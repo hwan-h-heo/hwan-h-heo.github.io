@@ -66,7 +66,6 @@
                             <p> <strong> <span style="color:red">Cons.</span> </strong> back-propagation through ray-sampled positions is unstable! </p>
                             <p> <br/> </p>
 
-                            <h2> Smooth Gradient for backward </h2>
                             <h3> Smooth gradients for unstable back-propagation </h3>
                             <img class="img-fluid" src="assets/pose_fig2.png" />
                             <ol>
@@ -86,9 +85,16 @@
                             <p> We propose to use the mix-up of tri-linear interpolation and smooth gradients: </p>
                             <p> $\hat{w}_{i, j} = w_{i,j} + \lambda \delta(w_{i,j}) - \lambda \tilde{\delta}(w_{i,j})$ </p>
                             <p> where $\lambda$ is a hyper-parameter, denotes the detached variable from the computational graph.  </p>
+                            <p> <br/> </p>
 
                             <h2> Experiments </h2>
-                            <h3> Training time per iteration </h3>
+                            <h3> Visualization of the progress of pose refienments </h3>
+                            <p> <span style="color:red">Red</span>  camera is GT and red line is a pose error vector. </p>
+                            <img class="img-fluid" src="assets/vis_pose.png" />
+                            <p> <br/> </p>
+
+                            <h3> Quantitative Results</h3>
+                            <h4> Training time per iteration </h4>
                             <DIV style ="text-align:center";>
                                 <img class="img-fluid" src="assets/training_time.png" width="50%" />
                             </DIV>
@@ -97,18 +103,11 @@
                                 <li> Inherit Instant-NGP's better accuracy </li>
                                 <li> Improve stability of pose refinement </li>
                             </ul>
-                            <h3> Visualization of the progress of pose refienments </h3>
-                            <p> <span style="color:red">Red</span>  camera is GT and red line is a pose error vector. </p>
-                            <img class="img-fluid" src="assets/vis_pose.png" />
-
-                            <h3> Quantitative Results</h3>
+                            <h4> Table Comparison </h4>
                             <DIV style ="text-align:center";>
                                 <img class="img-fluid" src="assets/table.png" width="70%" />
                             </DIV>
                             <p> For the Synthetic (Blender) dataset, our reimplementation utilizing the below tiny-cuda-nn and ngp_pl frameworks demonstrates remarkable superiority, achieving a score of 31.54, surpassing the paper's reported score of 29.86, as well as the scores of 28.96 achieved by GARF and 28.84 achieved by BARF. </p>
-
-
-
                         </div>
                     </div>
                 </div>
