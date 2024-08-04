@@ -39,10 +39,42 @@
                 <div class="container px-5 mb-5">
                     <div class="text-center mb-5">
                         <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Neural Rendering in Game Engine</span></h1>
+                        <div class="fs-3 fw-light text-muted"> NC Research </div>
                     </div>
                     <div class="row gx-5 justify-content-center">
                         <div class="col-lg-11 col-xl-9 col-xxl-8">
-                            <p> Contents of the project </p>
+                            <h2> Overview </h2>
+                            <hr/>
+                            <p> The project aims to explore the fusion of neural rendering and game engine. We design the pipeline of the efficient scene modeling, reconstruction with neural rendering and further utilizing the reconstructed scene in the game engine. </p>
+                            <iframe width="720" height="405" src="https://www.youtube.com/embed/3OqbvUaoNFw?si=GxEnL9nG7fuVT0x0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            <p> <br/> </p>
+
+                            <h2> Neural Rendering w/ 360 Videos </h2>
+                            <hr/>
+                            <h3> Using 360 Cameras for effective large scene capturing </h3>
+                            <p> To efficiently capture the large scene for 3D scene reconstruction, we use 360 videos for our GT NVS sources. </p>
+                            <figure> 
+                                <img class="img-fluid" src="assets/1_360_park_sample.jpg">
+                                <figcaption> sample of captured 360 scenes </figcaption>
+                            </figure>
+                            <p> <br/> </p>
+                            <h3> Spherical 3D Gaussian Splatting </h3>
+                            <p> Since the origianl diff-gaussian-rasterization only supports pinhole camera model w/ perspective projection, we desing the custom 3D Gaussian Splatting Rasterizer to support the various camera model. Then, we train the 3D Gaussian Splatting scene by leveraging our custom spherical projection cuda rasterizer. </p>
+                            <iframe width="720" height="405" src="https://www.youtube.com/embed/ISm-IL3HzmM?si=OyIAPB1Cgc70ADXU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            <p> <br/> </p>
+                            <p> Specifically, the original equirectangular images have stitching error between two fisheye images, we actually utilize two fisheye images of the 360 captured video. </p>
+                            <table>
+                                <tr><th>Fisheye Camera Model</th><th>Spherical Camera Model</th></tr>
+                                <tr><td><img class="img-fluid" src="assets/fisheye.png"></td><td><img class="img-fluid" src="assets/spherical.png"><td></tr>
+                            </table>
+                            <p> <br/> </p>
+                            
+
+                            <h2> Gaussian Splatting w/ Game Engine </h2>
+                            <hr/>
+                            <p> With the reconstructed 3D neural rendering scene, we further utilize it in the game engine such as Unity or Unreal, which have powerfull synthetic world generation possibility. We also show the virtual world experience w/ our recosntructed neural avatar, which is fully interactive in the game engine. </p>
+                            <iframe width="720" height="405" src="https://www.youtube.com/embed/p5YXFOXWeW0?si=padif0-DUOVX4PHV" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
                         </div>
                     </div>
                 </div>

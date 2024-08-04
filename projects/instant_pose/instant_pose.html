@@ -45,11 +45,13 @@
                 <div class="container px-5 mb-5">
                     <div class="text-center mb-5">
                         <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</span></h1>
+                        <div class="fs-3 fw-light text-muted"> ICML 2023 </div>
                     </div>
                     <div class="row gx-5 justify-content-center">
                         <div class="col-lg-11 col-xl-9 col-xxl-8">
                             <!--img class="img-fluid" src="./assets/poster.png" /-->
                             <h2> Motivation </h2>
+                            <hr/>
                             <p> Multi-Resolution hash encoding or Instant-NGP has recently been proposed to reduce the computational cost of NeRF's. However, we found that a naive gradient-based camera pose refinement method severely deteriorates performance. Showing that the oscilating gradient flows of hash encoding interfere with the registration of camera poses, our method addresses the issue by utilizing smooth interpolation weighting to stabilize the gradient oscilation for the ray samplings across has grids. </p>
                             <p> <br/> </p>
 
@@ -90,7 +92,7 @@
 
                             <h2> Experiments </h2>
                             <hr/>
-                            <h3> Visualization of the progress of pose refienments </h3>
+                            <h4> Visualization of the progress of pose refienments </h4>
                             <p> <span style="color:red">Red</span>  camera is GT and red line is a pose error vector. </p>
                             <img class="img-fluid" src="assets/vis_pose.png" />
                             <p> <br/> </p>
@@ -104,7 +106,7 @@
                                 <li> Inherit Instant-NGP's better accuracy </li>
                                 <li> Improve stability of pose refinement </li>
                             </ul>
-                            <h4> Table Comparison </h4>
+                            <h4> Quantitative Results </h4>
                             <DIV style ="text-align:center";>
                                 <img class="img-fluid" src="assets/table.png" width="70%" />
                             </DIV>
