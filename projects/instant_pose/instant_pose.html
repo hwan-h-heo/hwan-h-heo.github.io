@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Modern Business - Start Bootstrap Template</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Custom Google font-->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="../../css/styles.css" rel="stylesheet" />
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({            
+                tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}            
+            });
+        </script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+    </head>
+    <body class="d-flex flex-column h-100 bg-light">
+        <main class="flex-shrink-0">
+            <!-- Navigation-->
+            <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+                <div class="container px-5">
+                    <a class="navbar-brand" href="../../index.html"><span class="fw-bolder text-primary">HwanHeo's log</span></a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
+                            <li class="nav-item"><a class="nav-link" href="../../index.html">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="../../resume.html">Resume</a></li>
+                            <li class="nav-item"><a class="nav-link" href="../../projects.html">Projects</a></li>
+                            <li class="nav-item"><a class="nav-link" href="../../contact.html">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <!-- Projects Section-->
+            <section class="py-5">
+                <div class="container px-5 mb-5">
+                    <div class="text-center mb-5">
+                        <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</span></h1>
+                    </div>
+                    <div class="row gx-5 justify-content-center">
+                        <div class="col-lg-11 col-xl-9 col-xxl-8">
+                            <!--img class="img-fluid" src="./assets/poster.png" /-->
+                            <h2> Motivation </h2>
+                            <p> Multi-Resolution hash encoding or Instant-NGP has recently been proposed to reduce the computational cost of NeRF's. However, we found that a naive gradient-based camera pose refinement method severely deteriorates performance. Showing that the oscilating gradient flows of hash encoding interfere with the registration of camera poses, our method addresses the issue by utilizing smooth interpolation weighting to stabilize the gradient oscilation for the ray samplings across has grids. </p>
+                            <p> <br/> </p>
+
+                            <h2> Method </h2>
+                            <h3> Multi-Resolution Hash Encoding </h3>
+                            <img class="img-fluid" src="assets/hash_grid.png" width="90%" />
+                            <ol>
+                                <li> A positional encoding uses the hash tables for multi-resolution features. </li>
+                                <li> Each feature is the tri-linear interpolation of the eight-corner entries in a grid cube using proportional weights depending on the location of a given point. </li>
+                                <li> Cannot back-propagate through the hash entries due to random hashing, but through the weights, where the gradients are discontinuous across the grids. </li>
+                            </ol>
+
+                            <p> <strong> <span style="color:blue">Pros.</span> </strong> faster convergence with better accuracy </p>
+                            <p> <strong> <span style="color:red">Cons.</span> </strong> back-propagation through ray-sampled positions is unstable! </p>
+                            <p> <br/> </p>
+
+                            <h2> Smooth Gradient for backward </h2>
+                            <h3> Smooth gradients for unstable back-propagation </h3>
+                            <img class="img-fluid" src="assets/pose_fig2.png" />
+                            <ol>
+                                <li>
+                                    zero gradient at the boundaries of grids 
+                                </li>
+                                <li>
+                                    infintie-differentiable smooth gradient using cosine function <br/> $\delta(w_{i,j}) = \frac{1-\cos(\pi w_{i,j})}{2} \quad \nabla_{x} \delta(w_{i,j}) = \frac{\pi}{2} \sin (\pi w_{i,j}) \cdot \nabla_{x} w_{i,j} $
+                                </li>
+                            </ol>
+                            <p> where $w_{i, j}$ is the weight for the $i$-th corner and the $l$-th level resolution.</p>
+
+                            <p> <br/> </p>
+
+
+                            <h3> Straight-through forward function  </h3>
+                            <p> We propose to use the mix-up of tri-linear interpolation and smooth gradients: </p>
+                            <p> $\hat{w}_{i, j} = w_{i,j} + \lambda \delta(w_{i,j}) - \lambda \tilde{\delta}(w_{i,j})$ </p>
+                            <p> where $\lambda$ is a hyper-parameter, denotes the detached variable from the computational graph.  </p>
+
+                            <h2> Experiments </h2>
+                            <h3> Training time per iteration </h3>
+                            <DIV style ="text-align:center";>
+                                <img class="img-fluid" src="assets/training_time.png" width="50%" />
+                            </DIV>
+                            <ul>
+                                <li> Inherit Instant-NGP's faster convergence </li>
+                                <li> Inherit Instant-NGP's better accuracy </li>
+                                <li> Improve stability of pose refinement </li>
+                            </ul>
+                            <h3> Visualization of the progress of pose refienments </h3>
+                            <p> <span style="color:red">Red</span>  camera is GT and red line is a pose error vector. </p>
+                            <img class="img-fluid" src="assets/vis_pose.png" />
+
+                            <h3> Quantitative Results</h3>
+                            <DIV style ="text-align:center";>
+                                <img class="img-fluid" src="assets/table.png" width="70%" />
+                            </DIV>
+                            <p> For the Synthetic (Blender) dataset, our reimplementation utilizing the below tiny-cuda-nn and ngp_pl frameworks demonstrates remarkable superiority, achieving a score of 31.54, surpassing the paper's reported score of 29.86, as well as the scores of 28.96 achieved by GARF and 28.84 achieved by BARF. </p>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <!-- Footer-->
+        <footer class="bg-white py-4 mt-auto">
+            <div class="container px-5">
+                <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+                    <div class="col-auto"><div class="small m-0">Copyright &copy; hwanheo's log</div></div>
+                    <div class="col-auto">
+                        <a class="small" href="gjghks950@naver.com">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+    </body>
+</html>
