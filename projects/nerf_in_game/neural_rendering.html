@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Modern Business - Start Bootstrap Template</title>
+        <title>Hwan Heo's personal portfolio website</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <!-- Custom Google font-->
@@ -46,7 +46,9 @@
                             <h2> Overview </h2>
                             <hr/>
                             <p> The project aims to explore the fusion of neural rendering and game engine. We design the pipeline of the efficient scene modeling, reconstruction with neural rendering and further utilizing the reconstructed scene in the game engine. </p>
-                            <iframe width="720" height="405" src="https://www.youtube.com/embed/3OqbvUaoNFw?si=GxEnL9nG7fuVT0x0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            <div class="video-container">
+                                <iframe width="720" height="405" src="https://www.youtube.com/embed/3OqbvUaoNFw?si=GxEnL9nG7fuVT0x0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
                             <p> <br/> </p>
 
                             <h2> Neural Rendering w/ 360 Videos </h2>
@@ -60,9 +62,11 @@
                             <p> <br/> </p>
                             <h3> Spherical 3D Gaussian Splatting </h3>
                             <p> Since the origianl diff-gaussian-rasterization only supports pinhole camera model w/ perspective projection, we desing the custom 3D Gaussian Splatting Rasterizer to support the various camera model. Then, we train the 3D Gaussian Splatting scene by leveraging our custom spherical projection cuda rasterizer. </p>
-                            <iframe width="720" height="405" src="https://www.youtube.com/embed/ISm-IL3HzmM?si=OyIAPB1Cgc70ADXU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            <div class="video-container">
+                                <iframe width="720" height="405" src="https://www.youtube.com/embed/ISm-IL3HzmM?si=OyIAPB1Cgc70ADXU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
                             <p> <br/> </p>
-                            <p> Specifically, the original equirectangular images have stitching error between two fisheye images, we actually utilize two fisheye images of the 360 captured video. </p>
+                            <p> Specifically, since the original equirectangular images have stitching error between two fisheye images, we actually utilize two fisheye images of the 360 captured video. </p>
                             <table>
                                 <tr><th>Fisheye Camera Model</th><th>Spherical Camera Model</th></tr>
                                 <tr><td><img class="img-fluid" src="assets/fisheye.png"></td><td><img class="img-fluid" src="assets/spherical.png"><td></tr>
@@ -73,7 +77,10 @@
                             <h2> Gaussian Splatting w/ Game Engine </h2>
                             <hr/>
                             <p> With the reconstructed 3D neural rendering scene, we further utilize it in the game engine such as Unity or Unreal, which have powerfull synthetic world generation possibility. We also show the virtual world experience w/ our recosntructed neural avatar, which is fully interactive in the game engine. </p>
-                            <iframe width="720" height="405" src="https://www.youtube.com/embed/p5YXFOXWeW0?si=padif0-DUOVX4PHV" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            <div class="video-container">
+                                <iframe width="720" height="405" src="https://www.youtube.com/embed/p5YXFOXWeW0?si=padif0-DUOVX4PHV" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                           
 
                         </div>
                     </div>
