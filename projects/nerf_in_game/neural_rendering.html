@@ -84,8 +84,16 @@
                             <p> <br/> </p>
 
                             <h3> Spherical 3D Gaussian Splatting </h3>
-                            <p> Initially, we trained the 3D GS model using 360-degree images, but the results were poor. This was likely due to stitching errors between the fisheye images that comprise the equirectangular 360-degree images. </p>
-                            <p> To address this issue, we decided to use the original fisheye images as our ground truth (GT) sources. Furthermore, we implemented a custom CUDA-based Gaussian rasterization module to support the fisheye camera model, which was not supported by the original rasterization module. </p>
+                            <p> 
+                                Initially, we trained the 3D GS model using 360-degree images, but the results were poor. 
+                                This was likely due to stitching errors between the fisheye images that comprise the equirectangular 
+                                360-degree images. 
+                            </p>
+                            <p> 
+                                To address this issue, we decided to use the original fisheye images as our ground truth (GT) sources. 
+                                Furthermore, we implemented a custom CUDA-based Gaussian rasterization module to support the fisheye 
+                                camera model, which was not supported by the original rasterization module. 
+                            </p>
 
                             <table>
                                 <tr>
