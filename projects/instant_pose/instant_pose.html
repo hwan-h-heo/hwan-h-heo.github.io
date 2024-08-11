@@ -147,25 +147,18 @@
                             </div>
                             <p> where ${\partial {\mathbf{h}_{l}}(\mathbf{x})} / {\partial {x}_k}$ is the convex combination of the differences between two hash table entries. </p>
                             
-                            In summary, 
-                            <ol>
-                                <li>
-                                    zero gradient at the boundaries of grids 
-                                </li>
-                                <li>
-                                    infintie-differentiable smooth gradient using cosine function <br/> 
-                                    <div class="math-container">
-                                        $$\delta(w_{i,j}) = \frac{1-\cos(\pi w_{i,j})}{2} \quad \nabla_{x} \delta(w_{i,j}) = \frac{\pi}{2} \sin (\pi w_{i,j}) \cdot \nabla_{x} w_{i,j} $$
-                                    </div>
-                                </li>
-                            </ol>
+                            Therefore, we change the original interpolation to have infintie-differentiable smooth gradient using cosine function, 
+                            <div class="math-container">
+                                $$\delta(w_{i,j}) = \frac{1-\cos(\pi w_{i,j})}{2} \quad \nabla_{x} \delta(w_{i,j}) = \frac{\pi}{2} \sin (\pi w_{i,j}) \cdot \nabla_{x} w_{i,j} $$
+                            </div>
                             <p> where $w_{i, j}$ is the weight for the $i$-th corner and the $l$-th level resolution.</p>
 
                             <p> <br/> </p>
 
 
                             <h3> Straight-through forward function  </h3>
-                            <p> We propose to use the mix-up of tri-linear interpolation and smooth gradients: </p>
+                            <p> Furthermore, since the non-linear interpolation can hinder the original performance of the NGP, 
+                                we propose to use the mix-up of tri-linear interpolation and smooth gradients: </p>
                             <div class="math-container">
                                 $$\hat{w}_{i, j} = w_{i,j} + \lambda \delta(w_{i,j}) - \lambda \tilde{\delta}(w_{i,j})$$
                             </div>

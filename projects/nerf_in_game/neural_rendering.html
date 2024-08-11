@@ -16,6 +16,28 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="../../css/styles.css" rel="stylesheet" />
+        <script src="../../js/mathjax-config.js"></script>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({            
+                tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}            
+            });
+        </script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+        <style>
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                width: 50%;
+                border: none;
+                padding: 8px;
+                text-align: center;
+            }
+            th {
+                background-color: #f2f2f2; /* 옅은 회색 */
+            }
+        </style>
     </head>
     <body class="d-flex flex-column h-100 bg-light">
         <main class="flex-shrink-0">
@@ -45,7 +67,7 @@
                         <div class="col-lg-11 col-xl-9 col-xxl-8">
                             <h2> Overview </h2>
                             <hr/>
-                            <p> The project aims to explore the fusion of neural rendering and game engine. We design the pipeline of the efficient scene modeling, reconstruction with neural rendering and further utilizing the reconstructed scene in the game engine. </p>
+                            <p> The project aims to explore the fusion of neural rendering and game engines. We design a pipeline for efficient scene modeling, reconstruction using neural rendering, and subsequent integration of the reconstructed scene into a game engine. </p>
                             <div class="video-container">
                                 <iframe width="720" height="405" src="https://www.youtube.com/embed/3OqbvUaoNFw?si=GxEnL9nG7fuVT0x0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                             </div>
@@ -60,27 +82,93 @@
                                 <figcaption> sample of captured 360 scenes </figcaption>
                             </figure>
                             <p> <br/> </p>
+
                             <h3> Spherical 3D Gaussian Splatting </h3>
-                            <p> Since the origianl diff-gaussian-rasterization only supports pinhole camera model w/ perspective projection, we desing the custom 3D Gaussian Splatting Rasterizer to support the various camera model. Then, we train the 3D Gaussian Splatting scene by leveraging our custom spherical projection cuda rasterizer. </p>
+                            <p> Initially, we trained the 3D GS model using 360-degree images, but the results were poor. This was likely due to stitching errors between the fisheye images that comprise the equirectangular 360-degree images. </p>
+                            <p> To address this issue, we decided to use the original fisheye images as our ground truth (GT) sources. Furthermore, we implemented a custom CUDA-based Gaussian rasterization module to support the fisheye camera model, which was not supported by the original rasterization module. </p>
+
+                            <table>
+                                <tr>
+                                    <th>Fisheye Camera Model</th>
+                                    <th>Spherical Camera Model</th>
+                                </tr>
+                                <tr>
+                                    <td><img class="img-fluid" src="assets/fisheye.png" alt="Fisheye Camera"></td>
+                                    <td><img class="img-fluid" src="assets/spherical.png" alt="Spherical Camera"></td>
+                                </tr>
+                                <tr>
+                                    <th colspan='2'> 3D GS Reconstruction </th>
+                                </tr>
+                                <tr>
+                                    <td><img class="img-fluid" src="assets/3_comparison_01_final.png" alt="Comparison 01 Final"></td>
+                                    <td><img class="img-fluid" src="assets/3_comparison_01_first.png" alt="Comparison 01 First"></td>
+                                </tr>
+                                <tr>
+                                    <td><img class="img-fluid" src="assets/3_comparison_02_final.png" alt="Comparison 02 Final"></td>
+                                    <td><img class="img-fluid" src="assets/3_comparison_02_first.png" alt="Comparison 02 First"></td>
+                                </tr>
+                            </table>
+                            <br/>
+                            <p> Here is the final reconstructed scene from 360 camera capture. </p>
                             <div class="video-container">
                                 <iframe width="720" height="405" src="https://www.youtube.com/embed/ISm-IL3HzmM?si=OyIAPB1Cgc70ADXU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                             </div>
+
                             <p> <br/> </p>
-                            <p> Specifically, since the original equirectangular images have stitching error between two fisheye images, we actually utilize two fisheye images of the 360 captured video. </p>
-                            <table>
-                                <tr><th>Fisheye Camera Model</th><th>Spherical Camera Model</th></tr>
-                                <tr><td><img class="img-fluid" src="assets/fisheye.png"></td><td><img class="img-fluid" src="assets/spherical.png"><td></tr>
-                            </table>
-                            <p> <br/> </p>
-                            
 
                             <h2> Gaussian Splatting w/ Game Engine </h2>
                             <hr/>
-                            <p> With the reconstructed 3D neural rendering scene, we further utilize it in the game engine such as Unity or Unreal, which have powerfull synthetic world generation possibility. We also show the virtual world experience w/ our recosntructed neural avatar, which is fully interactive in the game engine. </p>
+                            <p> 
+                                With the reconstructed 3D neural rendering scene, we further integrate it into game engines 
+                                such as Unity or Unreal, which offer powerful synthetic world generation capabilities. 
+                            </p>
+                            <p>
+                                The integration of the Gaussian Splatting and Game Engine can be easily implemented using 
+                                GS rasterization rule. 
+                                We further optimize it using vector-quantization so that the Unity-GS can be rendered within its 
+                                original rapid performance. 
+                            </p>
+                            <p>
+                                Below is the GS's virtual world experience which is fully interactive within the Unity engine, 
+                                with our neural avatar also reconstructed by radiance fields technique. 
+                            </p>
                             <div class="video-container">
                                 <iframe width="720" height="405" src="https://www.youtube.com/embed/p5YXFOXWeW0?si=padif0-DUOVX4PHV" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                             </div>
-                           
+                           <p>
+                                In Unreal Engine (UE), Gaussian Splatting scenes can be constructed similarly. 
+                                However, we've encountered a significant limitation: 
+                                Unreal's Niagara system can effectively render only up to 2 million particles. 
+                                Given that a fully reconstructed scene often consists of over 6 million particles, 
+                                a simple copy-and-paste approach leads to disastrous results. 
+                                This issue has also been reported with the <a href="https://github.com/xverse-engine/XV3DGS-UEPlugin/issues/6">XVERSE's UE GS plugin</a>.
+                           </p>
+                           <p>
+                                To overcome this, it's necessary to prune the splats so that the particle count stays within UE's upper limit. 
+                                We define the em>contribution</em> of each splat as the sum of the intersected rays across all the training images. 
+                                Mathematically, this can be expressed as:
+                           </p>
+                           <div class="math-container">
+                                $$ C = \sum_{k=1}^{n} C_k, \quad
+                                C_k = \sum_{p \in \mathcal{P}_k} \alpha_i(p) \prod_{j=1}^{i(p)-1} (1 - \alpha_j)
+                                $$
+                           </div>
+                            <p>
+                                We estimated the contribution of all trained splats and pruned the particles accordingly. 
+                                The pruned GS scene was then aligned. 
+                                This prune-and-refine process was iteratively optimized through only a few steps. 
+                                Below is a comparison between the original GS scene and the pruned GS scene in UE.
+                            </p>
+                            <table>
+                                <tr>
+                                    <th> Original GS in UE </th>
+                                    <th> Pruned GS in UE</th>
+                                </tr>
+                                <tr>
+                                    <td><img class="img-fluid" src="assets/UE_org.png" alt="Fisheye Camera"></td>
+                                    <td><img class="img-fluid" src="assets/UE_pruned.png" alt="Spherical Camera"></td>
+                                </tr>
+                            </table>
 
                         </div>
                     </div>
