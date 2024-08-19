@@ -1,12 +1,4 @@
 /*!
-* Start Bootstrap - Personal v1.0.1 (https://startbootstrap.com/template-overviews/personal)
-* Copyright 2013-2023 Start Bootstrap
-* Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-personal/blob/master/LICENSE)
-*/
-// This file is intentionally blank
-// Use this file to add JavaScript to your project
-
-/*!
 * Start Bootstrap - Clean Blog v6.0.9 (https://startbootstrap.com/theme/clean-blog)
 * Copyright 2013-2023 Start Bootstrap
 * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-clean-blog/blob/master/LICENSE)
@@ -36,16 +28,6 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 })
 
-document.addEventListener("scroll", function() {
-    var headerHeight = document.querySelector('.masthead').offsetHeight;
-    var toc = document.querySelector('.toc');
-    
-    if (window.scrollY > headerHeight) {
-        toc.style.display = 'block'; // TOC를 보여줌
-    } else {
-        toc.style.display = 'none'; // TOC를 숨김
-    }
-});
 
 
 var toc = document.querySelector( '.toc' );
@@ -130,39 +112,45 @@ function drawPath() {
 
 function sync() {
   
-    var windowHeight = window.innerHeight;
-    var currentSection = null;
+  var windowHeight = window.innerHeight;
   
-    tocItems.forEach(function (item) {
-      var targetBounds = item.target.getBoundingClientRect();
+  var pathStart = pathLength,
+      pathEnd = 0;
   
-      // Check if this is the current section that should be active
-      if (targetBounds.top <= windowHeight * (1 - BOTTOM_MARGIN)) {
-        currentSection = item;  // Update currentSection with the latest visible section
-      }
-    });
+  var visibleItems = 0;
   
-    // Add 'active' class to the current section and remove it from others
-    tocItems.forEach(function (item) {
-      if (item === currentSection) {
-        item.listItem.classList.add('active');
-      } else {
-        item.listItem.classList.remove('active');
-      }
-    });
-  
-    // Specify the visible path or hide the path altogether
-    if (currentSection) {
-      var pathStart = currentSection.pathStart;
-      var pathEnd = currentSection.pathEnd;
-      tocPath.setAttribute('stroke-dashoffset', '1');
-      tocPath.setAttribute('stroke-dasharray', '1, ' + pathStart + ', ' + (pathEnd - pathStart) + ', ' + pathLength);
-      tocPath.setAttribute('opacity', 1);
-    } else {
-      tocPath.setAttribute('opacity', 0);
+  tocItems.forEach( function( item ) {
+
+    var targetBounds = item.target.getBoundingClientRect();
+    
+    if( targetBounds.bottom > windowHeight * TOP_MARGIN && targetBounds.top < windowHeight * ( 1 - BOTTOM_MARGIN ) ) {
+      pathStart = Math.min( item.pathStart, pathStart );
+      pathEnd = Math.max( item.pathEnd, pathEnd );
+      
+      visibleItems += 1;
+      
+      item.listItem.classList.add( 'visible' );
     }
+    else {
+      item.listItem.classList.remove( 'visible' );
+    }
+    
+  } );
   
-    lastPathStart = currentSection ? currentSection.pathStart : pathLength;
-    lastPathEnd = currentSection ? currentSection.pathEnd : 0;
+  // Specify the visible path or hide the path altogether
+  // if there are no visible items
+  if( visibleItems > 0 && pathStart < pathEnd ) {
+    if( pathStart !== lastPathStart || pathEnd !== lastPathEnd ) {
+      tocPath.setAttribute( 'stroke-dashoffset', '1' );
+      tocPath.setAttribute( 'stroke-dasharray', '1, '+ pathStart +', '+ ( pathEnd - pathStart ) +', ' + pathLength );
+      tocPath.setAttribute( 'opacity', 1 );
+    }
+  }
+  else {
+    tocPath.setAttribute( 'opacity', 0 );
   }
   
+  lastPathStart = pathStart;
+  lastPathEnd = pathEnd;
+
+}

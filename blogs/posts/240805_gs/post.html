@@ -29,17 +29,21 @@
                 vertical-align: middle;
             }
             th {
-                background-color: #f2f2f2; /* 옅은 회색 */
+                background-color: #f2f2f2; 
             }
             th {
                 width: 15%; /* Reduced width of the header column */
-                background-color: #f2f2f2; /* 옅은 회색 */
+                background-color: #f2f2f2; 
             }
             .img-fluid {
                 max-width: 100%;
                 height: auto;
                 display: block;
                 margin: auto;
+            }
+            .wp-block-image figcaption {
+                font-size: 4px;
+                color: #000000;
             }
         </style>
         <!-- MathJax CSS -->
@@ -88,22 +92,39 @@
         </header>
         <!-- Post Content-->
         <article class="mb-4">
+            <nav class="toc">
+                <ul>
+                    <li><a href="#sec1"> 3D Gaussian as Primitive Kernel</a></li>
+                    <li><a href="#sec2"> Splatting (Projection of Primitives)</a></li>
+                    <li><a href="#sec3"> Parallel Rasterization</a></li>
+                    <li><a href="#sec4"> MISC</a></li>
+                    <li><a href="#closing">Closing</a></li>
+                </ul>
+              <svg class="toc-marker" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+                <path stroke="#444" stroke-width="3" fill="transparent" stroke-dasharray="0, 0, 0, 1000" stroke-linecap="round" stroke-linejoin="round" transform="translate(-0.5, -0.5)" />
+              </svg>
+            </nav>
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
-                        <img src="assets/teaser.gif" alt="Gaussian Splatting Teaser by Luma AI" width="100%">
-                        <p><em>Figure credit: Luma AI</em></p>
-                        <h2>Introduction</h2>
+                        <h2 id="intro">Introduction</h2>
+                        <figure>
+                            <img src="assets/teaser.gif" alt="Gaussian Splatting Teaser by Luma AI" width="100%">
+                            <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 1.</strong> 3D GS by Luma AI</figcaption>
+                        </figure>
                         <p>
                             One of the most significant advantages of 3D Gaussian Splatting lies in its exceptional rendering speed, exceeding 100 frames per second (fps). 
                             This performance, faster than any other NeRF-based method, is achieved through a well-designed tile-based rasterization process. 
                             This article aims to explore 3D Gaussian Splatting from the perspective of rasterization, providing an in-depth understanding of its underlying mechanisms.
                         </p>
-
-                        <h2>1. 3D Gaussian as Primitive Kernel</h2>
                         <br/>
-                        <img src="assets/gs.png" alt="3D Gaussian as Primitive Kernel" width="100%">
-                        <p><em>Figure credit: <a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">Kate's medium<a></a></em></p>
+
+                        <h2 id="sec1">1. 3D Gaussian as Primitive Kernel</h2>
+                        <br/>
+                        <figure>
+                            <img src="assets/gs.png" alt="3D Gaussian as Primitive Kernel" width="100%">
+                            <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 2.</strong> NeRF vs 3D GS, source: <span style="text-decoration: underline;"><a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">Kate's medium</a></span></figcaption>
+                        </figure>
                         <p>
                             The basic idea of 3D Gaussian Splatting is to represent a scene with explicit, learnable primitives, contrasting with the implicit approach utilized in NeRF (Neural Radiance Fields). 
                             The explicit representation offers several advantages, as discussed in a previous review of 2D Gaussian Splatting 
@@ -123,6 +144,7 @@
                             <li> 
                                 <strong>Differentiability for Training:</strong> The function's differentiability facilitates gradient-based optimization during the training process.
                             </li>
+                            <br/>
                             <li> 
                                 <strong>Ease of Projection to 2D: </strong>> The Gaussian function allows for straightforward and well-defined projection to 2D, enabling fast alpha blending.
                             </li>
@@ -207,6 +229,7 @@ cov3D[5] = Sigma[2][2];</code>
                         <p> Here, Note that </p>
                         <ul>
                             <li> $S$: 3x3 diagonal matrix,</li>
+                            <br/>
                             <li> $R$: Calculated using the <a href="https://en.m.wikipedia.org/wiki/Quaternions_and_spatial_rotation">quaternion to rotation matrix</a> formula
                             <div class="math-container">
                                 $$ R = \begin{bmatrix}
@@ -216,14 +239,18 @@ cov3D[5] = Sigma[2][2];</code>
                                 \end{bmatrix} $$
                             </div>
                             </li>
-                            <li> COV: Since it is symmetric, we only need to store the right upper triangle.</li>
+                            <li> <em>cov3D</em>: Since it is symmetric, we only need to store the right upper triangle.</li>
                         </ul>
                         <br/>
 
-                        <h2>2. Splatting (Projection of Primitives)</h2>
+                        <h2 id="sec2">2. Splatting (Projection of Primitives)</h2>
                         <br/>
                         <h3>2.1. Projection</h3>
-                        <img src="assets/splatting.png" alt="Splatting of primitives" style="width:60%">
+                        <figure>
+                            <img src="assets/splatting.png" alt="Splatting of primitives" style="width:55%">
+                            <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 3.</strong> Projection of 3D Gaussian, <br/> source: <span style="text-decoration: underline;"><a href="https://dl.acm.org/doi/10.1145/3355089.3356513"><em>Differentiable Surface Splatting for Point-based Geometry Processing </em></a></span> </figcaption>
+                        </figure> 
+                        
 
                         <p>
                             To render a 3D scene onto a 2D image, it is necessary to project the covariance matrix of the Gaussian, defined in the world coordinate system, into image space. 
@@ -269,7 +296,10 @@ cov3D[5] = Sigma[2][2];</code>
                             <li>
                                 <p> 
                                     the image space pixel $(u,v)$ in a pinhole camera model,
-                                    <img src="assets/pinhole.png" width="60%" height="50%">
+                                    <figure>
+                                        <img src="assets/pinhole.png" width="60%" height="50%">
+                                        <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 4.</strong> Pinhole camera model, by Fusion of Imaging and Inertial Sensors for Navigation</figcaption>
+                                    </figure>
                                 </p>
                             </li>
                             <li>
@@ -308,6 +338,7 @@ glm::mat3 Vrk = glm::mat3(
 glm::mat3 cov = glm::transpose(T) * glm::transpose(Vrk) * T;</code>
                         </pre>
                         <br/>
+                        
                         <h3>2.2. Density of the Projected Gaussian </h3>
                         <p>
                             For a point $p$ in 3D space, the density $f_i(p)$ of the $i$th Gaussian can be defined as follows:
@@ -413,7 +444,7 @@ float3 conic = { cov.z * det_inv, -cov.y * det_inv, cov.x * det_inv };</code></p
                         </p>
 
                         <p>
-                            Since this is a quadratic equation for $\lambda$, it has the famous closed form solution :) The code also uses the root formula to find the value of the lambda. 
+                            Since this is a quadratic equation for $\lambda$, it has the famous closed form solution :) The code also uses the quadratic formula to find the value of the lambda. 
                         </p>
                         <pre class="language-cpp" style="font-size: 16px;"><code>// compute inverse of the covariance 2D
 float mid = 0.5f * (cov.x + cov.z);
@@ -424,9 +455,9 @@ float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));</code></pre>
                         <br/>
 
 
-                        <h2>3. Analysis of the Rasterization Algorithm </h2>
+                        <h2 id="sec3">3. Parallel Rasterization </h2>
                         <p>
-                            Having established the Gaussian kernel and its projection into image space, we can now proceed with rasterizing the 3D scene. 
+                            Having established the Gaussian kernel and its projection into image space, we can proceed with rasterizing the 3D scene. 
                             The goal is to efficiently render a 3D Gaussian Splatting scene as a 2D image by accumulating density and opacity values of Gaussians that intersect with the camera's ray.
                         </p>
 
@@ -439,20 +470,22 @@ float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));</code></pre>
                             The rasterization algorithm presented in the 3D Gaussian Splatting paper is a key element in achieving its remarkable rendering speed. 
                             Let’s break down the algorithm step-by-step:
                         </p>
-                        <img src="assets/rasterization.png" width="100%">
-                        <br/>
-                        <br/>
+                        <figure>
+                            <img src="assets/rasterization.png" width="100%">
+                            <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 5.</strong> An illustration of the forward process of 3D GS, <br/> source: <span style="text-decoration: underline;"><a href="https://arxiv.org/abs/2401.03890"><em>A Survey on 3D Gaussian Splatting </em></a></span> </figcaption>
+                        </figure>
+                        
                         <ol>
                             <li>
-                                <p><strong> Tile-Based Division. </strong></p>
                                 <p>
+                                    <strong> Tile-Based Division. </strong> <br/>
                                     The first step involves dividing the screen into 16x16 size tiles.
                                     This division is essential for CUDA parallelization, enabling efficient rasterization by allowing the GPU to process multiple tiles simultaneously.
                                 </p>
                             </li>
                             <li>
-                                <p><strong> Frustum Culling. </strong> </p>
                                 <p>
+                                    <strong> Frustum Culling. </strong> <br/>
                                     Once the screen is divided into tiles, the algorithm performs frustum culling. 
                                     This step involves discarding Gaussians that fall outside the camera's view frustum, ensuring that only relevant Gaussians are processed. 
                                 </p>
@@ -460,31 +493,32 @@ float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));</code></pre>
                             </li>
                             <br/>
                             <li>
-                                <strong> Instantiation of Gaussians.</strong> (Instantiate)
                                 <p>
+                                    <strong> Instantiation of Gaussians.</strong> (Instantiate) <br/>
                                     Gaussians that overlap with multiple tiles are duplicated, a process known as instantiation. 
                                     This ensures that each tile contains all relevant Gaussians for accurate rendering.
                                 </p>
                             </li>
-                            <br/>
                             <li>
-                                <strong> Sorting the Gaussians (in each tile) in depth order. </strong>
                                 <p>
+                                    <strong> Sorting the Gaussians (in each tile) in depth order. </strong> <br/>
                                     For each tile, the Gaussians are sorted in depth order using a GPU-accelerated radix sort. 
                                     Sorting is crucial because the covariance matrix used for rendering is already projected into image space. 
                                     Without depth sorting, the rendering would result in visually disordered overlapping Gaussians. 
                                     Importantly, this sorting is done before the execution of each CUDA thread block, ensuring that primitives are pre-sorted, rather than sorting them on a per-tile basis during rendering.
                                 </p>
                             </li>
-                            <br/>
                             <li>
-                                <strong> Parallel Rasterization.</strong>
                                 <p>
+                                    <strong> Parallel Rasterization.</strong> <br/>
                                     The next step involves setting the working range for each tile using the sorted Gaussians. CUDA thread blocks are then deployed in parallel, with each block responsible for rasterizing a specific tile. 
                                     To minimize memory bottlenecks, thread blocks store necessary information, such as Gaussian properties, in shared memory. 
                                     The final color value for each pixel is calculated by accumulating opacity and color along the sorted Gaussians.
                                 </p>
-                                <img src="assets/presort.png" width="70%" height="60%" alt="Gaussian Accumulation">
+                                <figure>
+                                    <img class="img-fluid" src="assets/presort.png" width="70%" height="60%" alt="Gaussian Accumulation">
+                                    <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 6.</strong>  An illustration of the tile based parallel rendering, <br/> source: <span style="text-decoration: underline;"><a href="https://arxiv.org/abs/2401.03890"><em>A Survey on 3D Gaussian Splatting </em></a></span> </figcaption>
+                                </figure>
                             </li>
                         </ol>
                     
@@ -509,7 +543,7 @@ __shared__ float4 collected_conic_opacity[BLOCK_SIZE];</code></pre>
                         <ul>
                             <li>
                                 <p>
-                                    Unlike NeRF, which requires sampling points along the ray and querying a Multi-Layer Perceptron (MLP) for the opacity and color at each point, 
+                                    NeRF requires sampling points along the ray and querying a Multi-Layer Perceptron (MLP) for the opacity and color at each point.
                                 </p>
                             </li>
                             <li>
@@ -518,12 +552,16 @@ __shared__ float4 collected_conic_opacity[BLOCK_SIZE];</code></pre>
                                 </p>
                             </li>
                         </ul>
+                        <figure>
+                            <img class="img-fluid" src="assets/nerf_vs_gs.png" width="70%">
+                            <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 7.</strong> NeRF vs 3D GS, source: <span style="text-decoration: underline;"><a href="https://arxiv.org/abs/2401.03890"><em>A Survey on 3D Gaussian Splatting </em></a></span> </figcaption>
+                        </figure>
                         <p>
                             In other words, since NeRF samples rays, it queries the MLP for each different point sampled by $r(t)$ (3D), whereas 3D GS queries the MLP for the same point $x$ (2D).
                         </p>
 
                         <br/>
-                        <h2>4. Miscellaneous </h2>
+                        <h2 id="sec4">4. Miscellaneous </h2>
                         <br/>
                         <h3>4.1. Camera Model </h3>
                         <p>
@@ -587,7 +625,7 @@ glm::mat3 J = glm::mat3(
                         <br/>
                     
 
-                        <h2>5. Conclusion</h2>
+                        <h2 id="closing">Closing</h2>
                         <p>
                             In this article, we have explored the intricacies of 3D Gaussian Splatting within the context of 
                             rasterization, highlighting its exceptional rendering speed and efficiency. 
@@ -610,12 +648,12 @@ glm::mat3 J = glm::mat3(
                         <ul>
                             <li>
                                 <a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">
-                                    A Comprehensive Overview of Gaussian Splatting
+                                    <span style="text-decoration: underline;">A Comprehensive Overview of Gaussian Splatting</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="https://github.com/kwea123/gaussian_splatting_notes">
-                                    Gaussian Splatting Notes
+                                    <span style="text-decoration: underline;">Gaussian Splatting Notes</span>
                                 </a>
                             </li>
                         </ul>
