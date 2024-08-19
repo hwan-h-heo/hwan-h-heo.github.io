@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>A Comprehensive Analysis of Gaussian Splatting Rasterization</title>
+        <link rel="icon" type="image/x-icon" href="../../../assets/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="../../../css/blog_style.css" rel="stylesheet" />
+        <!-- Prism.js CSS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+        <style>
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                width: 50%;
+                border: 1px solid #ddd;
+                padding: 10px;
+                text-align: center;
+                vertical-align: middle;
+            }
+            th {
+                width: 15%; /* Reduced width of the header column */
+                background-color: #f2f2f2; /* 옅은 회색 */
+            }
+            .img-fluid {
+                max-width: 100%;
+                height: auto;
+                display: block;
+                margin: auto;
+            }
+        </style>
+        <!-- MathJax CSS -->
+        <script src="../../../js/mathjax-config.js"></script>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({            
+                tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}            
+            });
+        </script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+    </head>
+    <body>
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="index.html">HwanHeo's Blog</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../../main.html">Post</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../../../index.html">HwanHeo's log</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Page Header-->
+        <header class="masthead" style="background-image: url('../../../assets/blog_bg.png')">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="post-heading">
+                            <h1>Title</h1>
+                            <br/>
+                            <span class="meta">
+                                Posted by
+                                Hwan Heo
+                                on Month Day, Year
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Post Content-->
+        <article class="mb-4">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <h2>Title 1</h2>
+                        <p>
+                            bla bla 
+                        </p>
+
+                        <img src="assets/placeholder.jpeg" alt="3D Gaussian as Primitive Kernel" width="50%">
+                        <p><em>Figure credit: <a href="#!">some linke<a></a></em></p>
+                        <p>
+                            Contents
+                            Link: <a href="#!">hyperlink text</a>
+                        </p>
+                        <div class="math-container">
+                            $$ E=mc^2
+                            $$
+                        </div>
+
+                        unordered list 
+                        <ul>
+                            <li> 
+                                <strong>BOLD</strong> 
+                                contents
+                            </li>
+                        </ul>
+                        ordered list 
+                        <ol>
+                            <li> 
+                                <strong>BOLD</strong> 
+                                contents
+                            </li>
+                        </ol>
+
+                        quote
+                        <blockquote>
+                            <p>
+                                contents contents 
+                                contents contents
+                            </p>
+                        </blockquote>
+
+                        code block
+                        <pre class="language-cpp" style="font-size: 16px;"><code>// code  
+a = 3;</code>
+                        </pre>
+
+                        newline
+                        <br/>
+
+                        table
+                        <table>
+                            <tr>
+                                <th>Title1</th>
+                                <th>Title2</th>
+                            </tr>
+                            <tr>
+                                <td>contents1</td>
+                                <td>contents2</td>
+                            </tr>
+                            <tr>
+                                <th colspan='2'> Spaned Title </th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>2</td>
+                            </tr>
+                            <tr colspan="2">
+                                3
+                            </tr>
+                        </table>
+
+                        <table>
+                            <tr>
+                                <th scope="col">번호</th>
+                                <th scope="col">제목</th>
+                                <th scope="col" colspan="2">이름</th>
+                                <!-- <th scope="col">조회수</th> : 밀려난 셀 제거-->
+                            </tr>
+                            <tr>
+                                <td rowspan="3">1</td>
+                                <td>테이블-1</td>
+                                <td>홍길동</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <!-- <td>2</td> -->
+                                <td>테이블-2</td>
+                                <td>둘리</td>
+                                <td>20</td>
+                            </tr>
+                            <tr>
+                                <!-- <td>3</td> -->
+                                <td>테이블-3</td>
+                                <td>도우너</td>
+                                <td>30</td>
+                            </tr>
+                    </table>
+                
+
+                    </div>
+                </div>
+            </div>
+        </article>
+        <!-- Footer-->
+        <footer class="border-top">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <ul class="list-inline text-center">
+                            <li class="list-inline-item">
+                                <a href="https://www.linkedin.com/in/hwan-heo-0905korea/">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="https://github.com/hwanhuh">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="small text-center text-muted fst-italic">Copyright &copy; Hwan Heo</div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="../../../js/scripts.js"></script>
+        <script src="https://unpkg.com/prismjs@1.28.0/components/prism-core.min.js"></script>
+        <script src="https://unpkg.com/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+        <script>
+            Prism.plugins.autoloader.languages_path = 'https://unpkg.com/prismjs@1.28.0/components/'
+        </script>
+    </body>
+</html>
