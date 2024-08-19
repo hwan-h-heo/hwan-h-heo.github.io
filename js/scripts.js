@@ -11,6 +11,7 @@
 * Copyright 2013-2023 Start Bootstrap
 * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-clean-blog/blob/master/LICENSE)
 */
+
 window.addEventListener('DOMContentLoaded', () => {
     let scrollPos = 0;
     const mainNav = document.getElementById('mainNav');
@@ -36,133 +37,74 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 })
 
+// Select the TOC and its items
+var toc = document.querySelector('.toc');
+var tocItems = [];
+
 document.addEventListener("scroll", function() {
-    var headerHeight = document.querySelector('.masthead').offsetHeight;
-    var toc = document.querySelector('.toc');
-    
-    if (window.scrollY > headerHeight) {
-        toc.style.display = 'block'; // TOC를 보여줌
-    } else {
-        toc.style.display = 'none'; // TOC를 숨김
-    }
+  var headerHeight = document.querySelector('.masthead').offsetHeight;
+  var toc = document.querySelector('.toc');
+  if (window.scrollY > headerHeight) {
+      toc.style.display = 'block'; // TOC를 보여줌
+  } else {
+      toc.style.display = 'none'; // TOC를 숨김
+  }
 });
 
-
-var toc = document.querySelector( '.toc' );
-var tocPath = document.querySelector( '.toc-marker path' );
-var tocItems;
-
-// Factor of screen size that the element must cross
-// before it's considered visible
+// Factor of screen size that the element must cross before it's considered visible
 var TOP_MARGIN = 0.1,
     BOTTOM_MARGIN = 0.2;
 
-var pathLength;
+window.addEventListener('scroll', sync, false);
 
-var lastPathStart,
-		lastPathEnd;
+// Initialize TOC items and their targets
+function initTocItems() {
+    tocItems = [].slice.call(toc.querySelectorAll('li'));
 
-window.addEventListener( 'resize', drawPath, false );
-window.addEventListener( 'scroll', sync, false );
+    // Cache element references and measurements
+    tocItems = tocItems.map(function(item) {
+        var anchor = item.querySelector('a');
+        var target = document.getElementById(anchor.getAttribute('href').slice(1));
 
-drawPath();
+        return {
+            listItem: item,
+            anchor: anchor,
+            target: target
+        };
+    });
 
-function drawPath() {
-  
-  tocItems = [].slice.call( toc.querySelectorAll( 'li' ) );
-
-  // Cache element references and measurements
-  tocItems = tocItems.map( function( item ) {
-    var anchor = item.querySelector( 'a' );
-    var target = document.getElementById( anchor.getAttribute( 'href' ).slice( 1 ) );
-
-    return {
-      listItem: item,
-      anchor: anchor,
-      target: target
-    };
-  } );
-
-  // Remove missing targets
-  tocItems = tocItems.filter( function( item ) {
-    return !!item.target;
-  } );
-
-  var path = [];
-  var pathIndent;
-
-  tocItems.forEach( function( item, i ) {
-
-    var x = item.anchor.offsetLeft - 5,
-        y = item.anchor.offsetTop,
-        height = item.anchor.offsetHeight;
-
-    if( i === 0 ) {
-      path.push( 'M', x, y, 'L', x, y + height );
-      item.pathStart = 0;
-    }
-    else {
-      // Draw an additional line when there's a change in
-      // indent levels
-      if( pathIndent !== x ) path.push( 'L', pathIndent, y );
-
-      path.push( 'L', x, y );
-      
-      // Set the current path so that we can measure it
-      tocPath.setAttribute( 'd', path.join( ' ' ) );
-      item.pathStart = tocPath.getTotalLength() || 0;
-      
-      path.push( 'L', x, y + height );
-    }
-    
-    pathIndent = x;
-    
-    tocPath.setAttribute( 'd', path.join( ' ' ) );
-    item.pathEnd = tocPath.getTotalLength();
-
-  } );
-  
-  pathLength = tocPath.getTotalLength();
-  
-  sync();
-  
+    // Remove missing targets
+    tocItems = tocItems.filter(function(item) {
+        return !!item.target;
+    });
 }
 
+// Sync TOC items with the current scroll position
 function sync() {
-  
     var windowHeight = window.innerHeight;
     var currentSection = null;
-  
-    tocItems.forEach(function (item) {
-      var targetBounds = item.target.getBoundingClientRect();
-  
-      // Check if this is the current section that should be active
-      if (targetBounds.top <= windowHeight * (1 - BOTTOM_MARGIN)) {
-        currentSection = item;  // Update currentSection with the latest visible section
-      }
+
+    tocItems.forEach(function(item) {
+        var targetBounds = item.target.getBoundingClientRect();
+
+        // Check if this is the current section that should be active
+        if (targetBounds.top <= windowHeight * (1 - BOTTOM_MARGIN)) {
+            currentSection = item;  // Update currentSection with the latest visible section
+        }
     });
-  
+
     // Add 'active' class to the current section and remove it from others
-    tocItems.forEach(function (item) {
-      if (item === currentSection) {
-        item.listItem.classList.add('active');
-      } else {
-        item.listItem.classList.remove('active');
-      }
+    tocItems.forEach(function(item) {
+        if (item === currentSection) {
+            item.listItem.classList.add('active');
+        } else {
+            item.listItem.classList.remove('active');
+        }
     });
-  
-    // Specify the visible path or hide the path altogether
-    if (currentSection) {
-      var pathStart = currentSection.pathStart;
-      var pathEnd = currentSection.pathEnd;
-      tocPath.setAttribute('stroke-dashoffset', '1');
-      tocPath.setAttribute('stroke-dasharray', '1, ' + pathStart + ', ' + (pathEnd - pathStart) + ', ' + pathLength);
-      tocPath.setAttribute('opacity', 1);
-    } else {
-      tocPath.setAttribute('opacity', 0);
-    }
-  
-    lastPathStart = currentSection ? currentSection.pathStart : pathLength;
-    lastPathEnd = currentSection ? currentSection.pathEnd : 0;
-  }
-  
+}
+
+// Initialize TOC items on page load
+document.addEventListener('DOMContentLoaded', function() {
+    initTocItems();
+    sync(); // Initial sync to set the correct active item on page load
+});

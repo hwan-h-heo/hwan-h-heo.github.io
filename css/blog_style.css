@@ -107,37 +107,39 @@ body {
 
 .toc {
   position: fixed;
-  top: 450px;
-  left: 1550px;
+  top: 40vh;
+  left: 75vw;
+  right: 5vw;
   padding: 1em;
-  width: $menuWidth;
+  width: 25vw;
   line-height: 2;
   font-size: 0.8em;
-  display: none; /* Hide initially */
-
-  ul {
+  display: none;
+}
+.toc  ul {
     list-style: none;
     padding: 0;
     margin: 0;
   }
   
-  ul ul {
+.toc ul ul {
     padding-left: 1.5em;
   }
   
-  li a {
+.toc li a {
     display: inline-block;
     color: #aaa;
     text-decoration: none;
     transition: all 0.3s cubic-bezier(0.230, 1.000, 0.320, 1.000);
   }
 
-  li.active a {
+.toc li.active a {
     color: #343a40;
     font-weight: bold;
   }
   
-  li.visible>a {
+.toc li.active a {
+    li.visible>a {
     color: #343a40;
     transform: translate( 5px );
   }
@@ -166,9 +168,9 @@ body {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1280px) {
   .toc {
-    display: none;
+    display: none !important;
   }
 }
 
