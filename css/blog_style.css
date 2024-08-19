@@ -112,7 +112,7 @@ body {
   padding: 1em;
   width: $menuWidth;
   line-height: 2;
-  font-size: 0.85em;
+  font-size: 0.8em;
   display: none; /* Hide initially */
 
   ul {

@@ -175,7 +175,7 @@
                             </li>
                             <br/>
                             <li> 
-                                <strong>Ease of Projection to 2D: </strong>> The Gaussian function allows for straightforward and well-defined projection to 2D, enabling fast alpha blending.
+                                <strong>Ease of Projection to 2D: </strong> The Gaussian function allows for straightforward and well-defined projection to 2D, enabling fast alpha blending.
                             </li>
                         </ul>
 
@@ -190,13 +190,13 @@
                             Here, $R$ and  $S$ are ${3 \times 3}$ rotation and scale matrices, respectively. 
                         </p>
                         <p>
-                            This formulation can be further rewritten to emphasize its equivalence to the 3D ellipsoid (anisotropic) matrix, implying that 3D Gaussian Splatting employs an opaque ellipsoid in 3D space, 
+                            This formulation can be further rewritten to emphasize its equivalence to the 3D ellipsoid (anisotropic) matrix, implying that 3D Gaussian Splatting employs an semitransparent ellipsoid in 3D space, 
                             with density defined by a Gaussian distribution, as its primitive kernel.
                         </p>
                         <div class="math-container">
                             $$ \begin{aligned}
                             \Sigma 
-                            & = R (SS^{\rm T}) R^{\rm T} \\ 
+                            & = R (SS^{\rm T}) R^{\rm T} \\ \\
                             & = R 
                             \begin{bmatrix} 
                             s_1^2 & 0 & 0 \\
@@ -259,7 +259,7 @@ cov3D[5] = Sigma[2][2];</code>
                         <ul>
                             <li> $S$: 3x3 diagonal matrix,</li>
                             <br/>
-                            <li> $R$: Calculated using the <a href="https://en.m.wikipedia.org/wiki/Quaternions_and_spatial_rotation">quaternion to rotation matrix</a> formula
+                            <li> $R$: Calculated using the <span style="text-decoration: underline;"><a href="https://en.m.wikipedia.org/wiki/Quaternions_and_spatial_rotation">quaternion to rotation matrix</a></span> formula
                             <div class="math-container">
                                 $$ R = \begin{bmatrix}
                                 1 - 2y^2 - 2z^2 & 2xy - 2zw & 2xz + 2yw \\
@@ -268,7 +268,7 @@ cov3D[5] = Sigma[2][2];</code>
                                 \end{bmatrix} $$
                             </div>
                             </li>
-                            <li> <em>cov3D</em>: Since it is symmetric, we only need to store the right upper triangle.</li>
+                            <li> <em>cov3D</em>: Since the covariance matrix is symmetric, we only need to store the right upper triangle.</li>
                         </ul>
                         <br/>
 
@@ -282,7 +282,7 @@ cov3D[5] = Sigma[2][2];</code>
                         
 
                         <p>
-                            To render a 3D scene onto a 2D image, it is necessary to project the covariance matrix of the Gaussian, defined in the world coordinate system, into image space. 
+                            To render a 3D scene onto a 2D image, it is necessary to project the covariance matrix of the Gaussian. 
                             The authors address this projection using a method proposed in Elliptical Weighted Average (EWA) Splatting:
                         </p>
                         <div class="math-container">
@@ -292,7 +292,7 @@ cov3D[5] = Sigma[2][2];</code>
                         <ul>
                             <li> 
                                 <p>
-                                    This transformation can be understood through the same lens as quadratic forms: converting the covariance matrix from <em>world coordinate system → camera space → ray space</em>.
+                                    This transformation can be understood through the same aspect as quadratic forms: converting the covariance matrix from <em>world coordinate system → camera space → ray space</em>.
                                 </p>
                             </li>
                             <li> 
@@ -301,11 +301,11 @@ cov3D[5] = Sigma[2][2];</code>
                                     The approximated transformation $\phi$ is represented as
                                     
                                     <div class="math-container">
-                                        $$ \phi(x) = \phi(t) + J \cdot (x - t) $$
+                                        $$ \phi(x) = \phi(t) + J \cdot (x - t). $$
                                     </div>
 
-                                    As this is a first-order Taylor approximation, there will be approximation errors as one moves away from the center of the Gaussian. 
-                                    Recent studies have highlighted this perspective error as a limitation of 3D Gaussian Splatting and proposed methods to address it.
+                                    As this is a first-order Taylor approximation, there should be an approximation error as a point moves away from the center of the Gaussian. 
+                                    Recent studies have highlighted this perspective error as a limitation of Gaussian Splatting and proposed methods to address it.
                                 </p>
                             </li>
                         </ul>
@@ -319,7 +319,7 @@ cov3D[5] = Sigma[2][2];</code>
                             \end{bmatrix}
                         </div>
                         <p> 
-                            In practical implementation, considering:
+                            In practical, when considering
                         </p>
                         <ul>
                             <li>
@@ -333,11 +333,11 @@ cov3D[5] = Sigma[2][2];</code>
                             </li>
                             <li>
                                 <p> 
-                                    the covariance matrix in image space is of 2x2, so the 3rd row (z-axis) of the projected covariance is not actually used, 
+                                    and the covariance matrix in image space is of 2x2 (so the 3rd row of the projected covariance remains unused),
                                 </p>
                             </li>
                         </ul>
-                        <p> leading to the following implementation: </p>
+                        <p> the implementation proceeds as follows: </p>
                         <div class="math-container">
                             \begin{bmatrix} 
                             f_x / t_2 & 0 & -f_x \cdot t_0 / t_2^2 \\
@@ -394,7 +394,7 @@ glm::mat3 cov = glm::transpose(T) * glm::transpose(Vrk) * T;</code>
 
                         <p>
                             To calculate the density value, the inverse of the projected covariance matrix is required. 
-                            The following code snippet illustrates the implementation, incorporating linear algebra techniques to ensure numerical stability:
+                            The following code snippet illustrates the implementation, incorporating linear algebra techniques to ensure numerical stability.
                         </p>
 
                         <p>
