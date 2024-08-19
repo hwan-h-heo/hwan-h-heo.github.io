@@ -93,10 +93,23 @@
         </header>
         <!-- Post Content-->
         <article class="mb-4">
+            <nav class="toc">
+                <ul>
+                    <li><a href="#sec1"> Introduction </a></li>
+                    <li>
+                        <a href="#sec2"> Generating 3D Vertices and Faces from Depth Maps </a>
+                    </li>
+                    <li><a href="#sec3"> Texturing the Mesh from Depth Maps </a></li>
+                    <li>
+                        <a href="#sec4"> Result & Analysis </a>
+                    </li>
+                    <li><a href="#closing"> Closing </a></li>
+                </ul>
+            </nav>
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
-                        <h2>1. Introduction</h2>
+                        <h2 id="sec1">1. Introduction </h2>
                         <p>
                             The success of 2D diffusion models has inspired researchers to explore the diffusion process of 
                             geometric information, such as depth and normal maps. 
@@ -127,7 +140,8 @@
                             aiming to qualitatively evaluate the performance of state-of-the-art depth estimation models, 
                             such as Marigold.
                         </p>
-                        <h2>2. Generating 3D Vertices and Faces from Depth Maps</h2>
+
+                        <h2 id="sec2">2. Generating 3D Vertices and Faces from Depth Maps</h2>
                         <p>
                             Our initial step involves using the Marigold model as a baseline for depth estimation. 
                             Despite its relatively lightweight architecture, Marigold is known for its high performance 
@@ -245,7 +259,7 @@ def move_top_right(mask):
                             as it is currently executed in a non-parallelized manner using a <em>for</em> loop.
                         </p>
 
-                        <h2>3. Texturing the Mesh from Depth Maps</h2>
+                        <h2 id="sec3">3. Texturing the Mesh from Depth Maps</h2>
                         <p>
                             Texturing is a critical aspect of 3D asset creation. For the task at hand, using the image pixel colors as vertex colors is effective, given that the number of vertices corresponds to the image size.
                         </p>
@@ -272,7 +286,7 @@ def move_top_right(mask):
                             The current implementation successfully generates meshes of a manageable size for HD and FHD images. However, for 4K images, the excessive number of vertices and faces may hinder visualization in tools like MeshLab. In such cases, reducing the number of mesh vertices through the aforementioned simplifications is advisable. Additionally, applying Laplacian smoothing beyond three iterations is discouraged, as it significantly increases the number of faces, particularly with FHD inputs.
                         </p>
 
-                        <h2>4. Results & Analysis</h2>
+                        <h2 id="sec4"> 4. Results & Analysis</h2>
                         <p>
                             We generated textured meshes using four images from the Marigold Demo.
                             The results are shown below:
@@ -315,7 +329,7 @@ def move_top_right(mask):
                             Zooming in on the front view reveals that the stripes on the torso were incorrectly inferred as part of the background. The extreme discontinuities in the depth map exacerbate the difficulty of accurate estimation in such cases.
                         </p>
                         
-                        <h2>5. Conclusion</h2>
+                        <h2 id="closing"> Closing </h2>
                         <p>
                             In this study, we explored the process of generating textured meshes from depth maps to qualitatively assess the depth estimation quality of diffusion-based models and other generative techniques.
                         </p>

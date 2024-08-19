@@ -104,9 +104,29 @@
             <nav class="toc">
                 <ul>
                     <li><a href="#sec1"> 3D Gaussian as Primitive Kernel</a></li>
-                    <li><a href="#sec2"> Splatting (Projection of Primitives)</a></li>
+                    <li>
+                        <a href="#sec2"> Splatting (Projection of Primitives)</a>
+                    </li>
+                    <ul>
+                        <li>
+                            <a href="#sec2.1"> Projection </a>
+                        </li>
+                        <li>
+                            <a href="#sec2.2"> Density of the projected Gaussian </a>
+                        </li>
+                    </ul>
                     <li><a href="#sec3"> Parallel Rasterization</a></li>
-                    <li><a href="#sec4"> MISC</a></li>
+                    <li>
+                        <a href="#sec4"> MISC</a>
+                    </li>
+                    <ul>
+                        <li>
+                            <a href="#sec4.1"> Camera Model </a>
+                        </li>
+                        <li>
+                            <a href="#sec4.2"> Mimic Luma AI </a>
+                        </li>
+                    </ul>
                     <li><a href="#closing">Closing</a></li>
                 </ul>
               <svg class="toc-marker" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
@@ -254,7 +274,7 @@ cov3D[5] = Sigma[2][2];</code>
 
                         <h2 id="sec2">2. Splatting (Projection of Primitives)</h2>
                         <br/>
-                        <h3>2.1. Projection</h3>
+                        <h3 id="sec2.1">2.1. Projection</h3>
                         <figure>
                             <img src="assets/splatting.png" alt="Splatting of primitives" style="width:55%">
                             <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 3.</strong> Projection of 3D Gaussian, <br/> source: <span style="text-decoration: underline;"><a href="https://dl.acm.org/doi/10.1145/3355089.3356513"><em>Differentiable Surface Splatting for Point-based Geometry Processing </em></a></span> </figcaption>
@@ -348,7 +368,7 @@ glm::mat3 cov = glm::transpose(T) * glm::transpose(Vrk) * T;</code>
                         </pre>
                         <br/>
                         
-                        <h3>2.2. Density of the Projected Gaussian </h3>
+                        <h3 id="sec2.2">2.2. Density of the Projected Gaussian </h3>
                         <p>
                             For a point $p$ in 3D space, the density $f_i(p)$ of the $i$th Gaussian can be defined as follows:
                         </p>
@@ -570,9 +590,10 @@ __shared__ float4 collected_conic_opacity[BLOCK_SIZE];</code></pre>
                         </p>
 
                         <br/>
-                        <h2 id="sec4">4. Miscellaneous </h2>
+                        <h2 id="sec4"> 4. Miscellaneous </h2>
                         <br/>
-                        <h3>4.1. Camera Model </h3>
+
+                        <h3 id="sec4.1"> 4.1. Camera Model </h3>
                         <p>
                             In the current implementation, the matrix $J$ serves as an approximation of the perspective projection 
                             in a pinhole camera model. Consequently, it is not suitable for rendering images using different 
@@ -610,7 +631,8 @@ glm::mat3 J = glm::mat3(
                         <p>
                             For more details, refer to <a href="https://github.com/inuex35/360-gaussian-splatting">360 Gaussian Splatting</a>
                         </p>
-                        <h3>4.2. Mimic Luma AI </h3>
+
+                        <h3 id="sec4.2"> 4.2. Mimic Luma AI </h3>
                         <p>
                             The article's teaser video showcases a rendering by Luma AI, a company founded by the NeRFStudio team. 
                             I recently came across this fascinating 3D scene rendering and decided to give it a try. 
