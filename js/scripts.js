@@ -123,3 +123,12 @@ window.onload = function() {
     const savedLang = localStorage.getItem('language') || 'eng';
     setLanguage(savedLang);
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll('p, h1, h2, h3, span').forEach(function(element) {
+        if (/[가-힣]/.test(element.innerText)) {
+            element.style.fontSize = '1.2rem';
+            element.style.fontFamily = 'Noto Sans KR';
+        }
+    });
+});

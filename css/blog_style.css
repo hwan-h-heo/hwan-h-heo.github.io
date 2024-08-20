@@ -10,6 +10,88 @@
  * Copyright 2011-2022 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
+ @font-face	{
+	font-family:'NanumSquare';
+	src:url('font/NanumSquareR.woff') format('woff');
+	unicode-range:U+AC00-D7A3;	/* 한글 */
+}
+
+@font-face {
+  font-family: 'NanumBarunGothic';
+  font-weight: 400;
+  unicode-range:U+AC00-D7A3;
+  src: local("나눔바른고딕"),
+       url(NanumBarunGothicSubset.woff2) format('woff2'),
+       url(NanumBarunGothicSubset.woff) format('woff'),
+       url(NanumBarunGothicSubset.ttf) format('truetype');
+  
+ }
+ @font-face {
+  font-family: 'NanumBarunGothic';
+  font-weight: 700;
+  unicode-range:U+AC00-D7A3;
+  src: local("나눔바른고딕 Bold"),
+       url(NanumBarunGothicBoldSubset.woff2) format('woff2'),
+       url(NanumBarunGothicBoldSubset.woff) format('woff'),
+       url(NanumBarunGothicBoldSubset.ttf) format('truetype');
+ }
+ @font-face {
+  font-family: 'NanumBarunGothic';
+  font-weight: 300;
+  unicode-range:U+AC00-D7A3;
+  src: local("나눔바른고딕 Light"),
+       url(NanumBarunGothicLightSubset.woff2) format('woff2'),
+       url(NanumBarunGothicLightSubset.woff) format('woff'),
+       url(NanumBarunGothicLightSubset.ttf) format('truetype');
+ }
+ @font-face {
+  font-family: 'NanumBarunGothic';
+  font-weight: 200;
+  unicode-range:U+AC00-D7A3;
+  src: local("나눔바른고딕 UltraLight"),
+       url(NanumBarunGothicUltraLightSubset.woff2) format('woff2'),
+       url(NanumBarunGothicUltraLightSubset.woff) format('woff'),
+       url(NanumBarunGothicUltraLightSubset.ttf) format('truetype');
+ }
+
+ @font-face {
+  font-family: 'NanumGothic';
+  unicode-range:U+AC00-D7A3;
+  src: url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothic/NanumGothic.eot);
+  src: url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothic/NanumGothic.eot?#iefix) format("embedded-opentype"), url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothic/NanumGothic.woff) format("woff"), url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothic/NanumGothic.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: 'NanumGothicBold';
+  unicode-range:U+AC00-D7A3;
+  src: url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothic/NanumGothicBold.otf) format("embedded-opentype"), url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothic/NanumGothicBold.ttf) format("truetype"), url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothic/NanumGothicBold.woff) format("woff");
+}
+
+@font-face {
+  font-family: 'NanumGothicExtraBold';
+  unicode-range:U+AC00-D7A3;
+  src: url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothic/NanumGothicExtraBold.otf) format("embedded-opentype"), url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothic/NanumGothicExtraBold.ttf) format("truetype"), url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothic/NanumGothicExtraBold.woff) format("woff");
+}
+
+@font-face {
+  font-family: 'NanumGothicLight';
+  unicode-range:U+AC00-D7A3;
+  src: url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothic/NanumGothicLight.otf) format("embedded-opentype"), url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothic/NanumGothicLight.ttf) format("truetype"), url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothic/NanumGothicLight.woff) format("woff");
+}
+
+@font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 100;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.otf) format('opentype');}
+
+@font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 300;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.otf) format('opentype');}
+
+@font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 400;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.otf) format('opentype');}
+
+@font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 500;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.otf) format('opentype');}
+
+@font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 700;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.otf) format('opentype');}
+
+@font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 900;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.otf) format('opentype');}
+
+
 :root {
   --bs-blue: #0d6efd;
   --bs-indigo: #6610f2;
@@ -54,7 +136,7 @@
   --bs-black-rgb: 0, 0, 0;
   --bs-body-color-rgb: 33, 37, 41;
   --bs-body-bg-rgb: 255, 255, 255;
-  --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "NanumGothic";
   --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
   --bs-body-font-family: Lora, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
@@ -95,6 +177,18 @@ body {
   margin: 0;
   font-family: var(--bs-body-font-family);
   font-size: var(--bs-body-font-size);
+  font-weight: var(--bs-body-font-weight);
+  line-height: var(--bs-body-line-height);
+  color: var(--bs-body-color);
+  text-align: var(--bs-body-text-align);
+  background-color: var(--bs-body-bg);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.hangul-text {
+  font-family: 'NanumGothic';
+  font-size: 1.2rem;
   font-weight: var(--bs-body-font-weight);
   line-height: var(--bs-body-line-height);
   color: var(--bs-body-color);
