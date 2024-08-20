@@ -125,7 +125,7 @@ window.onload = function() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    document.querySelectorAll('p, h1, h2, h3, span').forEach(function(element) {
+    document.querySelectorAll('p, h1, h2, h3, h4, ul, ol, li, span').forEach(function(element) {
         if (/[가-힣]/.test(element.innerText)) {
             element.style.fontSize = '1.2rem';
             element.style.fontFamily = 'Noto Sans KR';
