@@ -108,3 +108,18 @@ document.addEventListener('DOMContentLoaded', function() {
     initTocItems();
     sync(); // Initial sync to set the correct active item on page load
 });
+
+
+function setLanguage(lang) {
+    localStorage.setItem('language', lang);
+    document.querySelectorAll('.lang').forEach(el => {
+        if (!el.classList.contains('fixed')) {
+            el.style.display = el.classList.contains(lang) ? 'block' : 'none';
+        }
+    });
+}
+
+window.onload = function() {
+    const savedLang = localStorage.getItem('language') || 'eng';
+    setLanguage(savedLang);
+}
