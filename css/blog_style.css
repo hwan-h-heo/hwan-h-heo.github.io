@@ -205,7 +205,7 @@ div.lang.kor {
 
 .toc {
   position: fixed;
-  top: 35vh;
+  top: 50%;
   left: 75vw;
   right: 5vw;
   padding: 1em;
@@ -213,7 +213,10 @@ div.lang.kor {
   line-height: 2;
   font-size: 0.8em;
   display: none;
+  transform: translateY(-50%);
 }
+
+
 .toc  ul {
     list-style: none;
     padding: 0;
