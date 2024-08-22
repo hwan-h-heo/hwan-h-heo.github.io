@@ -139,7 +139,7 @@
                             This performance, faster than any other NeRF-based method, is achieved through a well-designed tile-based rasterization process. 
                             This article aims to explore 3D Gaussian Splatting from the perspective of rasterization, providing an in-depth understanding of its underlying mechanisms.
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             3D Gaussian Splatting 의 최대 장점은 그 무엇보다도 100fps 이상의 렌더링 '속도' 이다.
                             그 어떤 NeRF-based method 보다도 빠른 이 속도는 잘 설계된 tile-based rasterization 덕분인데, 
                             오늘은 이 rasterization 관점에서 3D Gaussin Splatting 을 (최대한) 완벽하게 이해해보는 시간을 갖도록 해보자.
@@ -157,7 +157,7 @@
                             The explicit representation offers several advantages, as discussed in a previous review of 2D Gaussian Splatting 
                             (please refer to the <a href="../240602_2dgs/post.html">linked article</a>. for more details).
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             3D Gaussian Splatting 의 기본 idea 는, implicit 한 NeRF 와 다르게 explicit 하고 학습 가능한 primitives 
                             로 scene 을 표현하자는 것이다. (explicit 한 표현으로 갖는 여러가지 장점이 있는데, 
                             이는 저번 2D GS review 에서 언급한 바 있으니 궁금하다면 <a href="../240602_2dgs/post.html">링크</a>를 참조하기 바란다.)
@@ -165,7 +165,7 @@
                         <p class="lang eng">
                             The authors define the kernel for these primitives (particles)  using the following 3D Gaussian function:
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             저자들은 이러한 primitive (particle) 에 대한 kernel 을 다음과 같은 3D Gaussian function 으로 정의하였다.
                         </p>
                         <div class="math-container">
@@ -175,7 +175,7 @@
                         <p class="lang eng"> 
                             The choice of the kernel design is justified by several factors outlined in the paper:
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             이 kernel design 에 대해서 꼭 3D Gaussian 이어야 했나? 라는 의문이 들 수 있는데, 논문에 언급된 몇 가지 도입 이유가 있다.
                         </p>
                         <ul class="lang eng">
@@ -187,7 +187,7 @@
                                 <strong>Ease of Projection to 2D: </strong> The Gaussian function allows for straightforward and well-defined projection to 2D, enabling fast alpha blending.
                             </li>
                         </ul>
-                        <ul class="lang kor">
+                        <ul class="lang kor" style="display: none;">
                             <li> 
                                 학습을 위해 differentiable 할 것
                             </li>
@@ -196,7 +196,7 @@
                                 빠른 alpha blending 을 위해서 2D 로의 projection 이 쉽고 잘 정의되어 있을 것
                             </li>
                         </ul>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             해당 기준 정도만 만족하면 어떤 kernel design 을 사용해도 무방할 것 같고, 실제로 최근 3D Gaussian Ray Tracing 에서 
                             여러가지 kernel 로 실험해봤는데, 성능에 큰 차이 없었다고 한다.
                         </p>
@@ -205,7 +205,7 @@
                             The covariance matrix $\Sigma$ is critical in defining the kernel's shape, and its physical meaning is preserved only if it is <em>positive definite</em>.
                             The authors suggest organizing the covariance matrix in the following form to facilitate learning: 
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             Covariance Matrix 는 positive definite 일 때만 물리적인 의미를 가지므로, 저자들은 학습의 용이성을 위해 covariance matrix 를 다음과 같은 형태로 구성할 것을 제안한다.
                         </p>
                         
@@ -215,14 +215,14 @@
                         <p class="lang eng"> 
                             Here, $R$ and  $S$ are ${3 \times 3}$ rotation and scale matrices, respectively. 
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             여기서 $R$, $S$ 는 각각 ${3 \times 3}$ rotation, scale matrix 이다. 
                         </p>
                         <p class="lang eng">
                             This formulation can be further rewritten to emphasize its equivalence to the 3D ellipsoid (anisotropic) matrix, implying that 3D Gaussian Splatting employs an semitransparent ellipsoid in 3D space, 
                             with density defined by a Gaussian distribution, as its primitive kernel.
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             이 covariance matrix 를 다음과 같이 약간 바꿔서 쓸 수 있는데, covariance matrix 의 형태가 3D ellipsoid (anistropic) matrix 와 같은 것을 알 수 있다. 
                             즉 3D GS 는 3D 상의 불투명한 (Gaussian Distribution 으로 density 가 정의되는) 타원체를 primitive kernel 로 사용한 것이다.
                         </p>
@@ -246,7 +246,7 @@
                                 This perspective is also applicable to eigendecomposition, which analyzes the significance of each axis (eigenvalues) in a coordinate system where the axes' orientation (eigenvectors) remains unchanged under linear transformation. 
                                 This understanding elucidates the relationship between Principal Component Analysis (PCA) and eigendecomposition.
                             </p>
-                            <p class="lang kor">
+                            <p class="lang kor" style="display: none;">
                                 <strong>Tip.</strong> Quadratic form $A^{-1}MA$ 을 다룰 때는, $M$ transformation in $A$ coordinate system 이라고 해석하면 좋을 때가 많다.
                                 이는 eigendecomposition 을 해석할 때도 마찬가지인데, 선형변환에도 방향이 보존되는 axis (eigenvectors) 로 이루어진 coordinate system 에서, 
                                 각 axis 가 어느 정도의 가중치를 가지고 있는지 (eigenvalues) 분석하는 것이 eigendecomposition 이다. 이렇게 생각하면 PCA 가 왜 eigendecomposition 과 연관있는지 자명하다.
@@ -269,10 +269,10 @@
                             </li>
                         </ul>
 
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             다시 말해, 정의된 Covariance matrix 는
                         </p>
-                        <ul class="lang kor">
+                        <ul class="lang kor" style="display: none;">
                             <li>
                                 <p>
                                     ellipsoid 의 각 principal axis 가 basis 인 coordinate system 에서의 intensity matrix (squared scale) 를
@@ -284,7 +284,7 @@
                                 </p>
                             </li>
                         </ul>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             이라고도 해석할 수 있다.
                         </p>
 
@@ -313,7 +313,7 @@ cov3D[5] = Sigma[2][2];</code>
                         </pre>
 
                         <p class="lang eng"> Here, Note that </p>
-                        <p class="lang kor"> 여기서, </p>
+                        <p class="lang kor" style="display: none;"> 여기서, </p>
                         <ul class="lang eng">
                             <li> $S$: 3x3 diagonal matrix,</li>
                             <br/>
@@ -328,7 +328,7 @@ cov3D[5] = Sigma[2][2];</code>
                             </li>
                             <li> <em>cov3D</em>: Since the covariance matrix is symmetric, we only need to store the right upper triangle.</li>
                         </ul>
-                        <ul class="lang kor">
+                        <ul class="lang kor" style="display: none;">
                             <li> $S$: 3x3 diagonal matrix,</li>
                             <br/>
                             <li> $R$: <span style="text-decoration: underline;"><a href="https://en.m.wikipedia.org/wiki/Quaternions_and_spatial_rotation">quaternion to rotation matrix</a></span> 공식을 통해서 계산되었다.
@@ -357,14 +357,14 @@ cov3D[5] = Sigma[2][2];</code>
                             To render a 3D scene onto a 2D image, it is necessary to project the covariance matrix of the Gaussian. 
                             The authors address this projection using a method proposed in Elliptical Weighted Average (EWA) Splatting:
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             이제 world system 위에 정의된 gaussian 의 covariance matrix 를 image space 에 projection 할 방법이 필요한데, 
                             저자들은 EWA Splatting 에서 제안된, 다음과 같은 방법으로 이를 해결한다.
                         </p>
                         <div class="math-container">
                             $$ \Sigma^{\prime} = JW\Sigma (JW)^{\rm T} $$
                         </div>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             이 식의 의미를 조금 더 자세히 분석해보도록 하자.
                         </p>
 
@@ -388,7 +388,7 @@ cov3D[5] = Sigma[2][2];</code>
                                 </p>
                             </li>
                         </ul>
-                        <ul class="lang kor">
+                        <ul class="lang kor" style="display: none;">
                             <li> 
                                 <p>
                                     이 변환에도 quadratic form 에 대해 같은 해석이 가능하다. 즉, <em>world coordinate system → camera space → ray space</em> 에서의 covariance matrix 를 의미한다. 
@@ -411,7 +411,7 @@ cov3D[5] = Sigma[2][2];</code>
                         </ul>
 
                         <p class="lang eng"> The Jacobian matrix $J$ for the perspective projection is derived as follows: </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             Perspective projection 에 대한 Jacobian $J$ 는 다음과 같이 유도되며,
                         </p>
                         <div class="math-container">
@@ -424,7 +424,7 @@ cov3D[5] = Sigma[2][2];</code>
                         <p class="lang eng"> 
                             In practical, when considering
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             실제 구현에서는
                         </p>
                         <ul>
@@ -441,14 +441,14 @@ cov3D[5] = Sigma[2][2];</code>
                                 <p class="lang eng"> 
                                     and the covariance matrix in image space is of 2x2 (so the 3rd row of the projected covariance remains unused),
                                 </p>
-                                <p class="lang kor">
+                                <p class="lang kor" style="display: none;">
                                     image space 에서 필요한 covariance matrix 는 2x2 형태이기 때문에 projection 된 covariance 의 3rd row (z-axis) 는 실제로 사용되지 않으므로
                                 </p>
                             </li>
                         </ul>
 
                         <p class="lang eng"> the implementation proceeds as follows: </p>
-                        <p class="lang kor"> 아래의 형태로 구현되어 있다. </p>
+                        <p class="lang kor" style="display: none;"> 아래의 형태로 구현되어 있다. </p>
                         <div class="math-container">
                             \begin{bmatrix} 
                             f_x / t_2 & 0 & -f_x \cdot t_0 / t_2^2 \\
@@ -483,7 +483,7 @@ glm::mat3 cov = glm::transpose(T) * glm::transpose(Vrk) * T;</code>
                         <p class="lang eng">
                             For a point $p$ in 3D space, the density $f_i(p)$ of the $i$th Gaussian can be defined as follows:
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             실제 rendering 시에는 Gaussian density 값과 opacity 값을 곱하여 사용하기 때문에, 3D 공간 위의 점 $p$ 에 대해, 
                             $i$th Gaussian 의 density $f_i(p)$ 를 다음과 같이 정의할 수 있다.
                         </p>
@@ -498,7 +498,7 @@ glm::mat3 cov = glm::transpose(T) * glm::transpose(Vrk) * T;</code>
                                 <p class="lang eng">
                                     This equation represents a <em>weighted (by opacity) probability density function</em> for a multivariate (3D) normal distribution.
                                 </p>
-                                <p class="lang kor">
+                                <p class="lang kor" style="display: none;">
                                     이는 multivariate (3D) normal distribution 에 대한 <em>weighted (by opacity) probability density function</em> 라고도 볼 수 있다.
                                 </p>
                             </li>
@@ -508,7 +508,7 @@ glm::mat3 cov = glm::transpose(T) * glm::transpose(Vrk) * T;</code>
                                     which quantifies the distance (or similarity) within an ellipsoid based on its scale. 
                                     Intuitively, the closer a 3D point is to the Gaussian center, the more opaque the Gaussian appears, leading to a higher response.
                                 </p>
-                                <p class="lang kor">
+                                <p class="lang kor" style="display: none;">
                                     inner exponential 의 값은 <a href="https://en.wikipedia.org/wiki/Mahalanobis_distance">Mahalanobis Distance</a> 인데, 
                                     3D 상에서 이 값은 scale 을 고려한 ellipsoid 내에서 거리 ( Similarity) 라고 볼 수 있다. 
                                     즉, 어떤 3D 상의 point 에서, Gaussian 과 가까울수록, Gaussian 이 opaque 할수록 response 가 커야하는 직관과 정확히 일치한다.
@@ -527,7 +527,7 @@ glm::mat3 cov = glm::transpose(T) * glm::transpose(Vrk) * T;</code>
                                 The actual end of this code is implemented as follows, 
                             </p>
                         </div>
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p class=>
                                 위 density 값을 계산하려면 projection 된 covaraiance 의 inverse matrix 가 필요하다. 
                                 코드 상으론 inverse 를 구하는 과정에서 선형대수를 이용한 트릭이 좀 있으니 살펴보도록 하자.
@@ -545,7 +545,7 @@ return { float(cov[0][0]), float(cov[0][1]), float(cov[1][1]) };</code></pre>
                         <p class="lang eng">  
                             which is the same as finding the inverse of the following inverse matrix, $(A=(RS)^{\rm T})$
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             이는 아래 식의 inverse matrix 를 구하는 것과 동일한 것을 알 수 있다 $(A=(RS)^{\rm T})$. 
                         </p>
                         <p> $$ A^{\rm T}A+\lambda \mathbf{I} $$</p>
@@ -554,7 +554,7 @@ return { float(cov[0][0]), float(cov[0][1]), float(cov[1][1]) };</code></pre>
                             Since the covariance matrix is <em>positive semidefinite</em>, adding a small $\lambda$ ensures that the covariance matrix 
                             remains positive definite, preventing numerical instability during matrix inversion.
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             covariance matrix 가 positive semidefinite 이기 때문에, 
                             small $\lambda$ 를 더해주면 다음과 같이 covariance matrix 가 positive definite 이 되므로
                             inverse matrix 를 구할 때 numerical unstability 가 방지된다.
@@ -577,7 +577,7 @@ float3 conic = { cov.z * det_inv, -cov.y * det_inv, cov.x * det_inv };</code></p
                                 <p class="lang eng">
                                     Note that the inverse matirx formula for 2x2 matrix is
                                 </p>
-                                <p class="lang kor">
+                                <p class="lang kor" style="display: none;">
                                     2x2 matrix 의 inverse matirx formula 는 다음과 같음을 기억하자
                                 </p>
                                 <div class="math-container">
@@ -599,7 +599,7 @@ float3 conic = { cov.z * det_inv, -cov.y * det_inv, cov.x * det_inv };</code></p
                                 <p class="lang eng">
                                     Also note that the inverse of cov is called conic, presumably because the definition of <a href="https://en.wikipedia.org/wiki/Conic_section">conic section</a>. 
                                 </p>
-                                <p class="lang kor">
+                                <p class="lang kor" style="display: none;">
                                     또한 cov 의 inverse 를 conic 이라고 명명하고 있는데, 이는 아마 ellipsoid 등이 <a href="https://en.wikipedia.org/wiki/Conic_section">conic section</a> 으로 정의되기 때문인 것 같다.
                                 </p>
                                 <img src="assets/conic.png" width="60%">
@@ -610,7 +610,7 @@ float3 conic = { cov.z * det_inv, -cov.y * det_inv, cov.x * det_inv };</code></p
                         <p class="lang eng">
                             Finally, the radius of each splat is calculated to ensure it covers at least 99.7% of the Gaussian distribution:                            
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             마지막으로 각 splats 의 radius 를, 99.7% 이상 cover 가능한
                         </p>
                         <div class="math-container">
@@ -620,7 +620,7 @@ float3 conic = { cov.z * det_inv, -cov.y * det_inv, cov.x * det_inv };</code></p
                         <p class="lang eng">
                             It is used for Gaussian culling (masking) purposes. (Otherwise, you would have to query all Gaussians in the scene....)
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             으로 정의해서, 이 값을 Gaussian culling (masking) 하는 용도로 사용한다. (그렇지 않으면 scene 안의 모든 Gaussian 에 query 해야 한다….)
                         </p>
 
@@ -628,7 +628,7 @@ float3 conic = { cov.z * det_inv, -cov.y * det_inv, cov.x * det_inv };</code></p
                             The standard deviation of the 3D Gaussian, defined by the covariance matrix, corresponds to the eigenvalue,
                             which can be obtained using the following <a href="https://en.wikipedia.org/wiki/Characteristic_polynomial">Characteristic equation</a>:
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             Covariance matrix 로 정의된 3D Gaussian 의 standard deviation 은 eigenvalue 와 같으므로, 
                             다음의 <a href="https://en.wikipedia.org/wiki/Characteristic_polynomial">Characteristic equation</a>
                             을 푸는 것으로 standard deviation 을 구할 수 있다.
@@ -642,7 +642,7 @@ float3 conic = { cov.z * det_inv, -cov.y * det_inv, cov.x * det_inv };</code></p
                         <p class="lang eng">
                             Since this is a quadratic equation for $\lambda$, it has the famous closed form solution :) The code also uses the quadratic formula to find the value of the lambda. 
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             이는 $\lambda$ 에 대한 2차 방정식이므로, 너무나 유명한 closed form solution (근의 공식) 이 존재한다 :) 코드에도 근의 공식을 통해 lambda 값을 구하도록 되어있다.
                         </p>
                         <pre class="language-cpp" style="font-size: 16px;"><code>// compute inverse of the covariance 2D
@@ -671,7 +671,7 @@ float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));</code></pre>
                                 Let’s break down the algorithm step-by-step:
                             </p>
                         </div>
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>
                                 Gaussian kernel 의 정의와, 이 kernel 이 image space 상에 어떻게 projection 되는지 알고 있으므로, 이제 우리는
                                 ray 와 intersect 하는 Gaussian 들에 대해 density 와 opacity 값을 depth order 로만 정렬해서 모으면 
@@ -698,7 +698,7 @@ float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));</code></pre>
                                     The first step involves dividing the screen into 16x16 size tiles.
                                     This division is essential for CUDA parallelization, enabling efficient rasterization by allowing the GPU to process multiple tiles simultaneously.
                                 </p>
-                                <p class="lang kor">
+                                <p class="lang kor" style="display: none;">
                                     Screen 을 16x16 크기의 tile 로 나눈다.<br/>
                                     이는 CUDA 병렬화 작업을 위해 (전체 tile 개수, 256) 의 grid, thread block 으로 나누어 rasterization 을 진행하기 위함이다.
                                 </p>
@@ -710,7 +710,7 @@ float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));</code></pre>
                                     Once the screen is divided into tiles, the algorithm performs frustum culling. 
                                     This step involves discarding Gaussians that fall outside the camera's view frustum, ensuring that only relevant Gaussians are processed. 
                                 </p>
-                                <p class="lang kor">
+                                <p class="lang kor" style="display: none;">
                                     Frustum culling 으로 valid gaussian 만 남긴다. (See fig.)
                                 </p>
                                 <img src="assets/culling.png" width="50%" height="40%" alt="Frustum Culling">
@@ -722,7 +722,7 @@ float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));</code></pre>
                                     Gaussians that overlap with multiple tiles are duplicated, a process known as instantiation. 
                                     This ensures that each tile contains all relevant Gaussians for accurate rendering.
                                 </p>
-                                <p class="lang kor">
+                                <p class="lang kor" style="display: none;">
                                     Tile 마다 겹치는 Gaussian 은 복제하여 사용한다. (Instantiate)
                                 </p>
                             </li>
@@ -734,7 +734,7 @@ float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));</code></pre>
                                     Without depth sorting, the rendering would result in visually disordered overlapping Gaussians. 
                                     Importantly, this sorting is done before the execution of each CUDA thread block, ensuring that primitives are pre-sorted, rather than sorting them on a per-tile basis during rendering.
                                 </p>
-                                <p class="lang kor">
+                                <p class="lang kor" style="display: none;">
                                     (각 tile 에서) Gaussian 을 depth order 로 정렬한다 (using GPU radix sort) <br/>
                                 </p>
                                 <ul class="lang kor">
@@ -754,10 +754,10 @@ float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));</code></pre>
                                     To minimize memory bottlenecks, thread blocks store necessary information, such as Gaussian properties, in shared memory. 
                                     The final color value for each pixel is calculated by accumulating opacity and color along the sorted Gaussians.
                                 </p>
-                                <p class="lang kor">
+                                <p class="lang kor" style="display: none;">
                                     정렬된 Gaussian 를 통해 각 tile 마다 작업 범위를 설정하고, Tile 마다 one CUDA thread block 을 실행하여 병렬로 rasterize 를 진행한다.
                                 </p>
-                                <ul class="lang kor">
+                                <ul class="lang kor" style="display: none;">
                                     <li>
                                         각 thread block 은 메모리 병목을 줄이기위해 몇 가지 정보를 shared memory 에 저장해놓는다.
                                     </li>
@@ -775,7 +775,7 @@ float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));</code></pre>
                         <p class="lang eng">
                             The <code>__shared__</code> variable is utilized to store variables like IDs, opacity values, and pixel coordinates. The relevant data, including the projected covariance and spherical harmonics color of each Gaussian, is precomputed and stored in shared memory before the rasterization of each tile begins.
                         </p>
-                        <p class="lang kor"> 
+                        <p class="lang kor" style="display: none;"> 
                             <code>__shared__</code> variable 에 실제로 id, opacity, pixel coord 등의 값을 저장해놓고 있도록 구현되어 있다. 즉 Gaussian 의 projected covariance, spherical harmoics color 등은 tile 단위의 계산이 일어나기 전에 이미 계산을 마치고 shared memory 에 저장되어 있다.
                         </p>
                         <pre class="language-cpp" style="font-size: 16px;"><code>// Allocate storage for batches of collectively fetched data.
@@ -784,10 +784,10 @@ __shared__ float2 collected_xy[BLOCK_SIZE];
 __shared__ float4 collected_conic_opacity[BLOCK_SIZE];</code></pre>
                         <br/>
 
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             Also, The color accumulation process, which calculates the final color at pixel $x$ can be mathematically expressed as:
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             또한 (5) 의 color 계산을 위한 accumulation 과정을 공식으로 써보면 다음과 같은데,
                         </p>
                         <div class="math-container">
@@ -798,7 +798,7 @@ __shared__ float4 collected_conic_opacity[BLOCK_SIZE];</code></pre>
                         <p class="lang eng">
                             This formula highlights a key difference from NeRF-based methods:
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             여기서도 NeRF 와의 차이점을 볼 수 있다.
                         </p>
                         <ul class="lang eng">
@@ -813,7 +813,7 @@ __shared__ float4 collected_conic_opacity[BLOCK_SIZE];</code></pre>
                                 </p>
                             </li>
                         </ul>
-                        <ul class="lang kor">
+                        <ul class="lang kor" style="display: none;">
                             <li>
                                 <p>
                                     Ray 를 따라 point 를 sampling 하여 그 point 의 opacity / color 를 MLP 에 query 해야하는 NeRF 와 달리,
@@ -832,7 +832,7 @@ __shared__ float4 collected_conic_opacity[BLOCK_SIZE];</code></pre>
                         <p class="lang eng">
                             In other words, since NeRF samples rays, it queries the MLP for each different point sampled by $r(t)$ (3D), whereas 3D GS queries the MLP for the same point $x$ (2D).
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             즉 NeRF 에서는 ray 를 sampling 하기 때문에 $r(t)$ 로 sampling 된 각각 다른 point 를 MLP 에 query 하지만, 3D GS 는 모두 똑같은 점 $x$ 를 query 하는 것을 볼 수 있다.
                         </p>
 
@@ -852,7 +852,7 @@ __shared__ float4 collected_conic_opacity[BLOCK_SIZE];</code></pre>
                                 can be formulated as follows:
                             </p>
                         </div>
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>
                                 현재 구현상으로는 $J$ 가 pinhole camera model 의 perspective projection 으로 구현되었기 때문에 다른 camera model 로 rendering 이 불가능하지만, 
                                 $J$ matrix 를 알맞은 camera model 에 대해 modeling 하면 원하는 camera model 에 대한 rendering 이 가능하다.
@@ -871,7 +871,7 @@ glm::mat3 J = glm::mat3(
                             This approximation enables the rasterization of 360-degree images with 3D Gaussian Splatting's Rasterization, 
                             as shown in the following:
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             이를 통해 다음의 360 image 를 3D GS 를 통해 training / rendering 이 가능하다.
                         </p>
                         <table>
@@ -894,7 +894,7 @@ glm::mat3 J = glm::mat3(
                                 For more details, refer to <a href="https://github.com/inuex35/360-gaussian-splatting">360 Gaussian Splatting</a>
                             </p>
                         </div>
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>
                                 물론 이 경우에는 approximation error 가 perspective projection 보다 훨씬 커지게되어 PNSR 이 pinhole images 를 사용할 때보다 낮아지게 된다. 
                                 affine projection 을 사용하지 않고 rendering 을 구현하여 camera modeling 하는 방법도 있지만 이는 추후 소개하도록 하겠다.
@@ -915,7 +915,7 @@ glm::mat3 J = glm::mat3(
                                 <li> <strong>Radius-Based Rendering:</strong> Increase the radius from the center (typically defined as the mean of the training camera positions, though it can be set manually) and render only the splats within the sphere defined by this radius. </li>
                             </ol>
                         </div>
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>
                                 글 Teaser 의 동영상은 NeRFStudio 팀이 창업한 Luma AI 의 rendering 영상인데, 꽤나 팬시해서 따라해보았다.
                                 다음과 같은 과정을 통해 비슷하게 그릴 수 있다.
@@ -959,7 +959,7 @@ glm::mat3 J = glm::mat3(
                                 The backward is almost the inverse of the forward computation described above, computing the gradient while traversing back-to-front as opposed to front-to-back in the forward step.
                             </p>
                         </div>
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>
                                 알고리즘의 많은 부분을 MLP 에 맡기는 NeRF 의 경우, Linear Algebra 나 Computer Graphics 관점에서 코드가 어떻게 짜여져 있는지 분석하는 것이 쉬운 편인데, 3D Gaussian Splatting 의 경우 explicit 한 primitive 를 
                                 다루기 때문에 rasterization module 이 매우 섬세하게 설계되어 있어 수학적, 코드적 관점으로 분석하기 꽤나 난해한 것 같다.
