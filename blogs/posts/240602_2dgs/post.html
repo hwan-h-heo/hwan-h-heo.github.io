@@ -117,12 +117,6 @@
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
                         <h2 id="intro"> Introduction </h2>
-                        <blockquote class="lang kor">
-                            <p>
-                                실사용이 가능한 수준의 mesh export 가 가능한 2D Gaussian Splatting for Geometrically Accurate Radiance Fields 를 리뷰해보자! 
-                                본격적인 리뷰에 앞서 2D GS 로 직접 만들어본 NeRFBlender dataset  lego scene 의 놀라운 모습을 공유한다.
-                            </p>
-                        </blockquote>
                         <blockquote class="lang eng">
                             <p>
                                 This article provides an in-depth review of the paper "2D Gaussian Splatting for Geometrically Accurate Radiance Fields," 
@@ -130,6 +124,13 @@
                                 I present an impressive result from the Lego scene in the NeRFBlender dataset, created using 2D Gaussian Splatting (2D GS). It's quite something!
                             </p>
                         </blockquote>
+                        <blockquote class="lang kor" style="display: none;">
+                            <p>
+                                실사용이 가능한 수준의 mesh export 가 가능한 2D Gaussian Splatting for Geometrically Accurate Radiance Fields 를 리뷰해보자! 
+                                본격적인 리뷰에 앞서 2D GS 로 직접 만들어본 NeRFBlender dataset  lego scene 의 놀라운 모습을 공유한다.
+                            </p>
+                        </blockquote>
+                        
                         <figure>
                             <img src="assets/teaser.gif" alt="teaser" width="100%">
                             <figcaption style="text-align: center; font-size: 15px;">
@@ -138,17 +139,6 @@
                         </figure>
 
                         <br/>
-                        <h3 id="recap-radiance-fields-mesh-recon-" class="lang kor"> Recap. Radiance Fields 의 Mesh Recon 의 어려움</h3>
-                        <p class="lang kor"> 이전 블로그 글, </p>
-                        <ol class="lang kor">
-                            <li><span style="text-decoration: underline;"><a href="https://ncsoft.github.io/ncresearch/b515d0241ebe9af4a549e991ae0efc4a90f0f65e">NeRF를 게임 제작에서 이용할 수 있을까?</a></span></li>
-                            <li><span style="text-decoration: underline;"><a href="https://velog.io/@gjghks950/NeRF를-게임-제작에서-이용할-수-있을까에-대한-단상">NeRF의 실용성에 대한 단상</a></span></li>
-                        </ol>
-                        <div class="lang kor">
-                            <p>를 통해 NeRF 및 Radiance Fields 기술이 아직은 실사용에 어려운 단계라고 공유했었다. </p>
-                            <p>특히 3D GS 의 경우, scene 자체의 게임/그래픽스/애니메이션 엔진으로의 이식 자체는 NeRF 보다 유리하지만 태생이 pointcloud 의 변형에 가까운 3D GS 의 특성상 mesh 로 만드는 것은 오히려 NeRF 보다도 더 어렵다고 했었는데...</p>
-                            <p>이번 SIGGRAPH&#39;24 에 공개된 논문 중 &#39;<a href="https://surfsplatting.github.io/">2D Gaussian Splatting for Geometrically Accurate Radiance Fields</a>&#39; 는 Splatting 기반 연구로써 실제로 사용할 수 있을만한 품질을 보여주고 있어 오랜만에 논문을 리뷰하려 한다. </p>
-                        </div>
                         <h3 id="recap-radiance-fields-mesh-recon-" class="lang eng"> Challenges in Mesh Reconstruction for Radiance Fields </h3>
                         <p class="lang eng"> 
                             In a previous discussion (<span style="text-decoration: underline;"><a href="https://ncsoft.github.io/ncresearch/b515d0241ebe9af4a549e991ae0efc4a90f0f65e">Can NeRF be used in game production? (kor)</a></span>), 
@@ -169,7 +159,18 @@
                                 Let’s take a look at what 2D GS is!
                             </p>
                         </div>
-
+                        
+                        <h3 id="recap-radiance-fields-mesh-recon-" class="lang kor" style="display: none;"> Recap. Radiance Fields 의 Mesh Recon 의 어려움</h3>
+                        <p class="lang kor" style="display: none;"> 이전 블로그 글, </p>
+                        <ol class="lang kor" style="display: none;">
+                            <li><span style="text-decoration: underline;"><a href="https://ncsoft.github.io/ncresearch/b515d0241ebe9af4a549e991ae0efc4a90f0f65e">NeRF를 게임 제작에서 이용할 수 있을까?</a></span></li>
+                            <li><span style="text-decoration: underline;"><a href="https://velog.io/@gjghks950/NeRF를-게임-제작에서-이용할-수-있을까에-대한-단상">NeRF의 실용성에 대한 단상</a></span></li>
+                        </ol>
+                        <div class="lang kor" style="display: none;">
+                            <p>를 통해 NeRF 및 Radiance Fields 기술이 아직은 실사용에 어려운 단계라고 공유했었다. </p>
+                            <p>특히 3D GS 의 경우, scene 자체의 게임/그래픽스/애니메이션 엔진으로의 이식 자체는 NeRF 보다 유리하지만 태생이 pointcloud 의 변형에 가까운 3D GS 의 특성상 mesh 로 만드는 것은 오히려 NeRF 보다도 더 어렵다고 했었는데...</p>
+                            <p>이번 SIGGRAPH&#39;24 에 공개된 논문 중 &#39;<a href="https://surfsplatting.github.io/">2D Gaussian Splatting for Geometrically Accurate Radiance Fields</a>&#39; 는 Splatting 기반 연구로써 실제로 사용할 수 있을만한 품질을 보여주고 있어 오랜만에 논문을 리뷰하려 한다. </p>
+                        </div>
 
                         <hr/>
                         <br/>
@@ -177,11 +178,7 @@
                         <h2 id="1-preliminary">1. Background </h2> <br/>
                         <h3 id="1-1-3d-gaussian-splatting"> 1.1. 3D Gaussian Splatting</h3>
                         <p><img src="https://miro.medium.com/v2/resize:fit:603/1*s6j7Hj9cg9Re9lxlqAHq5w.png" alt="" width="100%"></p>
-                        
-                        <div class="lang kor">
-                            <p><a href="https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/"> 3D Gaussian Splatting</a> 이란 <em>anistropic &amp; explicit</em> 한 3D Gaussian 의 집합으로 3D Scene 을 reconstruction 하는 기술이다. </p>
-                            <p>3D GS 원저자들은 학습의 용이성을 위해 3D Gaussians 의 covariance matrix 를 Gaussian 의 Rotation Matrix $R$ 과 Scale matrix $S$ 을 통해, 공간 위의 어떤 점 $p$ 에 대한 density function 을 다음과 같이 정의하였다.</p>
-                        </div>
+
                         <div class="lang eng">
                             <p>
                                 <a href="https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/"> 3D Gaussian Splatting</a> is a technique used to reconstruct 
@@ -192,6 +189,11 @@
                                 for a point $p$ in space, using the Gaussian rotation matrix $R$ and scale matrix $S$.
                             </p>
                         </div>
+                        <div class="lang kor" style="display: none;">
+                            <p><a href="https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/"> 3D Gaussian Splatting</a> 이란 <em>anistropic &amp; explicit</em> 한 3D Gaussian 의 집합으로 3D Scene 을 reconstruction 하는 기술이다. </p>
+                            <p>3D GS 원저자들은 학습의 용이성을 위해 3D Gaussians 의 covariance matrix 를 Gaussian 의 Rotation Matrix $R$ 과 Scale matrix $S$ 을 통해, 공간 위의 어떤 점 $p$ 에 대한 density function 을 다음과 같이 정의하였다.</p>
+                        </div>
+                        
                         <div class="math-container">
                             $$ \begin{aligned}
                             d(p) &= \sum_{g}
@@ -202,7 +204,7 @@
                             \end{aligned}
                             $$
                         </div>
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>
                                 3D GS 는 정의상 dense point cloud reconstruction 과도 비슷하지만, 
                             </p>
@@ -264,7 +266,7 @@
                         <br/>
                         
                         <h3 id="1-2-surface-reconstruction-problem-in-3d-gs"> 1.2. Surface Reconstruction Problem in 3D GS</h3>
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>
                                 상기한 3D GS 의 여러 장점이 있지만, 알려진 3D GS 의 가장 큰 단점 중 하나는
                                 <strong><em>surface reconstruction 이 어렵다</em></strong> 는 점이다. 
@@ -322,7 +324,7 @@
                                 <li>
                                     <p>
                                         <strong>Difficulty in Learning Thin Surfaces</strong><br/>
-                                        The volumetric radiance representation of 3D GS, which learns the three-dimensional scale, struggles to accurately represent thin surfaces.
+                                        The volumetric radiance representation of 3D GS, which learns the three-dimensional scale, struggles to represent thin surfaces accurately.
                                     </p>
                                 </li>
                                 <li>
@@ -354,7 +356,7 @@
                         </div>
 
                         <h3 id="1-3-sugar-surface-aligned-gaussian-splatting"> 1.3. SuGaR: Surface-Aligned Gaussian Splatting</h3>
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>
                                 상기 Surface Reconstruction 의 어려움을 해결하기 위해 <em>2) surface normal</em> 관점으로 문제를 해결하려 한 
                                 previous work 이 있는데, 그 연구가 바로 concurrent work 로 소개하는 
@@ -377,7 +379,7 @@
                             <p>
                                 <a href="https://anttwo.github.io/sugar/">SuGaR</a> (Surface-Aligned Gaussian Splatting) is a previous work that addresses some of the surface reconstruction challenges 
                                 in 3D GS. SuGaR's core idea is based on the assumption that for well-trained 3D Gaussians, <strong><em>the axis with the shortest scale will align with the surface normal</em></strong>. 
-                                This approximation is used as a regularization technique to ensure that the 3D GS surface is aligned.
+                                This approximation is used as a regularization technique to ensure the 3D GS surface is aligned.
                             </p>
                         </div>
                         <div class="math-container">
@@ -387,7 +389,7 @@
                             \\ n_g &: \text{ corresponding axis}
                             \end{aligned} $$
                         </div>
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>
                                 이러한 constraint 를 regularization 으로 활용하여 3D GS 를 surface aligned 하게 만든다. 
                             </p>
@@ -416,7 +418,7 @@
                                 The Rotation Matrix $R$ and Scale Matrix $S$ for 2D GS can be defined accordingly.
                             </p>
                         </div>
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>
                                 2D Gaussian Splatting 의 접근법은 크게 보면 SuGaR 의 intuition 을 반대로 뒤집은 것에 불과하다. 
                                 즉 3D Gaussian 을 flat 하게 만들어서 surface 에 정렬시키지 말고 (SuGaR), 처음부터 flat 한 2D Gaussian (surfels) 로 이루어진 scene 을 학습시키자는 것이다. 
@@ -432,7 +434,7 @@
                             $$
                         </div>
 
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             이제 2D Gaussian 을 world space 에서 center point $p_k$, tanget vector $(t_u, t_v)$ 를 갖는 $uv$ local tangent plane $P$ 에서 정의할 수 있으며, 이때 plane $P$ 는 다음과 같을 것이다. 
                         </p>
                         <p class="lang eng">
@@ -455,7 +457,7 @@
                             $$
                         </div>
 
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             따라서 $uv$ frame 에서 2D Gaussian 을 다음과 같은 standard 2D Gaussian fucntion 으로 표현된다. 
                         </p>
                         <p class="lang eng">
@@ -465,7 +467,7 @@
                             $$ \mathcal{G}(u,v) = \exp \left( -\frac{u^2 + v^2}{2} \right)
                             $$ 
                         </div>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             결론적으로 2D GS 에서 학습할 parameter 는 rotation axis $(t_u, t_v)$ 와 scaling $(s_u, s_v)$ , 
                             opcaity $\alpha$ 와 Non-Lambertian color 에 대한 Spherical Harmonics coefficient $c$ 가 된다. 
                         </p>
@@ -478,7 +480,7 @@
                         <h3 id="2-2-splatting"> 2.2. Splatting </h3><br/>
                         <h4 id="2-2-1-accurate-2d-to-2d-projection-in-homogeneous-coordinates"> 2D-to-2D Projection </h4>
 
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>
                                 2D Gaussian 은 원론적으로는 zero scale 만 추가하여 3D GS projection 을 그대로 사용할 수 있다. 하지만 앞서 언급한것처럼, 
                                 3D GS 의 affine projection $\Sigma&#39; = JW\Sigma W^{\rm T}J^{\rm T}$ 은 1st Taylor Expansion 만을 사용하기 때문에 
@@ -502,7 +504,7 @@
                         </div>
                         <img src="https://velog.velcdn.com/images/gjghks950/post/07faa95c-3a18-408b-8067-474d800eb4cc/image.png" alt="" width="90%"></li>
 
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>
                                 2D GS 의 저자들은 부정확한 3D GS 의 original projection 을 사용하는 대신, 2D Gaussians projection 으로 
                                 <strong><em>hoogeneous coordinates 를 이용한 일반적인 2D-to-2D mapping</em></strong> 을 사용할 것을 제안한다. 
@@ -529,7 +531,7 @@
                             This means that the c2w direction ray from a point in camera space intersects the 2D splats at depth $z$, 
                             and the Gaussian density of the screen space point can be obtained as
                         </p>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             이는 camera space 에서의 point $(x,y)$ 에서의 c2w direction ray 가 2D splats 과 depth $z$ 에서 교차한다는 의미이며, 
                             sceen space 의 $(x,y)$ point 의 Gaussian density 를 다음과 같이 얻을 수 있을 것이다. 
                         </p>
@@ -537,7 +539,7 @@
                             $$ \mathcal{G} \left( (\mathbf{WH})^{-1} \mathbf{x} \right)
                             $$
                         </div>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             하지만 inverse transform 은 numerical instability issue 가 있으며, threhold 사용 등으로 이를 우회하려해도 
                             unstable 한 optimization 을 초래할 수 있다. 
                         </p>
@@ -546,7 +548,7 @@
                         </p>
 
                         <h4 id="2-2-2-ray-splat-intersection"> Ray-Splat Intersection w/ Homography</h4>
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>
                                 저자들은 ray-splat 의 교점을 3개의 non-parallel plane ($uv$ plane, $x$-homogeneous plane, $y$-homogeneous plane) 
                                 의 교점을 구하는 방법으로 이를 해결한다. 
@@ -566,7 +568,7 @@
                             </p>
                             <p>
                                 For a given image coordinate $(x, y)$, a ray is defined as the intersection between two homogeneous planes, 
-                                $\mathbf{h}_x = (-1, 0, 0, x)$ 와 $y$-plane $\mathbf{h}_y = (-1, 0, 0, y)$.
+                                $\mathbf{h}_x = (-1, 0, 0, x)$ and $y$-plane $\mathbf{h}_y = (-1, 0, 0, y)$.
                                 And the intersection is calculated by transforming the homogeneous planes $\mathbf{h}_x$, $\mathbf{h}_y$ 
                                 to $uv$-space.
                             </p>
@@ -576,7 +578,7 @@
                             $$
                         </div>
                         
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             screen space $(x,y)$ 를 지나는 c2w direction ray 와 2D Gaussian Splats 의 교점은 다음과 같이 linear equation 의 closed-form solution 으로 구할 수 있다. 
                         </p>
                         <p class="lang eng">
@@ -592,7 +594,7 @@
                             v(\mathbf{x}) = \frac{\mathbf{h}_u^4 \mathbf{h}_v^1 - \mathbf{h}_u^1 \mathbf{h}_v^4}{\mathbf{h}_u^1 \mathbf{h}_v^2 - \mathbf{h}_u^2 \mathbf{h}_v^1}
                             $$
                         </div>
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>
                                 상기 공식을 통해 screen pixel $(x,y)$ 에 대한 $uv$-space 에의 projection value 를 알 수 있으며, 
                                 앞서 정의한 수식 $(xz, yz, z, z)^{\rm T} = \mathbf{W} P(u, v)$ 을 통해 depth $z$ 도 얻을 수 있다. 
@@ -618,7 +620,7 @@
 
 
                         <h3 id="2-3-training-2d-gs"> 2.3. Training 2D GS </h3>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             2D GS 의 학습에 사용되는 loss 는 앞서 정의된 2D projection / rasterization 을 이용한 image rendering loss 외에, 
                             추가적인 2가지 regularization loss 가 사용된다. 
                         </p>
@@ -627,7 +629,7 @@
                             the training process for 2D GS incorporates two additional regularization losses: Depth Distortion Loss and Normal Consistency Loss.
                         </p>
                         <h4 id="2-3-1-depth-distortion"> Depth Distortion Regularization </h4>
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>
                                 NeRF 와는 다르게, 3D GS 의 volume rendering 은 교차하는 splats 간의 거리 차이를 고려하지 않는다. 
                                 (NeRF 는 $\delta_i = t_{i+1} - t_i$ 로 sampling point 간 거리를 고려한 rendering 을 계산한다. 
@@ -642,7 +644,7 @@
                                 집중시키는 depth-distortion loss 를 제시하였다. 
                             </p>
                         </div>
-                        <div class="lang kor">
+                        <div class="lang eng">
                             <p>
                                 Unlike NeRF, where volume rendering accounts for distance differences between intersecting splats, 3D GS does not, 
                                 leading to challenges in surface reconstruction. 
@@ -658,7 +660,7 @@
                             L_d = \sum_{i,j} \omega_i \omega_j |z_i - z_j|
                             $$
                         </div>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             여기서 각 변수는 $i$th ray-splat 교점에 대해 다음과 같은 의미를 갖는다. 
                         </p>
                         <p class="lang eng">
@@ -672,7 +674,7 @@
                                 $z_i$: depth 
                             </li>
                         </ul>
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>
                                 weight 에 대한 정의를 보면 NeRF 의 accumulated transmittance 와 같은 식임을 알 수 있는데, 같은 논리로 
                             </p>
@@ -715,7 +717,7 @@
                             each of the terms is either an accumulation of opacity or an accumulation of opacity $\times$ depth.
                         </p>
 
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             각 모두 opacity 의 accumulation 혹은 opacity x depth 의 accumulation 등으로 이루어진 항임을 알 수 있다. 
                         </p>
                         <div class="math-container">
@@ -726,7 +728,7 @@
                             \end{aligned}
                             $$
                         </div>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             따라서, 위의 공식처럼 이 loss 를 일종의 image rendering 처럼 계산할 수 있다. 실제 2D GS 구현체에서도 rasterizer 단에서 
                             이를 처리하여 backpropagation 한다. 
                         </p>
@@ -736,7 +738,7 @@
                         </p>
 
                         <h4 id="2-3-2-normal-consistency"> Normal Consistency Regularization </h4>
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>
                                 Depth-Distortion Loss 에 더불어, 모든 2D splats 이 실제 surface 와 정렬되도록 하는 normal-consistency loss 를 제시한다.
                             </p>
@@ -776,7 +778,7 @@
                             </ul>
                             <p> Specifically, $\mathbf{N}$ is computed using finite difference as follows. </p>
                         </div>
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p> 여기서, </p>
                             <ul>
                                 <li>$i$ 는 ray 을 따라 교차하는 splats 의 index</li>
@@ -791,7 +793,7 @@
                             \mathbf{N} (x, y) = \frac{ \nabla _x \mathbf{p}  \times \nabla_y \mathbf{p}}{| \nabla_x \mathbf{p} \times \nabla_y \mathbf{p} | }
                             $$
                         </div>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             실제로 visualize 해서 보면 두 normal 의 차이가 보여서 흥미로운데,  surface normal 의 경우는 훨씬 smooth 한 모습을, 
                             depth 에서 계산한 normal 은 조금 더 detail 하게 geometry 를 반영하는 모습을 보여준다. 
                         </p>
@@ -807,7 +809,7 @@
 
                         <h2 id="3-experimens-custom-viser-viewer">3. Experimens &amp; Custom Viewer</h2><br/>
                         <h3 id="3-1-qualitative-results-custom-object-reconstruction">3.1. Qualitative Results </h3>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             Novel view synthesis 에서의 quantitative results 가 이전 연구에 비해 뛰어나지 않기 때문에 와닿지 않을 수도 있지만, 
                             이 연구의 진가는 정성평가와 이 알고리즘을 실제로 테스트 해봤을 때 드러난다. 
                         </p>
@@ -818,7 +820,7 @@
                         </p>
                         <p><img src="https://velog.velcdn.com/images/gjghks950/post/bf72f5fe-5347-4da6-b98a-870f7fd525eb/image.png" alt="" width="100%"></p>
                         
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>
                                 논문에서 드러나는 타 논문 대비 2D GS 의 surface recon / mesh recon 성능은 이전 연구 그 무엇과도 비교를 불허한다. 
                             </p>
@@ -841,7 +843,7 @@
                             <img src="https://velog.velcdn.com/images/gjghks950/post/845c9cd8-966a-4a1f-af36-c0e47a73b509/image.gif" alt="" width="100%"></p>
                             </li>
                         </ul>
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>
                                 이 정도의 성능이라면 light-condition disentanglement 문제만 어느 정도 해결된다는 가정 하에 실제 게임/모델링 등의 작업에도 사용할 수 
                                 있을만한 퀄리티라고 생각된다.  
@@ -882,7 +884,7 @@
                         
 
                         <h3 id="3-2-custom-viser-viewer-for-2d-gaussian-splatting">3.2. Custom Viser Viewer for 2D Gaussian Splatting</h3>
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>
                                 <del>2D GS 연구에 한 가지 아쉬운 점은, 현재로서는 official viewer 를 제공하지 않는다는 점이다.</del>
                                 (24.06.10 부터는 SIBR Viewer 를 제공하는 중이다) 
@@ -924,7 +926,7 @@
                         <h4 id="-github-project-link-https-github-com-hwanhuh-2d-gs-viser-viewer-tree-main-">⭐ <a href="https://github.com/hwanhuh/2D-GS-Viser-Viewer/tree/main">Github Project Link</a></h4>
                         <p><img src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_train.gif" alt="" width="100%"></p>
 
-                        <ul class="lang kor">
+                        <ul class="lang kor" style="display: none;">
                             <li><p>Viser 를 이용해서 구현하였으며, 2D GS 의 homogeneous projection 을 그대로 사용하여 projection error 가 없다. </p>
                             </li>
                             <li><p>Normal / Depth / Depth2Normal / Pointcloud 등 다양한 visualization 을 지원한다.</p>
@@ -939,16 +941,16 @@
                             <img src="https://velog.velcdn.com/images/gjghks950/post/f6295a58-61b7-4630-9e85-85f31c97fe7f/image.png" alt="" width="100%"></p>
                             </li>
                         </ul>
-                        <p class="lang kor">
+                        <p class="lang kor" style="display: none;">
                             쉽게 생각하고 구현을 시작했었는데 은근히 작업하면서 신경 쓸 게 많았다. 조만간 viewer 개발기도 올려볼 생각이다. 
                         </p>
-                        <ul class="lang kor">
+                        <ul class="lang kor" style="display: none;">
                             <li>cf. <a href="https://velog.io/@gjghks950/Custom-Neural-Rendering-Viewer-%EA%B0%9C%EB%B0%9C%EA%B8%B0">Viewer 개발기</a></li>
                         </ul>
                         <br/>
 
                         <h2 id="4-conclusion">4. Conclusion</h2>
-                        <div class="lang kor">
+                        <div class="lang kor" style="display: none;">
                             <p>당장 몇개월 전만 해도 아직 NeRF / 3D GS 의 실사용은 힘든 단계라고 글을 썼던 것이 무색하게 좋은 알고리즘이 공개되었다.</p>
                             <p>단순히 3D GS 를 flat 하게 핀 것에 불과한 Gaussian Surfels 연구에 비해서도, projection 의 부정확함, rasterization 등을 섬세하게 고려해서 잘 설계한 알고리즘이라는 생각이 든다.</p>
                             <p>2D GS 는 3D GS 가 가지는 explicit representation 의 장점을 그대로 계승하면서도, 3D GS 가 갖는 surface reconstruction 의 어려움, projection error 등을 해결한 진일보한 연구이다. </p>
