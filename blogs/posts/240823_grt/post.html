@@ -384,7 +384,7 @@ rgb[idx * C + 2] = result.z;</code></pre>
                             $$ \tau_{\max} = \frac{(\mu - \mathbf{o})^{\rm T} \Sigma^{-1} \mathbf{d}}{\mathbf{d}^{\rm T} \Sigma^{-1} \mathbf{d} } = \frac{-\mathbf{o}_g^{\rm T} \mathbf{d}_g}{\mathbf{d}_g^{\rm T}\mathbf{d}_g}
                             $$
                         </div>
-                        <p>where $ \mathbf{o}_g = {\rm S^{-1}R^T}(\mathbf{o} - \mu), \quad  d_g = {\rm S^{-1}R^T} \mathbf{d}$ </p>
+                        <p> where $ \mathbf{o}_g = {\rm S^{-1}R^T}(\mathbf{o} - \mu),  d_g = {\rm S^{-1}R^T} \mathbf{d}$. </p>
                         
                         <div class="lang eng">
                             <p>Let&#39;s interpret this step by step!</p>
@@ -456,7 +456,7 @@ rgb[idx * C + 2] = result.z;</code></pre>
                         
                         <h2 id="experiments"> 4. Experiments</h2><br/>
                         <h3 id="quantitative-results"> 4.1. Quantitative Results</h3>
-                        <p class="lang eng">The quantitative evaluations of 3D GRT indicate that there is almost no significant difference between the quantitative metrics of 3D GRT and other novel view synthesis (NVS) techniques. While the frames per second (fps) are slightly lower in comparison, 3D GS still achieves real-time performance.</p>
+                        <p class="lang eng">The quantitative evaluations of 3D GRT indicate that there is almost no significant difference between the quantitative metrics of 3D GRT and other novel view synthesis (NVS) techniques. While the fps is slightly lower in comparison, 3D GS still achieves real-time performance.</p>
                         <p class="lang kor" style="display: none;">정량적 평가 모두 훌륭하게 제시되어 있다. (역시 갓비디아…) </p>
                         <p class="lang kor" style="display: none;">3D GS 와 NVS quantitative results 는 거의 차이나지 않으며, fps 는 조금 느리지만 여전히 real-time 을 달성한다. </p>
                         <figure>
@@ -470,8 +470,8 @@ rgb[idx * C + 2] = result.z;</code></pre>
                         <br/>
 
                         <h3 id="ablation-study-and-ray-tracer-design"> 4.2. Ablation Study</h3>
-                        <p class="lang eng">The paper also includes an ablation study focused on the design of the Ray Tracer. This study explores various aspects such as the justification for the proxy mesh design and the determination of an optimal k value in the k-buffer, which is crucial for managing multiple semi-transparent particles during rendering.</p>
-                        <p class="lang eng">The study provides experimental evidence that supports the choices made in the design of the Ray Tracer, highlighting the importance of these parameters in achieving efficient and accurate rendering. By systematically analyzing the impact of these design decisions, the study offers valuable insights into how different elements contribute to the overall performance and quality of the rendering process.</p>
+                        <p class="lang eng">The paper also includes an ablation study focused on the design of the Ray Tracer. This study explores various aspects such as the justification for the proxy mesh design and the determination of an optimal $k$ value in the $k$-buffer, which is crucial for managing multiple semi-transparent particles during rendering.</p>
+                        <p class="lang eng">The study provides experimental evidence that supports the choices made in the design of the Ray Tracer, highlighting the importance of these parameters in achieving efficient and accurate rendering.</p>
                         <p class="lang kor" style="display: none;">Ray Tracer 설계에 대한 ablation study 도 제공하는데, proxy mesh design 에 대한 당위성이나 k buffer 에서 적절한 k 값을 설정하는 등의 실험이 보고되어있다.  </p>
                         <figure>
                             <img class="img-fluid" src="assets/fig9.png" width="100%">
@@ -480,9 +480,8 @@ rgb[idx * C + 2] = result.z;</code></pre>
                         <br/>
 
                         <h3 id="qualitative-results"> 4.3. Qualitative Results</h3>
-                        <p class="lang eng">In addition to the quantitative analysis, the qualitative results demonstrate how this method effectively overcomes the limitations of rasterization that were previously identified. Specifically, the system shows significant improvements in modeling and rendering, particularly in handling complex light effects across various camera models. This ability to accurately represent lighting and reflections, which are often challenging in rasterization-based techniques, suggests that the method could be highly effective in realistic rendering scenarios.</p>
-                        <p class="lang eng">Overall, the combination of both quantitative and qualitative evaluations highlights the strengths of this new 3D GS approach, especially in terms of performance, memory efficiency, and the ability to handle complex visual effects.</p>
-                        
+                        <p class="lang eng">In addition to the quantitative analysis, the qualitative results demonstrate how this method effectively overcomes the limitations of rasterization.</p> 
+                        <p class="lang eng"> Specifically, the 3D GRT shows significant improvements in modeling and rendering, particularly in handling complex light effects across various camera models. This ability to accurately represent lighting and reflections, which are often challenging in rasterization-based techniques, demonstrates that the method could be highly effective in realistic rendering scenarios.</p>
                         <p class="lang kor" style="display: none;">Qualitative Results 에서는 앞서 지적한 rasterization 의 한계점을 타파한 모습들을 보여준다. 다양한 camera model 에 대한 rendering 및 light effect 를 모델링하는 모습을 통해 3D GRT 가 효과적으로 구현되었음을 입증한다. </p>
                         <figure>
                             <img class="img-fluid" src="assets/fig10.png" width="100%">
@@ -492,6 +491,7 @@ rgb[idx * C + 2] = result.z;</code></pre>
                             <img class="img-fluid" src="assets/fig11.png" width="100%">
                             <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 11.</strong> 3D GRT's reconstruction capability for non-pinhole camera </figcaption>
                         </figure>
+                        <p class="lang eng">Overall, the combination of both quantitative and qualitative evaluations highlights the strengths of this new 3D GS approach, especially in terms of performance, memory efficiency, and the ability to handle complex visual effects.</p>
                         <br/>
                         
                         <h2 id="conclusion"> 5. Conclusion</h2>
