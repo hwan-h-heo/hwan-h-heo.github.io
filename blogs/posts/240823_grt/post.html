@@ -157,9 +157,9 @@
                                     As highlighted in <span style="text-decoration: underline;"><a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">previous article</a></span>, the use of EWA splatting introduces affine projection errors. 
                                     These errors complicate achieving high-quality results, even when modeling non-pinhole camera types.
                                 </p>
-                            </li><br/>
+                            </li>
                             <li><p><strong>Sensitivity to Image Quality</strong><br/> Unlike NeRF, which utilizes MLPs and exhibits a degree of robustness against calibration discrepancies between images, 3D GS relies on explicit geometric primitives. This reliance renders 3D GS highly sensitive to variations in image quality, including issues such as motion blur and rolling shutter effects, which can significantly degrade the final output.</p>
-                            </li><br/>
+                            </li>
                             <li><p><strong>Lack of Physically-Based Rendering Capabilities</strong><br/>
                                 Another challenge facing 3D GS is its inability to incorporate physically-based rendering (PBR) effects. Since 3D GS does not adhere to the principles of PBR, accurately modeling lighting and reflection effects within a scene remains problematic. This limitation restricts the realism and applicability of 3D GS in scenarios where accurate light interaction is critical.</p>
                             </li>
@@ -171,12 +171,12 @@
                         <p class="lang kor" style="display: none;">Next-photogramerry 로까지 불리며 각광받고 있는 연구분야지만, 아직 과도기이기 때문에 극복해야할 문제가 많이 남아있다. </p>
                         <p class="lang kor" style="display: none;">그 중 대표적인 것이 바로 Rasterization 사용으로 인한 문제들이다. </p>
                         <ol class="lang kor" style="display: none;">
-                            <li><strong>Inflexibility to Various Camera Models</strong><br/>
-                            이전 <span style="text-decoration: underline;"><a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">3D GS rasterization 분석글</a></span> 에서도 지적한 바와 같이 EWQ splatting 으로 구현된 rasterization 은 affine projection error 가 있으며, 이 때문에 다양한 camera 에 대한 modeling 을 구현하더라도 high-quality 로 학습하는 것이 쉽지 않다. </li>
-                            <li><strong>Sensitive to Image Quality</strong><br/>
-                            MLP 로 이루어진 NeRF 는 image 간 calibration 차이에도 일부 강건하지만, 3D GS 는 explicit primitive 를 사용하기 때문에 motion blur, rolling shutter 등 image quality 에 극도로 민감하다.  </li>
-                            <li><strong>Incapability of Physical-based Effect</strong><br/>
-                            Physically-based Rendering 이 아니기 때문에 조명, 반사 효과 등을 모델링하기 힘들다.</li>
+                            <li> <p><strong>Inflexibility to Various Camera Models</strong><br/>
+                            이전 <span style="text-decoration: underline;"><a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">3D GS rasterization 분석글</a></span> 에서도 지적한 바와 같이 EWQ splatting 으로 구현된 rasterization 은 affine projection error 가 있으며, 이 때문에 다양한 camera 에 대한 modeling 을 구현하더라도 high-quality 로 학습하는 것이 쉽지 않다. </p></li>
+                            <li><p><strong>Sensitive to Image Quality</strong><br/>
+                            MLP 로 이루어진 NeRF 는 image 간 calibration 차이에도 일부 강건하지만, 3D GS 는 explicit primitive 를 사용하기 때문에 motion blur, rolling shutter 등 image quality 에 극도로 민감하다. </p> </li>
+                            <li><p><strong>Incapability of Physical-based Effect</strong>
+                            Physically-based Rendering 이 아니기 때문에 조명, 반사 효과 등을 모델링하기 힘들다.</p></li>
                         </ol>
                         <p class="lang kor" style="display: none;">1), 2) 등에 대해서는 RadSplat 에서 Zip-NeRF 로 Radiance Fields 를 먼저 학습한 후, NeRF scene 에서 perfect &amp; calibrated pinhole image 를 rendering 하여 3D GS 의 training data 로 사용하면서 우회한 바 있다. </p>
                         <p class="lang kor" style="display: none;">하지만 이 학습 방법은 2-stage 기 때문에 효율적이지 못하며, 근본적으로 rasterization 이기 때문에 갖는 3) 은 여전히 challenge 로 남아있다. </p>
@@ -331,7 +331,11 @@ rgb[idx * C + 2] = result.z;</code></pre>
                             <div class="math-container">
                                 $$ \sigma / \alpha_{\min} = \exp(0.5) \ \rightarrow \sigma \cdot \exp (- 1/2) = \alpha_{\min}<br> $$
                             </div>
-                            <p> left side 가 익숙하지 않은가? gaussian distribution 의 pdf 형태와 닮아 있다. 즉 scale 이 1로 유지되는 기점은 3D Gaussian 의 local coordinate 에서 std 가 1만큼 떨어져 있는 곳의 responce 가 minimum responce 값보다 작은지 큰지를 결정하는 지점이 된다. </p>
+                            <p> left side 가 익숙하지 않은가? gaussian distribution 의 pdf 형태와 닮아 있다.</p> 
+                            <div>
+                                $$ f(x) = \frac{1}{\sigma\sqrt{2\pi}} \exp\left( -\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^{\!2}\,\right) $$
+                            </div>
+                            <p> 즉 scale 이 1로 유지되는 기점은 3D Gaussian 의 local coordinate 에서 std 가 1만큼 떨어져 있는 곳의 responce 가 minimum responce 값보다 작은지 큰지를 결정하는 지점이 된다. </p>
                             <p> 0.01 에 대한 당위성이 없다고 생각할 수도 있는데, confidence 99% 정도에 해당하는 std 값 2.6을 통해 gaussian pdf 를 계산해보면 대략 0.01 이란 값이 나온다. 비슷하게 3D GS 에서는 culling 을 위한 radius 계산에 3xstd 값을 이용한다.</p>
                             <div class="math-container">
                                 $$ \exp\left(-\frac{1}{2}(2.6)^2 \right) \cdot \frac{1}{\sqrt{2 \pi}} \approx 0.01 $$
@@ -362,7 +366,7 @@ rgb[idx * C + 2] = result.z;</code></pre>
                         
                         <p class="lang kor" style="display: none;">미분 가능하고 효율적인 렌더링을 위해 3D GRT 는 sorted k-buffer 를 통해 순차적으로 rendering 을 진행한다. </p>
                         <ul class="lang kor" style="display: none;">
-                            <li>BVH 를 이용해 next k particle 을 추적하고 (이때는 hit response 를 측정하지 않는다)</li>
+                            <li>BVH 를 이용해 next k particle 을 추적하고 (이때는 hit response 를 측정하지 않는다)</li><br/>
                             <li>각 chunk 내에서 실제 hit response 를 iterative 하게 측정한다
                                 <ul>
                                     <li>이때, ray 내의 모든 proxy hit particle 을 검사하거나</li>
