@@ -108,11 +108,11 @@
                             <a href="#parameterization"> 3D Gaussian Modeling </a>
                         </li>
                         <li>
-                            <a href="#hardware-accelerated-ray-tracing"> Ray Tracing </a>
+                            <a href="#hardware-accelerated-ray-tracing"> About Ray Tracing </a>
                         </li>
                     </ul>
                     <li>
-                        <a href="#method"> MISC</a>
+                        <a href="#method"> 3D Gaussian Ray Tracing </a>
                     </li>
                     <ul>
                         <li>
@@ -157,9 +157,9 @@
                                     As highlighted in <span style="text-decoration: underline;"><a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">previous article</a></span>, the use of EWA splatting introduces affine projection errors. 
                                     These errors complicate achieving high-quality results, even when modeling non-pinhole camera types.
                                 </p>
-                            </li>
+                            </li><br/>
                             <li><p><strong>Sensitivity to Image Quality</strong><br/> Unlike NeRF, which utilizes MLPs and exhibits a degree of robustness against calibration discrepancies between images, 3D GS relies on explicit geometric primitives. This reliance renders 3D GS highly sensitive to variations in image quality, including issues such as motion blur and rolling shutter effects, which can significantly degrade the final output.</p>
-                            </li>
+                            </li><br/>
                             <li><p><strong>Lack of Physically-Based Rendering Capabilities</strong><br/>
                                 Another challenge facing 3D GS is its inability to incorporate physically-based rendering (PBR) effects. Since 3D GS does not adhere to the principles of PBR, accurately modeling lighting and reflection effects within a scene remains problematic. This limitation restricts the realism and applicability of 3D GS in scenarios where accurate light interaction is critical.</p>
                             </li>
@@ -288,7 +288,7 @@ rgb[idx * C + 2] = result.z;</code></pre>
                         
                         <p class="lang kor" style="display: none;">저자들은 실험을 통해 Icosahedron (정이십면체) 를 사용하는 것이 가장 적절했다고 한다. </p>
                         <ul class="lang kor" style="display: none;">
-                            <li>Icosahedron 은 triangular face 로 이루어져 있기 때문에 ray-face intersection 을 계산하는 것이 hardware optimized 되어 있다.</li>
+                            <li>Icosahedron 은 triangular face 로 이루어져 있기 때문에 ray-face intersection 을 계산하는 것이 hardware optimized 되어 있다.</li><br/>
                             <li>3D Gaussian 에 대해 false positive, false negative 가 너무 많지 않게 감쌀 수 있는 적절한 모양이다.</li>
                         </ul>
                         <p class="lang kor" style="display: none;">Unit sphere 를 내접하는 icosahedron 에 대하여, 3D Gaussian 에 대한 minimum responce alpha (0.01 로 설정) 값을 통해 각 vertex 를 다음과 같이 transform 하여 proxy geometry 를 계산한다. </p>
@@ -302,11 +302,15 @@ rgb[idx * C + 2] = result.z;</code></pre>
                                 <p>The transformation matrix ${\rm SR^{T}}$ and mean vector $\mu$ adjust the icosahedron to fit the local coordinates of the 3D Gaussian. This involves stretching, rotating, and translating the initial icosahedron to properly enclose the 3D Gaussian distribution.</p>
                             </li>
                             <li><p><strong>Adaptive Clamping</strong></p> 
-                                <p>The scaling term $\sqrt{2 \log (\sigma / \alpha_{\min})}$ determines how the icosahedron is scaled. Specifically, the parameter $\alpha_{\min}$ (set to 0.01) represents the minimum response value, and $\sigma$ is the standard deviation of the Gaussian. When there is no change in scale, this relationship simplifies to:</p>
+                                <p> The scaling term $\sqrt{2 \log (\sigma / \alpha_{\min})}$ determines how the icosahedron is scaled. Specifically, the parameter $\alpha_{\min}$ (set to 0.01) represents the minimum response value.</p> 
+                                <p> Though the term is a little bit tricky when considering identical scaling, this relationship simplifies to:</p>
                                 <div class="math-container">
-                                    $$ \sigma / \alpha_{\min} = \exp(0.5) \ \rightarrow \sigma \cdot \exp (- 1/2) = \alpha_{\min}<br> $$
+                                    $$ \sigma / \alpha_{\min} = \exp(0.5) \ \Rightarrow \sigma \cdot \exp (- 1/2) = \alpha_{\min}<br> $$
                                 </div>
                                 <p> Doesn&#39;t the left side look familiar? This expression closely resembles the probability density function (pdf) of a Gaussian distribution. </p>
+                                <div>
+                                    $$ f(x) = \frac{1}{\sigma\sqrt{2\pi}} \exp\left( -\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^{\!2}\,\right) $$
+                                </div>
                                 <p> The scaling factor adjusts the icosahedron to match the point where the response in the Gaussian distribution drops to $\alpha_{\min}$, effectively clamping the scale at a confidence interval where the standard deviation equals 1.</p>
                                 <p> In my opinion, the choice of $\alpha_{\min} = 0.01$ is justified by calculating the Gaussian pdf at a standard deviation of 2.6, which corresponds to approximately 99% confidence, yielding a value close to 0.01. </p>
                                 <div class="math-container">
@@ -319,11 +323,11 @@ rgb[idx * C + 2] = result.z;</code></pre>
                         </ol>
                         <p class="lang kor" style="display: none;">논문에 공식만 턱 나와 있어서 당황스러울 수 있는데, 차근차근 분석해보자. </p>
                         <ol class="lang kor" style="display: none;">
-                            <li><p><strong>Stretching</strong><br/>
-                            먼저 ${SR^{\rm T}}$ 과 $\mu$ 은 3D Gaussian 이 정의된 local coordinate 로의 transform 이다. 즉 init Icosahedron 을 3D Gaussian 에 맞게 이동하고, 적절히 늘리고 회전하는 작업이다. </p>
+                            <li><p><strong>Stretching</strong></p>
+                                <p>먼저 ${SR^{\rm T}}$ 과 $\mu$ 은 3D Gaussian 이 정의된 local coordinate 로의 transform 이다. 즉 init Icosahedron 을 3D Gaussian 에 맞게 이동하고, 적절히 늘리고 회전하는 작업이다. </p>
                             </li>
-                            <li><p><strong>Adaptive Clamping</strong><br/>
-                            scaling 공식을 살펴보면, scale 이 변하지 않을 때가 다음과 같음을 알 수 있다. </p>
+                            <li><p><strong>Adaptive Clamping</strong></p>
+                                <p>scaling 공식을 살펴보면, scale 이 변하지 않을 때가 다음과 같음을 알 수 있다. </p>
                             <div class="math-container">
                                 $$ \sigma / \alpha_{\min} = \exp(0.5) \ \rightarrow \sigma \cdot \exp (- 1/2) = \alpha_{\min}<br> $$
                             </div>
@@ -335,7 +339,7 @@ rgb[idx * C + 2] = result.z;</code></pre>
                         </li>
                         </ol>
 
-                        <p class="lang eng">This approach enables a more efficient and accurate ray tracing mechanism for 3D Gaussians by using an optimized proxy geometry that is both computationally feasible and tightly conforms to the Gaussian distribution.</p>
+                        <p class="lang eng">This approach enables a more efficient and accurate ray-tracing mechanism for 3D Gaussians by using an optimized proxy geometry that is both computationally feasible and tightly conforms to the Gaussian distribution.</p>
                         <p class="lang kor" style="display: none;">Adaptive Clamping 는 opacity 까지 scaling 에 함께 활용하기 때문에, 거의 투명하지만 크기는 큰 particle 에 대해서는 실제 proxy primitive 가 작게 설정되는 등의 이점이 존재한다. </p>
 
                         <h3 id="ray-tracing-renderer"> 3.2. Ray Tracing Renderer</h3>
@@ -380,14 +384,10 @@ rgb[idx * C + 2] = result.z;</code></pre>
                             $$ \tau_{\max} = \frac{(\mu - \mathbf{o})^{\rm T} \Sigma^{-1} \mathbf{d}}{\mathbf{d}^{\rm T} \Sigma^{-1} \mathbf{d} } = \frac{-\mathbf{o}_g^{\rm T} \mathbf{d}_g}{\mathbf{d}_g^{\rm T}\mathbf{d}_g}
                             $$
                         </div>
-                        <p>where </p>
-                        <div class="math-container">
-                            $$ o_g = {\rm S^{-1}R^T}(\mathbf{o} - \mu), \quad  d_g = {\rm S^{-1}R^T} \mathbf{d}.
-                            $$
-                        </div>
+                        <p>where $ \mathbf{o}_g = {\rm S^{-1}R^T}(\mathbf{o} - \mu), \quad  d_g = {\rm S^{-1}R^T} \mathbf{d}$ </p>
                         
                         <div class="lang eng">
-                            <p>Let&#39;s interpret this step by step without panicking.</p>
+                            <p>Let&#39;s interpret this step by step!</p>
                             <p><strong>Step-by-Step Interpretation:</strong></p>
                             <ol>
                                 <li><p><strong>Transformation to Local Coordinates</strong></p>
@@ -411,10 +411,10 @@ rgb[idx * C + 2] = result.z;</code></pre>
                                     </div>
                                     <p> Since this is a convex function with respect to $t$, the maximum can be found by setting the derivative with respect to $t$ to zero:</p>
                                     <div class="math-container">
-                                        $$ \nabla_t f(t) = \frac{d}{dt} \left( (\mathbf{o}_g + t \mathbf{d}_g)^T (\mathbf{o}_g + t \mathbf{d}_g)\right) = 2 \mathbf{d}_g^T (\mathbf{o}_g + t \mathbf{d}_g).
+                                        $$ \begin{aligned} \nabla_t f(t) &= \frac{d}{dt} \left( (\mathbf{o}_g + t \mathbf{d}_g)^T (\mathbf{o}_g + t \mathbf{d}_g)\right) \\ &= 2 \mathbf{d}_g^T (\mathbf{o}_g + t \mathbf{d}_g). \end{aligned}
                                         $$
                                     </div>
-                                    <p> Subsequently, </p>p>
+                                    <p> Subsequently, the analytic solution can be derived as follows: </p>
                                     <div class="math-container"> 
                                         $$ 2 \mathbf{d}_g^T (\mathbf{o}_g + t \mathbf{d}_g) = 0 \\ \rightarrow t = -\frac{\mathbf{o}_g^{\rm T} \mathbf{d}_g}{\mathbf{d}_g^{\rm T}\mathbf{d}_g}
                                         $$ 
@@ -450,7 +450,7 @@ rgb[idx * C + 2] = result.z;</code></pre>
                                 $$ 2 \mathbf{d}_g^T (\mathbf{o}_g + t \mathbf{d}_g) = 0 \\ \rightarrow t = -\frac{\mathbf{o}_g^{\rm T} \mathbf{d}_g}{\mathbf{d}_g^{\rm T}\mathbf{d}_g}
                                 $$ 
                             </div>
-                            <p class="lang kor" style="display: none;">직관적으로 생각해도 자명한데, $\mathbf{o}_g, \ $\mathbf{d}_g$ 가 3D Gaussian 이 정의하는 elliptical space 로 transform 되어 있으므로, ray direction 이 3D Gaussian origin 과 align 되어 있을 수록, 거리가 가까울 수록 높은 reponce 를 보이게 된다. </p>
+                            <p class="lang kor" style="display: none;">직관적으로 생각해도 자명한데, $\mathbf{o}_g, \ \mathbf{d}_g$ 가 3D Gaussian 이 정의하는 elliptical space 로 transform 되어 있으므로, ray direction 이 3D Gaussian origin 과 align 되어 있을 수록, 거리가 가까울 수록 높은 reponce 를 보이게 된다. </p>
                             <p class="lang kor" style="display: none;">Ray tracing 은 proxy hit 순서로 진행되기 때문에 실제로 ray 에 대한 particle 들의 maximum responce 의 순서와는 약간 다를 수 있지만, 이 approximation 이 성능 저하를 초래하지 않았다고 한다. </p>
                         </div>
                         
