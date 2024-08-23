@@ -150,34 +150,59 @@
                         <h3 id="challenges-in-3d-gaussian-splatting">Challenges in 3D Gaussian Splatting</h3>
                         <p class="lang eng">3D Gaussian Splatting (3D GS) has emerged as a promising approach for high-fidelity novel-view synthesis and real-time rendering, leveraging a sophisticated tile-based rasterization technique. Despite its potential, this area, often referred to as the next frontier in photogrammetry, continues to face several significant challenges.</p>
                         <p class="lang eng">A major limitation of 3D GS arises from its reliance on rasterization, which introduces several constraints:</p>
-                        <ol class="lang eng">
+                        <p class="lang kor" style="display: none;">3D Gaussian Splatting 은 well-designed tile-based rasterizer 를 이용해 high-fidelity novel-view synthesis 와 real-time rendering 을 달성한 연구이다. </p>
+                        <p class="lang kor" style="display: none;">Next-photogramerry 로까지 불리며 각광받고 있는 연구분야지만, 아직 과도기이기 때문에 극복해야할 문제가 많이 남아있다. </p>
+                        <p class="lang kor" style="display: none;">그 중 대표적인 것이 바로 Rasterization 사용으로 인한 문제들이다. </p>
+                        
+                        <ol>
                             <li>
-                                <p><strong>Inflexibility with Diverse Camera Models</strong><br/>
+                                <p class="lang eng">
+                                    <strong>Inflexibility with Diverse Camera Models</strong><br/>
                                     One of the primary limitations of 3D Gaussian Splatting is its inflexibility in accommodating various camera models.
                                     As highlighted in <span style="text-decoration: underline;"><a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">previous article</a></span>, the use of EWA splatting introduces affine projection errors. 
                                     These errors complicate achieving high-quality results, even when modeling non-pinhole camera types.
                                 </p>
+                                <p class="lang kor" style="display: none;">
+                                    <strong> 다양한 Camera Model 에 유연하지 못하다. </strong><br/>
+                                    이전 <span style="text-decoration: underline;"><a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">3D GS rasterization 분석글</a></span> 에서도 지적한 바와 같이 
+                                    EWA splatting 으로 구현된 rasterization 은 affine projection error 가 있으며, 이 때문에 다양한 camera 에 대한 modeling 을 구현하더라도 high-quality 로 학습하는 것이 쉽지 않다. 
+                                </p>
+                                <figure>
+                                    <img class="img-fluid" src="assets/cam_model.png" width="80%">
+                                    <figcaption style="text-align: center; font-size: 15px;"> Inflexibility of 3D GS with Diverse Camera Models, source: <span style="text-decoration: underline;"><a href="https://letianhuang.github.io/op43dgs/">Optimal GS</a></span> </figcaption>
+                                </figure>
                             </li>
-                            <li><p><strong>Sensitivity to Image Quality</strong><br/> Unlike NeRF, which utilizes MLPs and exhibits a degree of robustness against calibration discrepancies between images, 3D GS relies on explicit geometric primitives. This reliance renders 3D GS highly sensitive to variations in image quality, including issues such as motion blur and rolling shutter effects, which can significantly degrade the final output.</p>
+                            <li>
+                                <p class="lang eng">
+                                    <strong> Sensitivity to Image Quality</strong><br/> 
+                                    Unlike NeRF, which utilizes MLPs and exhibits a degree of robustness against calibration discrepancies between images, 3D GS relies on explicit geometric primitives. This reliance renders 3D GS highly sensitive to variations in image quality, including issues such as motion blur and rolling shutter effects, which can significantly degrade the final output.
+                                </p>
+                                <p class="lang kor" style="display: none;">
+                                    <strong> Image Quality 에 민감하다. </strong><br/>
+                                    MLP 로 이루어진 NeRF 는 image 간 calibration 차이에도 일부 강건하지만, 3D GS 는 explicit primitive 를 사용하기 때문에 motion blur, rolling shutter 등 image quality 에 극도로 민감하다.
+                                </p>
+                                <figure>
+                                    <img class="img-fluid" src="assets/cap.png" width="80%">
+                                    <figcaption style="text-align: center; font-size: 15px;"> Left: trained 3D GS on motion blurred scene, right: GT, source: <span style="text-decoration: underline;"><a href="https://benhenryl.github.io/Deblurring-3D-Gaussian-Splatting/">Deblurring 3D GS</a></span> </figcaption>
+                                </figure>
                             </li>
-                            <li><p><strong>Lack of Physically-Based Rendering Capabilities</strong><br/>
-                                Another challenge facing 3D GS is its inability to incorporate physically-based rendering (PBR) effects. Since 3D GS does not adhere to the principles of PBR, accurately modeling lighting and reflection effects within a scene remains problematic. This limitation restricts the realism and applicability of 3D GS in scenarios where accurate light interaction is critical.</p>
+                            <li>
+                                <p class="lang eng">
+                                    <strong>Lack of Physically-Based Rendering Capabilities</strong><br/>
+                                    Another challenge facing 3D GS is its inability to incorporate physically-based rendering (PBR) effects. Since 3D GS does not adhere to the principles of PBR, accurately modeling lighting and reflection effects within a scene remains problematic. This limitation restricts the realism and applicability of 3D GS in scenarios where accurate light interaction is critical.
+                                </p>
+                                <p class="lang kor" style="display: none;">
+                                    <strong> 물리적인 반사 효과 모델링이 힘들다. </strong><br/>
+                                    Physically-based Rendering 이 아니기 때문에 조명, 반사 효과 등을 모델링하기 힘들다.
+                                </p>
+                                <figure>
+                                    <img class="img-fluid" src="assets/ref.png" width="70%">
+                                    <figcaption style="text-align: center; font-size: 15px;"> Left: GT, Right: 3D GS, source: <span style="text-decoration: underline;"><a href="https://gapszju.github.io/3DGS-DR/">3D GS-DR</a></span> </figcaption>
+                                </figure>
                             </li>
                         </ol>
                         <p class="lang eng">To address some of these challenges, RadSplat proposes a two-stage learning process. In this approach, Radiance Fields are first learned using Zip-NeRF, which generates perfectly calibrated pinhole images within the NeRF scene. These images are then used as training data for 3D GS.</p>
                         <p class="lang eng">However, this method is inefficient due to its two-stage nature and fails to resolve the fundamental limitations posed by rasterization, particularly with physically-based rendering.</p>
-                        
-                        <p class="lang kor" style="display: none;">3D Gaussian Splatting 은 well-designed tile-based rasterizer 를 이용해 high-fidelity novel-view synthesis 와 real-time rendering 을 달성한 연구이다. </p>
-                        <p class="lang kor" style="display: none;">Next-photogramerry 로까지 불리며 각광받고 있는 연구분야지만, 아직 과도기이기 때문에 극복해야할 문제가 많이 남아있다. </p>
-                        <p class="lang kor" style="display: none;">그 중 대표적인 것이 바로 Rasterization 사용으로 인한 문제들이다. </p>
-                        <ol class="lang kor" style="display: none;">
-                            <li> <p><strong>Inflexibility to Various Camera Models</strong><br/>
-                            이전 <span style="text-decoration: underline;"><a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">3D GS rasterization 분석글</a></span> 에서도 지적한 바와 같이 EWQ splatting 으로 구현된 rasterization 은 affine projection error 가 있으며, 이 때문에 다양한 camera 에 대한 modeling 을 구현하더라도 high-quality 로 학습하는 것이 쉽지 않다. </p></li>
-                            <li><p><strong>Sensitive to Image Quality</strong><br/>
-                            MLP 로 이루어진 NeRF 는 image 간 calibration 차이에도 일부 강건하지만, 3D GS 는 explicit primitive 를 사용하기 때문에 motion blur, rolling shutter 등 image quality 에 극도로 민감하다. </p> </li>
-                            <li><p><strong>Incapability of Physical-based Effect</strong>
-                            Physically-based Rendering 이 아니기 때문에 조명, 반사 효과 등을 모델링하기 힘들다.</p></li>
-                        </ol>
                         <p class="lang kor" style="display: none;">1), 2) 등에 대해서는 RadSplat 에서 Zip-NeRF 로 Radiance Fields 를 먼저 학습한 후, NeRF scene 에서 perfect &amp; calibrated pinhole image 를 rendering 하여 3D GS 의 training data 로 사용하면서 우회한 바 있다. </p>
                         <p class="lang kor" style="display: none;">하지만 이 학습 방법은 2-stage 기 때문에 효율적이지 못하며, 근본적으로 rasterization 이기 때문에 갖는 3) 은 여전히 challenge 로 남아있다. </p>
                         
@@ -235,10 +260,6 @@ rgb[idx * C + 2] = result.z;</code></pre>
                         <p class="lang eng">To effectively design a ray tracer tailored for 3D Gaussian Splatting, two key elements are essential:</p>
                         <ol class="lang eng">
                             <li><p><strong>BVH with Appropriate Proxy Primitives</strong><br/>Use Bounding Volume Hierarchy (BVH) to accelerate hit traversal by defining proxy primitives that encapsulate 3D Gaussians accurately.</p>
-                            <figure>
-                                <img class="img-fluid" src="assets/fig2.png" width="50%">
-                                <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 2.</strong> bounding primitive </figcaption>
-                            </figure>
                             </li>
                             <li><p><strong>Rendering Algorithm</strong><br/> Develop a rendering algorithm that casts rays and gathers information specific to 3D Gaussian Ray Tracing, optimizing the process for the unique characteristics of Gaussian splats.</p>
                             </li>
@@ -246,11 +267,7 @@ rgb[idx * C + 2] = result.z;</code></pre>
                         <p class="lang kor" style="display: none;">3D Gaussian 을 위한 Ray Tracer 설계를 위해 다음 두가지의 핵심 요소가 필요하다. </p>
                         <ul class="lang kor" style="display: none;">
                             <li> Hit traversal 가속화를 위해 BVH 를 사용하는데, BVH 를 위한 proxy primitive 를 3D Gaussian 에 알맞게 정의할 것
-                                <figure>
-                                    <img class="img-fluid" src="assets/fig2.png" width="50%">
-                                    <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 2.</strong> bounding primitive </figcaption>
-                                </figure>
-                            </li>
+                            </li><br/>
                             <li>3D Gaussian Ray Tracing 의 rendering algorithm (cast ray &amp; gather information) 을 알맞게 정의할 것. 즉 어떻게 효율적으로 ray 를 samplng 하고 gaussian responce 를 계산할 것인지 결정해야한다. </li>
                         </ul>
                         <p class="lang kor" style="display: none;">
@@ -259,18 +276,22 @@ rgb[idx * C + 2] = result.z;</code></pre>
                         <br/>
 
                         <h3 id="bounding-primitives"> 3.1. Bounding Primitives</h3>
-                        <p class="lang eng">Let&#39;s start with BVH (Bounding Volume Hierarchy).</p>
-                        <p class="lang kor" style="display: none;">간단하게 BVH (Bounding Volume Hierarchy) 부터 짚고 넘어가자. </p>
+                        <p class="lang eng">Let&#39;s start with BVH (<span style="text-decoration: underline;"><a href="https://en.wikipedia.org/wiki/Bounding_volume_hierarchy">Bounding Volume Hierarchy</a></span>).</p>
+                        <p class="lang kor" style="display: none;">간략하게 BVH (<span style="text-decoration: underline;"><a href="https://en.wikipedia.org/wiki/Bounding_volume_hierarchy">Bounding Volume Hierarchy</a></span>) 부터 짚고 넘어가자. </p>
                         <figure>
                             <img class="img-fluid" src="assets/fig3.png" width="90%">
-                            <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 3.</strong> Bounding Volume Hierarchy</figcaption>
+                            <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 2.</strong> Bounding Volume Hierarchy</figcaption>
                         </figure>
-                        <p class="lang eng">BVH is a hierarchical tree structure used to efficiently divide space for rendering and ray tracing. In this structure, parent nodes consist of larger bounding volumes that encompass smaller leaf nodes, facilitating efficient space partitioning and exploration. The main objective of BVH in this context is to define a proxy primitive that accurately encapsulates 3D Gaussians and to use this proxy geometry to construct a BVH. This hierarchy then guides the ray traversal process by determining which 3D Gaussians should be considered for intersection tests.</p>
-                        <p class="lang eng">NVIDIA OptiX, a common framework for ray tracing, offers three predefined proxy primitive types: triangles, spheres, and axis-aligned bounding boxes (AABBs). However, none of these are ideal for 3D Gaussians. For instance, using AABBs would simplify calculations but would lead to many false-positive proxy hits, as AABBs cannot tightly enclose the Gaussian distribution, leading to inefficiencies in ray tracing.</p>
-                        
+                        <p class="lang eng">BVH is a hierarchical tree structure used to efficiently divide space for rendering and ray tracing. In this structure, parent nodes consist of larger bounding volumes that encompass smaller leaf nodes, facilitating efficient space partitioning and exploration.</p> 
+                        <p class="lang eng">The main objective of BVH in this context is to define a proxy primitive that accurately encapsulates 3D Gaussians and to use this proxy geometry to construct a BVH. This hierarchy then guides the ray traversal process by determining which 3D Gaussians should be considered for intersection tests.</p>
                         <p class="lang kor" style="display: none;">BVH 란, 공간을 분할하여 hierarchy 로 나타낸 tree structure 이다. Parants node 는 더 큰 bounding volumes 으로 leefs 를 완전히 감싸는 형태로 이루어져있으며, 이를 통해 효율적으로 공간을 분할 탐색할 수 있게 된다. </p>
                         <p class="lang kor" style="display: none;">즉 BVH 의 목적은 3D Gaussian 을 적절하게 감싸는 proxy primitive 를 정의하고, 이 proxy geometry 로 BVH 를 구성하여 어떠한 3D Gaussian 들을 ray traversal 과정에서 탐색할 것인지를 결정하는 것이다. </p>
-                        <p class="lang kor" style="display: none;">NVIDIA OptiX 에서는 미리 정의된 3가지 타입 1) triangle, 2) sphere and 3) AABBs 가 있지만, 3가지 모두 3D Gaussian 에 적절하지 않다고 한다. 3) 의 AABB 를 이용하는 경우를 생각해보면, 계산은 간단하지만 false positive proxy hit 이 많아지기 때문에 trade-off 가 있다 (Fig4 first).</p>
+                        <figure>
+                            <img class="img-fluid" src="assets/fig2.png" width="65%">
+                            <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 3.</strong> bounding primitive </figcaption>
+                        </figure>
+                        <p class="lang eng">NVIDIA OptiX, a common framework for ray tracing, offers three predefined proxy primitive types: triangles, spheres, and axis-aligned bounding boxes (AABBs). However, none of these are ideal for 3D Gaussians. For instance, using AABBs would simplify calculations but would lead to many false-positive proxy hits, as AABBs cannot tightly enclose the Gaussian distribution, leading to inefficiencies in ray tracing (see Fig. 4)</p>
+                        <p class="lang kor" style="display: none;"> 저자에 의하면, NVIDIA OptiX 에서는 미리 정의된 3가지 타입 1) triangle, 2) sphere and 3) AABBs 은 모두 3D Gaussian 에 적절하지 않다고 한다. 3) 의 AABB 를 이용하는 경우를 생각해보면, 계산은 간단하지만 false positive proxy hit 이 많아지기 때문에 trade-off 가 있다 (see Fig. 4).</p>
 
                         <h4 id="stretched-polyhedron-proxy"> Stretched Polyhedron Proxy</h4>
                         <figure>
@@ -392,7 +413,6 @@ rgb[idx * C + 2] = result.z;</code></pre>
                         
                         <div class="lang eng">
                             <p>Let&#39;s interpret this step by step!</p>
-                            <p><strong>Step-by-Step Interpretation:</strong></p>
                             <ol>
                                 <li><p><strong>Transformation to Local Coordinates</strong></p>
                                     <p> The variables $\mathbf{o}_g$ and $\mathbf{d}_g$ represent the ray origin and direction, which is transformed into the local coordinate system of the 3D Gaussian (just as the proxy primitive is defined in these local coordinates).</p>
@@ -461,7 +481,7 @@ rgb[idx * C + 2] = result.z;</code></pre>
                         <h2 id="experiments"> 4. Experiments</h2><br/>
                         <h3 id="quantitative-results"> 4.1. Quantitative Results</h3>
                         <p class="lang eng">The quantitative evaluations of 3D GRT indicate that there is almost no significant difference between the quantitative metrics of 3D GRT and other novel view synthesis (NVS) techniques. While the fps is slightly lower in comparison, 3D GS still achieves real-time performance.</p>
-                        <p class="lang kor" style="display: none;">정량적 평가 모두 훌륭하게 제시되어 있다. (역시 갓비디아…) </p>
+                        <p class="lang kor" style="display: none;">정량적, 정성적 평가 모두 훌륭하게 제시되어 있다. (역시 갓비디아…) </p>
                         <p class="lang kor" style="display: none;">3D GS 와 NVS quantitative results 는 거의 차이나지 않으며, fps 는 조금 느리지만 여전히 real-time 을 달성한다. </p>
                         <figure>
                             <img class="img-fluid" src="assets/fig7.png" width="100%">
@@ -476,7 +496,7 @@ rgb[idx * C + 2] = result.z;</code></pre>
                         <h3 id="ablation-study-and-ray-tracer-design"> 4.2. Ablation Study</h3>
                         <p class="lang eng">The paper also includes an ablation study focused on the design of the Ray Tracer. This study explores various aspects such as the justification for the proxy mesh design and the determination of an optimal $k$ value in the $k$-buffer, which is crucial for managing multiple semi-transparent particles during rendering.</p>
                         <p class="lang eng">The study provides experimental evidence that supports the choices made in the design of the Ray Tracer, highlighting the importance of these parameters in achieving efficient and accurate rendering.</p>
-                        <p class="lang kor" style="display: none;">Ray Tracer 설계에 대한 ablation study 도 제공하는데, proxy mesh design 에 대한 당위성이나 k buffer 에서 적절한 k 값을 설정하는 등의 실험이 보고되어있다.  </p>
+                        <p class="lang kor" style="display: none;">Ray Tracer 설계에 대한 ablation study 도 제공하는데, proxy mesh design 에 대한 당위성이나 $k$ buffer 에서 적절한 $k$ 값을 설정하는 등의 실험이 보고되어있다.  </p>
                         <figure>
                             <img class="img-fluid" src="assets/fig9.png" width="100%">
                             <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 9.</strong> Ablation Study </figcaption>
