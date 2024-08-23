@@ -38,15 +38,15 @@
             <!-- Navigation-->
             <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
                 <div class="container px-5">
-                    <a class="navbar-brand" href="../../index.html"><span class="fw-bolder text-primary">HwanHeo's log</span></a>
+                    <a class="navbar-brand" href="../../"><span class="fw-bolder text-primary">HwanHeo's log</span></a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
-                            <li class="nav-item"><a class="nav-link" href="../../index.html">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="../../resume.html">Resume</a></li>
-                            <li class="nav-item"><a class="nav-link" href="../../projects.html">Projects</a></li>
-                            <li class="nav-item"><a class="nav-link" href="../../blogs/main.html">Blog</a></li>
-                            <li class="nav-item"><a class="nav-link" href="../../contact.html">Contact</a></li>
+                            <li class="nav-item"><a class="nav-link" href="../../">Home</a></li>
+                            <!--li class="nav-item"><a class="nav-link" href="../../resume.html">Resume</a></li-->
+                            <li class="nav-item"><a class="nav-link" href="../">Projects</a></li>
+                            <li class="nav-item"><a class="nav-link" href="../../blogs/"> | &nbsp; &nbsp; Blog</a></li>
+                            <!--li class="nav-item"><a class="nav-link" href="../../contact.html">Contact</a></li-->
                         </ul>
                     </div>
                 </div>
@@ -55,8 +55,8 @@
             <section class="py-5">
                 <div class="container px-5 mb-5">
                     <div class="text-center mb-5">
-                        <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild</span></h1>
-                        <div class="fs-3 fw-light text-muted"> preprint </div>
+                        <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Search-and-Attack: Temporally Sparse Adversarial Attack on Videos</span></h1>
+                        <div class="fs-3 fw-light text-muted"> IEEE Access 2021 </div>
                         <div class="fs-3 fw-light text-muted"> Korea University </div>
                     </div>
                     <div class="row gx-5 justify-content-center">
@@ -64,19 +64,31 @@
                             <!--img class="img-fluid" src="./assets/poster.png" /-->
                             <h2> Overview </h2>
                             <hr/>
-                            <img class="img-fluid" src="assets/main.png" width="100%" />
-                            <p> SF-NeRF focus on decomposing the transient and static phenomena, predicting the transient components of each image with an additional MLP module dubbed FilterNet. FilterNet exploits semantic information given by an image encoder pretrained in an unsupervised manner, which is the key to achieve few-shot learning. </p>
+                            <img class="img-fluid" src="main_figure.png" width="100%" />
                             <ul>
-                                <li> present a learning framework for reconstructing neural scene representations from a small number of unconstrained (different illuminations, occlusions, etc) tourist photos </li>
-                                <li> Using DINO (semantic segmentation) features, we make occlusion filtering module that predicts the transient color and its opacity for each pixel </li>
+                                <li> present a framework to generate a temporally sparse adversarial attack, called Search-and-Attack scheme, which first retrieves the most vulnerable frames and then attacks only those frames on Videos. </li>
+                                <li> Since the most vulnerable set of frames involves an expensive combinatorial optimization problem, we introduce alternative surrogate objective functions : Magnitude of the Gradients <strong>(MoG)</strong> and Frame-wise Robustness Intensity <strong>(FRI)</strong>. </li>
                             </ul>
                             <p> <br/> </p>
-                            <p> The overall quantitative results and qualitative results demonstrate that the SF-NeRF mostly outperforms the baselines in the few-shot setting in the wild images. </p>
-                            <div style="text-align : center;">
-                                <img class="img-thumbnail" src="assets/qual.png" width="100%">
+
+                            <p> <strong> Magnitude of Gradient</strong> </p>
+                            <p> The surrogate objective function is derived as: </p>
+                            <div class="math-container">
+                                $$ \mathcal{L}(x + \delta^{\mathbf{I}}, y; \theta) \approx \mathcal{L}(x, y; \theta) + \langle  \nabla_{{x}}\mathcal{L}(x, y; \theta), \delta^{\mathbf{I}} \rangle $$
                             </div>
-                            <div style="text-align : center;">
-                                <img class="img-thumbnail" src="assets/qual2.png" width="100%">
+                            <p> we can approximate the object with 1st Taylor approximation as follows: </p>
+                            <div class="math-container">
+                                $$ \mathcal{L}(x, y; \theta) + \langle  \nabla_{{x}}\mathcal{L}(x, y; \theta), \delta^{\mathbf{I}} \rangle \\  \le \mathcal{L}(x, y; \theta) + \varepsilon \cdot \sum\limits_{i \in \mathbf{I}}\; \|\nabla_{{x}_{i}}\mathcal{L}(x, y; \theta)\|_1. $$
+                            </div>
+
+                            <p> <strong> Framew-wise Vulnerability</strong> </p>
+                            <p> Secondly, we assume that the increase of the loss value by noise is approximately similar to the sum of the increases induced by frame-wise perturbation.</p>
+                            <div class="math-container">
+                                $$ \mathcal{L}(x + \delta)  - \mathcal{L}(x)= \mathcal{L} (x + \sum_{i \in \mathbf{I}} \delta^{(i)}) - \mathcal{L}(x)\\   \approx  \sum_{{i \in \mathbf{I}}} \left ( \mathcal{L}(x + \delta^{(i)}) - \mathcal{L}(x) \right ) $$
+                            </div>
+                            <p> Similar to MoG, the surrogate loss function can be further simplified by removing the constant L(x). The second surrogate objective function is given as : </p>
+                            <div class="math-container">
+                                $$ J_{\text{FRI}}(x, \mathbf{I}, y; \theta) = \sum_{{i \in \mathbf{I}}} \mathcal{L}(x + \delta^{(i)}, y; \theta) $$
                             </div>
                         </div>
                     </div>
