@@ -122,10 +122,18 @@
                             <a href="#ray-tracing-renderer"> Ray Tracing Renderer </a>
                         </li>
                         <li>
-                            <a href="ray-gaussian-intersection"> Ray Gaussian Intersection </a>
+                            <a href="#ray-gaussian-intersection"> Ray Gaussian Intersection </a>
                         </li>
                     </ul>
                     <li><a href="#experiments"> Experiments </a></li>
+                    <ul>
+                        <li>
+                            <a href="#quantitative-results"> Quantitative Results </a>
+                        </li>
+                        <li>
+                            <a href="#qualitative-results"> Qualitative Results </a>
+                        </li>
+                    </ul>
                     <li><a href="#conclusion"> Closing </a></li>
                 </ul>
             </nav>
@@ -168,7 +176,7 @@
                                     EWA splatting 으로 구현된 rasterization 은 affine projection error 가 있으며, 이 때문에 다양한 camera 에 대한 modeling 을 구현하더라도 high-quality 로 학습하는 것이 쉽지 않다. 
                                 </p>
                                 <figure>
-                                    <img class="img-fluid" src="assets/cam_model.png" width="80%">
+                                    <img class="img-fluid" src="assets/cam_model.png" width="85%">
                                     <figcaption style="text-align: center; font-size: 15px;"> Inflexibility of 3D GS with Diverse Camera Models, source: <span style="text-decoration: underline;"><a href="https://letianhuang.github.io/op43dgs/">Optimal GS</a></span> </figcaption>
                                 </figure>
                             </li>
@@ -182,7 +190,7 @@
                                     MLP 로 이루어진 NeRF 는 image 간 calibration 차이에도 일부 강건하지만, 3D GS 는 explicit primitive 를 사용하기 때문에 motion blur, rolling shutter 등 image quality 에 극도로 민감하다.
                                 </p>
                                 <figure>
-                                    <img class="img-fluid" src="assets/cap.png" width="80%">
+                                    <img class="img-fluid" src="assets/cap.png" width="85%">
                                     <figcaption style="text-align: center; font-size: 15px;"> Left: trained 3D GS on motion blurred scene, right: GT, source: <span style="text-decoration: underline;"><a href="https://benhenryl.github.io/Deblurring-3D-Gaussian-Splatting/">Deblurring 3D GS</a></span> </figcaption>
                                 </figure>
                             </li>
@@ -205,7 +213,8 @@
                         <p class="lang eng">However, this method is inefficient due to its two-stage nature and fails to resolve the fundamental limitations posed by rasterization, particularly with physically-based rendering.</p>
                         <p class="lang kor" style="display: none;">1), 2) 등에 대해서는 RadSplat 에서 Zip-NeRF 로 Radiance Fields 를 먼저 학습한 후, NeRF scene 에서 perfect &amp; calibrated pinhole image 를 rendering 하여 3D GS 의 training data 로 사용하면서 우회한 바 있다. </p>
                         <p class="lang kor" style="display: none;">하지만 이 학습 방법은 2-stage 기 때문에 효율적이지 못하며, 근본적으로 rasterization 이기 때문에 갖는 3) 은 여전히 challenge 로 남아있다. </p>
-                        
+                        <br/>
+
                         <h2 id="preliminary"> 2. Background </h2>
                         <br/>
                         <h3 id="parameterization">2.1. Parameterization</h3>
@@ -372,22 +381,22 @@ rgb[idx * C + 2] = result.z;</code></pre>
                             <img class="img-fluid" src="assets/fig5.png" width="100%">
                             <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 5.</strong> Ray Tracing </figcaption>
                         </figure>
-                        <p class="lang eng">For differentiable and efficient rendering in 3D GRT, the process involves sequentially rendering through a sorted k-buffer. The k-buffer approach helps in managing multiple semi-transparent particles along a single ray path. The rendering process is outlined as follows:</p>
+                        <p class="lang eng">For differentiable and efficient rendering in 3D GRT, the process involves sequentially rendering through a <em>next $k$ closest hit</em>. This approach helps in managing multiple semi-transparent particles along a single ray path. The rendering process is outlined as follows:</p>
                         <ol class="lang eng">
-                            <li><p><strong>Track Particles Using BVH</strong><br/>The next k particles along a ray path are tracked using the BVH. At this stage, the hit response (i.e., the particle&#39;s contribution to the final image) is not yet measured.</p>
+                            <li><p><strong>Track Particles Using BVH</strong><br/>The next $k$ closest particles along a ray path are tracked using the BVH. At this stage, the hit response (i.e., the particle&#39;s contribution to the final image) is not yet measured.</p>
                             </li>
-                            <li><p><strong>Measure Hit Response Iteratively</strong><br/> Once the k particles are identified, the actual hit response for each particle is measured iteratively within each chunk of the k-buffer. This step involves checking all particles that intersect with the ray.</p>
+                            <li><p><strong>Measure Hit Response Iteratively</strong><br/> Once the $k$ particles are identified, the actual hit response for each particle is measured iteratively within each chunk of the $k$-buffer. This step involves checking all particles that intersect with the ray.</p>
                             </li>
                             <li><p><strong>Proxy Hit Verification</strong><br/> During the response measurement, all proxy-hit particles along the ray are checked to determine their actual contribution based on their proximity and alignment with the ray.</p>
                             </li>
                             <li><p><strong>Rendering Termination</strong><br/> The rendering process continues until a certain threshold is reached, beyond which additional particle contributions are negligible, and rendering can be stopped.</p>
                             </li>
                         </ol>
-                        <p class="lang eng">The following diagram (referenced in the text) illustrates the ray tracing process of 3D GRT when k=3, showing how multiple particles are managed and rendered along a single ray.</p>
+                        <p class="lang eng">The following diagram (referenced in the text) illustrates the ray tracing process of 3D GRT when $k=3$, showing how multiple particles are managed and rendered along a single ray.</p>
                         
-                        <p class="lang kor" style="display: none;">미분 가능하고 효율적인 렌더링을 위해 3D GRT 는 sorted k-buffer 를 통해 순차적으로 rendering 을 진행한다. </p>
+                        <p class="lang kor" style="display: none;">미분 가능하고 효율적인 렌더링을 위해 3D GRT 는 sorted $k$-buffer 를 통해 순차적으로 rendering 을 진행한다. </p>
                         <ul class="lang kor" style="display: none;">
-                            <li>BVH 를 이용해 next k particle 을 추적하고 (이때는 hit response 를 측정하지 않는다)</li><br/>
+                            <li>BVH 를 이용해 next $k$ closest particle 을 추적하고 (이때는 hit response 를 측정하지 않는다)</li><br/>
                             <li>각 chunk 내에서 실제 hit response 를 iterative 하게 측정한다
                                 <ul>
                                     <li>이때, ray 내의 모든 proxy hit particle 을 검사하거나</li>
@@ -395,10 +404,10 @@ rgb[idx * C + 2] = result.z;</code></pre>
                                 </ul>
                             </li>
                         </ul>
-                        <p class="lang kor" style="display: none;">다음 그림은 k=3 일 때 3D GRT 의 ray tracing 과정을 도식화한 것이다. </p>
+                        <p class="lang kor" style="display: none;">다음 그림은 $k=3$ 일 때 3D GRT 의 ray tracing 과정을 도식화한 것이다. </p>
                         <figure>
                             <img class="img-fluid" src="assets/fig6.png" width="80%">
-                            <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 6.</strong> Ray-Traversal w/ k-buffer </figcaption>
+                            <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 6. Next $k$ closest hit Ray Tracer:</strong> on each round of tracing, the next $k$ closest hit particles are collected and sorted into depth order along the ray, the radiance is computed in-order, and the ray is cast again to process the next chunk.  </figcaption>
                         </figure>
                         <br/>
 
@@ -477,6 +486,7 @@ rgb[idx * C + 2] = result.z;</code></pre>
                             <p class="lang kor" style="display: none;">직관적으로 생각해도 자명한데, $\mathbf{o}_g, \ \mathbf{d}_g$ 가 3D Gaussian 이 정의하는 elliptical space 로 transform 되어 있으므로, ray direction 이 3D Gaussian origin 과 align 되어 있을 수록, 거리가 가까울 수록 높은 reponce 를 보이게 된다. </p>
                             <p class="lang kor" style="display: none;">Ray tracing 은 proxy hit 순서로 진행되기 때문에 실제로 ray 에 대한 particle 들의 maximum responce 의 순서와는 약간 다를 수 있지만, 이 approximation 이 성능 저하를 초래하지 않았다고 한다. </p>
                         </div>
+                        <br/>
                         
                         <h2 id="experiments"> 4. Experiments</h2><br/>
                         <h3 id="quantitative-results"> 4.1. Quantitative Results</h3>
@@ -493,27 +503,101 @@ rgb[idx * C + 2] = result.z;</code></pre>
                         </figure>
                         <br/>
 
-                        <h3 id="ablation-study-and-ray-tracer-design"> 4.2. Ablation Study</h3>
-                        <p class="lang eng">The paper also includes an ablation study focused on the design of the Ray Tracer. This study explores various aspects such as the justification for the proxy mesh design and the determination of an optimal $k$ value in the $k$-buffer, which is crucial for managing multiple semi-transparent particles during rendering.</p>
-                        <p class="lang eng">The study provides experimental evidence that supports the choices made in the design of the Ray Tracer, highlighting the importance of these parameters in achieving efficient and accurate rendering.</p>
-                        <p class="lang kor" style="display: none;">Ray Tracer 설계에 대한 ablation study 도 제공하는데, proxy mesh design 에 대한 당위성이나 $k$ buffer 에서 적절한 $k$ 값을 설정하는 등의 실험이 보고되어있다.  </p>
+                        <h4 id="ablation-study-and-ray-tracer-design"> Ablation Study</h4>
+                        <p class="lang eng">
+                            The paper also explores the design of the Next $k$-closest Ray Tracer (Fig.8 top left), 
+                            validation for the proxy mesh design (Fig. 8 bottom left) and the determination 
+                            of an optimal $k$ value in the $k$-buffer (Fig. 8 top right). 
+                        </p>
+                        <p class="lang eng"> Experimental results support the design of the Ray Tracer, highlighting the importance of these parameters in achieving efficient and accurate rendering.</p>
+                        <p class="lang kor" style="display: none;">
+                            Ablation study 로는 제안한 Next $k$-closest Ray Tracer 와 SLAB, MLAT 등 기존 ray tracer 들과의 비교 (Fig. 8 top left), 
+                            $k$-buffer 
+                            proxy mesh design 에 대한 당위성이나 $k$ buffer 에서 적절한 $k$ 값을 설정하는 등의 실험이 보고되어있다.  
+                        </p>
                         <figure>
                             <img class="img-fluid" src="assets/fig9.png" width="100%">
                             <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 9.</strong> Ablation Study </figcaption>
                         </figure>
                         <br/>
+                        <h4> Particle Kernel Design </h4>
+                        
+                        <p class="lang eng">
+                            Since the particle kernel for the designed Ray Tracer does not need to be strictly a 3D Gaussian, the authors experimented with different kernel designs. 
+                            The four kernels evaluated include:
+                        </p>
+                        <p class="lang kor" style="display: none;">
+                            설계된 Ray Tracer 에 대해 particle kernel 이 꼭 3D Gaussian 일 필요는 없으므로, 저자들은 다음 네 개의 kernel design 에 대한 실험도 진행하였다.
+                        </p>
+                        <ul>
+                            <li>
+                                <p>
+                                    <strong>3D Gaussian</strong>
+                                    <p>
+                                        $$ \hat{p}(x) = \sigma e^{ (x-\mu)^{\rm T} \Sigma^{-1} (x-\mu) }
+                                        $$ 
+                                    </p>
+                                </p>
+                            </li>
+                            <li>
+                                <p>
+                                    <strong>Generalized Gaussian</strong>: generalized of degree $n$
+                                    <p>
+                                        $$ \hat{p}_n(x) = \sigma e^{ \left((x-\mu)^{\rm T} \Sigma^{-1} (x-\mu)\right)^n }
+                                        $$ 
+                                    </p>
+                                </p>
+                            </li>
+                            <li>
+                                <p>
+                                    <strong>2D Gaussian</strong>: Gaussian Surfels, suggested in 2D Gaussian Splatting (cf. <a href="../240602_2dgs/"><span style="text-decoration: underline;">my previous review </span></a>)
+                                </p>
+                            </li>
+                            <li>
+                                <p>
+                                    <strong>Cosine wave modulation</strong>: aims to model a particle with spatially varying radiance
+                                    <p>
+                                        $$ \hat{p}_c(x) = \hat{p}(x) \left (  0.5 + 0.5 \cos (\psi {\rm R^T S^{-1}} (x-\mu))  \right )
+                                        $$
+                                    </p>
+                                </p>
+                            </li>
+                        </ul>
+                        <p class="lang eng">
+                            As shown in Figure 10, the reconstruction performance is similar across all kernels tested. However, when using the Generalized Gaussian (GG) kernel, 
+                            the frames per second (fps) nearly double compared to the standard 3D Gaussian kernel.
+                        </p>
+                        <p class="lang kor" style="display: none;">정량 평가는 Fig. 10 에서 볼 수 있는데, </p>
+                        <figure>
+                            <img class="img-fluid" src="assets/kernel_qual.png" width="100%">
+                            <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 10.</strong> Kernel Design Comparison </figcaption>
+                        </figure>
+                        <p class="lang eng">
+                            This increase in fps is due to the GG kernel’s design, which makes the density more concentrated around the mean. As the density is modeled closer to an opaque particle, the number of ray-particle intersections decreases, thereby improving rendering efficiency. 
+                        </p>
+                        <p class="lang eng">
+                            This effect is also evident in the ray-hit visualization provided by the authors, which shows fewer ray-particle interactions for the GG kernel.
+                        </p>
+                        <p class="lang kor" style="display: none;">각 kernel 별로 reconstruction 성능은 비슷하나, Generalized Gaussian (GG) 를 사용할 때 fps 가 3D Gaussian 에 비해 2배 가까이 올라간다. 이는 GG 의 kernel design 에서 $e^{-x}$ inner quadratic 을 degree $n$ 으로 제곱하기 때문에 density 가 mean 부근으로 몰려서 opaque particle 에 가깝게 modeling 되기 때문이다. </p>
+                        <p class="lang kor" style="display: none;">따라서 ray-particle hit 자체가 줄어들 것을 예상할 수 있으며, 이는 실제 저자들이 제공하는 ray-hit visualization 에서도 볼 수 있다. </p>
+                        <figure>
+                            <img class="img-fluid" src="assets/ray_hit.png" width="100%">
+                            <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 11.</strong> Ray hit count for left: 3D G, right: GG  </figcaption>
+                        </figure>
 
-                        <h3 id="qualitative-results"> 4.3. Qualitative Results</h3>
+                        <br/>
+
+                        <h3 id="qualitative-results"> 4.2. Qualitative Results</h3>
                         <p class="lang eng">In addition to the quantitative analysis, the qualitative results demonstrate how this method effectively overcomes the limitations of rasterization.</p> 
                         <p class="lang eng"> Specifically, the 3D GRT shows significant improvements in modeling and rendering, particularly in handling complex light effects across various camera models. This ability to accurately represent lighting and reflections, which are often challenging in rasterization-based techniques, demonstrates that the method could be highly effective in realistic rendering scenarios.</p>
                         <p class="lang kor" style="display: none;">Qualitative Results 에서는 앞서 지적한 rasterization 의 한계점을 타파한 모습들을 보여준다. 다양한 camera model 에 대한 rendering 및 light effect 를 모델링하는 모습을 통해 3D GRT 가 효과적으로 구현되었음을 입증한다. </p>
                         <figure>
                             <img class="img-fluid" src="assets/fig10.png" width="100%">
-                            <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 10.</strong> 3D GRT w/ various light effect </figcaption>
+                            <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 12.</strong> 3D GRT w/ various light effect </figcaption>
                         </figure>
                         <figure>
                             <img class="img-fluid" src="assets/fig11.png" width="100%">
-                            <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 11.</strong> 3D GRT's reconstruction capability for non-pinhole camera </figcaption>
+                            <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 13.</strong> 3D GRT's reconstruction capability for non-pinhole camera </figcaption>
                         </figure>
                         <p class="lang eng">Overall, the combination of both quantitative and qualitative evaluations highlights the strengths of this new 3D GS approach, especially in terms of performance, memory efficiency, and the ability to handle complex visual effects.</p>
                         <br/>
