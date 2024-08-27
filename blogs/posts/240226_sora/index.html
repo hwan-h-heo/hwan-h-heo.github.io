@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title> Can SORA understand 3D?  </title>
+        <link rel="icon" type="image/x-icon" href="../../../assets/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+        <!-- Prism.js CSS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="../../../css/blog_style.css" rel="stylesheet" />
+        <style>
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                width: 50%;
+                border: 1px solid #ddd;
+                padding: 10px;
+                text-align: center;
+                vertical-align: middle;
+            }
+            th {
+                width: 15%; /* Reduced width of the header column */
+                background-color: #f2f2f2; 
+            }
+            .wp-block-image figcaption {
+                font-size: 4px;
+                color: #000000;
+            }
+            .custom-btn {
+                color: #d3d3d3; /* Text color */
+                border: none; /* Remove border */
+            }
+            .custom-btn:hover {
+                color: black; /* Slightly darker gray for hover */
+            }
+            @media (min-width: 1920px) {
+                .modal-xl {
+                    --bs-modal-width: 1600px;
+                }
+            }
+            @media (min-width: 2560px) {
+                .modal-xl {
+                    --bs-modal-width: 1920px;
+                }
+            }
+        </style>
+        <!-- MathJax CSS -->
+        <script src="../../../js/mathjax-config.js"></script>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({            
+                tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}            
+            });
+        </script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+        <script src="../../../js/include.js"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-RF7ETSKPK9');
+        </script>
+    </head>
+    <body>
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="../../">HwanHeo's Blog</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../../">Post</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../../../">HwanHeo's log</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Page Header-->
+        <header class="masthead" style="background-image: url('../../../assets/blog_bg.png')">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="post-heading">
+                            <h1> Can SORA understand 3D? </h1>
+                            <br/>
+                            <span class="meta">
+                                Posted by
+                                Hwan Heo
+                                on Febrary 26, 2024
+                            </span>
+                            <div style="text-align: center;">
+                                <button type="button" class="btn custom-btn" onclick="setLanguage('eng')" style="font-size: 13px;">eng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Post Content-->
+        <article class="mb-4">
+            <nav class="toc">
+                <ul>
+                    <li>
+                        <a href="#intro"> Introduction</a>
+                    </li>
+                    <ul>
+                        <li>
+                            <a href="#sora"> Can SORA understand 3D? </a>
+                        </li>
+                    </ul>
+                    <li><a href="#experiments"> Experiments </a></li>
+                    <ul>
+                        <li>
+                            <a href="#set"> SfM from Sora </a>
+                        </li>
+                        <li>
+                            <a href="#nerf"> NeRF from Sora </a>
+                        </li>
+                        <li>
+                            <a href="#gs"> Gaussian Splatting from Sora </a>
+                        </li>
+                    </ul>
+                    <li><a href="#conclusion"> Closing </a></li>
+                </ul>
+            </nav>
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div data-include-path="../layout/series.html"></div>
+                        <br/>
+                        <h2 id="tl-dr">TL; DR</h2>
+                        <figure>
+                            <img src="https://velog.velcdn.com/images/gjghks950/post/e17bef88-fe46-41b6-936a-14b7391eda13/image.gif" alt="Gaussian RT" width="100%">
+                            <figcaption style="text-align: center; font-size: 15px;"><strong></strong> NeRF Reconstruction from SORA </figcaption>
+                        </figure>
+                        <p>In this article, I will explore the capabilities of 3D reconstruction through Neural Rendering techniques (NeRF and 3D Gaussian Splatting) by analyzing a video generated by OpenAI’s recently released Video Generation AI, <a href="https://openai.com/sora">Sora</a>.</p> 
+                        <p> The goal of the project includes examining the geometric consistency of Sora’s output and reflecting on the implications for the future of AI in video generation.</p>
+                        
+                        <h2 id="intro">Introduction</h2>
+                        <p>Sora represents a groundbreaking development in AI, comparable to the impact of ChatGPT. While overcoming the curse of dimensionality in machine learning is notoriously challenging, I initially believed it would take a significant amount of time for video generation models to achieve performance levels similar to those seen in 2D image diffusion models.</p>
+                        <p>However, a study from early 2024 has proven this assumption wrong. The following video provides a glimpse of Sora&#39;s remarkable capabilities:</p>
+                        <div class="video-container">
+                            <iframe width="100%" src="https://www.youtube.com/embed/HK6y8DAPN_0?si=86HWbOrGACbYvlEe&amp;start=82" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <p>This video showcases a substantial improvement over previous video generation models, which often struggled to maintain consistency even between frames. The smoothness and continuity in Sora&#39;s output indicate a new level of sophistication in video generation.</p>
+                        
+                        <h3 id="sora">Can SORA understand 3D?</h3>
+                        <p>Given my background in 3D reconstruction, I became curious about whether Sora generates scenes with an understanding of geometric consistency or merely maintains content consistency. To explore this, I formulated the following hypothesis:</p>
+                        <ul>
+                        <li><strong>Hypothesis:</strong> If Sora demonstrates a robust understanding of 3D geometry, then its generated outputs should facilitate accurate 3D reconstruction using computer vision techniques.</li>
+                        </ul>
+                        <p>To test this hypothesis, I adopted a method similar to Novel View Synthesis from real-world capture, which involves:</p>
+                        <ol>
+                        <li>Capturing the video.</li>
+                        <li>Camera pose tracking (calibrating extrinsic and intrinsic parameters).</li>
+                        <li>NeRF Training for 3D reconstruction.</li>
+                        </ol>
+                        <br/>
+
+                        <h2 id="experiments">Experiments</h2><br/>
+                        <h3 id="set">Dataset</h3>
+                        <p>I selected four videos from Sora’s published examples as candidates for 3D reconstruction:</p>
+                        <table>
+                            <tr>
+                                <th> Big Sur </th>
+                                <th> Santorini </th>
+                            </tr>
+                            <tr>
+                                <td><video controls style="width: 100%;"><source src="https://cdn.openai.com/sora/videos/big-sur.mp4" type="video/mp4"></video></td>
+                                <td><video controls style="width: 100%;"><source src="https://cdn.openai.com/sora/videos/santorini.mp4" type="video/mp4"></video></td>
+                            </tr>
+                            <tr>
+                                <th> Art Museum </th>
+                                <th> Gold Rush </th>
+                            </tr>
+                            <tr>
+                                <td><video controls style="width: 100%;"><source src="https://cdn.openai.com/sora/videos/art-museum.mp4" type="video/mp4"></video></td>
+                                <td><video controls style="width: 100%;"><source src="https://cdn.openai.com/sora/videos/gold-rush.mp4" type="video/mp4"></video></td>
+                            </tr>
+                        </table>
+                        <p>These scenes were chosen based on their relatively static nature, as scenes with too many dynamic objects would complicate reconstruction.</p>
+                        <h3 id="cam"> Camera Pose Tracking</h3>
+                        <p>After downloading the videos, I sampled the frames and performed Structure from Motion (SfM) using COLMAP. This process allowed us to assess how well Sora&#39;s output aligns with 3D geometry as assumed by stereo vision.</p>
+                        <p><em>COLMAP is a computer vision tool that identifies image features (such as edges), performs feature matching, and utilizes bundle adjustment to determine the spatial positions of each frame.</em></p>
+                        <p>The COLMAP results are as follows:</p>
+                        <ol>
+                        <li><p><strong>Santorini Scene</strong></p>
+                            <figure>
+                                <img src="https://velog.velcdn.com/images/gjghks950/post/f0029a1c-9f8f-4835-8d1b-b2b352346b93/image.gif" alt="Gaussian RT" width="100%">
+                                <figcaption style="text-align: center; font-size: 15px;"><strong></strong> NeRF Reconstruction from SORA </figcaption>
+                            </figure>
+                        </li>
+                        <li><p><strong>Museum Scene</strong></p>
+                            <figure>
+                                <img src="https://velog.velcdn.com/images/gjghks950/post/1c2ccefd-1801-4ffa-ade3-c975b7e8e525/image.gif" alt="Gaussian RT" width="100%">
+                                <figcaption style="text-align: center; font-size: 15px;"><strong></strong> NeRF Reconstruction from SORA </figcaption>
+                            </figure>
+                        </li>
+                        </ol>
+                        <p>In both cases, camera pose alignment was achieved to some extent. However, the results suggest that Sora does not fully comprehend 3D geometry. It appears to stretch existing landscapes to maintain content consistency rather than accurately represent 3D structures, as seen in the museum scene where the rectangular space is not properly reconstructed.</p>
+                        <p>Compared to previous video generation methods that struggled with even content consistency, Sora shows enough geometric consistency to allow for convergence below a certain error threshold during bundle adjustment, which relies on stereo vision (epipolar geometry). It is also noteworthy that the COLMAP process took longer than usual, likely due to the time required to align features that do not perfectly match in 3D.</p>
+                        <h3 id="nerf"> NeRF Reconstruction</h3>
+                        <p>Using the camera poses obtained from COLMAP, I proceeded with NeRF reconstruction. The results indicate that NeRF can successfully reconstruct the view for the visible portions of the scene.</p>
+                        <ol>
+                            <li><p><strong>Big Sur</strong></p>
+                                <div class="video-container">
+                                    <iframe width="100%" src="https://www.youtube.com/embed/h4QMYO-c2nQ?si=Nq4-7w4zsX6rPFmU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                </div>
+                            </li>
+                            <li><p><strong>Santorini</strong></p>
+                                <div class="video-container">
+                                    <iframe width="100%" src="https://www.youtube.com/embed/kqkii-L0q9M?si=-GUisg8x9rucU43g" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                </div>
+                            </li>
+                            <li><p><strong>Museum</strong></p>
+                                <div class="video-container">
+                                    <iframe width="100%" src="https://www.youtube.com/embed/ZK-f_hW655c?si=fakRiEz9eL8OURGY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                </div>
+                            </li>
+                            <li><p><strong>GoldRush</strong></p>
+                                <div class="video-container">
+                                    <iframe width="100%" src="https://www.youtube.com/embed/Qmc971VRdQM?si=LHsY8n0juvRw-_oC" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                </div>
+                            </li>
+                        </ol>
+                        <br/>
+                        
+                        <h3 id="gs"> 3D Gaussian Splatting Reconstruction</h3>
+                        <p>In addition to NeRF, I performed 3D reconstruction using 3D Gaussian Splatting (GS) based on the COLMAP sparse point cloud.</p>
+                        <ul>
+                        <li>3D GS is characterized by lower reconstruction quality in scenes with image distortion or misalignment compared to NeRF. This is because, unlike NeRF, which can learn to smooth out misaligned images due to the inherent smoothness of MLP (Multi-Layer Perceptron), 3D GS is an <strong>explicit method</strong> that does not offer this capability.</li>
+                        </ul>
+                        <p>Thus, the results from 3D GS provide additional insight into Sora’s ability to understand 3D geometry beyond what is visible with COLMAP and NeRF alone.</p>
+                        <ol>
+                            <li><p><strong>Big Sur</strong></p>
+                                <div class="video-container">
+                                    <iframe width="100%" src="https://www.youtube.com/embed/H4n7T8mWMEo?si=nRPvzDjDeCe1kRWI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                </div>
+                            </li>
+                            <li><p><strong>Santorini</strong></p>
+                                <div class="video-container">
+                                    <iframe width="100%" src="https://www.youtube.com/embed/MfrZZO-eRNg?si=ZTO913ZS7Nsc20NH" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                </div>
+                            </li>
+                            <li><p><strong>Museum</strong></p>
+                                <div class="video-container">
+                                    <iframe width="100%" src="https://www.youtube.com/embed/-2AZSHDYwTk?si=hgV6U76xGdPTPCqn" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                </div>
+                            </li>
+                            <li><p><strong>GoldRush</strong></p>
+                                <div class="video-container">
+                                    <iframe width="100%" src="https://www.youtube.com/embed/n_rZVhs9OBU?si=YPqL8ExksLYqdsG3" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                </div>
+                            </li>
+                        </ol>
+                        <p>While the qualitative quality between NeRF and 3D GS does not differ significantly, there are notable discrepancies in the Santorini scene, where the geometry is significantly off. Additionally, individual splats become visible when zooming into scenes reconstructed with splats.</p>
+                        
+                        <h2 id="conclusion">Closing</h2>
+                        <p>
+                            In summary, Neural Reconstruction from Sora shows
+                        </p>
+                        <ol>
+                        <li><strong>Geometric Consistency</strong><br/>Sora still lacks full geometric consistency (3D) in its generated outputs.</li><br/>
+                        <li><strong>SfM Performance</strong><br/>Despite this, SfM is sufficiently consistent to operate effectively.</li><br/>
+                        <li><strong>Human Perception</strong><br/>Neither Sora&#39;s nor NeRF/3D GS&#39;s outputs appear particularly strange when viewed normally. This may be because humans focus more on the content within and between scenes rather than attempting to form a perfect 3D geometric understanding.</li><br/>
+                        <li><strong>Future Potential</strong><br/>If video generation can consistently maintain content consistency, I believe geometric consistency will eventually be resolved. This is because real-world 3D shapes tend to be efficient and familiar.</li>
+                        </ol>
+                        <p>Given that this is just the first generation of Sora, its current performance is impressive. I am optimistic that within one or two more generations, models like Sora could generate videos that can be seamlessly reconstructed through neural rendering technologies for use in applications such as gaming. As a researcher, it is both exciting and humbling to witness such rapid progress, and I will be closely following OpenAI&#39;s advancements.</p>
+                        <hr/>
+                        <p>
+                            You may also like, 
+                        </p>
+                        <ul>
+                            <li>
+                                <a href="../240805_gs/">
+                                    <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../240602_2dgs/">
+                                    <span style="text-decoration: underline;">Under the 3D: Geometrically Accurate 2D Gaussian Splatting </span>
+                                </a>
+                            </li>
+                        </ul>
+                        <br/>
+                        <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="../240426_diffusion_depth/">Next Post →</a></div>
+                    </div>
+                </div>
+            </div>
+        </article>
+        <!-- Footer-->
+        <footer class="border-top">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <ul class="list-inline text-center">
+                            <li class="list-inline-item">
+                                <a href="https://www.linkedin.com/in/hwan-heo-0905korea/">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="https://github.com/hwanhuh">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="small text-center text-muted fst-italic">Copyright &copy; Hwan Heo</div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="../../../js/scripts.js"></script>
+        <script src="https://unpkg.com/prismjs@1.28.0/components/prism-core.min.js"></script>
+        <script src="https://unpkg.com/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+        <script>
+            Prism.plugins.autoloader.languages_path = 'https://unpkg.com/prismjs@1.28.0/components/'
+        </script>
+    </body>
+</html>

@@ -32,11 +32,12 @@
                 width: 15%; /* Reduced width of the header column */
                 background-color: #f2f2f2; /* 옅은 회색 */
             }
-            .img-fluid {
-                max-width: 100%;
-                height: auto;
-                display: block;
-                margin: auto;
+            .custom-btn {
+                color: #d3d3d3; /* Text color */
+                border: none; /* Remove border */
+            }
+            .custom-btn:hover {
+                color: black; /* Slightly darker gray for hover */
             }
         </style>
         <!-- MathJax CSS -->
@@ -47,6 +48,13 @@
             });
         </script>
         <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+        <script src="../../../js/include.js"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-RF7ETSKPK9');
+        </script>
     </head>
     <body>
         <!-- Navigation-->
@@ -79,9 +87,9 @@
                                 on June 02, 2024
                             </span>
                             <div style="text-align: center;">
-                                <button type="button" class="btn" onclick="setLanguage('eng')" style="font-size: 13px;">eng</button>
+                                <button type="button" class="btn custom-btn" onclick="setLanguage('eng')" style="font-size: 13px;">eng</button>
                                 |
-                                <button type="button" class="btn" onclick="setLanguage('kor')" style="font-size: 13px;">kor</button>
+                                <button type="button" class="btn custom-btn" onclick="setLanguage('kor')" style="font-size: 13px;">kor</button>
                             </div>
                         </div>
                     </div>
@@ -116,6 +124,8 @@
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div data-include-path="../layout/series.html"></div>
+                        <br/>
                         <h2 id="intro"> Introduction </h2>
                         <blockquote class="lang eng">
                             <p>
@@ -975,6 +985,11 @@
                         <ul>
                             <li>
                                 <a href="https://hwan-h-heo.github.io/hwan-h-heo.io/blogs/posts/240805_gs/">
+                                    <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://hwan-h-heo.github.io/hwan-h-heo.io/blogs/posts/240823_grt/">
                                     <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
                                 </a>
                             </li>

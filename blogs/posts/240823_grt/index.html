@@ -12,10 +12,10 @@
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="../../../css/blog_style.css" rel="stylesheet" />
         <!-- Prism.js CSS -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="../../../css/blog_style.css" rel="stylesheet" />
         <style>
             .wp-block-image figcaption {
                 font-size: 4px;
@@ -48,6 +48,12 @@
         </script>
         <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
         <script src="../../../js/include.js"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-RF7ETSKPK9');
+        </script>
     </head>
     <body>
         <!-- Navigation-->
@@ -67,7 +73,7 @@
             </div>
         </nav>
         <!-- Page Header-->
-        <header class="masthead" style="background-image: url('../../../assets/blog_bg.png'); height:60vh; display: flex; align-items: center;">
+        <header class="masthead" style="background-image: url('../../../assets/blog_bg.png')">
             <div class="container position-relative px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
@@ -81,7 +87,7 @@
                             </span>
                             <div style="text-align: center;">
                                 <button type="button" class="btn custom-btn" onclick="setLanguage('eng')" style="font-size: 13px;">eng</button>
-                                 
+                                |
                                 <button type="button" class="btn custom-btn" onclick="setLanguage('kor')" style="font-size: 13px;">kor</button>
                             </div>
                         </div>
@@ -135,7 +141,6 @@
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
                         <div data-include-path="../layout/series.html"></div>
-                        <hr/>
                         <br/>
                         <h2 id="tl-dr">TL; DR</h2>
                         <p class="lang eng">This article provides an in-depth review of the paper &quot;3D Gaussian Ray Tracing,&quot; which introduces a novel approach to leveraging ray tracing in 3D Gaussian Radiance Fields.</p>
@@ -427,6 +432,9 @@ rgb[idx * C + 2] = result.z;</code></pre>
                             $$
                         </div>
                         <p> where $ \mathbf{o}_g = {\rm S^{-1}R^T}(\mathbf{o} - \mu),  d_g = {\rm S^{-1}R^T} \mathbf{d}$. </p>
+                        <figure>
+                            <img class="img-fluid" src="assets/inter.png" width="40%">
+                        </figure>
                         
                         <div class="lang eng">
                             <p>Let&#39;s interpret this step by step!</p>
