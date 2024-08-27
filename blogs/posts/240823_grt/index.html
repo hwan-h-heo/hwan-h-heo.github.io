@@ -550,7 +550,7 @@ rgb[idx * C + 2] = result.z;</code></pre>
                                 <p>
                                     <strong>3D Gaussian</strong>
                                     <p>
-                                        $$ \hat{p}(x) = \sigma e^{ (x-\mu)^{\rm T} \Sigma^{-1} (x-\mu) }
+                                        $$ \hat{p}(x) = \sigma e^{ -(x-\mu)^{\rm T} \Sigma^{-1} (x-\mu) }
                                         $$ 
                                     </p>
                                 </p>
@@ -559,7 +559,7 @@ rgb[idx * C + 2] = result.z;</code></pre>
                                 <p>
                                     <strong>Generalized Gaussian</strong>: generalized of degree $n$
                                     <p>
-                                        $$ \hat{p}_n(x) = \sigma e^{ \left((x-\mu)^{\rm T} \Sigma^{-1} (x-\mu)\right)^n }
+                                        $$ \hat{p}_n(x) = \sigma e^{- \left((x-\mu)^{\rm T} \Sigma^{-1} (x-\mu)\right)^n }
                                         $$ 
                                     </p>
                                 </p>
