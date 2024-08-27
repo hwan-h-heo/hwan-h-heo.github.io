@@ -170,7 +170,6 @@
                         <br/>
 
                         <h2 id="experiments">Experiments</h2><br/>
-                        <h3 id="set">Dataset</h3>
                         <p>I selected four videos from Sora’s published examples as candidates for 3D reconstruction:</p>
                         <table>
                             <tr>
@@ -191,7 +190,7 @@
                             </tr>
                         </table>
                         <p>These scenes were chosen based on their relatively static nature, as scenes with too many dynamic objects would complicate reconstruction.</p>
-                        <h3 id="cam"> Camera Pose Tracking</h3>
+                        <h3 id="cam"> Structure-from-Motion from Sora </h3>
                         <p>After downloading the videos, I sampled the frames and performed Structure from Motion (SfM) using COLMAP. This process allowed us to assess how well Sora&#39;s output aligns with 3D geometry as assumed by stereo vision.</p>
                         <p><em>COLMAP is a computer vision tool that identifies image features (such as edges), performs feature matching, and utilizes bundle adjustment to determine the spatial positions of each frame.</em></p>
                         <p>The COLMAP results are as follows:</p>
