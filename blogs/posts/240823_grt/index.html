@@ -17,33 +17,26 @@
         <!-- Prism.js CSS -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
         <style>
-            table {
-                width: 100%;
-                border-collapse: collapse;
-            }
-            th, td {
-                width: 50%;
-                border: 1px solid #ddd;
-                padding: 10px;
-                text-align: center;
-                vertical-align: middle;
-            }
-            th {
-                background-color: #f2f2f2; 
-            }
-            th {
-                width: 15%; /* Reduced width of the header column */
-                background-color: #f2f2f2; 
-            }
-            .img-fluid {
-                max-width: 100%;
-                height: auto;
-                display: block;
-                margin: auto;
-            }
             .wp-block-image figcaption {
                 font-size: 4px;
                 color: #000000;
+            }
+            .custom-btn {
+                color: #d3d3d3; /* Text color */
+                border: none; /* Remove border */
+            }
+            .custom-btn:hover {
+                color: black; /* Slightly darker gray for hover */
+            }
+            @media (min-width: 1920px) {
+                .modal-xl {
+                    --bs-modal-width: 1600px;
+                }
+            }
+            @media (min-width: 2560px) {
+                .modal-xl {
+                    --bs-modal-width: 1920px;
+                }
             }
         </style>
         <!-- MathJax CSS -->
@@ -54,6 +47,7 @@
             });
         </script>
         <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+        <script src="../../../js/include.js"></script>
     </head>
     <body>
         <!-- Navigation-->
@@ -73,7 +67,7 @@
             </div>
         </nav>
         <!-- Page Header-->
-        <header class="masthead" style="background-image: url('../../../assets/blog_bg.png')">
+        <header class="masthead" style="background-image: url('../../../assets/blog_bg.png'); height:60vh; display: flex; align-items: center;">
             <div class="container position-relative px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
@@ -86,9 +80,9 @@
                                 on August 23, 2024
                             </span>
                             <div style="text-align: center;">
-                                <button type="button" class="btn" onclick="setLanguage('eng')" style="font-size: 13px;">eng</button>
+                                <button type="button" class="btn custom-btn" onclick="setLanguage('eng')" style="font-size: 13px;">eng</button>
                                 |
-                                <button type="button" class="btn" onclick="setLanguage('kor')" style="font-size: 13px;">kor</button>
+                                <button type="button" class="btn custom-btn" onclick="setLanguage('kor')" style="font-size: 13px;">kor</button>
                             </div>
                         </div>
                     </div>
@@ -140,6 +134,9 @@
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div data-include-path="../layout/series.html"></div>
+                        <hr/>
+                        <br/>
                         <h2 id="tl-dr">TL; DR</h2>
                         <p class="lang eng">This article provides an in-depth review of the paper &quot;3D Gaussian Ray Tracing,&quot; which introduces a novel approach to leveraging ray tracing in 3D Gaussian Radiance Fields.</p>
                         <p class="lang eng">3D Gaussian Splatting is a powerful and fascinating technology, but there are several problems inherited from rasterization. The recently presented 3D Gaussian Ray Tracing (3D GRT, hereinafter) resolves many of these shortcomings by introducing a Differentiable Ray Tracer for 3D Gaussian.</p>
@@ -263,9 +260,20 @@ rgb[idx * C + 2] = result.z;</code></pre>
                         
                         <h2 id="method"> 3. 3D Gaussian Ray Tracing </h2>
                         <figure>
-                            <img class="img-fluid" src="assets/fig1.png" width="100%">
+                            <img class="img-fluid" src="assets/fig1.png" width="100%" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#fig1_modal">
                             <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 1.</strong> Method Overview</figcaption>
                         </figure>
+                        <!-- Modal Structure -->
+                        <div class="modal fade" id="fig1_modal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <!-- Original size image -->
+                                        <img src="assets/fig1.png" alt="Full Size Image" width="100%" class="img-fluid">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <p class="lang eng">To effectively design a ray tracer tailored for 3D Gaussian Splatting, two key elements are essential:</p>
                         <ol class="lang eng">
                             <li><p><strong>BVH with Appropriate Proxy Primitives</strong><br/>Use Bounding Volume Hierarchy (BVH) to accelerate hit traversal by defining proxy primitives that encapsulate 3D Gaussians accurately.</p>
