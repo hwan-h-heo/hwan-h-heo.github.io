@@ -38,6 +38,60 @@
                 display: block;
                 margin: auto;
             }
+            #portfolio .container-fluid,
+            #portfolio .container-sm,
+            #portfolio .container-md,
+            #portfolio .container-lg,
+            #portfolio .container-xl,
+            #portfolio .container-xxl {
+                max-width: 1920px;
+            }
+
+            #portfolio .portfolio-box {
+                position: relative;
+                display: block;
+                width: 100%;
+                height: 100%;
+                overflow: hidden; /* Ensures any overflow is hidden */
+            }
+
+            #portfolio .portfolio-box img {
+                width: 100%; /* Makes image fill the portfolio box */
+                height: 100%; /* Makes image fill the portfolio box */
+                object-fit: cover; /* Ensures the image covers the box without distortion */
+                display: block; /* Prevents whitespace below images */
+            }
+
+            #portfolio .portfolio-box .portfolio-box-caption {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                bottom: 0;
+                text-align: center;
+                opacity: 0;
+                color: #fff;
+                background: rgba(244, 98, 58, 0.9);
+                transition: opacity 0.25s ease;
+            }
+
+            #portfolio .portfolio-box .project-category {
+                font-family: "Merriweather Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+                font-size: 0.85rem;
+                font-weight: 600;
+                text-transform: uppercase;
+            }
+
+            #portfolio .portfolio-box .project-name {
+                font-size: 1.2rem;
+            }
+
+            #portfolio .portfolio-box:hover .portfolio-box-caption {
+                opacity: 1;
+            }
         </style>
         <!-- MathJax CSS -->
         <script src="../../../js/mathjax-config.js"></script>
@@ -59,14 +113,14 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../../main.html">Post</a></li>
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../../../index.html">HwanHeo's log</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../../">Post</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../../../">HwanHeo's log</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
         <!-- Page Header-->
-        <header class="masthead" style="background-image: url('../../../assets/blog_bg.png')">
+        <header class="masthead" style="background-image: url('../../../assets/new_bg.png')">
             <div class="container position-relative px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
@@ -93,13 +147,13 @@
             </nav>
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="col-md-12 col-lg-10 col-xl-9">
                         <div id="portfolio">
                             <div class="container-fluid p-0">
                                 <div class="row g-0">
                                     <div class="col-lg-6 col-sm-6">
                                         <a class="portfolio-box" href="../240823_grt/" title="Project Name">
-                                            <img class="img-fluid" style="width: 25vw; height: 25vh" src="../240823_grt/assets/teaser.gif" alt="..." />
+                                            <img class="img-fluid" src="../240823_grt/assets/teaser.gif" alt="..." />
                                             <div class="portfolio-box-caption">
                                                 <div class="project-category text-white-50">Review</div>
                                                 <div class="project-name">3D Gaussian Ray Tracing</div>
@@ -107,53 +161,17 @@
                                         </a>
                                     </div>
                                     <div class="col-lg-6 col-sm-6">
-                                        <a class="portfolio-box" href="../240805_gs/assets/garden.gif" title="Project Name">
-                                            <img class="img-fluid" style="width: 25vw; height: 25vh" src="../240805_gs/assets/garden.gif" alt="..." />
+                                        <a class="portfolio-box" href="../240805_gs/" title="Project Name">
+                                            <img class="img-fluid" src="../240805_gs/assets/garden.gif" alt="..." />
                                             <div class="portfolio-box-caption">
                                                 <div class="project-category text-white-50">Review</div>
                                                 <div class="project-name">Gaussian Splatting Rasterization</div>
                                             </div>
                                         </a>
                                     </div>
-                                    <div class="col-lg-6 col-sm-6">
-                                        <a class="portfolio-box" href="../../../assets/blog_bg.png" title="Project Name">
-                                            <img class="img-fluid" src="../../../assets/blog_bg.png" alt="..." />
-                                            <div class="portfolio-box-caption">
-                                                <div class="project-category text-white-50">Category</div>
-                                                <div class="project-name">Project Name</div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-lg-6 col-sm-6">
-                                        <a class="portfolio-box" href="../../../assets/blog_bg.png" title="Project Name">
-                                            <img class="img-fluid" src="../../../assets/blog_bg.png" alt="..." />
-                                            <div class="portfolio-box-caption">
-                                                <div class="project-category text-white-50">Category</div>
-                                                <div class="project-name">Project Name</div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-lg-6 col-sm-6">
-                                        <a class="portfolio-box" href="../../../assets/blog_bg.png" title="Project Name">
-                                            <img class="img-fluid" src="../../../assets/blog_bg.png" alt="..." />
-                                            <div class="portfolio-box-caption">
-                                                <div class="project-category text-white-50">Category</div>
-                                                <div class="project-name">Project Name</div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-lg-6 col-sm-6">
-                                        <a class="portfolio-box" href="../../../assets/blog_bg.png" title="Project Name">
-                                            <img class="img-fluid" src="../../../assets/blog_bg.png" alt="..." />
-                                            <div class="portfolio-box-caption p-3">
-                                                <div class="project-category text-white-50">Category</div>
-                                                <div class="project-name">Project Name</div>
-                                            </div>
-                                        </a>
-                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </div><br/>
                         <h2 id="title1">Title 1</h2>
                         <p>
                             bla bla 
@@ -255,9 +273,9 @@ a = 3;</code>
                     </table>
                     </div>
                     <div class="d-flex justify-content-start mb-4"><a class="btn btn-primary text-uppercase" href="#!">Next Post →</a></div>
-                    <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Post ←</a></div>
+                    <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">← Older Post </a></div>
                     <div class="d-flex justify-content-between mb-4">
-                        <a class="btn btn-primary text-uppercase" href="#!">Older Post ←</a>
+                        <a class="btn btn-primary text-uppercase" href="#!">← Older Post</a>
                         <a class="btn btn-primary text-uppercase" href="#!">Next Post →</a>
                     </div>
                 </div>
