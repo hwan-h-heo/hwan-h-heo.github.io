@@ -23,6 +23,125 @@
             gtag('js', new Date());
             gtag('config', 'G-RF7ETSKPK9');
         </script>
+        <style>
+            /* Portfolio Container */
+            #portfolio .container-fluid,
+            #portfolio .container-sm,
+            #portfolio .container-md,
+            #portfolio .container-lg,
+            #portfolio .container-xl,
+            #portfolio .container-xxl {
+                max-width: 1920px;
+            }
+
+            #portfolio .portfolio-box {
+                position: relative;
+                display: block;
+                width: 100%;
+                height: 100%;
+                overflow: hidden; /* Ensures any overflow is hidden */
+            }
+
+            /* New Aspect Ratio Box */
+            .aspect-ratio-box {
+                width: 100%;
+                padding-top: 56.25%; /* 16:9 Aspect Ratio */
+                position: relative;
+                overflow: hidden;
+            }
+
+            #portfolio .portfolio-box img {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Ensures the image covers the box without distortion */
+                display: block; /* Prevents whitespace below images */
+            }
+
+            #portfolio .portfolio-box .portfolio-box-caption {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                bottom: 0;
+                text-align: center;
+                opacity: 0;
+                color: #fff;
+                background: rgba(244, 98, 58, 0.92);
+                transition: opacity 0.35s ease;
+            }
+
+            #portfolio .portfolio-box .project-category {
+                font-family: "Merriweather Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+                font-size: 0.8rem;
+                font-weight: 650;
+                color: #fff;
+                text-transform: uppercase;
+            }
+
+            #portfolio .portfolio-box .project-name {
+                font-size: 1.2rem;
+            }
+
+            #portfolio .portfolio-box:hover .portfolio-box-caption {
+                opacity: 1;
+            }
+
+            div.polaroid {
+                width: 100%;
+                background-color: white;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            div.polar_cap {
+                text-align: center;
+                color: #ced4da;
+                padding-top: 3px;
+                font-size: 0.9rem; /* Adjust font size for a more compact appearance */
+                line-height: 1; /* Adjust line-height to reduce spacing */
+                display: flex; /* Enables flexbox for vertical centering */
+                justify-content: center; /* Centers text horizontally */
+                align-items: center;
+            }
+
+            div.polar_content {
+                position: absolute;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                color: #f1f1f1;
+                width: 100%;
+                padding: 15px;
+                box-sizing: border-box; /* Ensure padding doesn't affect width */
+                font-size: 0.7rem;
+                line-height: 1.2;
+                height: 100px; /* Set a fixed height */
+                overflow: hidden; /* Hide any overflowing text */
+                display: flex;
+                flex-direction: column;
+                justify-content: center; /* Vertically centers content */
+            }
+
+            div.polaroid img {
+                width: 100%; /* Ensures the image width matches the polaroid width */
+                object-fit: cover; /* Ensures the image covers the space without distortion */
+            }
+
+            .top-left {
+                position: absolute;
+                top: 6px;
+                left: 6px;
+            }
+
+        </style>
     </head>
     <body class="d-flex flex-column h-100 bg-light">
         <main class="flex-shrink-0">
@@ -49,126 +168,149 @@
                         <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Projects</span></h1>
                     </div>
                     <div class="row gx-5 justify-content-center">
-                        <div class="col-lg-11 col-xl-9 col-xxl-8">
-                            <!-- Project Card 1-->
-                            <a href="nerf_in_game/" class="text-decoration-none">
-                                <div class="card overflow-hidden shadow rounded-4 border-0 mb-3">
-                                    <div class="card-body p-0">
-                                        <div class="d-flex align-items-center">
-                                            <div class="p-5">
-                                                <h2 class="fw-bolder">Neural Rendering in Game Engine</h2>
-                                                <h5> NC Research</h5>
-                                                <div style="text-align : center;">
-                                                    <img class="img-thumbnail" src="nerf_in_game/teaser.png" width="80%">
+                        <div class="col-lg-15 col-xl-13 col-xxl-12">
+                            <h2 class="text-primary fw-bolder mb-0">Neural Rendering</h2><hr/>
+                            <div id="portfolio">
+                                <div class="container-fluid p-0">
+                                    <div class="row g-0">
+                                        <div class="col-lg-6 col-sm-6"> <!-- col-12 col-lg-6 col-lg-4 col-sm-6 -->
+                                            <a class="portfolio-box" href="../blogs/posts/240721_sfm/">
+                                                <div class="polaroid">
+                                                    <div class="aspect-ratio-box"><img class="img-fluid" src="../blogs/posts/240721_sfm/assets/pen_sparse_vggsfm_2dgs.gif" alt="grt teaser"></div>
+                                                    <div class="polar_content">
+                                                        <h5>Gaussian Splatting from Deep-Based SfM</h5>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                            <!-- Project Card 2-->
-                            <a href="instant_pose/" class="text-decoration-none">
-                                <div class="card overflow-hidden shadow rounded-4 border-0 mb-3">
-                                    <div class="card-body p-0">
-                                        <div class="d-flex align-items-center">
-                                            <div class="p-5">
-                                                <h2 class="fw-bolder">Robust Camera Pose Refinement for <br/> Multi-Resolution Hash Encoding</h2>
-                                                <h5> ICML 2023</h5>
-                                                <h5> Naver AI Lab, Korea University </h5>
-                                                <div style="text-align : center;">
-                                                    <img class="img-thumbnail" src="../assets/poster.png" width="80%">
+                                                  
+                                                <div class="portfolio-box-caption">
+                                                    <div class="project-name">Gaussian Splatting from Deep-Based SfM</div>
+                                                    <div class="project-category text-white-50">Side Project</div>
                                                 </div>
-                                            </div>
+                                            </a>
                                         </div>
-                                        
-                                    </div>
-                                </div>
-                            </a>
-                            <!-- Project Card 3-->
-                            <a href="hoi/" class="text-decoration-none">
-                                <div class="card overflow-hidden shadow rounded-4 border-0 mb-3">
-                                    <div class="card-body p-0">
-                                        <div class="d-flex align-items-center">
-                                            <div class="p-5">
-                                                <h2 class="fw-bolder">Consistency Learning via Decoding Path Augmentation for Transformers in Human Object Interaction Detection</h2>
-                                                <h5> CVPR 2022</h5>
-                                                <h5> Korea University </h5>
-                                                <div style="text-align : center;">
-                                                    <img class="img-thumbnail" src="hoi/fig2_dot.png" width="80%">
+                                        <div class="col-lg-6 col-sm-6"> <!-- col-12 col-lg-6 col-lg-4 col-sm-6 -->
+                                            <a class="portfolio-box" href="https://github.com/hwanhuh/2D-GS-Viser-Viewer/">
+                                                <div class="polaroid">
+                                                    <div class="aspect-ratio-box"><img class="img-fluid" src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_train.gif" alt="grt teaser"></div>
+                                                    <div class="polar_content">
+                                                        <h5>Custom Viewer for 2D Gaussian Splatting</h5>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                            <!-- Project Card 4-->
-                            <a href="few_nerf/" class="text-decoration-none">
-                                <div class="card overflow-hidden shadow rounded-4 border-0 mb-3">
-                                    <div class="card-body p-0">
-                                        <div class="d-flex align-items-center">
-                                            <div class="p-5">
-                                                <h2 class="fw-bolder">Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild</h2>
-                                                <h5> Korea University </h5>
-                                                <div style="text-align : center;">
-                                                    <img class="img-thumbnail" src="few_nerf/assets/main.png" width="80%">
+                                                  
+                                                <div class="portfolio-box-caption">
+                                                    <div class="project-name">Custom Viewer for 2D Gaussian Splatting</div>
+                                                    <div class="project-category text-white-50">Side Project</div>
                                                 </div>
-                                            </div>
-                                            <!--img class="img-fluid" src="projects/instant_pose/assets/hash_grid.png" alt="..." /-->
+                                            </a>
                                         </div>
-                                    </div>
-                                </div>
-                            </a>
-                            <!-- Project Card 5-->
-                            <a href="adv/" class="text-decoration-none">
-                                <div class="card overflow-hidden shadow rounded-4 border-0 mb-3">
-                                    <div class="card-body p-0">
-                                        <div class="d-flex align-items-center">
-                                            <div class="p-5">
-                                                <h2 class="fw-bolder">Temporally Sparse Adversarial Perturbations on Videos</h2>
-                                                <h5> IEEE Access 2021 </h5>
-                                                <h5> Korea University </h5>
-                                                <div style="text-align : center;">
-                                                    <img class="img-thumbnail" src="adv/main_figure.png" width="80%">
+                                        <div class="col-lg-6 col-sm-6"> <!-- col-12 col-lg-6 col-lg-4 col-sm-6 -->
+                                            <a class="portfolio-box" href="nerf_in_game/">
+                                                <div class="polaroid">
+                                                    <div class="aspect-ratio-box">
+                                                        <img class="img-fluid" src="nerf_in_game/teaser.png" alt="grt teaser">
+                                                    </div>
+                                                    <div class="polar_content">
+                                                        <h5>Neural Rendering in Game</h5>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <!--img class="img-fluid" src="projects/instant_pose/assets/hash_grid.png" alt="..." /-->
+                                                  
+                                                <div class="portfolio-box-caption">
+                                                    <div class="project-name">Neural Rendering in Game</div>
+                                                    <div class="project-category text-white-50">NC Research</div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="col-lg-6 col-sm-6"> <!-- col-12 col-lg-6 col-lg-4 col-sm-6 -->
+                                            <a class="portfolio-box" href="instant_pose/">
+                                                <div class="polaroid">
+                                                    <div class="aspect-ratio-box"><img class="img-fluid" src="../assets/pose_learn.gif" alt="grt teaser"></div>
+                                                    <div class="top-left"> <h5><span class="badge text-bg-primary">ICML 2023</span></h5> </div>
+                                                    <div class="polar_content">
+                                                        <h5>Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</h5>
+                                                    </div>
+                                                </div>
+                                                  
+                                                <div class="portfolio-box-caption">
+                                                    <div class="project-name">Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</div>
+                                                    <div class="project-category text-white-50">ICML 2023</div>
+                                                    <div class="project-category text-white-50">Naver AI Lab, Korea University</div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="col-lg-6 col-sm-6"> <!-- col-12 col-lg-6 col-lg-4 col-sm-6 -->
+                                            <a class="portfolio-box" href="few_nerf/">
+                                                <div class="polaroid">
+                                                    <div class="aspect-ratio-box"><img class="img-fluid" src="few_nerf/assets/main.png" alt="grt teaser" style="width:100%; height: 100%;"></div>
+                                                    <div class="polar_content">
+                                                        <h5>Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild</h5>
+                                                    </div>
+                                                </div>
+                                                  
+                                                <div class="portfolio-box-caption">
+                                                    <div class="project-name">Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild</div>
+                                                    <div class="project-category text-white-50">Korea University</div>
+                                                </div>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
-                            </a>
-                            <!-- Project Card 3-->
-                            <!--a href="instant_pose.html" class="text-decoration-none">
-                                <div class="card overflow-hidden shadow rounded-4 border-0">
-                                    <div class="card-body p-0">
-                                        <div class="d-flex align-items-center">
-                                            <div class="p-5">
-                                                <h2 class="fw-bolder">Object Detection for Diagnosis of Infectious Diseases</h2>
-                                                <p> Collaborated with Korea University Guro Hospital</p>
-                                            </div>
-                                            <img class="img-fluid" src="./assets/blood.png" alt="..." width="90%" />
+                            </div><br/><br/>
+                            <h2 class="text-secondary fw-bolder mb-0">Visual Understanding</h2><hr/>
+                            <div id="portfolio">
+                                <div class="container-fluid p-0">
+                                    <div class="row g-0">
+                                        <div class="col-lg-6 col-sm-6"> <!-- col-12 col-lg-6 col-lg-4 col-sm-6 -->
+                                            <a class="portfolio-box" href="hoi/">
+                                                <div class="polaroid">
+                                                    <div class="aspect-ratio-box"><img class="img-fluid" src="hoi/fig2_dot.png" alt="grt teaser" style="width:100%; height: 100%;"></div>
+                                                    <div class="top-left"> <h5><span class="badge text-bg-primary">CVPR 2022</span></h5> </div>
+                                                    <div class="polar_content">
+                                                        <h5>Consistency Learning via Decoding Path Augmentation for Transformers in Human Object Interaction Detection</h5>
+                                                    </div>
+                                                </div>
+                                                  
+                                                <div class="portfolio-box-caption">
+                                                    <div class="project-name">Consistency Learning via Decoding Path Augmentation for Transformers in Human Object Interaction Detectiong</div>
+                                                    <div class="project-category text-white-50">CVPR 2022</div>
+                                                    <div class="project-category text-white-50">Korea University</div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="col-lg-6 col-sm-6"> <!-- col-12 col-lg-6 col-lg-4 col-sm-6 -->
+                                            <a class="portfolio-box" href="adv/">
+                                                <div class="polaroid">
+                                                    <div class="aspect-ratio-box"><img class="img-fluid" src="adv/main_figure.png" alt="grt teaser" style="width:100%; height: 100%;"></div>
+                                                    <div class="top-left"> <h5><span class="badge text-bg-primary">IEEE Access 2021</span></h5> </div>
+                                                    <div class="polar_content">
+                                                        <h5>Temporally Sparse Adversarial Perturbations on Videos</h5>
+                                                    </div>
+                                                </div>
+                                                  
+                                                <div class="portfolio-box-caption">
+                                                    <div class="project-name">Temporally Sparse Adversarial Perturbations on Videos</div>
+                                                    <div class="project-category text-white-50">IEEE Access 2021</div>
+                                                    <div class="project-category text-white-50">Korea University</div>
+                                                </div>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
-                            </a-->
+                            </div><br/>
                         </div>
                     </div>
                 </div>
             </section>
-            <!-- Call to action section-->
-            <!--section class="py-5 bg-gradient-primary-to-secondary text-white">
-                <div class="container px-5 my-5">
-                    <div class="text-center">
-                        <h2 class="display-4 fw-bolder mb-4">Let's build something together</h2>
-                        <a class="btn btn-outline-light btn-lg px-5 py-3 fs-6 fw-bolder" href="contact.html">Contact me</a>
-                    </div>
-                </div>
-            </section-->
         </main>
         <!-- Footer-->
+
         <footer class="bg-white py-4 mt-auto">
             <div class="container px-5">
+                <div class="d-flex justify-content-center fs-2 gap-4">
+                    <a class="text-gradient" href="https://www.linkedin.com/in/hwan-heo-0905korea/"><i class="bi bi-linkedin"></i></a>
+                    <a class="text-gradient" href="https://github.com/hwanhuh"><i class="bi bi-github"></i></a>
+                </div>
                 <div class="row align-items-center justify-content-between flex-column flex-sm-row">
-                    <div class="col-auto"><div class="small m-0">Copyright &copy; hwanheo's log</div></div>
+                    <div class="col-auto"><div class="small m-0">Copyright &copy; Hwan Heo</div></div>
                 </div>
             </div>
         </footer>
