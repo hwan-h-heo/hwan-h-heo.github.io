@@ -64,14 +64,110 @@
                             <!--img class="img-fluid" src="./assets/poster.png" /-->
                             <h2> Overview </h2>
                             <hr/>
-                            <img class="img-fluid" src="assets/main.png" width="100%" />
-                            <p> SF-NeRF focus on decomposing the transient and static phenomena, predicting the transient components of each image with an additional MLP module dubbed FilterNet. FilterNet exploits semantic information given by an image encoder pretrained in an unsupervised manner, which is the key to achieve few-shot learning. </p>
+                            <p>
+                                This research introduces <strong>SF-NeRF</strong>, an advanced framework designed to reconstruct neural scene representations 
+                                from a limited number of unconstrained tourist photos. 
+                            </p>
+                            <p> SF-NeRF focus on decomposing the transient and static phenomena, 
+                                predicting the transient components of each image with an additional MLP module dubbed FilterNet. 
+                                FilterNet exploits semantic information given by an image encoder pretrained in an unsupervised manner, 
+                                which is the key to achieve few-shot learning. </p>
                             <ul>
                                 <li> present a learning framework for reconstructing neural scene representations from a small number of unconstrained (different illuminations, occlusions, etc) tourist photos </li>
                                 <li> Using DINO (semantic segmentation) features, we make occlusion filtering module that predicts the transient color and its opacity for each pixel </li>
                             </ul>
+                            <br/>
+                            <h2> Methodology </h2>
+                            <hr/>
+                            <h3>Neural Radiance Fields</h3>
+                            <p>
+                                The core NeRF model represents a scene as a continuous volumetric radiance field $F_\theta$, 
+                                which maps a 3D position $ \mathbf{x} $ and viewing direction $ \mathbf{d} $ to a color $ \mathbf{c} $ and density $ \sigma $:
+                            </p>
+                            <div class="math-container">
+                                $$
+                                [\sigma, \mathbf{z}] = \text{MLP}_{\theta_1}(\gamma_{\mathbf{x}}(\mathbf{x})), \quad \mathbf{c} = \text{MLP}_{\theta_2}(\gamma_{\mathbf{d}}(\mathbf{d}), \mathbf{z})
+                                $$
+                            </div>
+                            <p>
+                                where $\gamma_{\mathbf{x}} $ and $ \gamma_{\mathbf{d}} $ are positional encoding functions.
+                            </p>
+  
+                            <p>
+                                The expected color $C(\mathbf{r})$ along a camera ray $\mathbf{r}(t) = \mathbf{o} + t\mathbf{d}$ is computed using volume rendering:
+                            </p>
+                            <div class="math-container">
+                                $$ C(\mathbf{r}) = \sum_{k=1}^{K} T(t_k) \alpha(t_k) \mathbf{c}(t_k)
+                                $$
+                            </div>
+                            <p>
+                                where $\alpha(t_k) = 1 - \exp(-\sigma(t_k) \delta_k) $ and $T(t_k) = \exp\left(-\sum_{k'=1}^{k-1} \sigma(t_{k'}) \delta_{k'}\right)$.
+                            </p><br/>
+                            <h3> NeRF w/ Latent Embeding</h3>
+                            <p>
+                                To make more robust representation for the wild images, the radiance and density can be conditioned on an appearance embedding $ \mathbf{l}_i $ for each image $I_i$:
+                            </p>
+                            <div class="math-container">
+                                $$
+                                \mathbf{c}_i = \text{MLP}_{\theta_2}(\gamma_{\mathbf{d}}(\mathbf{d}), \mathbf{z}, \mathbf{l}_i), \quad C_i(\mathbf{r}) = \sum_{k=1}^{K} T(t_k) \alpha(t_k) \mathbf{c}_i(t_k)
+                                $$
+                            </div>
+                            <p>
+                                The purpose of the embedding is to capture and represent the variations in appearance and lighting conditions across different images of the same scene. 
+                                These variations can include changes in illumination, color tone, and other environmental factors that differ from image to image.
+                            </p><br/>
+                            <h3> Dientangling Transients and Statics Using FilterNet</h3>
+                            <img class="img-thumbnail" src="assets/main.png" width="100%" />
+                            <p>
+                                To achieve consistent scene decomposition, we use an additional MLP module, dubbed FilterNet.
+                                FilterNet receives feature maps $f_i(\mathbf{p})$ extracted from the input image by a pretrained <strong>DINO</strong> image encoder $E_\phi$. 
+                                These features help FilterNet predict transient objects from images.
+                            </p>
+                            <p>
+                                Using Filternet, we model transient phenomena by learning image-dependent 2D maps: transient RGBA and uncertainty maps.
+                                The final predicted pixel color $\hat{C}_i(\mathbf{r})$ is obtained by blending the static color $C_i(\mathbf{r})$ and transient color:
+                            </p>
+                            <div class="math-container">
+                                $$ \hat{C}_i(\mathbf{r}) = \alpha_i^{(\tau)}(\mathbf{p}_r) C_i^{(\tau)}(\mathbf{p}_r) + \left(1 - \alpha_i^{(\tau)}(\mathbf{p}_r)\right) C_i(\mathbf{r})
+                                $$
+                            </div>
+                            <p>
+                                where $ \alpha_i^{(\tau)}(\mathbf{p}_r)$ is the transient opacity, $C_i^{(\tau)}(\mathbf{p}_r)$ is the transient color, and $\mathbf{p}_r$ is the pixel corresponding to ray $\mathbf{r} $.
+                            </p>
+
+                            <p>
+                                For each ray $\mathbf{r}$ in image $\mathcal{I}_i$, we train FilterNet to disentangle transient components from the scene in an unsupervised manner with loss $\mathcal{L}^{(i)}_\text{t}$:
+                            </p>
+                            <div class="math-container">
+                                $$ 
+                                    \mathcal{L}^{(i)}_\text{t}(\mathbf{r}) = \frac{\big\lVert \hat{\mathbf{C}}_i(\mathbf{r})- \bar{\mathbf{C}}_i(\mathbf{r})\big\rVert^2_2}{2\beta_i(\mathbf{r})^2} + \frac{\log\beta_i(\mathbf{r})^2}{2} + \lambda_\alpha \alpha^{(\tau)}_i\hspace{-0.05cm}(\mathbf{r}),
+                                $$
+                            </div>
+                            <p>
+                                where $\bar{\mathbf{C}}$ is the ground-truth color. 
+                                
+                                The first and second terms can be viewed as the negative log likelihood of $\bar{\mathbf{C}}_i(\mathbf{r})$ 
+                                which is assumed to follow an isotropic normal distribution with mean $\hat{\mathbf{C}}_i(\mathbf{r})$ 
+                                and variance $\beta_i(\mathbf{r})^2$.
+                                The third term discourages \jaewon{FilterNet} from describing static phenomena.
+                            </p><br/>
+
+                            <h4 id="comparison-to-latent-nerf-and-nerf-w">Remark. Comparison to Latent NeRF and NeRF-W</h4>
+                            <ul>
+                            <li><strong>Latent NeRF</strong><br/> primarily uses appearance embeddings to model varying lighting and view-dependent effects. However, it does not specifically address the challenge of transient occlusions or moving objects, making it less effective in dynamic real-world scenes.</li>
+                            <br/>
+                            <li><strong>NeRF-W</strong><br/> improves on Latent NeRF by introducing a transient head to handle scene variations. However, it requires a significant amount of training data to separate transient and static components effectively, limiting its applicability in few-shot scenarios.</li>
+                            </ul>
+                            <p><strong>SF-NeRF</strong> overcomes these limitations by integrating semantic guidance through FilterNet, which enables an effective decomposition of static and transient components even with minimal training images. The reparameterization and smoothness techniques further enhance its ability to produce clear and accurate scene reconstructions without the artifacts that commonly affect Latent NeRF and NeRF-W in challenging conditions.</p>
+
+
                             <p> <br/> </p>
+                            <h2>Experiments</h2>
+                            <hr/>
                             <p> The overall quantitative results and qualitative results demonstrate that the SF-NeRF mostly outperforms the baselines in the few-shot setting in the wild images. </p>
+                            <p>
+                                SF-NeRF significantly outperforms NeRF-W and Latent NeRF in novel view synthesis tasks, particularly in few-shot settings. Evaluations on the Phototourism dataset—featuring diverse and unconstrained photographs—demonstrate SF-NeRF's superior ability to handle transient occluders and achieve high-quality scene reconstructions with just 30 images per landmark.
+                            </p>
                             <div style="text-align : center;">
                                 <img class="img-thumbnail" src="assets/qual.png" width="100%">
                             </div>

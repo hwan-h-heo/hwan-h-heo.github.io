@@ -81,7 +81,7 @@
                                 $$ \mathcal{L}(x, y; \theta) + \langle  \nabla_{{x}}\mathcal{L}(x, y; \theta), \delta^{\mathbf{I}} \rangle \\  \le \mathcal{L}(x, y; \theta) + \varepsilon \cdot \sum\limits_{i \in \mathbf{I}}\; \|\nabla_{{x}_{i}}\mathcal{L}(x, y; \theta)\|_1. $$
                             </div>
 
-                            <p> <strong> Framew-wise Vulnerability</strong> </p>
+                            <p> <strong> Frame-wise Vulnerability</strong> </p>
                             <p> Secondly, we assume that the increase of the loss value by noise is approximately similar to the sum of the increases induced by frame-wise perturbation.</p>
                             <div class="math-container">
                                 $$ \mathcal{L}(x + \delta)  - \mathcal{L}(x)= \mathcal{L} (x + \sum_{i \in \mathbf{I}} \delta^{(i)}) - \mathcal{L}(x)\\   \approx  \sum_{{i \in \mathbf{I}}} \left ( \mathcal{L}(x + \delta^{(i)}) - \mathcal{L}(x) \right ) $$
