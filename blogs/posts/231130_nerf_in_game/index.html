@@ -129,7 +129,7 @@
                     <div class="col-md-10 col-lg-8 col-xl-7">
                         <div data-include-path="../layout/series.html"></div>
                         <br/>
-                        <h2 id="introduction">Introduction</h2>
+                        <h2 id="introduction">1. Introduction</h2>
                         <p>In this article, we&#39;ll explore some of the limitations of using NeRF (Neural Radiance Fields) in game production and how to work around them.</p>
                         <ul>
                             <li>
@@ -148,7 +148,7 @@
                         <p>Can we use the 3D model of a cookie box, as an object in a game? Unfortunately, the answer is still &#39;<strong><em>No</em></strong>&#39;. </p>
                         <p>Several limitations need to be addressed before NeRF can be used directly in commercial applications or game production. In this post, I&#39;ll outline the primary obstacles preventing NeRF&#39;s direct application in game development and the solutions being developed to overcome them.</p>
                         
-                        <h2 id="main"> NeRF & Illumination Control </h2><br/>
+                        <h2 id="main"> 2. NeRF & Illumination Control </h2><br/>
                         <h3 id="problem">NeRF&#39;s Inability to Separate Lighting Effects</h3>
                         <figure>
                             <img src="assets/nerf.gif" alt="Gaussian RT" width="100%">
@@ -213,8 +213,8 @@
                             </video>
                         </div>
                         <p>While this does not achieve perfect diffuse-specular separation, it shows that the object&#39;s color can be modeled independently of the lighting effects to some extent, compared to the full NeRF model on the left. Using only the diffuse NeRF model in the middle allows for relighting to be applied.</p>
-                        
-                        <h2 id="challenges">Other Challenges and Solutions</h2>
+                        <br/>
+                        <h2 id="challenges">3. Other Challenges and Solutions</h2><br/>
                         <h3 id="slow">Slow Rendering Speed</h3>
                         <p>
                             NeRF stores information in a 3D space through a neural network, meaning that to retrieve scene information, we must pass it through the network. Regardless of how lightweight the network is, the speed difference between directly reading stored information and obtaining it through the network is significant. This results in slow rendering speeds, a major drawback of NeRF.
@@ -228,7 +228,7 @@
                         <p>Due to the semi-transparent nature of NeRF opacity, creating high-quality meshes is challenging. However, new meshing techniques for neural rendering, such as nerf2mesh and flexicubes, are emerging to address this issue.</p>
                         <p>Recently, Gaussian Splatting, which uses explicit radiance fields and rasterization, has also been introduced. Gaussian Splatting is naturally compatible with game engines and is rapidly evolving.</p>
                         
-                        <h2 id="nerf_in_game">Neural Rendering in Game Engines</h2>
+                        <h2 id="nerf_in_game">4. Neural Rendering in Game Engines</h2>
                         <p>In the early stage of Neural Rendering, neural rendering technologies faced several limitations that hindered their use in-game production and other applications. </p>
                         <p>However, as these challenges are gradually being resolved, novel methods are emerging that enable neural rendering technologies in commercial game engines. Technology startups focusing on this technology are also appearing.</p>
                         <div class="video-container">
