@@ -73,6 +73,44 @@
                                 <li> CPC enforces all the possible predictions from permuted inference sequences to be consistent.  </li>
                             </ol>
                             <p> <br/> </p>
+                            <h2 id="problem-definition">Problem Definition</h2>
+                            <hr>
+
+                            <p>Human-Object Interaction (HOI) detection is a complex visual recognition task that involves identifying objects and classifying their interactions with humans. </p>
+                            <p>Recent advances have introduced transformer-based architectures that predict HOI triplets in an end-to-end manner, but these models still lack the ability to fully leverage the different paths through which HOI predictions can be made. </p>
+                            <p>The core challenge addressed in this paper is to improve the generalization and consistency of transformer-based HOI models by utilizing all possible prediction paths during training without increasing model capacity or inference time.</p>
+                            <p>The problem is formally framed as ensuring consistency across different decoding paths, where the objective is to make predictions invariant to the sequence of sub-task predictions. This leads to the following optimization problem:</p>
+                            <div class="math-container">$$
+                                \min_{\theta} \sum_{(k,k')\in K} L_{CPC} \left(f_{P_k}(x; \theta), f_{P_{k'}}(x; \theta)\right)
+                                $$
+                            </div>
+                            <p>where $ L_{CPC} $ is the Cross-Path Consistency (CPC) loss that enforces consistency between predictions from different paths $ P_k $ and $ P_{k&#39;} $.</p>
+                            <h2 id="method">Method</h2>
+                            <hr>
+                            <p>The proposed solution is a novel end-to-end learning strategy called <strong>Cross-Path Consistency (CPC) Learning</strong> for transformers in HOI detection. The method consists of two key components: <strong>Decoding-Path Augmentation</strong> and <strong>Cross-Path Consistency Regularization</strong>.</p>
+                            <ul>
+                            <li><p><strong>Decoding-Path Augmentation:</strong> 
+                            The method leverages various sequences of sub-task predictions (e.g., $x \rightarrow HOI$, $x \rightarrow HO \rightarrow I $) by augmenting the decoding paths within the transformer architecture. Four augmented paths are considered:</p>
+                            <div class="math-container">$$
+                            P_1 = x \rightarrow HOI, \quad P_2 = x \rightarrow HO \rightarrow I, \quad P_3 = x \rightarrow HI \rightarrow O, \quad P_4 = x \rightarrow OI \rightarrow H
+                            $$</div>
+                            <p>These paths represent different sequences in which the sub-tasks of human detection ($H$), object detection ($O$), and interaction classification ($I$) are performed.</p>
+                            </li>
+                            <li><p><strong>Cross-Path Consistency Learning:</strong> The CPC learning framework ensures that predictions across these different paths remain consistent. The outputs from different paths are trained to match each other by adding a consistency loss term:</p>
+                            <div class="math-container">$$
+                                L_{CPC} = \frac{1}{S} \sum_{(k,k') \in K} \sum_{n=1}^{N} L_{P_k P_{k'}}^n
+                            $$</div>
+                            <p>where $L_{P_k P_{k'}}^n $ is the consistency loss for the $n$-th ground truth across paths $ P_k$ and $ P_{k&#39;}$, $S$ is the total number of path pairs, and $N$ is the number of ground truth labels. The final training loss combines the supervision loss $L_k^{sup}$ for each path with the CPC loss:</p>
+                            <div class="math-container">$$
+                                L = \sum_k L_k^{sup} + w(t) \cdot L_{CPC}
+                            $$</div>
+                            <p>where $w(t)$ is a ramp-up function for stable training.</p>
+                            </li>
+                            </ul>
+                            <h2 id="experimental-results">Experimental Results</h2>
+                            <hr>
+                            <p>The proposed CPC learning framework was evaluated on two popular HOI detection benchmarks: V-COCO and HICO-DET, using transformer-based models such as QPIC and HOTR as baselines. </p>
+
                             <p> Based on two popular DETR-based HOI detection model: QPIC and HOTR, the presented CPC demonstrates effectiveness and superiority compared to the baseline. </p>
                             <div style="text-align : center;">
                                 <img class="img-thumbnail" src="assets/table.png" width="80%">
