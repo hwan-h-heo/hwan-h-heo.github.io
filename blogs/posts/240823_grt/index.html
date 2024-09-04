@@ -146,7 +146,7 @@
                         <br/>
                         <h2 id="tl-dr">TL; DR</h2>
                         <p class="lang eng">This article provides an in-depth review of the paper &quot;3D Gaussian Ray Tracing,&quot; which introduces a novel approach to leveraging ray tracing in 3D Gaussian Radiance Fields.</p>
-                        <p class="lang eng">3D Gaussian Splatting is a powerful and fascinating technology, but there are several problems inherited from rasterization. The recently presented 3D Gaussian Ray Tracing (3D GRT, hereinafter) resolves many of these shortcomings by introducing a Differentiable Ray Tracer for 3D Gaussian.</p>
+                        <p class="lang eng">3D Gaussian Splatting is a powerful and fascinating technology, but it inherits several problems from rasterization. The recently presented 3D Gaussian Ray Tracing (3D GRT) resolves many of these shortcomings by introducing a Differentiable Ray Tracer for 3D Gaussians.</p>
                         <p class="lang eng"> Let’s deep dive into the 3D GRT!</p>
                         <p class="lang kor" style="display: none;">3D Gaussian Splatting 은 강력하고 매력적인 기술이지만, rasterization 을 사용하기 때문에 생기는 여러 문제가 있다. 최근 공개된 3D Gaussian Ray Tracing (이하 3D GRT) 은 Ray Tracing 기술을 3D Gaussian 에 접목시켜 이러한 단점을 많이 해결한 모습을 보여주었다. 이 글을 통해 3D GRT 를 자세하게 알아보자! </p>
                         <ul>
@@ -160,8 +160,10 @@
                         
                         <h2 id="introduction"> 1. Introduction</h2><br/>
                         <h3 id="challenges-in-3d-gaussian-splatting">Challenges in 3D Gaussian Splatting</h3>
-                        <p class="lang eng">3D Gaussian Splatting (3D GS) has emerged as a promising approach for high-fidelity novel-view synthesis and real-time rendering, leveraging a sophisticated tile-based rasterization technique. Despite its potential, this area, often referred to as the next frontier in photogrammetry, continues to face several significant challenges.</p>
-                        <p class="lang eng">A major limitation of 3D GS arises from its reliance on rasterization, which introduces several constraints:</p>
+                        <p class="lang eng">
+                            3D Gaussian Splatting (3D GS) has emerged as a promising approach for high-fidelity novel-view synthesis and real-time rendering, leveraging sophisticated tile-based rasterization. Despite its potential, this area—often referred to as the next frontier in photogrammetry—continues to face several significant challenges.
+                        </p>
+                        <p class="lang eng">A major limitation of 3D GS stems from its reliance on rasterization, which introduces several constraints:</p>
                         <p class="lang kor" style="display: none;">3D Gaussian Splatting 은 well-designed tile-based rasterizer 를 이용해 high-fidelity novel-view synthesis 와 real-time rendering 을 달성한 연구이다. </p>
                         <p class="lang kor" style="display: none;">Next-photogramerry 로까지 불리며 각광받고 있는 연구분야지만, 아직 과도기이기 때문에 극복해야할 문제가 많이 남아있다. </p>
                         <p class="lang kor" style="display: none;">그 중 대표적인 것이 바로 Rasterization 사용으로 인한 문제들이다. </p>
