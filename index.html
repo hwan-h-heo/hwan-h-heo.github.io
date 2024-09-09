@@ -24,6 +24,57 @@
         gtag('js', new Date());
         gtag('config', 'G-RF7ETSKPK9');
         </script>
+        <style>
+            .mv-modal-box {
+                display: none;
+            }
+            /* 모달 박스 기본 스타일 */
+            .mv-modal-box {
+                display: none; /* 처음에는 보이지 않음 */
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%); /* 가운데 정렬 */
+                width: 40%; /* 창 너비 조정 */
+                height: 40%; /* 창 높이 조정 */
+                background-color: rgba(0, 0, 0, 0.8); /* 반투명한 배경 */
+                padding: 20px;
+                z-index: 1000;
+            }
+
+            /* 3D 모델 크기 조정 */
+            model-viewer {
+                width: 100%;
+                height: 100%;
+            }
+
+            /* 화면 전체 어두운 배경 (모달 밖 클릭 시 닫기) */
+            .modal-backdrop {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background-color: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
+                z-index: 999;
+            }
+            .close-btn {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background-color: red;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                cursor: pointer;
+                border-radius: 5px;
+                font-size: 16px;
+            }
+
+            .close-btn:hover {
+                background-color: darkred;
+            }
+        </style>
     </head>
     <body class="d-flex flex-column h-100">
         <main class="flex-shrink-0">
@@ -51,8 +102,8 @@
                             <!-- Header text content-->
                             <div class="text-center text-xxl-start">
                                 <div class="badge bg-gradient-primary-to-secondary text-white mb-4"><div class="text-uppercase">Computer Vision &middot; Neural Rendering</div></div>
-                                <div class="fs-3 fw-light text-muted">Vision AI Researcher </div>
-                                <h1 class="display-3 fw-bolder mb-5"><span class="text-gradient d-inline">Hello, I'm Hwan Heo</span></h1>
+                                <div class="fs-3 fw-light text-muted">Hello, I'm Vision AI Researcher </div>
+                                <h1 class="display-3 fw-bolder mb-5"><span class="text-gradient d-inline"> Hwan Heo</span></h1>
                                 <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xxl-start mb-3">
                                     <a class="btn btn-primary btn-lg px-5 py-3 me-sm-3 fs-6 fw-bolder" href="projects/">Projects</a>
                                     <a class="btn btn-outline-dark btn-lg px-5 py-3 fs-6 fw-bolder" href="blogs/">Tech Blog</a>
@@ -79,7 +130,13 @@
                                 <div class="text-center my-0">
                                     <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">About Me</span></h2>
                                     <p class="lead fw-light mb-1">Hello, my name is Hwan Heo, an AI Researcher.</p>
-                                    <img class="img-fluid" src="assets/profile.jpeg" width="25%" />
+                                    <img class="img-fluid" src="assets/profile.jpeg" width="25%" /> <br/>
+                                    <button class="btn btn-primary btn-sm open-model-btn">View 3D Avatar</button>
+
+                                    <div class="mv-modal-box">
+                                        <model-viewer id="model-ex" src="assets/profile_3d.glb" alt="model sample" camera-controls></model-viewer>
+                                        <button class="close-btn btn-sm justify-content-end">X</button>
+                                    </div>
                                     <br/>
                                     <br/>
                                     <p class="text-muted"> 
@@ -326,5 +383,24 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
+        <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+        <script>
+            const MV_MODAL_BOX = document.querySelector('.mv-modal-box');
+            const modelOpenBtn = document.querySelector('.open-model-btn');
+            const closeBtn = document.querySelector('.close-btn');
+        
+            modelOpenBtn.addEventListener('click', () => {
+                if (MV_MODAL_BOX.style.display === 'block') {
+                    MV_MODAL_BOX.style.display = 'none';
+                } else {
+                    MV_MODAL_BOX.style.display = 'block';
+                }
+            });
+
+            // Close 버튼 클릭 시 모달 닫기
+            closeBtn.addEventListener('click', () => {
+                MV_MODAL_BOX.style.display = 'none';
+            });
+        </script>        
     </body>
 </html>
