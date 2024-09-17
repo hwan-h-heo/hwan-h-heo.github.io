@@ -5,92 +5,38 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>A Comprehensive Analysis of Gaussian Splatting Rasterization</title>
+        <title> Do not Rasterize, but Ray Trace 3D Gaussian </title>
         <link rel="icon" type="image/x-icon" href="../../../assets/favicon.ico" />
         <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="../../../css/blog_style.css" rel="stylesheet" />
         <!-- Prism.js CSS -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="../../../css/blog_style.css" rel="stylesheet" />
         <style>
-            table {
-                width: 100%;
-                border-collapse: collapse;
+            .wp-block-image figcaption {
+                font-size: 4px;
+                color: #000000;
             }
-            th, td {
-                width: 50%;
-                border: 1px solid #ddd;
-                padding: 10px;
-                text-align: center;
-                vertical-align: middle;
+            .custom-btn {
+                color: #d3d3d3; /* Text color */
+                border: none; /* Remove border */
             }
-            th {
-                width: 15%; /* Reduced width of the header column */
-                background-color: #f2f2f2; /* 옅은 회색 */
+            .custom-btn:hover {
+                color: black; /* Slightly darker gray for hover */
             }
-            .img-fluid {
-                max-width: 100%;
-                height: auto;
-                display: block;
-                margin: auto;
+            @media (min-width: 1920px) {
+                .modal-xl {
+                    --bs-modal-width: 1600px;
+                }
             }
-            #portfolio .container-fluid,
-            #portfolio .container-sm,
-            #portfolio .container-md,
-            #portfolio .container-lg,
-            #portfolio .container-xl,
-            #portfolio .container-xxl {
-                max-width: 1920px;
-            }
-
-            #portfolio .portfolio-box {
-                position: relative;
-                display: block;
-                width: 100%;
-                height: 100%;
-                overflow: hidden; /* Ensures any overflow is hidden */
-            }
-
-            #portfolio .portfolio-box img {
-                width: 100%; /* Makes image fill the portfolio box */
-                height: 100%; /* Makes image fill the portfolio box */
-                object-fit: cover; /* Ensures the image covers the box without distortion */
-                display: block; /* Prevents whitespace below images */
-            }
-
-            #portfolio .portfolio-box .portfolio-box-caption {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-direction: column;
-                width: 100%;
-                height: 100%;
-                position: absolute;
-                bottom: 0;
-                text-align: center;
-                opacity: 0;
-                color: #fff;
-                background: rgba(244, 98, 58, 0.9);
-                transition: opacity 0.25s ease;
-            }
-
-            #portfolio .portfolio-box .project-category {
-                font-family: "Merriweather Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-                font-size: 0.85rem;
-                font-weight: 600;
-                text-transform: uppercase;
-            }
-
-            #portfolio .portfolio-box .project-name {
-                font-size: 1.2rem;
-            }
-
-            #portfolio .portfolio-box:hover .portfolio-box-caption {
-                opacity: 1;
+            @media (min-width: 2560px) {
+                .modal-xl {
+                    --bs-modal-width: 1920px;
+                }
             }
         </style>
         <!-- MathJax CSS -->
@@ -101,12 +47,21 @@
             });
         </script>
         <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+        <script src="../../../js/include.js"></script>
+
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-RF7ETSKPK9');
+        </script>
     </head>
     <body>
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
             <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href="../../main.html">HwanHeo's Blog</a>
+                <a class="navbar-brand" href="../../">HwanHeo's Blog</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                     Menu
                     <i class="fas fa-bars"></i>
@@ -120,17 +75,23 @@
             </div>
         </nav>
         <!-- Page Header-->
-        <header class="masthead" style="background-image: url('../../../assets/new_bg.png')">
+        <header class="masthead" style="background-image: url('../../../assets/blog_bg.jpeg')">
             <div class="container position-relative px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
                         <div class="post-heading">
-                            <h1>Post Highlight</h1>
+                            <h1> Don't Rasterize, But Ray Trace 3D Gaussian </h1>
                             <br/>
                             <span class="meta">
                                 Posted by
                                 Hwan Heo
+                                on August 23, 2024
                             </span>
+                            <div style="text-align: center;">
+                                <button type="button" class="btn custom-btn" onclick="setLanguage('eng')" style="font-size: 13px;">eng</button>
+                                |
+                                <button type="button" class="btn custom-btn" onclick="setLanguage('kor')" style="font-size: 13px;">kor</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -140,205 +101,60 @@
         <article class="mb-4">
             <nav class="toc">
                 <ul>
-                    <li><a href="#title1"> title1 </a></li>
-                    <li><a href="#title2"> title2 </a></li>
+                    <li>
+                        <a href="#introduction"> Introduction</a>
+                    </li>
+                    <li><a href="#preliminary"> Background</a></li>
                 </ul>
             </nav>
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-md-12 col-lg-10 col-xl-9"> <!-- 12 10 9 / 10 8 7-->
-                        <h2> Review & Analysis </h2>
-                        <div id="portfolio">
-                            <div class="container-fluid p-0">
-                                <div class="row g-0">
-                                    <div class="col-lg-6 col-sm-6"> <!-- col-12 col-lg-6 col-lg-4 col-sm-6 -->
-                                        <a class="portfolio-box" href="../240823_grt/" title="Project Name">
-                                            <img class="img-fluid" src="../240823_grt/assets/teaser.gif" alt="..." />
-                                            <div class="portfolio-box-caption">
-                                                <div class="project-category text-white-50">Review</div>
-                                                <div class="project-name">3D Gaussian Ray Tracing</div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-lg-6 col-sm-6"> 
-                                        <a class="portfolio-box" href="../240805_gs" title="Project Name">
-                                            <img class="img-fluid" src="../240805_gs/assets/teaser.gif" alt="..." />
-                                            <div class="portfolio-box-caption">
-                                                <div class="project-category text-white-50">Analysis</div>
-                                                <div class="project-name">Gaussian Splatting Rasterization </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-lg-6 col-sm-6"> 
-                                        <a class="portfolio-box" href="../240602_2dgs/" title="Project Name">
-                                            <img class="img-fluid" src="../240602_2dgs/assets/teaser.gif" alt="..." />
-                                            <div class="portfolio-box-caption">
-                                                <div class="project-category text-white-50">Review</div>
-                                                <div class="project-name"> 2D Gaussian Splatting </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-lg-6 col-sm-6"> 
-                                        <a class="portfolio-box" href="../230202_ngp/" title="Project Name">
-                                            <img class="img-fluid" src="../230202_ngp/assets/ngp.png" alt="..." />
-                                            <div class="portfolio-box-caption">
-                                                <div class="project-category text-white-50">Analysis</div>
-                                                <div class="project-name"> Instant-NGP </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div><br/>
-                        <h2> Side Projects </h2>
-                        <div id="portfolio">
-                            <div class="container-fluid p-0">
-                                <div class="row g-0">
-                                    <div class="col-lg-6 col-sm-6"> <!-- col-12 col-lg-6 col-lg-4 col-sm-6 -->
-                                        <a class="portfolio-box" href="../240721_sfm/assets/" title="Project Name">
-                                            <img class="img-fluid" src="../240721_sfm/assets/pen_vggsfm.png" alt="..." />
-                                            <div class="portfolio-box-caption">
-                                                <div class="project-category text-white-50"> Side Project </div>
-                                                <div class="project-name"> Radiance Fiedls from Deep-Based SfM </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-lg-6 col-sm-6"> 
-                                        <a class="portfolio-box" href="../240426_diffusion_depth/" title="Project Name">
-                                            <img class="img-fluid" src="../240426_diffusion_depth/assets/res3.gif" alt="..." />
-                                            <div class="portfolio-box-caption">
-                                                <div class="project-category text-white-50">Side Project</div>
-                                                <div class="project-name"> Make Mesh from Depth Diffusion </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-lg-6 col-sm-6"> 
-                                        <a class="portfolio-box" href="../240226_sora/" title="Project Name">
-                                            <img class="img-fluid" src="../240226_sora/assets/teaser.gif" alt="..." />
-                                            <div class="portfolio-box-caption">
-                                                <div class="project-category text-white-50"> Side Project </div>
-                                                <div class="project-name"> Neural Rendering from Sora </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-lg-6 col-sm-6"> 
-                                        <a class="portfolio-box" href="../230202_ngp/" title="Project Name">
-                                            <img class="img-fluid" src="../../../projects/nerf_in_game/teaser.png" alt="..." />
-                                            <div class="portfolio-box-caption">
-                                                <div class="project-category text-white-50"> Side Project </div>
-                                                <div class="project-name"> Instant-NGP </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div><br/>
-
-                        <h2 id="title1">Title 1</h2>
-                        <p>
-                            bla bla 
-                        </p>
-
-                        <figure>
-                            <img src="assets/placeholder.png" alt="alt description" width="100%">
-                            <figcaption style="text-align: center; font-size: 15px;"><strong>Figure #.</strong> description, source: <span style="text-decoration: underline;"><a href="#!">source link</a></span></figcaption>
-                        </figure>
-                        <p>
-                            Contents
-                            Link: <a href="#!">hyperlink text</a>
-                        </p>
-                        <div class="math-container">
-                            $$ E=mc^2
-                            $$
-                        </div>
-
-                        unordered list 
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div data-include-path="../layout/series.html"></div>
+                        <br/>
+                        <h2 id="tl-dr">TL; DR</h2>
+                        <p class="lang eng">This article provides an in-depth review of the paper &quot;3D Gaussian Ray Tracing,&quot; which introduces a novel approach to leveraging ray tracing in 3D Gaussian Radiance Fields.</p>
+                        <p class="lang eng">3D Gaussian Splatting is a powerful and fascinating technology, but it inherits several problems from rasterization. The recently presented 3D Gaussian Ray Tracing (3D GRT) resolves many of these shortcomings by introducing a Differentiable Ray Tracer for 3D Gaussians.</p>
+                        <p class="lang eng"> Let’s deep dive into the 3D GRT!</p>
+                        <p class="lang kor" style="display: none;">3D Gaussian Splatting 은 강력하고 매력적인 기술이지만, rasterization 을 사용하기 때문에 생기는 여러 문제가 있다. 최근 공개된 3D Gaussian Ray Tracing (이하 3D GRT) 은 Ray Tracing 기술을 3D Gaussian 에 접목시켜 이러한 단점을 많이 해결한 모습을 보여주었다. 이 글을 통해 3D GRT 를 자세하게 알아보자! </p>
                         <ul>
-                            <li> 
-                                <strong>BOLD</strong> 
-                                contents
+                            <li> project page: <span style="text-decoration: underline;"><a href="https://gaussiantracer.github.io/"> Link </a></span> </li>
+                        </ul>
+                        
+                        <hr/>
+                        <p>
+                            You may also like, 
+                        </p>
+                        <ul>
+                            <li>
+                                <a href="../240805_gs/">
+                                    <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../240602_2dgs/">
+                                    <span style="text-decoration: underline;">Under the 3D: Geometrically Accurate 2D Gaussian Splatting </span>
+                                </a>
                             </li>
                         </ul>
-                        ordered list 
-                        <ol>
-                            <li> 
-                                <strong>BOLD</strong> 
-                                contents
-                            </li>
-                        </ol>
-
-                        quote
-                        <blockquote>
-                            <p>
-                                contents contents 
-                                contents contents
-                            </p>
-                        </blockquote>
-
-                        code block
-                        <pre class="language-cpp" style="font-size: 16px;"><code>// code  
-a = 3;</code>
-                        </pre>
-
-                        newline
                         <br/>
-
-                        <h2 id="title2">Title 2</h2>
-
-                        table
-                        <table>
-                            <tr>
-                                <th>Title1</th>
-                                <th>Title2</th>
-                            </tr>
-                            <tr>
-                                <td>contents1</td>
-                                <td>contents2</td>
-                            </tr>
-                            <tr>
-                                <th colspan='2'> Spaned Title </th>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>2</td>
-                            </tr>
-                            <tr colspan="2">
-                                3
-                            </tr>
-                        </table>
-
-                        <table>
-                            <tr>
-                                <th scope="col">번호</th>
-                                <th scope="col">제목</th>
-                                <th scope="col" colspan="2">이름</th>
-                                <!-- <th scope="col">조회수</th> : 밀려난 셀 제거-->
-                            </tr>
-                            <tr>
-                                <td rowspan="3">1</td>
-                                <td>테이블-1</td>
-                                <td>홍길동</td>
-                                <td>10</td>
-                            </tr>
-                            <tr>
-                                <!-- <td>2</td> -->
-                                <td>테이블-2</td>
-                                <td>둘리</td>
-                                <td>20</td>
-                            </tr>
-                            <tr>
-                                <!-- <td>3</td> -->
-                                <td>테이블-3</td>
-                                <td>도우너</td>
-                                <td>30</td>
-                            </tr>
-                    </table>
-                    </div>
-                    <div class="d-flex justify-content-start mb-4"><a class="btn btn-primary text-uppercase" href="#!">Next Post →</a></div>
-                    <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">← Older Post </a></div>
-                    <div class="d-flex justify-content-between mb-4">
-                        <a class="btn btn-primary text-uppercase" href="#!">← Older Post</a>
-                        <a class="btn btn-primary text-uppercase" href="#!">Next Post →</a>
+                        <div class="d-flex justify-content-start mb-4"><a class="btn btn-primary text-uppercase" href="../240805_gs/">← Older Post</a></div>
+                        <script src="https://giscus.app/client.js"
+                            data-repo="hwan-h-heo/hwan-h-heo.io"
+                            data-repo-id="R_kgDOMeZQdw"
+                            data-category="General"
+                            data-category-id="DIC_kwDOMeZQd84CiEMJ"
+                            data-mapping="pathname"
+                            data-strict="0"
+                            data-reactions-enabled="1"
+                            data-emit-metadata="0"
+                            data-input-position="bottom"
+                            data-theme="light_protanopia"
+                            data-lang="en"
+                            data-loading="lazy"
+                            crossorigin="anonymous"
+                            async>
+                        </script>
                     </div>
                 </div>
             </div>
@@ -380,5 +196,6 @@ a = 3;</code>
         <script>
             Prism.plugins.autoloader.languages_path = 'https://unpkg.com/prismjs@1.28.0/components/'
         </script>
+        
     </body>
 </html>
