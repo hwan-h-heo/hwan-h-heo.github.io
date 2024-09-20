@@ -352,9 +352,9 @@ rgb[idx * C + 2] = result.z;</code></pre>
                                 <p> The scaling term $\sqrt{2 \log (\sigma / \alpha_{\min})}$ determines how the icosahedron is scaled. Specifically, the parameter $\alpha_{\min}$ (set to 0.01) represents the minimum response value.</p> 
                                 <p> Though the term is a little bit tricky when considering identical scaling, this relationship simplifies to:</p>
                                 <div class="math-container">
-                                    $$ \sigma / \alpha_{\min} = \exp(0.5) \ \Rightarrow \sigma \cdot \exp (- 1/2) = \alpha_{\min}<br> $$
+                                    $$ \sigma / \alpha_{\min} = \exp(0.5) \ \Rightarrow 1 / \sigma \cdot \exp (- 1/2) = \alpha_{\min}<br> $$
                                 </div>
-                                <p> Doesn&#39;t the left side look familiar? This expression closely resembles the probability density function (pdf) of a Gaussian distribution. </p>
+                                <p> Doesn&#39;t the right side look familiar? This expression closely resembles the probability density function (pdf) of a Gaussian distribution. </p>
                                 <div>
                                     $$ f(x) = \frac{1}{\sigma\sqrt{2\pi}} \exp\left( -\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^{\!2}\,\right) $$
                                 </div>
