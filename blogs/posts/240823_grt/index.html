@@ -356,7 +356,7 @@ rgb[idx * C + 2] = result.z;</code></pre>
                                 </div>
                                 <p> Doesn&#39;t the right side look familiar? This expression closely resembles the response function of the Gaussian Splatting. </p>
                                 <div>
-                                    $$  f_i(p) = \sigma_i \cdot \exp \left( - \frac{1}{2} (\mu_i -p)^{\rm T} \Sigma_i^{-1} (\mu_i - p ) \right )$$
+                                    $$  f_i(p) = \sigma_i \cdot \exp \left( - \frac{1}{2} (\mu_i -p)^{\rm T} \Sigma_i^{-1} (\mu_i - p ) \right ) $$
                                 </div>
                                 <p> The scaling factor adjusts the icosahedron to match the point where the response in the Gaussian distribution drops to $\alpha_{\min}$, effectively clamping the scale at a confidence interval where the standard deviation equals 1.</p>
                                 <p> In my opinion, the choice of $\alpha_{\min} = 0.01$ is justified by calculating the Gaussian pdf at a standard deviation of 2.6, which corresponds to approximately 99% confidence, yielding a value close to 0.01. </p>
@@ -378,9 +378,9 @@ rgb[idx * C + 2] = result.z;</code></pre>
                             <div class="math-container">
                                 $$ \sigma / \alpha_{\min} = \exp(0.5) \ \rightarrow \sigma \cdot \exp (- 1/2) = \alpha_{\min}<br> $$
                             </div>
-                            <p> right side 가 익숙하지 않은가? gaussian distribution 의 pdf 형태와 닮아 있다.</p> 
+                            <p> 오른쪽 항이 익숙하지 않은가? GS 의 response 형태와 닮아 있다.</p> 
                             <div>
-                                $$ f(x) = \frac{1}{\sigma\sqrt{2\pi}} \exp\left( -\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^{\!2}\,\right) $$
+                                $$ f_i(p) = \sigma_i \cdot \exp \left( - \frac{1}{2} (\mu_i -p)^{\rm T} \Sigma_i^{-1} (\mu_i - p ) \right ) $$
                             </div>
                             <p> 즉 scale 이 1로 유지되는 기점은 3D Gaussian 의 local coordinate 에서 std 가 1만큼 떨어져 있는 곳의 responce 가 minimum responce 값보다 작은지 큰지를 결정하는 지점이 된다. </p>
                             <p> 0.01 에 대한 당위성이 없다고 생각할 수도 있는데, confidence 99% 정도에 해당하는 std 값 2.6을 통해 gaussian pdf 를 계산해보면 대략 0.01 이란 값이 나온다. 비슷하게 3D GS 에서는 culling 을 위한 radius 계산에 3xstd 값을 이용한다.</p>
