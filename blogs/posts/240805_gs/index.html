@@ -161,7 +161,7 @@
                         <h2 id="sec1">1. 3D Gaussian as Primitive Kernel</h2>
                         <br/>
                         <figure>
-                            <img src="assets/gs.png" alt="3D Gaussian as Primitive Kernel" width="100%">
+                            <img src="assets/gs.jpg" alt="3D Gaussian as Primitive Kernel" width="100%">
                             <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 2.</strong> NeRF vs 3D GS, source: <span style="text-decoration: underline;"><a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">Kate's medium</a></span></figcaption>
                         </figure>
                         <p class="lang eng">
@@ -360,7 +360,7 @@ cov3D[5] = Sigma[2][2];</code>
                         <br/>
                         <h3 id="sec2.1">2.1. Projection</h3>
                         <figure>
-                            <img src="assets/splatting.png" alt="Splatting of primitives" style="width:55%">
+                            <img src="assets/splatting.jpg" alt="Splatting of primitives" style="width:55%">
                             <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 3.</strong> Projection of 3D Gaussian, <br/> source: <span style="text-decoration: underline;"><a href="https://dl.acm.org/doi/10.1145/3355089.3356513"><em>Differentiable Surface Splatting for Point-based Geometry Processing </em></a></span> </figcaption>
                         </figure> 
                         
@@ -444,7 +444,7 @@ cov3D[5] = Sigma[2][2];</code>
                                 <p> 
                                     the image space pixel $(u,v)$ in a pinhole camera model,
                                     <figure>
-                                        <img src="assets/pinhole.png" width="60%" height="50%">
+                                        <img src="assets/pinhole.jpg" width="60%" height="50%">
                                         <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 4.</strong> Pinhole camera model, by Fusion of Imaging and Inertial Sensors for Navigation</figcaption>
                                     </figure>
                                 </p>
@@ -614,7 +614,7 @@ float3 conic = { cov.z * det_inv, -cov.y * det_inv, cov.x * det_inv };</code></p
                                 <p class="lang kor" style="display: none;">
                                     또한 cov 의 inverse 를 conic 이라고 명명하고 있는데, 이는 아마 ellipsoid 등이 <a href="https://en.wikipedia.org/wiki/Conic_section">conic section</a> 으로 정의되기 때문인 것 같다.
                                 </p>
-                                <img src="assets/conic.png" width="60%">
+                                <img src="assets/conic.jpg" width="60%">
                             </li>
                         </ul>
                         <br/>
@@ -699,7 +699,7 @@ float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));</code></pre>
                         </div>
                         
                         <figure>
-                            <img src="assets/rasterization.png" width="100%">
+                            <img src="assets/rasterization.jpg" width="100%">
                             <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 5.</strong> An illustration of the forward process of 3D GS, <br/> source: <span style="text-decoration: underline;"><a href="https://arxiv.org/abs/2401.03890"><em>A Survey on 3D Gaussian Splatting </em></a></span> </figcaption>
                         </figure>
                         
@@ -725,7 +725,7 @@ float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));</code></pre>
                                 <p class="lang kor" style="display: none;">
                                     Frustum culling 으로 valid gaussian 만 남긴다. (See fig.)
                                 </p>
-                                <img src="assets/culling.png" width="50%" height="40%" alt="Frustum Culling">
+                                <img src="assets/culling.jpg" width="50%" height="40%" alt="Frustum Culling">
                             </li>
                             <br/>
                             <li>
@@ -778,7 +778,7 @@ float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));</code></pre>
                                     </li>
                                 </ul>
                                 <figure>
-                                    <img class="img-fluid" src="assets/presort.png" width="70%" height="60%" alt="Gaussian Accumulation">
+                                    <img class="img-fluid" src="assets/presort.jpg" width="70%" height="60%" alt="Gaussian Accumulation">
                                     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 6.</strong>  An illustration of the tile based parallel rendering, <br/> source: <span style="text-decoration: underline;"><a href="https://arxiv.org/abs/2401.03890"><em>A Survey on 3D Gaussian Splatting </em></a></span> </figcaption>
                                 </figure>
                             </li>
@@ -838,7 +838,7 @@ __shared__ float4 collected_conic_opacity[BLOCK_SIZE];</code></pre>
                             </li>
                         </ul>
                         <figure>
-                            <img class="img-fluid" src="assets/nerf_vs_gs.png" width="70%">
+                            <img class="img-fluid" src="assets/nerf_vs_gs.jpg" width="70%">
                             <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 7.</strong> NeRF vs 3D GS, source: <span style="text-decoration: underline;"><a href="https://arxiv.org/abs/2401.03890"><em>A Survey on 3D Gaussian Splatting </em></a></span> </figcaption>
                         </figure>
                         <p class="lang eng">
@@ -892,8 +892,8 @@ glm::mat3 J = glm::mat3(
                                 <th> Rasterization </th>
                             </tr>
                             <tr>
-                                <td><img src="assets/360img.png" alt="360 image" width="100%"></td>
-                                <td><img src="assets/360ptc.png" alt="360 ptc" width="100%"></td>
+                                <td><img src="assets/360img.jpg" alt="360 image" width="100%"></td>
+                                <td><img src="assets/360ptc.jpg" alt="360 ptc" width="100%"></td>
                             </tr>
                         </table>
                         <div class="lang eng">

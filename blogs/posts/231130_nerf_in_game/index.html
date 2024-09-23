@@ -160,7 +160,7 @@
                         <p>In other words, NeRF models cannot separate the reflections of the captured light from the object itself. This is a critical flaw, especially considering that Physics-Based Rendering (PBR), essential for creating realistic games, relies on realistic lighting effects.</p>
                         <p>Even in Phong shading, one of the simplest forms of light shading, the reflection effects are handled by three components:</p>
                         <figure>
-                            <img src="assets/IMG_2_Phong_reflection_model.png" alt="Gaussian RT" width="100%"> 
+                            <img src="assets/IMG_2_Phong_reflection_model.jpg" alt="Gaussian RT" width="100%"> 
                             <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 3.</strong> Phong reflection model, source: <span style="text-decoration: underline;"><a href="https://learnopengl.com/Lighting/Basic-Lighting">OpenGL</a></span> </figcaption>
                         </figure>
                         <ul>
@@ -174,13 +174,13 @@
                         <p>So, how can we separate lighting effects in NeRF models? There are several methods, but one simple approach involves modifying the model architecture to output specular and diffuse components separately. </p>
                         <p>Unlike the standard NeRF network structure, which takes coordinates $x$ (spatial location) and $d$ (direction) as inputs and outputs an RGB color $c$, a modified NeRF model outputs both specular color $c_s$ and diffuse color $c_d$.</p>
                         <figure>
-                            <img src="assets/IMG_3_diffuse_specular_disentanglement_model.png" alt="Gaussian RT" width="100%"> 
+                            <img src="assets/IMG_3_diffuse_specular_disentanglement_model.jpg" alt="Gaussian RT" width="100%"> 
                             <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 4.</strong> NeRF MLP w/ Diffuse-Specular Disentanglement </figcaption>
                         </figure>
                         <p>In this structure, the Spatial MLP not only outputs the diffuse color $c_d$ but also the normal vector $n$ at that location. This normal vector is used to represent the reflected light more accurately through a technique called &#39;reflection reparameterization.&#39; Consequently, the reflected light parameter $w_r$ is input into the Directional MLP, which then outputs the specular color $c_s$.</p>
                         <p>Understanding the reflection reparameterization formula might not be straightforward initially, but consider the following scenario to understand why we can represent reflected light $w_r$ through the normal vector and the observation direction.</p>
                         <figure>
-                            <img src="assets/IMG_4_reflection_reparameterization.png" alt="Gaussian RT" width="100%"> 
+                            <img src="assets/IMG_4_reflection_reparameterization.jpg" alt="Gaussian RT" width="100%"> 
                             <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 5.</strong> Illustration of reflection parameterization </figcaption>
                         </figure>
                         <p>As illustrated above, the reflected light $w_r$ at a point on an object has the following relationship with the observer&#39;s direction $d$ and normal $n$:</p>
