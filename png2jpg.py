@@ -2,7 +2,7 @@ from glob import glob
 import os
 from PIL import Image
 
-images = sorted(glob('blogs/posts/230202_ngp/assets/*'))
+images = sorted(glob('projects/dreamsurfels/assets/*'))
 for img in images:
     if 'png' in img:
         pil = Image.open(img)
