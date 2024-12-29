@@ -7,7 +7,7 @@
         <meta name="author" content="" />
         <title>Hwan Heo's personal portfolio website</title>
         <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
         <!-- Custom Google font-->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -77,8 +77,10 @@
                     </div>
                     <div class="row gx-5 justify-content-center">
                         <div class="col-lg-11 col-xl-9 col-xxl-8">
-                            <!--img class="img-fluid" src="./assets/poster.png" /-->
-                            <h2> Project Overview </h2>
+                            <div class="fs-6"> <strong>TL; DR:</strong> This project presents an accelerated facial NeRF pipeline utilizing multi-camera setups to capture multi-view data for novel view synthesis. </div>
+                            <div class="fs-6"> <strong>Keywords:</strong> Facial NeRF, Multi-Camera Setup, 3D Morphable Model (3DMM) </div>
+                            <p> <br/> </p>
+                            <h2> Overview </h2>
                             <hr/>
                             <p>
                                 This project introduces an accelerated method for face NeRF using multi-camera captures to gather multi-view data for novel view synthesis (NVS). By utilizing a feed-forward approach to estimate 3D Morphable Model (3DMM) parameters, we significantly reduce preprocessing times compared to traditional methods. We further adapt the reconstructed mesh for efficient ray-casting in a perspective projection, optimizing both speed and accuracy for facial reconstruction tasks.
@@ -124,7 +126,7 @@
                                 </video>
                             </div>
                             <p> <br/> </p>
-                            <h3> Mesh Construction and Adaptation for Multi-Camera System </h3>
+                            <h3> Mesh Adaptation for Multi-Camera System </h3>
                             <p>
                                 Once the 3DMM parameters are estimated, we construct a 3D mesh that serves as a proxy for ray-casting operations. 
                                 The challenge here lies in adapting the pre-trained network, which was trained under the assumption of an orthographic camera model. 
@@ -169,7 +171,10 @@
                                     <source src="assets/hwan_nerf.mp4" type="video/mp4">
                                 </video>
                             </div>
-                            
+                            <hr/>
+                            <p>
+                                This project successfully integrates multi-camera setups with accelerated facial NeRF, showcasing the potential for efficient and high-fidelity facial reconstruction. By leveraging feed-forward methods for 3DMM estimation and adapting ray-casting for perspective projections, we achieve a significant reduction in preprocessing time while maintaining high visual fidelity.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -179,10 +184,7 @@
         <footer class="bg-white py-4 mt-auto">
             <div class="container px-5">
                 <div class="row align-items-center justify-content-between flex-column flex-sm-row">
-                    <div class="col-auto"><div class="small m-0">Copyright &copy; hwanheo's log</div></div>
-                    <div class="col-auto">
-                        <a class="small" href="gjghks950@naver.com">Contact</a>
-                    </div>
+                    <div class="col-auto"><div class="small m-0">Copyright &copy; Hwan Heo</div></div>
                 </div>
             </div>
         </footer>

@@ -7,7 +7,7 @@
         <meta name="author" content="" />
         <title>Hwan Heo's personal portfolio website</title>
         <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
         <!-- Custom Google font-->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -75,9 +75,16 @@
                     </div>
                     <div class="row gx-5 justify-content-center">
                         <div class="col-lg-11 col-xl-9 col-xxl-8">
+                            <div class="fs-6"> <strong>TL; DR:</strong> This project proposes a unified pipeline that spans 360-camera captures to Gaussian Splatting-based scene reconstruction, enabling seamless integration into game and graphics engines such as Unity and Unreal. </div>
+                            <div class="fs-6"> <strong>Keywords:</strong> Neural Rendering, Gaussian Splatting, 360 Camera, Camera Modeling </div>
+                            <p> <br/> </p>
                             <h2> Overview </h2>
                             <hr/>
-                            <p> The project aims to explore the fusion of neural rendering and game engines. We design a pipeline for efficient scene modeling, reconstruction using neural rendering, and subsequent integration of the reconstructed scene into a game engine. </p>
+                            <p> 
+                                This project explores the integration of neural rendering techniques into game engines, bridging the gap between advanced 3D scene reconstruction and interactive applications. We develop a pipeline that efficiently processes 360-camera captures, reconstructs scenes using Gaussian Splatting, and optimizes the resulting assets for seamless deployment in game engines like Unity and Unreal.
+                                <br/> <br/>
+                                The pipeline not only ensures high-fidelity scene modeling but also addresses practical challenges such as camera modeling and compatibility with existing game engine workflows, paving the way for more realistic and dynamic gaming environments.
+                            </p>
                             <div class="video-container">
                                 <iframe width="720" height="405" src="https://www.youtube.com/embed/3OqbvUaoNFw?si=GxEnL9nG7fuVT0x0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                             </div>
@@ -85,24 +92,29 @@
 
                             <h2> Neural Rendering w/ 360 Videos </h2>
                             <hr/>
-                            <h3> Using 360 Cameras for effective large scene capturing </h3>
-                            <p> To efficiently capture the large scene for 3D scene reconstruction, we use 360 videos for our GT NVS sources. </p>
+                            <h3> Using 360 Camera for Effective Large Scene Capturing </h3>
+                            <p> 
+                                To efficiently capture large scenes for 3D scene reconstruction, we utilize 360-degree videos as ground truth (GT) sources for novel view synthesis (NVS). Unlike standard cameras, 360 cameras are equipped with dual fisheye lenses positioned back-to-back, enabling them to capture a full spherical view of the environment in a single frame.
+                                <br/> <br/>
+                                This configuration provides a significantly wider field of view compared to conventional cameras, allowing us to record extensive areas with fewer capture points. By leveraging this capability, we can efficiently gather high-quality data for large-scale scenes.
+                            </p>
                             <figure> 
                                 <img class="img-fluid" src="assets/1_360_park_sample.jpg">
-                                <figcaption> sample of captured 360 scenes </figcaption>
+                                <figcaption> a sample of captured 360 scene </figcaption>
                             </figure>
                             <p> <br/> </p>
 
                             <h3> Spherical 3D Gaussian Splatting </h3>
                             <p> 
-                                Initially, we trained the 3D GS model using 360-degree images, but the results were poor. 
-                                This was likely due to stitching errors between the fisheye images that comprise the equirectangular 
-                                360-degree images. 
+                                Initially, we trained the 3D Gaussian Splatting (GS) model using 360-degree equirectangular images. 
+                                However, the results were suboptimal, primarily due to <strong><em>stitching errors</em> </strong>inherent in the process of combining fisheye images to create 360-degree panoramas. 
+                                These errors introduced distortions and inconsistencies, which negatively impacted the quality of the reconstructed 3D scenes.
                             </p>
                             <p> 
-                                To address this issue, we decided to use the original fisheye images as our ground truth (GT) sources. 
-                                Furthermore, we implemented a custom CUDA-based Gaussian rasterization module to support the fisheye 
-                                camera model, which was not supported by the original rasterization module. 
+                                To overcome this limitation, we shifted to using the original fisheye images as our ground truth (GT) sources. 
+                                By directly utilizing fisheye images, we avoided the stitching artifacts and preserved the integrity of the captured data. 
+                                To further optimize this approach, we developed a <strong><em>custom CUDA-based Gaussian rasterization module</em></strong> tailored to the fisheye camera model. 
+                                This module extended the capabilities of the original rasterization module, which lacked native support for fisheye projections, enabling more accurate and efficient processing of spherical scene data.
                             </p>
 
                             <table>
@@ -156,9 +168,7 @@
                            <p>
                                 In Unreal Engine (UE), Gaussian Splatting scenes can be constructed similarly. 
                                 However, we've encountered a significant limitation: 
-                                Unreal's Niagara system can effectively render only up to 2 million particles. 
-                                Given that a fully reconstructed scene often consists of over 6 million particles, 
-                                a simple copy-and-paste approach leads to disastrous results. 
+                                Unreal's Niagara system can effectively render only up to 2 million particles. Given that a fully reconstructed scene often consists of over 6 million particles, this limitation leads to suboptimal results without optimization.
                                 This issue has also been reported with the <a href="https://github.com/xverse-engine/XV3DGS-UEPlugin/issues/6">XVERSE's UE GS plugin</a>.
                            </p>
                            <p>
@@ -187,14 +197,18 @@
                                     <td><img class="img-fluid" src="assets/UE_pruned.png" alt="Spherical Camera"></td>
                                 </tr>
                             </table>
+                            <hr/>
                             <p>
-                                Below is interactive result in UE. 
+                                Below is the result video that demonstrates the interactive experience achieved with our pipeline in Unreal Engine, showcasing the fidelity and performance of pruned Gaussian Splatting.
                             </p>
                             <div class="video-container">
                                 <iframe width="720" height="405" src="https://www.youtube.com/embed/FzoZVsvgVW0?si=GWOYlR0Ho8pgj2Cf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                             </div>
+                            <p>
+                                This pipeline demonstrates the potential of integrating advanced neural rendering techniques into interactive applications. Future work will explore further optimizations for real-time rendering and expanding the pipeline's scalability to larger scenes.
+                            </p>
                             <hr/>
-                            Please see also my related blog post: <a href="../../blogs/posts/231130_nerf_in_game/">Can NeRF be Used in Game?</a>
+                            For more insights, see my blog post discussing the practical challenges and solutions for using NeRF in game engines: <a href="../../blogs/posts/231130_nerf_in_game/">Can NeRF be Used in Game?</a>
                         </div>
                     </div>
                 </div>

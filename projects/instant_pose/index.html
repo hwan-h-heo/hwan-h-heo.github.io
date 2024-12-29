@@ -7,7 +7,7 @@
         <meta name="author" content="" />
         <title>Hwan Heo's personal portfolio website</title>
         <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
         <!-- Custom Google font-->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -56,15 +56,25 @@
                 <div class="container px-5 mb-5">
                     <div class="text-center mb-5">
                         <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</span></h1>
-                        <div class="fs-3 fw-light text-muted"> ICML 2023 </div>
+                        <div class="fs-3 fw-light text-muted"> ICML 2023 <a href="https://dl.acm.org/doi/10.5555/3618408.3618936" class="bi bi-link-45deg"></a> </div> 
                         <div class="fs-3 fw-light text-muted"> Naver AI Lab, Korea University </div>
                     </div>
                     <div class="row gx-5 justify-content-center">
                         <div class="col-lg-11 col-xl-9 col-xxl-8">
+                            <div class="fs-6"> <strong>TL; DR:</strong> We propose the joint optimization scheme of camera poses and 3D scene reconstruction using multi-resolution hash encoding (Instant-NGP). </div>
+                            <div class="fs-6"> <strong>Keywords:</strong> Neural Rendering, Radiance Fields, NeRF, Camera Pose Estimation </div>
+                            <p> <br/> </p>
                             <!--img class="img-fluid" src="./assets/poster.png" /-->
-                            <h2> Motivation </h2>
+                            <h2> Overview </h2>
                             <hr/>
-                            <p> Multi-Resolution hash encoding or Instant-NGP has recently been proposed to reduce the computational cost of NeRF's. However, we found that a naive gradient-based camera pose refinement method severely deteriorates performance. Showing that the oscilating gradient flows of hash encoding interfere with the registration of camera poses, our method addresses the issue by utilizing smooth interpolation weighting to stabilize the gradient oscilation for the ray samplings across has grids. </p>
+                            <p> 
+                                Multi-Resolution hash encoding (Instant-NGP) has been proposed to reduce the computational cost of NeRFs. 
+                                However, when jointly optimizing camera poses and 3D scene reconstruction, naive gradient-based methods often lead to performance degradation. 
+                                We observed that the oscillating gradient flows inherent to hash encoding interfere with accurate camera pose registration.
+                                <br/><br/>
+                                To address this, we propose a method that uses smooth interpolation weighting to stabilize gradient oscillations during ray sampling across hash grids. 
+                                Additionally, our curriculum training procedure facilitates level-wise learning of hash encodings, further enhancing both camera pose refinement and novel view synthesis quality.
+                            </p>
                             <p> <br/> </p>
 
                             <h2> Method </h2>
@@ -178,7 +188,7 @@
                             <h2> Experiments </h2>
                             <hr/>
                             <h4> Visualization of the progress of pose refienments </h4>
-                            <p> <span style="color:red">Red</span>  camera is GT and red line is a pose error vector. </p>
+                            <p> <span style="color:red">Red</span> lines denote pose error vectors between GT camera poses and optimized poses. </p>
                             <img class="img-fluid" src="assets/vis_pose.png" />
                             <p> <br/> </p>
 
@@ -191,6 +201,7 @@
                                 <li> Inherit Instant-NGP's better accuracy </li>
                                 <li> Improve stability of pose refinement </li>
                             </ul>
+                            <br/>
                             <h4> Quantitative Results </h4>
                             <DIV style ="text-align:center";>
                                 <img class="img-fluid" src="assets/table.png" width="70%" />
@@ -205,10 +216,7 @@
         <footer class="bg-white py-4 mt-auto">
             <div class="container px-5">
                 <div class="row align-items-center justify-content-between flex-column flex-sm-row">
-                    <div class="col-auto"><div class="small m-0">Copyright &copy; hwanheo's log</div></div>
-                    <div class="col-auto">
-                        <a class="small" href="gjghks950@naver.com">Contact</a>
-                    </div>
+                    <div class="col-auto"><div class="small m-0">Copyright &copy; Hwan Heo</div></div>
                 </div>
             </div>
         </footer>

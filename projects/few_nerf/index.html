@@ -7,7 +7,7 @@
         <meta name="author" content="" />
         <title>Hwan Heo's personal portfolio website</title>
         <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
         <!-- Custom Google font-->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -56,26 +56,24 @@
                 <div class="container px-5 mb-5">
                     <div class="text-center mb-5">
                         <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild</span></h1>
-                        <div class="fs-3 fw-light text-muted"> preprint </div>
+                        <div class="fs-3 fw-light text-muted"> preprint <a href="https://arxiv.org/abs/2303.03966" class="bi bi-link-45deg"></a></div>
                         <div class="fs-3 fw-light text-muted"> Korea University </div>
                     </div>
                     <div class="row gx-5 justify-content-center">
                         <div class="col-lg-11 col-xl-9 col-xxl-8">
-                            <!--img class="img-fluid" src="./assets/poster.png" /-->
+                            <div class="fs-6"> <strong>TL; DR:</strong> We introduce <strong>SF-NeRF</strong>, an advanced framework for reconstructing neural scene representations from a small number of unconstrained in-the-wild photos. </div>
+                            <div class="fs-6"> <strong>Keywords:</strong> Neural Rendering, Radiance Fields, NeRF in-the-wild</div>
+                            <p> <br/> </p>
                             <h2> Overview </h2>
                             <hr/>
-                            <p>
-                                This research introduces <strong>SF-NeRF</strong>, an advanced framework designed to reconstruct neural scene representations 
-                                from a limited number of unconstrained tourist photos. 
+                            <p> 
+                                SF-NeRF tackles the challenge of decomposing transient and static phenomena in neural scene reconstruction. 
+                                At its core is <em>FilterNet</em>, an additional MLP module designed to predict the transient components of each image. 
+                                FilterNet leverages semantic information extracted from an image encoder pretrained in an unsupervised manner, which is key to enabling few-shot learning.
                             </p>
-                            <p> SF-NeRF focus on decomposing the transient and static phenomena, 
-                                predicting the transient components of each image with an additional MLP module dubbed FilterNet. 
-                                FilterNet exploits semantic information given by an image encoder pretrained in an unsupervised manner, 
-                                which is the key to achieve few-shot learning. </p>
-                            <ul>
-                                <li> present a learning framework for reconstructing neural scene representations from a small number of unconstrained (different illuminations, occlusions, etc) tourist photos </li>
-                                <li> Using DINO (semantic segmentation) features, we make occlusion filtering module that predicts the transient color and its opacity for each pixel </li>
-                            </ul>
+                            <p>
+                                Our framework is tailored for scenes captured under unconstrained conditions, such as varying illuminations and occlusions, commonly found in tourist photos. By utilizing DINO-based semantic features, we introduce an occlusion filtering module that predicts the transient color and its opacity for each pixel, enabling robust neural scene reconstruction even with limited data.
+                            </p>
                             <br/>
                             <h2> Methodology </h2>
                             <hr/>
@@ -183,10 +181,7 @@
         <footer class="bg-white py-4 mt-auto">
             <div class="container px-5">
                 <div class="row align-items-center justify-content-between flex-column flex-sm-row">
-                    <div class="col-auto"><div class="small m-0">Copyright &copy; hwanheo's log</div></div>
-                    <div class="col-auto">
-                        <a class="small" href="gjghks950@naver.com">Contact</a>
-                    </div>
+                    <div class="col-auto"><div class="small m-0">Copyright &copy; Hwan Heo</div></div>
                 </div>
             </div>
         </footer>
