@@ -96,7 +96,7 @@
                             <span class="meta">
                                 Posted by
                                 Hwan Heo
-                                on January 01, 2025
+                                on January 06, 2025
                             </span>
                             <div style="text-align: center;">
                                 <button type="button" class="btn custom-btn" onclick="setLanguage('eng')" style="font-size: 13px;">eng</button>
@@ -120,7 +120,7 @@
                         </ul>
                     </li>
                     <li><a href="#modeling">Modeling</a></li>
-                    <li><a href="#quick-viewer-development-tip">Quick Viewer Development Tip</a>
+                    <li><a href="#quick-viewer-development-tip"> Viewer Tip</a>
                         <ul>
                             <li><a href="#viser-viewer">Viser Viewer</a></li>
                             <li><a href="#marching-cube-extraction">Marching Cube Extraction</a></li>
@@ -133,10 +133,15 @@
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
                         <div data-include-path="../layout/series.html"></div>
-                        <br/>
+                        <p>
+                            <strong> TL; DR. </strong>
+                            In this article, we will explore how to apply radiance fields technique (NeRF and Gaussian Splatting) beyond photometric domain. 
+                            Also, I will post the short tip for the quick development of the NeRF / GS viewer which has no official viewer.
+                        </p>
+                        <hr/>
                         <h2 id="introduction">Introduction</h2>
-                        <p class="lang eng">Recently, I had the serendipitous opportunity to explore how Neural Rendering could be applied within the medical domain, specifically in Tomography (X-ray), referencing SAX-NeRF.</p>
-                        <p class="lang kor" style="display: none;">최근 우연한 기회로 의료 도메인, 특히 Tomography (X-ray) 에서 Neural Rendering 을 어떻게 적용해야 하는지 찾아볼 일이 있었다. (Ref: SAX-NeRF)</p>
+                        <p class="lang eng">Recently, I had the serendipitous opportunity to explore how Neural Rendering could be applied within the medical domain, specifically in Tomography (X-ray), referencing <a href='https://github.com/caiyuanhao1998/SAX-NeRF'>SAX-NeRF</a>.</p>
+                        <p class="lang kor" style="display: none;">최근 우연한 기회로 의료 도메인, 특히 Tomography (X-ray) 에서 Neural Rendering 을 어떻게 적용해야 하는지 찾아볼 일이 있었다. (Ref: <a href='https://github.com/caiyuanhao1998/SAX-NeRF'>SAX-NeRF</a>)</p>
                         <p class="lang eng">Unlike photography, which captures the reflection of visible light, tomography constructs images based on signals that have penetrated a substance. In tracing the authors' investigative process of how to adapt the standard Neural Rendering setting for Tomography, I was able to deepen my abstract intuition and comprehension of Neural Rendering.</p>
                         <p class="lang kor" style="display: none;">가시광의 반사를 포착하는 photography 와 다르게, tomography 는 물질을 투과한 신호를 바탕으로 이미지를 구성한다. 저자들이 Tomography 를 위해 일반적인 Neural Rendering setting 을 어떻게 수정해야 하는지를 탐구한 과정을 따라가면서, 나 또한 Neural Rendering 에 대한 추상적인 직관성과 이해를 증진시킬 수 있었다.</p>
                         <p class="lang eng">In this post, I aim to elucidate the foundational intuitions behind Neural Rendering, NeRF, and GS through a personal review of SAX-NeRF. Additionally, I will offer insights into a technique for creating a simple web viewer using viser when an official viewer is unavailable.</p>
