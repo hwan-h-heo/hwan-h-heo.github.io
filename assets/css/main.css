@@ -564,7 +564,7 @@ section,
 
 @media (max-width: 768px) {
   .hero img {
-    object-position: 50% 50%; /* 또는 object-position: 100% 50%; */
+    object-position: 75% 50%; /* 또는 object-position: 100% 50%; */
   }
 }
 
@@ -984,7 +984,7 @@ section,
 .testimonials .testimonial-item .quote-icon-left,
 .testimonials .testimonial-item .quote-icon-right {
   color: color-mix(in srgb, var(--accent-color), transparent 40%);
-  font-size: 26px;
+  font-size: 0px;
   line-height: 0;
 }
 
@@ -1282,3 +1282,9 @@ section,
 
 
 
+.progress-bar {
+  height: 0.4rem;
+  background: #6EA8FE;
+  width: 0%;
+  z-index: 9999;
+}

@@ -47,6 +47,13 @@
         th {
             background-color: #f2f2f2; /* 옅은 회색 */
         }
+        .progress-bar {
+          height: 0.4rem;
+          background: #6EA8FE;
+          width: 0%;
+          z-index: 9999;
+          position: fixed;
+        }
     </style>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
@@ -57,7 +64,9 @@
         gtag('config', 'G-RF7ETSKPK9');
     </script>
 </head>
-
+<div class="progress-container">
+  <div class="progress-bar" id="myBar"></div>
+</div>
 <body class="portfolio-details-page">
 
   <header id="header" class="header dark-background d-flex flex-column">
@@ -107,7 +116,7 @@
     <!-- Portfolio Details Section -->
     <section id="portfolio-details" class="portfolio-details section">
         <div class="text-center mb-5">
-            <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild</span></h1>
+            <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Semantic-aware Occlusion Filtering Neural Radiance Fields <br/> in the Wild</span></h1>
             <div class="fs-3 fw-light text-muted"> preprint <a href="https://arxiv.org/abs/2303.03966" class="bi bi-link-45deg"></a></div>
             <div class="fs-3 fw-light text-muted"> Korea University </div>
         </div>
@@ -267,6 +276,27 @@
 
   <!-- Main JS File -->
   <script src="../../assets/js/main.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const observer = new IntersectionObserver(() => {
+            updateScrollIndicator();
+        });
+
+        document.querySelectorAll("model-viewer").forEach((viewer) => observer.observe(viewer));
+
+        window.onscroll = updateScrollIndicator;
+        window.onresize = updateScrollIndicator;
+
+        function updateScrollIndicator() {
+            var winScroll = document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            if (height > 0) {
+                var scrolled = (winScroll / height) * 100;
+                document.getElementById("myBar").style.width = scrolled + "%";
+            }
+        }
+    });
+  </script>
 
 </body>
 

@@ -48,7 +48,7 @@
             background-color: #f2f2f2; /* 옅은 회색 */
         }
     </style>
-    
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
     <script>
@@ -59,6 +59,9 @@
     </script>
 </head>
 
+<div class="progress-container">
+    <div class="progress-bar" id="myBar"></div>
+  </div>
 <body class="portfolio-details-page">
 
   <header id="header" class="header dark-background d-flex flex-column">
@@ -149,7 +152,27 @@
 
   <!-- Main JS File -->
   <script src="../../assets/js/main.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const observer = new IntersectionObserver(() => {
+            updateScrollIndicator();
+        });
 
+        document.querySelectorAll("model-viewer").forEach((viewer) => observer.observe(viewer));
+
+        window.onscroll = updateScrollIndicator;
+        window.onresize = updateScrollIndicator;
+
+        function updateScrollIndicator() {
+            var winScroll = document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            if (height > 0) {
+                var scrolled = (winScroll / height) * 100;
+                document.getElementById("myBar").style.width = scrolled + "%";
+            }
+        }
+    });
+  </script>
 </body>
 
 </html>
