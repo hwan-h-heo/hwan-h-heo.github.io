@@ -1,145 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Hwan Heo's personal portfolio website</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Custom Google font-->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
-        <!-- Bootstrap icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="../../css/styles.css" rel="stylesheet" />
-        <script src="../../js/mathjax-config.js"></script>
-        <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({            
-                tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}            
-            });
-        </script>
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
-        <script>
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Consistency Learning via Decoding Path Augmentation for Transformers in Human Object Interaction Detection</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="../../assets/favicon.ico" rel="icon">
+  <link href="../../assets/favicon.ico" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../../assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="../../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="../../assets/css/main.css" rel="stylesheet">
+  <script src="../../js/mathjax-config.js"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({            
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}            
+        });
+    </script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            width: 50%;
+            border: none;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2; /* 옅은 회색 */
+        }
+    </style>
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-
         gtag('config', 'G-RF7ETSKPK9');
-        </script>
-    </head>
-    <body class="d-flex flex-column h-100 bg-light">
-        <main class="flex-shrink-0">
-            <!-- Navigation-->
-            <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
-                <div class="container px-5">
-                    <a class="navbar-brand" href="../../"><span class="fw-bolder text-primary">HwanHeo's log</span></a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
-                            <li class="nav-item"><a class="nav-link" href="../../">Home</a></li>
-                            <!--li class="nav-item"><a class="nav-link" href="../../resume.html">Resume</a></li-->
-                            <li class="nav-item"><a class="nav-link" href="../">Projects</a></li>
-                            <li class="nav-item"><a class="nav-link" href="../../blogs/"> | &nbsp; &nbsp; Blog</a></li>
-                            <!--li class="nav-item"><a class="nav-link" href="../../contact.html">Contact</a></li-->
-                        </ul>
-                    </div>
+    </script>
+</head>
+
+<body class="portfolio-details-page">
+
+  <header id="header" class="header dark-background d-flex flex-column">
+    <i class="header-toggle d-xl-none bi bi-list"></i>
+
+    <div class="profile-img">
+      <img src="../../assets/icon.webp" alt="" class="img-fluid rounded-circle">
+    </div>
+
+    <a href="index.html" class="logo d-flex align-items-center justify-content-center">
+      <h1 class="sitename">Hwan Heo</h1>
+    </a>
+
+    <div class="social-links text-center">
+      <a href="https://github.com/hwanhuh" class="github"><i class="bi bi-github"></i></a>
+      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin"><i class="bi bi-linkedin"></i></a>
+      <a href="https://www.instagram.com/hwan_heo_guitar?igsh=MWZraDFudWh0cnN2Mg==" class="instagram"><i class="bi bi-instagram"></i></a>
+      <a href="mailto:gjghks950@naver.com" class="google-plus"><i class="bi bi-envelope"></i></a>
+    </div>
+
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="../../#home"><i class="bi bi-house navicon"></i>Home</a></li>
+        <li><a href="../../#about"><i class="bi bi-person navicon"></i> About</a></li>
+        <li><a href="../../#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
+        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Portfolio</a></li>
+        <li><a href="../../../../blogs/"><i class="bi bi-keyboard navicon"></i> Blog <i class="bi bi-link-45deg"></i> </a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title dark-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <!-- <h1 class="mb-2 mb-lg-0">Title</h1> -->
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="../../">Home</a></li>
+            <li class="current">Consistency Learning via Decoding Path Augmentation for Transformers in Human Object Interaction Detection</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- Portfolio Details Section -->
+    <section id="portfolio-details" class="portfolio-details section">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Consistency Learning via Decoding Path Augmentation for Transformers <br/> in Human Object Interaction Detection</span></h2>
+            <div class="fs-3 fw-light text-muted"> CVPR 2022 </div>
+            <div class="fs-3 fw-light text-muted"> Korea University </div>
+        </div>
+        <div class="row gx-5 justify-content-center">
+            <div class="col-lg-11 col-xl-9 col-xxl-8">
+                <!--img class="img-fluid" src="./assets/poster.png" /-->
+                <h2> Overview </h2>
+                <hr/>
+                <img class="img-fluid" src="fig2_dot.png" width="100%" />
+                <br/> <br/>
+
+                <ol>
+                    <li> We present DETR-based HOI detectors, which directly predicts the HOI triplets (Image -> HOI)  </li>
+                    <li> We propose cross-path consistency learning (CPC), which leverages augmented decoding paths (Right Fig.). </li>
+                    <li> CPC enforces all the possible predictions from permuted inference sequences to be consistent.  </li>
+                </ol>
+                <p> <br/> </p>
+                <h2 id="problem-definition">Problem Definition</h2>
+                <hr>
+
+                <p>Human-Object Interaction (HOI) detection is a complex visual recognition task that involves identifying objects and classifying their interactions with humans. </p>
+                <p>Recent advances have introduced transformer-based architectures that predict HOI triplets in an end-to-end manner, but these models still lack the ability to fully leverage the different paths through which HOI predictions can be made. </p>
+                <p>The core challenge addressed in this paper is to improve the generalization and consistency of transformer-based HOI models by utilizing all possible prediction paths during training without increasing model capacity or inference time.</p>
+                <p>The problem is formally framed as ensuring consistency across different decoding paths, where the objective is to make predictions invariant to the sequence of sub-task predictions. This leads to the following optimization problem:</p>
+                <div class="math-container">$$
+                    \min_{\theta} \sum_{(k,k')\in K} L_{CPC} \left(f_{P_k}(x; \theta), f_{P_{k'}}(x; \theta)\right)
+                    $$
                 </div>
-            </nav>
-            <!-- Projects Section-->
-            <section class="py-5">
-                <div class="container px-5 mb-5">
-                    <div class="text-center mb-5">
-                        <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Consistency Learning via Decoding Path Augmentation for Transformers in Human Object Interaction Detection</span></h1>
-                        <div class="fs-3 fw-light text-muted"> CVPR 2022 </div>
-                        <div class="fs-3 fw-light text-muted"> Korea University </div>
-                    </div>
-                    <div class="row gx-5 justify-content-center">
-                        <div class="col-lg-11 col-xl-9 col-xxl-8">
-                            <!--img class="img-fluid" src="./assets/poster.png" /-->
-                            <h2> Overview </h2>
-                            <hr/>
-                            <img class="img-fluid" src="fig2_dot.png" width="100%" />
-                            <br/> <br/>
+                <p>where $ L_{CPC} $ is the Cross-Path Consistency (CPC) loss that enforces consistency between predictions from different paths $ P_k $ and $ P_{k&#39;} $.</p>
+                <h2 id="method">Method</h2>
+                <hr>
+                <p>The proposed solution is a novel end-to-end learning strategy called <strong>Cross-Path Consistency (CPC) Learning</strong> for transformers in HOI detection. The method consists of two key components: <strong>Decoding-Path Augmentation</strong> and <strong>Cross-Path Consistency Regularization</strong>.</p>
+                <ul>
+                <li><p><strong>Decoding-Path Augmentation:</strong> 
+                The method leverages various sequences of sub-task predictions (e.g., $x \rightarrow HOI$, $x \rightarrow HO \rightarrow I $) by augmenting the decoding paths within the transformer architecture. Four augmented paths are considered:</p>
+                <div class="math-container">$$
+                P_1 = x \rightarrow HOI, \quad P_2 = x \rightarrow HO \rightarrow I, \quad P_3 = x \rightarrow HI \rightarrow O, \quad P_4 = x \rightarrow OI \rightarrow H
+                $$</div>
+                <p>These paths represent different sequences in which the sub-tasks of human detection ($H$), object detection ($O$), and interaction classification ($I$) are performed.</p>
+                </li>
+                <li><p><strong>Cross-Path Consistency Learning:</strong> The CPC learning framework ensures that predictions across these different paths remain consistent. The outputs from different paths are trained to match each other by adding a consistency loss term:</p>
+                <div class="math-container">$$
+                    L_{CPC} = \frac{1}{S} \sum_{(k,k') \in K} \sum_{n=1}^{N} L_{P_k P_{k'}}^n
+                $$</div>
+                <p>where $L_{P_k P_{k'}}^n $ is the consistency loss for the $n$-th ground truth across paths $ P_k$ and $ P_{k&#39;}$, $S$ is the total number of path pairs, and $N$ is the number of ground truth labels. The final training loss combines the supervision loss $L_k^{sup}$ for each path with the CPC loss:</p>
+                <div class="math-container">$$
+                    L = \sum_k L_k^{sup} + w(t) \cdot L_{CPC}
+                $$</div>
+                <p>where $w(t)$ is a ramp-up function for stable training.</p>
+                </li>
+                </ul>
+                <h2 id="experimental-results">Experimental Results</h2>
+                <hr>
+                <p>The proposed CPC learning framework was evaluated on two popular HOI detection benchmarks: V-COCO and HICO-DET, using transformer-based models such as QPIC and HOTR as baselines. </p>
 
-                            <ol>
-                                <li> We present DETR-based HOI detectors, which directly predicts the HOI triplets (Image -> HOI)  </li>
-                                <li> We propose cross-path consistency learning (CPC), which leverages augmented decoding paths (Right Fig.). </li>
-                                <li> CPC enforces all the possible predictions from permuted inference sequences to be consistent.  </li>
-                            </ol>
-                            <p> <br/> </p>
-                            <h2 id="problem-definition">Problem Definition</h2>
-                            <hr>
-
-                            <p>Human-Object Interaction (HOI) detection is a complex visual recognition task that involves identifying objects and classifying their interactions with humans. </p>
-                            <p>Recent advances have introduced transformer-based architectures that predict HOI triplets in an end-to-end manner, but these models still lack the ability to fully leverage the different paths through which HOI predictions can be made. </p>
-                            <p>The core challenge addressed in this paper is to improve the generalization and consistency of transformer-based HOI models by utilizing all possible prediction paths during training without increasing model capacity or inference time.</p>
-                            <p>The problem is formally framed as ensuring consistency across different decoding paths, where the objective is to make predictions invariant to the sequence of sub-task predictions. This leads to the following optimization problem:</p>
-                            <div class="math-container">$$
-                                \min_{\theta} \sum_{(k,k')\in K} L_{CPC} \left(f_{P_k}(x; \theta), f_{P_{k'}}(x; \theta)\right)
-                                $$
-                            </div>
-                            <p>where $ L_{CPC} $ is the Cross-Path Consistency (CPC) loss that enforces consistency between predictions from different paths $ P_k $ and $ P_{k&#39;} $.</p>
-                            <h2 id="method">Method</h2>
-                            <hr>
-                            <p>The proposed solution is a novel end-to-end learning strategy called <strong>Cross-Path Consistency (CPC) Learning</strong> for transformers in HOI detection. The method consists of two key components: <strong>Decoding-Path Augmentation</strong> and <strong>Cross-Path Consistency Regularization</strong>.</p>
-                            <ul>
-                            <li><p><strong>Decoding-Path Augmentation:</strong> 
-                            The method leverages various sequences of sub-task predictions (e.g., $x \rightarrow HOI$, $x \rightarrow HO \rightarrow I $) by augmenting the decoding paths within the transformer architecture. Four augmented paths are considered:</p>
-                            <div class="math-container">$$
-                            P_1 = x \rightarrow HOI, \quad P_2 = x \rightarrow HO \rightarrow I, \quad P_3 = x \rightarrow HI \rightarrow O, \quad P_4 = x \rightarrow OI \rightarrow H
-                            $$</div>
-                            <p>These paths represent different sequences in which the sub-tasks of human detection ($H$), object detection ($O$), and interaction classification ($I$) are performed.</p>
-                            </li>
-                            <li><p><strong>Cross-Path Consistency Learning:</strong> The CPC learning framework ensures that predictions across these different paths remain consistent. The outputs from different paths are trained to match each other by adding a consistency loss term:</p>
-                            <div class="math-container">$$
-                                L_{CPC} = \frac{1}{S} \sum_{(k,k') \in K} \sum_{n=1}^{N} L_{P_k P_{k'}}^n
-                            $$</div>
-                            <p>where $L_{P_k P_{k'}}^n $ is the consistency loss for the $n$-th ground truth across paths $ P_k$ and $ P_{k&#39;}$, $S$ is the total number of path pairs, and $N$ is the number of ground truth labels. The final training loss combines the supervision loss $L_k^{sup}$ for each path with the CPC loss:</p>
-                            <div class="math-container">$$
-                                L = \sum_k L_k^{sup} + w(t) \cdot L_{CPC}
-                            $$</div>
-                            <p>where $w(t)$ is a ramp-up function for stable training.</p>
-                            </li>
-                            </ul>
-                            <h2 id="experimental-results">Experimental Results</h2>
-                            <hr>
-                            <p>The proposed CPC learning framework was evaluated on two popular HOI detection benchmarks: V-COCO and HICO-DET, using transformer-based models such as QPIC and HOTR as baselines. </p>
-
-                            <p> Based on two popular DETR-based HOI detection model: QPIC and HOTR, the presented CPC demonstrates effectiveness and superiority compared to the baseline. </p>
-                            <div style="text-align : center;">
-                                <img class="img-thumbnail" src="assets/table.png" width="80%">
-                            </div>
-                            <p> <br/> </p>
-
-                            <p> Furthermore, we show the performance is gradually improved as augmented paths are added. The ablation study evidences that regardless of each path performance, taking advantage of more paths bolsters the learning capability. </p>
-                            <div style="text-align : center;">
-                                <img class="img-thumbnail" src="assets/abl.png" width="80%">
-                            </div>
-                        </div>
-                    </div>
+                <p> Based on two popular DETR-based HOI detection model: QPIC and HOTR, the presented CPC demonstrates effectiveness and superiority compared to the baseline. </p>
+                <div style="text-align : center;">
+                    <img class="img-thumbnail" src="assets/table.png" width="80%">
                 </div>
-            </section>
-        </main>
-        <!-- Footer-->
-        <footer class="bg-white py-4 mt-auto">
-            <div class="container px-5">
-                <div class="row align-items-center justify-content-between flex-column flex-sm-row">
-                    <div class="col-auto"><div class="small m-0">Copyright &copy; hwanheo's log</div></div>
-                    <div class="col-auto">
-                        <a class="small" href="gjghks950@naver.com">Contact</a>
-                    </div>
+                <p> <br/> </p>
+
+                <p> Furthermore, we show the performance is gradually improved as augmented paths are added. The ablation study evidences that regardless of each path performance, taking advantage of more paths bolsters the learning capability. </p>
+                <div style="text-align : center;">
+                    <img class="img-thumbnail" src="assets/abl.png" width="80%">
                 </div>
             </div>
-        </footer>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
-    </body>
+        </div>
+    </section><!-- /Portfolio Details Section -->
+
+  </main>
+
+  <footer id="footer" class="footer position-relative light-background">
+
+    <div class="container">
+      <div class="copyright text-center ">
+        <p>© <span>Copyright</span> <strong class="px-1 sitename">Hwan Heo</strong> <span>All Rights Reserved</span></p>
+      </div>
+      <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you've purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a>
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../../assets/vendor/php-email-form/validate.js"></script>
+  <script src="../../assets/vendor/aos/aos.js"></script>
+  <script src="../../assets/vendor/typed.js/typed.umd.js"></script>
+  <script src="../../assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="../../assets/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="../../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../../assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="../../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="../../assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="../../assets/js/main.js"></script>
+
+</body>
+
 </html>

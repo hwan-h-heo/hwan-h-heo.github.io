@@ -1,228 +1,308 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Hwan Heo's personal portfolio website</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
-        <!-- Custom Google font-->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
-        <!-- Bootstrap icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="../../css/styles.css" rel="stylesheet" />
-        <script src="../../js/mathjax-config.js"></script>
-        <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({            
-                tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}            
-            });
-        </script>
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
-        <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
 
-        gtag('config', 'G-RF7ETSKPK9');
-        </script>
-    </head>
-    <body class="d-flex flex-column h-100 bg-light">
-        <main class="flex-shrink-0">
-            <!-- Navigation-->
-            <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
-                <div class="container px-5">
-                    <a class="navbar-brand" href="../../"><span class="fw-bolder text-primary">HwanHeo's log</span></a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
-                            <li class="nav-item"><a class="nav-link" href="../../">Home</a></li>
-                            <!--li class="nav-item"><a class="nav-link" href="../../resume.html">Resume</a></li-->
-                            <li class="nav-item"><a class="nav-link" href="../">Projects</a></li>
-                            <li class="nav-item"><a class="nav-link" href="../../blogs/"> | &nbsp; &nbsp; Blog</a></li>
-                            <!--li class="nav-item"><a class="nav-link" href="../../contact.html">Contact</a></li-->
-                        </ul>
-                    </div>
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="../../assets/favicon.ico" rel="icon">
+  <link href="../../assets/favicon.ico" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../../assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="../../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="../../assets/css/main.css" rel="stylesheet">
+  <script src="../../js/mathjax-config.js"></script>
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({            
+          tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}            
+      });
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+  <style>
+      table {
+          width: 100%;
+          border-collapse: collapse;
+      }
+      th, td {
+          width: 50%;
+          border: none;
+          padding: 8px;
+          text-align: center;
+      }
+      th {
+          background-color: #f2f2f2; /* 옅은 회색 */
+      }
+  </style>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RF7ETSKPK9');
+  </script>
+</head>
+
+<body class="portfolio-details-page">
+
+  <header id="header" class="header dark-background d-flex flex-column">
+    <i class="header-toggle d-xl-none bi bi-list"></i>
+
+    <div class="profile-img">
+      <img src="../../assets/icon.webp" alt="" class="img-fluid rounded-circle">
+    </div>
+
+    <a href="index.html" class="logo d-flex align-items-center justify-content-center">
+      <h1 class="sitename">Hwan Heo</h1>
+    </a>
+
+    <div class="social-links text-center">
+      <a href="https://github.com/hwanhuh" class="github"><i class="bi bi-github"></i></a>
+      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin"><i class="bi bi-linkedin"></i></a>
+      <a href="https://www.instagram.com/hwan_heo_guitar?igsh=MWZraDFudWh0cnN2Mg==" class="instagram"><i class="bi bi-instagram"></i></a>
+      <a href="mailto:gjghks950@naver.com" class="google-plus"><i class="bi bi-envelope"></i></a>
+    </div>
+
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="../../#home"><i class="bi bi-house navicon"></i>Home</a></li>
+        <li><a href="../../#about"><i class="bi bi-person navicon"></i> About</a></li>
+        <li><a href="../../#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
+        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Portfolio</a></li>
+        <li><a href="../../../../blogs/"><i class="bi bi-keyboard navicon"></i> Blog <i class="bi bi-link-45deg"></i> </a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title dark-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <!-- <h1 class="mb-2 mb-lg-0">Title</h1> -->
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="../../">Home</a></li>
+            <li class="current"> Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- Portfolio Details Section -->
+    <section id="portfolio-details" class="portfolio-details section">
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Robust Camera Pose Refinement <br/> for Multi-Resolution Hash Encoding</span></h1>
+            <div class="fs-3 fw-light text-muted"> ICML 2023 <a href="https://dl.acm.org/doi/10.5555/3618408.3618936" class="bi bi-link-45deg"></a> </div> 
+            <div class="fs-3 fw-light text-muted"> Naver AI Lab, Korea University </div>
+        </div>
+        <div class="row gx-5 justify-content-center">
+            <div class="col-lg-11 col-xl-9 col-xxl-8">
+                <div class="fs-6"> <strong>TL; DR:</strong> We propose the joint optimization scheme of camera poses and 3D scene reconstruction using multi-resolution hash encoding (Instant-NGP). </div>
+                <div class="fs-6"> <strong>Keywords:</strong> Neural Rendering, Radiance Fields, NeRF, Camera Pose Estimation </div>
+                <p> <br/> </p>
+                <!--img class="img-fluid" src="./assets/poster.png" /-->
+                <h2> Overview </h2>
+                <hr/>
+                <p> 
+                    Multi-Resolution hash encoding (Instant-NGP) has been proposed to reduce the computational cost of NeRFs. 
+                    However, when jointly optimizing camera poses and 3D scene reconstruction, naive gradient-based methods often lead to performance degradation. 
+                    We observed that the oscillating gradient flows inherent to hash encoding interfere with accurate camera pose registration.
+                    <br/><br/>
+                    To address this, we propose a method that uses smooth interpolation weighting to stabilize gradient oscillations during ray sampling across hash grids. 
+                    Additionally, our curriculum training procedure facilitates level-wise learning of hash encodings, further enhancing both camera pose refinement and novel view synthesis quality.
+                </p>
+                <p> <br/> </p>
+
+                <h2> Method </h2>
+                <hr/>
+                <h3> Multi-Resolution Hash Encoding </h3>
+                <img class="img-fluid" src="assets/hash_grid.png" width="90%" />
+                <ol>
+                    <li> A positional encoding uses the hash tables for multi-resolution features. </li>
+                    <li> Each feature is the tri-linear interpolation of the eight-corner entries in a grid cube using proportional weights depending on the location of a given point. </li>
+                    <li> Cannot back-propagate through the hash entries due to random hashing, but through the weights, where the gradients are discontinuous across the grids. </li>
+                </ol>
+
+                <p> <strong> <span style="color:blue">Pros.</span> </strong> faster convergence with better accuracy </p>
+                <p> <strong> <span style="color:red">Cons.</span> </strong> back-propagation through ray-sampled positions is unstable! </p>
+                <p> <br/> </p>
+
+                <p> <br/> </p>
+                <h3> Smooth gradients for unstable back-propagation </h3>
+                <img class="img-fluid" src="assets/pose_fig2.png" />
+                <br/> <br/>
+                <p> <strong> The Derivative of Multi-Resolution Hash Encoding </strong> </p>
+                <p> Using this relation and the appropriate choice of the indices, the $k^{\text{th}}$ element of Jacobian $\nabla_{\mathbf{x}}\mathbf{h}_{l}(\mathbf{x})$ can be rewritten as follows: </p>
+                <div class="math-container">
+                    $$\begin{aligned} \nabla_{\mathbf{x}}\mathbf{h}_{l}(\mathbf{x})  &= 
+                    \left[  
+                        \frac{\partial {\mathbf{h}_{l}}(\mathbf{x})}{\partial {x}_1}, 
+                        \dots,
+                        \frac{\partial {\mathbf{h}_{l}}(\mathbf{x})}{\partial {x}_d}
+                    \right]
+                    \\
+                    &= 
+                    \sum_{i=1}^{2^{d}} 
+                    \mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{i,l} (\mathbf{x}) \big) \big)
+                    \cdot
+                    \left[  
+                        \frac{\partial {{w}_{i,l}}(\mathbf{x})}{\partial {x}_1}, 
+                        \dots,
+                        \frac{\partial {{w}_{i,l}}(\mathbf{x})}{\partial {x}_d}
+                    \right]. \end{aligned}$$
                 </div>
-            </nav>
-            <!-- Projects Section-->
-            <section class="py-5">
-                <div class="container px-5 mb-5">
-                    <div class="text-center mb-5">
-                        <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</span></h1>
-                        <div class="fs-3 fw-light text-muted"> ICML 2023 <a href="https://dl.acm.org/doi/10.5555/3618408.3618936" class="bi bi-link-45deg"></a> </div> 
-                        <div class="fs-3 fw-light text-muted"> Naver AI Lab, Korea University </div>
-                    </div>
-                    <div class="row gx-5 justify-content-center">
-                        <div class="col-lg-11 col-xl-9 col-xxl-8">
-                            <div class="fs-6"> <strong>TL; DR:</strong> We propose the joint optimization scheme of camera poses and 3D scene reconstruction using multi-resolution hash encoding (Instant-NGP). </div>
-                            <div class="fs-6"> <strong>Keywords:</strong> Neural Rendering, Radiance Fields, NeRF, Camera Pose Estimation </div>
-                            <p> <br/> </p>
-                            <!--img class="img-fluid" src="./assets/poster.png" /-->
-                            <h2> Overview </h2>
-                            <hr/>
-                            <p> 
-                                Multi-Resolution hash encoding (Instant-NGP) has been proposed to reduce the computational cost of NeRFs. 
-                                However, when jointly optimizing camera poses and 3D scene reconstruction, naive gradient-based methods often lead to performance degradation. 
-                                We observed that the oscillating gradient flows inherent to hash encoding interfere with accurate camera pose registration.
-                                <br/><br/>
-                                To address this, we propose a method that uses smooth interpolation weighting to stabilize gradient oscillations during ray sampling across hash grids. 
-                                Additionally, our curriculum training procedure facilitates level-wise learning of hash encodings, further enhancing both camera pose refinement and novel view synthesis quality.
-                            </p>
-                            <p> <br/> </p>
 
-                            <h2> Method </h2>
-                            <hr/>
-                            <h3> Multi-Resolution Hash Encoding </h3>
-                            <img class="img-fluid" src="assets/hash_grid.png" width="90%" />
-                            <ol>
-                                <li> A positional encoding uses the hash tables for multi-resolution features. </li>
-                                <li> Each feature is the tri-linear interpolation of the eight-corner entries in a grid cube using proportional weights depending on the location of a given point. </li>
-                                <li> Cannot back-propagate through the hash entries due to random hashing, but through the weights, where the gradients are discontinuous across the grids. </li>
-                            </ol>
-
-                            <p> <strong> <span style="color:blue">Pros.</span> </strong> faster convergence with better accuracy </p>
-                            <p> <strong> <span style="color:red">Cons.</span> </strong> back-propagation through ray-sampled positions is unstable! </p>
-                            <p> <br/> </p>
-
-                            <p> <br/> </p>
-                            <h3> Smooth gradients for unstable back-propagation </h3>
-                            <img class="img-fluid" src="assets/pose_fig2.png" />
-                            <br/> <br/>
-                            <p> <strong> The Derivative of Multi-Resolution Hash Encoding </strong> </p>
-                            <p> Using this relation and the appropriate choice of the indices, the $k^{\text{th}}$ element of Jacobian $\nabla_{\mathbf{x}}\mathbf{h}_{l}(\mathbf{x})$ can be rewritten as follows: </p>
-                            <div class="math-container">
-                                $$\begin{aligned} \nabla_{\mathbf{x}}\mathbf{h}_{l}(\mathbf{x})  &= 
-                                \left[  
-                                    \frac{\partial {\mathbf{h}_{l}}(\mathbf{x})}{\partial {x}_1}, 
-                                    \dots,
-                                    \frac{\partial {\mathbf{h}_{l}}(\mathbf{x})}{\partial {x}_d}
-                                \right]
-                                \\
-                                &= 
-                                \sum_{i=1}^{2^{d}} 
-                                \mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{i,l} (\mathbf{x}) \big) \big)
-                                \cdot
-                                \left[  
-                                    \frac{\partial {{w}_{i,l}}(\mathbf{x})}{\partial {x}_1}, 
-                                    \dots,
-                                    \frac{\partial {{w}_{i,l}}(\mathbf{x})}{\partial {x}_d}
-                                \right]. \end{aligned}$$
-                            </div>
-
-                            <p> Let $\bar{i}$ be one of the nearest corner indices from $\mathbf{c}_{i,l}$ in a unit hypercube, where $\mathbf{c}_{i,l}$ and $\mathbf{c}_{\bar{i},l}$ make an edge of the unit hypercube.
-                                Among the $2^d$ corners, we have $2^{d-1}$ pairs like that. 
-                                Then, we have the relation for $w_{\bar{i}_k,l}$ as follows: 
-                            </p>
-                            <div class="math-container">
-                                $$ \begin{aligned} \frac{\partial {{w}_{\bar{i}_k,l}}(\mathbf{x})}{\partial {x}_k} 
-                                = 
-                                - \frac{\partial {{w}_{i,l}}(\mathbf{x})}{\partial {x}_k}, \end{aligned}$$ 
-                            </div>
-                            <P> which can be inferred from weight definition, since the relative positions of $\mathbf{x}$ are different for the two cases. </P>
-
-                            <p> Using this relation and the appropriate choice of the indices, the $k^{\text{th}}$ element of Jacobian $\nabla_{\mathbf{x}}\mathbf{h}_{l}(\mathbf{x})$ can be rewritten as follows: </p>
-                            <div class="math-container">
-                                $$ \begin{aligned} \frac{\partial {\mathbf{h}_{l}}(\mathbf{x})}{\partial {x}_k}
-                                &= 
-                                \sum_{i=1}^{2^{d}} 
-                                \mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{i,l} (\mathbf{x}) \big) \big)
-                                \cdot
-                                \frac{\partial {{w}_{i,l}}(\mathbf{x})}{\partial {x}_k}
-                                \\
-                                &=
-                                \sum_{i=1}^{2^{d-1}} 
-                                \left(
-                                \mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{i,l} (\mathbf{x}) \big) \big)
-                                -
-                                \mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{\bar{i}_k,l} (\mathbf{x}) \big) \big)
-                                \right)
-                                \cdot
-                                \frac{\partial {{w}_{i,l}}(\mathbf{x})}{\partial {x}_k} 
-                                \\ 
-                                &=
-                                \sum_{i=1}^{2^{d-1}} 
-                                \left(
-                                \mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{i,l} (\mathbf{x}) \big) \big)
-                                -
-                                \mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{\bar{i}_k,l} (\mathbf{x}) \big) \big)
-                                \right)
-                                \cdot
-                                \prod_{j \neq k} 
-                                \left(
-                                    1 - | \mathbf{x}_{l} - \mathbf{c}_{i,l}(\mathbf{x}) |_j 
-                                \right ), \end{aligned}$$ 
-                            </div>
-                            <p> where $\prod_{j \neq k} \left( 1 - | \mathbf{x}_{l} - \mathbf{c}_{i,l}(\mathbf{x}) |_j \right )$ and the differences between the hash table entries are constant to the $x_k$, which make ${\partial {\mathbf{h}_{l}}(\mathbf{x})} / {\partial {x}_k}$ is constant along with the $k^{\text{th}}$ axis of the unit hypercube. 
-                                Notice that the last term can be seen as the weights defined as: 
-                            </p>
-                            <div class="math-container">
-                                $$ \begin{aligned} \sum_{i=1}^{2^{d-1}} \prod_{j \neq k} \left( 1 - | \mathbf{x}_{l} - \mathbf{c}_{i,l}(\mathbf{x}) |_j \right ) = 1,\end{aligned}$$ 
-                            </div>
-                            <p> where ${\partial {\mathbf{h}_{l}}(\mathbf{x})} / {\partial {x}_k}$ is the convex combination of the differences between two hash table entries. </p>
-                            
-                            Therefore, we change the original interpolation to have infintie-differentiable smooth gradient using cosine function, 
-                            <div class="math-container">
-                                $$\delta(w_{i,j}) = \frac{1-\cos(\pi w_{i,j})}{2} \quad \nabla_{x} \delta(w_{i,j}) = \frac{\pi}{2} \sin (\pi w_{i,j}) \cdot \nabla_{x} w_{i,j} $$
-                            </div>
-                            <p> where $w_{i, j}$ is the weight for the $i$-th corner and the $l$-th level resolution.</p>
-
-                            <p> <br/> </p>
-
-
-                            <h3> Straight-through forward function  </h3>
-                            <p> Furthermore, since the non-linear interpolation can hinder the original performance of the NGP, 
-                                we propose to use the mix-up of tri-linear interpolation and smooth gradients: </p>
-                            <div class="math-container">
-                                $$\hat{w}_{i, j} = w_{i,j} + \lambda \delta(w_{i,j}) - \lambda \tilde{\delta}(w_{i,j})$$
-                            </div>
-                            <p> where $\lambda$ is a hyper-parameter, denotes the detached variable from the computational graph.  </p>
-                            <p> <br/> </p>
-
-                            <h2> Experiments </h2>
-                            <hr/>
-                            <h4> Visualization of the progress of pose refienments </h4>
-                            <p> <span style="color:red">Red</span> lines denote pose error vectors between GT camera poses and optimized poses. </p>
-                            <img class="img-fluid" src="assets/vis_pose.png" />
-                            <p> <br/> </p>
-
-                            <h4> Training time per iteration </h4>
-                            <DIV style ="text-align:center";>
-                                <img class="img-fluid" src="assets/training_time.png" width="50%" />
-                            </DIV>
-                            <ul>
-                                <li> Inherit Instant-NGP's faster convergence </li>
-                                <li> Inherit Instant-NGP's better accuracy </li>
-                                <li> Improve stability of pose refinement </li>
-                            </ul>
-                            <br/>
-                            <h4> Quantitative Results </h4>
-                            <DIV style ="text-align:center";>
-                                <img class="img-fluid" src="assets/table.png" width="70%" />
-                            </DIV>
-                            <p> For the Synthetic (Blender) dataset, our reimplementation utilizing the below tiny-cuda-nn and ngp_pl frameworks demonstrates remarkable superiority, achieving a score of 31.54, surpassing the paper's reported score of 29.86, as well as the scores of 28.96 achieved by GARF and 28.84 achieved by BARF. </p>
-                        </div>
-                    </div>
+                <p> Let $\bar{i}$ be one of the nearest corner indices from $\mathbf{c}_{i,l}$ in a unit hypercube, where $\mathbf{c}_{i,l}$ and $\mathbf{c}_{\bar{i},l}$ make an edge of the unit hypercube.
+                    Among the $2^d$ corners, we have $2^{d-1}$ pairs like that. 
+                    Then, we have the relation for $w_{\bar{i}_k,l}$ as follows: 
+                </p>
+                <div class="math-container">
+                    $$ \begin{aligned} \frac{\partial {{w}_{\bar{i}_k,l}}(\mathbf{x})}{\partial {x}_k} 
+                    = 
+                    - \frac{\partial {{w}_{i,l}}(\mathbf{x})}{\partial {x}_k}, \end{aligned}$$ 
                 </div>
-            </section>
-        </main>
-        <!-- Footer-->
-        <footer class="bg-white py-4 mt-auto">
-            <div class="container px-5">
-                <div class="row align-items-center justify-content-between flex-column flex-sm-row">
-                    <div class="col-auto"><div class="small m-0">Copyright &copy; Hwan Heo</div></div>
+                <P> which can be inferred from weight definition, since the relative positions of $\mathbf{x}$ are different for the two cases. </P>
+
+                <p> Using this relation and the appropriate choice of the indices, the $k^{\text{th}}$ element of Jacobian $\nabla_{\mathbf{x}}\mathbf{h}_{l}(\mathbf{x})$ can be rewritten as follows: </p>
+                <div class="math-container">
+                    $$ \begin{aligned} \frac{\partial {\mathbf{h}_{l}}(\mathbf{x})}{\partial {x}_k}
+                    &= 
+                    \sum_{i=1}^{2^{d}} 
+                    \mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{i,l} (\mathbf{x}) \big) \big)
+                    \cdot
+                    \frac{\partial {{w}_{i,l}}(\mathbf{x})}{\partial {x}_k}
+                    \\
+                    &=
+                    \sum_{i=1}^{2^{d-1}} 
+                    \left(
+                    \mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{i,l} (\mathbf{x}) \big) \big)
+                    -
+                    \mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{\bar{i}_k,l} (\mathbf{x}) \big) \big)
+                    \right)
+                    \cdot
+                    \frac{\partial {{w}_{i,l}}(\mathbf{x})}{\partial {x}_k} 
+                    \\ 
+                    &=
+                    \sum_{i=1}^{2^{d-1}} 
+                    \left(
+                    \mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{i,l} (\mathbf{x}) \big) \big)
+                    -
+                    \mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{\bar{i}_k,l} (\mathbf{x}) \big) \big)
+                    \right)
+                    \cdot
+                    \prod_{j \neq k} 
+                    \left(
+                        1 - | \mathbf{x}_{l} - \mathbf{c}_{i,l}(\mathbf{x}) |_j 
+                    \right ), \end{aligned}$$ 
                 </div>
+                <p> where $\prod_{j \neq k} \left( 1 - | \mathbf{x}_{l} - \mathbf{c}_{i,l}(\mathbf{x}) |_j \right )$ and the differences between the hash table entries are constant to the $x_k$, which make ${\partial {\mathbf{h}_{l}}(\mathbf{x})} / {\partial {x}_k}$ is constant along with the $k^{\text{th}}$ axis of the unit hypercube. 
+                    Notice that the last term can be seen as the weights defined as: 
+                </p>
+                <div class="math-container">
+                    $$ \begin{aligned} \sum_{i=1}^{2^{d-1}} \prod_{j \neq k} \left( 1 - | \mathbf{x}_{l} - \mathbf{c}_{i,l}(\mathbf{x}) |_j \right ) = 1,\end{aligned}$$ 
+                </div>
+                <p> where ${\partial {\mathbf{h}_{l}}(\mathbf{x})} / {\partial {x}_k}$ is the convex combination of the differences between two hash table entries. </p>
+                
+                Therefore, we change the original interpolation to have infintie-differentiable smooth gradient using cosine function, 
+                <div class="math-container">
+                    $$\delta(w_{i,j}) = \frac{1-\cos(\pi w_{i,j})}{2} \quad \nabla_{x} \delta(w_{i,j}) = \frac{\pi}{2} \sin (\pi w_{i,j}) \cdot \nabla_{x} w_{i,j} $$
+                </div>
+                <p> where $w_{i, j}$ is the weight for the $i$-th corner and the $l$-th level resolution.</p>
+
+                <p> <br/> </p>
+
+
+                <h3> Straight-through forward function  </h3>
+                <p> Furthermore, since the non-linear interpolation can hinder the original performance of the NGP, 
+                    we propose to use the mix-up of tri-linear interpolation and smooth gradients: </p>
+                <div class="math-container">
+                    $$\hat{w}_{i, j} = w_{i,j} + \lambda \delta(w_{i,j}) - \lambda \tilde{\delta}(w_{i,j})$$
+                </div>
+                <p> where $\lambda$ is a hyper-parameter, denotes the detached variable from the computational graph.  </p>
+                <p> <br/> </p>
+
+                <h2> Experiments </h2>
+                <hr/>
+                <h4> Visualization of the progress of pose refienments </h4>
+                <p> <span style="color:red">Red</span> lines denote pose error vectors between GT camera poses and optimized poses. </p>
+                <img class="img-fluid" src="assets/vis_pose.png" />
+                <p> <br/> </p>
+
+                <h4> Training time per iteration </h4>
+                <DIV style ="text-align:center";>
+                    <img class="img-fluid" src="assets/training_time.png" width="50%" />
+                </DIV>
+                <ul>
+                    <li> Inherit Instant-NGP's faster convergence </li>
+                    <li> Inherit Instant-NGP's better accuracy </li>
+                    <li> Improve stability of pose refinement </li>
+                </ul>
+                <br/>
+                <h4> Quantitative Results </h4>
+                <DIV style ="text-align:center";>
+                    <img class="img-fluid" src="assets/table.png" width="70%" />
+                </DIV>
+                <p> For the Synthetic (Blender) dataset, our reimplementation utilizing the below tiny-cuda-nn and ngp_pl frameworks demonstrates remarkable superiority, achieving a score of 31.54, surpassing the paper's reported score of 29.86, as well as the scores of 28.96 achieved by GARF and 28.84 achieved by BARF. </p>
             </div>
-        </footer>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
-    </body>
+        </div>
+    </section><!-- /Portfolio Details Section -->
+
+  </main>
+
+  <footer id="footer" class="footer position-relative light-background">
+
+    <div class="container">
+      <div class="copyright text-center ">
+        <p>© <span>Copyright</span> <strong class="px-1 sitename">Hwan Heo</strong> <span>All Rights Reserved</span></p>
+      </div>
+      <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you've purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a>
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../../assets/vendor/php-email-form/validate.js"></script>
+  <script src="../../assets/vendor/aos/aos.js"></script>
+  <script src="../../assets/vendor/typed.js/typed.umd.js"></script>
+  <script src="../../assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="../../assets/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="../../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../../assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="../../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="../../assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="../../assets/js/main.js"></script>
+
+</body>
+
 </html>

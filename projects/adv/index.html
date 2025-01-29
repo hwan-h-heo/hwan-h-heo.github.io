@@ -1,191 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Hwan Heo's personal portfolio website</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Custom Google font-->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
-        <!-- Bootstrap icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="../../css/styles.css" rel="stylesheet" />
-        <script src="../../js/mathjax-config.js"></script>
-        <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({            
-                tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}            
-            });
-        </script>
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
-        <script>
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Search-and-Attack: Temporally Sparse Adversarial Attack on Videos</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="../../assets/favicon.ico" rel="icon">
+  <link href="../../assets/favicon.ico" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../../assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="../../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="../../assets/css/main.css" rel="stylesheet">
+  <script src="../../js/mathjax-config.js"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({            
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}            
+        });
+    </script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            width: 50%;
+            border: none;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2; /* 옅은 회색 */
+        }
+    </style>
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-
         gtag('config', 'G-RF7ETSKPK9');
-        </script>
-    </head>
-    <body class="d-flex flex-column h-100 bg-light">
-        <main class="flex-shrink-0">
-            <!-- Navigation-->
-            <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
-                <div class="container px-5">
-                    <a class="navbar-brand" href="../../"><span class="fw-bolder text-primary">HwanHeo's log</span></a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
-                            <li class="nav-item"><a class="nav-link" href="../../">Home</a></li>
-                            <!--li class="nav-item"><a class="nav-link" href="../../resume.html">Resume</a></li-->
-                            <li class="nav-item"><a class="nav-link" href="../">Projects</a></li>
-                            <li class="nav-item"><a class="nav-link" href="../../blogs/"> | &nbsp; &nbsp; Blog</a></li>
-                            <!--li class="nav-item"><a class="nav-link" href="../../contact.html">Contact</a></li-->
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-            <!-- Projects Section-->
-            <section class="py-5">
-                <div class="container px-5 mb-5">
-                    <div class="text-center mb-5">
-                        <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Search-and-Attack: Temporally Sparse Adversarial Attack on Videos</span></h1>
-                        <div class="fs-3 fw-light text-muted"> IEEE Access 2021 </div>
-                        <div class="fs-3 fw-light text-muted"> Korea University </div>
-                    </div>
-                    <div class="row gx-5 justify-content-center">
-                        <div class="col-lg-11 col-xl-9 col-xxl-8">
-                            <!--img class="img-fluid" src="./assets/poster.png" /-->
-                            <h2> Overview </h2>
-                            <hr/>
-                            <img class="img-fluid" src="main_figure.png" width="100%" />
-                            <ul>
-                                <li> present a framework to generate a temporally sparse adversarial attack, called Search-and-Attack scheme, which first retrieves the most vulnerable frames and then attacks only those frames on Videos. </li>
-                                <li> Since the most vulnerable set of frames involves an expensive combinatorial optimization problem, we introduce alternative surrogate objective functions : Magnitude of the Gradients <strong>(MoG)</strong> and Frame-wise Robustness Intensity <strong>(FRI)</strong>. </li>
-                            </ul>
-                            <p> <br/> </p>
+    </script>
+</head>
 
-                            <h2> Method </h2>
-                            <hr/>
-                            <h3> Problem Definition </h3>
-                            <p>
-                                Deep neural networks (DNNs) are highly effective in tasks like image and video classification, 
-                                but they are vulnerable to adversarial attacks, where small, deliberate perturbations to the input can cause the network to misclassify the data. 
-                            </p>
-                            <p>
-                                While adversarial attacks have been extensively studied in the image domain, their impact on video data has received less attention. 
-                                Existing video attacks either modify all frames or sample frames uniformly, failing to account for temporal dependencies between frames. 
-                                This approach is suboptimal, especially for video classification models that leverage temporal information. 
-                            </p>
-                            <p>
-                                The challenge addressed in this paper is to develop a method that efficiently identifies and perturbs only the most vulnerable frames in a video, resulting in a temporally sparse adversarial attack that is both effective and less perceptible.
-                            </p>
-                            
-                            <p>
-                            The problem is formally defined as a mixed-integer non-linear program (MINLP):
-                            </p>
+<body class="portfolio-details-page">
+
+  <header id="header" class="header dark-background d-flex flex-column">
+    <i class="header-toggle d-xl-none bi bi-list"></i>
+
+    <div class="profile-img">
+      <img src="../../assets/icon.webp" alt="" class="img-fluid rounded-circle">
+    </div>
+
+    <a href="index.html" class="logo d-flex align-items-center justify-content-center">
+      <h1 class="sitename">Hwan Heo</h1>
+    </a>
+
+    <div class="social-links text-center">
+      <a href="https://github.com/hwanhuh" class="github"><i class="bi bi-github"></i></a>
+      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin"><i class="bi bi-linkedin"></i></a>
+      <a href="https://www.instagram.com/hwan_heo_guitar?igsh=MWZraDFudWh0cnN2Mg==" class="instagram"><i class="bi bi-instagram"></i></a>
+      <a href="mailto:gjghks950@naver.com" class="google-plus"><i class="bi bi-envelope"></i></a>
+    </div>
+
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="../../#home"><i class="bi bi-house navicon"></i>Home</a></li>
+        <li><a href="../../#about"><i class="bi bi-person navicon"></i> About</a></li>
+        <li><a href="../../#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
+        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Portfolio</a></li>
+        <li><a href="../../../../blogs/"><i class="bi bi-keyboard navicon"></i> Blog <i class="bi bi-link-45deg"></i> </a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title dark-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <!-- <h1 class="mb-2 mb-lg-0">Title</h1> -->
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="../../">Home</a></li>
+            <li class="current">Search-and-Attack: Temporally Sparse Adversarial Attack on Videos</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- Portfolio Details Section -->
+    <section id="portfolio-details" class="portfolio-details section">
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Search-and-Attack: Temporally Sparse Adversarial Attack on Videos</span></h1>
+            <div class="fs-3 fw-light text-muted"> IEEE Access 2021 </div>
+            <div class="fs-3 fw-light text-muted"> Korea University </div>
+        </div>
+        <div class="row gx-5 justify-content-center">
+            <div class="col-lg-11 col-xl-9 col-xxl-8">
+                <!--img class="img-fluid" src="./assets/poster.png" /-->
+                <h2> Overview </h2>
+                <hr/>
+                <img class="img-fluid" src="main_figure.png" width="100%" />
+                <ul>
+                    <li> present a framework to generate a temporally sparse adversarial attack, called Search-and-Attack scheme, which first retrieves the most vulnerable frames and then attacks only those frames on Videos. </li>
+                    <li> Since the most vulnerable set of frames involves an expensive combinatorial optimization problem, we introduce alternative surrogate objective functions : Magnitude of the Gradients <strong>(MoG)</strong> and Frame-wise Robustness Intensity <strong>(FRI)</strong>. </li>
+                </ul>
+                <p> <br/> </p>
+
+                <h2> Method </h2>
+                <hr/>
+                <h3> Problem Definition </h3>
+                <p>
+                    Deep neural networks (DNNs) are highly effective in tasks like image and video classification, 
+                    but they are vulnerable to adversarial attacks, where small, deliberate perturbations to the input can cause the network to misclassify the data. 
+                </p>
+                <p>
+                    While adversarial attacks have been extensively studied in the image domain, their impact on video data has received less attention. 
+                    Existing video attacks either modify all frames or sample frames uniformly, failing to account for temporal dependencies between frames. 
+                    This approach is suboptimal, especially for video classification models that leverage temporal information. 
+                </p>
+                <p>
+                    The challenge addressed in this paper is to develop a method that efficiently identifies and perturbs only the most vulnerable frames in a video, resulting in a temporally sparse adversarial attack that is both effective and less perceptible.
+                </p>
+                
+                <p>
+                The problem is formally defined as a mixed-integer non-linear program (MINLP):
+                </p>
+                <div class="math-container">
+                    $$ \max_{\delta, I} \ L(x + \delta_I, y; \theta) \quad \text{subject to} \quad |I| = N, \quad \| \delta(i) \|_\infty \leq \epsilon, \quad \delta_I = \sum_{i \in I} \delta(i)
+                    $$
+                </div>
+                
+                <p>
+                    Here, $L(x + \delta_I, y; \theta)$ represents the loss function of the neural network with perturbed input, 
+                    $x$ is the input video, $y$ is the ground truth label, $\delta_I$ is the perturbation 
+                    applied only to the selected frames $I$, $\epsilon$ is the maximum allowable perturbation, 
+                    and $|I| = N$ ensures that only $N$ frames are attacked.
+                </p><br/>
+
+                <h3> Sparse Adversarial Attack for Video </h3>
+                <p>
+                    The paper introduces a novel "Search-and-Attack" framework that consists of two stages: <strong>Search</strong> and <strong>Attack</strong>.
+                </p>
+
+                <h4>Search Stage</h4>
+                <p>
+                    The goal of this stage is to identify the most vulnerable frames in a video that should be targeted by the adversarial attack. 
+                    This is achieved using surrogate objective functions:
+                </p>
+                <ul>
+                    <li>
+                        <p> 
+                            <strong> Magnitude of Gradient</strong> <br/>
+                            This function estimates the vulnerability of each frame by calculating the L1-norm of the gradient of the loss function 
+                            with respect to the frame:
+
                             <div class="math-container">
-                                $$ \max_{\delta, I} \ L(x + \delta_I, y; \theta) \quad \text{subject to} \quad |I| = N, \quad \| \delta(i) \|_\infty \leq \epsilon, \quad \delta_I = \sum_{i \in I} \delta(i)
-                                $$
+                                $$ \mathcal{L}(x + \delta^{\mathbf{I}}, y; \theta) \approx \mathcal{L}(x, y; \theta) + \langle  \nabla_{{x}}\mathcal{L}(x, y; \theta), \delta^{\mathbf{I}} \rangle $$
                             </div>
-                            
-                            <p>
-                                Here, $L(x + \delta_I, y; \theta)$ represents the loss function of the neural network with perturbed input, 
-                                $x$ is the input video, $y$ is the ground truth label, $\delta_I$ is the perturbation 
-                                applied only to the selected frames $I$, $\epsilon$ is the maximum allowable perturbation, 
-                                and $|I| = N$ ensures that only $N$ frames are attacked.
-                            </p><br/>
-
-                            <h3> Sparse Adversarial Attack for Video </h3>
-                            <p>
-                                The paper introduces a novel "Search-and-Attack" framework that consists of two stages: <strong>Search</strong> and <strong>Attack</strong>.
-                            </p>
-
-                            <h4>Search Stage</h4>
-                            <p>
-                                The goal of this stage is to identify the most vulnerable frames in a video that should be targeted by the adversarial attack. 
-                                This is achieved using surrogate objective functions:
-                            </p>
-                            <ul>
-                                <li>
-                                    <p> 
-                                        <strong> Magnitude of Gradient</strong> <br/>
-                                        This function estimates the vulnerability of each frame by calculating the L1-norm of the gradient of the loss function 
-                                        with respect to the frame:
-
-                                        <div class="math-container">
-                                            $$ \mathcal{L}(x + \delta^{\mathbf{I}}, y; \theta) \approx \mathcal{L}(x, y; \theta) + \langle  \nabla_{{x}}\mathcal{L}(x, y; \theta), \delta^{\mathbf{I}} \rangle $$
-                                        </div>
-                                        <p> we can approximate the object with 1st Taylor approximation as follows: </p>
-                                        <div class="math-container">
-                                            $$ \mathcal{L}(x, y; \theta) + \langle  \nabla_{{x}}\mathcal{L}(x, y; \theta), \delta^{\mathbf{I}} \rangle \\  \le \mathcal{L}(x, y; \theta) + \varepsilon \cdot \sum\limits_{i \in \mathbf{I}}\; \|\nabla_{{x}_{i}}\mathcal{L}(x, y; \theta)\|_1. $$
-                                        </div>
-                                    </p>
-                                </li>
-                                <li>
-                                    <p> 
-                                        <strong> Frame-wise Vulnerability</strong><br/> 
-                                        This function assumes local linearity of the loss function around each frame and sums up the loss increases when perturbing each frame individually
-
-                                        <div class="math-container">
-                                            $$ \mathcal{L}(x + \delta)  - \mathcal{L}(x)= \mathcal{L} (x + \sum_{i \in \mathbf{I}} \delta^{(i)}) - \mathcal{L}(x)\\   \approx  \sum_{{i \in \mathbf{I}}} \left ( \mathcal{L}(x + \delta^{(i)}) - \mathcal{L}(x) \right ) $$
-                                        </div>
-                                        <p> Similar to MoG, the surrogate loss function can be further simplified by removing the constant L(x). The second surrogate objective function is given as : </p>
-                                        <div class="math-container">
-                                            $$ J_{\text{FRI}}(x, \mathbf{I}, y; \theta) = \sum_{{i \in \mathbf{I}}} \mathcal{L}(x + \delta^{(i)}, y; \theta) $$
-                                        </div>
-                                    </p>
-                                </li>
-                            </ul>
-                            <p> 
-                                Based on these surrogate losses, frames are selected using either a single-step method or more complex iterative search methods.
-                            </p><br/>
-                            
-                            <h4>Atack Stage</h4>
-                            <p>
-                                Once the vulnerable frames are identified, adversarial perturbations are generated using methods such as FGSM (Fast Gradient Sign Method) or PGD (Projected Gradient Descent), 
-                                but only applied to the selected frames. For example, in the FGSM attack, the perturbation is calculated as
-                            </p>
+                            <p> we can approximate the object with 1st Taylor approximation as follows: </p>
                             <div class="math-container">
-                                $$\delta_{\text{FGSM}}(x, y, \theta, I) = \epsilon \cdot \text{sign}(\nabla_x L(x, y; \theta)) \odot M_I$$
+                                $$ \mathcal{L}(x, y; \theta) + \langle  \nabla_{{x}}\mathcal{L}(x, y; \theta), \delta^{\mathbf{I}} \rangle \\  \le \mathcal{L}(x, y; \theta) + \varepsilon \cdot \sum\limits_{i \in \mathbf{I}}\; \|\nabla_{{x}_{i}}\mathcal{L}(x, y; \theta)\|_1. $$
                             </div>
-                            <p>
-                                where $M_I$ is a mask that applies the perturbation only to the selected frames $I$.
-                            </p><br/>
+                        </p>
+                    </li>
+                    <li>
+                        <p> 
+                            <strong> Frame-wise Vulnerability</strong><br/> 
+                            This function assumes local linearity of the loss function around each frame and sums up the loss increases when perturbing each frame individually
 
-                            <h2>Experiments</h2>
-                            <hr/>
-                            <p>
-                                Extensive experiments were conducted on three public benchmark datasets—UCF101, HMDB51, and Kinetics400—using widely adopted action recognition models like I3D, R3D, and SlowFast. The experiments reveal that the proposed Search-and-Attack method, particularly the combination of Greedy Search with FRI and PGD (FRI-G + PGD), significantly reduces the classification accuracy of the models by attacking only a small subset of frames, achieving comparable or superior performance to state-of-the-art dense attacks. The Section Search method, combined with FGSM, also demonstrated strong performance with reduced computational cost, highlighting the effectiveness of the framework in generating temporally sparse but powerful adversarial perturbations.
-                            </p>
-                            <img class="img-thumbnail" src="assets/image.png" width="100%" />
-
-
-                        </div>
-                    </div>
+                            <div class="math-container">
+                                $$ \mathcal{L}(x + \delta)  - \mathcal{L}(x)= \mathcal{L} (x + \sum_{i \in \mathbf{I}} \delta^{(i)}) - \mathcal{L}(x)\\   \approx  \sum_{{i \in \mathbf{I}}} \left ( \mathcal{L}(x + \delta^{(i)}) - \mathcal{L}(x) \right ) $$
+                            </div>
+                            <p> Similar to MoG, the surrogate loss function can be further simplified by removing the constant L(x). The second surrogate objective function is given as : </p>
+                            <div class="math-container">
+                                $$ J_{\text{FRI}}(x, \mathbf{I}, y; \theta) = \sum_{{i \in \mathbf{I}}} \mathcal{L}(x + \delta^{(i)}, y; \theta) $$
+                            </div>
+                        </p>
+                    </li>
+                </ul>
+                <p> 
+                    Based on these surrogate losses, frames are selected using either a single-step method or more complex iterative search methods.
+                </p><br/>
+                
+                <h4>Atack Stage</h4>
+                <p>
+                    Once the vulnerable frames are identified, adversarial perturbations are generated using methods such as FGSM (Fast Gradient Sign Method) or PGD (Projected Gradient Descent), 
+                    but only applied to the selected frames. For example, in the FGSM attack, the perturbation is calculated as
+                </p>
+                <div class="math-container">
+                    $$\delta_{\text{FGSM}}(x, y, \theta, I) = \epsilon \cdot \text{sign}(\nabla_x L(x, y; \theta)) \odot M_I$$
                 </div>
-            </section>
-        </main>
-        <!-- Footer-->
-        <footer class="bg-white py-4 mt-auto">
-            <div class="container px-5">
-                <div class="row align-items-center justify-content-between flex-column flex-sm-row">
-                    <div class="col-auto"><div class="small m-0">Copyright &copy; hwanheo's log</div></div>
-                    <div class="col-auto">
-                        <a class="small" href="gjghks950@naver.com">Contact</a>
-                    </div>
-                </div>
+                <p>
+                    where $M_I$ is a mask that applies the perturbation only to the selected frames $I$.
+                </p><br/>
+
+                <h2>Experiments</h2>
+                <hr/>
+                <p>
+                    Extensive experiments were conducted on three public benchmark datasets—UCF101, HMDB51, and Kinetics400—using widely adopted action recognition models like I3D, R3D, and SlowFast. The experiments reveal that the proposed Search-and-Attack method, particularly the combination of Greedy Search with FRI and PGD (FRI-G + PGD), significantly reduces the classification accuracy of the models by attacking only a small subset of frames, achieving comparable or superior performance to state-of-the-art dense attacks. The Section Search method, combined with FGSM, also demonstrated strong performance with reduced computational cost, highlighting the effectiveness of the framework in generating temporally sparse but powerful adversarial perturbations.
+                </p>
+                <img class="img-thumbnail" src="assets/image.png" width="100%" />
             </div>
-        </footer>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
-    </body>
+        </div>
+    </section><!-- /Portfolio Details Section -->
+
+  </main>
+
+  <footer id="footer" class="footer position-relative light-background">
+
+    <div class="container">
+      <div class="copyright text-center ">
+        <p>© <span>Copyright</span> <strong class="px-1 sitename">Hwan Heo</strong> <span>All Rights Reserved</span></p>
+      </div>
+      <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you've purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a>
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../../assets/vendor/php-email-form/validate.js"></script>
+  <script src="../../assets/vendor/aos/aos.js"></script>
+  <script src="../../assets/vendor/typed.js/typed.umd.js"></script>
+  <script src="../../assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="../../assets/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="../../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../../assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="../../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="../../assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="../../assets/js/main.js"></script>
+
+</body>
+
 </html>

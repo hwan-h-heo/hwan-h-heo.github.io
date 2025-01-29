@@ -1,432 +1,707 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Hwan Heo's personal portfolio website</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Custom Google font-->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
-        <!-- Bootstrap icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="css/styles.css" rel="stylesheet" />
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
-        <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-RF7ETSKPK9');
-        </script>
-        <style>
-            .mv-modal-box {
-                display: none;
-            }
-            /* 모달 박스 기본 스타일 */
-            .mv-modal-box {
-                display: none; /* 처음에는 보이지 않음 */
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%); /* 가운데 정렬 */
-                width: 40%; /* 창 너비 조정 */
-                height: 40%; /* 창 높이 조정 */
-                background-color: rgba(0, 0, 0, 0.8); /* 반투명한 배경 */
-                padding: 20px;
-                z-index: 1000;
-            }
 
-            /* 3D 모델 크기 조정 */
-            model-viewer {
-                width: 100%;
-                height: 100%;
-            }
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Hwan Heo's Log</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
 
-            /* 화면 전체 어두운 배경 (모달 밖 클릭 시 닫기) */
-            .modal-backdrop {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                background-color: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
-                z-index: 999;
-            }
-            .close-btn {
-                position: absolute;
-                top: 10px;
-                right: 10px;
-                background-color: red;
-                color: white;
-                border: none;
-                padding: 5px 10px;
-                cursor: pointer;
-                border-radius: 5px;
-                font-size: 16px;
-            }
+  <!-- Favicons -->
+  <link href="assets/favicon.ico" rel="icon">
+  <link href="assets/favicon.ico" rel="apple-touch-icon">
 
-            .close-btn:hover {
-                background-color: darkred;
-            }
-        </style>
-    </head>
-    <body class="d-flex flex-column h-100">
-        <main class="flex-shrink-0">
-            <!-- Navigation-->
-            <nav class="navbar navbar-expand-lg navbar-light bg-white py-3" id="top">
-                <div class="container px-5">
-                    <a class="navbar-brand" href=""><span class="fw-bolder text-primary">HwanHeo's log</span></a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
-                            <li class="nav-item"><a class="nav-link" href="">Home</a></li>
-                            <!--li class="nav-item"><a class="nav-link" href="resume.html">About</a></li-->
-                            <li class="nav-item"><a class="nav-link" href="projects/">Projects</a></li>
-                            <!--li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li-->
-                            <li class="nav-item"><a class="nav-link" href="blogs/">| &nbsp; &nbsp; Blog</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-            <!-- Header-->
-            <header class="py-5">
-                <div class="container px-5 pb-5">
-                    <div class="row gx-5 align-items-center">
-                        <div class="col-xxl-5">
-                            <!-- Header text content-->
-                            <div class="text-center text-xxl-start">
-                                <div class="badge bg-gradient-primary-to-secondary text-white mb-4"><div class="text-uppercase">Computer Vision &middot; Neural Rendering</div></div>
-                                <div class="fs-3 fw-light text-muted">Hello, I'm Vision AI Researcher </div>
-                                <h1 class="display-3 fw-bolder mb-5"><span class="text-gradient d-inline"> Hwan Heo</span></h1>
-                                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xxl-start mb-3">
-                                    <a class="btn btn-primary btn-lg px-5 py-3 me-sm-3 fs-6 fw-bolder" href="projects/">Projects</a>
-                                    <a class="btn btn-outline-dark btn-lg px-5 py-3 fs-6 fw-bolder" href="blogs/">Tech Blog</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xxl-7">
-                            <!-- Header profile picture-->
-                            <div class="d-flex justify-content-center mt-5 mt-xxl-0">
-                                <div class="profile bg-gradient-primary-to-secondary">
-                                    <!-- TIP: For best results, use a photo with a transparent background like the demo example below-->
-                                    <!-- Watch a tutorial on how to do this on YouTube (link)-->
-                                    <img class="profile-img" src="assets/icon.webp" alt="..." />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- About Section-->
-                <section id="about" class="bg-light py-5">
-                    <div class="container px-5">
-                        <div class="row gx-5 justify-content-center">
-                            <div class="col-xxl-8">
-                                <div class="text-center my-0">
-                                    <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">About Me</span></h2>
-                                    <p class="lead fw-light mb-1">Hello, my name is Hwan Heo, an AI Researcher.</p>
-                                    <img class="img-fluid" src="assets/profile.jpeg" width="25%" /> <br/>
-                                    <button class="btn btn-primary btn-sm open-model-btn">View 3D Avatar</button>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
-                                    <div class="mv-modal-box">
-                                        <model-viewer id="model-ex" src="assets/profile_3d.glb" alt="model sample" camera-controls></model-viewer>
-                                        <button class="close-btn btn-sm justify-content-end">X</button>
-                                    </div>
-                                    <br/>
-                                    <br/>
-                                    <p class="text-muted"> 
-                                        I'm currently working at Graphics AI Lab in NCSOFT, 
-                                        where I fulfill as a Technical Research Personnel for Alternative Military Service. 
-                                        I received my B.S. and M.S. degrees in computer science from Korea University in 2020 and 2022, respectively. During my Master’s program, I was advised by Prof. Hyunwoo J. Kim.
-                                        My research primarily focuses on 3D Computer Vision and Neural Rendering, 
-                                        with a particular emphasis on Radiance Fields and 3D Gaussian Splatting. 
-                                        I'm passionate about exploring innovative techniques and contributing to 
-                                        the cutting-edge developments in these fascinating fields.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <!-- Resume Section-->
-                <div id="resume" class="container px-5 my-5">
-                    <div class="text-center mb-5">
-                        <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Resume</span></h1>
-                    </div>
-                    <div class="row gx-5 justify-content-center">
-                        <div class="col-lg-11 col-xl-9 col-xxl-8">
-                            <!-- Experience Section-->
-                            <section>
-                                <div class="d-flex align-items-center justify-content-end mb-4">
-                                    <!-- Download resume button-->
-                                    <!-- Note: Set the link href target to a PDF file within your project-->
-                                    <a class="btn btn-primary px-3 py-2" href="https://raw.githubusercontent.com/hwan-h-heo/hwan-h-heo.io/main/assets/Hwan_Heo_s_Curriculum_Vitae.pdf">
-                                        <div class="d-inline-block bi bi-download me-2"></div>
-                                        Download CV
-                                    </a>
-                                </div>
-                                <div class="card shadow border-0 rounded-4 mb-5">
-                                    <div class="card-body p-5">
-                                        <h3 class="text-primary fw-bolder mb-4">Experience</h3>
-                                        <div class="row align-items-center gx-5">
-                                            <div class="col text-center text-lg-start mb-4 mb-lg-0">
-                                                <div class="bg-light p-4 rounded-4">
-                                                    <div class="text-primary fw-bolder mb-2">2023 - Present</div>
-                                                    <div class="small fw-bolder">AI Researcher</div> 
-                                                    <div class="small text-muted">Graphics AI Lab, NCSOFT</div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div>
-                                                    <ul>
-                                                        <li>
-                                                            Research on 3D Asset Generation; 3D Latent Diffusion & Texture Synthesis
-                                                            <a href="https://ncsoft.github.io/CaPa/" class="bi bi-link-45deg"></a>
-                                                        </li>
-                                                        <li>
-                                                            Neural Rendering Applications; Gaussian Splatting in Game Engines
-                                                            <a href="projects/nerf_in_game/" class="bi bi-link-45deg"></a>, 
-                                                            NeRF Avatar
-                                                            <a href="projects/face_nerf/" class="bi bi-link-45deg"></a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <br/>
-                                        <div class="row align-items-center gx-5">
-                                            <div class="col text-center text-lg-start mb-4 mb-lg-0">
-                                                <div class="bg-light p-4 rounded-4">
-                                                    <div class="text-primary fw-bolder mb-2">2022</div>
-                                                    <div class="small fw-bolder">Research Intern</div>
-                                                    <div class="small text-muted">AI Lab, Naver Corp.</div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div>
-                                                    <ul>
-                                                        <li>
-                                                            Research on Neural Rendering; Joint Optimization of Camera Pose and Hash Grid Radiance Fields
-                                                            <a href="https://dl.acm.org/doi/10.5555/3618408.3618936" class="bi bi-link-45deg"></a></p>
-                                                        </li>
-                                                        <li>
-                                                            Mentored by Dr. Jin-Hwa Kim
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <br/>
-                                        <h3 class="text-secondary fw-bolder mb-4">Education</h3>
-                                        <div class="row align-items-center gx-5">
-                                            <div class="col text-center text-lg-start mb-4 mb-lg-0">
-                                                <div class="bg-light p-4 rounded-4">
-                                                    <div class="text-secondary fw-bolder mb-2">2020 - 2022</div>
-                                                    <div class="mb-2">
-                                                        <div class="small fw-bolder">Korea University</div>
-                                                        <div class="small text-muted">Seoul, South Korea</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div>
-                                                    <ul>
-                                                        <li>
-                                                            <strong>Master's</strong> in Computer Science <a href="https://www.hyunwoojkim.com/"><strong>[MLV Lab]</strong></a> 
-                                                        </li>
-                                                        <li>
-                                                            Advised by Professor Hyunwoo J. Kim
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <br/>
-                                        <div class="row align-items-center gx-5">
-                                            <div class="col text-center text-lg-start mb-4 mb-lg-0">
-                                                <div class="bg-light p-4 rounded-4">
-                                                    <div class="text-secondary fw-bolder mb-2">
-                                                        2015 - 2020
-                                                    </div>
-                                                    <div class="mb-2">
-                                                        <div class="small fw-bolder">
-                                                            Korea University
-                                                        </div>
-                                                        <div class="small text-muted">
-                                                            Seoul, South Korea
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div>
-                                                    <ul>
-                                                        <li>
-                                                            <strong>Bachelor's</strong> in Computer Science
-                                                        </li>
-                                                        <li>
-                                                            Advised by Profressor Heui-Seok Lim
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                            <!-- Divider-->
-                            <section>
-                                <div class="card shadow border-0 rounded-4 mb-5">
-                                    <div class="card-body p-5">
-                                        <h3 class="text-success fw-bolder mb-4">Publications</h3>
-                                        <ul>
-                                            <li class="mb-4">
-                                                <p class="mb-1"><strong>CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation</strong></p>
-                                                <p class="mb-0"><strong>Hwan Heo</strong>, J. Kim, S. Lee, J. Wi, J. Choi, S. Ahn <strong>[under review]</strong> <a href="https://ncsoft.github.io/CaPa/" class="bi bi-link-45deg"></a></p>
-                                            </li>
-                                            <li class="mb-4">
-                                                <p class="mb-1"><strong>DreamSurfels: Generative Gaussian Surfels for Geometrically Accurate 3D Content Creation</strong></p>
-                                                <p class="mb-0"><strong>Hwan Heo</strong>, S. Ahn <strong>[ICTC 2024]</strong> (oral, domestic conference)</p>
-                                            </li>
-                                            <li class="mb-4">
-                                                <p class="mb-1"><strong>Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</strong></p>
-                                                <p class="mb-0"><strong>Hwan Heo</strong>, T. Kim, J. Lee, J. Lee, S. Kim, H. J. Kim, JH. Kim <strong>[ICML 2023]</strong> <a href="https://dl.acm.org/doi/10.5555/3618408.3618936" class="bi bi-link-45deg"></a></p>
-                                            </li>
-                                            <li class="mb-4">
-                                                <p class="mb-1"><strong>Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild</strong></p>
-                                                <p class="mb-0">J. Lee, I. Kim, <strong>Hwan Heo</strong>, H. J. Kim <strong>[preprint]</strong> <a href="https://arxiv.org/abs/2303.03966" class="bi bi-link-45deg"></a></p>
-                                            </li>
-                                            <li class="mb-4">
-                                                <p class="mb-1"><strong>Consistency Learning via Decoding Path Augmentation for Transformers in Human Object Interaction Detection</strong></p>
-                                                <p class="mb-0">J. Park, S. Lee, <strong>Hwan Heo</strong>, H. Choi, H. J. Kim <strong>[CVPR 2022]</strong> <a href="https://arxiv.org/abs/2204.04836" class="bi bi-link-45deg"></a></p>
-                                            </li>
-                                            <li class="mb-4">
-                                                <p class="mb-1"><strong>Domain Generalization Emerges from Dreaming</strong></p>
-                                                <p class="mb-0"><strong>Hwan Heo</strong>, Y. Oh, J. Lee, H. J. Kim <strong>[preprint]</strong> <a href="https://arxiv.org/abs/2302.00980" class="bi bi-link-45deg"></a></p>
-                                            </li>
-                                            <li class="mb-4">
-                                                <p class="mb-1"><strong>Temporally Sparse Adversarial Perturbations on Videos</strong></p>
-                                                <p class="mb-0"><strong>Hwan Heo</strong>, D. Ko, J. Lee, Y. Hong, H. J. Kim <strong>[IEEE Access 2021]</strong> <a href="https://ieeexplore.ieee.org/document/9592758" class="bi bi-link-45deg"></a></p>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </section>
-                            <div class="pb-5"></div>
-                            <!-- Skills Section-->
-                            <section>
-                                <!-- Skillset Card-->
-                                <div class="card shadow border-0 rounded-4 mb-5">
-                                    <div class="card-body p-5">
-                                        <!-- Professional skills list-->
-                                        <div class="mb-5">
-                                            <div class="d-flex align-items-center mb-4">
-                                                <div class="feature bg-primary bg-gradient-primary-to-secondary text-white rounded-3 me-3"><i class="bi bi-book"></i></div>
-                                                <h3 class="fw-bolder mb-0"><span class="text-gradient d-inline">Research Interest</span></h3>
-                                            </div>
-                                            <div class="row row-cols-1 row-cols-md-3 mb-4">
-                                                <div class="col mb-4 mb-md-0"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">Computer Vision</div></div>
-                                                <div class="col mb-4 mb-md-0"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">Neural Rendering</div></div>
-                                                <div class="col"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">3D Generation</div></div>
-                                            </div>
-                                        </div>
-                                        <!-- Languages list-->
-                                        <div class="mb-0">
-                                            <div class="d-flex align-items-center mb-4">
-                                                <div class="feature bg-primary bg-gradient-primary-to-secondary text-white rounded-3 me-3"><i class="bi bi-code-slash"></i></div>
-                                                <h3 class="fw-bolder mb-0"><span class="text-gradient d-inline">Languages</span></h3>
-                                            </div>
-                                            <div class="row row-cols-1 row-cols-md-3 mb-4">
-                                                <div class="col mb-4 mb-md-0"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">Python</div></div>
-                                                <div class="col mb-4 mb-md-0"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">PyTorch</div></div>
-                                                <div class="col"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">TensorFlow</div></div>
-                                            </div>
-                                            <div class="row row-cols-1 row-cols-md-3">
-                                                <div class="col mb-4 mb-md-0"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">OpenCV</div></div>
-                                                <div class="col mb-4 mb-md-0"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">C++</div></div>
-                                                <div class="col"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">CUDA</div></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                        </div>
-                    </div>
-                </div>
-                <div id="contact" class="container px-5 my-5">
-                    <div class="text-center mb-5">
-                        <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Contact</span></h1>
-                    </div>
-                    <div class="row gx-5 justify-content-center">
-                        <div class="col-lg-11 col-xl-9 col-xxl-8">
-                            <!-- Experience Section-->
-                            <section>
-                                <!-- Experience Card 1-->
-                                <div class="card shadow border-0 rounded-4 mb-5">
-                                    <div class="card-body p-5">
-                                        <div class="row align-items-center gx-5">
-                                            <div class="col text-center mb-4 mb-lg-0">
-                                                <div class="feature bg-primary bg-gradient-primary-to-secondary text-white rounded-3 mb-3"><i class="bi bi-envelope"></i></div>
-                                                <div class="feature bg-primary bg-gradient-primary-to-secondary text-white rounded-3 mb-3"><i class="bi bi-phone"></i></div>
-                                                <p class="lead fw-normal text-muted mb-0"> 
-                                                    <a href="mailto:gjghks950@naver.com">gjghks950@naver.com</a>
-                                                </p>
-                                                <p class="lead fw-normal text-muted mb-0"> +82 10-2295-9546</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                        </div>
-                    </div>
-                </div>
-                <!-- Page content-->
-                
-            </header>
-        </main>
-        <!-- Footer-->
-        <footer class="bg-white py-4 mt-auto">
-            <div class="text-center mb-5">
-                <a class="btn btn-info" href="#top" style="color:white"><strong>Go to Top</strong></a>
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.17/fullpage.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.17/fullpage.js"></script>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RF7ETSKPK9');
+  </script>
+
+  <style>
+    /* Added */
+    /* Portfolio Container */
+    #portfolio .container-fluid,
+    #portfolio .container-sm,
+    #portfolio .container-md,
+    #portfolio .container-lg,
+    #portfolio .container-xl,
+    #portfolio .container-xxl {
+        max-width: 1920px;
+    }
+
+    #portfolio .portfolio-box {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 100%;
+        overflow: hidden; /* Ensures any overflow is hidden */
+    }
+
+    /* New Aspect Ratio Box */
+    .aspect-ratio-box {
+        width: 100%;
+        padding-top: 56.25%; /* 16:9 Aspect Ratio */
+        position: relative;
+        overflow: hidden;
+    }
+
+    #portfolio .portfolio-box img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Ensures the image covers the box without distortion */
+        display: block; /* Prevents whitespace below images */
+    }
+
+    #portfolio .portfolio-box .portfolio-box-caption {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        bottom: 0;
+        text-align: center;
+        opacity: 0;
+        color: #fff;
+        background: rgba(244, 98, 58, 0.92);
+        transition: opacity 0.35s ease;
+    }
+
+    #portfolio .portfolio-box .project-category {
+        font-family: "Merriweather Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        font-size: 0.8rem;
+        font-weight: 650;
+        color: #fff;
+        text-transform: uppercase;
+    }
+
+    #portfolio .portfolio-box .project-name {
+        font-size: 1.2rem;
+    }
+
+    #portfolio .portfolio-box:hover .portfolio-box-caption {
+        opacity: 1;
+    }
+
+    div.polaroid {
+        width: 100%;
+        background-color: white;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    div.polar_cap {
+        text-align: center;
+        color: #ced4da;
+        padding-top: 3px;
+        font-size: 0.9rem; /* Adjust font size for a more compact appearance */
+        line-height: 1; /* Adjust line-height to reduce spacing */
+        display: flex; /* Enables flexbox for vertical centering */
+        justify-content: center; /* Centers text horizontally */
+        align-items: center;
+    }
+
+    div.polar_content {
+        position: absolute;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        color: #f1f1f1;
+        width: 100%;
+        padding: 15px;
+        box-sizing: border-box; /* Ensure padding doesn't affect width */
+        font-size: 0.7rem;
+        line-height: 1.2;
+        height: auto; /* Set a fixed height */
+        overflow: hidden; /* Hide any overflowing text */
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Vertically centers content */
+    }
+
+    div.polaroid img {
+        width: 100%; /* Ensures the image width matches the polaroid width */
+        object-fit: cover; /* Ensures the image covers the space without distortion */
+    }
+
+    .top-left {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+    }
+
+  </style>
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header dark-background d-flex flex-column">
+    <i class="header-toggle d-xl-none bi bi-list"></i>
+
+    <div class="profile-img">
+      <img src="assets/icon.webp" alt="" class="img-fluid rounded-circle">
+    </div>
+
+    <a href="index.html" class="logo d-flex align-items-center justify-content-center">
+      <!-- Uncomment the line below if you also wish to use an image logo -->
+      <!-- <img src="assets/img/logo.png" alt=""> -->
+      <h1 class="sitename">Hwan Heo</h1>
+    </a>
+
+    <div class="social-links text-center">
+      <a href="https://github.com/hwanhuh" class="github"><i class="bi bi-github"></i></a>
+      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin"><i class="bi bi-linkedin"></i></a>
+      <a href="https://www.instagram.com/hwan_heo_guitar?igsh=MWZraDFudWh0cnN2Mg==" class="instagram"><i class="bi bi-instagram"></i></a>
+      <a href="mailto:gjghks950@naver.com" class="google-plus"><i class="bi bi-envelope"></i></a>
+    </div>
+
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="#home" class="active"><i class="bi bi-house navicon"></i>Home</a></li>
+        <li><a href="#about"><i class="bi bi-person navicon"></i> About</a></li>
+        <li><a href="#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
+        <li><a href="#portfolio"><i class="bi bi-images navicon"></i> Portfolio</a></li>
+        <!-- <li><a href="#services"><i class="bi bi-hdd-stack navicon"></i> Services</a></li> -->
+        <!-- <li class="dropdown"><a href="#"><i class="bi bi-menu-button navicon"></i> <span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+          <ul>
+            <li><a href="#">Dropdown 1</a></li>
+            <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+              <ul>
+                <li><a href="#">Deep Dropdown 1</a></li>
+                <li><a href="#">Deep Dropdown 2</a></li>
+                <li><a href="#">Deep Dropdown 3</a></li>
+                <li><a href="#">Deep Dropdown 4</a></li> 
+                <li><a href="#">Deep Dropdown 5</a></li>
+              </ul>
+            </li>
+            <li><a href="#">Dropdown 2</a></li>
+            <li><a href="#">Dropdown 3</a></li>
+            <li><a href="#">Dropdown 4</a></li>
+          </ul>
+        </li> -->
+        <li><a href="blogs/"><i class="bi bi-keyboard navicon"></i> Blog <i class="bi bi-link-45deg"></i> </a></li>
+      </ul>
+    </nav>
+
+  </header>
+
+  <main class="main">
+
+    <!-- Hero Section -->
+    <section id="home" class="hero section dark-background">
+
+      <img src="assets/photo2.jpg" alt="" data-aos="fade-in" class="">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100" style="margin-left: 3rem;">
+        <h2>Hwan Heo</h2>
+        <p>Hello, I'm <span class="typed" data-typed-items="AI Researcher, AI Engineer, AI Learner">AI Researcher</span><span class="typed-cursor typed-cursor--blink" aria-hidden="true"></span><span class="typed-cursor typed-cursor--blink" aria-hidden="true"></span></p>
+      </div>
+
+    </section><!-- /Hero Section -->
+
+    <!-- About Section -->
+    <section id="about" class="about section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>About</h2>
+        <p>
+          Hi, it's a delightful serendipity to meet you in the vast expanse of the digital cosmos. I'm Hwan Heo, a lifelong learner, and explorer in AI & Computer Vision.
+        </p>
+      </div><!-- End Section Title -->
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-4 justify-content-center">
+          <div class="col-lg-4">
+            <img src="assets/prof2.jpg" class="img-fluid" alt="">
+          </div>
+          <div class="col-lg-8 content">
+            <h2> Vision AI Researcher </h2>
+            <p class="fst-italic py-3">
+              Specializing in 3D Computer Vision.
+            </p>
+            <div class="row">
+              <div class="col-lg-6">
+                <ul>
+                  <li><i class="bi bi-chevron-right"></i> <strong>Interest:</strong> <span>3D Vision, Neural Rendering</span></li>
+                  <li><i class="bi bi-chevron-right"></i> <strong>Degree:</strong> <span>Master's in Computer Science</span></li>
+                  <li><i class="bi bi-chevron-right"></i> <strong>E-mail:</strong> <span>gjghks950@naver.com</span></li>
+                  <li><i class="bi bi-chevron-right"></i> <strong>City:</strong> <span>Sungnam, South Korea</span></li>
+                </ul>
+              </div>
+              <!-- <div class="col-lg-6">
+                <ul>
+                  <li><i class="bi bi-chevron-right"></i> <strong>Age:</strong> <span>30</span></li>
+                  <li><i class="bi bi-chevron-right"></i> <strong>Degree:</strong> <span>Master</span></li>
+                  <li><i class="bi bi-chevron-right"></i> <strong>Email:</strong> <span>email@example.com</span></li>
+                  <li><i class="bi bi-chevron-right"></i> <strong>Freelance:</strong> <span>Available</span></li>
+                </ul>
+              </div> -->
             </div>
+            <p class="py-3">
+              Hwan Heo is an AI researcher at <strong>Graphics AI Lab, NCSOFT</strong>. 
+              He holds a <strong>B.S. and M.S. in Computer Science from Korea University</strong>, under the supervision of Professor <a href="https://www.hyunwoojkim.com/">Hyunwoo J. Kim</a> . 
+              Hs was Research Intern in <a href="https://naver-career.gitbook.io/en/positions/ai-ml/generation-research#internship-alumni">Generation Research</a> at <strong>NAVER AI Lab</strong> mentored by Dr. <a href="https://wityworks.com/">Jin-Hwa Kim</a>. 
+              His research emphasizes 3D Computer Vision, Radiance Fields, and 3D Generation, contributing to the cutting-edge developments in these fascinating fields.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /About Section -->
+
+    <!-- Stats Section -->
+
+    <!-- Skills Section -->
+
+    <!-- Resume Section -->
+    <section id="resume" class="resume section">
+      <div class="container section-title" data-aos="fade-up" style="margin-bottom: -5rem; padding-left: 1rem">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <h2>Resume</h2>
+          <a class="btn btn-dark px-3 py-2" href="https://raw.githubusercontent.com/hwan-h-heo/hwan-h-heo.io/main/assets/Hwan_Heo_s_Curriculum_Vitae.pdf">
+              <div class="d-inline-block bi bi-download me-2"></div>
+              Download CV
+          </a>
+        </div>
+      </div>
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100" style="padding-left: 2rem;">
+            <h3 class="resume-title">Sumary</h3>
+
+            <div class="resume-item pb-0">
+              <h4>Hwan Heo</h4>
+              <p><em>
+                Driven AI Researcher with 3+ years of experience specializing in 3D Computer Vision, 
+                focused on developing leading-edge techniques for Neural Rendering and 3D Generation. </em></p>
+              <ul>
+                <li>AI Researcher at NC Research</li>
+                <li>Research Personnel, Alternative Military Service</li>
+              </ul>
+            </div><!-- Edn Resume Item -->
+
+            <h3 class="resume-title"> Education </h3>
+            <div class="resume-item">
+              <h4><i class="bi bi-mortarboard-fill"></i> Master of Computer Science &amp; Engineering</h4>
+              <h5>2020 - 2022</h5>
+              <p><em>MLV Lab, Korea University, Seoul</em></p>
+              <!-- <p>
+                Studied advanced machine learning, computer vision, generalization and related areas, building a strong theoretical and practical foundation.
+              </p> -->
+            </div><!-- Edn Resume Item -->
+
+            <div class="resume-item">
+              <h4> <i class="bi bi-mortarboard-fill"></i> Bachelor of Computer Science &amp; Engineering</h4>
+              <h5>2015 - 2020</h5>
+              <p><em>Korea University, Seoul</em></p>
+              <!-- <p>
+                Gained a comprehensive understanding of computer science principles and engineering fundamentals through a rigorous undergraduate program.
+              </p> -->
+            </div><!-- Edn Resume Item -->
+
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200" style="padding-right: 1rem;">
+            <h3 class="resume-title">Professional Experience</h3>
+            <div class="resume-item">
+              <h4>AI Researcher</h4>
+              <h5>2023 - Present</h5>
+              <p><em>Neural Rendering &amp; 3D Generation, NCSOFT Research </em></p>
+              <ul>
+                <li>Lead in the research on 3D asset generation; 3D Latent Diffusion & Texture Synthesis <a href="https://ncsoft.github.io/CaPa/" class="bi bi-link-45deg"></a> </li>
+                <li>
+                  Application on Neural Rendering; Gaussian Splatting in Game Engine  
+                  <a href="projects/nerf_in_game/" class="bi bi-link-45deg"></a>, 
+                  Fast Neural Facial Avatar for Multi-Camera System
+                  <a href="projects/face_nerf/" class="bi bi-link-45deg"></a>
+                </li>
+              </ul>
+            </div><!-- Edn Resume Item -->
+
+            <div class="resume-item">
+              <h4>AI Researcher, Intern</h4>
+              <h5>2022</h5>
+              <p><em>Generation Research, NAVER AI Lab</em></p>
+              <ul>
+                <li>
+                  Research on Neural Rendering; Joint Optimization of Camera Pose and Hash Grid Radiance Fields
+                  <a href="https://dl.acm.org/doi/10.5555/3618408.3618936" class="bi bi-link-45deg"></a></p>
+                </li>
+                <li>
+                  Image-to-Image Translation on Equirectangular Images
+                  <a href="https://dl.acm.org/doi/10.5555/3618408.3618936" class="bi bi-link-45deg"></a></p>
+                </li>
+              </ul>
+            </div><!-- Edn Resume Item -->
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section><!-- /Resume Section -->
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="portfolio section light-background">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Portfolio</h2>
+        <p>
+          <strong> </strong> Research & Development: Featured Publication &amp Project Lists
+        </p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
+
+          <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
+            <li data-filter="*" class="filter-active">All</li>
+            <li data-filter=".filter-research">Research</li>
+            <li data-filter=".filter-app">Application</li>
+            <li data-filter=".filter-per">Personal</li>
+            <!-- <li data-filter=".filter-books">Generation</li> -->
+          </ul><!-- End Portfolio Filters -->
+
+            <div class="row gy-4 isotope-container" >
+              <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-research filter-app"> <!-- col-12 col-lg-6 col-lg-4 col-sm-6 -->
+                <a class="portfolio-box" href="https://ncsoft.github.io/CaPa/">
+                    <div class="polaroid">
+                        <div class="aspect-ratio-box"><img class="img-fluid" src="https://github.com/ncsoft/CaPa/raw/main/assets/teaser.gif" alt="CaPa teaser"></div>
+                        <div class="top-left"> <h6><span class="badge text-bg-success">Featured on HuggingFace (Jan 17, 2025)</span></h6> </div>
+                        <div class="polar_content">
+                          <h6 style="color:#f1f1f1">CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation</h6>
+                        </div>
+                    </div>
+                      
+                    <div class="portfolio-box-caption">
+                        <div class="project-name">
+                          <!-- CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation -->
+                          <h6 style="color:#f1f1f1">3D asset generation scheme that generates <em>4K Textured Mesh</em> under 30 seconds</h6>
+                        </div>
+                        <div class="project-category text-white-50">NC Research</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="row gy-4 isotope-container" >
+              <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-research"> <!-- col-12 col-lg-6 col-lg-4 col-sm-6 -->
+                <a class="portfolio-box" href="projects/instant_pose/">
+                    <div class="polaroid">
+                        <div class="aspect-ratio-box"><img class="img-fluid" src="projects/instant_pose/assets/pose_fig2.jpg" alt="Pose teaser"></div>
+                        <div class="top-left"> <h6><span class="badge text-bg-primary">ICML 2023</span></h6> </div>
+                        <div class="polar_content">
+                          <h6 style="color:#f1f1f1">Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</h6>
+                        </div>
+                    </div>
+                      
+                    <div class="portfolio-box-caption">
+                        <div class="project-name">
+                          <!-- CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation -->
+                          <h6 style="color:#f1f1f1">Joint optimization of camera poses and hash-grid NeRF (Instant-NGP) </h6>
+                        </div>
+                        <div class="project-category text-white-50">Naver AI Lab</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="row gy-4 isotope-container" >
+              <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-research"> <!-- col-12 col-lg-6 col-lg-4 col-sm-6 -->
+                <a class="portfolio-box" href="projects/few_nerf/">
+                    <div class="polaroid">
+                        <div class="aspect-ratio-box">
+                          <img class="img-fluid" src="projects/few_nerf/assets/main.jpg" alt="Occ-NeRF teaser">
+                        </div>
+                        <div class="top-left"> <h6><span class="badge text-bg-primary">arXiv 2023</span></h6> </div>
+                        <div class="polar_content">
+                          <h6 style="color:#f1f1f1">Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild</h6>
+                        </div>
+                    </div>
+                      
+                    <div class="portfolio-box-caption">
+                        <div class="project-name">
+                          <!-- CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation -->
+                          <h6 style="color:#f1f1f1"> Neural scene reconstruction from a small number of unconstrained in-the-wild photos. </h6>
+                        </div>
+                        <div class="project-category text-white-50">Korea University</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="row gy-4 isotope-container" >
+              <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-app"> <!-- col-12 col-lg-6 col-lg-4 col-sm-6 -->
+                <a class="portfolio-box" href="projects/nerf_in_game/">
+                    <div class="polaroid">
+                        <div class="aspect-ratio-box">
+                          <img class="img-fluid" src="projects/nerf_in_game/teaser.jpg" alt="NeRF Game teaser">
+                        </div>
+                        <!-- <div class="top-left"> <h6><span class="badge text-bg-primary">arXiv 2023</span></h6> </div> -->
+                        <div class="polar_content">
+                          <h6 style="color:#f1f1f1">Neural Rendering in Game Engine </h6>
+                        </div>
+                    </div>
+                      
+                    <div class="portfolio-box-caption">
+                        <div class="project-name">
+                          <!-- CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation -->
+                          <h6 style="color:#f1f1f1"> Integration Gaussian Splatting from 360 cameras to the Game Engine </h6>
+                        </div>
+                        <div class="project-category text-white-50">NC Research</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="row gy-4 isotope-container" >
+              <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-per filter-app"> <!-- col-12 col-lg-6 col-lg-4 col-sm-6 -->
+                <a class="portfolio-box" href="https://github.com/hwanhuh/Radiance-Fields-from-VGGSfM-Mast3r">
+                    <div class="polaroid">
+                        <div class="aspect-ratio-box">
+                          <img class="img-fluid" src="https://hwan-h-heo.github.io/hwan-h-heo.io/blogs/posts/240721_sfm/assets/pen_sparse_vggsfm_2dgs.gif" alt="NeRF Face teaser">
+                        </div>
+                        <div class="top-left"> <h6><span class="badge text-bg-success">Featured on Github (190+ stars)</span></h6> </div>
+                        <div class="polar_content">
+                          <h6 style="color:#f1f1f1"> Radiance Fields from Deep-based Structure-from-Motion </h6>
+                        </div>
+                    </div>
+                      
+                    <div class="portfolio-box-caption">
+                        <div class="project-name">
+                          <!-- CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation -->
+                          <h6 style="color:#f1f1f1"> Exploring Gaussian Splatting reconstruction from VGGSfM and MaST3R </h6>
+                        </div>
+                        <div class="project-category text-white-50">Personal Project</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="row gy-4 isotope-container" >
+                <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-per filter-app"> <!-- col-12 col-lg-6 col-lg-4 col-sm-6 -->
+                  <a class="portfolio-box" href="https://github.com/hwanhuh/2D-GS-Viser-Viewer/">
+                      <div class="polaroid">
+                          <div class="aspect-ratio-box">
+                            <img class="img-fluid" src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_train.gif" alt="NeRF light teaser">
+                          </div>
+                          <div class="top-left"> <h6><span class="badge text-bg-success">Featured on Github (110+ stars)</span></h6> </div>
+                          <div class="polar_content">
+                            <h6 style="color:#f1f1f1"> Custom Web Viewer for 2D Gaussian Splatting </h6>
+                          </div>
+                      </div>
+                        
+                      <div class="portfolio-box-caption">
+                          <div class="project-name">
+                            <!-- CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation -->
+                            <h6 style="color:#f1f1f1"> First public viewer for 2D Gaussian Splatting using nerfstudio's viser </h6>
+                          </div>
+                          <div class="project-category text-white-50">Personal Project</div>
+                      </div>
+                  </a>
+            </div>
+
+            <div class="row gy-4 isotope-container" >
+              <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-app"> <!-- col-12 col-lg-6 col-lg-4 col-sm-6 -->
+                <a class="portfolio-box" href="projects/ref_nerf/">
+                    <div class="polaroid">
+                        <div class="aspect-ratio-box">
+                          <img class="img-fluid" src="projects/ref_nerf/assets/image.jpg" alt="NeRF light teaser">
+                        </div>
+                        <!-- <div class="top-left"> <h6><span class="badge text-bg-primary">arXiv 2023</span></h6> </div> -->
+                        <div class="polar_content">
+                          <h6 style="color:#f1f1f1"> Specular-Diffuse Disentanglement w/ Hash-Grid NeRF (feat. nerfstudio's NeRFacto) </h6>
+                        </div>
+                    </div>
+                      
+                    <div class="portfolio-box-caption">
+                        <div class="project-name">
+                          <!-- CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation -->
+                          <h6 style="color:#f1f1f1"> Light disentanglement modeling on the Instnat-NGP-based NeRF model </h6>
+                        </div>
+                        <div class="project-category text-white-50">NC Research</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="row gy-4 isotope-container" >
+              <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-app"> <!-- col-12 col-lg-6 col-lg-4 col-sm-6 -->
+                <a class="portfolio-box" href="projects/face_nerf/">
+                    <div class="polaroid">
+                        <div class="aspect-ratio-box">
+                          <img class="img-fluid" src="projects/face_nerf/assets/image.jpg" alt="NeRF Face teaser">
+                        </div>
+                        <!-- <div class="top-left"> <h6><span class="badge text-bg-primary">arXiv 2023</span></h6> </div> -->
+                        <div class="polar_content">
+                          <h6 style="color:#f1f1f1"> Fast Neural Facial Avatar for Multi-Camera System  </h6>
+                        </div>
+                    </div>
+                      
+                    <div class="portfolio-box-caption">
+                        <div class="project-name">
+                          <!-- CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation -->
+                          <h6 style="color:#f1f1f1"> Fast NeRF face avatar reconstruction from multi-camera system </h6>
+                        </div>
+                        <div class="project-category text-white-50">NC Research</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="row gy-4 isotope-container" >
+              <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-research"> <!-- col-12 col-lg-6 col-lg-4 col-sm-6 -->
+                <a class="portfolio-box" href="projects/hoi/">
+                    <div class="polaroid">
+                        <div class="aspect-ratio-box">
+                          <img class="img-fluid" src="projects/hoi/fig2_dot.jpg" alt="NeRF light teaser">
+                        </div>
+                        <div class="top-left"> <h6><span class="badge text-bg-primary">CVPR 2022</span></h6> </div>
+                        <div class="polar_content">
+                          <h6 style="color:#f1f1f1"> Consistency Learning via Decoding Path Augmentation for Transformers in Human Object Interaction Detection </h6>
+                        </div>
+                    </div>
+                      
+                    <div class="portfolio-box-caption">
+                        <div class="project-name">
+                          <!-- CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation -->
+                          <h6 style="color:#f1f1f1"> Enhance DeTR-based Human-object interaction detection using consistency regularization </h6>
+                        </div>
+                        <div class="project-category text-white-50">Korea University</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="row gy-4 isotope-container" >
+              <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-research"> <!-- col-12 col-lg-6 col-lg-4 col-sm-6 -->
+                <a class="portfolio-box" href="projects/adv/">
+                    <div class="polaroid">
+                        <div class="aspect-ratio-box">
+                          <img class="img-fluid" src="projects/adv/main_figure.jpg" alt="NeRF light teaser">
+                        </div>
+                        <div class="top-left"> <h6><span class="badge text-bg-primary">IEEE Access 2021</span></h6> </div>
+                        <div class="polar_content">
+                          <h6 style="color:#f1f1f1"> Search-and-Attack: Temporally Sparse Adversarial Attack on Videos </h6>
+                        </div>
+                    </div>
+                      
+                    <div class="portfolio-box-caption">
+                        <div class="project-name">
+                          <!-- CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation -->
+                          <h6 style="color:#f1f1f1"> Adversarial Attack for video action recognition model </h6>
+                        </div>
+                        <div class="project-category text-white-50">Korea University</div>
+                    </div>
+                </a>
+            </div>
+            </div>
+        </div>
+      </div>
+    </section><!-- /Portfolio Section -->
+    <section class="light-background">
+        <div class="container section-title">
+            <br/>
+            <h5>Publications</h5>
             <hr/>
-            <div class="d-flex justify-content-center fs-2 gap-4">
-                <a class="text-gradient" href="https://www.linkedin.com/in/hwan-heo-0905korea/"><i class="bi bi-linkedin"></i></a>
-                <a class="text-gradient" href="https://github.com/hwanhuh"><i class="bi bi-github"></i></a>
-            </div>
-            <div class="container px-5">
-                <div class="row align-items-center justify-content-between flex-column flex-sm-row">
-                    <div class="col-auto"><div class="small m-0">Copyright &copy; Hwan Heo </div></div>
-                </div>
-            </div>
-        </footer>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
-        <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-        <script>
-            const MV_MODAL_BOX = document.querySelector('.mv-modal-box');
-            const modelOpenBtn = document.querySelector('.open-model-btn');
-            const closeBtn = document.querySelector('.close-btn');
-        
-            modelOpenBtn.addEventListener('click', () => {
-                if (MV_MODAL_BOX.style.display === 'block') {
-                    MV_MODAL_BOX.style.display = 'none';
-                } else {
-                    MV_MODAL_BOX.style.display = 'block';
-                }
-            });
+            <!-- <br/> -->
+            <ul>
+                <li class="mb-4">
+                    <p class="mb-1"><strong>CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation</strong></p>
+                    <p class="mb-0"><strong>Hwan Heo</strong>, J. Kim, S. Lee, J. Wi, J. Choi, S. Ahn <strong>[underreview]</strong> <a href="https://ncsoft.github.io/CaPa/" class="bi bi-link-45deg"></a></p>
+                </li>
+                <li class="mb-4">
+                    <p class="mb-1"><strong>DreamSurfels: Generative Gaussian Surfels for Geometrically Accurate 3D Content Creation</strong></p>
+                    <p class="mb-0"><strong>Hwan Heo</strong>, S. Ahn <strong>[ICTC 2024]</strong> (oral, domestic conference)</p>
+                </li>
+                <li class="mb-4">
+                    <p class="mb-1"><strong>Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</strong></p>
+                    <p class="mb-0"><strong>Hwan Heo</strong>, T. Kim, J. Lee, J. Lee, S. Kim, H. J. Kim, JH. Kim <strong>[ICML 2023]</strong> <a href="https://dl.acm.org/doi/10.5555/3618408.3618936" class="bi bi-link-45deg"></a></p>
+                </li>
+                <li class="mb-4">
+                    <p class="mb-1"><strong>Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild</strong></p>
+                    <p class="mb-0">J. Lee, I. Kim, <strong>Hwan Heo</strong>, H. J. Kim <strong>[arXiv 2023]</strong> <a href="https://arxiv.org/abs/2303.03966" class="bi bi-link-45deg"></a></p>
+                </li>
+                <li class="mb-4">
+                    <p class="mb-1"><strong>Consistency Learning via Decoding Path Augmentation for Transformers in Human Object Interaction Detection</strong></p>
+                    <p class="mb-0">J. Park, S. Lee, <strong>Hwan Heo</strong>, H. Choi, H. J. Kim <strong>[CVPR 2022]</strong> <a href="https://arxiv.org/abs/2204.04836" class="bi bi-link-45deg"></a></p>
+                </li>
+                <li class="mb-4">
+                    <p class="mb-1"><strong>Domain Generalization Emerges from Dreaming</strong></p>
+                    <p class="mb-0"><strong>Hwan Heo</strong>, Y. Oh, J. Lee, H. J. Kim <strong>[arXiv 2022]</strong> <a href="https://arxiv.org/abs/2302.00980" class="bi bi-link-45deg"></a></p>
+                </li>
+                <li class="mb-4">
+                    <p class="mb-1"><strong>Temporally Sparse Adversarial Perturbations on Videos</strong></p>
+                    <p class="mb-0"><strong>Hwan Heo</strong>, D. Ko, J. Lee, Y. Hong, H. J. Kim <strong>[IEEE Access 2021]</strong> <a href="https://ieeexplore.ieee.org/document/9592758" class="bi bi-link-45deg"></a></p>
+                </li>
+            </ul>
+        </div>
+    </section>
+  </main>
 
-            // Close 버튼 클릭 시 모달 닫기
-            closeBtn.addEventListener('click', () => {
-                MV_MODAL_BOX.style.display = 'none';
-            });
-        </script>        
-    </body>
+  <footer id="footer" class="footer position-relative light-background">
+
+    <div class="container">
+      <div class="copyright text-center ">
+        <p>© <span>Copyright</span> <strong class="px-1 sitename"> Hwan Heo </strong> <span>All Rights Reserved</span></p>
+      </div>
+      <div class="credits">
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a>
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/typed.js/typed.umd.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+</body>
+
 </html>
