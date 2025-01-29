@@ -562,6 +562,12 @@ section,
   z-index: 1;
 }
 
+@media (max-width: 768px) {
+  .hero img {
+    object-position: 50% 50%; /* 또는 object-position: 100% 50%; */
+  }
+}
+
 .hero:before {
   content: "";
   background: color-mix(in srgb, var(--background-color), transparent 70%);
