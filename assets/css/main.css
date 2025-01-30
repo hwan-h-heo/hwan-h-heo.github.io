@@ -1306,3 +1306,119 @@ section,
   width: 100%;
   height: 100%;
 }
+
+#portfolio .container-fluid,
+#portfolio .container-sm,
+#portfolio .container-md,
+#portfolio .container-lg,
+#portfolio .container-xl,
+#portfolio .container-xxl {
+    max-width: 1920px;
+}
+
+#portfolio .portfolio-box {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Ensures any overflow is hidden */
+}
+
+/* New Aspect Ratio Box */
+.aspect-ratio-box {
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    position: relative;
+    overflow: hidden;
+}
+
+#portfolio .portfolio-box img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the box without distortion */
+    display: block; /* Prevents whitespace below images */
+}
+
+#portfolio .portfolio-box .portfolio-box-caption {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+    opacity: 0;
+    color: #fff;
+    background: rgba(244, 98, 58, 0.92);
+    transition: opacity 0.35s ease;
+}
+
+#portfolio .portfolio-box .project-category {
+    font-family: "Merriweather Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: 0.8rem;
+    font-weight: 650;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+#portfolio .portfolio-box .project-name {
+    font-size: 1.2rem;
+}
+
+#portfolio .portfolio-box:hover .portfolio-box-caption {
+    opacity: 1;
+}
+
+div.polaroid {
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+div.polar_cap {
+    text-align: center;
+    color: #ced4da;
+    padding-top: 3px;
+    font-size: 0.9rem; /* Adjust font size for a more compact appearance */
+    line-height: 1; /* Adjust line-height to reduce spacing */
+    display: flex; /* Enables flexbox for vertical centering */
+    justify-content: center; /* Centers text horizontally */
+    align-items: center;
+}
+
+div.polar_content {
+    position: absolute;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    color: #f1f1f1;
+    width: 100%;
+    padding: 15px;
+    box-sizing: border-box; /* Ensure padding doesn't affect width */
+    font-size: 0.7rem;
+    line-height: 1.2;
+    height: auto; /* Set a fixed height */
+    overflow: hidden; /* Hide any overflowing text */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Vertically centers content */
+}
+
+div.polaroid img {
+    width: 100%; /* Ensures the image width matches the polaroid width */
+    object-fit: cover; /* Ensures the image covers the space without distortion */
+}
+
+.top-left {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+}
