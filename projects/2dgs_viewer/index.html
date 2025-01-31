@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>2D Gaussian Splatting Viewer - Portfolio</title>
+  <meta content="Portfolio showcase of the 2D Gaussian Splatting Viewer project, highlighting development and contributions." name="description">
+  <meta content="2D Gaussian Splatting, Viewer, Visualization, Editing, Rendering, Viser, Portfolio" name="keywords">
+
+  <!-- Favicons -->
+  <link href="../../assets/favicon.ico" rel="icon">
+  <link href="../../assets/favicon.ico" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;0,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../../assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="../../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="../../assets/css/main.css" rel="stylesheet">
+  <style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        width: 50%;
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+        vertical-align: middle;
+    }
+    th {
+        width: 15%; /* Reduced width of the header column */
+        background-color: #f2f2f2;
+    }
+    .progress-bar {
+      height: 0.4rem;
+      background: #6EA8FE;
+      width: 0%;
+      z-index: 9999;
+      position: fixed;
+    }
+    .feature-img {
+        max-width: 100%; /* Ensure images don't exceed container width */
+        height: auto; /* Maintain aspect ratio */
+    }
+  </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RF7ETSKPK9');
+    </script>
+</head>
+
+<div class="progress-container">
+    <div class="progress-bar" id="myBar"></div>
+  </div>
+<body class="portfolio-details-page">
+
+  <header id="header" class="header dark-background d-flex flex-column">
+    <i class="header-toggle d-xl-none bi bi-list"></i>
+
+    <div class="profile-img">
+      <img src="../../assets/icon.webp" alt="" class="img-fluid rounded-circle">
+    </div>
+
+    <a href="index.html" class="logo d-flex align-items-center justify-content-center">
+      <h1 class="sitename">Hwan Heo</h1>
+    </a>
+
+    <div class="social-links text-center">
+      <a href="https://github.com/hwanhuh" class="github"><i class="bi bi-github"></i></a>
+      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin"><i class="bi bi-linkedin"></i></a>
+      <a href="https://www.instagram.com/hwan_heo_guitar?igsh=MWZraDFudWh0cnN2Mg==" class="instagram"><i class="bi bi-instagram"></i></a>
+      <a href="mailto:gjghks950@naver.com" class="google-plus"><i class="bi bi-envelope"></i></a>
+    </div>
+
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="../../#home"><i class="bi bi-house navicon"></i>Home</a></li>
+        <li><a href="../../#about"><i class="bi bi-person navicon"></i> About</a></li>
+        <li><a href="../../#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
+        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Portfolio</a></li>
+        <li><a href="../../../../blogs/"><i class="bi bi-keyboard navicon"></i> Blog <i class="bi bi-link-45deg"></i> </a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title dark-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="../../">Home</a></li>
+            <li class="current">2D GS Viewer</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- Portfolio Details Section -->
+    <section id="portfolio-details" class="portfolio-details section">
+        <div class="row gx-5 justify-content-center">
+            <div class="text-center mb-5 col-11 col-lg-10 col-xl-8 col-xxl-7">
+                <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline"> 2D Gaussian Splatting Viewer </span></h1>
+                <div class="fs-3 fw-light text-muted"> Personal Project </div>
+            </div>
+        </div>
+
+        <div class="container portfolio-details-container col-11">
+
+          <div class="row gy-4">
+
+            <div class="col-lg-8">
+              <div class="portfolio-description">
+                <h2>Project Overview</h2>
+                <p>
+                    As a personal project, I developed the <strong>2D Gaussian Splatting Viewer</strong>, a first publicly available tool designed to enhance the accessibility and usability of the "<a href="https://surfsplatting.github.io/">2D Gaussian Splatting for Geometrically Accurate Radiance Fields</a>" research. Recognizing the need for a user-friendly interface to explore and manipulate 2D Gaussian Splatting data, I built this viewer leveraging existing libraries and adding significant features to improve visualization, editing, and overall workflow.
+                </p>
+                <p>
+                    This project addresses the gap in readily available tools for interacting with 2D Gaussian Splatting, making it easier for researchers and enthusiasts to delve into this exciting field. By providing intuitive controls and a range of functionalities, the viewer empowers users to gain deeper insights and experiment with 2D GS scenes effectively.
+                </p>
+
+                <div class="mt-4">
+                    <p><strong>Key Contributions:</strong></p>
+                    <ul>
+                        <li>Developed an intuitive and feature-rich viewer from the ground up, based on the 2D Gaussian Splatting.</li>
+                        <li>Integrated various rendering modes for comprehensive data visualization.</li>
+                        <li>Implemented editing and transformation tools to enable scene manipulation.</li>
+                        <li>Added training capabilities directly within the viewer for streamlined experimentation.</li>
+                        <li>Continuously improved performance and added new features based on user needs and research advancements.</li>
+                    </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              <div class="portfolio-info">
+                <h3>Project Details</h3>
+                <ul>
+                  <li><strong>Category</strong>: Web Application, 3D Visualization Tool</li>
+                  <li><strong>Project URL</strong>: <a href="https://github.com/hwanhuh/2D-GS-Viser-Viewer" target="_blank" class="portfolio-link"><i class="bi bi-github"></i> Viewer Github</a></li>
+                  <li><strong>Skills Demonstrated</strong>: Python, Viser, CUDA, Gaussian Splatting, Rasterization </li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="container col-11">
+            <section id="features" class="features section">
+                <h2>Key Features </h2>
+                <hr/>
+                <div class="row feature-icons">
+                    <h4> Rendering & Training Enhancements </h4>
+                    <div class="row">
+                        <div class="col-md-6 icon-box" data-aos="fade-up">
+                            <img src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_train.gif" alt="Rendering Features" class="feature-img">
+                            <h5>Advanced Rendering Suite</h5>
+                            <p> To enable comprehensive analysis, the viewer supports a diverse set of rendering types, including RGB, Edge, Normal, Depth, and more. This allows users to visualize 2D GS data from multiple perspectives. </p>
+                        </div>
+                        <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="100">
+                            <img src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_train2.gif" alt="Training Features" class="feature-img">
+                            <h5>Integrated Training Capability</h5>
+                            <p>  For a more seamless workflow, the viewer supports training functionality directly. Users can train 2D GS models and monitor the learning process in real-time within the same application. </p>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+
+                <div class="row feature-icons">
+                    <h4> Editing & Transform Tools for Scene Manipulation </h4>
+                    <div class="row">
+                        <div class="col-md-4 icon-box" data-aos="fade-up">
+                            <img src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_general_opt.gif" alt="General Features" class="feature-img">
+                            <h5>Intuitive General Controls</h5>
+                            <p> 
+                                The viewer features user-friendly general controls, including Render Type selection, Cropbox for region of interest, and Pointcloud visualization mode. 
+                            </p>
+                        </div>
+                        <div class="col-md-4 icon-box" data-aos="fade-up" data-aos-delay="100">
+                            <img src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_edit_opt.gif" alt="Edit Features" class="feature-img">
+                            <h5>Interactive Editing and Mesh Export</h5>
+                            <p> Users can directly modify and save splats within the viewer.  Also, the implementation of mesh export functionality enables seamless integration of 2D GS scenes into other 3D applications and workflows. </p>
+                        </div>
+                        <div class="col-md-4 icon-box" data-aos="fade-up" data-aos-delay="200">
+                            <img src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_transform_opt.gif" alt="Transform Features" class="feature-img">
+                            <h5>Rigid Transformation Capabilities</h5>
+                            <p> To provide spatial control, the viewer supports Rigid Transform functionality, enabling users to freely adjust the position, rotation, and scale of 2D GS Scenes.  </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12" data-aos="fade-up">
+                        <h4> Detailed Feature List </h4>
+                        <p>Beyond the highlighted features, the viewer includes:</p>
+                        <ul>
+                            <li><strong>Comprehensive Render Types</strong>: RGB, Edge, Normal, View-Normal, Depth, Depth-to-Normal, Depth-Distortion, Curvature</li>
+                            <li><strong>Disk Visualization</strong>: Option to visualize splats as disks for clarity.</li>
+                            <li><strong>Edit & Save Splats</strong>: Interactive modification and saving of splat data.</li>
+                            <li><strong>Mesh Export (Edit Tab)</strong>: Export edited scenes as standard mesh formats.</li>
+                            <li><strong>Render Path and Preview</strong>: Tools for generating and previewing camera paths for video rendering.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+    </section><!-- /Portfolio Details Section -->
+
+  </main>
+
+  <footer id="footer" class="footer position-relative light-background">
+
+    <div class="container">
+      <div class="copyright text-center ">
+        <p>© <span>Copyright</span> <strong class="px-1 sitename">Hwan Heo</strong> <span>All Rights Reserved</span></p>
+      </div>
+      <div class="credits">
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a>
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../../assets/vendor/php-email-form/validate.js"></script>
+  <script src="../../assets/vendor/aos/aos.js"></script>
+  <script src="../../assets/vendor/typed.js/typed.umd.js"></script>
+  <script src="../../assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="../../assets/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="../../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../../assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="../../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="../../assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="../../assets/js/main.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const observer = new IntersectionObserver(() => {
+            updateScrollIndicator();
+        });
+
+        document.querySelectorAll("model-viewer").forEach((viewer) => observer.observe(viewer));
+
+        window.onscroll = updateScrollIndicator;
+        window.onresize = updateScrollIndicator;
+
+        function updateScrollIndicator() {
+            var winScroll = document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            if (height > 0) {
+                var scrolled = (winScroll / height) * 100;
+                document.getElementById("myBar").style.width = scrolled + "%";
+            }
+        }
+    });
+  </script>
+
+</body>
+
+</html>

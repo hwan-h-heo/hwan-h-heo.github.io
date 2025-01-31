@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>CaPa: Efficient 4K Textured Mesh Generation - Portfolio</title>
+  <meta content="Portfolio showcase of CaPa, a novel method for fast 4K textured mesh generation." name="description">
+  <meta content="CaPa, 3D Mesh Generation, Textured Mesh, 4K Texture, Neural Carving, Neural Painting, Efficient 3D, Game Assets, VR/AR Assets" name="keywords">
+
+  <!-- Favicons -->
+  <link href="../../assets/favicon.ico" rel="icon">
+  <link href="../../assets/favicon.ico" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;0,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../../assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="../../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="../../assets/css/main.css" rel="stylesheet">
+  <style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        width: 50%;
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+        vertical-align: middle;
+    }
+    th {
+        width: 15%; /* Reduced width of the header column */
+        background-color: #f2f2f2;
+    }
+    .progress-bar {
+      height: 0.4rem;
+      background: #6EA8FE;
+      width: 0%;
+      z-index: 9999;
+      position: fixed;
+    }
+    .feature-img {
+        max-width: 100%; /* Ensure images don't exceed container width */
+        height: auto; /* Maintain aspect ratio */
+    }
+      /* Custom style for GIF display */
+    .gif-container {
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+    }
+
+    .gif-container img {
+        max-width: 100%; /* Ensure GIF doesn't exceed container width */
+        height: auto; /* Maintain aspect ratio */
+        display: block; /* Prevent extra space below image */
+        margin: 0 auto; /* Center the image */
+    }
+  </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RF7ETSKPK9');
+    </script>
+</head>
+
+<div class="progress-container">
+    <div class="progress-bar" id="myBar"></div>
+  </div>
+<body class="portfolio-details-page">
+
+  <header id="header" class="header dark-background d-flex flex-column">
+    <i class="header-toggle d-xl-none bi bi-list"></i>
+
+    <div class="profile-img">
+      <img src="../../assets/icon.webp" alt="" class="img-fluid rounded-circle">
+    </div>
+
+    <a href="index.html" class="logo d-flex align-items-center justify-content-center">
+      <h1 class="sitename">Hwan Heo</h1>
+    </a>
+
+    <div class="social-links text-center">
+      <a href="https://github.com/hwanhuh" class="github"><i class="bi bi-github"></i></a>
+      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin"><i class="bi bi-linkedin"></i></a>
+      <a href="https://www.instagram.com/hwan_heo_guitar?igsh=MWZraDFudWh0cnN2Mg==" class="instagram"><i class="bi bi-instagram"></i></a>
+      <a href="mailto:gjghks950@naver.com" class="google-plus"><i class="bi bi-envelope"></i></a>
+    </div>
+
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="../../#home"><i class="bi bi-house navicon"></i>Home</a></li>
+        <li><a href="../../#about"><i class="bi bi-person navicon"></i> About</a></li>
+        <li><a href="../../#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
+        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Portfolio</a></li>
+        <li><a href="../../../../blogs/"><i class="bi bi-keyboard navicon"></i> Blog <i class="bi bi-link-45deg"></i> </a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title dark-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="../../">Home</a></li>
+            <li class="current">CaPa: Efficient 4K Textured Mesh Generation</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- Portfolio Details Section -->
+    <section id="portfolio-details" class="portfolio-details section">
+        <div class="row gx-5 justify-content-center">
+            <div class="text-center mb-5 col-11 col-lg-10 col-xl-8 col-xxl-7">
+                <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline"> CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation </span></h1>
+                <div class="fs-3 fw-light text-muted"> NC Research </div>
+            </div>
+        </div>
+
+        <div class="container portfolio-details-container col-11">
+
+          <div class="row gy-4">
+
+            <div class="col-lg-8">
+              <div class="portfolio-description">
+                <h2>Project Overview</h2>
+                <p>
+                    This project introduces <strong>CaPa (Carve-n-Paint Synthesis)</strong>, a groundbreaking method designed for the rapid generation of high-fidelity 4K textured 3D meshes. Addressing the challenges of time-consuming and resource-intensive traditional 3D asset creation pipelines, CaPa delivers production-ready assets in under 30 seconds. This efficiency and quality make CaPa ideally suited for demanding commercial applications across game development, movie production, and VR/AR experiences.
+                </p>
+                <p>
+                    CaPa achieves this remarkable performance through a novel two-stage approach: <strong>Carving</strong> (shape synthesis) and <strong>Painting</strong> (texture synthesis). 
+                    The Carving stage focuses on efficiently constructing the 3D mesh geometry, while the Painting stage synthesizes and applies a detailed 4K texture to the carved mesh. 
+                    This synergistic process allows for the creation of visually stunning and highly detailed 3D assets with unprecedented speed and efficiency.
+                </p>
+                <img src="https://ncsoft.github.io/CaPa/assets/pipeline.png" alt="CaPa Pipeline" class="img-fluid"/>
+
+                <div class="mt-4">
+                    <p><strong>Key Contributions:</strong></p>
+                    <ul>
+                        <li><strong>CaPa</strong>: a novel two-stage framework for efficient 4K textured mesh generation.</li>
+                        <li><strong>Mesh-Optimized 3D Generation Pipeline</strong>: Separating geometry and texture generation, enabling effective meshing and enhancing the practicality of 3D asset generation</li>
+                        <li><strong>Spatially Decoupled Cross Attention</strong>: A model-agnostic, training-free solution to generate 4K textures without additional training, super-resolution, and janus problem.</li>
+                        <li><strong>3D-aware Fast Occlusion Inpainting</strong>: A robust inpainting solution for handling occluded regions in 3D textures, reducing visible seams, and preserving texture fidelity.</li>
+                    </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              <div class="portfolio-info">
+                <h3>Project Details</h3>
+                <ul>
+                  <li><strong>Category</strong>: Research, 3D Generation, Texture Synthesis, Deep Learning</li>
+                  <li><strong>Technology</strong>: 3D Asset Generation, Neural Rendering, Texture Synthesis</li>
+                  <li><strong>Project URL</strong>: <a href='https://ncsoft.github.io/CaPa' target="_blank" class="portfolio-link"><i class="bi bi-link-45deg"></i> Project Page </a></li>
+                  <li><strong>Paper URL</strong>: <a href='https://arxiv.org/abs/2501.09433' target="_blank" class="portfolio-link"><i class="bi bi-file-earmark-text"></i> Paper </a></li>
+                  <li><strong>Related Project</strong>: <a href='https://www.youtube.com/embed/HvyPxxDzrwo?si=fvLPdWsv613WCRTu' target="_blank" class="portfolio-link"><i class="bi bi-youtube"></i> Texture Copilot </a></li>
+                  <li><strong>Skills Demonstrated</strong>: 3D Computer Vision, 3D Generation, Generative Models, Latent Diffusion</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="container col-11">
+
+            <div class="section-title">
+            
+            <div class="portfolio-description">
+                <h2>Results Showcase</h2>
+                <p class="mt-3"><strong>Interactive 4K Textured Mesh Examples</strong></p>
+                <p>
+                    For a closer look at the exceptional quality of CaPa's output, please visit the <a href='https://ncsoft.github.io/CaPa'>project page</a>. There, you can explore interactive 4K textured meshes in detail, experiencing the high fidelity and visual richness firsthand.
+                </p>
+                <br/>
+
+                <p><strong>Diverse 4K Textured Meshes Generated by CaPa</strong></p>
+                <p>
+                    The following showcases the diversity and high quality of 4K textured meshes generated by CaPa across various object categories.  The results demonstrate CaPa's capability to produce detailed and visually appealing 3D assets efficiently.
+                </p>
+                <div class="gif-container">
+                    <img src="https://github.com/ncsoft/CaPa/raw/main/assets/result.gif" alt="Diverse CaPa Results" style="max-width: 80%; height: auto;"/>
+                </div>
+            </div>
+
+
+        </div>
+
+    </section><!-- /Portfolio Details Section -->
+
+  </main>
+
+  <footer id="footer" class="footer position-relative light-background">
+
+    <div class="container">
+      <div class="copyright text-center ">
+        <p>© <span>Copyright</span> <strong class="px-1 sitename">Hwan Heo</strong> <span>All Rights Reserved</span></p>
+      </div>
+      <div class="credits">
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a>
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../../assets/vendor/php-email-form/validate.js"></script>
+  <script src="../../assets/vendor/aos/aos.js"></script>
+  <script src="../../assets/vendor/typed.js/typed.umd.js"></script>
+  <script src="../../assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="../../assets/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="../../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../../assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="../../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="../../assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="../../assets/js/main.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const observer = new IntersectionObserver(() => {
+            updateScrollIndicator();
+        });
+
+        document.querySelectorAll("model-viewer").forEach((viewer) => observer.observe(viewer));
+
+        window.onscroll = updateScrollIndicator;
+        window.onresize = updateScrollIndicator;
+
+        function updateScrollIndicator() {
+            var winScroll = document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            if (height > 0) {
+                var scrolled = (winScroll / height) * 100;
+                document.getElementById("myBar").style.width = scrolled + "%";
+            }
+        }
+    });
+  </script>
+
+</body>
+
+</html>

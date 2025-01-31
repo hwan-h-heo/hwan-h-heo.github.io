@@ -27,47 +27,48 @@
   <!-- Main CSS File -->
   <link href="../../assets/css/main.css" rel="stylesheet">
   <script src="../../js/mathjax-config.js"></script>
-  <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({            
-          tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}            
-      });
-  </script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
-  <style>
-      table {
-          width: 100%;
-          border-collapse: collapse;
-      }
-      th, td {
-          width: 50%;
-          border: none;
-          padding: 8px;
-          text-align: center;
-      }
-      th {
-          background-color: #f2f2f2; /* 옅은 회색 */
-      }
-      .progress-bar {
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({            
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}            
+        });
+    </script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            width: 50%;
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        th {
+            width: 15%; /* Reduced width of the header column */
+            background-color: #f2f2f2; 
+        }
+        .progress-bar {
           height: 0.4rem;
           background: #6EA8FE;
           width: 0%;
           z-index: 9999;
           position: fixed;
         }
-  </style>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-RF7ETSKPK9');
-  </script>
+    </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RF7ETSKPK9');
+    </script>
 </head>
-
 <div class="progress-container">
-  <div class="progress-bar" id="myBar"></div>
-</div>
+    <div class="progress-bar" id="myBar"></div>
+  </div>
 <body class="portfolio-details-page">
 
   <header id="header" class="header dark-background d-flex flex-column">
@@ -104,11 +105,11 @@
     <!-- Page Title -->
     <div class="page-title dark-background">
       <div class="container d-lg-flex justify-content-between align-items-center">
-        <!-- <h1 class="mb-2 mb-lg-0">Neural Rendering in Game Engine</h1> -->
+        <!-- <h1 class="mb-2 mb-lg-0">Title</h1> -->
         <nav class="breadcrumbs">
           <ol>
             <li><a href="../../">Home</a></li>
-            <li class="current">Nerual Rendering in Game Engine</li>
+            <li class="current">Neural Rendering in Game Engine</li>
           </ol>
         </nav>
       </div>
@@ -116,14 +117,14 @@
 
     <!-- Portfolio Details Section -->
     <section id="portfolio-details" class="portfolio-details section">
-
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <div class="text-center mb-5">
-          <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline">Neural Rendering in Game Engine</span></h1>
-          <div class="fs-3 fw-light text-muted"> NC Research </div>
-      </div>
-      <div class="row gx-5 justify-content-center">
+        <div class="row gx-5 justify-content-center text-center mb-5">
           <div class="col-11 col-lg-10 col-xl-8 col-xxl-7">
+              <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline"> Neural Rendering in Game Engine </span></h1>
+              <div class="fs-3 fw-light text-muted"> NC Research </div>
+          </div>
+        </div>
+        <div class="row gx-5 justify-content-center">
+            <div class="col-11 col-lg-10 col-xl-8 col-xxl-7">
               <div class="fs-6"> <strong>TL; DR:</strong> This project proposes a unified pipeline that spans 360-camera captures to Gaussian Splatting-based scene reconstruction, enabling seamless integration into game and graphics engines such as Unity and Unreal. </div>
               <div class="fs-6"> <strong>Keywords:</strong> Neural Rendering, Gaussian Splatting, 360 Camera, Camera Modeling </div>
               <p> <br/> </p>
@@ -138,7 +139,7 @@
                   <iframe width="720" height="405" src="https://www.youtube.com/embed/3OqbvUaoNFw?si=GxEnL9nG7fuVT0x0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
               </div>
               <p> <br/> </p>
-
+  
               <h2> Neural Rendering w/ 360 Videos </h2>
               <hr/>
               <h3> Using 360 Camera for Effective Large Scene Capturing </h3>
@@ -152,7 +153,7 @@
                   <figcaption> a sample of captured 360 scene </figcaption>
               </figure>
               <p> <br/> </p>
-
+  
               <h3> Spherical 3D Gaussian Splatting </h3>
               <p> 
                   Initially, we trained the 3D Gaussian Splatting (GS) model using 360-degree equirectangular images. 
@@ -165,7 +166,7 @@
                   To further optimize this approach, we developed a <strong><em>custom CUDA-based Gaussian rasterization module</em></strong> tailored to the fisheye camera model. 
                   This module extended the capabilities of the original rasterization module, which lacked native support for fisheye projections, enabling more accurate and efficient processing of spherical scene data.
               </p>
-
+  
               <table>
                   <tr>
                       <th>Fisheye Camera Model</th>
@@ -192,9 +193,9 @@
               <div class="video-container">
                   <iframe width="720" height="405" src="https://www.youtube.com/embed/ISm-IL3HzmM?si=OyIAPB1Cgc70ADXU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
               </div>
-
+  
               <p> <br/> </p>
-
+  
               <h2> Gaussian Splatting w/ Game Engine </h2>
               <hr/>
               <p> 
@@ -214,22 +215,22 @@
               <div class="video-container">
                   <iframe width="720" height="405" src="https://www.youtube.com/embed/p5YXFOXWeW0?si=padif0-DUOVX4PHV" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
               </div>
-             <p>
-                  In Unreal Engine (UE), Gaussian Splatting scenes can be constructed similarly. 
-                  However, we've encountered a significant limitation: 
-                  Unreal's Niagara system can effectively render only up to 2 million particles. Given that a fully reconstructed scene often consists of over 6 million particles, this limitation leads to suboptimal results without optimization.
-                  This issue has also been reported with the <a href="https://github.com/xverse-engine/XV3DGS-UEPlugin/issues/6">XVERSE's UE GS plugin</a>.
-             </p>
-             <p>
-                  To overcome this, it's necessary to prune the splats so that the particle count stays within UE's upper limit. 
-                  We define the <em>contribution</em> of each splat as the sum of the intersected rays across all the training images. 
-                  Mathematically, this can be expressed as:
-             </p>
-             <div class="math-container">
-                  $$ C = \sum_{k=1}^{n} C_k, \quad
-                  C_k = \sum_{p \in \mathcal{P}_k} \alpha_i(p) \prod_{j=1}^{i(p)-1} (1 - \alpha_j)
-                  $$
-             </div>
+              <p>
+                    In Unreal Engine (UE), Gaussian Splatting scenes can be constructed similarly. 
+                    However, we've encountered a significant limitation: 
+                    Unreal's Niagara system can effectively render only up to 2 million particles. Given that a fully reconstructed scene often consists of over 6 million particles, this limitation leads to suboptimal results without optimization.
+                    This issue has also been reported with the <a href="https://github.com/xverse-engine/XV3DGS-UEPlugin/issues/6">XVERSE's UE GS plugin</a>.
+              </p>
+              <p>
+                    To overcome this, it's necessary to prune the splats so that the particle count stays within UE's upper limit. 
+                    We define the <em>contribution</em> of each splat as the sum of the intersected rays across all the training images. 
+                    Mathematically, this can be expressed as:
+              </p>
+              <div class="math-container">
+                    $$ C = \sum_{k=1}^{n} C_k, \quad
+                    C_k = \sum_{p \in \mathcal{P}_k} \alpha_i(p) \prod_{j=1}^{i(p)-1} (1 - \alpha_j)
+                    $$
+              </div>
               <p>
                   We estimated the contribution of all trained splats and pruned the particles accordingly. 
                   The pruned GS scene was then aligned. 
@@ -257,12 +258,9 @@
                   This pipeline demonstrates the potential of integrating advanced neural rendering techniques into interactive applications. Future work will explore further optimizations for real-time rendering and expanding the pipeline's scalability to larger scenes.
               </p>
               <hr/>
-              For more insights, see my blog post discussing the practical challenges and solutions for using NeRF in game engines: <a href="../../../blogs/posts/231130_nerf_in_game/">Can NeRF be Used in Game?</a>
-          </div>
-      </div>
-
-      </div>
-
+              <p>For more insights, see my blog post discussing the practical challenges and solutions for using NeRF in game engines: <a href="../../../blogs/posts/231130_nerf_in_game/">Can NeRF be Used in Game?</a></p>
+            </div>
+        </div>
     </section><!-- /Portfolio Details Section -->
 
   </main>
@@ -325,8 +323,11 @@
         }
     });
   </script>
-
 </body>
 
 </html>
+
+
+
+
 
