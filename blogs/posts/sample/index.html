@@ -49,7 +49,7 @@
                 overflow-y: auto;
                 /* position: fixed; */
                 position: fixed;
-                top: 19vh; 
+                top: 20vh; 
                 left: 0;     
                 bottom: 0;   
                 height: auto; 
@@ -174,8 +174,10 @@
                     <!-- for saving ... -->
                     <!-- <button class="btn btn-success" onclick="saveContent()">Save</button> -->
                     <!-- <button class="btn btn-sm btn-success" onclick="loadContent()"><i class="bi bi-arrow-clockwise"></i> Load</button> -->
-                    <button class="btn btn-sm btn-success" onclick="downloadContent()"><i class="bi bi-download"></i> Save</button>
-                    <button class="btn btn-sm btn-success" onclick="uploadContent()"><i class="bi bi-upload"></i> Load</button>
+                    <div style="text-align: left;">
+                        <button class="btn btn-sm btn-success" onclick="downloadContent()"><i class="bi bi-download"></i> Save</button>
+                        <button class="btn btn-sm btn-success" onclick="uploadContent()"><i class="bi bi-upload"></i> Load</button>
+                    </div>
                 </div>
                 <textarea id="markdown-input" class="language-markdown"></textarea>
             </div>

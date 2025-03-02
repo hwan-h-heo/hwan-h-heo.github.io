@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Web HTML Editor</title>
+    <link rel="icon" type="image/x-icon" href="../../../assets/favicon.ico" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="../../../css/blog_style.css" rel="stylesheet" />
+    <!-- Prism.js CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"  />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <!-- Prism Markdown plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markdown.min.js"></script>
+    <!-- Prism Autolinker plugin for links -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autolinker/prism-autolinker.min.js"></script>
+    <!-- Include Prism Autolinker CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autolinker/prism-autolinker.min.css" />
+
+    <!-- Ace Editor -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.31.1/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.31.1/ext-language_tools.js"></script>
+
+    <style>
+        table {
+                width: 50%;
+                border-collapse: collapse;
+            }
+        #toolbar {
+            position: fixed;
+            top: 6vh;
+            z-index: 1000;
+        }
+        .masthead {
+            position: relative;
+            background: no-repeat center center scroll;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            background-size: cover;
+            height: 10px;
+            overflow: hidden;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        #content {
+            display: block;
+            flex-grow: 1;
+            position: relative;
+        }
+        #editor-panel {
+            height: inherit;
+            width: 50%;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            position: fixed;
+            top: 20vh;
+            /* margin-top: 2vh; */
+            left: 0;
+            bottom: 0;
+            height: auto;
+        }
+        #editor-panel::-webkit-scrollbar {
+            display: none;
+        }
+        #preview-panel {
+            width: 50%;
+            padding: 20px;
+            box-sizing: border-box;
+            /* border-left: 1px solid #ddd; */
+            overflow-y: auto;
+            position: absolute;
+            top: 0vh;
+            right: 0;
+            bottom: 0;
+            margin-left: 50%;
+            /* z-index: 0; */
+        }
+        #toolbar {
+            padding: 3px;
+            isolation: isolate;
+        }
+        #toolbar button {
+            margin-right: 3px;
+            padding: 3px 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: normal;
+            isolation: isolate;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: monospace;
+        }
+
+        .editor-container {
+            position: relative;
+            height: 100%;
+            margin-top: 2vh;
+            /* font-family: 'Courier New', monospace; Monospace font for code-like appearance */
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Monaco, 'Courier New', monospace;
+            /* display: block; */
+            /* overflow: auto; */
+        }
+
+        /* Ace Editor Styles (no changes needed, adjust if necessary) */
+        #ace-editor {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            font-size: 14px;
+            /* background: #f8f9fa; */
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Monaco, 'Courier New', monospace;
+        }
+        #ace-editor::-webkit-scrollbar {
+            display: none;
+        }
+
+        .token.keyword { color: #007bff; }        /* Example: Blue keywords */
+        .token.tag { color: #e83e8c; }            /* Example: Pink tags */
+        .token.attr-name { color: #fd7e14; }      /* Example: Orange attribute names */
+        .token.attr-value { color: #28a745; }     /* Example: Green attribute values */
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script defer>
+        document.addEventListener('DOMContentLoaded', function() {
+            renderMathInElement(document.body, {
+              delimiters: [
+                  {left: '$$', right: '$$', display: true},
+                  {left: '$', right: '$', display: false},
+                  {left: '\\(', right: '\\)', display: false},
+                  {left: '\\[', right: '\\]', display: true}
+              ],
+              throwOnError : false
+            });
+        });
+    </script>
+
+    <script src="../../../js/include.js"></script>
+    <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' defer></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.5/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        Prism.plugins.autoloader.languages_path = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/';
+    </script>
+</head>
+<body>
+    <!-- Navigation-->
+    <!-- Page Header-->
+    <div style="margin-top: 1rem; margin-bottom: 2rem; position: inherit;">
+        <div>
+            <div style="font-size: 14px">
+                <h2 style="margin-left: 2rem;"> Simple Web Editor</h2>
+                <div class="modal fade" id="tableModal" tabindex="-1" aria-labelledby="tableModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="tableModalLabel">Insert Table</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="tableRows" class="form-label">Rows:</label>
+                                    <input type="number" class="form-control" id="tableRows" value="3" min="1">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="tableCols" class="form-label">Columns:</label>
+                                    <input type="number" class="form-control" id="tableCols" value="3" min="1">
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="tableHeaderRow" checked>
+                                    <label class="form-check-label" for="tableHeaderRow">Include Header Row</label>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Preview:</label>
+                                    <div id="tableGridPreview" style="border: 1px solid #ddd; padding: 10px; overflow-x: auto;">
+                                        <!-- Table Preview -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-sm btn-secondary" style="font-size: 13px" data-bs-dismiss="modal">Cancel</button>
+                                <button class="btn btn-sm btn-primary" style="font-size: 13px" id="insertTableBtn">Insert</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-heading">
+                    <div style="text-align: center; position: fixed; right: 40vh; ">
+                        <button type="button" class="btn custom-btn " onclick="setLanguage('eng')" style="font-size: 13px;">eng</button>
+                        <button type="button" class="btn custom-btn " onclick="setLanguage('kor')" style="font-size: 13px;">kor</button>
+                    </div>
+                </div>
+
+                <!-- Export Modal -->
+                <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true" style="display: none;"> 
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exportModalLabel">Exported HTML Preview</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" id="exportModalBody" style="overflow-x: auto;">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="downloadExportedHtmlBtn">Download HTML</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main Content-->
+    <div id="content">
+        <div id="editor-panel">
+            <div id="toolbar">
+                <!-- Toolbar buttons -->
+                <button class="btn btn-light" style="font-size: 20px" onclick="insertHtml('<h1> H1 </h1>\n')"><strong>H1</strong></button>
+                <button class="btn btn-light" style="font-size: 18px" onclick="insertHtml('<h2> H2 </h2>\n')"><strong>H2</strong></button>
+                <button class="btn btn-light" style="font-size: 16px" onclick="insertHtml('<h3> H3 </h3>\n')"><strong>H3</strong></button>
+                <button class="btn btn-light" style="font-size: 15px" onclick="insertHtml('<h4> H4 </h4>\n')"><strong>H4</strong></button>
+                <button class="btn btn-light" onclick="insertHtml('<p class=\'lang eng\'> Eng </p>\n')">eng</button>
+                <button class="btn btn-light" onclick="insertHtml('<p class=\'lang kor\'> Kor </p>\n')">kor</button>
+                <button class="btn btn-light" onclick="insertHtml('<strong>  text </strong>')"><strong>Bold</strong></button>
+                <button class="btn btn-light" onclick="insertHtml('<em> text </em>')"><em>Ital.</em></button>
+                <button class="btn btn-light" onclick="insertHtml('<strong><em>  text </em></strong>')"><strong><em>B+I</em></strong></button>
+                <div style="display: inline-block;">
+                    <button class="btn btn-light" id="linkButton" style="color: blue"><i class="bi bi-link"></i> link</button>
+                    <div id="linkOptionsInline" style="display: none; position: absolute; background-color: #f8f9fa; border: 1px solid #ced4da; padding: 10px; z-index: 1001;">
+                        <div class="mb-2">
+                            <label for="linkUrl" class="form-label" style="font-size: 13px; margin-bottom: 0.2rem;">URL:</label>
+                            <input type="text" class="form-control form-control-sm" id="linkUrl" style="font-size: 12px;">
+                        </div>
+                        <div class="mb-2">
+                            <label for="linkText" class="form-label" style="font-size: 13px; margin-bottom: 0.2rem;">Link Text:</label>
+                            <input type="text" class="form-control form-control-sm" id="linkText" style="font-size: 12px;">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label" style="font-size: 13px; margin-bottom: 0.2rem;">Preview:</label>
+                            <div id="linkPreview" style="border: 1px solid #ced4da; padding: 5px; font-size: 12px;"></div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-primary" id="insertLinkBtn" style="font-size: 12px;">Insert Link</button>
+                    </div>
+                </div>
+                <!-- <button class="btn btn-light"  onclick="insertHtml('<p>$$ Equation $$</p>\n')">$e=mc^2 $</button>
+                <button class="btn btn-light"  onclick="insertHtml('$ equation $')">$ (x,y, z) $</button> -->
+                <!-- Math Block Button -->
+                <div style="display: inline-block;">
+                    <button class="btn btn-light" id="mathBlockButton">$e=mc^2 $</button>
+                    <div id="mathBlockOptionsInline" style="display: none; position: absolute; background-color: #f8f9fa; border: 1px solid #ced4da; padding: 10px; z-index: 1001;">
+                        <div class="mb-2">
+                            <label for="mathBlockEquation" class="form-label" style="font-size: 13px; margin-bottom: 0.2rem;">Block Equation:</label>
+                            <input type="text" class="form-control form-control-sm" id="mathBlockEquation" style="font-size: 12px;">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label" style="font-size: 13px; margin-bottom: 0.2rem;">Preview:</label>
+                            <div id="mathBlockPreview" style="border: 1px solid #ced4da; padding: 5px; font-size: 12px; text-align: center;"></div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-primary" id="insertMathBlockBtn" style="font-size: 12px;">Insert Block Math</button>
+                    </div>
+                </div>
+
+                <!-- Math Inline Button -->
+                <div style="display: inline-block;">
+                    <button class="btn btn-light" id="mathInlineButton">$ (x,y,z) $</button>
+                    <div id="mathInlineOptionsInline" style="display: none; position: absolute; background-color: #f8f9fa; border: 1px solid #ced4da; padding: 10px; z-index: 1001;">
+                        <div class="mb-2">
+                            <label for="mathInlineEquation" class="form-label" style="font-size: 13px; margin-bottom: 0.2rem;">Inline Equation:</label>
+                            <input type="text" class="form-control form-control-sm" id="mathInlineEquation" style="font-size: 12px;">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label" style="font-size: 13px; margin-bottom: 0.2rem;">Preview:</label>
+                            <div id="mathInlinePreview" style="border: 1px solid #ced4da; padding: 5px; font-size: 12px; text-align: center;"></div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-primary" id="insertMathInlineBtn" style="font-size: 12px;">Insert Inline Math</button>
+                    </div>
+                </div>
+                <br/>
+
+                <button class="btn btn-light" onclick="insertHtml('<ol>\n  <li> List Item </li>\n</ol>\n')"><i class="bi bi-list-ol"></i> ol </button>
+                <button class="btn btn-light" onclick="insertHtml('<ul>\n  <li> List Item </li>\n</ul>\n')"><i class="bi bi-list-ul"></i> ul</button>
+                <button class="btn btn-light" onclick="insertHtml('  <li> List Item </li>')"><i class="bi bi-list"></i> li</button>
+                <button class="btn btn-light" onclick="insertHtml('<blockquote> quote </blockquote>')"><i class="bi bi-quote"></i></button>
+                <button class="btn btn-light" onclick="insertHtml('<pre> callout </pre>')"><i class="bi bi-blockquote-left"></i>Callout</button>
+                <div style="display: inline-block;">
+                    <button class="btn btn-light" id="imageButton"><i class="bi bi-card-image"></i> image</button>
+                    <div id="imageOptionsInline" style="display: none; position: absolute; background-color: #f8f9fa; border: 1px solid #ced4da; padding: 10px; z-index: 1001;">
+                        <div class="mb-2">
+                            <label for="imageUrl" class="form-label" style="font-size: 13px; margin-bottom: 0.2rem;">Image URL:</label>
+                            <input type="text" class="form-control form-control-sm" id="imageUrl" style="font-size: 12px;">
+                        </div>
+                        <div class="mb-2">
+                            <label for="imageCaption" class="form-label" style="font-size: 13px; margin-bottom: 0.2rem;">Caption:</label>
+                            <input type="text" class="form-control form-control-sm" id="imageCaption" style="font-size: 12px;">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label" style="font-size: 13px; margin-bottom: 0.2rem;">Preview:</label>
+                            <div id="imagePreview" style="border: 1px solid #ced4da; padding: 5px; font-size: 12px; text-align: center;"></div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-primary" id="insertImageBtn" style="font-size: 12px;">Insert Image</button>
+                    </div>
+                </div>
+                <!-- <button class="btn btn-light" onclick="insertHtml('<div class=\'video-container\'>\n  <video controls style=\'width: 100%\'> controls autoplay playsinline loop\n    <source src=\' assets/vid_name.mp4 \' type=\'video/mp4\'>\n  </video>\n</div>')"><i class="bi bi-play-btn-fill"></i></button> -->
+                <div style="display: inline-block;">
+                    <button class="btn btn-light" id="videoButton"><i class="bi bi-play-btn-fill"></i> video</button>
+                    <div id="videoOptionsInline" style="display: none; position: absolute; background-color: #f8f9fa; border: 1px solid #ced4da; padding: 10px; z-index: 1001;">
+                        <div class="mb-2">
+                            <label for="videoUrl" class="form-label" style="font-size: 13px; margin-bottom: 0.2rem;">Video URL:</label>
+                            <input type="text" class="form-control form-control-sm" id="videoUrl" style="font-size: 12px;">
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="videoControls" value="controls" checked>
+                                <label class="form-check-label" for="videoControls" style="font-size: 12px;">Controls</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="videoAutoplay" value="autoplay">
+                                <label class="form-check-label" for="videoAutoplay" style="font-size: 12px;">Autoplay</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="videoPlaysinline" value="playsinline">
+                                <label class="form-check-label" for="videoPlaysinline" style="font-size: 12px;">Playsinline</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="videoLoop" value="loop">
+                                <label class="form-check-label" for="videoLoop" style="font-size: 12px;">Loop</label>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label" style="font-size: 13px; margin-bottom: 0.2rem;">Preview:</label>
+                            <div id="videoPreview" style="border: 1px solid #ced4da; padding: 5px; font-size: 12px; text-align: center;"></div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-primary" id="insertVideoBtn" style="font-size: 12px;">Insert Video</button>
+                    </div>
+                </div>
+                <button class="btn btn-light" onclick="insertHtml('<hr/>\n')"> Hor. line</button>
+                <button class="btn btn-light" onclick="insertHtml('<br/>\n')"> space</button>
+                <div style="display: inline-block;">
+                    <button class="btn btn-light" id="codeButton"><i class="bi bi-code-square"></i> Code</button>
+                    <div id="codeOptionsInline" style="display: none; position: absolute; background-color: #f8f9fa; border: 1px solid #ced4da; padding: 10px; z-index: 1001;">
+                        <div class="mb-2">
+                            <label class="form-label" style="font-size: 13px; margin-bottom: 0.2rem;">Code Type:</label>
+                            <!-- <div class="form-check" style="margin-bottom: 0.1rem;">
+                                <input type="radio" class="form-check-input" id="codeTypeInline" name="codeTypeInlineUI" value="inline" checked>
+                                <label class="form-check-label" for="codeTypeInline" style="font-size: 12px;">Inline</label>
+                            </div> -->
+                            <div class="form-check" style="margin-bottom: 0.1rem;">
+                                <input type="radio" class="form-check-input" id="codeTypeBlock" name="codeTypeInlineUI" value="block" checked>
+                                <label class="form-check-label" for="codeTypeBlock" style="font-size: 12px;">Block</label>
+                            </div>
+                            <div class="form-check" style="margin-bottom: 0.1rem;">
+                                <input type="radio" class="form-check-input" id="codeTypeCollapsibleBlock" name="codeTypeInlineUI" value="collapsible-block">
+                                <label class="form-check-label" for="codeTypeCollapsibleBlock" style="font-size: 12px;">Collapsible</label>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label for="codeLanguageInline" class="form-label" style="font-size: 13px; margin-bottom: 0.2rem;">Language:</label>
+                            <select id="codeLanguageInline" class="form-select form-select-sm" style="font-size: 12px;">
+                                <option value="python">Python</option>
+                                <option value="javascript">JavaScript</option>
+                                <option value="html">HTML</option>
+                                <option value="css">CSS</option>
+                                <option value="csharp">C#</option>
+                                <option value="cpp">C++</option>
+                                <option value="markdown">Markdown</option>
+                                <option value="text">Plain Text</option>
+                                <option value="none">None</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-primary" id="insertCodeInlineBtn" style="font-size: 12px;">Insert</button>
+                    </div>
+                </div>
+                <div style="display: inline-block; position: relative;">
+                    <button class="btn btn-light" id="tableButton"><i class="bi bi-table"></i> Table</button>
+                    <div id="tableOptionsInline" style="display: none; right: 0; position: absolute; background-color: #f8f9fa; border: 1px solid #ced4da; padding: 10px; z-index: 1001; width: 250px; height: auto">
+                        <div class="mb-2">
+                            <label for="tableRowsInline" class="form-label" style="font-size: 13px; margin-bottom: 0.2rem;">Rows:</label>
+                            <input type="number" class="form-control form-control-sm" id="tableRowsInline" value="3" min="1" style="font-size: 12px;">
+                        </div>
+                        <div class="mb-2">
+                            <label for="tableColsInline" class="form-label" style="font-size: 13px; margin-bottom: 0.2rem;">Columns:</label>
+                            <input type="number" class="form-control form-control-sm" id="tableColsInline" value="3" min="1" style="font-size: 12px;">
+                        </div>
+                        <div class="mb-2 form-check" style="margin-bottom: 0.3rem;">
+                            <input type="checkbox" class="form-check-input" id="tableHeaderRowInline">
+                            <label class="form-check-label" for="tableHeaderRowInline" style="font-size: 12px;">Header Row</label>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label" style="font-size: 13px; margin-bottom: 0.2rem;">Preview:</label>
+                            <div id="tableGridPreviewInline" style="border: 1px solid #ddd; padding: 5px; overflow-x: auto; height: auto; font-size: 12px;">
+                                <!-- Table Preview -->
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-primary" id="insertTableInlineBtn" style="font-size: 12px; width: 100%;">Insert Table</button>
+                    </div>
+                </div>
+                <!-- <button class="btn btn-light"><i class="bi bi-table"></i> Table</button> -->
+                <br/>
+
+                <div style="text-align: left;">
+                    <button class="btn btn-sm btn-success" onclick="downloadContent()"><i class="bi bi-download"></i> Save</button>
+                    <button class="btn btn-sm btn-success" onclick="uploadContent()"><i class="bi bi-upload"></i> Load</button>
+                    <button class="btn btn-primary" onclick="translateMarkdownToHtml()">MD to HTML</button>
+                    <button class="btn btn-secondary" onclick="exportContent()">Export</button>
+                </div>
+
+                <!-- Table Edit Toolbar -->
+                <div id="table-edit-toolbar" style="display: none; position: inherit; background-color: #f0f0f0; padding: 3px; isolation: isolate;">
+                    <div class="btn-group me-2" role="group">
+                        <button type="button" class="btn btn-sm btn-light" onclick="addTableRow()"><i class="bi bi-plus-lg"></i> Row</button>
+                        <button type="button" class="btn btn-sm btn-light" onclick="deleteTableRow()"><i class="bi bi-dash-lg"></i> Row</button>
+                        <button type="button" class="btn btn-sm btn-light" onclick="addTableColumn()"><i class="bi bi-plus-lg"></i> Col</button>
+                        <button type="button" class="btn btn-sm btn-light" onclick="deleteTableColumn()"><i class="bi bi-dash-lg"></i> Col</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Ace Editor Container -->
+            <div id="ace-editor" class="editor-container"></div>
+        </div>
+        <div id="preview-panel">
+            <h1>Preview</h1>
+            <p>Content will be displayed here.</p>
+        </div>
+    </div>
+
+    <script>
+        // Get references to editor and preview panels
+        const previewPanel = document.getElementById('preview-panel');
+
+        // Initialize element counter globally, before any function uses it
+        let elementCounter = { p: 0, h1:0, h2: 0, h3: 0, h4: 0, h5: 0, h6: 0, li: 0, blockquote: 0, codeblock: 0, table: 0, img: 0, video: 0, hr: 0, br: 0, em: 0, strong: 0, a: 0, ol: 0, ul: 0, pre: 0, figure: 0, figcaption: 0, div: 0, span: 0 };
+
+        // Initialize Ace Editor
+        let editor = ace.edit("ace-editor");
+        editor.setTheme("ace/theme/gruvbox");
+        editor.session.setMode("ace/mode/html");
+        editor.setFontSize(14);
+        // editor.wrapEnabled(true);
+        editor.setOptions({
+            enableBasicAutocompletion: true,
+            enableSnippets: true,
+            enableLiveAutocompletion: true,
+            wrap: true 
+        });
+        editor.setShowPrintMargin(false);
+        
+        // Function to get content from Ace Editor
+        function getEditorContent() {
+            return editor.getValue();
+        }
+
+        // Function to set content in Ace Editor
+        function setEditorContent(content) {
+            editor.setValue(content);
+            editor.clearSelection();
+        }
+
+        function insertHtml(htmlCode) {
+            const selectedRange = editor.getSelectionRange(); // Ace Editor selection range
+            const selectedText = editor.session.getTextRange(selectedRange); // Get selected text from Ace Editor
+
+            let htmlToInsert = htmlCode; // HTML code to be inserted, initially as provided
+
+            // const tagMatch = htmlCode.match(/<([a-z]+)/i);
+            const tagMatch = htmlCode.match(/<([a-z0-9]+)/i); 
+            let tagName = tagMatch ? tagMatch[1].toLowerCase() : null;
+
+            if (!selectedRange.isEmpty()) { // Check if there is a selection
+                if (htmlCode.includes(' H1 ')) {
+                    htmlToInsert = htmlCode.replace(' H1 ', selectedText);
+                } else if (htmlCode.includes(' H2 ')) {
+                    htmlToInsert = htmlCode.replace(' H2 ', selectedText);
+                } else if (htmlCode.includes(' H3 ')) {
+                    htmlToInsert = htmlCode.replace(' H3 ', selectedText);
+                } else if (htmlCode.includes(' H4 ')) {
+                    htmlToInsert = htmlCode.replace(' H4 ', selectedText);
+                } else if (htmlCode.includes(' Eng ')) {
+                    htmlToInsert = htmlCode.replace(' Eng ', selectedText);
+                } else if (htmlCode.includes(' Kor ')) {
+                    htmlToInsert = htmlCode.replace(' Kor ', selectedText);
+                } else if (htmlCode.includes(' text ')) { // For Bold, Italic, Bold+Italic
+                    htmlToInsert = htmlCode.replace(' text ', selectedText);
+                } else if (htmlCode.includes('$$ Equation $$')) { // Math block
+                    htmlToInsert = htmlCode.replace(' Equation ', selectedText);
+                } else if (htmlCode.includes('$ equation $')) { // Inline Math
+                    htmlToInsert = htmlCode.replace(' equation ', selectedText);
+                } else if (htmlCode.includes(' List Item ')) { // Lists
+                    htmlToInsert = htmlCode.replace(' List Item ', selectedText);
+                } else if (htmlCode.includes('// Your code here')) { // Code block
+                    htmlToInsert = htmlCode.replace('// Your code here', selectedText);
+                } else if (htmlCode.includes(' quote ')) { // Quote
+                    htmlToInsert = htmlCode.replace(' quote ', selectedText);
+                } else if (htmlCode.includes(' callout ')) { // Quote
+                    htmlToInsert = htmlCode.replace(' callout ', selectedText);
+                } 
+                // Horizontal line and space buttons don't need text replacement
+            }
+
+
+            if (tagName && elementCounter.hasOwnProperty(tagName) ) {
+                elementCounter[tagName]++;
+                const elementId = `${tagName}-${elementCounter[tagName]}`;
+                const idAttribute = `id="${elementId}" `;
+                if (tagName.startsWith('h') && tagName.length === 2 && parseInt(tagName[1]) >= 1 && parseInt(tagName[1]) <= 6) { // h1~h6 
+                    tagInsertionRegex = new RegExp(`<${tagName}(?=[ >]|>)`, 'i'); // 
+                } else {
+                    tagInsertionRegex = new RegExp(`<${tagName}(?=[ >])`, 'i'); // 
+                }
+                htmlToInsert = htmlToInsert.replace(tagInsertionRegex, `<${tagName} ${idAttribute}`);
+            }
+
+            editor.insert(htmlToInsert); // Insert HTML using Ace Editor's insert method
+        }
+
+        const linkButton = document.getElementById('linkButton');
+        const linkOptionsInline = document.getElementById('linkOptionsInline');
+        const imageButton = document.getElementById('imageButton');
+        const imageOptionsInline = document.getElementById('imageOptionsInline');
+        const videoButton = document.getElementById('videoButton');
+        const videoOptionsInline = document.getElementById('videoOptionsInline');
+        const mathBlockButton = document.getElementById('mathBlockButton');
+        const mathBlockOptionsInline = document.getElementById('mathBlockOptionsInline');
+        const mathInlineButton = document.getElementById('mathInlineButton');
+        const mathInlineOptionsInline = document.getElementById('mathInlineOptionsInline');
+
+        linkButton.addEventListener('click', function() {
+            linkOptionsInline.style.display = linkOptionsInline.style.display === 'none' ? 'block' : 'none';
+            imageOptionsInline.style.display = 'none'; // 
+        });
+
+        imageButton.addEventListener('click', function() {
+            imageOptionsInline.style.display = imageOptionsInline.style.display === 'none' ? 'block' : 'none';
+            linkOptionsInline.style.display = 'none'; // 
+        });
+
+        videoButton.addEventListener('click', function() {
+            videoOptionsInline.style.display = videoOptionsInline.style.display === 'none' ? 'block' : 'none';
+            linkOptionsInline.style.display = 'none';
+            imageOptionsInline.style.display = 'none';
+        });
+
+        mathBlockButton.addEventListener('click', function() {
+            mathBlockOptionsInline.style.display = mathBlockOptionsInline.style.display === 'none' ? 'block' : 'none';
+            linkOptionsInline.style.display = 'none';
+            imageOptionsInline.style.display = 'none';
+            videoOptionsInline.style.display = 'none';
+            mathInlineOptionsInline.style.display = 'none';
+        });
+
+        mathInlineButton.addEventListener('click', function() {
+            mathInlineOptionsInline.style.display = mathInlineOptionsInline.style.display === 'none' ? 'block' : 'none';
+            linkOptionsInline.style.display = 'none';
+            imageOptionsInline.style.display = 'none';
+            videoOptionsInline.style.display = 'none';
+            mathBlockOptionsInline.style.display = 'none';
+        });
+
+        const linkUrlInput = document.getElementById('linkUrl');
+        const linkTextInput = document.getElementById('linkText');
+        const linkPreviewDiv = document.getElementById('linkPreview');
+        const insertLinkBtn = document.getElementById('insertLinkBtn');
+
+        linkUrlInput.addEventListener('input', updateLinkPreview);
+        linkTextInput.addEventListener('input', updateLinkPreview);
+
+        function updateLinkPreview() {
+            const url = linkUrlInput.value;
+            const text = linkTextInput.value;
+            linkPreviewDiv.innerHTML = `<a href="${url}">${text || 'Link Text'}</a>`;
+        }
+
+        insertLinkBtn.addEventListener('click', function() {
+            const url = linkUrlInput.value;
+            const text = linkTextInput.value;
+            const htmlCode = `<a href='${url}'>${text || 'Link Text'}</a>`;
+            insertHtml(htmlCode);
+            linkOptionsInline.style.display = 'none'; // 
+            linkUrlInput.value = ''; //
+            linkTextInput.value = '';
+            updateLinkPreview(); // 
+        });
+
+
+        const imageUrlInput = document.getElementById('imageUrl');
+        const imageCaptionInput = document.getElementById('imageCaption');
+        const imagePreviewDiv = document.getElementById('imagePreview');
+        const insertImageBtn = document.getElementById('insertImageBtn');
+
+        imageUrlInput.addEventListener('input', updateImagePreview);
+        imageCaptionInput.addEventListener('input', updateImagePreview);
+
+        function updateImagePreview() {
+            const url = imageUrlInput.value;
+            const caption = imageCaptionInput.value;
+            imagePreviewDiv.innerHTML = `<figure>\n  <img src='${url}' alt='image' width='100%'>\n  <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> ${caption}</figcaption>\n</figure>`;
+        }
+
+        insertImageBtn.addEventListener('click', function() {
+            const url = imageUrlInput.value;
+            const caption = imageCaptionInput.value;
+            const htmlCode = `<figure>\n  <img src='${url}' alt='img alt' width='100%'>\n  <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> ${caption}</figcaption>\n</figure>`;
+            insertHtml(htmlCode);
+            imageOptionsInline.style.display = 'none'; // 
+            imageUrlInput.value = ''; //
+            imageCaptionInput.value = '';
+            updateImagePreview(); // 
+        });
+
+        const videoUrlInput = document.getElementById('videoUrl');
+        const videoPreviewDiv = document.getElementById('videoPreview');
+        const insertVideoBtn = document.getElementById('insertVideoBtn');
+        const videoControlsCheckbox = document.getElementById('videoControls');
+        const videoAutoplayCheckbox = document.getElementById('videoAutoplay');
+        const videoPlaysinlineCheckbox = document.getElementById('videoPlaysinline');
+        const videoLoopCheckbox = document.getElementById('videoLoop');
+
+        videoUrlInput.addEventListener('input', updateVideoPreview);
+        videoControlsCheckbox.addEventListener('change', updateVideoPreview);
+        videoAutoplayCheckbox.addEventListener('change', updateVideoPreview);
+        videoPlaysinlineCheckbox.addEventListener('change', updateVideoPreview);
+        videoLoopCheckbox.addEventListener('change', updateVideoPreview);
+
+
+        function updateVideoPreview() {
+            const url = videoUrlInput.value;
+            let videoTag = `<video style='width: 100%' `;
+            if (videoControlsCheckbox.checked) videoTag += 'controls ';
+            if (videoAutoplayCheckbox.checked) videoTag += 'autoplay ';
+            if (videoPlaysinlineCheckbox.checked) videoTag += 'playsinline ';
+            if (videoLoopCheckbox.checked) videoTag += 'loop ';
+            videoTag += `>\n    <source src='${url}' type='video/mp4'>\n</video>`;
+            videoPreviewDiv.innerHTML = url ? videoTag : ''; // URL 없으면 미리보기 숨김
+        }
+
+        insertVideoBtn.addEventListener('click', function() {
+            const url = videoUrlInput.value;
+            let htmlCode = `<video controls style='width: 100%' `; // controls always default for now
+            if (videoAutoplayCheckbox.checked) htmlCode += 'autoplay ';
+            if (videoPlaysinlineCheckbox.checked) htmlCode += 'playsinline ';
+            if (videoLoopCheckbox.checked) htmlCode += 'loop ';
+            htmlCode += `>\n    <source src='${url}' type='video/mp4'>\n</video>`;
+
+            if (url) { // URL 이 입력되었을 때만 삽입
+                insertHtml(htmlCode);
+                videoOptionsInline.style.display = 'none';
+                videoUrlInput.value = '';
+                updateVideoPreview();
+            } else {
+                alert("Please enter a Video URL."); // URL 이 없을 경우 알림 (선택 사항)
+            }
+        });
+
+        // Get references to the inline UI elements
+        const codeButton = document.getElementById('codeButton');
+        const codeOptionsInline = document.getElementById('codeOptionsInline');
+        const insertCodeInlineBtn = document.getElementById('insertCodeInlineBtn');
+
+        // Event listener for the "Code" button to toggle inline options visibility
+        codeButton.addEventListener('click', function() {
+            codeOptionsInline.style.display = codeOptionsInline.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // Event listener for the "Insert Code" button in the inline UI
+        insertCodeInlineBtn.addEventListener('click', function() {
+            const codeType = document.querySelector('input[name="codeTypeInlineUI"]:checked').value;
+            const language = document.getElementById('codeLanguageInline').value;
+            let languageClass = language !== 'none' ? `language-${language}` : '';
+
+            if (codeType === 'inline') {
+                insertHtml(`<pre><code class='${languageClass}'>\n// Your code here\n</code></pre>`); // Insert inline code block
+            } else if (codeType === 'block') {
+                insertHtml(`<pre><code class='${languageClass}'>\n// Your code here\n</code></pre>`); // Insert regular code block (same as inline for now, adjust if needed)
+            } else if (codeType === 'collapsible-block') {
+                insertCollapsibleCodeBlockInline(languageClass); // Call function for collapsible code block
+            }
+
+            codeOptionsInline.style.display = 'none'; // Hide inline options after insertion
+        });
+
+        function insertCollapsibleCodeBlockInline(languageClass) {
+            const codeBlock = `
+<div class="accordion accordion-flush">
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+        <strong><em>Show Code!</em></strong>
+      </button>
+    </h2>
+    <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">
+        <pre><code class="${languageClass}">
+// Your code here
+        </code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+            insertHtml(codeBlock);
+        }
+
+        // Math Block
+        const mathBlockEquationInput = document.getElementById('mathBlockEquation');
+        const mathBlockPreviewDiv = document.getElementById('mathBlockPreview');
+        const insertMathBlockBtn = document.getElementById('insertMathBlockBtn');
+
+        mathBlockEquationInput.addEventListener('input', updateMathBlockPreview);
+
+        function updateMathBlockPreview() {
+            const equation = mathBlockEquationInput.value;
+            const previewPanelMB = mathBlockPreviewDiv; // Rename for clarity in renderMathInElement context
+            previewPanelMB.innerHTML = `$$\\displaystyle ${equation}$$`; // Wrap equation for block display in KaTeX
+
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(previewPanelMB, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError : false
+                });
+            } else {
+                console.warn("renderMathInElement is not yet defined. Math equations may not be rendered.");
+            }
+        }
+
+        insertMathBlockBtn.addEventListener('click', function() {
+            const equation = mathBlockEquationInput.value;
+            const htmlCode = `<p>$$ ${equation} $$</p>\n`;
+            if (equation) {
+                insertHtml(htmlCode);
+                mathBlockOptionsInline.style.display = 'none';
+                mathBlockEquationInput.value = '';
+                updateMathBlockPreview();
+            } else {
+                alert("Please enter a Math Block equation.");
+            }
+        });
+
+
+        // Math Inline
+        const mathInlineEquationInput = document.getElementById('mathInlineEquation');
+        const mathInlinePreviewDiv = document.getElementById('mathInlinePreview');
+        const insertMathInlineBtn = document.getElementById('insertMathInlineBtn');
+
+        mathInlineEquationInput.addEventListener('input', updateMathInlinePreview);
+
+        function updateMathInlinePreview() {
+            const equation = mathInlineEquationInput.value;
+            const previewPanelMI = mathInlinePreviewDiv; // Rename for clarity
+            previewPanelMI.innerHTML = `$ ${equation} $`; // Wrap equation for inline display in KaTeX
+
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(previewPanelMI, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError : false
+                });
+            } else {
+                console.warn("renderMathInElement is not yet defined. Math equations may not be rendered.");
+            }
+        }
+
+        insertMathInlineBtn.addEventListener('click', function() {
+            const equation = mathInlineEquationInput.value;
+            const htmlCode = `$ ${equation} $`;
+            if (equation) {
+                insertHtml(htmlCode);
+                mathInlineOptionsInline.style.display = 'none';
+                mathInlineEquationInput.value = '';
+                updateMathInlinePreview();
+            } else {
+                alert("Please enter an Inline Math equation.");
+            }
+        });
+
+        // Add keyboard shortcuts for Bold (Ctrl+B) and Italic (Ctrl+I)
+        editor.commands.addCommands([
+            {
+                name: 'bold',
+                bindKey: {win: 'Ctrl-B', mac: 'Command-B'},
+                exec: function(editor) {
+                    insertHtml('<strong>  text </strong>');
+                },
+                readOnly: false // false if command should not apply in readOnly mode
+            },
+            {
+                name: 'italic',
+                bindKey: {win: 'Ctrl-I', mac: 'Command-I'},
+                exec: function(editor) {
+                    insertHtml('<em> text </em>');
+                },
+                readOnly: false // false if command should not apply in readOnly mode
+            }
+        ]);
+
+        function updatePreview() {
+            const content = getEditorContent();
+            previewPanel.innerHTML = marked.parse(content);
+
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(previewPanel, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError : false
+                });
+            } else {
+                console.warn("renderMathInElement is not yet defined. Math equations may not be rendered.");
+            }
+
+            Prism.highlightAll();
+        }
+
+        function debounce(func, delay) {
+            let timeoutId;
+            return function(...args) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        }
+
+        // editor.session.on('change', updatePreview);
+        const debouncedUpdatePreview = debounce(updatePreview, 300); 
+        editor.session.on('change', debouncedUpdatePreview);
+        updatePreview();
+
+        function initializeElementCounterFromContent() {
+            const content = getEditorContent();
+            const tempElement = document.createElement('div');
+            tempElement.innerHTML = content;
+
+            // Reset element counters
+            for (const tagName in elementCounter) {
+                elementCounter[tagName] = 0;
+            }
+
+            // Count existing elements and update elementCounter
+            for (const tagName in elementCounter) {
+                const elements = tempElement.querySelectorAll(tagName);
+                elementCounter[tagName] = elements.length;
+            }
+        }
+
+        function getElementCountsFromContent() {
+            const content = getEditorContent();
+            const tempElement = document.createElement('div');
+            tempElement.innerHTML = content;
+
+            for (const tagName in elementCounter) {
+                elementCounter[tagName] = 0;
+            }
+            for (const tagName in elementCounter) {
+                const elements = tempElement.querySelectorAll(tagName);
+                elementCounter[tagName] = elements.length;
+            }
+            return elementCounter;
+        }
+
+        const LANGUAGE_STORAGE_KEY = 'editor-language';
+        function setLanguage(lang) {
+            localStorage.setItem(LANGUAGE_STORAGE_KEY, lang); // Save language to Local Storage
+            const langElements = document.querySelectorAll('.lang');
+            langElements.forEach(element => {
+                if (element.classList.contains(lang)) {
+                    element.style.display = '';
+                } else {
+                    element.style.display = 'none';
+                }
+            });
+        }
+
+        // Local Storage
+        const AUTO_SAVE_INTERVAL = 10000;
+        const STORAGE_KEY = 'markdown-editor-content';
+
+        function saveContentToLocalStorage() {
+            const content = getEditorContent();
+            localStorage.setItem(STORAGE_KEY, content);
+        }
+
+        setInterval(saveContentToLocalStorage, AUTO_SAVE_INTERVAL);
+
+        window.addEventListener('load', () => {
+            const savedContent = localStorage.getItem(STORAGE_KEY);
+            console.log('Loaded content from Local Storage'); 
+
+            if (savedContent) {
+                setEditorContent(savedContent);
+                updatePreview();
+                initializeElementCounterFromContent();
+                console.log('Content set to Ace Editor from Local Storage.'); 
+            } else {
+                console.log('No content found in Local Storage.'); 
+            }
+
+            const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY); // Load from localStorage
+            if (savedLanguage) {
+                setLanguage(savedLanguage); 
+                console.log(`Language preference loaded: ${savedLanguage}`);
+            } else {
+                setLanguage('eng'); // Default to English 
+                console.log('No language preference found, defaulting to English.');
+            }
+        });
+
+        function saveContent() {
+            const content = getEditorContent();
+            localStorage.setItem(STORAGE_KEY, content);
+            alert('Content saved to Local Storage!');
+        }
+
+        function loadContent() {
+            const savedContent = localStorage.getItem(STORAGE_KEY);
+            if (savedContent) {
+                setEditorContent(savedContent);
+                updatePreview();
+                alert('Content loaded from Local Storage!');
+            } else {
+                alert('No content saved in Local Storage.');
+            }
+        }
+
+        function downloadContent() {
+            const content = getEditorContent();
+            let filename = prompt("Enter filename for download:", "markdown-editor-content");
+            if (!filename) {
+                return;
+            }
+            if (!filename.toLowerCase().endsWith(".md")) {
+                filename += ".md";
+            }
+            const blob = new Blob([content], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function uploadContent() {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = '.md, .markdown, .txt';
+            fileInput.onchange = (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        setEditorContent(e.target.result);
+                        updatePreview();
+                        alert('Content loaded from file!');
+                    };
+                    reader.onerror = (e) => {
+                        alert('Error reading file.');
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            fileInput.click();
+        }
+
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function translateMarkdownToHtml() {
+            const editorContent = getEditorContent();
+            const selectedText = editor.session.getTextRange(editor.getSelectionRange());
+            let markdownText = '';
+            let processFullTranslation = false;
+
+            if (selectedText.trim() === "") {
+                markdownText = editorContent;
+                processFullTranslation = true;
+            } else {
+                markdownText = selectedText;
+                processFullTranslation = false;
+            }
+
+            // function convertBareImageUrls(text) {
+            //     const imageUrlRegex = /!?https?:\/\/[^\s]+\.(?:png|jpg|jpeg|gif|svg|webp)(?:\?[^\s]*)?/gi;
+            //     return text.replace(imageUrlRegex, (match) => {
+            //         const prevChar = text[text.indexOf(match) - 1];
+            //         if (prevChar === '(' || prevChar === '"') {
+            //             return match;
+            //         }
+            //         if (match.startsWith('!')) {
+            //             match = match.slice(1);
+            //             return `<img src="${match}" alt="Converted Image" width = "100%" />`;
+            //         }
+            //         return match;
+            //     });
+            // }
+            function convertBareImageUrls(text) {
+                const imageUrlRegex = /!?https?:\/\/[^\s]+\.(?:png|jpg|jpeg|gif|svg|webp)(?:\?[^\s]*)?/gi;
+                return text.replace(imageUrlRegex, (match) => {
+                    if (match.startsWith('!')) {
+                        match = match.slice(1); // Remove leading '!' if present (if you want to handle '!' prefix)
+                    }
+                    return `<img src="${match}" alt="Converted Image" width="100%" />`;
+                });
+            }
+
+            markdownText = convertBareImageUrls(markdownText);
+            // console.log(markdownText)
+            markdownText = markdownText.replace(/<br\s*\/?>/gi, '\n');
+
+            const mathJaxPlaceholder = '[[MATHJAX_PLACEHOLDER_{INDEX}]]';
+            const mathJaxBlocks = [];
+            let index = 0;
+            markdownText = markdownText.replace(/\$\$[\s\S]*?\$\$|\$[\s\S]*?\$/g, (match) => {
+                mathJaxBlocks.push(match);
+                const placeholder = mathJaxPlaceholder.replace('{INDEX}', index);
+                index++;
+                return placeholder;
+            });
+
+            let htmlText = marked.parse(markdownText);
+            // let htmlText = markdownText
+
+            // Define addIds function inside translateMarkdownToHtml scope to ensure elementCounter is accessible
+            const addIds = (html) => {
+                return html.replace(/<(p|h2|h3|h4|h5|h6|li|blockquote|pre|code|table|img|video|hr|br|em|strong|a|ol|ul|figure|figcaption|div|span)(?=[ >])([^>]*?)>/g,
+                    (match, tagName, attributes) => {
+                        elementCounter[tagName]++;
+                        const id = `${tagName}-${elementCounter[tagName]}`;
+                        return `<${tagName} id="${id}" ${attributes}>`;
+                    });
+            };
+
+            htmlText = addIds(htmlText);
+
+            index = 0;
+            htmlText = htmlText.replace(/\[\[MATHJAX_PLACEHOLDER_(\d+)\]\]/g, (match, placeholderIndex) => {
+                const blockIndex = parseInt(placeholderIndex, 10);
+                return mathJaxBlocks[blockIndex];
+            });
+
+            if (processFullTranslation) {
+                setEditorContent(htmlText);
+                previewPanel.innerHTML = htmlText;
+            } else {
+                const range = editor.getSelectionRange();
+                editor.session.replace(range, htmlText);
+                previewPanel.innerHTML = marked.parse(getEditorContent());
+            }
+            updatePreview();
+        }
+
+        previewPanel.addEventListener('dblclick', (event) => {
+            const targetElement = event.target.closest('[id]');
+            if (targetElement) {
+                const elementId = targetElement.id;
+                goToElementId(elementId); // Call goToElementId when element with id is clicked
+            }
+        });
+
+        function goToElementId(elementId) {
+            editor.focus();
+
+            const session = editor.session; // Get session once
+            const lineCount = session.getLength(); // Get line count once
+            let foundLineNumber = -1;
+            let characterPosition = -1;
+
+            for (let i = 0; i < lineCount; i++) {
+                const line = session.getLine(i); // Efficient line access
+                if (line.indexOf(elementId) !== -1) {
+                    foundLineNumber = i;
+                    characterPosition = getCharacterPositionForLineAce(i);
+                    break;
+                }
+            }
+
+            if (foundLineNumber !== -1) {
+                goToCharacterPositionAce(characterPosition, foundLineNumber, elementId);
+            } else {
+                console.warn("Could not find corresponding line in editor for ID:", elementId);
+            }
+        }
+
+        // Function to get character position at the start of a line in Ace Editor
+        function getCharacterPositionForLineAce(lineNumber) {
+            return editor.session.doc.positionToIndex({row: lineNumber, column: 0});
+        }
+
+        function goToCharacterPositionAce(position, lineNumber, elementId) {
+            editor.focus();
+
+            const acePosition = editor.session.doc.indexToPosition(position);
+            editor.moveCursorToPosition(acePosition);
+            editor.selection.clearSelection();
+
+            const editorPanel = document.getElementById('editor-panel');
+            const editorPanelHeight = editorPanel.offsetHeight; 
+            const lineHeight = editor.getFontSize() * 1.5; 
+            const linesToScrollDown = Math.floor(editorPanelHeight / lineHeight / 2); 
+            const adjustedLineNumber = Math.max(0, lineNumber - linesToScrollDown + Math.floor(linesToScrollDown/2));
+
+            editor.scrollToLine(lineNumber, true, true, function() {
+                // Optional callback after scroll if needed
+            });
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if ((event.ctrlKey || event.metaKey) && event.key === 'z') {
+                event.preventDefault();
+                editor.undo();
+                updatePreview();
+            }
+            if ((event.ctrlKey || event.metaKey) && (event.shiftKey && event.key === 'Z' || event.key === 'y')) {
+                event.preventDefault();
+                editor.redo();
+                updatePreview();
+            }
+        });
+    </script>
+    <script>
+        let currentTable = null;
+
+        // Get references to the inline UI elements for Table
+        const tableButton = document.getElementById('tableButton');
+        const tableOptionsInline = document.getElementById('tableOptionsInline');
+        const tableRowsInline = document.getElementById('tableRowsInline');
+        const tableColsInline = document.getElementById('tableColsInline');
+        const tableHeaderRowInline = document.getElementById('tableHeaderRowInline');
+        const tableGridPreviewInline = document.getElementById('tableGridPreviewInline');
+        const insertTableInlineBtn = document.getElementById('insertTableInlineBtn');
+
+        // Event listener for the "Table" button to toggle inline options visibility
+        tableButton.addEventListener('click', function() {
+            tableOptionsInline.style.display = tableOptionsInline.style.display === 'none' ? 'block' : 'none';
+            generateTableGridPreviewInline(); // Generate preview when showing options
+        });
+
+        // Modified generateTableGridPreview function for inline UI
+        function generateTableGridPreviewInline() {
+            const rows = parseInt(tableRowsInline.value, 10) || 1;
+            const cols = parseInt(tableColsInline.value, 10) || 1;
+            const includeHeaderRow = tableHeaderRowInline.checked;
+            const previewArea = tableGridPreviewInline;
+            previewArea.innerHTML = ''; // Clear previous preview
+
+            const table = document.createElement('table');
+            table.className = 'table table-bordered table-sm'; // Bootstrap table styles, table-sm for smaller size
+
+            if (includeHeaderRow) {
+                const thead = document.createElement('thead');
+                const headerRow = document.createElement('tr');
+                for (let j = 0; j < cols; j++) {
+                    const th = document.createElement('th');
+                    th.textContent = 'Header ' + (j + 1);
+                    headerRow.appendChild(th);
+                }
+                thead.appendChild(headerRow);
+                table.appendChild(thead);
+            }
+
+            const tbody = document.createElement('tbody');
+            for (let i = 0; i < rows; i++) {
+                const tr = document.createElement('tr');
+                for (let j = 0; j < cols; j++) {
+                    const td = document.createElement('td');
+                    td.textContent = 'Row ' + (i + 1) + ', Col ' + (j + 1);
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+            }
+            table.appendChild(tbody);
+            previewArea.appendChild(table);
+        }
+
+        // Modified insertAdvancedTable function for inline UI
+        function insertAdvancedTableInline() {
+            const rows = parseInt(tableRowsInline.value, 10);
+            const cols = parseInt(tableColsInline.value, 10);
+            const includeHeaderRow = tableHeaderRowInline.checked;
+
+            if (isNaN(rows) || isNaN(cols) || rows < 1 || cols < 1) {
+                alert('Please enter valid number of rows and columns.');
+                return;
+            }
+
+            elementCounter.table++;
+            // const tableId = `table-${elementCounter.table}`;
+            // let tableHTML = `<table class="table " id="${tableId}">\n`; // ADDED ID HERE
+            let tableHTML = `<table class="table ">\n`;
+
+            if (includeHeaderRow) {
+                tableHTML += `<thead>\n<tr>\n`;
+                for (let j = 0; j < cols; j++) {
+                    tableHTML += '<th>Header ' + (j + 1) + '</th>\n';
+                }
+                tableHTML += '</tr>\n</thead>\n';
+            }
+
+            tableHTML += '<tbody>\n';
+            for (let i = 0; i < rows; i++) {
+                tableHTML += '<tr>\n';
+                for (let j = 0; j < cols; j++) {
+                    tableHTML += '<td>Row ' + (i + 1) + ' Col ' + (j + 1) + '</td>\n';
+                }
+                tableHTML += '</tr>\n';
+            }
+            tableHTML += '</tbody>\n</table>\n';
+
+            insertHtml(tableHTML);
+
+            tableOptionsInline.style.display = 'none'; // Hide inline options after insertion
+        }
+
+        // Event listener for the "Insert Table" button in the inline UI
+        insertTableInlineBtn.addEventListener('click', insertAdvancedTableInline);
+
+        function showTableEditToolbar(tableElement) {
+            const toolbar = document.getElementById('table-edit-toolbar');
+            currentTable = tableElement; // save reference to current table
+            const rect = currentTable.getBoundingClientRect(); // get position of current table
+
+            const toolbarTop = rect.top + window.scrollY - toolbar.offsetHeight;
+            const toolbarRight = rect.left + window.scrollX // + rect.width / 2 - toolbar.offsetWidth / 2;
+
+            toolbar.style.top = toolbarTop + 'px';
+            toolbar.style.right = toolbarRight + 'px';
+            previewPanel.style.zIndex = 1; // Lower z-index of preview panel
+            toolbar.style.zIndex = 9999;
+            toolbar.style.display = 'block';
+        }
+
+        function hideTableEditToolbar() {
+            const toolbar = document.getElementById('table-edit-toolbar');
+            toolbar.style.display = 'none';
+            currentTable = null; // clear reference to current table
+        }
+
+        // Event listeners for input changes in inline UI to update preview
+        tableRowsInline.addEventListener('input', generateTableGridPreviewInline);
+        tableColsInline.addEventListener('input', generateTableGridPreviewInline);
+        tableHeaderRowInline.addEventListener('change', generateTableGridPreviewInline);
+
+        // Event listener for clicks on the preview panel
+        previewPanel.addEventListener('click', function(event) {
+            const clickedElement = event.target;
+            const tableElement = clickedElement.closest('table');
+            currentTableId = tableElement ? tableElement.id : null;
+
+            if (tableElement) {
+                showTableEditToolbar(tableElement);
+            } else {
+                hideTableEditToolbar(); // Hide table edit toolbar if clicked outside a table
+            }
+        });
+
+        function getEditorHTMLContentAsDOM() {
+            const content = getEditorContent();
+            const parser = new DOMParser();
+            const dom = parser.parseFromString(content, 'text/html');
+            return dom.body; // body
+        }
+
+        function updateEditorContentFromDOM(domBody) {
+            const serializer = new XMLSerializer();
+            const newHTMLContent = serializer.serializeToString(domBody); // body -> HTML
+            setEditorContent(newHTMLContent);
+            updatePreview();
+        }
+
+
+        function addTableRow() {
+            if (!currentTable || !currentTableId) return;
+
+            const domBody = getEditorHTMLContentAsDOM(); // Ace Editor HTML parsing
+            const tableInEditor = domBody.querySelector(`#${currentTableId}`); // Find table by ID
+
+            if (!tableInEditor) {
+                console.error("Table with ID not found in editor content:", currentTableId);
+                return;
+            }
+
+            const tbody = tableInEditor.querySelector('tbody');
+            if (!tbody) return;
+
+            const newRow = tbody.insertRow();
+            const columnCount = tableInEditor.rows[0].cells.length;
+
+            for (let i = 0; i < columnCount; i++) {
+                const newCell = newRow.insertCell();
+                newCell.textContent = 'New Row Data';
+            }
+
+            updateEditorContentFromDOM(domBody); // DOM -> HTML -> Ace Editor 
+        }
+
+        function deleteTableRow() {
+            if (!currentTable || !currentTableId) return;
+
+            const domBody = getEditorHTMLContentAsDOM(); 
+            const tableInEditor = domBody.querySelector(`#${currentTableId}`); 
+
+            if (!tableInEditor) {
+                console.error("Table with ID not found in editor content:", currentTableId);
+                return;
+            }
+
+            const tbody = tableInEditor.querySelector('tbody');
+            if (!tbody) return;
+
+            if (tableInEditor.rows.length <= (tableInEditor.querySelector('thead') ? 2 : 1)) {
+                alert("No more rows to delete (at least one row must remain).");
+                return;
+            }
+            tbody.deleteRow(-1);
+
+            updateEditorContentFromDOM(domBody); 
+        }
+
+        function addTableColumn() {
+            if (!currentTable || !currentTableId) return;
+
+            const domBody = getEditorHTMLContentAsDOM(); 
+            const tableInEditor = domBody.querySelector(`#${currentTableId}`);
+
+            if (!tableInEditor) {
+                console.error("Table with ID not found in editor content:", currentTableId);
+                return;
+            }
+
+            const headerRow = tableInEditor.querySelector('thead tr');
+            const dataRows = tableInEditor.querySelectorAll('tbody tr');
+
+            if (headerRow) {
+                const th = document.createElement('th');
+                th.textContent = 'New Header';
+                headerRow.appendChild(th);
+            }
+
+            dataRows.forEach(row => {
+                const td = document.createElement('td');
+                td.textContent = 'New Col Data';
+                row.appendChild(td);
+            });
+
+            updateEditorContentFromDOM(domBody); 
+        }
+
+        function deleteTableColumn() {
+            if (!currentTable || !currentTableId) return;
+
+            const domBody = getEditorHTMLContentAsDOM(); 
+            const tableInEditor = domBody.querySelector(`#${currentTableId}`); 
+
+            if (!tableInEditor) {
+                console.error("Table with ID not found in editor content:", currentTableId);
+                return;
+            }
+
+            const columnCount = tableInEditor.rows[0].cells.length;
+            if (columnCount <= 1) {
+                alert("No more columns to delete (at least one column must remain).");
+                return;
+            }
+
+            const headerRow = tableInEditor.querySelector('thead tr');
+            const dataRows = tableInEditor.querySelectorAll('tbody tr');
+
+            if (headerRow) {
+                headerRow.deleteCell(-1);
+                }
+            dataRows.forEach(row => {
+                row.deleteCell(-1);
+            });
+
+            updateEditorContentFromDOM(domBody); 
+        }
+    </script>
+    <script>
+        async function exportContent() {
+            const editorContent = getEditorContent();
+            let postTitle = "Title";
+
+            const titleElement = new DOMParser().parseFromString(editorContent, 'text/html').querySelector('#title');
+            if (titleElement) {
+                postTitle = titleElement.textContent.trim();
+            } else {
+                const userTitle = prompt("Enter post title:", "My Post Title");
+                if (userTitle) {
+                    postTitle = userTitle;
+                }
+            }
+
+            const mainContent = editorContent;
+            const tocHTML = generateTOC(editorContent);
+
+            try {
+                const response = await fetch('export_template.html'); 
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                let fullHtml = await response.text();
+
+                const escapedMainContent = mainContent.replace(/\$/g, '$$$$');
+
+                fullHtml = fullHtml.replace('[[TITLE]]', postTitle);
+                fullHtml = fullHtml.replace('[[TOC]]', tocHTML);
+                fullHtml = fullHtml.replace('[[MAIN_CONTENT]]', escapedMainContent);
+
+                document.getElementById('exportModalBody').textContent = '';
+                document.getElementById('exportModalBody').innerHTML = fullHtml;
+
+                exportModal.addEventListener('shown.bs.modal', function () {
+                    renderKatexInModal();
+                });
+
+                function renderKatexInModal() {
+                    renderMathInElement(exportModal, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false},
+                            {left: '\\(', right: '\\)', display: false},
+                            {left: '\\[', right: '\\]', display: true}
+                        ],
+                        throwOnError: false
+                    });
+                }
+
+                new bootstrap.Modal(document.getElementById('exportModal')).show();
+
+                const downloadBtn = document.getElementById('downloadExportedHtmlBtn');
+                downloadBtn.onclick = function() {
+                    downloadHtmlFile(fullHtml, `${postTitle}.html`);
+                };
+
+            } catch (error) {
+                console.error('Error fetching or processing template:', error);
+                alert('Fail to load template');
+            }
+        }
+
+        function generateTOC(htmlContent) {
+            const tempElement = document.createElement('div');
+            tempElement.innerHTML = htmlContent;
+            const headings = tempElement.querySelectorAll('h2, h3');
+            let tocHTML = '<ul>'; 
+            let currentH2 = null; 
+
+            headings.forEach(heading => {
+                const tagName = heading.tagName;
+                const headingId = heading.id;
+                const headingText = heading.innerHTML;
+
+                if (tagName === 'H2') {
+                    if (currentH2) {
+                        tocHTML += '</ul></li>'; 
+                    }
+                    tocHTML += `<li><a href="#${headingId}">${headingText}</a><ul>`; 
+                    currentH2 = heading;
+                } else if (tagName === 'H3' && currentH2) {
+                    tocHTML += `<li><a href="#${headingId}">${headingText}</a></li>`; 
+                }
+
+                console.log(tocHTML)
+            });
+
+            if (currentH2) {
+                tocHTML += '</ul></li>'; // 마지막 h2 섹션의 ul, li 닫기
+            }
+            tocHTML += '</ul>'; // TOC 전체 ul 닫기
+
+
+            return tocHTML;
+        }
+                
+        function downloadHtmlFile(html, filename) {
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title> Title </title>
+        <link rel="icon" type="image/x-icon" href="../../../assets/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+        <!-- Prism.js CSS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="../../../css/blog_style.css" rel="stylesheet" />
+        <style>
+            .wp-block-image figcaption {
+                font-size: 4px;
+                color: #000000;
+            }
+            .custom-btn {
+                color: #d3d3d3; /* Text color */
+                border: none; /* Remove border */
+            }
+            .custom-btn:hover {
+                color: black; /* Slightly darker gray for hover */
+            }
+            @media (min-width: 1920px) {
+                .modal-xl {
+                    --bs-modal-width: 1600px;
+                }
+            }
+            @media (min-width: 2560px) {
+                .modal-xl {
+                    --bs-modal-width: 1920px;
+                }
+            }
+            #threeCanvas {
+            width: 50%;
+            height: 50%;
+            margin-bottom: 20px;
+            }
+            #controls {
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                z-index: 100;
+            }
+        </style>
+        <!-- MathJax CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+        <script defer>
+            document.addEventListener('DOMContentLoaded', function() {
+                renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false
+                });
+            });
+        </script>
+        <script src="../../../js/include.js"></script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-RF7ETSKPK9');
+            </script>
+        </head>
+        <body>
+            <!-- Navigation-->
+            <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+                <div class="container px-4 px-lg-5">
+                    <a class="navbar-brand" href="../../">HwanHeo's Blog</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                        Menu
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarResponsive">
+                        <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                            <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../../">Post</a></li>
+                            <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../../../">HwanHeo's log</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <!-- Page Header-->
+            <header class="masthead" style="background-image: url('../../../assets/blog_bg.jpeg')">
+                <div class="container position-relative px-4 px-lg-5">
+                    <div class="row gx-4 gx-lg-5 justify-content-center">
+                        <div class="col-md-10 col-lg-8 col-xl-7">
+                            <div class="post-heading">
+                                <h1 id="title"> [[TITLE]] </h1>
+                                <br/>
+                                <span class="meta">
+                                    Posted by
+                                    Hwan Heo
+                                    on Month Day, Year
+                                </span>
+                                <div style="text-align: center;">
+                                    <button type="button" class="btn custom-btn" onclick="setLanguage('eng')" style="font-size: 13px;">eng</button>
+                                    |
+                                    <button type="button" class="btn custom-btn" onclick="setLanguage('kor')" style="font-size: 13px;">kor</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Post Content-->
+            <article class="mb-4">
+                <nav class="toc">
+                    [[TOC]]
+                </nav>
+                <div class="container px-4 px-lg-5">
+                    <div class="row gx-4 gx-lg-5 justify-content-center">
+                        <div class="col-md-10 col-lg-8 col-xl-7">
+                            <div data-include-path="../layout/series.html"></div>
+                            <br/>
+                            <div id ='maincontent'>
+                                [[MAIN_CONTENT]]
+                            </div>
+                            <hr/>
+                            <p>
+                                You may also like, 
+                            </p>
+                            <ul>
+                                <li>
+                                    <a href="#">
+                                        <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <br/>
+                            <div class="d-flex justify-content-between mb-4">
+                                <a class="btn btn-primary text-uppercase" href="#">← Older Post</a>
+                                <a class="btn btn-primary text-uppercase" href="#">Next Post →</a>
+                            </div>
+                            <!-- <div class="d-flex justify-content-start mb-4"><a class="btn btn-primary text-uppercase" href="../240917_3djs/">← Older Post</a></div> -->
+                            <script src="https://giscus.app/client.js"
+                                data-repo="hwan-h-heo/hwan-h-heo.io"
+                                data-repo-id="R_kgDOMeZQdw"
+                                data-category="General"
+                                data-category-id="DIC_kwDOMeZQd84CiEMJ"
+                                data-mapping="pathname"
+                                data-strict="0"
+                                data-reactions-enabled="1"
+                                data-emit-metadata="0"
+                                data-input-position="bottom"
+                                data-theme="light_protanopia"
+                                data-lang="en"
+                                data-loading="lazy"
+                                crossorigin="anonymous"
+                                async>
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <!-- Footer-->
+            <footer class="border-top">
+                <div class="container px-4 px-lg-5">
+                    <div class="row gx-4 gx-lg-5 justify-content-center">
+                        <div class="col-md-10 col-lg-8 col-xl-7">
+                            <ul class="list-inline text-center">
+                                <li class="list-inline-item">
+                                    <a href="https://www.linkedin.com/in/hwan-heo-0905korea/">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fas fa-circle fa-stack-2x"></i>
+                                            <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="https://github.com/hwanhuh">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fas fa-circle fa-stack-2x"></i>
+                                            <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="small text-center text-muted fst-italic">Copyright &copy; Hwan Heo</div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+            <!-- Bootstrap core JS-->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+            <!-- Core theme JS-->
+            <script src="../../../js/scripts.js"></script>
+            <script src="https://unpkg.com/prismjs@1.28.0/components/prism-core.min.js"></script>
+            <script src="https://unpkg.com/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+            <script>
+                Prism.plugins.autoloader.languages_path = 'https://unpkg.com/prismjs@1.28.0/components/'
+            </script>
+        </body>
+</html>
+
