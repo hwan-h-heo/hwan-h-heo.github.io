@@ -5,87 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>link share</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-  <style>
-    .share_modal {
-      display: none;
-      position: fixed;
-      z-index: 1;
-      right: 0.75%;
-      top: 1.5%;
-      width: 80%;
-      max-width: 250px;
-      height: auto;
-      overflow: visible;
-      background-color: rgba(0, 255, 0, 0.4);
-    }
-
-    .share_modal-content {
-      background-color: rgb(7, 188, 12);
-      color:rgb(255, 255, 255);
-      margin: 0 auto;
-      padding: 10px;
-      border: 1px solid #888;
-      width: 100%;
-      max-width: 250px;
-      text-align: center;
-      border-radius: 5px;
-      position: relative;
-      box-sizing: border-box;
-    }
-
-    .share_modal_close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: -10px;
-      margin-right: -10px;
-    }
-
-    .share_modal_close:hover,
-    .share_modal_close:focus {
-      color: black;
-      text-decoration: none;
-    }
-
-    #copyButton {
-      padding: 10px 15px;
-      background-color: #0d6efd;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    /* Indicator 스타일 */
-    .indicator-container {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 5px;
-      background-color: rgb(7, 188, 12);
-      overflow: hidden;
-    }
-
-    .indicator {
-      width: 0%;
-      height: 100%;
-      background-color: #ddd;
-    }
-  </style>
+  <link href="../../../css/blog_style.css" rel="stylesheet" />
 </head>
 <body>
 
-  <button id="copyButton"><i class="bi bi-share"></i></button>
+  <button id="copyButton"><i class="bi bi-share-fill"></i></button>
 
   <div id="myshare_modal" class="share_modal">
     <div class="share_modal-content">
       <span class="share_modal_close">×</span>
       <p><strong>Link Copied!</strong></p>
-      <div class="indicator-container">
-        <div class="indicator" id="share_modalIndicator"></div>
+      <div class="copy_indicator-container">
+        <div class="copy_indicator" id="share_modalIndicator"></div>
       </div>
     </div>
   </div>

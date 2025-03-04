@@ -19,7 +19,6 @@ window.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', function() {
         const currentTop = document.body.getBoundingClientRect().top * -1;
         if ( currentTop < scrollPos) {
-            // Scrolling Up
             if (currentTop > 0 && mainNav.classList.contains('is-fixed')) {
                 mainNav.classList.add('is-visible');
             } else {

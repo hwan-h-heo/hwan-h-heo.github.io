@@ -11043,3 +11043,83 @@ header.masthead .post-heading .meta a {
 #portfolio .container-fluid .portfolio-box:hover .portfolio-box-caption, #portfolio .container-sm .portfolio-box:hover .portfolio-box-caption, #portfolio .container-md .portfolio-box:hover .portfolio-box-caption, #portfolio .container-lg .portfolio-box:hover .portfolio-box-caption, #portfolio .container-xl .portfolio-box:hover .portfolio-box-caption, #portfolio .container-xxl .portfolio-box:hover .portfolio-box-caption {
   opacity: 1;
 }
+
+.share_modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  right: 0.55%;
+  top: 1.5%;
+  width: 80%;
+  max-width: 250px;
+  height: auto;
+  overflow: visible;
+  background-color: rgba(0, 255, 0, 0.4);
+}
+
+.share_modal-content {
+  background-color: rgb(7, 188, 12);
+  color:rgb(255, 255, 255);
+  font-size:medium;
+  margin: 0 auto;
+  padding: 10px;
+  border: 1px solid #888;
+  width: 100%;
+  max-width: 250px;
+  text-align: center;
+  border-radius: 5px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.share_modal_close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: -10px;
+  margin-right: -2px;
+}
+
+.share_modal_close:hover,
+.share_modal_close:focus {
+  color: black;
+  text-decoration: none;
+}
+
+#copyButton {
+  padding: 5px 10px;
+  background-color: #ffffff;
+  color: #858E96;
+  border: none;
+  border: 1px solid #858E96; /* 212529 */
+  border-radius: 50%; /* 더 둥근 모서리 */
+  cursor: pointer;
+  position: fixed;
+  display: none;
+  top: 13rem;
+  left: 15rem;
+  z-index: 2;
+}
+
+#copyButton :hover{
+  color: #212529;
+  /* border: 1px solid #212529;  */
+}
+
+.copy_indicator-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background-color: rgb(7, 188, 12);
+  overflow: hidden;
+}
+
+.copy_indicator {
+  width: 0%;
+  height: 100%;
+  background-color: #ddd;
+}

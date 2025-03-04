@@ -67,7 +67,10 @@
                 });
             });
         </script>
-        <script src="../../../js/include.js"></script>
+        <script src="../../../js/include.js" defer></script>
+        <!-- for share button & modal -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+        <script src="../../../js/share.js" defer></script>
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
             <script>
                 window.dataLayer = window.dataLayer || [];
@@ -119,15 +122,27 @@
             <!-- Post Content-->
             <article class="mb-4">
                 <nav class="toc">
-                    <ul><li><a href="#h2-1">Preliminary: What is Latent?</a><ul></ul></li><li><a href="#h2-2">1. ShapeVAE</a><ul><li><a href="#h3-1">Challenges for ShapeVAE</a></li></ul></li><li><a href="#h2-3">2. Trellis</a><ul><li><a href="#h3-2">2.1. Structured Latent Representation</a></li><li><a href="#h3-3">2.2. SLAT Generation</a></li></ul></li><li><a href="#h2-4">3. Hunyuan3D-v2</a><ul><li><a href="#h3-4">3.1. Hunyuan-ShapeVAE</a></li><li><a href="#h3-5">3.2. Hunyuan3D-DiT</a></li><li><a href="#h3-6">3.3. Hunyuan3D-paint</a></li></ul></li><li><a href="#h2-6"> 4. Trellis vs Hunyuan? </a><ul></ul></li><li><a href="#h2-5">Closing</a><ul></ul></li></ul>
+                    <ul><li><a href="#h2-1">Preliminary: What is Latent?</a><ul></ul></li><li><a href="#h2-2">ShapeVAE</a><ul><li><a href="#h3-1">Challenges for ShapeVAE</a></li></ul></li><li><a href="#h2-3">Trellis</a><ul><li><a href="#h3-2">Structured Latent</a></li><li><a href="#h3-3">3D Generation</a></li></ul></li><li><a href="#h2-4">Hunyuan3D-v2</a><ul><li><a href="#h3-4">Hunyuan-ShapeVAE</a></li><li><a href="#h3-5">Hunyuan3D-DiT</a></li><li><a href="#h3-6">Hunyuan3D-Paint</a></li></ul></li><li><a href="#h2-6"> Trellis vs Hunyuan? </a><ul></ul></li><li><a href="#h2-5">Closing</a><ul></ul></li></ul>
                 </nav>
+                <button id="copyButton">
+                    <i class="bi bi-share-fill"></i>
+                </button>
+                <div id="myshare_modal" class="share_modal">
+                    <div class="share_modal-content">
+                        <span class="share_modal_close">×</span>
+                        <p><strong>Link Copied!</strong></p>
+                        <div class="copy_indicator-container">
+                        <div class="copy_indicator" id="share_modalIndicator"></div>
+                        </div>
+                    </div>
+                </div>
                 <div class="container px-4 px-lg-5">
                     <div class="row gx-4 gx-lg-5 justify-content-center">
                         <div class="col-md-10 col-lg-8 col-xl-7">
                             <div data-include-path="../layout/series.html"></div>
                             <br/>
                             <div id ='maincontent'>
-
+                                
 <video id="video-1" width="100%" autoplay="" loop="">
 <source src="https://trellis3d.github.io/assets/teaser.mp4" type="video/mp4" />
 </video>
@@ -570,7 +585,6 @@ $$</p>
 <p id="p-123">While the open-source community did not achieve remarkable progress in the 3D field for some time after the emergence of CLAY, recent studies have showcased innovative designs and reached state-of-the-art quality, further fueling anticipation for generative models in the 3D domain.</p>
 <p id="p-124">Personally, Hunyuan's application of proven designs from Flux, MV-Adapter, and other works to the 3D generation scheme is particularly impressive. It reinforces the notion that to conduct impactful research, one must remain attentive to research trends in other fields.</p>
 <p id="p-125">Finally, recent research, led by MeshAnything, is attracting attention by focusing on the auto-regressive generation of mesh faces to create what are termed "Artistic-Created Meshes" (these studies also utilize the ShapeVAE latent space). However, due to its auto-regressive nature, this approach is time-consuming, and the quality is not yet satisfactory; therefore, it seems prudent to observe its development for the time being.</p>
-<hr id="hr-6" />
 </body>
                             </div>
                             <hr/>
