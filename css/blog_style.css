@@ -11103,6 +11103,12 @@ header.masthead .post-heading .meta a {
   z-index: 2;
 }
 
+/* @media (max-width: 1280px) {
+  #copyButton {
+    display: none !important;
+  }
+} */
+
 #copyButton :hover{
   color: #212529;
   /* border: 1px solid #212529;  */

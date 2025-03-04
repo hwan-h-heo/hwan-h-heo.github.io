@@ -5,14 +5,23 @@ const indicator = document.getElementById('share_modalIndicator');
 let timeoutId;
 let animationId; // requestAnimationFrame ID 
 
-document.addEventListener("scroll", function() {
+function updateShareButtonVisibility() {
     var headerHeight = document.querySelector('.masthead').offsetHeight;
-    if (window.scrollY > headerHeight) {
+    if (window.innerWidth > 1280 && window.scrollY > headerHeight) {
         copyButton.style.display = 'block'; 
     } else {
         copyButton.style.display = 'none'; 
     }
-});
+}
+
+// 페이지 로드 시 초기 상태 설정
+window.addEventListener('load', updateShareButtonVisibility);
+
+// 스크롤 이벤트 처리
+document.addEventListener('scroll', updateShareButtonVisibility);
+
+// 창 크기 변경 이벤트 처리
+window.addEventListener('resize', updateShareButtonVisibility);
 
 function animateIndicator() {
     let startTime = null;
