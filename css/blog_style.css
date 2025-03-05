@@ -11047,7 +11047,7 @@ header.masthead .post-heading .meta a {
 .share_modal {
   display: none;
   position: fixed;
-  z-index: 1;
+  z-index: 1031;
   right: 0.55%;
   top: 1.5%;
   width: 80%;
