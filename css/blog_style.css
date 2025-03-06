@@ -10880,7 +10880,7 @@ footer {
 
 header.masthead {
   position: relative;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
   padding-top: calc(8rem + 57px);
   padding-bottom: 8rem;
   background: no-repeat center center;
@@ -10946,8 +10946,8 @@ header.masthead .post-heading .meta a {
 }
 @media (min-width: 992px) {
   header.masthead {
-    padding-top: 12.5rem;
-    padding-bottom: 12.5rem;
+    padding-top: 11.5rem;
+    padding-bottom: 10.5rem;
   }
   header.masthead .page-heading h1, header.masthead .page-heading .h1,
   header.masthead .site-heading h1,
@@ -10955,7 +10955,7 @@ header.masthead .post-heading .meta a {
     font-size: 5rem;
   }
   header.masthead .post-heading h1, header.masthead .post-heading .h1 {
-    font-size: 3.5rem;
+    font-size: 2.5rem;
   }
   header.masthead .post-heading .subheading {
     font-size: 1.875rem;
@@ -10991,10 +10991,11 @@ header.masthead .post-heading .meta a {
 }
 .post-preview > a > .post-subtitle {
   font-weight: 300;
+  font-size: 1.2rem;
   margin-bottom: 0.625rem;
 }
 .post-preview > .post-meta {
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-style: italic;
   margin-top: 0;
   color: #6c757d;
@@ -11004,7 +11005,7 @@ header.masthead .post-heading .meta a {
 }
 @media (min-width: 992px) {
   .post-preview > a > .post-title {
-    font-size: 2.25rem;
+    font-size: 2rem;
   }
 }
 
@@ -11099,15 +11100,27 @@ header.masthead .post-heading .meta a {
   position: fixed;
   display: none;
   top: 35%;
-  right: 75vw;
+  right: 77vw;
   z-index: 2;
 }
 
-/* @media (max-width: 1280px) {
+@media (min-width: 1920px) {
   #copyButton {
-    display: none !important;
+    right: 75vw;
   }
-} */
+}
+
+@media (min-width: 2240px) {
+  #copyButton {
+    right: 70vw;
+  }
+}
+
+@media (min-width: 2560px) {
+  #copyButton {
+    right: 65vw;
+  }
+}
 
 #copyButton :hover{
   color: #212529;
