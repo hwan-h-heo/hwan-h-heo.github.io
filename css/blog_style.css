@@ -11005,7 +11005,7 @@ header.masthead .post-heading .meta a {
 }
 @media (min-width: 992px) {
   .post-preview > a > .post-title {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
 }
 
@@ -11112,13 +11112,13 @@ header.masthead .post-heading .meta a {
 
 @media (min-width: 2240px) {
   #copyButton {
-    right: 70vw;
+    right: 72vw;
   }
 }
 
 @media (min-width: 2560px) {
   #copyButton {
-    right: 65vw;
+    right: 69vw;
   }
 }
 
@@ -11141,4 +11141,61 @@ header.masthead .post-heading .meta a {
   width: 0%;
   height: 100%;
   background-color: #ddd;
+}
+
+
+.button_top { /* Changed from .button to .button_top */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #149ddd;
+  border: none;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* box-shadow: 0px 0px 0px 4px rgba(180, 160, 255, 0.253); */
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  /* position: fixed;      
+  bottom: 15px;        
+  right: 15px; */
+}
+
+.svgIcon {
+  width: 10px;
+  transition-duration: 0.3s;
+}
+
+.svgIcon path {
+  fill: white;
+}
+
+.button_top:hover { /* Changed from .button:hover to .button_top:hover */
+  width: 140px;
+  border-radius: 50px;
+  transition-duration: 0.3s;
+  background-color: rgb(181, 160, 255);
+  align-items: center;
+}
+
+.button_top:hover .svgIcon { /* Changed from .button:hover .svgIcon to .button_top:hover .svgIcon */
+  transition-duration: 0.3s;
+  transform: translateY(-200%);
+}
+
+.button_top::before { /* Changed from .button::before to .button_top::before */
+  position: absolute;
+  bottom: -20px;
+  content: "Back to Top";
+  color: white;
+  font-size: 0px;
+}
+
+.button_top:hover::before { /* Changed from .button:hover::before to .button_top:hover::before */
+  font-size: 11px;
+  opacity: 1;
+  bottom: unset;
+  transition-duration: 0.3s;
 }
