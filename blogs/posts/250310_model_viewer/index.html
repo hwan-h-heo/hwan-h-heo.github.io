@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title> 3D Model Viewer in Web </title>
+        <link rel="icon" type="image/x-icon" href="../../../assets/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "https://unpkg.com/three@0.150.0/build/three.module.js",
+                    "three/addons/": "https://unpkg.com/three@0.157.0/examples/jsm/"
+                }
+            }
+        </script>
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+        <!-- Prism.js CSS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="../../../css/blog_style.css" rel="stylesheet" />
+        <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+        
+        <style>
+            simple-model-viewer { 
+                display: block; 
+                background-color: #eeeeee;
+                width: 100vw; 
+                height: 100vh; 
+                margin-bottom: 3px;
+            }
+            .wp-block-image figcaption {
+                font-size: 4px;
+                color: #000000;
+            }
+            .custom-btn {
+                color: #d3d3d3; /* Text color */
+                border: none; /* Remove border */
+            }
+            .custom-btn:hover {
+                color: black; /* Slightly darker gray for hover */
+            }
+            @media (min-width: 1920px) {
+                .modal-xl {
+                    --bs-modal-width: 1600px;
+                }
+            }
+            @media (min-width: 2560px) {
+                .modal-xl {
+                    --bs-modal-width: 1920px;
+                }
+            }
+            #threeCanvas {
+            width: 50%;
+            height: 50%;
+            margin-bottom: 20px;
+            }
+            #controls {
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                z-index: 100;
+            }
+        </style>
+        <!-- MathJax CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+        <script defer>
+            document.addEventListener('DOMContentLoaded', function() {
+                renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError : false
+                });
+            });
+        </script>
+        <script src="../../../js/include.js"></script>
+        <!-- for share button & modal -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+        <script src="../../../js/share.js" defer></script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-RF7ETSKPK9');
+            </script>
+        </head>
+        <body>
+            <!-- Navigation-->
+            <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+                <div class="container px-4 px-lg-5">
+                    <a class="navbar-brand" href="../../">HwanHeo's Blog</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                        Menu
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarResponsive">
+                        <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                            <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../../">Post</a></li>
+                            <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../../../">HwanHeo's log</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <!-- Page Header-->
+            <header class="masthead" style="background-image: url('../../../assets/blog_bg.jpeg')">
+                <div class="container position-relative px-4 px-lg-5">
+                    <div class="row gx-4 gx-lg-5 justify-content-center">
+                        <div class="col-md-10 col-lg-8 col-xl-7">
+                            <div class="post-heading">
+                                <h1 id="title"> 3D Model Viewer in Web </h1>
+                                <br/>
+                                <span class="meta">
+                                    Posted by
+                                    Hwan Heo
+                                    on March 10, 2025
+                                </span>
+                                <div style="text-align: center;">
+                                    <button type="button" class="btn custom-btn" onclick="setLanguage('eng')" style="font-size: 13px;">eng</button>
+                                    |
+                                    <button type="button" class="btn custom-btn" onclick="setLanguage('kor')" style="font-size: 13px;">kor</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Post Content-->
+            <article class="mb-4">
+                <nav class="toc">
+                    <ul>
+                        <li><a href="#h2-3"> Introduction </a><ul></ul></li>
+                        <li><a href="#h2-1"> Google Model Viewer </a>
+                            <ul>
+                                <li><a href="#h3-1"> Basic Usage </a></li>
+                                <li><a href="#h3-2"> Geometry Rendering </a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#h2-2"> Threejs-Based Custom Viewer </a>
+                            <ul>
+                                <li><a href="#h3-3"> Basic Usage </a></li>
+                                <li><a href="#h3-4"> Custom Viewer </a></li>
+                                <li><a href="#h3-5"> Key Takeaways </a></li>
+                            </ul>
+                        </li>
+                        <li><a href='#conclusion'>Conclusion</a></li>
+                    </ul>
+                </nav>
+                <button id="copyButton">
+                    <i class="bi bi-share-fill"></i>
+                </button>
+                <div id="myshare_modal" class="share_modal">
+                    <div class="share_modal-content">
+                        <span class="share_modal_close">×</span>
+                        <p><strong>Link Copied!</strong></p>
+                        <div class="copy_indicator-container">
+                        <div class="copy_indicator" id="share_modalIndicator"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container px-4 px-lg-5">
+                    <div class="row gx-4 gx-lg-5 justify-content-center">
+                        <div class="col-md-10 col-lg-8 col-xl-7">
+                            <div data-include-path="../layout/series.html"></div>
+                            <br/>
+                            <div id ='maincontent'>
+
+<h2 id="h2-3" > Introduction </h2>
+<p id="p-1" class='lang eng'> Since my work tends to revolve around the 3D domain, 
+    I occasionally find myself needing to render 3D models on web pages—whether it’s for a quick demo to present internally or to build a project page for a research paper. </p> 
+<p id="p-2" class='lang eng'> For someone like me who isn’t deeply familiar with web development, there are two straightforward options: </p> 
+<ol id="ol-1" class="lang eng"> <li>Use Google Model Viewer, or</li> <li id="li-1">Build a simple viewer from scratch using Three.js.</li> </ol> 
+<p id="p-3" class='lang eng'> In this post, I’ll dive into my personal experiences with both approaches, exploring their usage, pros, and cons. 
+    I’ll also share details about a custom Three.js-based <code>SimpleModelViewer</code> I’ve developed. If you’re only interested in the custom viewer itself, feel free to jump straight to 
+    <a href="#h4-3">this section</a>! 
+</p>
+<p id="p-1"  class='lang kor'>
+    하는 일이 3D Domain 에 편중되어 있다보니, 사내에서 보고를 위한 간단한 데모를 제작할 때나, 혹은 논문 project page 를 만드는 등 web page 에서 3D Model 을 rendering 해서 보여줄 일이 가끔 있다. 
+</p>
+<p id="p-2"  class='lang kor'>
+    웹에 대해 잘 모르고 간단히 쓸만한 방법으론     
+</p>
+<ol id="ol-1" class="lang kor">
+    <li> Google Model Viewer 사용하거나 </li>
+    <li id="li-1" > Threejs 기반으로 간단한 viewer 를 직접 제작하거나 </li>
+</ol>
+<p id="p-3"  class='lang kor'>
+    두 가지 정도가 있는데, 이 글에서는 개인적으로 느낀 각 방법의 사용법과 장단점에 대해 탐구해보고, custom 으로 제작한 Threejs 기반의 simple model viewer 에 대해서도 공유하는 시간을 갖도록 해보자. 
+    구현한 custom threejs model viewer 만 궁금한 경우에는 <a href="#h4-3">여기</a> 를 참조하면 된다!
+</p>
+
+
+
+<h2 id="h2-1" > Google Model Viewer </h2>
+<p id="p-5" class='lang eng'> <a id="a-1" href='https://modelviewer.dev/'>Model Viewer</a> is a handy 3D model viewing package provided by Google. It’s a breeze to use whenever I need a simple viewer, and I’ve even employed it for the 3D model viewer on the <a id="a-1" href='https://ncsoft.github.io/CaPa/'>CaPa</a> project page. </p>
+
+<p id="p-5"  class='lang kor'>
+    <a id="a-1"  href='https://modelviewer.dev/'>Model Viewer</a> 는 구글에서 배포하는 간단한 3D Model viewing 용 패키지이다. 
+    간단한 3D model viewer 를 필요할 때는 손쉽게 사용이 가능하며, <a id="a-1"  href='https://ncsoft.github.io/CaPa/'>CaPa</a> project page 의 3D model viewer 도 google model viewer 를 이용해 만들었다. 
+</p>
+<h3 id="h3-1" > Usage </h3>
+<p id="p-7" class='lang eng'> You can easily import it into an HTML file via CDN like this: </p>
+<p id="p-7"  class='lang kor'> 
+    cdn 으로 다음과 같이 html file 에서 import 한 후, 
+</p>
+
+<pre id="pre-2" ><code id="model-viewer-cdn" style="font-size: 1rem"  class="language-html">&lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<p id="p-8" class='lang eng'> Then, just declare <code>model-viewer</code> and specify the 3D model path in the <code>src</code> attribute to embed an interactive 3D model directly into your webpage: </p>
+<p class="lang kor"><code>model-viewer</code> 를 선언하면서 <code>src</code> 에 3D model path 만 입력하면 interactive 한 3D Model 을 웹에 바로 삽입할 수 있다. </p>
+
+<pre id="pre-3" ><code style="font-size: 1rem"  class='language-html'>&lt;model-viewer 
+    src="your_3d_model.glb" &gt;
+&lt;/model-viewer&gt;
+</code></pre>
+
+<p id="p-9" class='lang eng'> Beyond that, it offers options like: </p>
+<p id="p-9"  class='lang kor'>이 밖에도 </p>
+
+<ul id="ul-1" >
+  <li> <code>auto-rotate</code> </li>
+  <li> <code>rotation-per-second</code> </li>
+  <li> <code>camera-orbit</code>: $ (\theta, \phi, r) $</li>
+  <li> <code>exposure</code></li>
+  <li> <code>skybox-image</code></li>
+</ul>
+<p id="p-10" class='lang eng'> These allow you to tweak things like camera angles or environment settings during model loading, making it super convenient to achieve polished rendering with minimal effort. </p> 
+<p id="p-10"  class='lang kor'>등의 옵션을 제공하고 있어, model load 시 camera angle 이나 environment 등을 적용한 rendering 을 손쉽게 구현할 수 있다. </p>
+<p id="p-11" ><strong id="strong-1"><em>Example:</em></strong></p>
+<pre id="pre-3" ><code style="font-size: 1rem"  class='language-html'>&lt;model-viewer 
+    src="omni.glb" 
+    auto-rotate
+    rotation-per-second="60deg"
+    camera-orbit="0deg 90deg 5m" 
+    exposure="3"
+    skybox-image="sunrise_1K_hdr.hdr" &gt;
+&lt;/model-viewer&gt;
+</code></pre>
+<model-viewer 
+    style="width: 100%; height: 700px;" 
+    exposure="3" 
+    id="model-ex" 
+    src="https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/omni.glb" 
+    alt="model sample" 
+    lighting="none"  
+    auto-rotate
+    rotation-per-second="60deg"
+    skybox-image="https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/spruit_sunrise_1k_HDR.hdr" >
+</model-viewer>
+<br/>
+
+<h3 id="h3-2" > Geometry Rendering </h3>
+<p id="p-12" class='lang eng'> For a basic 3D model viewer, it’s hard to beat Google Model Viewer. However, it’s tricky to modify its default shaders, and it doesn’t support alternative rendering types like Normal, Geometry, or Wireframe. This makes it tough to visually inspect detailed mesh elements beyond the base texture. </p> 
+<p id="p-13" class='lang eng'> That said, you can work around this limitation to some extent by removing the texture and using a gradient equirectangular image as the environment. This leverages PBR rendering to reflect the gradient, creating an effect that mimics mesh geometry rendering. </p>
+<p id="p-12"  class='lang kor'> 
+    이처럼 간단한 3D model viewer 로는 더할 나위가 없지만, model viewer 는 기본 shader 를 수정하기가 힘들고, 기본 texture rendering 외에 다른 타입 (Normal, Geometry, Wireframe) 등을 지원하지 않아서, texture 외의 detail 한 mesh 요소를 눈으로 확인하기가 힘들다. 
+</p>
+<p id="p-13"  class='lang kor'> 
+    대신에 제한적으로 texture 를 지우고 enviroment 에 gradient equirectangular image 를 사용하여, PBR rendering 으로 gradient environment 를 반사하는 rendering 을 만들어서 mesh geometry 를 rendering 하는 듯한 효과를 낼 수 있다. 
+</p>
+<figure id="figure-1" >
+  <img src='https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/gradient.jpg' alt='img alt' width='100%'>
+  <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Gradient Map</figcaption>
+</figure>
+
+<p id="p-14" class='lang eng'> Here’s how you can set this up in JavaScript by using the gradient image as the environment and stripping the original texture: </p>
+<p id="p-14"  class='lang kor'>
+    위 이미지를 mesh environment 으로 설정하고 original texture 를 없애주는 코드를 javascript 로 다음과 같이 작성할 수 있다.  
+</p>
+
+
+<pre id="pre-4" ><code id="code-mesh" style="font-size: 1rem"  class="language-javascript">var window_state = {};
+function show_geometry(){
+    let modelViewer = document.getElementById(&#39;model&#39;);
+    if (modelViewer.model.materials[0].pbrMetallicRoughness.baseColorTexture.texture === null) return;
+    window_state.textures = [];
+    for (let i = 0; i &lt; modelViewer.model.materials.length; i++) {
+        window_state.textures.push(modelViewer.model.materials[i].pbrMetallicRoughness.baseColorTexture.texture);
+    }
+    window_state.exposure = modelViewer.exposure;
+    modelViewer.environmentImage = &#39;&lt;img src=&quot;gradient.jpg&quot; width=&quot;100%&quot; /&gt;&#39;;
+    for (let i = 0; i &lt; modelViewer.model.materials.length; i++) {
+        modelViewer.model.materials[i].pbrMetallicRoughness.baseColorTexture.setTexture(null);
+    }
+    modelViewer.exposure = 3;
+}
+</code></pre>
+<p id="p-15" class='lang eng'> By saving the original texture and adding a function to restore it, you can map these to button UI elements. This lets you toggle between texture and geometry views, as shown below: </p>
+<p id="p-15"  class='lang kor'> 
+    original texture 를 저장해놨다가 되돌리는 function 을 작성해 button ui 에 mapping 하면 다음과 같이 texture / geometry 를 번갈아가면서 보여주는 model viewer 를 제공할 수 있다. 
+</p>
+
+
+<button class="btn btn-sm btn-primary" onclick="show_geometry()">Geometry</button>
+<button class="btn btn-sm btn-secondary" onclick="show_texture()">Texture</button>
+<model-viewer 
+    style="width: 100%; height: 700px;" 
+    exposure="3" 
+    id="model-g" 
+    src="https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/omni.glb" 
+    alt="model sample" 
+    lighting="none"  camera-controls>
+</model-viewer>
+
+
+
+<h2 id="h2-2" > Threejs-Based Custom Viewer </h2>
+<p id="p-16" class='lang eng'> To implement rendering modes like Normal or Wireframe that Google Model Viewer can’t handle, you’ll need to roll up your sleeves and build a custom model viewer class using Three.js. </p>
+<p id="p-16"  class='lang kor'>
+    위에서 살펴본 model viewer 만으로 rendering 할 수 없는 normal, wireframe rendering 등을 구현하기 위해서는 threejs 를 사용해서 직접 model viewer class 를 구현해야 한다. 
+</p>
+<h3 id="h3-3" > Usage </h3>
+<pre id="pre-2" ><code style="font-size: 1rem"  class='language-html'>&lt;script type="importmap"&gt;
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.150.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.157.0/examples/jsm/"
+        }
+    }
+&lt;/script&gt;
+</code></pre>
+<p id="p-17" class='lang eng'> Like Model Viewer, you can import Three.js via CDN, but setting it up is quite a bit more involved. </p> 
+<p id="p-18" class='lang eng'> You have to manually configure the <code>scene</code>, <code>camera</code>, <code>renderer</code>, and more. Start by importing the essential packages in JavaScript: </p>
+<p id="p-17"  class='lang kor'>  
+    Model Viewer 와 마찬가지로 cdn 으로 import 해서 쓸 수 있지만, threejs 자체는 기본적인 설정이 model viewer 보다 훨씬 복잡하다. 
+</p>
+<p id="p-18"  class='lang kor'>
+    <code>scene</code>, <code>camera</code>, <code>renderer</code> 등을 모두 직접 설정해줘야 하는데, jacascript 에서 다음과 같이 필요한 최소 패키지들을 import 한 후,  
+</p>
+<pre id="pre-3" ><code style="font-size: 1rem"  class='language-javascript'>import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+</code></pre>
+<p id="p-19" class='lang eng'> Then define your scene and camera: </p>
+<p id="p-19"  class='lang kor'>
+    scene 과 camera 를 새로 정의하고 
+</p>
+
+<pre id="pre-4" ><code style="font-size: 1rem"  class='language-javascript'>scene = new THREE.Scene(); <br/>
+camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
+renderer = new THREE.WebGLRenderer({ antialias: true });
+controls = new OrbitControls(this.camera, this.renderer.domElement);
+</code></pre>
+<p id="p-20" class='lang eng'> Finally, load a GLTF 3D model and add it to the scene: </p>
+<p id="p-20"  class='lang kor'>
+    다음과 같이 gltf 3D model 을 load 하여 scene 에 불러올 수 있다.  
+</p>
+<pre id="pre-5"><code style="font-size: 1rem"  class='language-javascript'>loader = new GLTFLoader();
+loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined, (error) => { console.error('Loading Error:', error); });</code></pre> 
+<br/>
+
+
+<h3 id="h3-4">Custom Viewer Implementation</h3> 
+<p id="p-21" class='lang eng'> A Three.js-based custom viewer offers far greater flexibility compared to Google Model Viewer. It allows you to implement diverse rendering modes like Diffuse, Mesh, Wireframe, and Normal with ease. </p> 
+<p id="p-22" class='lang eng'> In Three.js, mesh textures are defined as PBR materials using <code>MeshStandardMaterial</code>. Rendering modes like Normal, Geometry, or Wireframe can be achieved by simply adjusting the material mappings. </p>
+<p id="p-21" class='lang kor'> Three.js를 사용한 커스텀 뷰어는 Google Model Viewer에 비해 훨씬 더 많은 유연성을 제공한다. 이를 통해 Diffuse, Mesh, Wireframe, Normal 등 다양한 렌더링 모드를 구현할 수 있다.  </p> 
+<p id="p-22" class='lang kor'> 
+    Threejs 의 Mesh Texture 는 <code>MeshStandardMaterial</code> 에 PBR material 형태로 정의되어 있는데, Normal, Geometry, Wireframe 등의 rendering 은 material mapping 만 적절히 해주는 것으로 구현 가능하다. 
+</p> 
+<h4 id="h4-1" > Normal Map </h4>
+<p id="p-23" class='lang eng'> For example, to render a Normal map, you can set the mesh material to <code>THREE.MeshNormalMaterial()</code>, which Three.js provides out of the box: </p>
+<p id="p-23">
+    예를 들어 Normal map 의 경우에는 threejs 에서 제공하는 <code>THREE.MeshNormalMaterial()</code> 을 mesh material 로 설정하는 것으로 rendering 할 수 있다. 
+</p>
+<pre id="pre-5" ><code id="code-NaN" style="font-size: 1rem"  class="language-javascript">if (model) {
+    model.traverse((child) => {
+        if (child.isMesh) {
+            child.material = new THREE.MeshNormalMaterial();
+        }
+    });
+}
+</code></pre>
+<br/>
+
+
+<h4 id="h4-2" > Wireframe </h4>
+<p id="p-24" class='lang eng'> For Wireframe, setting <code>wireframe: true</code> in <code>THREE.MeshBasicMaterial()</code> will display the wireframe, but this hides the original texture and geometry, reducing visibility. </p>
+<p id="p-25" class='lang eng'> A better approach is to create a separate wireframe mesh as a copy and add it as a child of the original mesh. This way, you can render the wireframe alongside the original texture and geometry: </p>
+<p id="p-24"  class='lang kor'> 
+    Wireframe 의 경우에는  <code>THREE.MeshNormalMaterial()</code> 에서 <code>wireframe: true</code> 로 설정하면 wireframe mesh 가 나오긴 하지만, 이 모드는 원본 texture 랑 geometry 가 사라져서 가시성이 떨어진다.
+</p>
+<p id="p-25"  class='lang kor'> 
+    대신에 wireframemesh 를 복사본으로 선언한 후, original mesh 의 child 로 추가하여 mesh 의 original texture, geometry 와 함께 wireframe 을 렌더링하여 볼 수 있다.   
+</p>
+<pre id="pre-6" ><code id="code-NaN" style="font-size: 1rem" class="language-javascript">model.traverse((child) =&gt; {
+    if (child.isMesh) {
+        const wireframeMesh = new THREE.Mesh(child.geometry, new THREE.MeshBasicMaterial({
+            wireframe: true,
+            color: 0xaaaaaa, // light gray
+            depthTest: true,
+            transparent: true,
+            opacity: 0.8 // transparency
+        }));
+        model.add(wireframeMesh); // add as child 
+    }
+});
+</code></pre>
+<br/>
+<h4 id="h4-3" > Custom Model Viewer </h4>
+<p id="p-26" class='lang eng'> Reimplementing these features for every 3D model can get tedious, so I created a <code>SimpleModelViewer</code> class that bundles them together. It includes pre-defined skybox environment map settings, the ability to remove them, and a UI panel for adjusting model position and rotation. </p>
+<p id="p-26"  class='lang kor'> 
+    3D Model 에 따라 이 기능들을 항상 재구현 하기엔 좀 귀찮으므로, 앞서 설명한 기능들과 더불어 성격이 다른 pre-defined skybox env map 설정 및 제거,모델의 위치와 회전을 조정할 수 있는 UI 패널 등을 추가한 <code>SimpleModelViewer</code> class 를 만들어보았다. 
+</p>
+<simple-model-viewer 
+    src="https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/omni.glb" 
+    style="width: 100%; height: 600px;">
+</simple-model-viewer>
+<p class="lang eng"> Check out the source code for the viewer below: </p>
+<p class="lang kor">
+    model viewer 의 소스코드는 아래를 참조:
+</p>
+<div id="div-1"  class="accordion accordion-flush">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+          <strong><em>simple-model-viewer.js</em></strong>
+        </button>
+      </h2>
+      <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body">
+          <pre><code style="font-size: 1rem;" class="language-javascript">import * as THREE from 'three';
+import { OrbitControls } from &#39;three/addons/controls/OrbitControls.js&#39;;
+import { GLTFLoader } from &#39;three/addons/loaders/GLTFLoader.js&#39;;
+import { RGBELoader } from &#39;three/addons/loaders/RGBELoader.js&#39;;
+
+class SimpleModelViewer extends HTMLElement {
+    constructor() {
+        super();
+        // Shadow DOM
+        this.attachShadow({ mode: &#39;open&#39; });
+        this.shadowRoot.innerHTML = `
+            &lt;style&gt;
+                :host { display: block; border: 2px solid #ccc; border-radius: 8px;}
+                #canvas-container { width: 100%; height: 100%; }
+                canvas { width: 100%; height: 100%; }
+                .controls { margin: 5px; }
+                button {
+                    background-color: #04AA6D; /* Green */
+                    border: none;
+                    color: white;
+                    padding: 5px 10px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    text-align: center;
+                    text-decoration: none;
+                    display: inline-block;
+                    font-size: 0.8rem;
+                }
+                button:hover{
+                    background-color: #3e8e41
+                }
+                .transform-panel {
+                    position: absolute;
+                    top: 0.5rem; 
+                    right: 0.5rem; 
+                    font-size: 0.8rem;
+                    background-color: rgba(200, 200, 200, 0.8); 
+                    padding: 0.5rem;
+                    border-radius: 5px; 
+                    display: flex;
+                    flex-direction: column; 
+                    gap: 3px; 
+                }
+                
+                .transform-panel label {
+                    display: flex;
+                    justify-content: space-between; 
+                    align-items: center;
+                }
+                
+                .transform-panel input {
+                    width: 3rem; 
+                }
+            &lt;/style&gt;
+            &lt;div class=&quot;controls&quot;&gt;
+                &lt;div id=&#39;meta&#39;&gt;
+                    &lt;button id=&quot;textureBtn&quot;&gt;Diffuse&lt;/button&gt;
+                    &lt;button id=&quot;meshBtn&quot;&gt;Geometry&lt;/button&gt;
+                    &lt;button id=&quot;normalBtn&quot;&gt;Normal&lt;/button&gt;
+                    &lt;button id=&quot;wireframeBtn&quot;&gt;Wireframe&lt;/button&gt;
+                    &lt;button id=&quot;setBgBtn1&quot;&gt;Env1&lt;/button&gt;
+                    &lt;button id=&quot;setBgBtn2&quot;&gt;Env2&lt;/button&gt;
+                    &lt;button id=&quot;setBgBtn3&quot;&gt;Env3&lt;/button&gt;
+                    &lt;button id=&quot;removeBgBtn&quot;&gt;Remove Env&lt;/button&gt;
+
+                    &lt;div id=&quot;modelInfo&quot; style=&#39;padding-left: 0.1rem; font-size:0.8rem&#39;&gt;&lt;strong&gt;[Model Info]&lt;/strong&gt; loading...&lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;canvas-container&quot; style=&quot;position: relative;&quot;&gt;
+                    &lt;div class=&quot;transform-panel&quot;&gt;
+                        &lt;label&gt;Position X: &lt;input type=&quot;number&quot; id=&quot;posX&quot; step=&quot;0.1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
+                        &lt;label&gt;Position Y: &lt;input type=&quot;number&quot; id=&quot;posY&quot; step=&quot;0.1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
+                        &lt;label&gt;Position Z: &lt;input type=&quot;number&quot; id=&quot;posZ&quot; step=&quot;0.1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
+                        &lt;label&gt;Rotation X (deg): &lt;input type=&quot;number&quot; id=&quot;rotX&quot; step=&quot;1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
+                        &lt;label&gt;Rotation Y (deg): &lt;input type=&quot;number&quot; id=&quot;rotY&quot; step=&quot;1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
+                        &lt;label&gt;Rotation Z (deg): &lt;input type=&quot;number&quot; id=&quot;rotZ&quot; step=&quot;1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
+                        &lt;div&gt;Scale: &lt;input type=&quot;range&quot; id=&quot;scale&quot; style=&#39;width: 7rem; &#39; min=&quot;1&quot; max=&quot;20&quot; step=&quot;0.1&quot; value=&quot;8&quot;&gt;&lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div id=&quot;canvas-container&quot; style=&#39;text-align: center&#39;&gt;&lt;/div&gt;
+        `;
+
+        // Three.js settings
+        this.scene = new THREE.Scene();
+        this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000); //
+        this.renderer = new THREE.WebGLRenderer({ antialias: true });
+        this.renderer.setClearColor(0xeeeeee, 1);
+        this.shadowRoot.querySelector(&#39;#canvas-container&#39;).appendChild(this.renderer.domElement);
+
+        // OrbitControls for mouse control
+        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        this.controls.enableDamping = true;
+        this.controls.dampingFactor = 0.05;
+
+        // Init texture and loader
+        this.textureLoader = new THREE.TextureLoader();
+        this.whiteTexture = this.textureLoader.load(&#39;&lt;img src=&quot;https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/white.jpg&quot; alt=&quot;Converted Image&quot; width=&quot;100%&quot; /&gt;&#39;);
+        this.whiteTexture.mapping = THREE.EquirectangularReflectionMapping;
+
+        this.gradTexture = this.textureLoader.load(&#39;&lt;img src=&quot;https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/gradient.jpg&quot; alt=&quot;Converted Image&quot; width=&quot;100%&quot; /&gt;&#39;);
+        this.gradTexture.mapping = THREE.EquirectangularReflectionMapping;
+
+        this.loader = new GLTFLoader();
+        this.model = null;
+        this.originalMaterials = {};
+        this.wireframeMeshes = [];
+        this.modelSize = 8;
+
+        this.initEventListeners();
+    }
+
+    // DOM
+    connectedCallback() {
+        this.resizeRenderer(); // init resizing
+        this.animate();
+    }
+
+    static get observedAttributes() {
+        return [&#39;src&#39;];
+    }
+
+    // src track
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === &#39;src&#39; &amp;&amp; newValue) {
+            this.loadModel(newValue);
+        }
+    }
+
+    // model load
+    loadModel(url) {
+        this.loader.load(url, (gltf) =&gt; {
+            if (this.model) {
+                this.scene.remove(this.model);
+            }
+            this.model = gltf.scene;
+            this.model.scale.set(this.modelSize, this.modelSize, this.modelSize);
+            this.model.position.set(0, -3, 0);
+
+            // model info
+            let vertexCount = 0, faceCount = 0;
+            this.model.traverse((child) =&gt; {
+                if (child.isMesh &amp;&amp; child.geometry) {
+                    vertexCount += child.geometry.attributes.position.count;
+                    faceCount += child.geometry.index ? child.geometry.index.count / 3 : child.geometry.attributes.position.count / 3;
+                    this.originalMaterials[child.uuid] = child.material;
+                }
+            });
+            this.shadowRoot.querySelector(&#39;#modelInfo&#39;).innerHTML = `&lt;strong&gt;[Model Info]&lt;/strong&gt; Vertices: ${vertexCount}, Faces: ${faceCount}`;
+            this.scene.add(this.model);
+
+            this.showTexture();
+
+            this.camera.position.set(0, 5, 15);
+            this.camera.lookAt(0, 0, 0);
+        }, undefined, (error) =&gt; {
+            console.error(&#39;Loading Error:&#39;, error);
+        });
+    }
+
+    // Button Event Listner
+    initEventListeners() {
+        this.shadowRoot.querySelector(&#39;#textureBtn&#39;).addEventListener(&#39;click&#39;, () =&gt; this.showTexture());
+        this.shadowRoot.querySelector(&#39;#meshBtn&#39;).addEventListener(&#39;click&#39;, () =&gt; this.showMesh());
+        this.shadowRoot.querySelector(&#39;#wireframeBtn&#39;).addEventListener(&#39;click&#39;, () =&gt; this.showWireframe());
+        this.shadowRoot.querySelector(&#39;#normalBtn&#39;).addEventListener(&#39;click&#39;, () =&gt; this.showNormal());
+        this.shadowRoot.querySelector(&#39;#setBgBtn1&#39;).addEventListener(&#39;click&#39;, () =&gt; this.setBackground1());
+        this.shadowRoot.querySelector(&#39;#setBgBtn2&#39;).addEventListener(&#39;click&#39;, () =&gt; this.setBackground2());
+        this.shadowRoot.querySelector(&#39;#setBgBtn3&#39;).addEventListener(&#39;click&#39;, () =&gt; this.setBackground3());
+        this.shadowRoot.querySelector(&#39;#removeBgBtn&#39;).addEventListener(&#39;click&#39;, () =&gt; this.removeBG());
+
+        this.shadowRoot.querySelector(&#39;#posX&#39;).addEventListener(&#39;input&#39;, () =&gt; this.updateModelTransform());
+        this.shadowRoot.querySelector(&#39;#posY&#39;).addEventListener(&#39;input&#39;, () =&gt; this.updateModelTransform());
+        this.shadowRoot.querySelector(&#39;#posZ&#39;).addEventListener(&#39;input&#39;, () =&gt; this.updateModelTransform());
+        this.shadowRoot.querySelector(&#39;#rotX&#39;).addEventListener(&#39;input&#39;, () =&gt; this.updateModelTransform());
+        this.shadowRoot.querySelector(&#39;#rotY&#39;).addEventListener(&#39;input&#39;, () =&gt; this.updateModelTransform());
+        this.shadowRoot.querySelector(&#39;#rotZ&#39;).addEventListener(&#39;input&#39;, () =&gt; this.updateModelTransform());
+
+        this.shadowRoot.querySelector(&#39;#scale&#39;).addEventListener(&#39;input&#39;, (e) =&gt; {
+            this.modelSize = parseFloat(e.target.value);
+            if (this.model) this.model.scale.set(this.modelSize, this.modelSize, this.modelSize);
+        });
+    }
+
+    updateModelTransform() {
+        if (this.model) {
+            const posX = parseFloat(this.shadowRoot.querySelector(&#39;#posX&#39;).value);
+            const posY = parseFloat(this.shadowRoot.querySelector(&#39;#posY&#39;).value);
+            const posZ = parseFloat(this.shadowRoot.querySelector(&#39;#posZ&#39;).value);
+            this.model.position.set(posX, posY-3, posZ);
+
+            const rotX = THREE.MathUtils.degToRad(parseFloat(this.shadowRoot.querySelector(&#39;#rotX&#39;).value));
+            const rotY = THREE.MathUtils.degToRad(parseFloat(this.shadowRoot.querySelector(&#39;#rotY&#39;).value));
+            const rotZ = THREE.MathUtils.degToRad(parseFloat(this.shadowRoot.querySelector(&#39;#rotZ&#39;).value));
+            this.model.rotation.set(rotX, rotY, rotZ);
+        }
+    }
+
+    // Show Diffuse 
+    showTexture() {
+        if (this.model) {
+            this.model.traverse((child) =&gt; {
+                if (child.isMesh) {
+                    child.material = new THREE.MeshBasicMaterial({
+                        map: this.originalMaterials[child.uuid].map,
+                    });
+                }
+            });
+        }
+    }
+
+    // Mesh Geometry
+    showMesh() {
+        if (this.model) {
+            this.model.traverse((child) =&gt; {
+                if (child.isMesh) {
+                    child.material = new THREE.MeshStandardMaterial({
+                        color: 0xffffff,
+                        map: null,
+                        envMap: this.gradTexture,
+                        envMapIntensity: 1.0,
+                        roughness: 1,
+                        metalness: 1
+                    });
+                }
+            });
+        }
+    }
+
+    // Wireframe toggle
+    showWireframe() {
+        if (this.model) {
+            if (this.wireframeMeshes.length &gt; 0) {
+                this.wireframeMeshes.forEach((mesh) =&gt; {
+                    this.model.remove(mesh); // remove wireframe
+                });
+                this.wireframeMeshes = [];
+            } 
+            // make wireframe
+            else {
+                this.model.traverse((child) =&gt; {
+                    if (child.isMesh) {
+                        const wireframeMesh = new THREE.Mesh(child.geometry, new THREE.MeshBasicMaterial({
+                            wireframe: true,
+                            color: 0xaaaaaa, 
+                            depthTest: true,
+                            transparent: true,
+                            opacity: 0.8 // transparent
+                        }));
+                        this.model.add(wireframeMesh); // add as child 
+                        this.wireframeMeshes.push(wireframeMesh); 
+                    }
+                });
+            }
+        }
+    }
+
+    // Normal Material
+    showNormal() {
+        if (this.model) {
+            this.model.traverse((child) =&gt; {
+                if (child.isMesh) {
+                    child.material = new THREE.MeshNormalMaterial();
+                }
+            });
+        }
+    }
+
+    set_bg(url, rgbeLoader) {
+        rgbeLoader.load(url, (texture) =&gt; {
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+            this.scene.background = texture;
+            // this.scene.environment = texture;
+            if (this.model) {
+                this.model.traverse((child) =&gt; {
+                    if (child.isMesh) {
+                        child.material = new THREE.MeshStandardMaterial({
+                            map: this.originalMaterials[child.uuid].map,
+                            envMap: texture,
+                            envMapIntensity: 1.0,
+                            roughness: 0.99,
+                            metalness: 0.01
+                        });
+                        child.material.needsUpdate = true;
+                    }
+                });
+            }
+        }, undefined, (err) =&gt; {
+            console.error(&#39;Skybox err:&#39;, err);
+            alert(&#39;Cannot load Skybox Image&#39;);
+        });
+    }
+
+    // Skybox
+    setBackground1() {
+        const url = &#39;https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/spruit_sunrise_1k_HDR.hdr&#39;;
+        const rgbeLoader = new RGBELoader();
+        this.set_bg(url, rgbeLoader)
+    }
+    setBackground2() {
+        const url = &#39;https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/aircraft_workshop_01_1k.hdr&#39;;
+        const rgbeLoader = new RGBELoader();
+        this.set_bg(url, rgbeLoader)
+    }
+
+    setBackground3() {
+        const url = &#39;https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/lebombo_1k.hdr&#39;;
+        const rgbeLoader = new RGBELoader();
+        this.set_bg(url, rgbeLoader)
+    }
+
+
+    // Remove BG
+    removeBG() {
+        this.scene.background = null;
+        this.scene.environment = null;
+        if (this.model) {
+            this.model.traverse((child) =&gt; {
+                if (child.isMesh) {
+                    child.material = new THREE.MeshBasicMaterial({
+                        map: this.originalMaterials[child.uuid].map,
+                        envMap: null,
+                    });
+                    child.material.needsUpdate = true;
+                }
+            });
+        }
+    }
+
+    animate() {
+        requestAnimationFrame(() =&gt; this.animate());
+        this.controls.update();
+        this.renderer.render(this.scene, this.camera);
+    }
+
+    // Resizing for the window
+    resizeRenderer() {
+        const host = this.shadowRoot.host;
+        const metaDiv = this.shadowRoot.querySelector(&#39;#meta&#39;);
+        const metaHeight = metaDiv ? metaDiv.offsetHeight : 0; // meta div
+        const width = host.clientWidth * 0.99; 
+        const height = host.clientHeight - metaHeight; // rest
+
+        // this.shadowRoot.host.style.setProperty(&#39;--meta-height&#39;, `${metaHeight}px`);
+
+        this.renderer.setSize(width, height * 0.96);
+        this.camera.aspect = width / height;
+        this.camera.updateProjectionMatrix();
+    }
+}
+
+// custom element 
+customElements.define(&#39;simple-model-viewer&#39;, SimpleModelViewer);
+export { SimpleModelViewer };
+
+          </code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p id="p-27" class='lang eng'> By loading this JS file into an HTML file that imports Three.js, you can configure <code>simple-model-viewer</code> as follows. It works independently across multiple 3D models, much like Google Model Viewer: </p>
+<p id="p-23" class='lang kor'> 위의 js 파일을 load 해서 threejs import 한 html 파일에 아래와 같이 simple-model-viewer 에 대한 설정만 해준다면, google model viewer class 처럼 독립적으로 여러 3D model 에 대해 web 에서 불러올 수 있다.</p> 
+<pre id="pre-12" ><code id="code-NaN" style="font-size:1rem"  class="language-javascript">&lt;script type=&quot;module&quot;&gt;
+    import { SimpleModelViewer } from &#39;simple-model-viewer.js&#39;;
+
+    // Resizing
+    window.addEventListener(&#39;resize&#39;, () =&gt; {
+        const viewers = document.querySelectorAll(&#39;simple-model-viewer&#39;);
+        viewers.forEach(viewer =&gt; viewer.resizeRenderer());
+    });
+&lt;/script&gt;
+</code></pre>
+<p class="lang eng"> As another example, here’s a monster asset generated with <a href='https://ncsoft.github.io/CaPa/'>CaPa</a>, previously shared in <a href="../250302_3d_latent_diffusion/">Deep Dive into 3D Latent Diffusion</a>: </p>
+<p class="lang kor">
+    다른 mesh file 불러온 예시로, 이전 <a href="../250302_3d_latent_diffusion/">Deep Dive into 3D Latent Diffusion</a> 에서 공유한 <a href='https://ncsoft.github.io/CaPa/'>CaPa</a> 로 만든 monster asset Result 를 첨부한다. 
+</p>
+<simple-model-viewer 
+    src="https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/monster_ours.glb" 
+    style="width: 100%; height: 600px;">
+</simple-model-viewer>
+<p id="p-28" class='lang eng'> Adding a default animation with <code>animate()</code> to automatically adjust the mesh’s Y-axis rotation, or including settings like <code>mesh.position</code> in <code>observedAttributes</code>, could make this a versatile 3D model viewer akin to Google’s, but with more features. </p> 
+<p id="p-29" class='lang eng'> I’m planning to add these enhancements soon and release it as a modest <code>3D Model Viewer for 3D Generation</code> package on GitHub. </p>
+<p id="p-28"  class='lang kor'> <code>animate()</code> 로 mesh 의 rotation y angle 을 자동으로 바꾸는 기본 animation 을 추가하거나, <code>mesh.position</code> 등의 setting 을 <code>observedAttributes</code> 에 추가한다면, model viewer 와 흡사하지만 좀 더 많은 기능을 제공하는 3D Model Viewer 로 사용할 수 있을 것이다.  </p>
+<p id="p-29"  class='lang kor'> 조만간 해당 기능들을 추가하여, <code>3D Model Viewer for 3D Generation</code> 패키지로 소소하게 github 에 올려볼 예정이다. </p>
+<hr/>
+<h3 id="h3-5">Key Takeaways</h3>
+<br/>
+<ul class='lang eng'>
+    <li><strong>Google Model Viewer</strong>: Quick and easy setup is its strength, but it’s limited in rendering modes and customization.</li> 
+    <li><strong>Three.js Custom Viewer</strong>: Offers flexibility and fine-grained control, though it requires more complex setup and time.</li>
+    <li>Choose based on your project’s needs—simplicity or versatility.</li> 
+</ul>
+<ul class='lang kor'>
+    <li><strong>Google Model Viewer</strong>: 빠르고 쉬운 설정이 장점이나, 렌더링 모드와 커스터마이징에 한계가 있다.</li>
+    <li><strong>Three.js Custom Viewer</strong>: 유연성과 세밀한 제어가 강점이지만, 설정이 복잡하고 시간이 더 걸린다.</li> 
+    <li>프로젝트 요구사항에 따라 간편함과 유연성 중 적절한 선택이 필요하다.</li> 
+</ul>
+<br/>
+<h2 id="conclusion">Conclusion</h2>
+
+<p id="p-30" class='lang eng'> Google Model Viewer is a fantastic tool for quickly and easily embedding 3D models on the web. However, when you need finer control or a variety of rendering modes, a Three.js-based custom viewer is the way to go. </p> 
+<p id="p-31" class='lang eng'> In this project, I used Three.js to build a custom viewer supporting Diffuse, Mesh, Wireframe, and Normal rendering modes, complete with a panel for adjusting model position and rotation. This gives users the flexibility to manipulate models and explore different visual effects. </p> 
+<p id="p-32" class='lang eng'> Looking ahead, there’s room to expand with features like lighting controls, camera view saving, or model rotation animations. I hope this post helps you understand the ins and outs of 3D model viewers and pick the best approach for your next project! </p>
+<p id="p-30" class='lang kor'> 
+    Google Model Viewer는 빠르고 간편하게 3D 모델을 웹에 삽입할 수 있는 훌륭한 도구다. 하지만 더 세밀한 제어나 다양한 렌더링 모드가 필요할 때는 Three.js를 사용한 커스텀 뷰어가 더 적합하다. 
+</p>
+<p id="p-31" class='lang kor'> 
+    이번 작업에서 Three.js를 활용해 Diffuse, Mesh, Wireframe, Normal 등의 렌더링 모드를 지원하는 커스텀 뷰어를 구현했으며, 모델의 위치와 회전을 조정할 수 있는 패널도 추가했다. 
+    이를 통해 사용자는 모델을 유연하게 조작하며 다양한 시각적 효과를 탐구할 수 있다. 
+</p> 
+<p id="p-32" class='lang kor'> 앞으로 필요에 따라 기능을 확장할 수 있으며, 예를 들어 조명 설정, 카메라 뷰 저장, 모델 회전 애니메이션 등을 추가할 수 있다. 이 글을 통해 3D 모델 뷰어의 구현 방법을 이해하고, 프로젝트에 맞는 최적의 방법을 선택하는 데 도움이 되길 바란다. </p>
+
+                            </div>
+                            <hr/>
+                            <p>
+                                You may also like, 
+                            </p>
+                            <ul>
+                                <li>
+                                    <a href="../240917_3djs/">
+                                        <span style="text-decoration: underline;">Add Gaussian Splatting to your Website</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="../250302_3d_latent_diffusion/">
+                                        <span style="text-decoration: underline;">A Deep Dive into 3D Latent Diffusion</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <br/>
+                            <div class="d-flex justify-content-between mb-4">
+                                <a class="btn btn-primary text-uppercase" href="../250302_3d_latent_diffusion/">← Older Post</a>
+                                <!-- <a class="btn btn-primary text-uppercase" href="#">Next Post →</a> -->
+                            </div>
+                            <!-- <div class="d-flex justify-content-start mb-4"><a class="btn btn-primary text-uppercase" href="../240917_3djs/">← Older Post</a></div> -->
+                            <script src="https://giscus.app/client.js"
+                                data-repo="hwan-h-heo/hwan-h-heo.io"
+                                data-repo-id="R_kgDOMeZQdw"
+                                data-category="General"
+                                data-category-id="DIC_kwDOMeZQd84CiEMJ"
+                                data-mapping="pathname"
+                                data-strict="0"
+                                data-reactions-enabled="1"
+                                data-emit-metadata="0"
+                                data-input-position="bottom"
+                                data-theme="light_protanopia"
+                                data-lang="en"
+                                data-loading="lazy"
+                                crossorigin="anonymous"
+                                async>
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <!-- Footer-->
+            <footer class="border-top">
+                <div class="container px-4 px-lg-5">
+                    <div class="row gx-4 gx-lg-5 justify-content-center">
+                        <div class="col-md-10 col-lg-8 col-xl-7">
+                            <ul class="list-inline text-center">
+                                <li class="list-inline-item">
+                                    <a href="https://www.linkedin.com/in/hwan-heo-0905korea/">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fas fa-circle fa-stack-2x"></i>
+                                            <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="https://github.com/hwanhuh">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fas fa-circle fa-stack-2x"></i>
+                                            <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="small text-center text-muted fst-italic">Copyright &copy; Hwan Heo</div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+            <!-- Bootstrap core JS-->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+            <!-- Core theme JS-->
+            <script src="../../../js/scripts.js"></script>
+            <script src="https://unpkg.com/prismjs@1.28.0/components/prism-core.min.js"></script>
+            <script src="https://unpkg.com/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+            <script>
+                Prism.plugins.autoloader.languages_path = 'https://unpkg.com/prismjs@1.28.0/components/'
+            </script>
+            <script>
+                var window_state = {};
+                function show_texture(){
+                    let modelViewer = document.getElementById('model-g');
+        
+                    if (modelViewer.model.materials[0].pbrMetallicRoughness.baseColorTexture.texture !== null) return;
+                    modelViewer.environmentImage = 'https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/white.jpg';
+                    for (let i = 0; i < modelViewer.model.materials.length; i++) {
+                        modelViewer.model.materials[i].pbrMetallicRoughness.baseColorTexture.setTexture(window_state.textures[i]);
+                    }
+                    modelViewer.exposure = window_state.exposure;
+        
+                }
+                function show_geometry(){
+                    let modelViewer = document.getElementById('model-g');
+        
+                    if (modelViewer.model.materials[0].pbrMetallicRoughness.baseColorTexture.texture === null) return;
+                    window_state.textures = [];
+                    for (let i = 0; i < modelViewer.model.materials.length; i++) {
+                        window_state.textures.push(modelViewer.model.materials[i].pbrMetallicRoughness.baseColorTexture.texture);
+                    }
+                    window_state.exposure = modelViewer.exposure;
+                    modelViewer.environmentImage = 'https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/gradient.jpg';
+                    for (let i = 0; i < modelViewer.model.materials.length; i++) {
+                        modelViewer.model.materials[i].pbrMetallicRoughness.baseColorTexture.setTexture(null);
+                    }
+                    modelViewer.exposure = 3;
+                }
+            </script>
+            <script type="module">
+                import { SimpleModelViewer } from '../../../js/simple-model-viewer.js';
+        
+                // Resizing
+                window.addEventListener('resize', () => {
+                    const viewers = document.querySelectorAll('simple-model-viewer');
+                    viewers.forEach(viewer => viewer.resizeRenderer());
+                });
+            </script>
+        </body>
+</html>
+

@@ -148,6 +148,56 @@
             display: none;
         }
 
+        .mv-modal-box {
+                display: none;
+            }
+        /* 모달 박스 기본 스타일 */
+        .mv-modal-box {
+            display: none; /* 처음에는 보이지 않음 */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* 가운데 정렬 */
+            width: 40%; /* 창 너비 조정 */
+            height: 40%; /* 창 높이 조정 */
+            background-color: rgba(0, 0, 0, 0.8); /* 반투명한 배경 */
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        /* 3D 모델 크기 조정 */
+        model-viewer {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 화면 전체 어두운 배경 (모달 밖 클릭 시 닫기) */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
+            z-index: 999;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .close-btn:hover {
+            background-color: darkred;
+        }
+
         .token.keyword { color: #007bff; }        /* Example: Blue keywords */
         .token.tag { color: #e83e8c; }            /* Example: Pink tags */
         .token.attr-name { color: #fd7e14; }      /* Example: Orange attribute names */
@@ -1029,20 +1079,6 @@
                 processFullTranslation = false;
             }
 
-            // function convertBareImageUrls(text) {
-            //     const imageUrlRegex = /!?https?:\/\/[^\s]+\.(?:png|jpg|jpeg|gif|svg|webp)(?:\?[^\s]*)?/gi;
-            //     return text.replace(imageUrlRegex, (match) => {
-            //         const prevChar = text[text.indexOf(match) - 1];
-            //         if (prevChar === '(' || prevChar === '"') {
-            //             return match;
-            //         }
-            //         if (match.startsWith('!')) {
-            //             match = match.slice(1);
-            //             return `<img src="${match}" alt="Converted Image" width = "100%" />`;
-            //         }
-            //         return match;
-            //     });
-            // }
             function convertBareImageUrls(text) {
                 const imageUrlRegex = /!?https?:\/\/[^\s]+\.(?:png|jpg|jpeg|gif|svg|webp)(?:\?[^\s]*)?/gi;
                 return text.replace(imageUrlRegex, (match) => {
