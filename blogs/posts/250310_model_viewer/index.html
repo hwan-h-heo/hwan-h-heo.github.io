@@ -430,7 +430,7 @@ loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined
       </h2>
       <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
         <div class="accordion-body">
-          <pre><code style="font-size: 1rem;" class="language-javascript">import * as THREE from 'three';
+          <pre><code style="font-size: 1rem;" class="language-javascript">import * as THREE from &#39;three&#39;;
 import { OrbitControls } from &#39;three/addons/controls/OrbitControls.js&#39;;
 import { GLTFLoader } from &#39;three/addons/loaders/GLTFLoader.js&#39;;
 import { RGBELoader } from &#39;three/addons/loaders/RGBELoader.js&#39;;
@@ -438,7 +438,6 @@ import { RGBELoader } from &#39;three/addons/loaders/RGBELoader.js&#39;;
 class SimpleModelViewer extends HTMLElement {
     constructor() {
         super();
-        // Shadow DOM
         this.attachShadow({ mode: &#39;open&#39; });
         this.shadowRoot.innerHTML = `
             &lt;style&gt;
@@ -447,7 +446,7 @@ class SimpleModelViewer extends HTMLElement {
                 canvas { width: 100%; height: 100%; }
                 .controls { margin: 5px; }
                 button {
-                    background-color: #04AA6D; /* Green */
+                    background-color: #04AA6D;
                     border: none;
                     color: white;
                     padding: 5px 10px;
@@ -458,31 +457,25 @@ class SimpleModelViewer extends HTMLElement {
                     display: inline-block;
                     font-size: 0.8rem;
                 }
-                button:hover{
-                    background-color: #3e8e41
-                }
+                button:hover { background-color: #3e8e41 }
                 .transform-panel {
                     position: absolute;
-                    top: 0.5rem; 
-                    right: 0.5rem; 
+                    top: 0.5rem;
+                    right: 0.5rem;
                     font-size: 0.8rem;
-                    background-color: rgba(200, 200, 200, 0.8); 
+                    background-color: rgba(200, 200, 200, 0.8);
                     padding: 0.5rem;
-                    border-radius: 5px; 
+                    border-radius: 5px;
                     display: flex;
-                    flex-direction: column; 
-                    gap: 3px; 
+                    flex-direction: column;
+                    gap: 3px;
                 }
-                
                 .transform-panel label {
                     display: flex;
-                    justify-content: space-between; 
+                    justify-content: space-between;
                     align-items: center;
                 }
-                
-                .transform-panel input {
-                    width: 3rem; 
-                }
+                .transform-panel input { width: 3rem; }
             &lt;/style&gt;
             &lt;div class=&quot;controls&quot;&gt;
                 &lt;div id=&#39;meta&#39;&gt;
@@ -490,41 +483,41 @@ class SimpleModelViewer extends HTMLElement {
                     &lt;button id=&quot;meshBtn&quot;&gt;Geometry&lt;/button&gt;
                     &lt;button id=&quot;normalBtn&quot;&gt;Normal&lt;/button&gt;
                     &lt;button id=&quot;wireframeBtn&quot;&gt;Wireframe&lt;/button&gt;
+                    &lt;button id=&quot;autoRotateBtn&quot;&gt;Auto-Rotate&lt;/button&gt;
                     &lt;button id=&quot;setBgBtn1&quot;&gt;Env1&lt;/button&gt;
                     &lt;button id=&quot;setBgBtn2&quot;&gt;Env2&lt;/button&gt;
                     &lt;button id=&quot;setBgBtn3&quot;&gt;Env3&lt;/button&gt;
                     &lt;button id=&quot;removeBgBtn&quot;&gt;Remove Env&lt;/button&gt;
-
                     &lt;div id=&quot;modelInfo&quot; style=&#39;padding-left: 0.1rem; font-size:0.8rem&#39;&gt;&lt;strong&gt;[Model Info]&lt;/strong&gt; loading...&lt;/div&gt;
                 &lt;/div&gt;
-                &lt;div id=&quot;canvas-container&quot; style=&quot;position: relative;&quot;&gt;
+                &lt;div id=&quot;transform-container&quot; style=&quot;position: relative;&quot;&gt;
                     &lt;div class=&quot;transform-panel&quot;&gt;
-                        &lt;label&gt;Position X: &lt;input type=&quot;number&quot; id=&quot;posX&quot; step=&quot;0.1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
-                        &lt;label&gt;Position Y: &lt;input type=&quot;number&quot; id=&quot;posY&quot; step=&quot;0.1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
-                        &lt;label&gt;Position Z: &lt;input type=&quot;number&quot; id=&quot;posZ&quot; step=&quot;0.1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
-                        &lt;label&gt;Rotation X (deg): &lt;input type=&quot;number&quot; id=&quot;rotX&quot; step=&quot;1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
-                        &lt;label&gt;Rotation Y (deg): &lt;input type=&quot;number&quot; id=&quot;rotY&quot; step=&quot;1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
-                        &lt;label&gt;Rotation Z (deg): &lt;input type=&quot;number&quot; id=&quot;rotZ&quot; step=&quot;1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
-                        &lt;div&gt;Scale: &lt;input type=&quot;range&quot; id=&quot;scale&quot; style=&#39;width: 7rem; &#39; min=&quot;1&quot; max=&quot;20&quot; step=&quot;0.1&quot; value=&quot;8&quot;&gt;&lt;/div&gt;
+                        &lt;button id=&quot;togglePanelBtn&quot;&gt;&lt;i class=&quot;bi bi-caret-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+                        &lt;div id=&quot;transformControls&quot; style=&quot;display: block;&quot;&gt;
+                            &lt;label&gt;Position X: &lt;input type=&quot;number&quot; id=&quot;posX&quot; step=&quot;0.1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
+                            &lt;label&gt;Position Y: &lt;input type=&quot;number&quot; id=&quot;posY&quot; step=&quot;0.1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
+                            &lt;label&gt;Position Z: &lt;input type=&quot;number&quot; id=&quot;posZ&quot; step=&quot;0.1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
+                            &lt;label&gt;Rotation X (deg): &lt;input type=&quot;number&quot; id=&quot;rotX&quot; step=&quot;1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
+                            &lt;label&gt;Rotation Y (deg): &lt;input type=&quot;number&quot; id=&quot;rotY&quot; step=&quot;1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
+                            &lt;label&gt;Rotation Z (deg): &lt;input type=&quot;number&quot; id=&quot;rotZ&quot; step=&quot;1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
+                            &lt;div&gt;Scale: &lt;input type=&quot;range&quot; id=&quot;scale&quot; style=&quot;width: 7rem;&quot; min=&quot;1&quot; max=&quot;20&quot; step=&quot;0.1&quot; value=&quot;8&quot;&gt;&lt;/div&gt;
+                        &lt;/div&gt;
                     &lt;/div&gt;
                 &lt;/div&gt;
             &lt;/div&gt;
             &lt;div id=&quot;canvas-container&quot; style=&#39;text-align: center&#39;&gt;&lt;/div&gt;
         `;
 
-        // Three.js settings
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000); //
+        this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setClearColor(0xeeeeee, 1);
         this.shadowRoot.querySelector(&#39;#canvas-container&#39;).appendChild(this.renderer.domElement);
 
-        // OrbitControls for mouse control
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.enableDamping = true;
         this.controls.dampingFactor = 0.05;
 
-        // Init texture and loader
         this.textureLoader = new THREE.TextureLoader();
         this.whiteTexture = this.textureLoader.load(&#39;&lt;img src=&quot;https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/white.jpg&quot; alt=&quot;Converted Image&quot; width=&quot;100%&quot; /&gt;&#39;);
         this.whiteTexture.mapping = THREE.EquirectangularReflectionMapping;
@@ -537,59 +530,41 @@ class SimpleModelViewer extends HTMLElement {
         this.originalMaterials = {};
         this.wireframeMeshes = [];
         this.modelSize = 8;
+        this.autoRotate = false;
+        this.anglePerSecond = 30;
+        this.lastTime = 0;
 
         this.initEventListeners();
     }
 
-    // DOM
     connectedCallback() {
-        this.resizeRenderer(); // init resizing
-        this.animate();
+        this.resizeRenderer();
+        this.animate(0);
     }
 
     static get observedAttributes() {
-        return [&#39;src&#39;];
+        return [&#39;src&#39;, &#39;auto-rotate&#39;, &#39;angle-per-second&#39;, &#39;camera-orbit&#39;, &#39;hide-control-ui&#39;];
     }
 
-    // src track
     attributeChangedCallback(name, oldValue, newValue) {
         if (name === &#39;src&#39; &amp;&amp; newValue) {
             this.loadModel(newValue);
+        } else if (name === &#39;auto-rotate&#39;) {
+            this.autoRotate = newValue !== null;
+        } else if (name === &#39;angle-per-second&#39;) {
+            this.anglePerSecond = parseFloat(newValue) || 30;
+        } else if (name === &#39;camera-orbit&#39;) {
+            this.setCameraOrbit(newValue);
+        } else if (name === &#39;hide-control-ui&#39;) {
+            const controlsDiv = this.shadowRoot.querySelector(&#39;.controls&#39;);
+            if (newValue !== null) {
+                controlsDiv.style.display = &#39;none&#39;;
+            } else {
+                controlsDiv.style.display = &#39;block&#39;;
+            }
         }
     }
 
-    // model load
-    loadModel(url) {
-        this.loader.load(url, (gltf) =&gt; {
-            if (this.model) {
-                this.scene.remove(this.model);
-            }
-            this.model = gltf.scene;
-            this.model.scale.set(this.modelSize, this.modelSize, this.modelSize);
-            this.model.position.set(0, -3, 0);
-
-            // model info
-            let vertexCount = 0, faceCount = 0;
-            this.model.traverse((child) =&gt; {
-                if (child.isMesh &amp;&amp; child.geometry) {
-                    vertexCount += child.geometry.attributes.position.count;
-                    faceCount += child.geometry.index ? child.geometry.index.count / 3 : child.geometry.attributes.position.count / 3;
-                    this.originalMaterials[child.uuid] = child.material;
-                }
-            });
-            this.shadowRoot.querySelector(&#39;#modelInfo&#39;).innerHTML = `&lt;strong&gt;[Model Info]&lt;/strong&gt; Vertices: ${vertexCount}, Faces: ${faceCount}`;
-            this.scene.add(this.model);
-
-            this.showTexture();
-
-            this.camera.position.set(0, 5, 15);
-            this.camera.lookAt(0, 0, 0);
-        }, undefined, (error) =&gt; {
-            console.error(&#39;Loading Error:&#39;, error);
-        });
-    }
-
-    // Button Event Listner
     initEventListeners() {
         this.shadowRoot.querySelector(&#39;#textureBtn&#39;).addEventListener(&#39;click&#39;, () =&gt; this.showTexture());
         this.shadowRoot.querySelector(&#39;#meshBtn&#39;).addEventListener(&#39;click&#39;, () =&gt; this.showMesh());
@@ -611,6 +586,23 @@ class SimpleModelViewer extends HTMLElement {
             this.modelSize = parseFloat(e.target.value);
             if (this.model) this.model.scale.set(this.modelSize, this.modelSize, this.modelSize);
         });
+
+        this.shadowRoot.querySelector(&#39;#autoRotateBtn&#39;).addEventListener(&#39;click&#39;, () =&gt; {
+            this.autoRotate = !this.autoRotate;
+            this.shadowRoot.querySelector(&#39;#autoRotateBtn&#39;).textContent = this.autoRotate ? &#39;Auto-Rotate On&#39; : &#39;Auto-Rotate Off&#39;;
+        });
+
+        this.shadowRoot.querySelector(&#39;#togglePanelBtn&#39;).addEventListener(&#39;click&#39;, () =&gt; {
+            const controls = this.shadowRoot.querySelector(&#39;#transformControls&#39;);
+            const button = this.shadowRoot.querySelector(&#39;#togglePanelBtn&#39;);
+            if (controls.style.display === &#39;none&#39;) {
+                controls.style.display = &#39;block&#39;;
+                button.innerHTML = &#39;&lt;i class=&quot;bi bi-caret-left-fill&quot;&gt;&lt;/i&gt;&#39;;
+            } else {
+                controls.style.display = &#39;none&#39;;
+                button.innerHTML = &#39;&lt;i class=&quot;bi bi-caret-left&quot;&gt;&lt;/i&gt;&#39;;
+            }
+        });
     }
 
     updateModelTransform() {
@@ -618,7 +610,7 @@ class SimpleModelViewer extends HTMLElement {
             const posX = parseFloat(this.shadowRoot.querySelector(&#39;#posX&#39;).value);
             const posY = parseFloat(this.shadowRoot.querySelector(&#39;#posY&#39;).value);
             const posZ = parseFloat(this.shadowRoot.querySelector(&#39;#posZ&#39;).value);
-            this.model.position.set(posX, posY-3, posZ);
+            this.model.position.set(posX, posY - 3, posZ);
 
             const rotX = THREE.MathUtils.degToRad(parseFloat(this.shadowRoot.querySelector(&#39;#rotX&#39;).value));
             const rotY = THREE.MathUtils.degToRad(parseFloat(this.shadowRoot.querySelector(&#39;#rotY&#39;).value));
@@ -627,20 +619,16 @@ class SimpleModelViewer extends HTMLElement {
         }
     }
 
-    // Show Diffuse 
     showTexture() {
         if (this.model) {
             this.model.traverse((child) =&gt; {
                 if (child.isMesh) {
-                    child.material = new THREE.MeshBasicMaterial({
-                        map: this.originalMaterials[child.uuid].map,
-                    });
+                    child.material = new THREE.MeshBasicMaterial({ map: this.originalMaterials[child.uuid].map });
                 }
             });
         }
     }
 
-    // Mesh Geometry
     showMesh() {
         if (this.model) {
             this.model.traverse((child) =&gt; {
@@ -658,35 +646,29 @@ class SimpleModelViewer extends HTMLElement {
         }
     }
 
-    // Wireframe toggle
     showWireframe() {
         if (this.model) {
             if (this.wireframeMeshes.length &gt; 0) {
-                this.wireframeMeshes.forEach((mesh) =&gt; {
-                    this.model.remove(mesh); // remove wireframe
-                });
+                this.wireframeMeshes.forEach((mesh) =&gt; this.model.remove(mesh));
                 this.wireframeMeshes = [];
-            } 
-            // make wireframe
-            else {
+            } else {
                 this.model.traverse((child) =&gt; {
                     if (child.isMesh) {
                         const wireframeMesh = new THREE.Mesh(child.geometry, new THREE.MeshBasicMaterial({
                             wireframe: true,
-                            color: 0xaaaaaa, 
+                            color: 0xaaaaaa,
                             depthTest: true,
                             transparent: true,
-                            opacity: 0.8 // transparent
+                            opacity: 0.8
                         }));
-                        this.model.add(wireframeMesh); // add as child 
-                        this.wireframeMeshes.push(wireframeMesh); 
+                        this.model.add(wireframeMesh);
+                        this.wireframeMeshes.push(wireframeMesh);
                     }
                 });
             }
         }
     }
 
-    // Normal Material
     showNormal() {
         if (this.model) {
             this.model.traverse((child) =&gt; {
@@ -701,7 +683,6 @@ class SimpleModelViewer extends HTMLElement {
         rgbeLoader.load(url, (texture) =&gt; {
             texture.mapping = THREE.EquirectangularReflectionMapping;
             this.scene.background = texture;
-            // this.scene.environment = texture;
             if (this.model) {
                 this.model.traverse((child) =&gt; {
                     if (child.isMesh) {
@@ -709,8 +690,8 @@ class SimpleModelViewer extends HTMLElement {
                             map: this.originalMaterials[child.uuid].map,
                             envMap: texture,
                             envMapIntensity: 1.0,
-                            roughness: 0.99,
-                            metalness: 0.01
+                            roughness: this.originalMaterials[child.uuid].roughness,
+                            metalness: this.originalMaterials[child.uuid].metalness,
                         });
                         child.material.needsUpdate = true;
                     }
@@ -722,57 +703,107 @@ class SimpleModelViewer extends HTMLElement {
         });
     }
 
-    // Skybox
     setBackground1() {
         const url = &#39;https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/spruit_sunrise_1k_HDR.hdr&#39;;
         const rgbeLoader = new RGBELoader();
-        this.set_bg(url, rgbeLoader)
+        this.set_bg(url, rgbeLoader);
     }
+
     setBackground2() {
         const url = &#39;https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/aircraft_workshop_01_1k.hdr&#39;;
         const rgbeLoader = new RGBELoader();
-        this.set_bg(url, rgbeLoader)
+        this.set_bg(url, rgbeLoader);
     }
 
     setBackground3() {
         const url = &#39;https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/lebombo_1k.hdr&#39;;
         const rgbeLoader = new RGBELoader();
-        this.set_bg(url, rgbeLoader)
+        this.set_bg(url, rgbeLoader);
     }
 
-
-    // Remove BG
     removeBG() {
         this.scene.background = null;
         this.scene.environment = null;
         if (this.model) {
             this.model.traverse((child) =&gt; {
                 if (child.isMesh) {
-                    child.material = new THREE.MeshBasicMaterial({
-                        map: this.originalMaterials[child.uuid].map,
-                        envMap: null,
-                    });
+                    child.material = new THREE.MeshBasicMaterial({ map: this.originalMaterials[child.uuid].map, envMap: null });
                     child.material.needsUpdate = true;
                 }
             });
         }
     }
 
-    animate() {
-        requestAnimationFrame(() =&gt; this.animate());
+    setCameraOrbit(value) {
+        const [x, y, z] = value.split(&#39; &#39;).map(parseFloat);
+        if (!isNaN(x) &amp;&amp; !isNaN(y) &amp;&amp; !isNaN(z)) {
+            this.camera.position.set(x, y, z);
+            this.camera.lookAt(0, 0, 0);
+        }
+    }
+
+    loadModel(url) {
+        this.loader.load(url, (gltf) =&gt; {
+            if (this.model) {
+                this.scene.remove(this.model);
+            }
+            this.model = gltf.scene;
+            this.model.scale.set(this.modelSize, this.modelSize, this.modelSize);
+
+            const box = new THREE.Box3().setFromObject(this.model);
+            const center = box.getCenter(new THREE.Vector3());
+            this.model.position.sub(center);
+
+            const size = box.getSize(new THREE.Vector3());
+            const maxDim = Math.max(size.x, size.y, size.z);
+            const fov = this.camera.fov * (Math.PI / 180);
+            let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+
+            const cameraOrbit = this.getAttribute(&#39;camera-orbit&#39;);
+            if (cameraOrbit) {
+                this.setCameraOrbit(cameraOrbit);
+            } else {
+                this.camera.position.set(0, 0, cameraZ * 1.5);
+                this.camera.lookAt(0, 0, 0);
+            }
+
+            let vertexCount = 0, faceCount = 0;
+            this.model.traverse((child) =&gt; {
+                if (child.isMesh &amp;&amp; child.geometry) {
+                    vertexCount += child.geometry.attributes.position.count;
+                    faceCount += child.geometry.index ? child.geometry.index.count / 3 : child.geometry.attributes.position.count / 3;
+                    this.originalMaterials[child.uuid] = child.material;
+                }
+            });
+            this.shadowRoot.querySelector(&#39;#modelInfo&#39;).innerHTML = `&lt;strong&gt;[Model Info]&lt;/strong&gt; Vertices: ${vertexCount}, Faces: ${faceCount}`;
+            this.scene.add(this.model);
+
+            this.showTexture();
+        }, undefined, (error) =&gt; {
+            console.error(&#39;Loading Error:&#39;, error);
+        });
+    }
+
+    animate(time) {
+        requestAnimationFrame((t) =&gt; this.animate(t));
+        const deltaTime = (time - this.lastTime) / 1000;
+        this.lastTime = time;
+
+        if (this.autoRotate &amp;&amp; this.model) {
+            const rotationSpeed = THREE.MathUtils.degToRad(this.anglePerSecond);
+            this.model.rotation.y += rotationSpeed * deltaTime;
+        }
+
         this.controls.update();
         this.renderer.render(this.scene, this.camera);
     }
 
-    // Resizing for the window
     resizeRenderer() {
         const host = this.shadowRoot.host;
         const metaDiv = this.shadowRoot.querySelector(&#39;#meta&#39;);
-        const metaHeight = metaDiv ? metaDiv.offsetHeight : 0; // meta div
-        const width = host.clientWidth * 0.99; 
-        const height = host.clientHeight - metaHeight; // rest
-
-        // this.shadowRoot.host.style.setProperty(&#39;--meta-height&#39;, `${metaHeight}px`);
+        const metaHeight = metaDiv ? metaDiv.offsetHeight : 0;
+        const width = host.clientWidth * 0.99;
+        const height = host.clientHeight - metaHeight;
 
         this.renderer.setSize(width, height * 0.96);
         this.camera.aspect = width / height;
@@ -780,19 +811,24 @@ class SimpleModelViewer extends HTMLElement {
     }
 }
 
-// custom element 
 customElements.define(&#39;simple-model-viewer&#39;, SimpleModelViewer);
 export { SimpleModelViewer };
-
           </code></pre>
         </div>
       </div>
     </div>
   </div>
 
-  <p id="p-27" class='lang eng'> By loading this JS file into an HTML file that imports Three.js, you can configure <code>simple-model-viewer</code> as follows. It works independently across multiple 3D models, much like Google Model Viewer: </p>
+<p id="p-27" class='lang eng'> By loading this JS file into an HTML file that imports Three.js, you can configure <code>simple-model-viewer</code> as follows. It works independently across multiple 3D models, much like Google Model Viewer: </p>
 <p id="p-23" class='lang kor'> 위의 js 파일을 load 해서 threejs import 한 html 파일에 아래와 같이 simple-model-viewer 에 대한 설정만 해준다면, google model viewer class 처럼 독립적으로 여러 3D model 에 대해 web 에서 불러올 수 있다.</p> 
-<pre id="pre-12" ><code id="code-NaN" style="font-size:1rem"  class="language-javascript">&lt;script type=&quot;module&quot;&gt;
+<pre id="pre-12" ><code id="code-NaN" style="font-size:1rem"  class="language-javascript">&lt;simple-model-viewer 
+    src=&quot;model.glb&quot; 
+    camera-orbit=&quot;0 0 20&quot;
+    angle-per-second=&quot;45&quot;
+    style=&quot;width: 100%; height: 800px;&quot;&gt;
+&lt;/simple-model-viewer&gt;
+    
+&lt;script type=&quot;module&quot;&gt;
     import { SimpleModelViewer } from &#39;simple-model-viewer.js&#39;;
 
     // Resizing
@@ -810,10 +846,10 @@ export { SimpleModelViewer };
     src="https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/monster_ours.glb" 
     style="width: 100%; height: 600px;">
 </simple-model-viewer>
-<p id="p-28" class='lang eng'> Adding a default animation with <code>animate()</code> to automatically adjust the mesh’s Y-axis rotation, or including settings like <code>mesh.position</code> in <code>observedAttributes</code>, could make this a versatile 3D model viewer akin to Google’s, but with more features. </p> 
-<p id="p-29" class='lang eng'> I’m planning to add these enhancements soon and release it as a modest <code>3D Model Viewer for 3D Generation</code> package on GitHub. </p>
-<p id="p-28"  class='lang kor'> <code>animate()</code> 로 mesh 의 rotation y angle 을 자동으로 바꾸는 기본 animation 을 추가하거나, <code>mesh.position</code> 등의 setting 을 <code>observedAttributes</code> 에 추가한다면, model viewer 와 흡사하지만 좀 더 많은 기능을 제공하는 3D Model Viewer 로 사용할 수 있을 것이다.  </p>
-<p id="p-29"  class='lang kor'> 조만간 해당 기능들을 추가하여, <code>3D Model Viewer for 3D Generation</code> 패키지로 소소하게 github 에 올려볼 예정이다. </p>
+<p id="p-28" class='lang eng'> With <code>auto-animate</code>, a basic animation to automatically change the mesh's rotation Y-angle can be added. Just like Model Viewer, this value is adjustable via <code>angle-per-second</code>, and the initial camera position is also configurable using <code>camera-orbit</code> option.</p> 
+<p id="p-29" class='lang eng'> By incorporating toggleable settings for features like the <code>Control Panel</code>, I’ve developed a 3D Model Viewer that, while similar to Model Viewer, offers a broader range of functionalities. </p>
+<p id="p-28"  class='lang kor'> <code>auto-animate</code> 로 mesh 의 rotation y angle 을 자동으로 바꾸는 기본 animation 을 추가할 수 있고, model viewer 와 마찬가지로 <code>angle-per-second</code> 로 이 값을 조정하고, <code>camera-orbit</code> 으로 초기 카메라 위치 또한 설정 가능하다. </p>
+<p id="p-29"  class='lang kor'> <code>Control Pannel</code> 등도 toggle 가능하게 setting 하여 model viewer 와 흡사하지만 좀 더 많은 기능을 제공하는 3D Model Viewer 로 만들어 보았다.  </p>
 <br/>
 <h3 id="h3-5">Key Takeaways</h3>
 <br/>
@@ -832,7 +868,7 @@ export { SimpleModelViewer };
 
 <p id="p-30" class='lang eng'> Google Model Viewer is a fantastic tool for quickly and easily embedding 3D models on the web. However, when you need finer control or a variety of rendering modes, a Three.js-based custom viewer is the way to go. </p> 
 <p id="p-31" class='lang eng'> In this project, I used Three.js to build a custom viewer supporting Diffuse, Mesh, Wireframe, and Normal rendering modes, complete with a panel for adjusting model position and rotation. This gives users the flexibility to manipulate models and explore different visual effects. </p> 
-<p id="p-32" class='lang eng'> Looking ahead, there’s room to expand with features like lighting controls, camera view saving, or model rotation animations. I hope this post helps you understand the ins and outs of 3D model viewers and pick the best approach for your next project! </p>
+<p id="p-32" class='lang eng'> Looking ahead, there’s room to expand with features like lighting controls or camera view saving. I hope this post helps you understand the ins and outs of 3D model viewers and pick the best approach for your next project! </p>
 <p id="p-30" class='lang kor'> 
     Google Model Viewer는 빠르고 간편하게 3D 모델을 웹에 삽입할 수 있는 훌륭한 도구다. 하지만 더 세밀한 제어나 다양한 렌더링 모드가 필요할 때는 Three.js를 사용한 커스텀 뷰어가 더 적합하다. 
 </p>
@@ -840,7 +876,7 @@ export { SimpleModelViewer };
     이번 작업에서 Three.js를 활용해 Diffuse, Mesh, Wireframe, Normal 등의 렌더링 모드를 지원하는 커스텀 뷰어를 구현했으며, 모델의 위치와 회전을 조정할 수 있는 패널도 추가했다. 
     이를 통해 사용자는 모델을 유연하게 조작하며 다양한 시각적 효과를 탐구할 수 있다. 
 </p> 
-<p id="p-32" class='lang kor'> 앞으로 필요에 따라 기능을 확장할 수 있으며, 예를 들어 조명 설정, 카메라 뷰 저장, 모델 회전 애니메이션 등을 추가할 수 있다. 이 글을 통해 3D 모델 뷰어의 구현 방법을 이해하고, 프로젝트에 맞는 최적의 방법을 선택하는 데 도움이 되길 바란다. </p>
+<p id="p-32" class='lang kor'> 앞으로 필요에 따라 기능을 확장할 수 있으며, 예를 들어 조명 설정, 카메라 뷰 저장 등을 추가할 수 있다. 이 글을 통해 3D 모델 뷰어의 구현 방법을 이해하고, 프로젝트에 맞는 최적의 방법을 선택하는 데 도움이 되길 바란다. </p>
 
                             </div>
                             <hr/>

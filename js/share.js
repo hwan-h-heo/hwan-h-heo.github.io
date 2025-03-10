@@ -14,13 +14,13 @@ function updateShareButtonVisibility() {
     }
 }
 
-// 페이지 로드 시 초기 상태 설정
+// init state when page loaded
 window.addEventListener('load', updateShareButtonVisibility);
 
-// 스크롤 이벤트 처리
+// scroll event
 document.addEventListener('scroll', updateShareButtonVisibility);
 
-// 창 크기 변경 이벤트 처리
+// resize
 window.addEventListener('resize', updateShareButtonVisibility);
 
 function animateIndicator() {
@@ -43,19 +43,23 @@ function animateIndicator() {
     animationId = requestAnimationFrame(step); 
 }
 
-
 copyButton.addEventListener('click', () => {
     const currentURL = window.location.href;
+    const url = new URL(currentURL);
 
-    navigator.clipboard.writeText(currentURL)
+    url.hash = '';
+
+    const urlWithoutHash = url.href; 
+
+    navigator.clipboard.writeText(urlWithoutHash)
     .then(() => {
         clearTimeout(timeoutId);
         cancelAnimationFrame(animationId);
 
         share_modal.style.display = 'block';
-        indicator.style.width = '0%'; 
+        indicator.style.width = '0%';
 
-        animateIndicator(); 
+        animateIndicator();
 
     })
     .catch(err => {
