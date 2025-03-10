@@ -63,6 +63,7 @@ class SimpleModelViewer extends HTMLElement {
                     <button id="normalBtn">Normal</button>
                     <button id="wireframeBtn">Wireframe</button>
                     <button id="autoRotateBtn">Auto-Rotate</button>
+                    <button id="toonShadingBtn">Toon Shading</button>
                     <button id="setBgBtn1">Env1</button>
                     <button id="setBgBtn2">Env2</button>
                     <button id="setBgBtn3">Env3</button>
@@ -80,6 +81,8 @@ class SimpleModelViewer extends HTMLElement {
                             <label>Rotation Y (deg): <input type="number" id="rotY" step="1" value="0"></label>
                             <label>Rotation Z (deg): <input type="number" id="rotZ" step="1" value="0"></label>
                             <div>Scale: <input type="range" id="scale" style="width: 7rem;" min="1" max="20" step="0.1" value="8"></div>
+                            <div>Roughness: <input type="range" id="roughness" style="width: 7rem;" min="0" max="1" step="0.01" value="0.5"></div> 
+                            <div>Metalness: <input type="range" id="metalness" style="width: 7rem;" min="0" max="1" step="0.01" value="0.5"></div> 
                         </div>
                     </div>
                 </div>
@@ -98,6 +101,7 @@ class SimpleModelViewer extends HTMLElement {
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.enableDamping = true;
         this.controls.dampingFactor = 0.05;
+        this.controls.addEventListener('change', () => this.updateControlPanel()); 
 
         this.textureLoader = new THREE.TextureLoader();
         this.whiteTexture = this.textureLoader.load('https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/white.jpg');
@@ -114,6 +118,9 @@ class SimpleModelViewer extends HTMLElement {
         this.autoRotate = false;
         this.anglePerSecond = 30;
         this.lastTime = 0;
+        this.toonEnabled = false; 
+        this.toonMaterial = null;
+        this.standardMaterials = [];
 
         this.initEventListeners();
     }
@@ -163,6 +170,9 @@ class SimpleModelViewer extends HTMLElement {
         this.shadowRoot.querySelector('#rotY').addEventListener('input', () => this.updateModelTransform());
         this.shadowRoot.querySelector('#rotZ').addEventListener('input', () => this.updateModelTransform());
 
+        this.shadowRoot.querySelector('#roughness').addEventListener('input', () => this.updateMaterialProperties());
+        this.shadowRoot.querySelector('#metalness').addEventListener('input', () => this.updateMaterialProperties());
+
         this.shadowRoot.querySelector('#scale').addEventListener('input', (e) => {
             this.modelSize = parseFloat(e.target.value);
             if (this.model) this.model.scale.set(this.modelSize, this.modelSize, this.modelSize);
@@ -184,6 +194,29 @@ class SimpleModelViewer extends HTMLElement {
                 button.innerHTML = '<i class="bi bi-caret-left"></i>';
             }
         });
+
+        this.shadowRoot.querySelector('#toonShadingBtn').addEventListener('click', () => { 
+            this.toonEnabled = !this.toonEnabled;
+            if (this.toonEnabled) {
+                this.enableToonShading();
+                this.shadowRoot.querySelector('#toonShadingBtn').textContent = 'Toon Shading Off';
+            } else {
+                this.disableToonShading();
+                this.shadowRoot.querySelector('#toonShadingBtn').textContent = 'Toon Shading On';
+            }
+        });
+    }
+
+    updateControlPanel() { 
+        if (this.model) {
+            this.shadowRoot.querySelector('#posX').value = this.model.position.x.toFixed(1);
+            this.shadowRoot.querySelector('#posY').value = this.model.position.y.toFixed(1);
+            this.shadowRoot.querySelector('#posZ').value = this.model.position.z.toFixed(1);
+
+            this.shadowRoot.querySelector('#rotX').value = THREE.MathUtils.radToDeg(this.model.rotation.x).toFixed(0);
+            this.shadowRoot.querySelector('#rotY').value = THREE.MathUtils.radToDeg(this.model.rotation.y).toFixed(0);
+            this.shadowRoot.querySelector('#rotZ').value = THREE.MathUtils.radToDeg(this.model.rotation.z).toFixed(0);
+        }
     }
 
     updateModelTransform() {
@@ -191,7 +224,7 @@ class SimpleModelViewer extends HTMLElement {
             const posX = parseFloat(this.shadowRoot.querySelector('#posX').value);
             const posY = parseFloat(this.shadowRoot.querySelector('#posY').value);
             const posZ = parseFloat(this.shadowRoot.querySelector('#posZ').value);
-            this.model.position.set(posX, posY - 3, posZ);
+            this.model.position.set(posX, posY, posZ);
 
             const rotX = THREE.MathUtils.degToRad(parseFloat(this.shadowRoot.querySelector('#rotX').value));
             const rotY = THREE.MathUtils.degToRad(parseFloat(this.shadowRoot.querySelector('#rotY').value));
@@ -271,10 +304,13 @@ class SimpleModelViewer extends HTMLElement {
                             map: this.originalMaterials[child.uuid].map,
                             envMap: texture,
                             envMapIntensity: 1.0,
-                            roughness: this.originalMaterials[child.uuid].roughness,
-                            metalness: this.originalMaterials[child.uuid].metalness,
+                            roughness: child.material.roughness,
+                            metalness: child.material.metalness,
                         });
                         child.material.needsUpdate = true;
+
+                        this.shadowRoot.querySelector('#roughness').value = child.material.roughness;
+                        this.shadowRoot.querySelector('#metalness').value = child.material.metalness;
                     }
                 });
             }
@@ -353,18 +389,36 @@ class SimpleModelViewer extends HTMLElement {
             }
 
             let vertexCount = 0, faceCount = 0;
+            this.standardMaterials = []; 
+            let initialRoughness = 0.5; 
+            let initialMetalness = 0.5;  
+            let standardMaterialFound = false;
+
             this.model.traverse((child) => {
                 if (child.isMesh && child.geometry) {
                     vertexCount += child.geometry.attributes.position.count;
                     faceCount += child.geometry.index ? child.geometry.index.count / 3 : child.geometry.attributes.position.count / 3;
                     this.originalMaterials[child.uuid] = child.material;
+                    if (child.material instanceof THREE.MeshStandardMaterial) {
+                        this.standardMaterials.push(child.material);
+                        if (!standardMaterialFound) { 
+                            initialRoughness = child.material.roughness;
+                            initialMetalness = child.material.metalness;
+                            standardMaterialFound = true;
+                        }
+                    }
                 }
             });
+            this.shadowRoot.querySelector('#roughness').value = initialRoughness;
+            this.shadowRoot.querySelector('#metalness').value = initialMetalness;
+
             this.shadowRoot.querySelector('#modelInfo').innerHTML = `<strong>[Model Info]</strong> Vertices: ${vertexCount}, Faces: ${faceCount}`;
             this.scene.add(this.model);
 
             this.showTexture();
-            progressBar.style.display = 'none'; // hide
+            this.updateControlPanel(); 
+
+            progressBar.style.display = 'none'; // hide progress bar
             }, (xhr) => { // onProgress call back
                 if (xhr.lengthComputable) {
                     const percentComplete = xhr.loaded / xhr.total * 100;
@@ -373,6 +427,31 @@ class SimpleModelViewer extends HTMLElement {
         }, undefined, (error) => {
             console.error('Loading Error:', error);
         });
+    }
+
+    updateMaterialProperties() { 
+        const roughnessValue = parseFloat(this.shadowRoot.querySelector('#roughness').value);
+        const metalnessValue = parseFloat(this.shadowRoot.querySelector('#metalness').value);
+
+        this.standardMaterials.forEach(material => { 
+            material.roughness = roughnessValue;
+            material.metalness = metalnessValue;
+        });
+        if (this.model) {
+            this.model.traverse((child) => {
+                if (child.isMesh) {
+                    child.material = new THREE.MeshStandardMaterial({
+                        map: this.originalMaterials[child.uuid].map,
+                        envMap: this.scene.background,
+                        envMapIntensity: 1.0,
+                        roughness: roughnessValue,
+                        metalness: metalnessValue,
+                    });
+                    child.material.needsUpdate = true;
+                }
+            });
+        }
+        this.renderer.render(this.scene, this.camera);
     }
 
     animate(time) {
@@ -399,6 +478,81 @@ class SimpleModelViewer extends HTMLElement {
         this.renderer.setSize(width, height * 0.96);
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
+    }
+
+    createToonMaterial() { // ShaderMaterial generator
+        const toonMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                lightDirection: { value: new THREE.Vector3(0.5, 0.5, 1).normalize() }, 
+                outlineColor: { value: new THREE.Color(0x000000) },        
+                toonColor1: { value: new THREE.Color(0xffffff) },           
+                toonColor2: { value: new THREE.Color(0xc0c0c0) },           
+                toonColor3: { value: new THREE.Color(0x808080) }            
+            },
+            vertexShader: `
+                varying vec3 vNormal;
+                varying vec3 vWorldPosition;
+
+                void main() {
+                    vNormal = normalize(normalMatrix * normal);
+                    vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+                    vWorldPosition = worldPosition.xyz;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform vec3 lightDirection;
+                uniform vec3 outlineColor;
+                uniform vec3 toonColor1;
+                uniform vec3 toonColor2;
+                uniform vec3 toonColor3;
+
+                varying vec3 vNormal;
+                varying vec3 vWorldPosition;
+
+                void main() {
+                    float diffuseIntensity = max(0.0, dot(vNormal, lightDirection));
+                    vec3 toonColor = toonColor1; 
+                    if (diffuseIntensity < 0.8) {
+                        toonColor = toonColor2;   
+                    }
+                    if (diffuseIntensity < 0.5) {
+                        toonColor = toonColor3;   
+                    }
+
+                    // Normal based outline
+                    vec3 viewDir = normalize(cameraPosition - vWorldPosition);
+                    float outlineFactor = 1.0 - max(0.0, dot(vNormal, viewDir)); 
+                    float outlineThreshold = 0.7; 
+                    float outlineMix = smoothstep(outlineThreshold, outlineThreshold + 0.05, outlineFactor); 
+
+                    vec3 finalColor = mix(toonColor, outlineColor, outlineMix);
+
+                    gl_FragColor = vec4(finalColor, 1.0);
+                }
+            `
+        });
+        return toonMaterial;
+    }
+
+    enableToonShading() { 
+        if (!this.model) return;
+        this.toonMaterial = this.toonMaterial || this.createToonMaterial(); 
+        this.model.traverse((child) => {
+            if (child.isMesh) {
+                this.originalMaterials[child.uuid] = child.material; 
+                child.material = this.toonMaterial; 
+            }
+        });
+    }
+
+    disableToonShading() { 
+        if (!this.model) return;
+        this.model.traverse((child) => {
+            if (child.isMesh && this.originalMaterials[child.uuid]) {
+                child.material = this.originalMaterials[child.uuid];
+            }
+        });
     }
 }
 
