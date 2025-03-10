@@ -47,6 +47,7 @@ class SimpleModelViewer extends HTMLElement {
                     display: flex;
                     flex-direction: column;
                     gap: 3px;
+                    z-index: 1000;
                 }
                 .transform-panel label {
                     display: flex;
