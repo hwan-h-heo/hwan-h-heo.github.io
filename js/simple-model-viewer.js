@@ -10,7 +10,17 @@ class SimpleModelViewer extends HTMLElement {
         this.shadowRoot.innerHTML = `
             <style>
                 :host { display: block; border: 2px solid #ccc; border-radius: 8px;}
-                #canvas-container { width: 100%; height: 100%; }
+                #loadingProgressBar {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 0%; 
+                    height: 5px;
+                    background-color: #4CAF50; 
+                    z-index: 1; 
+                    display: none; 
+                }
+                #canvas-container { width: 100%; height: 100%; position: relative; }
                 canvas { width: 100%; height: 100%; }
                 .controls { margin: 5px; }
                 button {
@@ -73,7 +83,9 @@ class SimpleModelViewer extends HTMLElement {
                     </div>
                 </div>
             </div>
-            <div id="canvas-container" style='text-align: center'></div>
+            <div id="canvas-container" style='text-align: center'>
+                <div id="loadingProgressBar"></div>
+            </div>
         `;
 
         this.scene = new THREE.Scene();
@@ -311,6 +323,10 @@ class SimpleModelViewer extends HTMLElement {
     }
 
     loadModel(url) {
+        const progressBar = this.shadowRoot.querySelector('#loadingProgressBar');
+        progressBar.style.display = 'block'; 
+        progressBar.style.width = '0%'
+
         this.loader.load(url, (gltf) => {
             if (this.model) {
                 this.scene.remove(this.model);
@@ -347,6 +363,12 @@ class SimpleModelViewer extends HTMLElement {
             this.scene.add(this.model);
 
             this.showTexture();
+            progressBar.style.display = 'none'; // hide
+            }, (xhr) => { // onProgress call back
+                if (xhr.lengthComputable) {
+                    const percentComplete = xhr.loaded / xhr.total * 100;
+                    progressBar.style.width = `${percentComplete}%`; // bar update
+                }
         }, undefined, (error) => {
             console.error('Loading Error:', error);
         });
