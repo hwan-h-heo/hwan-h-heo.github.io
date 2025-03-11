@@ -442,7 +442,17 @@ class SimpleModelViewer extends HTMLElement {
         this.shadowRoot.innerHTML = `
             &lt;style&gt;
                 :host { display: block; border: 2px solid #ccc; border-radius: 8px;}
-                #canvas-container { width: 100%; height: 100%; }
+                #loadingProgressBar {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 0%; 
+                    height: 5px;
+                    background-color: #4CAF50; 
+                    z-index: 1; 
+                    display: none; 
+                }
+                #canvas-container { width: 100%; height: 100%; position: relative; }
                 canvas { width: 100%; height: 100%; }
                 .controls { margin: 5px; }
                 button {
@@ -469,6 +479,7 @@ class SimpleModelViewer extends HTMLElement {
                     display: flex;
                     flex-direction: column;
                     gap: 3px;
+                    z-index: 1000;
                 }
                 .transform-panel label {
                     display: flex;
@@ -484,6 +495,7 @@ class SimpleModelViewer extends HTMLElement {
                     &lt;button id=&quot;normalBtn&quot;&gt;Normal&lt;/button&gt;
                     &lt;button id=&quot;wireframeBtn&quot;&gt;Wireframe&lt;/button&gt;
                     &lt;button id=&quot;autoRotateBtn&quot;&gt;Auto-Rotate&lt;/button&gt;
+                    &lt;button id=&quot;toonShadingBtn&quot;&gt;Toon Shading&lt;/button&gt;
                     &lt;button id=&quot;setBgBtn1&quot;&gt;Env1&lt;/button&gt;
                     &lt;button id=&quot;setBgBtn2&quot;&gt;Env2&lt;/button&gt;
                     &lt;button id=&quot;setBgBtn3&quot;&gt;Env3&lt;/button&gt;
@@ -501,22 +513,44 @@ class SimpleModelViewer extends HTMLElement {
                             &lt;label&gt;Rotation Y (deg): &lt;input type=&quot;number&quot; id=&quot;rotY&quot; step=&quot;1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
                             &lt;label&gt;Rotation Z (deg): &lt;input type=&quot;number&quot; id=&quot;rotZ&quot; step=&quot;1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
                             &lt;div&gt;Scale: &lt;input type=&quot;range&quot; id=&quot;scale&quot; style=&quot;width: 7rem;&quot; min=&quot;1&quot; max=&quot;20&quot; step=&quot;0.1&quot; value=&quot;8&quot;&gt;&lt;/div&gt;
+                            &lt;div&gt;Roughness: &lt;input type=&quot;range&quot; id=&quot;roughness&quot; style=&quot;width: 7rem;&quot; min=&quot;0&quot; max=&quot;1&quot; step=&quot;0.01&quot; value=&quot;0.5&quot;&gt;&lt;/div&gt; 
+                            &lt;div&gt;Metalness: &lt;input type=&quot;range&quot; id=&quot;metalness&quot; style=&quot;width: 7rem;&quot; min=&quot;0&quot; max=&quot;1&quot; step=&quot;0.01&quot; value=&quot;0.5&quot;&gt;&lt;/div&gt; 
                         &lt;/div&gt;
                     &lt;/div&gt;
                 &lt;/div&gt;
             &lt;/div&gt;
-            &lt;div id=&quot;canvas-container&quot; style=&#39;text-align: center&#39;&gt;&lt;/div&gt;
+            &lt;div id=&quot;canvas-container&quot; style=&#39;text-align: center&#39;&gt;
+                &lt;div id=&quot;loadingProgressBar&quot;&gt;&lt;/div&gt;
+            &lt;/div&gt;
         `;
 
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
-        this.renderer = new THREE.WebGLRenderer({ antialias: true });
+        this.renderer = new THREE.WebGLRenderer({ 
+            antialias: true, 
+            alpha: true,
+            preserveDrawingBuffer: true
+        });
+        this.renderer.setPixelRatio(window.devicePixelRatio);
+        // this.renderer.outputEncoding = THREE.LinearEncoding;
+        this.renderer.outputEncoding = THREE.sRGBEncoding;
         this.renderer.setClearColor(0xeeeeee, 1);
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        this.renderer.toneMappingExposure = 1.0;
+
         this.shadowRoot.querySelector(&#39;#canvas-container&#39;).appendChild(this.renderer.domElement);
+
+        // const ambient = new THREE.AmbientLight(0x404040, 0.5);      
+        // const directional = new THREE.DirectionalLight(0xffffff, 1); 
+        // directional.position.set(5, 10, 7.5);
+        // directional.castShadow = true;
+        // this.scene.add(ambient, directional);
 
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.enableDamping = true;
         this.controls.dampingFactor = 0.05;
+        this.controls.addEventListener(&#39;change&#39;, () =&gt; this.updateControlPanel()); 
 
         this.textureLoader = new THREE.TextureLoader();
         this.whiteTexture = this.textureLoader.load(&#39;&lt;img src=&quot;https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/white.jpg&quot; alt=&quot;Converted Image&quot; width=&quot;100%&quot; /&gt;&#39;);
@@ -533,6 +567,9 @@ class SimpleModelViewer extends HTMLElement {
         this.autoRotate = false;
         this.anglePerSecond = 30;
         this.lastTime = 0;
+        this.toonEnabled = false; 
+        this.toonMaterial = null;
+        this.standardMaterials = [];
 
         this.initEventListeners();
     }
@@ -582,6 +619,9 @@ class SimpleModelViewer extends HTMLElement {
         this.shadowRoot.querySelector(&#39;#rotY&#39;).addEventListener(&#39;input&#39;, () =&gt; this.updateModelTransform());
         this.shadowRoot.querySelector(&#39;#rotZ&#39;).addEventListener(&#39;input&#39;, () =&gt; this.updateModelTransform());
 
+        this.shadowRoot.querySelector(&#39;#roughness&#39;).addEventListener(&#39;input&#39;, () =&gt; this.updateMaterialProperties());
+        this.shadowRoot.querySelector(&#39;#metalness&#39;).addEventListener(&#39;input&#39;, () =&gt; this.updateMaterialProperties());
+
         this.shadowRoot.querySelector(&#39;#scale&#39;).addEventListener(&#39;input&#39;, (e) =&gt; {
             this.modelSize = parseFloat(e.target.value);
             if (this.model) this.model.scale.set(this.modelSize, this.modelSize, this.modelSize);
@@ -603,6 +643,29 @@ class SimpleModelViewer extends HTMLElement {
                 button.innerHTML = &#39;&lt;i class=&quot;bi bi-caret-left&quot;&gt;&lt;/i&gt;&#39;;
             }
         });
+
+        this.shadowRoot.querySelector(&#39;#toonShadingBtn&#39;).addEventListener(&#39;click&#39;, () =&gt; { 
+            this.toonEnabled = !this.toonEnabled;
+            if (this.toonEnabled) {
+                this.enableToonShading();
+                this.shadowRoot.querySelector(&#39;#toonShadingBtn&#39;).textContent = &#39;Toon Shading Off&#39;;
+            } else {
+                this.disableToonShading();
+                this.shadowRoot.querySelector(&#39;#toonShadingBtn&#39;).textContent = &#39;Toon Shading On&#39;;
+            }
+        });
+    }
+
+    updateControlPanel() { 
+        if (this.model) {
+            this.shadowRoot.querySelector(&#39;#posX&#39;).value = this.model.position.x.toFixed(1);
+            this.shadowRoot.querySelector(&#39;#posY&#39;).value = this.model.position.y.toFixed(1);
+            this.shadowRoot.querySelector(&#39;#posZ&#39;).value = this.model.position.z.toFixed(1);
+
+            this.shadowRoot.querySelector(&#39;#rotX&#39;).value = THREE.MathUtils.radToDeg(this.model.rotation.x).toFixed(0);
+            this.shadowRoot.querySelector(&#39;#rotY&#39;).value = THREE.MathUtils.radToDeg(this.model.rotation.y).toFixed(0);
+            this.shadowRoot.querySelector(&#39;#rotZ&#39;).value = THREE.MathUtils.radToDeg(this.model.rotation.z).toFixed(0);
+        }
     }
 
     updateModelTransform() {
@@ -610,7 +673,7 @@ class SimpleModelViewer extends HTMLElement {
             const posX = parseFloat(this.shadowRoot.querySelector(&#39;#posX&#39;).value);
             const posY = parseFloat(this.shadowRoot.querySelector(&#39;#posY&#39;).value);
             const posZ = parseFloat(this.shadowRoot.querySelector(&#39;#posZ&#39;).value);
-            this.model.position.set(posX, posY - 3, posZ);
+            this.model.position.set(posX, posY, posZ);
 
             const rotX = THREE.MathUtils.degToRad(parseFloat(this.shadowRoot.querySelector(&#39;#rotX&#39;).value));
             const rotY = THREE.MathUtils.degToRad(parseFloat(this.shadowRoot.querySelector(&#39;#rotY&#39;).value));
@@ -681,22 +744,48 @@ class SimpleModelViewer extends HTMLElement {
 
     set_bg(url, rgbeLoader) {
         rgbeLoader.load(url, (texture) =&gt; {
+            texture.minFilter = THREE.LinearFilter;
+            texture.magFilter = THREE.LinearFilter;
             texture.mapping = THREE.EquirectangularReflectionMapping;
             this.scene.background = texture;
+            this.scene.environment = texture;
             if (this.model) {
+                let initialRoughness = 0.5, initialMetalness = 0.5;
                 this.model.traverse((child) =&gt; {
                     if (child.isMesh) {
+                        const originalMaterial = this.originalMaterials[child.uuid];
+                        const isStandardMaterial = originalMaterial instanceof THREE.MeshStandardMaterial;
+
                         child.material = new THREE.MeshStandardMaterial({
-                            map: this.originalMaterials[child.uuid].map,
+                            map: originalMaterial.map ? originalMaterial.map.clone() : null,
                             envMap: texture,
                             envMapIntensity: 1.0,
-                            roughness: this.originalMaterials[child.uuid].roughness,
-                            metalness: this.originalMaterials[child.uuid].metalness,
+                            roughness: isStandardMaterial &amp;&amp; originalMaterial.roughness !== undefined ? originalMaterial.roughness : 0.5,
+                            metalness: isStandardMaterial &amp;&amp; originalMaterial.metalness !== undefined ? originalMaterial.metalness : 0.5,
+                            normalMap: originalMaterial.normalMap ? originalMaterial.normalMap : null,
+                            emissiveMap: originalMaterial.emissiveMap ? originalMaterial.emissiveMap : null,
                         });
+                        if (child.material.map) {
+                            child.material.map.encoding = THREE.sRGBEncoding; 
+                        }
+                        if (child.material.emissiveMap) {
+                            child.material.emissiveMap.encoding = THREE.sRGBEncoding;
+                        }
                         child.material.needsUpdate = true;
+    
+                        // ui init
+                        if (!initialRoughness &amp;&amp; !initialMetalness &amp;&amp; isStandardMaterial) {
+                            initialRoughness = child.material.roughness;
+                            initialMetalness = child.material.metalness;
+                        }
                     }
                 });
+                const roughnessInput = this.shadowRoot.querySelector(&#39;#roughness&#39;);
+                const metalnessInput = this.shadowRoot.querySelector(&#39;#metalness&#39;);
+                if (roughnessInput) roughnessInput.value = initialRoughness;
+                if (metalnessInput) metalnessInput.value = initialMetalness;
             }
+            this.renderer.render(this.scene, this.camera);
         }, undefined, (err) =&gt; {
             console.error(&#39;Skybox err:&#39;, err);
             alert(&#39;Cannot load Skybox Image&#39;);
@@ -743,6 +832,10 @@ class SimpleModelViewer extends HTMLElement {
     }
 
     loadModel(url) {
+        const progressBar = this.shadowRoot.querySelector(&#39;#loadingProgressBar&#39;);
+        progressBar.style.display = &#39;block&#39;; 
+        progressBar.style.width = &#39;0%&#39;
+
         this.loader.load(url, (gltf) =&gt; {
             if (this.model) {
                 this.scene.remove(this.model);
@@ -768,20 +861,107 @@ class SimpleModelViewer extends HTMLElement {
             }
 
             let vertexCount = 0, faceCount = 0;
+            this.standardMaterials = []; 
+            let initialRoughness = 0.5; 
+            let initialMetalness = 0.5;  
+            let standardMaterialFound = false;
+
             this.model.traverse((child) =&gt; {
                 if (child.isMesh &amp;&amp; child.geometry) {
                     vertexCount += child.geometry.attributes.position.count;
                     faceCount += child.geometry.index ? child.geometry.index.count / 3 : child.geometry.attributes.position.count / 3;
+
                     this.originalMaterials[child.uuid] = child.material;
+                    if (child.material instanceof THREE.MeshStandardMaterial) {
+                        this.standardMaterials.push(child.material);
+                        if (!standardMaterialFound) { 
+                            initialRoughness = child.material.roughness || 0.5;
+                            initialMetalness = child.material.metalness || 0.5;
+                            standardMaterialFound = true;
+
+                            const roughnessInput = this.shadowRoot.querySelector(&#39;#roughness&#39;);
+                            const metalnessInput = this.shadowRoot.querySelector(&#39;#metalness&#39;);
+                            if (roughnessInput) roughnessInput.value = initialRoughness;
+                            if (metalnessInput) metalnessInput.value = initialMetalness;
+                        }
+                        const material = child.material;
+                        if (material.map) {
+                            material.map.encoding = THREE.sRGBEncoding;
+                        }
+                        if (material.emissiveMap) {
+                            material.emissiveMap.encoding = THREE.sRGBEncoding;
+                        }
+                        material.needsUpdate = true;
+                    } else {
+                        // not Standard
+                        child.material = new THREE.MeshStandardMaterial({
+                            map: child.material.map,
+                            roughness: 0.5,
+                            metalness: 0.5
+                        });
+                        if (child.material.map) {
+                            child.material.map.encoding = THREE.sRGBEncoding;
+                        }
+                        child.material.needsUpdate = true;
+                        this.standardMaterials.push(child.material);
+                    }
                 }
             });
+            this.shadowRoot.querySelector(&#39;#roughness&#39;).value = initialRoughness;
+            this.shadowRoot.querySelector(&#39;#metalness&#39;).value = initialMetalness;
+
             this.shadowRoot.querySelector(&#39;#modelInfo&#39;).innerHTML = `&lt;strong&gt;[Model Info]&lt;/strong&gt; Vertices: ${vertexCount}, Faces: ${faceCount}`;
             this.scene.add(this.model);
 
             this.showTexture();
+            this.updateControlPanel(); 
+
+            progressBar.style.display = &#39;none&#39;; // hide progress bar
+            }, (xhr) =&gt; { // onProgress call back
+                if (xhr.lengthComputable) {
+                    const percentComplete = xhr.loaded / xhr.total * 100;
+                    progressBar.style.width = `${percentComplete}%`; // bar update
+                }
         }, undefined, (error) =&gt; {
             console.error(&#39;Loading Error:&#39;, error);
         });
+    }
+
+    updateMaterialProperties() { 
+        const roughnessValue = parseFloat(this.shadowRoot.querySelector(&#39;#roughness&#39;).value);
+        const metalnessValue = parseFloat(this.shadowRoot.querySelector(&#39;#metalness&#39;).value);
+
+        this.standardMaterials.forEach(material =&gt; { 
+            material.roughness = roughnessValue;
+            material.metalness = metalnessValue;
+            material.needsUpdate = true;
+        });
+        if (this.model) {
+            this.model.traverse((child) =&gt; {
+                if (child.isMesh) {
+                    const originalMaterial = this.originalMaterials[child.uuid];
+                    const isStandardMaterial = originalMaterial instanceof THREE.MeshStandardMaterial;
+
+                    child.material = new THREE.MeshStandardMaterial({
+                        map: originalMaterial.map ? originalMaterial.map.clone() : null,
+                        envMap: this.scene.environment || this.scene.background,
+                        envMapIntensity: 1.0,
+                        roughness: roughnessValue,
+                        metalness: metalnessValue,
+                        normalMap: originalMaterial.normalMap ? originalMaterial.normalMap : null, 
+                        emissiveMap: originalMaterial.emissiveMap ? originalMaterial.emissiveMap : null,
+                    });
+                    if (child.material.map) {
+                        child.material.map.encoding = THREE.sRGBEncoding; 
+                    }
+                    if (child.material.emissiveMap) {
+                        child.material.emissiveMap.encoding = THREE.sRGBEncoding;
+                    }
+                    child.material.needsUpdate = true;
+                }
+            });
+        }
+        this.renderer.render(this.scene, this.camera);
     }
 
     animate(time) {
@@ -808,6 +988,104 @@ class SimpleModelViewer extends HTMLElement {
         this.renderer.setSize(width, height * 0.96);
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
+    }
+
+    createToonMaterial(originalTexture = null) {
+        const toonMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                lightDirection: { value: new THREE.Vector3(0.5, 0.5, 1).normalize() },
+                outlineColor: { value: new THREE.Color(0x000000) },
+                toonColors: { value: [new THREE.Color(0xffffff), new THREE.Color(0xc0c0c0), new THREE.Color(0x808080)] },
+                toonSteps: { value: [0.8, 0.5] },
+                originalTexture: { value: originalTexture },
+                textureBlendFactor: { value: 0.8 },
+                outlineThickness: { value: 0.05 },
+                rimColor: { value: new THREE.Color(0xaaaaaa) },
+                rimPower: { value: 2.0 }
+            },
+            vertexShader: `
+                varying vec3 vNormal;
+                varying vec3 vWorldPosition;
+                varying vec2 vUv;
+    
+                void main() {
+                    vNormal = normalize(normalMatrix * normal);
+                    vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+                    vWorldPosition = worldPosition.xyz;
+                    vUv = uv;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform vec3 lightDirection;
+                uniform vec3 outlineColor;
+                uniform vec3 toonColors[3];
+                uniform float toonSteps[2];
+                uniform sampler2D originalTexture;
+                uniform float textureBlendFactor;
+                uniform float outlineThickness;
+    
+                varying vec3 vNormal;
+                varying vec3 vWorldPosition;
+                varying vec2 vUv;
+
+                uniform vec3 rimColor;
+                uniform float rimPower;
+    
+                void main() {
+                    float diffuseIntensity = max(0.0, dot(vNormal, lightDirection));
+                    vec3 toonColor = toonColors[0];
+                    if (diffuseIntensity &lt; toonSteps[0]) toonColor = toonColors[1];
+                    if (diffuseIntensity &lt; toonSteps[1]) toonColor = toonColors[2];
+    
+                    vec3 viewDir = normalize(cameraPosition - vWorldPosition);
+                    float outlineFactor = 1.0 - max(0.0, dot(vNormal, viewDir));
+                    float outlineThreshold = 0.7;
+                    float outlineMix = smoothstep(outlineThreshold - outlineThickness, outlineThreshold + outlineThickness, outlineFactor);
+    
+                    vec3 finalToonColor = mix(toonColor, outlineColor, outlineMix);
+                    vec4 originalTexColor = texture2D(originalTexture, vUv);
+
+                    float rimFactor = 1.0 - max(0.0, dot(vNormal, viewDir));
+                    rimFactor = pow(rimFactor, rimPower); // curvature effect
+                    vec3 rimLighting = rimColor * rimFactor;
+
+                    vec3 finalColor = mix(finalToonColor, originalTexColor.rgb, textureBlendFactor) + rimLighting;
+                    gl_FragColor = vec4(finalColor, 1.0);
+                }
+            `
+        });
+        if (originalTexture) {
+            originalTexture.encoding = THREE.sRGBEncoding;
+        }
+        return toonMaterial;
+    }
+
+    enableToonShading() {
+        if (!this.model) return;
+        this.toonMaterial = this.toonMaterial || this.createToonMaterial();
+        this.model.traverse((child) =&gt; {
+            if (child.isMesh) {
+                this.originalMaterials[child.uuid] = child.material;
+                child.material = this.toonMaterial;
+                if (this.originalMaterials[child.uuid].map) { 
+                    this.toonMaterial.uniforms.originalTexture.value = this.originalMaterials[child.uuid].map;
+                    this.toonMaterial.uniforms.originalTexture.needsUpdate = true; // Texture uniform update 
+                } else {
+                    this.toonMaterial.uniforms.originalTexture.value = this.whiteTexture; // White texture as default
+                    this.toonMaterial.uniforms.originalTexture.needsUpdate = true;
+                }
+            }
+        });
+    }
+
+    disableToonShading() { 
+        if (!this.model) return;
+        this.model.traverse((child) =&gt; {
+            if (child.isMesh &amp;&amp; this.originalMaterials[child.uuid]) {
+                child.material = this.originalMaterials[child.uuid];
+            }
+        });
     }
 }
 
