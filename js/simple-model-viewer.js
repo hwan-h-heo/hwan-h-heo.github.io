@@ -602,7 +602,7 @@ class SimpleModelViewer extends HTMLElement {
             isAnimationPlaying: false,
             wireframeInitialized: false,
             isWireframeOn: false,
-            transformMode: 'translate',
+            transformMode: 'none',
         };
 
         this.mixer = null;
