@@ -16,6 +16,7 @@
                 }
             }
         </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/25.0.0/tween.umd.js"></script>
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
@@ -415,6 +416,7 @@ loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined
 </p>
 <simple-model-viewer 
     src="https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/omni.glb" 
+    view-mode="diffuse"
     style="width: 100%; height: 600px;">
 </simple-model-viewer>
 <p class="lang eng"> Check out the source code for the viewer below: </p>
@@ -1122,6 +1124,7 @@ export { SimpleModelViewer };
 </p>
 <simple-model-viewer 
     src="https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/monster_ours.glb" 
+    view-mode="diffuse"
     style="width: 100%; height: 600px;">
 </simple-model-viewer>
 <p id="p-28" class='lang eng'> With <code>auto-animate</code>, a basic animation to automatically change the mesh's rotation Y-angle can be added. Just like Model Viewer, this value is adjustable via <code>angle-per-second</code>, and the initial camera position is also configurable using <code>camera-orbit</code> option.</p> 
