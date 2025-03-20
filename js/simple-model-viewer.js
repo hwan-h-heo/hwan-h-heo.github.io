@@ -2234,118 +2234,6 @@ class SimpleModelViewer extends HTMLElement {
         }
     }
 
-    // initTextureMapUI() {
-    //     const diffuseMapInput = this.shadowRoot.querySelector('#diffuseMapInput');
-    //     const roughnessMapInput = this.shadowRoot.querySelector('#roughnessMapInput');
-    //     const metalnessMapInput = this.shadowRoot.querySelector('#metalnessMapInput');
-    //     const normalMapInput = this.shadowRoot.querySelector('#normalMapInput');
-    //     const AOMapInput = this.shadowRoot.querySelector('#aoMapInput');
-    //     const emissiveMapInput = this.shadowRoot.querySelector('#emissiveMapInput');
-    //     const partSelector = this.shadowRoot.querySelector('#texturePartSelector');
-
-    //     diffuseMapInput.addEventListener('change', (e) => this.handleTextureFileChange(e, 'map'));
-    //     roughnessMapInput.addEventListener('change', (e) => this.handleTextureFileChange(e, 'roughnessMap'));
-    //     metalnessMapInput.addEventListener('change', (e) => this.handleTextureFileChange(e, 'metalnessMap'));
-    //     normalMapInput.addEventListener('change', (e) => this.handleTextureFileChange(e, 'normalMap'));
-    //     AOMapInput.addEventListener('change', (e) => this.handleTextureFileChange(e, 'aoMap'));
-    //     emissiveMapInput.addEventListener('change', (e) => this.handleTextureFileChange(e, 'emissiveMap'));
-
-    //     partSelector.addEventListener('change', () => {
-    //         const selectedPartIndex = parseInt(partSelector.value);
-    //         if (!isNaN(selectedPartIndex) && selectedPartIndex >= 0 && selectedPartIndex < this.meshParts.length) {
-    //             const selectedMeshPart = this.meshParts[selectedPartIndex];
-    //             this.selectMeshPartInSceneGraph(selectedMeshPart, null);
-    //         }
-    //     });
-    // }
-
-    // handleTextureFileChange(event, mapType) {
-    //     if (!event.target) {
-    //         console.error('event.target is null');
-    //         return;
-    //     }
-
-    //     const fileInput = event.target;
-    //     const file = fileInput.files[0];
-    //     if (!file) return;
-
-    //     const textureURL = URL.createObjectURL(file);
-    //     const texture = this.textureLoader.load(textureURL, () => {
-    //         texture.encoding = THREE.sRGBEncoding;
-    //         texture.flipY = false;
-
-    //         const selectedMeshPartIndex = parseInt(fileInput.dataset.meshPartIndex);
-    //         if (isNaN(selectedMeshPartIndex)) {
-    //             console.error("Mesh part index is not set on the file input.");
-    //             return;
-    //         }
-
-    //         const mesh = this.meshParts[selectedMeshPartIndex];
-    //         if (!mesh || !mesh.material) {
-    //             console.error("Mesh or material not found for index:", selectedMeshPartIndex);
-    //             return;
-    //         }
-
-    //         if (mesh.material.isShared) {
-    //             mesh.material = mesh.material.clone();
-    //         }
-
-    //         mesh.material[mapType] = texture;
-    //         this.originalMaterials[mesh.uuid][mapType] = texture.clone();
-    //         mesh.material.needsUpdate = true;
-
-    //         this.updateTextureMapDisplay();
-    //         this.renderer.render(this.scene, this.camera);
-    //     }, undefined, (error) => {
-    //         console.error('Texture loading error:', error);
-    //         alert('Failed to load texture.');
-    //     });
-    // }
-
-    // populateTextureMapSelector() {
-    //     const partSelector = this.shadowRoot.querySelector('#texturePartSelector');
-    //     const typeSelector = this.shadowRoot.querySelector('#textureTypeSelector');
-    //     const replaceTextureButton = this.shadowRoot.querySelector('#replaceTextureBtn');
-
-    //     partSelector.innerHTML = '';
-    //     this.meshParts.forEach((mesh, index) => {
-    //         const option = document.createElement('option');
-    //         option.value = index;
-    //         option.textContent = mesh.name || `Part ${index + 1}`;
-    //         partSelector.appendChild(option);
-    //     });
-
-    //     partSelector.selectedIndex = 0;
-
-    //     partSelector.addEventListener('change', () => {
-    //         this.updateTextureMapDisplay(); //
-    //     });
-
-    //     typeSelector.addEventListener('change', () => {
-    //         this.updateTextureMapDisplay(); //
-    //     });
-
-    //     replaceTextureButton.addEventListener('click', () => {
-    //         const selectedType = typeSelector.value;
-    //         let fileInputId = '';
-    //         if (selectedType === 'map') fileInputId = 'diffuseMapInput';
-    //         else if (selectedType === 'roughnessMap') fileInputId = 'roughnessMapInput';
-    //         else if (selectedType === 'metalnessMap') fileInputId = 'metalnessMapInput';
-    //         else if (selectedType === 'normalMap') fileInputId = 'normalMapInput';
-    //         else if (selectedType === 'aoMap') fileInputId = 'aoMapInput';
-    //         else if (selectedType === 'emissiveMap') fileInputId = 'emissiveMapInput';
-
-    //         if (fileInputId) {
-    //             const fileInput = this.shadowRoot.querySelector(`#${fileInputId}`);
-    //             const selectedPartIndex = parseInt(partSelector.value);
-    //             fileInput.dataset.meshPartIndex = selectedPartIndex;
-    //             fileInput.click();
-    //         }
-    //     });
-
-    //     this.updateTextureMapDisplay();
-    // }
-
     initTextureMapUI() {
         const diffuseMapInput = this.shadowRoot.querySelector('#diffuseMapInput');
         const roughnessMapInput = this.shadowRoot.querySelector('#roughnessMapInput');
@@ -2458,7 +2346,7 @@ class SimpleModelViewer extends HTMLElement {
         partSelector.selectedIndex = 0;
 
         partSelector.addEventListener('change', () => {
-            this.updateTextureMapDisplay();
+            // this.updateTextureMapDisplay();
             this.updateHistorySelector();
         });
 
@@ -2548,12 +2436,13 @@ class SimpleModelViewer extends HTMLElement {
                 mesh.material = mesh.material.clone();
             }
             mesh.material[selectedType] = selectedTexture;
-    
             // this.originalMaterials[meshUUID][selectedType] = selectedTexture.clone();
     
             mesh.material.needsUpdate = true;
     
-            this.updateTextureMapDisplay();
+            // this.updateTextureMapDisplay();
+            const previewElement = this.shadowRoot.querySelector('#texturePreview');
+            this.drawPreview(selectedTexture, previewElement);
             this.renderer.render(this.scene, this.camera);
         }
     }
@@ -2564,19 +2453,23 @@ class SimpleModelViewer extends HTMLElement {
         const previewElement = this.shadowRoot.querySelector('#texturePreview');
         const selectedPartIndex = parseInt(partSelector.value);
         const selectedType = typeSelector.value;
-
+    
         if (isNaN(selectedPartIndex) || selectedPartIndex < 0 || selectedPartIndex >= this.meshParts.length) {
             console.error('Invalid selected part index:', selectedPartIndex);
             previewElement.textContent = 'Error';
             previewElement.style.backgroundImage = '';
             return;
         }
-
+    
         const selectedMesh = this.meshParts[selectedPartIndex];
-        // const selectedMaterial = this.originalMaterials[selectedMesh.uuid];
-        const selectedMaterial = selectedMesh.material;
+        // const selectedMaterial = selectedMesh.material; // 변경: selectedMesh.material 사용
+        const selectedMaterial = this.originalMaterials[selectedMesh.uuid]; // 이전 코드 (originalMaterials 사용)
         let selectedTexture = selectedMaterial[selectedType];
+    
+        this.drawPreview(selectedTexture, previewElement);
+    }
 
+    drawPreview(selectedTexture, previewElement){
         if (selectedTexture) {
             if (selectedTexture.image instanceof ImageBitmap) {
                 this.setImageBitmapPreview(selectedTexture.image, previewElement);
@@ -2598,6 +2491,47 @@ class SimpleModelViewer extends HTMLElement {
             previewElement.style.textAlign = 'center';
         }
     }
+
+    // updateTextureMapDisplay() {
+    //     const partSelector = this.shadowRoot.querySelector('#texturePartSelector');
+    //     const typeSelector = this.shadowRoot.querySelector('#textureTypeSelector');
+    //     const previewElement = this.shadowRoot.querySelector('#texturePreview');
+    //     const selectedPartIndex = parseInt(partSelector.value);
+    //     const selectedType = typeSelector.value;
+
+    //     if (isNaN(selectedPartIndex) || selectedPartIndex < 0 || selectedPartIndex >= this.meshParts.length) {
+    //         console.error('Invalid selected part index:', selectedPartIndex);
+    //         previewElement.textContent = 'Error';
+    //         previewElement.style.backgroundImage = '';
+    //         return;
+    //     }
+
+    //     const selectedMesh = this.meshParts[selectedPartIndex];
+    //     // const selectedMaterial = this.originalMaterials[selectedMesh.uuid];
+    //     const selectedMaterial = selectedMesh.material;
+    //     let selectedTexture = selectedMaterial[selectedType];
+
+    //     if (selectedTexture) {
+    //         if (selectedTexture.image instanceof ImageBitmap) {
+    //             this.setImageBitmapPreview(selectedTexture.image, previewElement);
+    //         } else if (selectedTexture.image) {
+    //             const imageSource = selectedTexture.image.currentSrc || selectedTexture.image.src;
+    //             previewElement.style.backgroundImage = `url(${imageSource})`;
+    //             previewElement.style.backgroundSize = 'cover';
+    //             previewElement.textContent = '';
+    //         } else {
+    //             previewElement.textContent = 'Preview Unavailable';
+    //             previewElement.style.backgroundImage = '';
+    //             previewElement.style.lineHeight = '150px';
+    //             previewElement.style.textAlign = 'center';
+    //         }
+    //     } else {
+    //         previewElement.textContent = 'None';
+    //         previewElement.style.backgroundImage = '';
+    //         previewElement.style.lineHeight = '150px';
+    //         previewElement.style.textAlign = 'center';
+    //     }
+    // }
 
     setImageBitmapPreview(imageBitmap, previewElement) {
         const canvas = document.createElement('canvas');
@@ -2899,12 +2833,13 @@ class SimpleModelViewer extends HTMLElement {
             this.selectedSceneGraphLabel.classList.add('selected');
         }
 
+        this.updateTextureMapDisplay();
+
         this.previousMeshPartOriginalMaterial = mesh.material;
         this.previousSelectedMeshPart = mesh;
         mesh.material = this.glowMaterial;
         mesh.material.needsUpdate = true;
 
-        this.updateTextureMapDisplay();
         this.renderer.render(this.scene, this.camera);
 
         this.glowTimeoutId = setTimeout(() => {
