@@ -1787,6 +1787,7 @@ class SimpleModelViewer extends HTMLElement {
             if (this.model) {
                 this.model.traverse((child) => {
                     if (child.isMesh) {
+
                         const originalMaterial = this.originalMaterials[child.uuid];
                         const isStandardMaterial = originalMaterial instanceof THREE.MeshStandardMaterial;
 
@@ -2420,12 +2421,15 @@ class SimpleModelViewer extends HTMLElement {
         const mesh = this.meshParts[selectedPartIndex];
         const meshUUID = mesh.uuid;
         let selectedTexture = null;
-    
-        if (historyIndex === -1) {
+        const historyArray = this.textureHistory.get(meshUUID).get(selectedType);
+
+        if (historyIndex === -1 && historyArray.length < 2) {
             // "Current" 선택 시 원본 텍스처 사용
             selectedTexture = this.originalMaterials[meshUUID][selectedType];
+            // selectedTexture = 
+        } else if (historyArray.length > 1) {
+            selectedTexture = historyArray[historyIndex];
         } else if (this.textureHistory.has(meshUUID) && this.textureHistory.get(meshUUID).has(selectedType)) {
-            const historyArray = this.textureHistory.get(meshUUID).get(selectedType);
             if (historyIndex >= 0 && historyIndex < historyArray.length) {
                 selectedTexture = historyArray[historyIndex];
             }
@@ -2436,7 +2440,7 @@ class SimpleModelViewer extends HTMLElement {
                 mesh.material = mesh.material.clone();
             }
             mesh.material[selectedType] = selectedTexture;
-            // this.originalMaterials[meshUUID][selectedType] = selectedTexture.clone();
+            this.originalMaterials[meshUUID][selectedType] = selectedTexture.clone();
     
             mesh.material.needsUpdate = true;
     
