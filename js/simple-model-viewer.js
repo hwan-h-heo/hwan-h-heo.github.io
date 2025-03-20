@@ -556,6 +556,10 @@ class SimpleModelViewer extends HTMLElement {
                 <div id="fileInputContainer" style="display: none;">
                     <input type="file" id="fileInput" accept=".glb,.gltf, .obj">
                     <p style="font-size: 0.8rem; margin-top: 5px;"><strong>Select a GLTF/GLB/OBJ file</strong></p>
+                    <hr/>
+                    <p style="font-size: 0.8rem; margin-top: 5px;"><strong> or </strong></p>
+                    <input type="text" id="urlInput" style="width: 12rem; height: 1.1rem; font-size: 0.8rem;" placeholder="Enter model URL">
+                    <button id="loadUrlButton">Load URL</button>
                 </div>
             </div>
 
@@ -906,6 +910,7 @@ class SimpleModelViewer extends HTMLElement {
             'angle-per-second', // animation angle per sec
             'camera-orbit',  // init camera orbit
             'hide-control-ui', // hide ui
+            'ui', // show ui
             'light-off', // turn off basic light
             'no-pbr', // turn off light, default as diffuse mode
             'view-mode', // 'default', 'diffuse', 'geometry', 'normal'
@@ -934,6 +939,8 @@ class SimpleModelViewer extends HTMLElement {
             } else {
                 controlsDiv.style.display = 'block';
             }
+        } else if (name === 'ui'){
+            this.shadowRoot.querySelector('#panelContent').style.display = 'block'
         } else if (name === 'light-off') {
             this.state.lightsOn = !(newValue !== null);
             this.ambientLight.visible = this.state.lightsOn;
@@ -1208,13 +1215,33 @@ class SimpleModelViewer extends HTMLElement {
         });
 
         const fileInput = this.shadowRoot.querySelector('#fileInput');
+        const urlInput = this.shadowRoot.querySelector('#urlInput');
+        const loadUrlButton = this.shadowRoot.querySelector('#loadUrlButton');
+        const fileInputContainer = this.shadowRoot.querySelector('#fileInputContainer');
+
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
                 const fileName = file.name;
                 this.loadModel(URL.createObjectURL(file), fileName);
-                const fileInputContainer = this.shadowRoot.querySelector('#fileInputContainer');
                 fileInputContainer.style.display = 'none';
+            }
+        });
+
+        loadUrlButton.addEventListener('click', () => {
+            const url = urlInput.value.trim();
+            if (url) {
+                const fileName = url.split('/').pop();
+                this.loadModel(url, fileName);
+                fileInputContainer.style.display = 'none';
+                urlInput.value = ''; 
+            }
+        });
+        
+        // with enter button
+        urlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                loadUrlButton.click();
             }
         });
 
