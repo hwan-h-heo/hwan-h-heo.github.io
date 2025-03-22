@@ -2421,15 +2421,12 @@ class SimpleModelViewer extends HTMLElement {
         const mesh = this.meshParts[selectedPartIndex];
         const meshUUID = mesh.uuid;
         let selectedTexture = null;
-        const historyArray = this.textureHistory.get(meshUUID).get(selectedType);
-
-        if (historyIndex === -1 && historyArray.length < 2) {
+    
+        if (historyIndex === -1) {
             // "Current" 선택 시 원본 텍스처 사용
             selectedTexture = this.originalMaterials[meshUUID][selectedType];
-            // selectedTexture = 
-        } else if (historyArray.length > 1) {
-            selectedTexture = historyArray[historyIndex];
         } else if (this.textureHistory.has(meshUUID) && this.textureHistory.get(meshUUID).has(selectedType)) {
+            const historyArray = this.textureHistory.get(meshUUID).get(selectedType);
             if (historyIndex >= 0 && historyIndex < historyArray.length) {
                 selectedTexture = historyArray[historyIndex];
             }
@@ -2440,7 +2437,7 @@ class SimpleModelViewer extends HTMLElement {
                 mesh.material = mesh.material.clone();
             }
             mesh.material[selectedType] = selectedTexture;
-            this.originalMaterials[meshUUID][selectedType] = selectedTexture.clone();
+            // this.originalMaterials[meshUUID][selectedType] = selectedTexture.clone();
     
             mesh.material.needsUpdate = true;
     
@@ -2649,8 +2646,10 @@ class SimpleModelViewer extends HTMLElement {
             if (this.animationMesh && this.isIdleAnimationRunning) {
                 const rotationSpeedy = Math.PI / 6; // 30 deg
                 const rotationSpeedz = Math.PI / 3; // 60 deg
+                const rotationSpeedx = Math.PI / 9;
                 this.animationMesh.rotation.y += rotationSpeedy * deltaTime;
                 this.animationMesh.rotation.z += rotationSpeedz * deltaTime;
+                this.animationMesh.rotation.x += rotationSpeedx * deltaTime;
             }
 
         } else if (this.isIdleAnimationRunning) {
