@@ -4,6 +4,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import {FBXLoader} from 'three/addons/loaders/FBXLoader.js';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
 
 class SimpleModelViewer extends HTMLElement {
@@ -554,8 +555,8 @@ class SimpleModelViewer extends HTMLElement {
             <div id="canvas-container" style='text-align: center'>
                 <div id="loadingProgressBar"></div>
                 <div id="fileInputContainer" style="display: none;">
-                    <input type="file" id="fileInput" accept=".glb,.gltf, .obj">
-                    <p style="font-size: 0.8rem; margin-top: 5px;"><strong>Select a GLTF/GLB/OBJ file</strong></p>
+                    <input type="file" id="fileInput" accept=".glb,.gltf, .obj, .fbx">
+                    <p style="font-size: 0.8rem; margin-top: 5px;"><strong>Select a GLTF/GLB/OBJ/FBX file</strong></p>
                     <hr/>
                     <p style="font-size: 0.8rem; margin-top: 5px;"><strong> or </strong></p>
                     <input type="text" id="urlInput" style="width: 12rem; height: 1.1rem; font-size: 0.8rem;" placeholder="Enter model URL">
@@ -648,6 +649,7 @@ class SimpleModelViewer extends HTMLElement {
         this.dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/versioned/decoders/1.5.7/' );
         // this.dracoLoader.setDecoderPath( './draco/' );
         this.gltfLoader = new GLTFLoader();
+        this.fbxloader = new FBXLoader();
         this.gltfLoader.setDRACOLoader(this.dracoLoader);
         this.model = null;
         this.originalMaterials = {};
@@ -1991,10 +1993,17 @@ class SimpleModelViewer extends HTMLElement {
         }
 
         const fileExtension = fileName.split('.').pop().toLowerCase();
-        const loader = fileExtension === 'obj' ? this.objLoader : this.gltfLoader;
+        if (fileExtension === 'obj'){
+            this.loader = this.objLoader;
+        } else if (fileExtension === 'fbx'){
+            this.loader = this.fbxloader;
+        } else if (fileExtension === 'fbx'){
+            this.loader = this.gltfLoader;
+        }
+        // const loader = fileExtension === 'obj' ? this.objLoader : this.gltfLoader;
 
 
-        loader.load(url, (object) => {
+        this.loader.load(url, (object) => {
             if (this.model) {
                 this.scene.remove(this.model);
             }
@@ -2492,47 +2501,6 @@ class SimpleModelViewer extends HTMLElement {
             previewElement.style.textAlign = 'center';
         }
     }
-
-    // updateTextureMapDisplay() {
-    //     const partSelector = this.shadowRoot.querySelector('#texturePartSelector');
-    //     const typeSelector = this.shadowRoot.querySelector('#textureTypeSelector');
-    //     const previewElement = this.shadowRoot.querySelector('#texturePreview');
-    //     const selectedPartIndex = parseInt(partSelector.value);
-    //     const selectedType = typeSelector.value;
-
-    //     if (isNaN(selectedPartIndex) || selectedPartIndex < 0 || selectedPartIndex >= this.meshParts.length) {
-    //         console.error('Invalid selected part index:', selectedPartIndex);
-    //         previewElement.textContent = 'Error';
-    //         previewElement.style.backgroundImage = '';
-    //         return;
-    //     }
-
-    //     const selectedMesh = this.meshParts[selectedPartIndex];
-    //     // const selectedMaterial = this.originalMaterials[selectedMesh.uuid];
-    //     const selectedMaterial = selectedMesh.material;
-    //     let selectedTexture = selectedMaterial[selectedType];
-
-    //     if (selectedTexture) {
-    //         if (selectedTexture.image instanceof ImageBitmap) {
-    //             this.setImageBitmapPreview(selectedTexture.image, previewElement);
-    //         } else if (selectedTexture.image) {
-    //             const imageSource = selectedTexture.image.currentSrc || selectedTexture.image.src;
-    //             previewElement.style.backgroundImage = `url(${imageSource})`;
-    //             previewElement.style.backgroundSize = 'cover';
-    //             previewElement.textContent = '';
-    //         } else {
-    //             previewElement.textContent = 'Preview Unavailable';
-    //             previewElement.style.backgroundImage = '';
-    //             previewElement.style.lineHeight = '150px';
-    //             previewElement.style.textAlign = 'center';
-    //         }
-    //     } else {
-    //         previewElement.textContent = 'None';
-    //         previewElement.style.backgroundImage = '';
-    //         previewElement.style.lineHeight = '150px';
-    //         previewElement.style.textAlign = 'center';
-    //     }
-    // }
 
     setImageBitmapPreview(imageBitmap, previewElement) {
         const canvas = document.createElement('canvas');
