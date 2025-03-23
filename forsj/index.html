@@ -282,8 +282,87 @@
         }
 
         const scheduleSlots = getAvailableSlotsForWeb(applicants, interviewers, interviewPeriod);
-        displayScheduleTable(scheduleSlots);
+
+        if (scheduleSlots.length > 0) {
+            displayScheduleTable(scheduleSlots);
+            inputArea.style.display = 'none';
+            arrangeButton.style.display = 'none';
+            scheduleArea.style.display = 'block';
+        } else {
+            alert("입력된 조건으로는 가능한 면접 일정이 없습니다. 면접 기간, 면접관/지원자 가용 시간 설정을 다시 확인해주세요.");
+        }
     }
+
+    // 개선된 스케줄링 알고리즘 함수
+    function getAvailableSlotsForWeb(applicants, interviewers, interviewPeriod) {
+        const slots = [];
+        const possibleDates = getDatesInRange(interviewPeriod.start, interviewPeriod.end);
+        const timeSlots = generate30MinSlots();
+        const interviewerScheduleCount = {}; // 면접관별 스케줄 횟수 추적
+        interviewers.forEach(interviewer => {
+            interviewerScheduleCount[interviewer.name] = 0; // 초기화
+        });
+        const scheduledApplicants = new Set(); // 이미 스케줄링된 지원자 추적
+
+        for (const date of possibleDates) {
+            for (const timeSlot of timeSlots) {
+                // 지원자 루프를 먼저 돌면서 가능한 면접관을 찾음
+                for (const applicant of applicants) {
+                    if (scheduledApplicants.has(applicant.name)) {
+                        continue; // 이미 스케줄된 지원자는 스킵
+                    }
+
+                    if (isApplicantAvailable(applicant, date, timeSlot)) {
+                        const { start, end } = getTimeForSlot(timeSlot);
+                        // 해당 시간대에 가능한 면접관 필터링
+                        const availableInterviewersForSlot = interviewers.filter(interviewer =>
+                            isInterviewerAvailable(interviewer, date, timeSlot)
+                        );
+
+                        if (availableInterviewersForSlot.length > 0) {
+                            // 면접관 스케줄 횟수를 기준으로 정렬 (오름차순)
+                            availableInterviewersForSlot.sort((a, b) => interviewerScheduleCount[a.name] - interviewerScheduleCount[b.name]);
+                            const selectedInterviewer = availableInterviewersForSlot[0]; // 가장 적게 배정된 면접관 선택
+
+                            slots.push({
+                                date: date,
+                                startTime: start,
+                                endTime: end,
+                                applicant: applicant.name,
+                                interviewer: selectedInterviewer.name
+                            });
+                            interviewerScheduleCount[selectedInterviewer.name]++; // 면접관 스케줄 횟수 증가
+                            scheduledApplicants.add(applicant.name); // 지원자 스케줄 완료 표시
+                        }
+                    }
+                }
+            }
+        }
+        return slots;
+    }
+
+    // function arrangeSchedule() {
+    //     const interviewerCount = parseInt(document.getElementById('interviewerCount').value);
+    //     const applicantCount = parseInt(document.getElementById('applicantCount').value);
+    //     const interviewPeriod = window.interviewPeriod;
+    //     const interviewers = [];
+    //     const applicants = [];
+
+    //     for (let i = 0; i < interviewerCount; i++) {
+    //         const interviewerName = document.querySelector(`.interviewer-form:nth-child(${i + 2}) .interviewer-name`).value || `면접관${i+1}`;
+    //         const availability = window.interviewers[i] ? window.interviewers[i].availability : {};
+    //         interviewers.push({ name: interviewerName, availability: availability });
+    //     }
+
+    //     for (let i = 0; i < applicantCount; i++) {
+    //         const applicantName = document.querySelector(`.applicant-form:nth-child(${i + 2}) .applicant-name`).value || `지원자${i+1}`;
+    //         const availability = window.applicants[i] ? window.applicants[i].availability : {};
+    //         applicants.push({ name: applicantName, availability: availability });
+    //     }
+
+    //     const scheduleSlots = getAvailableSlotsForWeb(applicants, interviewers, interviewPeriod);
+    //     displayScheduleTable(scheduleSlots);
+    // }
 
     // function getAvailableSlotsForWeb(applicants, interviewers, interviewPeriod) {
     //     const slots = [];
@@ -325,46 +404,46 @@
     //     }
     //     return slots;
     // }
-    function getAvailableSlotsForWeb(applicants, interviewers, interviewPeriod) {
-        const slots = [];
-        const possibleDates = getDatesInRange(interviewPeriod.start, interviewPeriod.end);
-        const timeSlots = generate30MinSlots();
-        const assignedInterviewers = {};
+    // function getAvailableSlotsForWeb(applicants, interviewers, interviewPeriod) {
+    //     const slots = [];
+    //     const possibleDates = getDatesInRange(interviewPeriod.start, interviewPeriod.end);
+    //     const timeSlots = generate30MinSlots();
+    //     const assignedInterviewers = {};
 
-        for (const date of possibleDates) {
-            assignedInterviewers[date] = {};
-            for (const timeSlot of timeSlots) {
-                assignedInterviewers[date][timeSlot] = new Set();
-            }
-        }
+    //     for (const date of possibleDates) {
+    //         assignedInterviewers[date] = {};
+    //         for (const timeSlot of timeSlots) {
+    //             assignedInterviewers[date][timeSlot] = new Set();
+    //         }
+    //     }
 
-        for (const date of possibleDates) {
-            for (const applicant of applicants) {
-                for (const timeSlot of timeSlots) {
-                    if (isApplicantAvailable(applicant, date, timeSlot)) {
-                        const { start, end } = getTimeForSlot(timeSlot); // 변수명 수정
-                        const availableInterviewers = interviewers.filter(i => 
-                            isInterviewerAvailable(i, date, timeSlot) && 
-                            !assignedInterviewers[date][timeSlot].has(i.name)
-                        );
+    //     for (const date of possibleDates) {
+    //         for (const applicant of applicants) {
+    //             for (const timeSlot of timeSlots) {
+    //                 if (isApplicantAvailable(applicant, date, timeSlot)) {
+    //                     const { start, end } = getTimeForSlot(timeSlot); // 변수명 수정
+    //                     const availableInterviewers = interviewers.filter(i => 
+    //                         isInterviewerAvailable(i, date, timeSlot) && 
+    //                         !assignedInterviewers[date][timeSlot].has(i.name)
+    //                     );
                         
-                        if (availableInterviewers.length >= 1) {
-                            const interviewer = availableInterviewers[0];
-                            assignedInterviewers[date][timeSlot].add(interviewer.name);
-                            slots.push({
-                                date: date,
-                                startTime: start, // startTime 대신 start 사용
-                                endTime: end,     // endTime 대신 end 사용
-                                applicant: applicant.name,
-                                interviewer: interviewer.name
-                            });
-                        }
-                    }
-                }
-            }
-        }
-        return slots;
-    }
+    //                     if (availableInterviewers.length >= 1) {
+    //                         const interviewer = availableInterviewers[0];
+    //                         assignedInterviewers[date][timeSlot].add(interviewer.name);
+    //                         slots.push({
+    //                             date: date,
+    //                             startTime: start, // startTime 대신 start 사용
+    //                             endTime: end,     // endTime 대신 end 사용
+    //                             applicant: applicant.name,
+    //                             interviewer: interviewer.name
+    //                         });
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return slots;
+    // }
 
     function getDatesInRange(startDate, endDate) {
         let dates = [];
@@ -392,16 +471,28 @@
     //     const end = moment(timeSlot, 'HH:mm').add(1, 'hour');
     //     return { start: start.format('HH:mm'), end: end.format('HH:mm') };
     // }
+    // function getTimeForSlot(timeSlot) {
+    //     const start = moment(timeSlot, 'HH:mm');
+    //     if (!start.isValid()) {
+    //         console.error('Invalid timeSlot:', timeSlot); // 디버깅용
+    //         return { start: '09:00', end: '10:00' }; // 기본값
+    //     }
+    //     const end = start.clone().add(1, 'hour');
+    //     return { 
+    //         start: start.format('HH:mm'), 
+    //         end: end.format('HH:mm') 
+    //     };
+    // }
     function getTimeForSlot(timeSlot) {
         const start = moment(timeSlot, 'HH:mm');
         if (!start.isValid()) {
-            console.error('Invalid timeSlot:', timeSlot); // 디버깅용
-            return { start: '09:00', end: '10:00' }; // 기본값
+            console.error('Invalid timeSlot:', timeSlot);
+            return { start: '09:00', end: '09:30' }; // 기본값도 30분 간격으로 수정
         }
-        const end = start.clone().add(1, 'hour');
-        return { 
-            start: start.format('HH:mm'), 
-            end: end.format('HH:mm') 
+        const end = start.clone().add(30, 'minutes'); // 30분 추가로 수정
+        return {
+            start: start.format('HH:mm'),
+            end: end.format('HH:mm')
         };
     }
 
