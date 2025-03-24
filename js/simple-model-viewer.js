@@ -1997,7 +1997,7 @@ class SimpleModelViewer extends HTMLElement {
             this.loader = this.objLoader;
         } else if (fileExtension === 'fbx'){
             this.loader = this.fbxloader;
-        } else if (fileExtension === 'fbx'){
+        } else {
             this.loader = this.gltfLoader;
         }
         // const loader = fileExtension === 'obj' ? this.objLoader : this.gltfLoader;
