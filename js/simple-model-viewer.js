@@ -4,7 +4,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-import {FBXLoader} from 'three/addons/loaders/FBXLoader.js';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
 
 class SimpleModelViewer extends HTMLElement {
@@ -555,8 +554,8 @@ class SimpleModelViewer extends HTMLElement {
             <div id="canvas-container" style='text-align: center'>
                 <div id="loadingProgressBar"></div>
                 <div id="fileInputContainer" style="display: none;">
-                    <input type="file" id="fileInput" accept=".glb,.gltf, .obj, .fbx">
-                    <p style="font-size: 0.8rem; margin-top: 5px;"><strong>Select a GLTF/GLB/OBJ/FBX file</strong></p>
+                    <input type="file" id="fileInput" accept=".glb,.gltf, .obj">
+                    <p style="font-size: 0.8rem; margin-top: 5px;"><strong>Select a GLTF/GLB/OBJ file</strong></p>
                     <hr/>
                     <p style="font-size: 0.8rem; margin-top: 5px;"><strong> or </strong></p>
                     <input type="text" id="urlInput" style="width: 12rem; height: 1.1rem; font-size: 0.8rem;" placeholder="Enter model URL">
@@ -648,8 +647,7 @@ class SimpleModelViewer extends HTMLElement {
         this.objLoader = new OBJLoader();
         this.dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/versioned/decoders/1.5.7/' );
         // this.dracoLoader.setDecoderPath( './draco/' );
-        this.gltfLoader = new GLTFLoader();
-        this.fbxloader = new FBXLoader();
+        this.gltfLoader = new GLTFLoader()
         this.gltfLoader.setDRACOLoader(this.dracoLoader);
         this.model = null;
         this.originalMaterials = {};
@@ -1995,8 +1993,6 @@ class SimpleModelViewer extends HTMLElement {
         const fileExtension = fileName.split('.').pop().toLowerCase();
         if (fileExtension === 'obj'){
             this.loader = this.objLoader;
-        } else if (fileExtension === 'fbx'){
-            this.loader = this.fbxloader;
         } else {
             this.loader = this.gltfLoader;
         }
