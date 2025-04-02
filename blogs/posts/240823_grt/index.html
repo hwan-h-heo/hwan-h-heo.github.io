@@ -374,7 +374,7 @@ rgb[idx * C + 2] = result.z;</code></pre>
                                 <p> The scaling term $\sqrt{2 \log (\sigma / \alpha_{\min})}$ determines how the icosahedron is scaled. Specifically, the parameter $\alpha_{\min}$ (set to 0.01) represents the minimum response value.</p> 
                                 <p> Though the term is a little bit tricky when considering identical scaling, this relationship simplifies to:</p>
                                 <div class="math-container">
-                                    $$ \sigma / \alpha_{\min} = \exp(0.5) \ \Rightarrow \sigma \cdot \exp (- 1/2) = \alpha_{\min}<br> $$
+                                    $$ \sigma / \alpha_{\min} = \exp(0.5) \ \Rightarrow \sigma \cdot \exp (- 1/2) = \alpha_{\min} $$
                                 </div>
                                 <p> Doesn&#39;t the right side look familiar? This expression closely resembles the response function of the Gaussian Splatting. </p>
                                 <div>
@@ -737,10 +737,10 @@ rgb[idx * C + 2] = result.z;</code></pre>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="../../../js/scripts.js"></script>
-        <script src="https://unpkg.com/prismjs@1.28.0/components/prism-core.min.js"></script>
-        <script src="https://unpkg.com/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
         <script>
-            Prism.plugins.autoloader.languages_path = 'https://unpkg.com/prismjs@1.28.0/components/'
+            Prism.plugins.autoloader.languages_path = 'https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/'
         </script>
         
     </body>

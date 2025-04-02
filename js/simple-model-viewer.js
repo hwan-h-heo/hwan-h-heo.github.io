@@ -299,6 +299,59 @@ class SimpleModelViewer extends HTMLElement {
                     margin-right: 5px;
                     display: inline-block;
                     vertical-align: middle;
+                    transform-origin: 100% 0%;
+                }
+
+                .texture-preview:hover{
+                    transform: scale(1.5);
+                    border: 1px solid #666666;
+                    z-index: 10; 
+                    cursor: cell;
+                }
+
+                #videoModal {
+                    /* Styles already defined inline, but you can move them here */
+                    /* display: none; */ /* Controlled by JS */
+                    /* position: fixed; */
+                    /* ... etc ... */
+                }
+
+                #videoModal > div {
+                    /* background-color: white; */
+                    /* padding: 20px; */
+                    /* border-radius: 5px; */
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                }
+
+                #videoPreview {
+                    border: 1px solid #ccc;
+                }
+
+                #recordBtn {
+                    background-color: #d9534f; /* Red */
+                    color: white;
+                    border-color: #d43f3a;
+                }
+                #recordBtn:hover {
+                    background-color: #c9302c;
+                }
+
+                #stopBtn {
+                    background-color: #5bc0de; /* Blue */
+                    color: white;
+                    border-color: #46b8da;
+                }
+                #stopBtn:hover {
+                    background-color: #31b0d5;
+                }
+
+                #downloadBtn {
+                    background-color: #5cb85c; /* Green */
+                    color: white;
+                    border-color: #4cae4c;
+                }
+                #downloadBtn:hover {
+                    background-color: #449d44;
                 }
 
                 ul {
@@ -432,15 +485,45 @@ class SimpleModelViewer extends HTMLElement {
 
                                 <fieldset style="margin-top: 0.5rem;">
                                     <legend style="font-size: 0.8rem;"><strong>Util</strong></legend>
-                                    <button id="autoRotateBtn">Auto-Rotate</button>
-                                    <button id="screenshotBtn">Screenshot</button>
-                                    <button id="discardModelBtn" style="background-color: red">Discard Model</button>
-                                    <button id="runAnimationBtn" style="display: none; background-color: #149ddd">Run</button>
-                                    <button id="pauseAnimationBtn" style="display: none; background-color: #777777">Pause</button>
+                                    <button id="autoRotateBtn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z"/>
+                                            <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466"/>
+                                        </svg>
+                                    </button>
+                                    <button id="screenshotBtn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera-fill" viewBox="0 0 16 16">
+                                            <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                                            <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0"/>
+                                        </svg>
+                                    </button>
+                                    <button id="recordBtn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-record-circle" viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                            <path d="M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                        </svg>
+                                    </button>
+                                    <button id="stopBtn" style="display: none;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stop-circle" viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                            <path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5z"/>
+                                        </svg>
+                                    </button>
+                                    <button id="runAnimationBtn" style="display: none; background-color: #149ddd">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+                                            <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
+                                        </svg>
+                                    </button>
+                                    <button id="pauseAnimationBtn" style="display: none; background-color: #777777">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16">
+                                            <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5m5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5"/>
+                                        </svg>
+                                    </button>
                                     <div id="anim_description" style="display: none; margin-bottom: 0.5rem;">
                                         <strong>Actions:</strong>
                                     </div>
                                 </fieldset>
+                                <button id="discardModelBtn" style="background-color: red; width: 100%">Discard Model</button>
                             </div>
                         </div>
 
@@ -520,12 +603,11 @@ class SimpleModelViewer extends HTMLElement {
                                     <div>Metalness: <input type="range" id="metalness" style="font-size: 0.8rem; width: 17rem;" min="0" max="1" step="0.01" value="0.5"></div>
                                     <hr/>
                                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
-                                        <label for="texturePartSelector" style="font-size: 0.8rem;">Part:</label>
+                                        <label for="texturePartSelector" style="font-size: 0.8rem;">Info:</label>
                                         <select id="texturePartSelector" style="font-size: 0.8rem; max-width: 9rem;">
                                             <!-- Part options will be populated here -->
                                         </select>
 
-                                        <label for="textureTypeSelector" style="font-size: 0.8rem;">Type:</label>
                                         <select id="textureTypeSelector" style="font-size: 0.8rem; max-width: 9rem;">
                                             <option value="map">Diffuse</option>
                                             <option value="roughnessMap">Roughness</option>
@@ -560,6 +642,15 @@ class SimpleModelViewer extends HTMLElement {
                     <p style="font-size: 0.8rem; margin-top: 5px;"><strong> or </strong></p>
                     <input type="text" id="urlInput" style="width: 12rem; height: 1.1rem; font-size: 0.8rem;" placeholder="Enter model URL">
                     <button id="loadUrlButton">Load URL</button>
+                    <p style="font-size: 0.8rem; margin-top: 5px;"><em> https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/omni.glb </em></p>
+                </div>
+            </div>
+            <div id="videoModal" style="display: none; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+                <div style="background-color: white; padding: 20px; border-radius: 5px; text-align: center;">
+                    <h4>Video Preview</h4>
+                    <video id="videoPreview" controls style="max-width: 80vw; max-height: 60vh; display: block; margin: 10px auto;"></video>
+                    <button id="downloadBtn">Download Video</button>
+                    <button id="closeModalBtn" style="margin-left: 10px;">Close</button>
                 </div>
             </div>
 
@@ -677,6 +768,17 @@ class SimpleModelViewer extends HTMLElement {
         this.glowMaterial = this.createGlowMaterial(); // Glow Material
         this.previousSelectedMeshPart = null; // Previous selected mesh part
         this.previousMeshPartOriginalMaterial = null;
+
+        // --- State Variables for Recording ---
+        this.mediaRecorder = null;
+        this.recordedChunks = [];
+        this.videoBlob = null; // To store the final blob
+        this.stream = null;    // To store the canvas stream
+
+        this.startRecording = this.startRecording.bind(this);
+        this.stopRecording = this.stopRecording.bind(this);
+        this.downloadVideo = this.downloadVideo.bind(this);
+        this.closeModal = this.closeModal.bind(this);
 
         // TransformControls instance generation
         this.transformControls = new TransformControls(this.camera, this.renderer.domElement);
@@ -1179,7 +1281,7 @@ class SimpleModelViewer extends HTMLElement {
             this.autoRotate = !this.autoRotate;
 
             const rotateButton = this.shadowRoot.querySelector('#autoRotateBtn');
-            rotateButton.textContent = this.autoRotate ? 'Auto-Rotate Off' : 'Auto-Rotate';
+            // rotateButton.textContent = this.autoRotate ? 'Auto-Rotate Off' : 'Auto-Rotate';
             if (this.autoRotate) {
                 rotateButton.classList.add('toggled-off');
             } else {
@@ -1326,6 +1428,210 @@ class SimpleModelViewer extends HTMLElement {
         this.shadowRoot.querySelector('#cameraFov').addEventListener('input', (event) => this.updateCameraFov(parseFloat(event.target.value)));
         this.shadowRoot.querySelector('#cameraNear').addEventListener('input', (event) => this.updateCameraNear(parseFloat(event.target.value)));
         this.shadowRoot.querySelector('#cameraFar').addEventListener('input', (event) => this.updateCameraFar(parseFloat(event.target.value)));
+
+        this.recordBtn = this.shadowRoot.querySelector('#recordBtn');
+        this.stopBtn = this.shadowRoot.querySelector('#stopBtn');
+        this.videoModal = this.shadowRoot.querySelector('#videoModal');
+        this.videoPreview = this.shadowRoot.querySelector('#videoPreview');
+        this.downloadBtn = this.shadowRoot.querySelector('#downloadBtn');
+        this.closeModalBtn = this.shadowRoot.querySelector('#closeModalBtn');
+        this.closeModal(); // Ensure modal is hidden initially
+
+        if (this.recordBtn) this.recordBtn.addEventListener('click', this.startRecording); // No ()
+        if (this.stopBtn) this.stopBtn.addEventListener('click', this.stopRecording);     // No ()
+        if (this.downloadBtn) this.downloadBtn.addEventListener('click', this.downloadVideo); // No ()
+        if (this.closeModalBtn) this.closeModalBtn.addEventListener('click', this.closeModal);   // No ()
+
+        // Optional: Close modal if clicking outside the content area
+        if (this.videoModal) {
+            this.videoModal.addEventListener('click', (event) => {
+                // Check if the click target is the modal background itself, not its children
+                if (event.target === this.videoModal) {
+                    this.closeModal();
+                }
+            });
+        }
+
+        // Optional: Close modal if clicking outside the content area
+        this.videoModal.addEventListener('click', (event) => {
+            if (event.target === this.videoModal) {
+                this.closeModal();
+            }
+        });
+    }
+
+    // --- Video Recording Functions ---
+
+    startRecording() {
+        if (!this.renderer) {
+            alert("Renderer not ready.");
+            return;
+        }
+
+        if (!this.model){
+            alert("Model not loaded.");
+            return;
+        }
+
+        if (!window.MediaRecorder) {
+            alert("MediaRecorder API not supported in this browser.");
+            return;
+        }
+
+        const canvas = this.renderer.domElement;
+        if (!canvas.captureStream) {
+             alert("Canvas captureStream API not supported in this browser.");
+             return;
+        }
+
+        console.log("Starting recording...");
+        this.recordedChunks = []; // Reset chunks
+        this.videoBlob = null; // Reset final blob
+
+        // Get stream from canvas (e.g., at 30fps)
+        this.stream = canvas.captureStream(30); // Adjust frame rate as needed
+
+        // --- Choose a MIME type ---
+        // Prefer webm with vp9 or vp8, fallback to default
+        const options = { mimeType: 'video/webm;codecs=vp9' };
+        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+            console.warn(`${options.mimeType} not supported, trying vp8`);
+            options.mimeType = 'video/webm;codecs=vp8';
+            if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                 console.warn(`${options.mimeType} not supported, trying default`);
+                 options.mimeType = 'video/webm'; // Or even '' to let browser decide
+                 if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                     console.error("No suitable video/webm MIME type supported");
+                      // Clean up stream if necessary
+                      this.stream.getTracks().forEach(track => track.stop());
+                      this.stream = null;
+                     alert("Could not find a supported video format for recording.");
+                     return;
+                 }
+            }
+        }
+        console.log("Using MIME type:", options.mimeType);
+
+        try {
+            this.mediaRecorder = new MediaRecorder(this.stream, options);
+
+            this.mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    this.recordedChunks.push(event.data);
+                    // console.log("Received data chunk:", event.data.size);
+                }
+            };
+
+            this.mediaRecorder.onstop = () => {
+                console.log("Recording stopped. Processing chunks...");
+                if (this.recordedChunks.length === 0) {
+                    console.warn("No data recorded.");
+                     alert("Recording failed: No video data captured.");
+                     // No need to show modal if nothing was recorded
+                    this.closeModal(); // Ensure it's hidden
+                    return;
+                }
+                // Combine chunks into a single Blob
+                this.videoBlob = new Blob(this.recordedChunks, {
+                    type: options.mimeType // Use the determined MIME type
+                });
+                console.log("Video blob created:", this.videoBlob);
+
+                // Create object URL for preview
+                const videoUrl = URL.createObjectURL(this.videoBlob);
+
+                // Set preview source and show modal
+                this.videoPreview.src = videoUrl;
+                // this.videoPreview.load(); // Usually not needed with createObjectURL
+                this.videoModal.style.display = 'flex'; // Show modal
+            };
+
+             this.mediaRecorder.onerror = (event) => {
+                 console.error("MediaRecorder error:", event.error);
+                 alert(`Recording failed: ${event.error.name} - ${event.error.message}`);
+                 this.stopRecording(); // Attempt cleanup
+             };
+
+            // Start recording
+            this.mediaRecorder.start();
+
+            // Update UI
+            this.recordBtn.style.display = 'none';
+            this.stopBtn.style.display = 'inline-block'; // Or 'block'
+
+        } catch (err) {
+            console.error("Failed to create MediaRecorder:", err);
+            alert("Failed to initialize video recorder. See console for details.");
+             // Clean up stream if necessary
+             if (this.stream) {
+                 this.stream.getTracks().forEach(track => track.stop());
+                 this.stream = null;
+             }
+        }
+    }
+
+    stopRecording() {
+        console.log("Stopping recording...");
+        if (this.mediaRecorder && this.mediaRecorder.state === "recording") {
+            this.mediaRecorder.stop(); // This triggers the 'onstop' event handler
+            // Stop the stream tracks *after* recorder has fully stopped (in onstop is safer, but here is common)
+            if (this.stream) {
+                this.stream.getTracks().forEach(track => track.stop());
+                this.stream = null; // Release the stream
+            }
+        } else {
+            console.warn("Recorder not active or already stopped.");
+        }
+
+        // Update UI immediately
+        this.stopBtn.style.display = 'none';
+        this.recordBtn.style.display = 'inline-block'; // Or 'block'
+    }
+
+    downloadVideo() {
+        if (!this.videoBlob) {
+            console.error("No video blob available to download.");
+            alert("No recording available to download.");
+            return;
+        }
+
+        // Create a temporary URL for the blob
+        const url = URL.createObjectURL(this.videoBlob);
+
+        // Create a temporary anchor element
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        // Suggest a filename (e.g., recording.webm)
+        const extension = this.videoBlob.type.split('/')[1].split(';')[0]; // Get 'webm' etc.
+        a.download = `recording-${Date.now()}.${extension}`; // Add timestamp
+
+        // Append to body, click, and remove
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        // Revoke the object URL to free up memory
+        URL.revokeObjectURL(url);
+
+        console.log("Download initiated.");
+        // Optional: Close modal after download starts
+        // this.closeModal();
+    }
+
+    closeModal() {
+        console.log("Closing modal.");
+        this.videoModal.style.display = 'none';
+        // Clean up video preview source to release blob memory sooner
+        if (this.videoPreview.src) {
+             URL.revokeObjectURL(this.videoPreview.src); // Revoke if it's an object URL
+             this.videoPreview.src = ''; // Clear src
+             this.videoPreview.removeAttribute('src'); // Remove attribute
+             this.videoPreview.load(); // Ask video element to release file
+        }
+        // Reset state if needed (optional, depends on desired flow)
+        // this.videoBlob = null;
+        // this.recordedChunks = [];
     }
 
     setTransformMode(mode) {
@@ -1416,7 +1722,7 @@ class SimpleModelViewer extends HTMLElement {
     }
 
     addDirectionalLight() {
-        const newLight = new THREE.DirectionalLight(0xffffff, 1);
+        const newLight = new THREE.DirectionalLight(0xffffff, 3);
         newLight.position.set(5, 5, 5);
         this.directionalLights.push(newLight);
         this.scene.add(newLight);

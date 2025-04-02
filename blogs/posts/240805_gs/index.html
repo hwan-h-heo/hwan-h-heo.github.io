@@ -449,11 +449,13 @@ cov3D[5] = Sigma[2][2];</code>
                             Perspective projection 에 대한 Jacobian $J$ 는 다음과 같이 유도되며,
                         </p>
                         <div class="math-container">
+                            $$
                             \begin{bmatrix} 
                             1 / t_2 & 0 & -t_0 / t_2^2 \\
                             0 & 1 / t_2 &  -t_1 / t_2^2 \\
-                            t_0 / \| t\| & t_1 / \| t\|   & t_2 / \| t\|  \\
+                            t_0 / \| t\| & t_1 / \| t\|   & t_2 / \| t \|  \\
                             \end{bmatrix}
+                            $$
                         </div>
                         <p class="lang eng"> 
                             In practical, when considering
@@ -484,11 +486,13 @@ cov3D[5] = Sigma[2][2];</code>
                         <p class="lang eng"> the implementation proceeds as follows: </p>
                         <p class="lang kor" style="display: none;"> 아래의 형태로 구현되어 있다. </p>
                         <div class="math-container">
+                            $$
                             \begin{bmatrix} 
                             f_x / t_2 & 0 & -f_x \cdot t_0 / t_2^2 \\
                             0 & f_y / t_2 &  - f_y \cdot t_1 / t_2^2 \\
                             0 & 0 & 0 \\
                             \end{bmatrix}
+                            $$
                         </div>
                         <br/>
                         <pre class="language-cpp" style="font-size: 16px;"><code>// affine approximation of the Jacobian matrix of viewmatrix to rayspace
@@ -1080,10 +1084,10 @@ glm::mat3 J = glm::mat3(
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="../../../js/scripts.js"></script>
-        <script src="https://unpkg.com/prismjs@1.28.0/components/prism-core.min.js"></script>
-        <script src="https://unpkg.com/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
         <script>
-            Prism.plugins.autoloader.languages_path = 'https://unpkg.com/prismjs@1.28.0/components/'
+            Prism.plugins.autoloader.languages_path = 'https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/'
         </script>
     </body>
 </html>
