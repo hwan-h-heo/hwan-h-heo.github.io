@@ -1950,14 +1950,22 @@ class SimpleModelViewer extends HTMLElement {
         if (this.model) {
             this.model.traverse((child) => {
                 if (child.isMesh) {
-                    child.material = new THREE.MeshStandardMaterial({
+                    const originalMaterial = this.originalMaterials[child.uuid];
+    
+                    const newMaterialProps = {
                         color: 0xffffff,
                         map: null,
                         envMap: this.gradTexture,
                         envMapIntensity: 1.0,
                         roughness: 1,
                         metalness: 1
-                    });
+                    };
+    
+                    if (originalMaterial && originalMaterial.vertexColors) {
+                        newMaterialProps.vertexColors = true;
+                    }
+    
+                    child.material = new THREE.MeshStandardMaterial(newMaterialProps);
                     this.modifyMaterialForWireframe(child.material);
                     child.material.needsUpdate = true;
                 }
