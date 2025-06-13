@@ -2109,7 +2109,7 @@ class SimpleModelViewer extends HTMLElement {
                         const originalMaterial = this.originalMaterials[child.uuid];
                         const isStandardMaterial = originalMaterial instanceof THREE.MeshStandardMaterial;
 
-                        child.material = new THREE.MeshStandardMaterial({
+                        const newMaterialProps = {
                             map: originalMaterial.map ? originalMaterial.map.clone() : null,
                             envMap: texture,
                             envMapIntensity: 1.0,
@@ -2119,7 +2119,13 @@ class SimpleModelViewer extends HTMLElement {
                             metalnessMap: isStandardMaterial && originalMaterial.metalnessMap !== undefined ? originalMaterial.metalnessMap : null,
                             normalMap: originalMaterial.normalMap ? originalMaterial.normalMap : null,
                             emissiveMap: originalMaterial.emissiveMap ? originalMaterial.emissiveMap : null,
-                        });
+                        };
+                        
+                        if (originalMaterial && originalMaterial.vertexColors) {
+                            newMaterialProps.vertexColors = true;
+                        }
+    
+                        child.material = new THREE.MeshStandardMaterial(newMaterialProps);
                         if (child.material.map) {
                             child.material.map.encoding = THREE.sRGBEncoding;
                         }
