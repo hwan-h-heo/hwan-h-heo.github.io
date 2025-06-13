@@ -775,6 +775,10 @@ class SimpleModelViewer extends HTMLElement {
         this.videoBlob = null; // To store the final blob
         this.stream = null;    // To store the canvas stream
 
+        // --- State Variables for Explode Effect ---
+        this.modelCenter = null;
+        this.modelMaxDim = 0;
+
         this.startRecording = this.startRecording.bind(this);
         this.stopRecording = this.stopRecording.bind(this);
         this.downloadVideo = this.downloadVideo.bind(this);
@@ -2316,6 +2320,8 @@ class SimpleModelViewer extends HTMLElement {
             const size = box.getSize(new THREE.Vector3());
             const maxDim = Math.max(size.x, size.y, size.z);
             let scaleFactor = 1;
+            
+            this.modelMaxDim = maxDim;
 
             if (maxDim > 0) {
                 const targetSize = 10;
@@ -2405,12 +2411,22 @@ class SimpleModelViewer extends HTMLElement {
             this.meshParts = [];
             this.meshPartTextureInfo = [];
 
+            const modelBbox = new THREE.Box3().setFromObject(this.model);
+            this.modelCenter = modelBbox.getCenter(new THREE.Vector3());
+
 
             // Mesh Parts and Textures
             this.model.traverse((child) => {
                 if (child.isMesh && child.geometry) {
+                    // for no-normal geometry
+                    if (!child.geometry.attributes.normal) {
+                        child.geometry.computeVertexNormals();
+                    }
+                    
                     vertexCount += child.geometry.attributes.position.count;
                     faceCount += child.geometry.index ? child.geometry.index.count / 3 : child.geometry.attributes.position.count / 3;
+
+                    child.userData.originalPosition = child.position.clone();
 
                     this.modifyMaterialForWireframe(child.material); // Wireframe overlay
                     this.originalMaterials[child.uuid] = child.material.clone();
@@ -2497,6 +2513,8 @@ class SimpleModelViewer extends HTMLElement {
 
             this.shadowRoot.querySelector('#modelInfo').innerHTML = `<strong>[Model Info]</strong> Vertices: ${vertexCount}, Faces: ${faceCount}`;
             this.scene.add(this.model);
+
+            this.createExplodeSlider();
 
             this.updateControlPanel();
             this.renderMode();
@@ -3127,6 +3145,92 @@ class SimpleModelViewer extends HTMLElement {
                 this.renderer.render(this.scene, this.camera);
             }
         }, 5000); // 1000ms = 1sec
+    }
+
+    createExplodeSlider() {
+        const editTabContent = this.shadowRoot.querySelector("#render-tab-content");
+        if (!editTabContent) {
+          console.warn("Could not find the 'Edit' tab to add the explode slider.");
+          return;
+        }
+    
+        // Prevent adding multiple sliders if a model is reloaded without discarding
+        if (this.shadowRoot.querySelector("#explode-fieldset")) {
+          return;
+        }
+    
+        const fieldset = document.createElement("fieldset");
+        fieldset.id = "explode-fieldset"; // For easy selection/removal later
+        fieldset.style.marginTop = "0.5rem";
+    
+        const legend = document.createElement("legend");
+        legend.style.fontSize = "0.8rem";
+        legend.innerHTML = "<strong>Explode</strong>";
+        fieldset.appendChild(legend);
+    
+        const sliderContainer = document.createElement("div");
+        sliderContainer.style.display = "flex";
+        sliderContainer.style.alignItems = "center";
+        sliderContainer.style.justifyContent = "center";
+        sliderContainer.style.margin = "5px 0";
+    
+        const label = document.createElement("span");
+        label.textContent = "Amount:";
+        label.style.marginRight = "10px";
+        label.style.fontWeight = "bold";
+    
+        const slider = document.createElement("input");
+        slider.type = "range";
+        slider.min = "0";
+        slider.max = "1";
+        slider.step = "0.01";
+        slider.value = "0";
+        slider.style.width = "100%";
+    
+        slider.oninput = (event) => {
+          const explodeAmount = parseFloat(event.target.value);
+          this.applyExplodeEffect(explodeAmount);
+        };
+    
+        sliderContainer.appendChild(label);
+        sliderContainer.appendChild(slider);
+        fieldset.appendChild(sliderContainer);
+    
+        // Add the new fieldset to the edit tab
+        editTabContent.appendChild(fieldset);
+    }
+    
+    applyExplodeEffect(explodeAmount) {
+        if (!this.model || !this.modelCenter) return;
+    
+        // A multiplier to make the explosion visually significant.
+        // Using half of the model's max dimension provides a good scale.
+        const explosionFactor = this.modelMaxDim * 1.5;
+    
+        this.model.traverse((part) => {
+          if (part.isMesh) {
+            // The original position should have been stored in loadModel.
+            if (!part.userData.originalPosition) {
+              console.warn("Original position not found for part:", part.name, "- Storing now.");
+              part.userData.originalPosition = part.position.clone();
+            }
+    
+            const bbox = new THREE.Box3().setFromObject(part);
+            const part_center = bbox.getCenter(new THREE.Vector3());
+            
+            // Direction is from the center of the whole model to the center of the part
+            const direction = part_center.clone().sub(this.modelCenter).normalize();
+            direction.x *= 2
+            direction.z *= 2
+    
+            const originalPosition = part.userData.originalPosition;
+            const offset = direction.multiplyScalar(explodeAmount * explosionFactor);
+            const newPosition = originalPosition.clone().add(offset);
+    
+            // Apply the new calculated position
+            part.position.copy(newPosition);
+          }
+        });
     }
 }
 
