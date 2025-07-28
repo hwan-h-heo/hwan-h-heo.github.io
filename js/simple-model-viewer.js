@@ -134,7 +134,7 @@ class SimpleModelViewer extends HTMLElement {
                 .right-ui-panel { /* Renamed and unified panel */
                     position: absolute;
                     top: 0.5rem;
-                    right: 0.5rem; /* Positioned to the right */
+                    right: 1rem; /* Positioned to the right */
                     font-size: 0.7rem;
                     background-color: rgba(200, 200, 200, 0.5);
                     padding: 0.5rem;

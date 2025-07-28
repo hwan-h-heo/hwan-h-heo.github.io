@@ -71,7 +71,7 @@ author: Hwan Heo
 </p>
 <h4>How COLMAP Works</h4>
 <br/>
-<img src="assets/colmap_pipe.jpg" alt="colmap pipeline" width="100%">
+<img src="./240721_sfm/assets/colmap_pipe.jpg" alt="colmap pipeline" width="100%">
 <br/>
 <br/>
 <ol>

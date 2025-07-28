@@ -198,10 +198,13 @@
                                                 <a href="?id=250106_tomography/">Neural Rendering Beyond Photography</a>
                                             </li>
                                             <li>
-                                                <a href="?id=250302_3d_latent_diffusion">Deep Dive into 3D Latent Diffusion</a>
+                                                <a href="?id=250302_3d_latent_diffusion/">Deep Dive into 3D Latent Diffusion</a>
                                             </li>
                                             <li>
-                                                <a href="?id=250310_model_viewer">3D Model Viewer in Web</a>
+                                                <a href="?id=250310_model_viewer/">3D Model Viewer in Web</a>
+                                            </li>
+                                            <li>
+                                                <a href="?id=250702_building_large_3d_1/">Building Large 3D Generative Model (1) Data pre-processing</a>
                                             </li>
                                         </ol>
                                     </div>
@@ -248,20 +251,62 @@
         <!-- Main script to fetch and render content -->
         <script>
             function setLanguage(lang) {
+                localStorage.setItem('language', lang);
+
                 document.querySelectorAll('.lang').forEach(el => {
-                    el.style.display = 'none';
-                });
-        
-                document.querySelectorAll('.lang.' + lang).forEach(el => {
-                    el.style.display = ''; // 기본 display 속성으로 복원 (block, inline 등)
+                    if (!el.classList.contains('fixed')) {
+                        el.style.display = el.classList.contains(lang) ? 'block' : 'none';
+                    }
                 });
             }
+
+            function generateTOC(htmlContent) {
+                const tempElement = document.createElement('div');
+                tempElement.innerHTML = htmlContent;
+                const headings = tempElement.querySelectorAll('h2, h3');
+
+                if (headings.length === 0) {
+                    return { tocHtml: '', contentHtml: htmlContent };
+                }
+
+                let tocHTML = '<ul>';
+                let currentH2 = null;
+
+                headings.forEach((heading, index) => {
+                    let headingId = heading.id;
+                    // ID가 없으면 자동으로 생성
+                    if (!headingId) {
+                        headingId = `toc-heading-${index}`;
+                        heading.id = headingId;
+                    }
+
+                    const tagName = heading.tagName;
+                    const headingText = heading.innerHTML; // 이미 파싱된 HTML이므로 innerHTML 사용
+
+                    if (tagName === 'H2') {
+                        if (currentH2) {
+                            tocHTML += '</ul></li>';
+                        }
+                        tocHTML += `<li><a href="#${headingId}">${headingText}</a><ul>`;
+                        currentH2 = heading;
+                    } else if (tagName === 'H3' && currentH2) {
+                        tocHTML += `<li><a href="#${headingId}">${headingText}</a></li>`;
+                    }
+                });
+
+                if (currentH2) {
+                    tocHTML += '</ul></li>';
+                }
+                tocHTML += '</ul>';
+
+                return { tocHtml: tocHTML, contentHtml: tempElement.innerHTML };
+            }
+
         
             document.addEventListener("DOMContentLoaded", function() {
                 const urlParams = new URLSearchParams(window.location.search);
                 const postId = urlParams.get('id');
 
-                // 시리즈 목록을 분석해서 이전/다음 글 링크를 생성하고 현재 글을 강조하는 함수
                 function setupNavigationAndHighlighting() {
                     const seriesLinks = document.querySelectorAll('#series ol li a');
                     if (seriesLinks.length === 0) return; // 시리즈 목록이 없으면 종료
@@ -337,9 +382,31 @@
                             document.getElementById('post-meta').innerText = `Posted by ${author} on ${date}`;
                             
                             const postContentEl = document.getElementById('post-content');
-                            postContentEl.innerHTML = marked.parse(content);
+                            // postContentEl.innerHTML = marked.parse(content);
+
+                            // toc 
+                            let finalHtmlContent;
+
+                            // 1. content.md에 이미 TOC가 있는지 확인
+                            if (content.includes('<nav class="toc">')) {
+                                // 이미 있다면, 그대로 파싱만 진행
+                                finalHtmlContent = marked.parse(content);
+                            } else {
+                                // TOC가 없다면, 자동 생성 로직 실행
+                                const parsedBodyContent = marked.parse(content);
+                                const { tocHtml, contentHtml } = generateTOC(parsedBodyContent);
+                                
+                                if (tocHtml) {
+                                    const tocNavHtml = `<nav class="toc">${tocHtml}</nav>`;
+                                    finalHtmlContent = tocNavHtml + contentHtml;
+                                } else {
+                                    finalHtmlContent = contentHtml;
+                                }
+                            }
+                            
+                            postContentEl.innerHTML = finalHtmlContent;
+
         
-                            // --- 동적 콘텐츠 로드 후 기능 활성화 ---
 
                             // 0. 이전/다음 글 내비게이션 생성 및 현재 글 강조
                             setupNavigationAndHighlighting();
@@ -381,7 +448,9 @@
                             }
                             
                             // 4. 언어 토글 기능의 초기 상태 설정 (기본으로 영어 표시)
-                            setLanguage('eng');
+                            const savedLanguage = localStorage.getItem('language') || 'eng';
+
+                            setLanguage(savedLanguage);
                         })
                         .catch(error => {
                             console.error('Error fetching post:', error);

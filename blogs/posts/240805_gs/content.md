@@ -318,11 +318,9 @@ cov3D[5] = Sigma[2][2];
         <p>
             여기서 $J$ 는 <strong>Jacobian matrix (affine approximation) of the perspective projection</strong>, 
             , 다시 말해 camera → ray space transformation ϕ 에 대한 linear approximation 이다.
-            
             <div class="math-container">
                 $$ \phi(x) = \phi(t) + J \cdot (x - t). $$
             </div>
-
             1st order Taylor approximation 이기 때문에, Gaussian 중심에서 멀어질수록 approximation error 가 생길 것임이 자명하다. 
             최근에는 이러한 perspective error 를 3D GS 의 한계로 제시하고 해결하려는 연구들도 제시되고 있다. 
             (2D Gaussian Splatting / On the error analysis of 3D Gaussian Splatting)
@@ -907,6 +905,16 @@ glm::mat3 J = glm::mat3(
     You may also like, 
 </p>
 <ul>
+    <li>
+        <a href="./?id=240823_grt/">
+            <span style="text-decoration: underline;">Don't Rasterize But Ray Trace Gaussian</span>
+        </a>
+    </li>
+    <li>
+        <a href="./?id=240602_2dgs/">
+            <span style="text-decoration: underline;">Under the 3D: Geometrically Accurate 2D Gaussian Splatting </span>
+        </a>
+    </li>
     <li>
         <a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">
             <span style="text-decoration: underline;">A Comprehensive Overview of Gaussian Splatting</span>

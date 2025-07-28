@@ -104,7 +104,7 @@ author: Hwan Heo
 
 <h2 id="1-preliminary">1. Background </h2> <br/>
 <h3 id="1-1-3d-gaussian-splatting"> 1.1. 3D Gaussian Splatting</h3>
-<p><img src="./240602_2dgs/assets/1*s6j7Hj9cg9Re9lxlqAHq5w.png" alt="" width="100%"></p>
+<p><img src="./240602_2dgs/assets/image-7.png" alt="" width="100%"></p>
 
 <div class="lang eng">
     <p>
@@ -219,7 +219,7 @@ author: Hwan Heo
             <p>
                 <strong>Multi-View Consistency 가 부족하다.</strong><br/>
                 3D GS 의 rasterization 은 각기 다른 viewpoint 에서 다양한 2D intersection surface 가 발생하는 문제가 생긴다. <em>i.e.,</em> Artifacts! 
-                <img src='https://velog.velcdn.com/images/gjghks950/post/79ef55af-c851-4ac3-84da-7c576ed1bde5/image.png' width=40%>
+                <img src='./240602_2dgs/assets/image-8.png' width=40%>
             </p>
         </li>
         <li>
@@ -264,7 +264,7 @@ author: Hwan Heo
             <p>
                 <strong>Lack of Multi-View Consistency</strong><br/>
                 The rasterization process in 3D GS can lead to artifacts, as different viewpoints result in varying 2D intersection surfaces. <em>i.e.,</em> Artifacts! 
-                <img src='https://velog.velcdn.com/images/gjghks950/post/79ef55af-c851-4ac3-84da-7c576ed1bde5/image.png' width=40%>
+                <img src='./240602_2dgs/assets/image-8.png' width=40%>
             </p>
         </li>
         <li>
@@ -765,7 +765,7 @@ author: Hwan Heo
     <img src="./240602_2dgs/assets/image.gif" alt="" width="100%"></p>
     </li>
     <li><p><strong>2D GS: penguin (mesh) </strong>
-    <img src="./240602_2dgs/assets/image.gif" alt="" width="100%"></p>
+    <img src="./240602_2dgs/assets/image-4.gif" alt="" width="100%"></p>
     </li>
 </ul>
 <div class="lang kor" style="display: none;">
@@ -899,12 +899,12 @@ author: Hwan Heo
 </p>
 <ul>
     <li>
-        <a href="https://hwan-h-heo.github.io/hwan-h-heo.io/blogs/posts/240805_gs/">
+        <a href="./?id=240805_gs/">
             <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
         </a>
     </li>
     <li>
-        <a href="https://hwan-h-heo.github.io/hwan-h-heo.io/blogs/posts/240823_grt/">
+        <a href="./?id=240823_grt/">
             <span style="text-decoration: underline;">Don't Rasterize, But Ray Trace 3D Gaussian</span>
         </a>
     </li>

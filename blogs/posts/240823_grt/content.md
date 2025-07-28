@@ -562,12 +562,12 @@ $$</p>
 </p>
 <ul>
     <li>
-        <a href="../240805_gs/">
+        <a href="./?id=240805_gs/">
             <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
         </a>
     </li>
     <li>
-        <a href="../240602_2dgs/">
+        <a href="./?id=240602_2dgs/">
             <span style="text-decoration: underline;">Under the 3D: Geometrically Accurate 2D Gaussian Splatting </span>
         </a>
     </li>
