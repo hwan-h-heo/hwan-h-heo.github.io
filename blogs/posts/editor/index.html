@@ -33,6 +33,211 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.31.1/ace.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.31.1/ext-language_tools.js"></script>
 
+    <script>
+        // === [Google Drive Integration Script - Final Version] ===
+    
+        const CLIENT_ID = '444899710966-kvtp07h6e8v8i2u4egm819qd6ht3931c.apps.googleusercontent.com';
+        const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+    
+        let tokenClient;
+        let gapiInited = false;
+        let gisInited = false;
+    
+        // --- UI Elements ---
+        // DOM 요소들은 문서가 로드된 후에 접근해야 하므로, 변수 선언은 여기서 하되 할당은 필요시 나중에 합니다.
+        let authButton, signoutButton, saveToDriveButton, loadFromDriveButton, fileListDiv;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            authButton = document.getElementById('auth-button');
+            signoutButton = document.getElementById('signout-button');
+            saveToDriveButton = document.getElementById('save-to-drive-button');
+            loadFromDriveButton = document.getElementById('load-from-drive-button');
+            fileListDiv = document.getElementById('drive-file-list');
+            // DOMContentLoaded 시점에 UI를 한 번 업데이트하여 초기 상태를 반영합니다.
+            // updateUiWithAuthState();
+        });
+
+        // --- Initialization Functions ---
+    
+        function gapiLoaded() {
+            gapi.load('client', initializeGapiClient);
+        }
+    
+        async function initializeGapiClient() {
+            await gapi.client.init({
+                discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
+            });
+            gapiInited = true;
+            // updateUiWithAuthState();
+        }
+    
+        function gisLoaded() {
+            tokenClient = google.accounts.oauth2.initTokenClient({
+                client_id: CLIENT_ID,
+                scope: SCOPES,
+                callback: (tokenResponse) => {
+                    if (tokenResponse && tokenResponse.access_token) {
+                        gapi.client.setToken(tokenResponse);
+                        updateUiWithAuthState();
+                    }
+                },
+            });
+            gisInited = true;
+            // updateUiWithAuthState();
+        }
+    
+        // --- Core Authentication and UI Logic ---
+    
+        function updateUiWithAuthState() {
+            // UI 요소가 아직 로드되지 않았을 수 있으므로 null 체크를 추가합니다.
+            if (!authButton) {
+                return;
+            }
+
+            if (!gapiInited || !gisInited) {
+                return;
+            }
+    
+            const token = gapi.client.getToken();
+            const isLoggedIn = token !== null;
+    
+            authButton.style.display = isLoggedIn ? 'none' : 'block';
+            signoutButton.style.display = isLoggedIn ? 'block' : 'none';
+            saveToDriveButton.style.display = isLoggedIn ? 'block' : 'none';
+            loadFromDriveButton.style.display = isLoggedIn ? 'block' : 'none';
+    
+            if (fileListDiv) {
+                fileListDiv.innerHTML = '';
+            }
+        }
+    
+        function handleAuthClick() {
+            if (!gapiInited || !gisInited) {
+                alert("Google API is still initializing. Please wait a moment and try again.");
+                return;
+            }
+            
+            if (gapi.client.getToken() === null) {
+                tokenClient.requestAccessToken({ prompt: 'consent' });
+            } else {
+                tokenClient.requestAccessToken({ prompt: '' });
+            }
+        }
+    
+        function handleSignoutClick() {
+            if (!gapiInited || !gisInited) return;
+    
+            const token = gapi.client.getToken();
+            if (token !== null) {
+                google.accounts.oauth2.revoke(token.access_token, () => {
+                    gapi.client.setToken('');
+                    // updateUiWithAuthState();
+                });
+            }
+        }
+
+        // --- Google Drive File Operations (saveFileToDrive, listFilesFromDrive, loadFileContent) ---
+        // (나머지 함수들은 수정 없이 그대로 유지)
+        
+        async function saveFileToDrive() {
+            if (!gapiInited || !gisInited) {
+                alert("Google API is not ready. Please wait a moment and try again.");
+                return;
+            }
+            const content = getEditorContent(); // getEditorContent는 전역 함수여야 합니다.
+            if (!content.trim()) {
+                alert('There is no content to save.');
+                return;
+            }
+            let fileName = prompt("Enter the filename to save:", "new-post.html");
+            if (!fileName) return;
+            if (!fileName.toLowerCase().endsWith(".html") && !fileName.toLowerCase().endsWith(".md")) {
+                fileName += ".html";
+            }
+            const fileMetadata = {
+                'name': fileName,
+                'mimeType': 'text/html',
+            };
+            const boundary = '-------314159265358979323846';
+            const delimiter = `\r\n--${boundary}\r\n`;
+            const close_delim = `\r\n--${boundary}--`;
+            const multipartRequestBody =
+                delimiter +
+                'Content-Type: application/json; charset=UTF-8\r\n\r\n' +
+                JSON.stringify(fileMetadata) +
+                delimiter +
+                'Content-Type: text/html; charset=UTF-8\r\n\r\n' +
+                content +
+                close_delim;
+            try {
+                const response = await gapi.client.request({
+                    'path': '/upload/drive/v3/files?uploadType=multipart',
+                    'method': 'POST',
+                    'headers': { 'Content-Type': `multipart/related; boundary="${boundary}"` },
+                    'body': multipartRequestBody
+                });
+                alert('File saved successfully to Google Drive!\nID: ' + response.result.id);
+            } catch (err) {
+                console.error("Error saving file:", err);
+                alert('Failed to save the file. Please check the console for details.');
+            }
+        }
+        async function listFilesFromDrive() {
+            if (!gapiInited || !gisInited) {
+                alert("Google API is not ready. Please wait a moment and try again.");
+                return;
+            }
+            if (!fileListDiv) return;
+            fileListDiv.innerHTML = '<p>Loading files from Drive...</p>';
+            try {
+                const response = await gapi.client.drive.files.list({
+                    'q': "'me' in owners",
+                    'pageSize': 20,
+                    'fields': 'files(id, name, modifiedTime)',
+                    'orderBy': 'modifiedTime desc'
+                });
+                const files = response.result.files;
+                if (files && files.length > 0) {
+                    let listHtml = '<h5>Select a file to load:</h5><ul class="list-group">';
+                    files.forEach(file => {
+                        listHtml += `
+                            <li class="list-group-item list-group-item-action" style="cursor: pointer;" onclick="loadFileContent('${file.id}')">
+                                ${file.name}
+                            </li>
+                        `;
+                    });
+                    listHtml += '</ul>';
+                    fileListDiv.innerHTML = listHtml;
+                } else {
+                    fileListDiv.innerHTML = '<p>No files found in your Drive.</p>';
+                }
+            } catch (err) {
+                console.error("Error listing files:", err);
+                fileListDiv.innerHTML = `<p style="color: red;">Failed to load file list: ${err.message}</p>`;
+            }
+        }
+        async function loadFileContent(fileId) {
+            if (!gapiInited || !gisInited) return;
+            if (!fileListDiv) return;
+            fileListDiv.innerHTML = `<p>Loading file content...</p>`;
+            try {
+                const response = await gapi.client.drive.files.get({
+                    fileId: fileId,
+                    alt: 'media'
+                });
+                setEditorContent(response.body); // setEditorContent는 전역 함수여야 합니다.
+                updatePreview(); // updatePreview는 전역 함수여야 합니다.
+                fileListDiv.innerHTML = `<p class="text-success">Successfully loaded file.</p>`;
+            } catch (err) {
+                console.error("Error loading file content:", err);
+                fileListDiv.innerHTML = `<p style="color: red;">Failed to load file content.</p>`;
+            }
+        }
+    </script>
+
+    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+
     <style>
         table {
                 width: 50%;
@@ -117,6 +322,7 @@
             padding: 10px;
             border-radius: 5px;
             overflow-x: auto;
+            font-size: 1rem !important;
         }
         code {
             font-family: monospace;
@@ -206,6 +412,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    
     <script defer>
         document.addEventListener('DOMContentLoaded', function() {
             renderMathInElement(document.body, {
@@ -217,6 +424,7 @@
               ],
               throwOnError : false
             });
+            updatePreview(); 
         });
     </script>
 
@@ -487,6 +695,13 @@
                 <div style="text-align: left;">
                     <button class="btn btn-sm btn-success" onclick="downloadContent()"><i class="bi bi-download"></i> Save</button>
                     <button class="btn btn-sm btn-success" onclick="uploadContent()"><i class="bi bi-upload"></i> Load</button>
+
+                    <button id="auth-button" class="btn btn-sm btn-info" onclick="handleAuthClick()">Google Login</button>
+                    <button id="signout-button" class="btn btn-sm btn-secondary" onclick="handleSignoutClick()" >Logout</button>
+                    <button id="save-to-drive-button" class="btn btn-sm btn-primary" onclick="saveFileToDrive()" >Save to Drive</button>
+                    <button id="load-from-drive-button" class="btn btn-sm btn-primary" onclick="listFilesFromDrive()" >Load from Drive</button>
+                    <div id="drive-file-list"></div>
+                    
                     <button class="btn btn-primary" onclick="translateMarkdownToHtml()">MD to HTML</button>
                     <button class="btn btn-secondary" onclick="exportContent()">Export</button>
                 </div>
@@ -921,7 +1136,7 @@
         // editor.session.on('change', updatePreview);
         const debouncedUpdatePreview = debounce(updatePreview, 300); 
         editor.session.on('change', debouncedUpdatePreview);
-        updatePreview();
+        // updatePreview();
 
         function initializeElementCounterFromContent() {
             const content = getEditorContent();
@@ -1065,12 +1280,25 @@
             return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
 
+        function addDefaultImageWidth(html) {
+            return html.replace(/<img[^>]*>/gi, (imgTag) => {
+                const hasWidth = /\bwidth\s*=/i.test(imgTag);
+                const hasHeight = /\bheight\s*=/i.test(imgTag);
+
+                if (hasWidth || hasHeight) {
+                    return imgTag;
+                }
+
+                return imgTag.replace(/\s*\/?>$/, ' width="100%" />');
+            });
+        }
+
         function translateMarkdownToHtml() {
             const editorContent = getEditorContent();
             const selectedText = editor.session.getTextRange(editor.getSelectionRange());
             let markdownText = '';
             let processFullTranslation = false;
-
+            
             if (selectedText.trim() === "") {
                 markdownText = editorContent;
                 processFullTranslation = true;
@@ -1079,20 +1307,35 @@
                 processFullTranslation = false;
             }
 
-            function convertBareImageUrls(text) {
-                const imageUrlRegex = /!?https?:\/\/[^\s]+\.(?:png|jpg|jpeg|gif|svg|webp)(?:\?[^\s]*)?/gi;
-                return text.replace(imageUrlRegex, (match) => {
-                    if (match.startsWith('!')) {
-                        match = match.slice(1); // Remove leading '!' if present (if you want to handle '!' prefix)
+            function correctInlineDisplayMath(text) {
+                return text.replace(/^(.*?)\$\$([\s\S]+?)\$\$(.*)$/gm, (match, before, mathContent, after) => {
+                    // $$ 앞이나 뒤에 공백이 아닌 문자가 있다면 인라인 수식으로 간주
+                    if (before.trim() !== '' || after.trim() !== '') {
+                        return `${before}$${mathContent}$${after}`;
                     }
-                    return `<img src="${match}" alt="Converted Image" width="100%" />`;
+                    // 그렇지 않으면(단독 라인) 그대로 둔다
+                    return match;
                 });
             }
 
-            markdownText = convertBareImageUrls(markdownText);
-            // console.log(markdownText)
+            function convertBareImageUrls(text) {
+                const imageUrlRegex = /(?<![!=('"`])https?:\/\/[^\s]+\.(?:png|jpg|jpeg|gif|svg|webp)(?:\?[^\s]*)?/gi;
+                return text.replace(imageUrlRegex, (match) => {
+                    return `<img src="${match}" alt="Converted Image" width="100%" />`;
+                });
+            }
+            
+
+            // 0. <br> 태그를 개행 문자로 변환 (기존 로직 유지)
             markdownText = markdownText.replace(/<br\s*\/?>/gi, '\n');
 
+            // 1. 순수 URL을 이미지 태그로 변환
+            markdownText = convertBareImageUrls(markdownText);
+            
+            // 2. 잘못 사용된 $$ 수식 교정
+            markdownText = correctInlineDisplayMath(markdownText);
+            
+            // 3. MathJax 수식을 placeholder로 임시 치환 (파서로부터 보호)
             const mathJaxPlaceholder = '[[MATHJAX_PLACEHOLDER_{INDEX}]]';
             const mathJaxBlocks = [];
             let index = 0;
@@ -1103,36 +1346,54 @@
                 return placeholder;
             });
 
+            // 4. `marked.js`로 마크다운을 HTML로 변환
             let htmlText = marked.parse(markdownText);
-            // let htmlText = markdownText
 
-            // Define addIds function inside translateMarkdownToHtml scope to ensure elementCounter is accessible
+            // 5. 문제 1 해결: <p><img ...></p> 와 같이 불필요하게 감싸진 태그 제거
+            htmlText = htmlText.replace(/<p>\s*(<img[^>]+>)\s*<\/p>/gi, '$1');
+
+            const addDefaultImageWidth = (html) => {
+                return html.replace(/<img[^>]*>/gi, (imgTag) => {
+                    const hasWidth = /\bwidth\s*=/i.test(imgTag);
+                    const hasHeight = /\bheight\s*=/i.test(imgTag);
+                    if (hasWidth || hasHeight) {
+                        return imgTag;
+                    }
+                    return imgTag.replace(/\s*\/?>$/, ' width="100%" />');
+                });
+            };
+            htmlText = addDefaultImageWidth(htmlText);
+
+            // 6. 각 HTML 요소에 고유 ID 추가
             const addIds = (html) => {
                 return html.replace(/<(p|h2|h3|h4|h5|h6|li|blockquote|pre|code|table|img|video|hr|br|em|strong|a|ol|ul|figure|figcaption|div|span)(?=[ >])([^>]*?)>/g,
                     (match, tagName, attributes) => {
+                        // 이미 id가 있는 경우는 건너뛰기
+                        if (attributes.includes('id=')) {
+                            return match;
+                        }
                         elementCounter[tagName]++;
                         const id = `${tagName}-${elementCounter[tagName]}`;
-                        return `<${tagName} id="${id}" ${attributes}>`;
+                        return `<${tagName} id="${id}"${attributes}>`;
                     });
             };
-
             htmlText = addIds(htmlText);
 
-            index = 0;
+            // 7. placeholder를 다시 원래의 MathJax 수식으로 복원
             htmlText = htmlText.replace(/\[\[MATHJAX_PLACEHOLDER_(\d+)\]\]/g, (match, placeholderIndex) => {
                 const blockIndex = parseInt(placeholderIndex, 10);
-                return mathJaxBlocks[blockIndex];
+                return mathJaxBlocks[blockIndex] || ''; // 혹시 모를 오류 방지
             });
-
+            
+            // 8. 최종 결과를 에디터와 미리보기에 적용
             if (processFullTranslation) {
                 setEditorContent(htmlText);
-                previewPanel.innerHTML = htmlText;
             } else {
                 const range = editor.getSelectionRange();
                 editor.session.replace(range, htmlText);
-                previewPanel.innerHTML = marked.parse(getEditorContent());
             }
-            updatePreview();
+            
+            updatePreview(); 
         }
 
         previewPanel.addEventListener('dblclick', (event) => {
