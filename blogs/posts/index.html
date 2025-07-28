@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>HwanHeo's Blog</title>
+        <link rel="icon" type="image/x-icon" href="../../../assets/favicon.ico" />
+        
+        <!-- Import Maps for three.js -->
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.module.js",
+                    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.150.0/examples/jsm/",
+                    "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
+                }
+            }
+        </script>
+        
+        <!-- External Libraries -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/25.0.0/tween.umd.js"></script>
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+        
+        <!-- Prism.js CSS for Code Highlighting -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+        
+        <!-- Core and Custom CSS -->
+        <link href="../../css/blog_style.css" rel="stylesheet" />
+        <link href="../css/blog_post_specific.css" rel="stylesheet" />
+
+        <!-- Google Model Viewer -->
+        <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+        
+        <!-- Custom Styles from original post -->
+        <style>
+            simple-model-viewer { 
+                display: block; 
+                background-color: #eeeeee;
+                width: 100vw; 
+                height: 100vh; 
+                margin-bottom: 3px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                width: 50%;
+                border: 1px solid #ddd;
+                padding: 10px;
+                text-align: center;
+                vertical-align: middle;
+            }
+            th {
+                width: 15%; /* Reduced width of the header column */
+                background-color: #f2f2f2; 
+            }
+            pre {
+                background-color: #f4f4f4;
+                padding: 10px;
+                border-radius: 5px;
+                overflow-x: auto;
+                font-size: 0.9rem !important;
+            }
+            pre code {
+                font-size: 0.9rem !important; /* 원하는 크기로 조절하세요. 14px, 1em 등 다른 단위도 가능합니다. */
+            }
+            .wp-block-image figcaption {
+                font-size: 4px;
+                color: #000000;
+            }
+            .custom-btn {
+                color: #d3d3d3;
+                border: none;
+            }
+            .custom-btn:hover {
+                color: black;
+            }
+            @media (min-width: 1920px) { .modal-xl { --bs-modal-width: 1600px; } }
+            @media (min-width: 2560px) { .modal-xl { --bs-modal-width: 1920px; } }
+            #threeCanvas { width: 50%; height: 50%; margin-bottom: 20px; }
+            #controls { position: fixed; top: 10px; left: 10px; z-index: 100; }
+        </style>
+
+        <!-- KaTeX for MathJax -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+        
+        <!-- Other Scripts -->
+        <script src="../../js/include.js"></script>
+        <script src="../../js/script_md.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+        <script src="../../js/share_md.js" defer></script>
+        
+        <!-- Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-RF7ETSKPK9');
+        </script>
+
+        <!-- Marked.js for Markdown Parsing -->
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    </head>
+    <body>
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="../">HwanHeo's Blog</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../">Post</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../../">HwanHeo's log</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Page Header -->
+        <header class="masthead" style="background-image: url('../../../assets/blog_bg.jpeg')">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="post-heading">
+                            <br/>
+                            <h2 id="post-title"></h2>
+                            <span class="meta" id="post-meta"></span>
+                            <div style="text-align: center;">
+                                <button type="button" class="btn custom-btn" onclick="setLanguage('eng')" style="font-size: 13px;">eng</button>
+                                |
+                                <button type="button" class="btn custom-btn" onclick="setLanguage('kor')" style="font-size: 13px;">kor</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Post Content -->
+        <article class="mb-4">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7" id="series">
+                        <div class="accordion" id="accordionExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    <strong> Series </strong>
+                                </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse collapse" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <ol>
+                                            <li>
+                                                <a href="?id=211128_fourier/">Why Positional Encoding Makes NeRF more Powerful</a>
+                                            </li>
+                                            <li>
+                                                <a href="?id=230202_ngp/">Instant NGP Review & Re-implementation</a>
+                                            </li>
+                                            <li>
+                                                <a href="?id=231130_nerf_in_game/">Can NeRF be Used in Game?</a>
+                                            </li>
+                                            <li>
+                                                <a href="?id=240226_sora/">Can Sora Understand 3D?</a>
+                                            </li>
+                                            <li>
+                                                <a href="?id=240426_diffusion_depth/">Is Diffusion's Estimated Depth Really Good?</a>
+                                            </li>
+                                            <li>
+                                                <a href="?id=240602_2dgs/">Under the 3D: Geometrically Accurate 2D Gaussian Splatting </a>
+                                            </li>
+                                            <li>
+                                                <a href="?id=240721_sfm/">Radiance Fields from Deep-based Structure-from-Motion</a>
+                                            </li>
+                                            <li>
+                                                <a href="?id=240805_gs/">A Comprehensive Analysis of Gaussian Splatting Rasterization</a>
+                                            </li>
+                                            <li>
+                                                <a href="?id=240823_grt/">Don't Rasterize, But Ray Trace 3D Gaussian</a>
+                                            </li>
+                                            <li>
+                                                <a href="?id=240917_3djs/">Add Gaussian Splatting to Your Website</a>
+                                            </li>
+                                            <li>
+                                                <a href="?id=250106_tomography/">Neural Rendering Beyond Photography</a>
+                                            </li>
+                                            <li>
+                                                <a href="?id=250302_3d_latent_diffusion/">Deep Dive into 3D Latent Diffusion</a>
+                                            </li>
+                                            <li>
+                                                <a href="?id=250310_model_viewer/">3D Model Viewer in Web</a>
+                                            </li>
+                                            <li>
+                                                <a href="?id=250702_building_large_3d_1/">Building Large 3D Generative Model (1) Data pre-processing</a>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-10 col-lg-8 col-xl-7" id="post-content">
+                        <!-- Content from markdown will be injected here -->
+                    </div>
+                    <div class="col-md-10 col-lg-8 col-xl-7" id="post-nav-block">
+                        <div id="post-navigation"></div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Footer -->
+        <footer class="border-top">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <ul class="list-inline text-center">
+                            <li class="list-inline-item">
+                                <a href="https://www.linkedin.com/in/hwan-heo-0905korea/">
+                                    <span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i><i class="fab fa-linkedin fa-stack-1x fa-inverse"></i></span>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="https://github.com/hwanhuh">
+                                    <span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i><i class="fab fa-github fa-stack-1x fa-inverse"></i></span>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="small text-center text-muted fst-italic">Copyright © Hwan Heo</div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        
+        <!-- Main script to fetch and render content -->
+        <script>
+            function setLanguage(lang) {
+                localStorage.setItem('language', lang);
+
+                document.querySelectorAll('.lang').forEach(el => {
+                    if (!el.classList.contains('fixed')) {
+                        el.style.display = el.classList.contains(lang) ? 'block' : 'none';
+                    }
+                });
+            }
+
+            function generateTOC(htmlContent) {
+                const tempElement = document.createElement('div');
+                tempElement.innerHTML = htmlContent;
+                const headings = tempElement.querySelectorAll('h2, h3');
+
+                if (headings.length === 0) {
+                    return { tocHtml: '', contentHtml: htmlContent };
+                }
+
+                let tocHTML = '<ul>';
+                let currentH2 = null;
+
+                headings.forEach((heading, index) => {
+                    let headingId = heading.id;
+                    // ID가 없으면 자동으로 생성
+                    if (!headingId) {
+                        headingId = `toc-heading-${index}`;
+                        heading.id = headingId;
+                    }
+
+                    const tagName = heading.tagName;
+                    const headingText = heading.innerHTML; // 이미 파싱된 HTML이므로 innerHTML 사용
+
+                    if (tagName === 'H2') {
+                        if (currentH2) {
+                            tocHTML += '</ul></li>';
+                        }
+                        tocHTML += `<li><a href="#${headingId}">${headingText}</a><ul>`;
+                        currentH2 = heading;
+                    } else if (tagName === 'H3' && currentH2) {
+                        tocHTML += `<li><a href="#${headingId}">${headingText}</a></li>`;
+                    }
+                });
+
+                if (currentH2) {
+                    tocHTML += '</ul></li>';
+                }
+                tocHTML += '</ul>';
+
+                return { tocHtml: tocHTML, contentHtml: tempElement.innerHTML };
+            }
+
+        
+            document.addEventListener("DOMContentLoaded", function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const postId = urlParams.get('id');
+
+                function setupNavigationAndHighlighting() {
+                    const seriesLinks = document.querySelectorAll('#series ol li a');
+                    if (seriesLinks.length === 0) return; // 시리즈 목록이 없으면 종료
+
+                    // 1. DOM에서 게시물 목록을 배열로 변환
+                    const postList = Array.from(seriesLinks).map(anchor => {
+                        const href = anchor.getAttribute('href');
+                        const linkUrlParams = new URLSearchParams(href.split('?')[1]);
+                        const id = linkUrlParams.get('id');
+                        return { id, href, anchorElement: anchor };
+                    }).filter(post => post.id);
+
+                    // 2. 현재 게시물의 인덱스 찾기
+                    const currentIndex = postList.findIndex(post => post.id === postId);
+                    if (currentIndex === -1) return; // 목록에 없으면 종료
+
+                    // 3. 현재 게시물을 시리즈 목록에서 볼드 처리
+                    const currentPostAnchor = postList[currentIndex].anchorElement;
+                    const listItem = currentPostAnchor.parentElement; // <li> 태그
+                    listItem.innerHTML = `<strong>${currentPostAnchor.textContent} </strong>`;
+                    
+                    // 4. 이전/다음 글 버튼 생성
+                    // 목록은 시간순(오래된 글이 위)이므로, 이전 글은 index - 1, 다음 글은 index + 1
+                    const olderPost = postList[currentIndex - 1];
+                    const nextPost = postList[currentIndex + 1];
+                    
+                    const navContainer = document.getElementById('post-navigation');
+                    const navDiv = document.createElement('div');
+                    navDiv.className = 'd-flex justify-content-between mb-4';
+
+                    if (olderPost) {
+                        const olderLink = document.createElement('a');
+                        olderLink.className = 'btn btn-primary text-uppercase';
+                        olderLink.href = olderPost.href;
+                        olderLink.innerHTML = '← Older Post';
+                        navDiv.appendChild(olderLink);
+                    } else {
+                        // 버튼이 한쪽에만 있을 때 레이아웃이 깨지지 않도록 빈 div 추가
+                        navDiv.appendChild(document.createElement('div'));
+                    }
+
+                    if (nextPost) {
+                        const nextLink = document.createElement('a');
+                        nextLink.className = 'btn btn-primary text-uppercase';
+                        nextLink.href = nextPost.href;
+                        nextLink.innerHTML = 'Next Post →';
+                        navDiv.appendChild(nextLink);
+                    }
+                    
+                    navContainer.appendChild(navDiv);
+                }
+
+                if (postId) {
+                    fetch(postId + '/content.md')
+                        .then(response => {
+                            if (!response.ok) throw new Error('Network response was not ok');
+                            return response.text();
+                        })
+                        .then(text => {
+                            // --- 메타데이터와 콘텐츠 분리 ---
+                            const parts = text.split('--- 여기부터 실제 콘텐츠 ---');
+                            const metadata = parts[0];
+                            const content = parts.length > 1 ? parts[1] : '';
+                            
+                            const lines = metadata.split('\n');
+                            const title = lines[0].replace('title: ', '').trim();
+                            const date = lines[1].replace('date: ', '').trim();
+                            const author = lines[2].replace('author: ', '').trim();
+        
+                            // --- HTML에 정보 삽입 ---
+                            document.getElementById('post-title').innerText = title;
+                            document.title = title;
+                            document.getElementById('post-meta').innerText = `Posted by ${author} on ${date}`;
+                            
+                            const postContentEl = document.getElementById('post-content');
+                            // postContentEl.innerHTML = marked.parse(content);
+
+                            // toc 
+                            let finalHtmlContent;
+
+                            // 1. content.md에 이미 TOC가 있는지 확인
+                            if (content.includes('<nav class="toc">')) {
+                                // 이미 있다면, 그대로 파싱만 진행
+                                finalHtmlContent = marked.parse(content);
+                            } else {
+                                // TOC가 없다면, 자동 생성 로직 실행
+                                const parsedBodyContent = marked.parse(content);
+                                const { tocHtml, contentHtml } = generateTOC(parsedBodyContent);
+                                
+                                if (tocHtml) {
+                                    const tocNavHtml = `<nav class="toc">${tocHtml}</nav>`;
+                                    finalHtmlContent = tocNavHtml + contentHtml;
+                                } else {
+                                    finalHtmlContent = contentHtml;
+                                }
+                            }
+                            
+                            postContentEl.innerHTML = finalHtmlContent;
+
+        
+
+                            // 0. 이전/다음 글 내비게이션 생성 및 현재 글 강조
+                            setupNavigationAndHighlighting();
+        
+                            // 1. Prism.js 코드 하이라이팅
+                            Prism.highlightAllUnder(postContentEl);
+        
+                            // 2. KaTeX 수학 공식 렌더링
+                            renderMathInElement(postContentEl, {
+                                delimiters: [
+                                    {left: '$$', right: '$$', display: true},
+                                    {left: '$', right: '$', display: false},
+                                    {left: '\\\\(', right: '\\\\)', display: false},
+                                    {left: '\\\\[', right: '\\\\]', display: true}
+                                ],
+                                throwOnError: false
+                            });
+
+                            if (typeof initializeToc === 'function') initializeToc();
+                            if (typeof initializeLanguageToggle === 'function') initializeLanguageToggle();
+                            if (typeof initializeKoreanFonts === 'function') initializeKoreanFonts();
+
+                            console.log(postId)
+                            if (postId === '240917_3djs/') { 
+                                console.log('aaaa')
+                                import('../3DViewer/js/gaussian_viewer.js')
+                                    .then(module => {
+                                        // 모듈 로드가 성공하면, export된 함수를 실행합니다.
+                                        module.initGaussianViewer();
+                                    })
+                                    .catch(err => {
+                                        console.error("Failed to load the Gaussian viewer script:", err);
+                                    });
+                            }
+        
+                            // 3. 공유 버튼 기능 초기화
+                            if (typeof initializeShareFunctionality === 'function') {
+                                initializeShareFunctionality();
+                            }
+                            
+                            // 4. 언어 토글 기능의 초기 상태 설정 (기본으로 영어 표시)
+                            const savedLanguage = localStorage.getItem('language') || 'eng';
+
+                            setLanguage(savedLanguage);
+                        })
+                        .catch(error => {
+                            console.error('Error fetching post:', error);
+                            document.getElementById('post-content').innerText = 'Failed to load post content.';
+                        });
+                }
+            });
+        </script>
+
+        <!-- Scripts from original file for interactivity -->
+        <script>
+            // Functions for Google Model Viewer interactivity
+            var window_state = {};
+            function show_texture(){
+                let modelViewer = document.getElementById('model-g');
+                if (!modelViewer || !window_state.textures) return;
+                if (modelViewer.model.materials[0].pbrMetallicRoughness.baseColorTexture.texture !== null) return;
+                
+                modelViewer.environmentImage = 'https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/white.jpg';
+                for (let i = 0; i < modelViewer.model.materials.length; i++) {
+                    modelViewer.model.materials[i].pbrMetallicRoughness.baseColorTexture.setTexture(window_state.textures[i]);
+                }
+                modelViewer.exposure = window_state.exposure;
+            }
+            function show_geometry(){
+                let modelViewer = document.getElementById('model-g');
+                if (!modelViewer) return;
+                if (modelViewer.model.materials[0].pbrMetallicRoughness.baseColorTexture.texture === null) return;
+
+                window_state.textures = [];
+                for (let i = 0; i < modelViewer.model.materials.length; i++) {
+                    window_state.textures.push(modelViewer.model.materials[i].pbrMetallicRoughness.baseColorTexture.texture);
+                }
+                window_state.exposure = modelViewer.exposure;
+                modelViewer.environmentImage = 'https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/gradient.jpg';
+                for (let i = 0; i < modelViewer.model.materials.length; i++) {
+                    modelViewer.model.materials[i].pbrMetallicRoughness.baseColorTexture.setTexture(null);
+                }
+                modelViewer.exposure = 3;
+            }
+        </script>
+
+        <!-- Prism.js for Code Highlighting -->
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+        <!-- Custom SimpleModelViewer and its dependencies -->
+        <script type="module">
+            import { SimpleModelViewer } from '../../../js/simple-model-viewer.js';
+    
+            // Resize handler for viewers
+            window.addEventListener('resize', () => {
+                const viewers = document.querySelectorAll('simple-model-viewer');
+                viewers.forEach(viewer => viewer.resizeRenderer());
+            });
+        </script>
+    </body>
+</html>

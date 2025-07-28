@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
@@ -132,7 +134,7 @@ class SimpleModelViewer extends HTMLElement {
                 .right-ui-panel { /* Renamed and unified panel */
                     position: absolute;
                     top: 0.5rem;
-                    right: 0.5rem; /* Positioned to the right */
+                    right: 1rem; /* Positioned to the right */
                     font-size: 0.7rem;
                     background-color: rgba(200, 200, 200, 0.5);
                     padding: 0.5rem;
@@ -636,13 +638,13 @@ class SimpleModelViewer extends HTMLElement {
             <div id="canvas-container" style='text-align: center'>
                 <div id="loadingProgressBar"></div>
                 <div id="fileInputContainer" style="display: none;">
-                    <input type="file" id="fileInput" accept=".glb,.gltf, .obj">
-                    <p style="font-size: 0.8rem; margin-top: 5px;"><strong>Select a GLTF/GLB/OBJ file</strong></p>
+                    <input type="file" id="fileInput" accept=".glb,.gltf, .obj,.fbx,.ply">
+                    <p style="font-size: 0.8rem; margin-top: 5px;"><strong>Select a GLB/OBJ/FBX/PLY file</strong></p>
                     <hr/>
                     <p style="font-size: 0.8rem; margin-top: 5px;"><strong> or </strong></p>
                     <input type="text" id="urlInput" style="width: 12rem; height: 1.1rem; font-size: 0.8rem;" placeholder="Enter model URL">
                     <button id="loadUrlButton">Load URL</button>
-                    <p style="font-size: 0.8rem; margin-top: 5px;"><em> https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/omni.glb </em></p>
+                    <p style="font-size: 0.8rem; margin-top: 5px;"><em> https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/fox_quad.glb </em></p>
                 </div>
             </div>
             <div id="videoModal" style="display: none; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 1000; display: flex; align-items: center; justify-content: center;">
@@ -738,7 +740,9 @@ class SimpleModelViewer extends HTMLElement {
         this.objLoader = new OBJLoader();
         this.dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/versioned/decoders/1.5.7/' );
         // this.dracoLoader.setDecoderPath( './draco/' );
-        this.gltfLoader = new GLTFLoader()
+        this.gltfLoader = new GLTFLoader();
+        this.fbxLoader = new FBXLoader(); 
+        this.plyLoader = new PLYLoader();
         this.gltfLoader.setDRACOLoader(this.dracoLoader);
         this.model = null;
         this.originalMaterials = {};
@@ -2315,21 +2319,52 @@ class SimpleModelViewer extends HTMLElement {
         }
 
         const fileExtension = fileName.split('.').pop().toLowerCase();
-        if (fileExtension === 'obj'){
-            this.loader = this.objLoader;
-        } else {
-            this.loader = this.gltfLoader;
+        switch (fileExtension) {
+            case 'gltf':
+            case 'glb':
+                this.loader = this.gltfLoader;
+                break;
+            case 'obj':
+                this.loader = this.objLoader;
+                break;
+            case 'fbx':
+                this.loader = this.fbxLoader;
+                break;
+            case 'ply':
+                this.loader = this.plyLoader;
+                break;
+            default:
+                console.error('Unsupported file format:', fileExtension);
+                progressBar.style.display = 'none';
+                return;
         }
-        // const loader = fileExtension === 'obj' ? this.objLoader : this.gltfLoader;
-
 
         this.loader.load(url, (object) => {
             if (this.model) {
                 this.scene.remove(this.model);
             }
-            this.model = fileExtension === 'obj' ? object : object.scene;
+            switch (fileExtension) {
+                case 'gltf':
+                case 'glb':
+                    this.model = object.scene;
+                    break;
+                case 'fbx':
+                case 'obj':
+                    this.model = object;
+                    break;
+                case 'ply':
+                    // PLYLoader는 BufferGeometry를 반환.
+                    const geometry = object;
+                    // 정점 노멀이 없는 경우 계산.
+                    if (!geometry.attributes.normal) {
+                        geometry.computeVertexNormals();
+                    }
+                    // 정점 색상 정보가 있는지 확인하여 재질을 설정.
+                    const material = new THREE.MeshStandardMaterial({ vertexColors: geometry.hasAttribute('color') });
+                    this.model = new THREE.Mesh(geometry, material);
+                    break;
+            }
 
-            // this.model = gltf.scene;
             const box = new THREE.Box3().setFromObject(this.model);
             const size = box.getSize(new THREE.Vector3());
             const maxDim = Math.max(size.x, size.y, size.z);
@@ -2350,7 +2385,7 @@ class SimpleModelViewer extends HTMLElement {
             const center = updatedBox.getCenter(new THREE.Vector3());
             this.model.position.sub(center);
 
-            if (fileExtension !== 'obj' && object.animations.length > 0) {
+            if (object.animations && object.animations.length > 0) {
                 this.mixer = new THREE.AnimationMixer(this.model);
                 this.animationActions = object.animations.map(clip => this.mixer.clipAction(clip));
 
@@ -2477,7 +2512,7 @@ class SimpleModelViewer extends HTMLElement {
                         });
                         if (child.material.map) {
                             child.material.map.encoding = THREE.sRGBEncoding;
-                            child.material.map.flipY = false;
+                            child.material.map.flipY = true;
                         }
                         child.material.needsUpdate = true;
                         this.standardMaterials.push(child.material);

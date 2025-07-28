@@ -7,4 +7,4 @@ class CORSRequestHandler(http.server.SimpleHTTPRequestHandler):
         return super(CORSRequestHandler, self).end_headers()
 
 if __name__ == '__main__':
-    http.server.test(HandlerClass=CORSRequestHandler)
+    http.server.test(HandlerClass=CORSRequestHandler, port=8013)

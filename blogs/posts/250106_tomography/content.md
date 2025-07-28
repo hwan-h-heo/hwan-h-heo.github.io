@@ -1,0 +1,454 @@
+title: Neural Rendering Beyond Photography
+date: January 06, 2025
+author: Hwan Heo
+--- 여기부터 실제 콘텐츠 ---
+
+<!-- <div style="text-align: center;">
+    <button type="button" class="btn custom-btn" onclick="setLanguage('eng')" style="font-size: 13px;">eng</button>
+    |
+    <button type="button" class="btn custom-btn" onclick="setLanguage('kor')" style="font-size: 13px;">kor</button>
+</div> -->
+
+<button id="copyButton">
+    <i class="bi bi-share-fill"></i>
+</button>
+<div id="myshare_modal" class="share_modal">
+    <div class="share_modal-content">
+        <span class="share_modal_close">×</span>
+        <p><strong>Link Copied!</strong></p>
+        <div class="copy_indicator-container">
+        <div class="copy_indicator" id="share_modalIndicator"></div>
+        </div>
+    </div>
+</div>
+
+<nav class="toc">
+    <ul>
+        <li><a href="#introduction">Introduction</a></li>
+        <li><a href="#tomography-vs-photography">Tomography vs. Photography</a>
+            <ul>
+                <li><a href="#photography">Photography</a></li>
+                <li><a href="#tomography">Tomography</a></li>
+            </ul>
+        </li>
+        <li><a href="#modeling">Modeling</a></li>
+        <li><a href="#quick-viewer-development-tip"> Viewer Tip</a>
+            <ul>
+                <li><a href="#viser-viewer">Viser Viewer</a></li>
+                <li><a href="#marching-cube-extraction">Marching Cube Extraction</a></li>
+            </ul>
+        </li>
+        <li><a href="#concluding-remarks">Concluding Remarks</a></li>
+    </ul>
+</nav>
+
+<p class="lang eng">
+    <strong> TL; DR. </strong>
+    In this article, we will explore how to apply radiance fields technique (NeRF and Gaussian Splatting) beyond photometric domain. 
+    Also, I will post the short tip for the quick development of the NeRF / GS viewer which has no official viewer.
+</p>
+<p class="lang kor">
+    <strong> TL; DR. </strong>
+    Photography 가 아닌 domain 에서 Neural Rendering 을 적용하기 위해선 어떤 사항들을 고려해야하는지 생각해보자!
+    + Viewer 가 없는 Neural Rendering technique 을 위한 빠른 viewer 개발 Tip
+</p>
+<hr/>
+<h2 id="introduction">Introduction</h2>
+<p class="lang eng">Recently, I had the serendipitous opportunity to explore how Neural Rendering could be applied within the medical domain, specifically in Tomography (X-ray), referencing <a href='https://github.com/caiyuanhao1998/SAX-NeRF'>SAX-NeRF</a>.</p>
+<p class="lang kor" style="display: none;">최근 우연한 기회로 의료 도메인, 특히 Tomography (X-ray) 에서 Neural Rendering 을 어떻게 적용해야 하는지 찾아볼 일이 있었다. (Ref: <a href='https://github.com/caiyuanhao1998/SAX-NeRF'>SAX-NeRF</a>)</p>
+<p class="lang eng">Unlike photography, which captures the reflection of visible light, tomography constructs images based on signals that have penetrated a substance. In tracing the authors' investigative process of how to adapt the standard Neural Rendering setting for Tomography, I was able to deepen my abstract intuition and comprehension of Neural Rendering.</p>
+<p class="lang kor" style="display: none;">가시광의 반사를 포착하는 photography 와 다르게, tomography 는 물질을 투과한 신호를 바탕으로 이미지를 구성한다. 저자들이 Tomography 를 위해 일반적인 Neural Rendering setting 을 어떻게 수정해야 하는지를 탐구한 과정을 따라가면서, 나 또한 Neural Rendering 에 대한 추상적인 직관성과 이해를 증진시킬 수 있었다.</p>
+<p class="lang eng">In this post, I aim to elucidate the foundational intuitions behind Neural Rendering, NeRF, and GS through a personal review of SAX-NeRF. Additionally, I will offer insights into a technique for creating a simple web viewer using viser when an official viewer is unavailable.</p>
+<p class="lang kor" style="display: none;">이 글에서는 SAX-NeRF 에 대한 개인적인 review 를 통해 Neural Rendering, NeRF, GS 등의 저변에 깔린 직관에 대해서 기술해보도록 하겠다. 아울러 official viewer 가 없을 때 viser 로 간단한 web viewer 를 만드는 tip 에 대해서도 써보려 한다.</p>
+
+<h2 id="tomography-vs-photography">1. Tomography vs. Photography</h2>
+<img class="img-fluid" src="./250106_tomography/assets/image1.png" width="100%" alt="Tomography vs Photography" />
+<br/> 
+<h3 id="photography">1.1. Photography</h3>
+<p class="lang eng">- What are the underlying physical principles of the act of <code>'seeing'</code>?</p>
+<p class="lang kor" style="display: none;">- <code>'본다'</code> 라는 행위는 물리학적으로 어떤 의미를 지닐까?</p>
+<p class="lang eng">'Seeing' physically denotes the process where light emitted from a source interacts with an object, causing the object's surface to absorb or reflect specific wavelengths (or energy) of light. The unabsorbed, reflected light then reaches the observer's eye (or detection device), leading to visual perception.</p>
+<p class="lang kor" style="display: none;">'본다'는 것은 광원에서 방출된 빛이 물체와 상호작용하여, 물체의 표면에서 특정 파장의 (or energy) 빛을 흡수하거나 반사하고, 흡수되지 않은 파장의 반사된 (reflection) 빛이 관찰자의 눈(또는 감지 장치)에 도달하여 시각적으로 인지되는 과정을 말한다.</p>
+<p class="lang eng">This process encompasses the interaction between light and an object (absorption and reflection) and the subsequent transmission of the interaction's result to the observer's visual system.</p>
+<p class="lang kor" style="display: none;">이 과정은 빛과 물체 간의 상호작용 (흡수 및 반사), 그리고 그 상호작용의 결과가 관찰자의 시각 체계로 전달되는 과정을 포함한다.</p>
+<p class="lang eng">Neural Rendering and Novel View Synthesis primarily focus on scenes <code>'observed within the visible light spectrum'</code>. Consequently, the standard NeRF rendering equation (emission-absorption ray casting) mathematically represents the intuition behind the act of 'seeing'.</p>
+<p class="lang kor" style="display: none;">Neural Rendering, Novel View Synthesis 에서 주로 다루는 scene 은 <code>'가시광 영역에서 관찰한 대상'</code> 이 목표이다. 따라서 흔히 사용하는 NeRF 의 rendering equation (emission-absorption ray casting) 은 '본다' 라는 과정의 직관을 수학적으로 나타내고 있다.</p>
+<p>$$ C(r) = \int_{t_n}^{t_f} T(t) \cdot \sigma ({\rm \textbf{r}}(t))  \cdot c({\rm \textbf{r}}(t), {\rm \textbf{d}} ) \ dt  $$</p>
+<p>$$ \text{where }T(t) = \text{exp} \bigg( - \int_{t_n}^{t}\sigma ({\rm \textbf{r}}(s)) ds \bigg ) $$</p>
+<p class="lang eng">In this equation, $C(r)$ represents the final accumulated color along a ray. The constituent components of the equation are interpreted as follows:</p>
+<p class="lang kor" style="display: none;">이 식에서 $C(r)$ 은 광선을 따라 누적된 최종 색을 의미한다. 각 식의 요소는 다음과 같이 해석된다:</p>
+<ul class="lang eng">
+    <li>$\textbf{r}(t)$ : Represents the ray of light.</li>
+    <li>$\sigma ({\rm \textbf{r}}(t))$: The density (opacity) or absorption coefficient at a point $t$ along the ray, indicating the extent of interaction between the ray and the object.</li>
+    <li>$c({\rm \textbf{r}}(t), {\rm \textbf{d}})$: The color of the light reflected by the object at that point. (d is used to reflect view-dependent color.)</li>
+    <li>$T(t)$: The accumulated transmittance, indicating whether previously encountered objects blocked (opaque) or allowed passage (transparent) of the ray.</li>
+</ul>
+<ul class="lang kor" style="display: none;">
+    <li>$\textbf{r}(t)$ : 빛, 광선 (ray) 를</li>
+    <li>$\sigma ({\rm \textbf{r}}(t))$: 광선이 어떤 지점 $t$ 에서 물체와 상호작용 상호작용하는 밀도(opacity) 또는 흡수 계수</li>
+    <li>$c({\rm \textbf{r}}(t), {\rm \textbf{d}})$: 해당 지점에서 물체가 반사하는 빛의 색 (color). (d 는 방향성을 반영하기 위해 사용하는 view-dependent color.</li>
+    <li>$T(t)$: 누적 투명도, 이전에 만난 물체가 광선을 차단했는지 (불투명) 또는 통과했는지 (투명).</li>
+</ul>
+<img class="img-fluid" src="./250106_tomography/assets/image2.png" alt="NeRF Rendering Equation" />
+<p class="lang eng">Thus, NeRF's rendering equation mathematically formalizes the process of visual object perception. By integrating all elements of the physical light-object interaction (absorption, reflection, transparency, etc.), NeRF calculates the cumulative contribution of light along the ray path to ultimately generate an image.</p>
+<p class="lang kor" style="display: none;">이와 같이 NeRF 의 rendering equation 은 우리가 물체를 '본다'는 행위를 수식적으로 표현한 결과물이다. 물리적 빛-물체 상호작용 (흡수, 반사, 투명도 등) 의 모든 요소를 통합하여, NeRF는 광선 경로를 따라 누적된 빛의 기여를 계산해 최종적으로 이미지를 생성한다.</p>
+<img class="img-fluid" src="./250106_tomography/assets/image3.png" alt="NeRF Image Generation" />
+<br/>
+
+<h3 id="tomography">1.2. Tomography</h3>
+<p class="lang eng">So, what considerations are necessary for applying Neural Rendering to domains outside the visible light spectrum?</p>
+<p class="lang kor" style="display: none;">그렇다면 Neural Rendering 을 가시광 영역이 아닌 domain 에 적용하려면 어떻게 해야할까?</p>
+<p class="lang eng">A quintessential example in this domain is Tomography, including X-ray and CT scans. Tomography utilizes X-rays, which have shorter wavelengths (and higher energy) than visible light. Instead of reflection, the process is based on the <strong><em>penetration</em></strong> of X-rays through an object and the <strong><em>attenuation</em></strong> of the light's intensity by the object's internal density. This contrasts with the reflection-based nature of visible light, and the internal structure of the object is reconstructed by analyzing the intensity of the light that passes through and reaches the detector.</p>
+<p class="lang kor" style="display: none;">해당 domain 의 대표적이면서 대중적인 예시가 X-ray, CT 등으로 익숙한 Tomography 일 것이다. Tomgraphy 는 가시광선보다 파장이 짧은 (에너지가 큰) X-ray 를 사용하여 빛이 반사되기보다는, 물체를 <strong><em>투과 (penetration)</em></strong>하고, 빛의 세기가 물체 내부의 밀도에 의해 <strong><em>감쇠 (attenuation) </em></strong> 되는 과정을 기반으로 한다. 이 과정은 가시광선 기반의 Reflection과 대비되며, 빛이 물체의 뒤쪽에 맺히는 상 (intensity)을 분석하여 물체의 내부 구조를 재구성한다.</p>
+<img class="img-fluid" src="./250106_tomography/assets/image5.png" alt="Tomography Process" />
+<p class="lang eng">In Tomography, this penetration and attenuation process is modeled by the <a href="https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law">Beer-Lambert Law</a>, which is specifically expressed as:</p>
+<p class="lang kor" style="display: none;">Tomography 에서 이러한 penetration, attenuation 과정을 modeling 하는 식은 <a href="https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law">Beer-Lambert Law</a> 로 표현되는데, 구체적으로는 다음과 같다.</p>
+<p class="lang eng">$$ I_\text{gt}(\mathbf{r}) = I_o \cdot \exp \left ( - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt \right ) $$</p>
+<p class="lang kor" style="display: none;">$$ I_\text{gt}(\mathbf{r}) = I_o \cdot \exp \left ( - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt \right ) $$</p>
+<ul class="lang eng">
+    <li>Here, $I_\text{gt}(\mathbf{r})$ is the final intensity measured by the detector, and $I_0$ is the initial intensity value.</li>
+    <li>$\rho$ is the radiodensity value, representing the degree to which X-rays are attenuated.</li>
+</ul>
+<ul class="lang kor" style="display: none;">
+    <li>여기서 $I_\text{gt}(\mathbf{r})$ 는 상에 맺힌 최종적인 intensity, $I_0$ 는 initial intensity 값이다.</li>
+    <li>$\rho$ 는 radiodensity 값으로, X-ray 가 attenuation 되는 정도를 나타낸다.</li>
+</ul>
+<p class="lang eng">The resemblance of the exponential term is notable. It exhibits an identical form to the Accumulated Transmittance equation used in NeRF modeling. In fact, both terms share the fundamental assumption that the degree of intensity reduction is proportional to both the current light intensity and the opacity at the current point.</p>
+<p class="lang kor" style="display: none;">exponential 항이 익숙하지 않은가? NeRF modeling 에서 사용하는 Accumulated Transmittance 수식과 똑같은 형태를 지니고 있다. 실제로 두 항은 Intensity 가 감소하는 정도가 *1) 현재 지점 빛의 세기, 2) 현재 지점의 불투명도에* 비례할 것이라는 동일한 가정을 지니고 있다.</p>
+<p class="lang eng">The underlying intuition regarding light intensity in this modeling is further elucidated by the following derivation:</p>
+<p class="lang kor" style="display: none;">다음과 같은 유도 과정을 통해서도 이 modeling 의 저변에 빛의 intensity 에 대한 직관성이 담겨있는 것을 알 수 있다.</p>
+<p> <strong> * Derivation of Beer-Lambert Law</strong>  (which mirrors the derivation of Accumulated Transmittance)</p>
+<p>$$ I_\text{gt}(\mathbf{r}) = I_o \cdot \exp \left ( - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt \right ) $$</p>
+<p>$$ \rightarrow \ln(I_\text{gt}(\mathbf{r}) ) - \ln (I_o) = - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt $$</p>
+<p>$$ \rightarrow \int_{t_n}^{t_f } \frac{1}{I(\mathbf{r}(t))} dI(\mathbf{r}(t)) = - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt $$</p>
+<p>$$ \rightarrow \frac{1}{I(\mathbf{r}(t))} dI(\mathbf{r}(t)) = -\rho(\mathbf{r}(t)) dt $$</p>
+<p>$$ \therefore \frac{d}{dt}I(t) = -I(t)\cdot \rho(t) $$</p>
+<p class="lang eng">The reconstruction of a NeRF model from Tomography data necessitates the substitution of the conventional emission-absorption ray casting with a rendering equation grounded in the Beer-Lambert Law.</p>
+<p class="lang kor" style="display: none;">Tomography 를 입력으로 하는 NeRF 를 reconstruction 하기 위해서는, 기존 emission-absorption ray casting 대신에 위의 Beer-Lambert Law 기반으로 rendering equation 을 대체해야 할 것이다.</p>
+<p class="lang eng">The ultimate intensity rendering term is expressed in a discretized form, analogous to that in NeRF, as follows:</p>
+<p class="lang kor" style="display: none;">최종적인 intensity rendering term 은 NeRF 에서처럼 discretized form 으로 다음과 같이 표현된다.</p>
+<p>$$ I_{pred}(\mathbf{r}) = I_0 \cdot \exp\left(-\sum_{i=1}^{N} \rho_i \delta_i\right) $$</p>
+<img class="img-fluid" src="./250106_tomography/assets/image6.png" alt="Tomography Intensity Rendering" />
+<br/>
+
+<h2 id="modeling">2. Modeling</h2>
+<p class="lang eng">Returning our focus to NeRF, while variations such as Hash Grid NeRF and TensoRF exist, the fundamental principle of NeRF is to parameterize and represent a 3D scene.</p>
+<p class="lang kor" style="display: none;">다시 NeRF 로 돌아가보자. Hash Grid NeRF, TensoRF 등의 변형이 있지만, 기본적으로 NeRF 의 골자는 어떠한 3D scene 을 parameterize 해서 표현하자는 것이다.</p>
+<p class="lang eng">When this parameterization is achieved through an MLP, it is classified within the NeRF family, whereas the utilization of explicit 3D Gaussians or 2D Gaussian surfels aligns it with the Gaussian Splatting methodology.</p>
+<p class="lang kor" style="display: none;">이 parameterization 의 방법이 MLP 라면 NeRF 계열이, explicit 한 3D Gaussian, 2D Gaussian surfel 등을 사용하면 Gaussian Splatting 계열이 될 것이다.</p>
+<p class="lang eng">Conventionally, these parameter models are designed to receive a 3D Cartesian Coordinate $(x,y,z)$ as input, subsequently producing the density and color $(\sigma, c)$ at the specified location.</p>
+<p class="lang kor" style="display: none;">일반적으로 이러한 parameter model 은 3D Cartessian Coordinate $(x,y,z)$ 을 입력으로 받아 그 점의 density 와 color $(\sigma, c)$ 를 출력하도록 modeling 된다.</p>
+<img class="img-fluid" src="./250106_tomography/assets/image7.png" alt="NeRF Modeling" />
+<p class="lang eng">However, the rendering equation pertinent to Tomography necessitates the radiodensity $\rho$ as opposed to $(\sigma, c)$. Consequently, the application of NeRF to Tomography mandates a distinct modeling strategy compared to that employed in Photography.</p>
+<p class="lang kor" style="display: none;">하지만 Tomography 의 rendering equation 에서는 $(\sigma, c)$ 가 아닌 radiodensity $\rho$ 가 필요하므로, Tomography 에 NeRF 를 적용하려면, Photography 와 다른 방식으로 모델링해야 한다.</p>
+<p class="lang eng">Given that the rendering equation for Tomography, adapted based on the Beer-Lambert Law, exhibits sole dependency on radiodensity $\rho$, a Tomography-NeRF model can be architected to accept a 3D Cartesian Coordinate $(x,y,z)$ as input and exclusively generate $\rho$ as the output.</p>
+<p class="lang kor" style="display: none;">Beer-Lambert Law 를 바탕으로 수정된 Tomography 의 rendering equation 은 radiodensity $\rho$ 에만 dependent 하므로, Tomography-NeRF 또한 3D Cartessian Coordinate $(x,y,z)$ 을 입력으로 받아 $\rho$ 하나만을 출력하게 하는 구조로 바꿔주면 된다.</p>
+<img class="img-fluid" src="./250106_tomography/assets/image8.png" alt="Tomography NeRF Modeling" />
+<p class="lang eng">Subsequently, SAX-NeRF introduces an alternative design, favoring a Transformer architecture over an MLP to accommodate X-Ray specific attributes, and incorporating ray-wise locality inductive bias within the attention mechanism. However, considering this aspect to be of secondary importance to the central discussion, I will proceed without further elaboration. Readers seeking further details are encouraged to consult the original publication.</p>
+<p class="lang kor" style="display: none;">SAX-NeRF 에서는 이후 X-Ray 특성을 고려해서 MLP 를 적용하기보단, Transformer 로 바꿔주고 attention 안에서 ray 간 locality inductive bias 를 고려하는 설계 등을 제시하긴 한다. 하지만 크게 중요한 부분은 아니라고 생각해서 스킵하도록 하겠다. 궁금하면 논문을 참조하길 바란다.</p>
+<br/>
+
+<h2 id="quick-viewer-development-tip">3. Quick Viewer Development Tip</h2>
+<br/>
+<h3 id="viser-viewer">3.1. Viser Viewer</h3>
+<p class="lang eng">While the code for SAX-NeRF is publicly available, it lacks an official viewer. Consequently, the basic visualization code provided is limited, necessitating the implementation of a viewer for more interactive exploration of the results.</p>
+<p class="lang kor" style="display: none;">SAX-NeRF 는 code 가 공개되어 있긴 하지만, official viewer 가 없고 visualization 으로 제공하는 기본 코드가 제한적이라 결과를 좀 더 interactive 하게 살펴보기 위해서는 viewer 를 구현할 필요가 있었다.</p>
+<p class="lang eng"><em>To interactively visualize a NeRF/GS model, certain key elements are required:</em></p>
+<p class="lang kor" style="display: none;"><em>Q. NeRF / GS model 을 interactive 하게 '보기' 위해서는 어떤 요소들이 필요할까?</em></p>
+<ol class="lang eng">
+    <li>Information about the viewing angle of the 3D scene ($[\mathbf{R|t}]$).</li>
+    <li>Rays generated from that angle.</li>
+    <li>Rendering (applying the rendering equation).</li>
+</ol>
+<ol class="lang kor" style="display: none;">
+    <li>3D scene 을 관찰하려는 각도의 정보 ($[\mathbf{R|t}]$)</li>
+    <li>각도를 통해 생성한 rays</li>
+    <li>Rendering (rendering equation 적용)</li>
+</ol>
+<p class="lang eng">Typically, the implementation of elements 2) and 3) is less challenging, provided that the corresponding code is publicly accessible. However, camera coordinate systems can vary across projects, particularly between OpenGL and OpenCV, which often leads to errors. Therefore, it is crucial to generate rays specifically tailored to the project being implemented.</p>
+<p class="lang kor" style="display: none;">대게의 경우 2), 3) 은 코드가 공개되어 있는 상태라면 참고해서 구현하는 것이 어렵지는 않다. 하지만 camera coordinate system 은 project 마다 다른 경우, 특히 OpenGL <-> OpenCV 의 coordinate system 이 달라서 오류가 나는 경우가 많으므로 구현하려는 project 에 맞춰서 ray 를 생성해야 한다.</p>
+<img class="img-fluid" src="./250106_tomography/assets/image9.png" alt="Coordinate Systems" />
+<p class="lang eng">Another challenge lies in the difficulty of custom implementing 1) to control the scene as desired. Fortunately, <a href="https://github.com/nerfstudio-project/viser">viser</a>, developed by the NeRFStudio team, offers a remarkably easy solution. A 2D Gaussian Splatting viewer I developed previously also utilized this viser project.</p>
+<p class="lang kor" style="display: none;">또다른 문제는 1) 을 custom 하게 구현해서 원하는 대로 scene 을 컨트롤 하기가 좀 힘들다는데 있는데, 다행히도 NeRFStudio team 이 개발 중인 <a href="https://github.com/nerfstudio-project/viser">viser</a> 를 이용하면 이 부분을 굉장히 쉽게 해결할 수 있다. 예전에 개발했던 2D Gaussian Spaltting 용 viewer 도 이 viser 를 이용한 project 이다.</p>
+<p class="lang eng">Below is a very simple SAX-NeRF viewer implemented using viser. This implementation utilizes the <code>nerfview</code> package, which provides minimal features within the viser project.</p>
+<p class="lang kor" style="display: none;">아래는 viser 를 이용해서 구현한 아주 간단한 SAX-NeRF viewer 이다. 아래 구현에서는 viser project 중에서도 minimal 한 feature 를 제공하고 잇는 <code>nerfview</code> package 를 이용하였다.</p>
+<div class="accordion accordion-flush" id="accordionFlushExample1">
+<div class="accordion-item">
+<h2 class="accordion-header">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+    <strong><em>viewer.py</em></strong>
+</button>
+</h2>
+<div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+<div class="accordion-body">
+
+```python
+from typing import Tuple
+import time
+import viser
+import nerfview
+import tyro
+
+import os
+import torch
+import numpy as np
+import argparse
+import matplotlib.pyplot as plt
+
+from src.network import get_network
+from src.encoder import get_encoder
+from src.config.configloading import load_config
+from src.render import render
+
+def normalize(img):
+    max_val = img.max()
+    min_val = img.min()
+    return (img - min_val) / (max_val - min_val)
+
+@torch.no_grad()
+def make_rays(K, c2w, img_wh, dsd=1.5, device='cuda'):
+    H, W = img_wh
+    pose = create_sax_pose_from_camera(c2w, DSO=1.0)
+    i, j = torch.meshgrid(torch.linspace(0, W - 1, W, device=device),
+                            torch.linspace(0, H - 1, H, device=device), indexing="ij")
+    uu = (i.t() + 0.5 - W / 2) * 0.001
+    vv = (j.t() + 0.5 - H / 2) * 0.001
+    dirs = torch.stack([uu / dsd, vv / dsd, torch.ones_like(uu)], -1)
+    rays_d = torch.sum(torch.matmul(pose[:3,:3], dirs[..., None]).to(device), -1)
+    rays_o = pose[:3, -1].expand(rays_d.shape)
+
+    rays = torch.cat([rays_o, rays_d,
+                    torch.full_like(rays_o[..., :1], 0.904),
+                    torch.full_like(rays_o[..., :1], 1.1)], dim=-1)
+    return rays.reshape(-1, 8)
+
+@torch.no_grad()
+def create_sax_pose_from_camera(c2w: torch.Tensor, DSO: float):
+    forward_vector = c2w[:3, 2]
+    angle = np.arctan2(forward_vector[1], forward_vector[0])
+    
+    phi1 = -np.pi / 2
+    R1 = np.array([[1.0, 0.0, 0.0],
+                    [0.0, np.cos(phi1), -np.sin(phi1)],
+                    [0.0, np.sin(phi1), np.cos(phi1)]])
+
+    phi2 = np.pi / 2
+    R2 = np.array([[np.cos(phi2), -np.sin(phi2), 0.0],
+                    [np.sin(phi2), np.cos(phi2), 0.0],
+                    [0.0, 0.0, 1.0]])
+
+    R3 = np.array([[np.cos(angle), -np.sin(angle), 0.0],
+                    [np.sin(angle), np.cos(angle), 0.0],
+                    [0.0, 0.0, 1.0]])
+
+    rot = np.dot(np.dot(R3, R2), R1)
+    trans = np.array([DSO * np.cos(angle), DSO * np.sin(angle), 0])
+    # rot = c2w[:3, :3].T
+    # trans = np.array([DSO, DSO, 0])
+
+    pose = np.eye(4)
+    pose[:-1, :-1] = rot
+    pose[:-1, -1] = trans
+
+    return torch.tensor(pose, dtype=torch.float32, device='cuda')
+
+class NerfViewer:
+    def __init__(self, args):
+        self.args = args
+        os.environ["CUDA_DEVICE_ORDER"] = 'PCI_BUS_ID'
+        os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
+
+        self.cfg = load_config(args.config)
+        self.device = torch.device("cuda")
+        self.dsd_value = 1.5
+        self.clm_colors = torch.tensor(plt.cm.get_cmap("turbo").colors, device="cuda")
+
+        self.network = get_network(self.cfg["network"]["net_type"])
+        self.cfg["network"].pop("net_type", None)
+        self.encoder = get_encoder(**self.cfg["encoder"])
+        self.model = self.network(self.encoder, **self.cfg["network"]).to(self.device)
+        self.model_fine = None
+        n_fine = self.cfg["render"]["n_fine"]
+
+        if n_fine > 0:
+            self.model_fine = self.network(self.encoder, **self.cfg["network"]).to(self.device)
+
+        ckpt = torch.load(args.weights)
+        print(ckpt["epoch"])
+        self.model.load_state_dict(ckpt["network"])
+
+        if n_fine > 0:
+            self.model_fine.load_state_dict(ckpt["network_fine"])
+        self.model.eval()
+
+        self.render_W = args.size
+        self.render_H = args.size
+
+    @torch.no_grad()
+    def render_fn(self, camera_state: nerfview.CameraState, img_wh: Tuple[int, int]) -> np.ndarray:
+        W, H = img_wh
+        render_img_wh = (self.render_W, self.render_H)
+
+        c2w = camera_state.c2w
+        K = camera_state.get_K(img_wh)
+        rays = make_rays(K, c2w, render_img_wh, self.dsd_value, device=self.device)
+        chunk_size = 1048576
+        num_rays = rays.shape[0]
+        all_imgs = []
+
+        for i in range(0, num_rays, chunk_size):
+            start = i
+            end = min(i + chunk_size, num_rays)
+            rays_chunk = rays[start:end]
+            rendered_chunk = render(rays_chunk, self.model, self.model_fine, **self.cfg["render"])["acc"]
+            all_imgs.append(rendered_chunk)
+
+        img = torch.cat(all_imgs, dim=0).reshape(self.render_H, self.render_W, 1)
+        img = img.repeat(1, 1, 3)
+        img = torch.nn.functional.interpolate(img.unsqueeze(0).permute(0, 3, 1, 2), size=(H, W), mode='bilinear', align_corners=False).squeeze(0).permute(1, 2, 0)
+        img = (normalize(img.cpu().numpy()) * 255).astype(np.uint8)
+        return img
+
+    def update_dsd(self, value):
+        self.dsd_value = value
+
+def config_parser():
+    cat = 'foot'
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--gpu_id", default="0", help="gpu to use")
+    parser.add_argument("--method", default=f"Lineformer", help="name of the tested method")
+    parser.add_argument("--category", default=f"{cat}", help="category of the tested scene")
+    parser.add_argument("--config", default=f"config/Lineformer/{cat}_50.yaml", help="path to configs file")
+    parser.add_argument("--weights", default=f"pretrained/{cat}.tar", help="path to the experiments")
+    parser.add_argument("--output_path", default=f"output", help="path to the output folder")
+    parser.add_argument("--vis", default="True", help="visualization or not?")
+    parser.add_argument("--size", default=256)
+    return parser
+
+def main(args):
+    nerf_viewer = NerfViewer(args)
+    with torch.no_grad():
+        server = viser.ViserServer(verbose=True, port=9123, )
+        _ = nerfview.Viewer(server=server, render_fn=nerf_viewer.render_fn, mode='rendering')
+        dsd_val = server.add_gui_slider(
+            "DSD",
+            min=0.1,
+            max=2.0,
+            step=0.05,
+            initial_value=nerf_viewer.dsd_value,
+        )
+        @dsd_val.on_update
+        def _(_) -> None:
+            nerf_viewer.update_dsd(dsd_val.value)
+    while True:
+        time.sleep(1.0)
+
+if __name__ == "__main__":
+    parser = config_parser()
+    args = parser.parse_args()
+    tyro.cli(lambda: main(args)) 
+```
+
+</div>
+</div>
+</div>
+</div>
+<br/>
+
+<p><strong>Captured Results:</strong></p>
+<img class="img-fluid" src="./250106_tomography/assets/viewer_capture.gif" alt="viewer capture" />
+<p class="lang eng">As demonstrated, a viewer for a new NeRF / GS model can be quickly created with minimal coding. I initially considered uploading this to GitHub, but due to its simplicity, I will only include it in this blog post.</p>
+<p class="lang kor" style="display: none;">이처럼 간단한 코딩으로 새로운 NeRF / GS 모델에 대한 viewer 를 빠르게 만들 수 있다. 원래는 github 에 올릴까 하다가 너무 간단한 코딩이라 블로그에만 올리고 갈무리하려 한다.</p>
+
+<h3 id="marching-cube-extraction">3.2. Marching Cube Extraction</h3>
+<p class="lang eng">Another method for interactively examining a NeRF / GS scene is by using scalar field to polygonal mesh conversion algorithms, such as marching cubes.</p>
+<p class="lang kor" style="display: none;">또 하나 NeRF / GS scene 을 interactive 하게 확인하는 방법은, marching cube 등의 scalar field -> polygonal mesh 변환 알고리즘을 이용하는 것이다.</p>
+<img class="img-fluid" src="./250106_tomography/assets/image10.png" style="width: 70%;" alt="Marching Cubes" />
+<p class="lang eng">However, it is important to note that standard NeRF or GS models, which are not specifically designed for surface reconstruction like 2D GS or SDF, may not align perfectly with conventional mesh conversion algorithms. The density field obtained from NeRF or GS represents a volumetric density rather than a clear surface. Therefore, the extracted mesh might appear noisy or require careful tuning of the isosurface value.</p>
+<p class="lang kor" style="display: none;">하지만 명심할 점은, 2D GS 또는 SDF 와 같이 surface reconstruction 을 위해 특별히 설계되지 않은 일반적인 NeRF/GS 모델은 conventional 한 mesh conversion 알고리즘과 완벽하게 호환되지 않을 수 있다는 것이다. 
+    NeRF/GS 에서 얻은 density field 는 volumetric density 를 나타내기 때문에, 추출된 mesh 에 noise 가 많아 보이거나 isosurface 값을 신중하게 조정해야 할 수 있다.
+</p>
+<p class="lang eng">This should be considered as a supplementary approach for gaining a rough geometric understanding of the scene.</p>
+<p class="lang kor" style="display: none;">어디까지나 참고로 활용해보면 좋을 것.</p>
+<p class="lang eng">Below is an example code snippet for generating a simple mesh from SAX-NeRF using <code>scikit-image</code>:</p>
+<p class="lang kor" style="display: none;">다음은 <code>scikit-image</code> 를 사용하여 SAX-NeRF 에서 간단한 mesh 를 생성하는 코드 snippet 의 예이다.</p>
+<div class="accordion accordion-flush" id="accordionFlushExample1">
+<div class="accordion-item">
+<h2 class="accordion-header">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+    <strong><em>marching_cube.py</em></strong>
+</button>
+</h2>
+<div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+<div class="accordion-body">
+
+```python
+
+from skimage import measure
+import trimesh
+
+from src.config.configloading import load_config
+from src.network import get_network
+from src.encoder import get_encoder
+from src.render import render, run_network
+
+# init model 
+'''
+    load SAX NeRF model, see: test.py in SAX-NeRF
+'''
+
+# make voxel 
+voxel_size = 128 
+x, y, z = np.mgrid[:voxel_size, :voxel_size, :voxel_size]
+x = (x - (voxel_size - 1) / 2) / (voxel_size / 2)
+y = (y - (voxel_size - 1) / 2) / (voxel_size / 2)
+z = (z - (voxel_size - 1) / 2) / (voxel_size / 2)
+voxel = np.stack([x, y, z], axis=-1)
+voxel /= 16
+
+# marching cube
+threshold = 0.4
+voxel_estimated = run_network(voxel, model_fine if model_fine is not None else model, netchunk)
+voxel_estimated = voxel_estimated.squeeze(dim=-1).cpu().numpy()
+verts, faces, _, _ = measure.marching_cubes(voxel_estimated, level=threshold)
+mesh = trimesh.Trimesh(vertices=verts, faces=faces)
+mesh.export("output.obj") 
+```
+
+</div>
+</div>
+</div>
+</div>
+<br/>
+<img class="img-fluid" src="./250106_tomography/assets/foot_gif.gif" alt="foot capture" />
+<h2 id="concluding-remarks">Concluding Remarks</h2>
+<p class="lang eng">Through the exploration of SAX-NeRF, we've seen how the foundational principles of Neural Rendering can be adapted beyond the realm of traditional photography. By understanding the underlying physical phenomena, such as the Beer-Lambert Law in tomography, we can modify the rendering equation and model architecture to suit different imaging modalities. This adaptation underscores the abstract nature of Neural Rendering and its potential applicability across various scientific domains.</p>
+<p class="lang kor" style="display: none;">SAX-NeRF 를 살펴보면서, Neural Rendering 의 기본 원리가 어떻게 기존 photography 영역을 넘어서 적용될 수 있는지 확인해 보았다. 
+    Tomography 에서 Beer-Lambert Law 와 같은 기본적인 물리적 현상을 이해함으로써, 다양한 이미징 방식에 맞춰 rendering equation 과 모델 구조를 수정할 수 있음을 알 수 있었다. 
+</p>
+<p class="lang eng">Ultimately, the ability to apply Neural Rendering to diverse data types and the ease with which we can now visualize these results opens up exciting possibilities for future research and applications across various fields.</p>
+<p class="lang kor" style="display: none;">
+    Neural Rendering 을 다양한 유형의 데이터에 적용할 수 있는 능력과 이러한 결과를 시각화하는 능력은 다양한 도메인에서도 Neural Rendering 기술을 적용하고 응용해볼 수 있는 잠재력으로써 작용할 것이다.
+</p>
+<hr/>
+<p>
+    You may also like, 
+</p>
+<ul>
+    <li>
+        <a href="./?id=230202_ngp/">
+            <span style="text-decoration: underline;">Instant-NGP Review & Re-Implementation</span>
+        </a>
+    </li>
+    <li>
+        <a href="./?id=211128_fourier/">
+            <span style="text-decoration: underline;">Why Positional Encoding Makes NeRF more Powerful</span>
+        </a>
+    </li>
+    <li>
+        <a href="./?id=240805_gs/">
+            <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
+        </a>
+    </li>
+</ul>
+<br/>
