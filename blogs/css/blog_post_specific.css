@@ -1,0 +1,39 @@
+simple-model-viewer { 
+    display: block; 
+    background-color: #eeeeee;
+    width: 100vw; 
+    height: 100vh; 
+    margin-bottom: 3px;
+}
+.wp-block-image figcaption {
+    font-size: 4px;
+    color: #000000;
+}
+.custom-btn {
+    color: #d3d3d3; /* Text color */
+    border: none; /* Remove border */
+}
+.custom-btn:hover {
+    color: black; /* Slightly darker gray for hover */
+}
+@media (min-width: 1920px) {
+    .modal-xl {
+        --bs-modal-width: 1600px;
+    }
+}
+@media (min-width: 2560px) {
+    .modal-xl {
+        --bs-modal-width: 1920px;
+    }
+}
+#threeCanvas {
+width: 50%;
+height: 50%;
+margin-bottom: 20px;
+}
+#controls {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 100;
+}
