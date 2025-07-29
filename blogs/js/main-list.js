@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         return `
         <div class="post-preview">
-            <a href="/blogs/posts/?id=${post.id}">
+            <a href="./posts/?id=${post.id}">
                 <h3 class="post-title">${title}</h3>
                 ${subtitle ? `<h5 class="post-subtitle">${subtitle}</h5>` : ''}
             </a>
