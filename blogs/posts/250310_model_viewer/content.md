@@ -134,7 +134,7 @@ author: Hwan Heo
     대신에 제한적으로 texture 를 지우고 enviroment 에 gradient equirectangular image 를 사용하여, PBR rendering 으로 gradient environment 를 반사하는 rendering 을 만들어서 mesh geometry 를 rendering 하는 듯한 효과를 낼 수 있다.
 </p>
 <figure id="figure-1" >
-  <img src='https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/gradient.jpg' alt='img alt' width='100%'>
+  <img src='./250310_model_viewer/assets/gradient.jpg' alt='img alt' width='100%'>
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Gradient Map</figcaption>
 </figure>
 
