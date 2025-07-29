@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const title = post[`title_${lang}`] || post.title_eng;
                 seriesHTML += `
                     <li>
-                        <a href="./blogs/posts/?id=${post.id}">${title}</a>
+                        <a href="./posts/?id=${post.id}">${title}</a>
                         <span class="post-meta-sm">${new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                     </li>
                 `;
