@@ -23,10 +23,45 @@
             gtag('config', 'G-RF7ETSKPK9');
         </script>
         <style>
+            html {
+                overflow-y: scroll;
+            }
             .custom-badge {
                 display: inline-block;
                 padding: 0.5em 1em; 
                 font-size: 14px; 
+            }
+            .series-group .series-title {
+                font-size: 1.3rem;
+                margin-bottom: 1rem;
+                border-left: 4px solid #007bff;
+                padding-left: 10px;
+            }
+
+            .series-group .series-post-list {
+                list-style-type: decimal;
+                padding-left: 2rem;
+            }
+
+            .series-group .series-post-list li {
+                padding: 8px 0;
+                border-bottom: 1px solid #eee;
+            }
+
+            .series-group .series-post-list li a {
+                text-decoration: none;
+                font-size: 1rem;
+                color: #212529;
+            }
+
+            .series-group .series-post-list li a:hover {
+                color: #007bff;
+            }
+
+            .post-meta-sm {
+                font-size: 0.8rem;
+                color: #6c757d;
+                margin-left: 10px;
             }
         </style>
     <link href="css/sidebar.css" rel="stylesheet">
@@ -62,10 +97,28 @@
                     <input type="text" id="searchInput" class="form-control" placeholder="Search posts by title or keyword">
                 </div>
             </nav>
+
+            
         
         </header>
         <main class="main">
         <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+            <div class="container px-4 px-lg-5">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                        <div class="language-toggle text-center my-3">
+                            <a id="lang-toggle-main" class="btn btn-sm" style="color: #ccc; font-size: 0.7rem">
+                            </a>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </nav>
         <!-- Page Header-->
         <header class="masthead" style="background-image: url('../assets/image_fx_.jpg');  background-position: center 34%; background-size: cover;">
             <div class="container position-relative px-4 px-lg-5">
@@ -85,274 +138,29 @@
         <div class="container px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-7">
-                    
-
-                    <div id="post-list">
-                        <!-- Post preview-->
-                        <div class="post-preview">
-                            <a href="posts/?id=250702_building_large_3d_1/">
-                                <h3 class="post-title">Building Large 3D Generative Model (1) Data pre-processing</h3>
-                                <h5 class="post-subtitle"> Watertight mesh conversion and Salient edge sampling</h5>
-                            </a>
-                            <p class="post-meta">
-                                July 02, 2025
-                            </p>
-                            <div class="post-tags" style="display: none;">
-                                3d, graphics, generation, cuda, vae, dit, graphics, flow, diffusion, hunyuan, clay, rodin, meshy, mesh, texture, controlnet, adapter, ip adapter, mv adapter, craftsman, vecset vae, shapevae, 
-                            </div>
+                    <ul class="nav nav-tabs nav-justified mb-4" style='font-size: 1rem;'>
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#posts-tab">Posts</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#series-tab">Series</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#notes-tab">Notes</a>
+                        </li>
+                    </ul>
+    
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="posts-tab">
                         </div>
-                        <hr class="my-4" />
-
-                        <div class="post-preview">
-                            <a href="posts/?id=250310_model_viewer/">
-                                <h3 class="post-title">3D Model Viewer in Web</h3>
-                                <h5 class="post-subtitle"> Custom Threejs 3D Model Viewer for 3D Asset Generation</h5>
-                            </a>
-                            <p class="post-meta">
-                                March 10, 2025
-                            </p>
-                            <div class="post-tags" style="display: none;">
-                                web, viewer, 3d, graphics, generation, shader, webgl, google model viewer, threejs, three.js, javascript
-                            </div>
-                        </div>
-                        <hr class="my-4" />
-
-                        <div class="post-preview">
-                            <a href="posts/?id=250302_3d_latent_diffusion/">
-                                <h3 class="post-title">Deep Dive into 3D Latent Diffusion</h3>
-                                <h5 class="post-subtitle"> ShapeVAE, Trellis and Hunyuan3D</h5>
-                            </a>
-                            <p class="post-meta">
-                                March 02, 2025
-                            </p>
-                            <div class="post-tags" style="display: none;">
-                                3d, generation, vae, dit, graphics, flow, diffusion, hunyuan, clay, rodin, meshy, mesh, texture, controlnet, adapter, ip adapter, mv adapter, craftsman, vecset vae, shapevae, 
-                            </div>
-                        </div>
-                        <!-- <span class="badge rounded-pill text-bg-secondary custom-badge">eng</span> -->
                         
-                        <!-- Divider-->
-                        <hr class="my-4" />
-                        <div class="post-preview">
-                            <!-- <a href="posts/250106_tomography/"> -->
-                            <a href="posts/?id=250106_tomography/">
-                                <h3 class="post-title">Neural Rendering Beyond Photography</h3>
-                                <h5 class="post-subtitle"> NeRF for Tomography & Tip for NeRF Viewer</h5>
-                            </a>
-                            <p class="post-meta">January 06, 2025
-                            </p>
-                            <div class="post-tags" style="display: none;">
-                                nerf, gs, gaussian splatting, neural rendering, viewer, reconstruction, vision, nerfstudio, viser, web, tomography, photography, 
-                            </div>
+                        <div class="tab-pane fade" id="series-tab">
                         </div>
-                        <!-- <span class="badge rounded-pill text-bg-secondary custom-badge">eng</span>
-                        <span class="badge rounded-pill text-bg-success custom-badge">kor</span> -->
-                        
-                        <!-- Divider-->
-                        <hr class="my-4" />
-                        <!-- Post preview-->
-                        <div class="post-preview">
-                            <a href="posts/?id=240917_3djs/">
-                                <h3 class="post-title">Add Gaussian Splatting to Your Website</h3>
-                                <h5 class="post-subtitle"> Tutorial for GS Scene w/ Three-js</h5>
-                            </a>
-                            <p class="post-meta">
-                                September 17, 2024
-                            </p>
-                            <div class="post-tags" style="display: none;">
-                                nerf, gs, graphics, gaussian splatting, neural rendering, viewer, reconstruction, vision, web, threejs, three.js,
-                            </div>
-                        </div>
-                        <!-- <span class="badge rounded-pill text-bg-secondary custom-badge">eng</span>
-                        <span class="badge rounded-pill text-bg-success custom-badge">kor</span> -->
-                        
-                        <!-- Divider-->
-                        <hr class="my-4" />
-
-                        <!-- Post preview-->
-                        <div class="post-preview">
-                            <a href="posts/?id=240823_grt/">
-                                <h3 class="post-title">Don't Rasterize, But Ray Trace 3D Gaussian</h3>
-                                <h5 class="post-subtitle"> In-Depth Review of 3D Gaussian Ray Tracing by NVIDIA </h5>
-                            </a>
-                            <p class="post-meta">
-                                August 23, 2024
-                            </p>
-                            <div class="post-tags" style="display: none;">
-                                nerf, gs, gaussian splatting, gaussian ray tracing, reconstruction, neural rendering, path tracing, rendering equation, pbr, physics based rendering, rendering effect, rasterization
-                            </div>
-                        </div>
-                        <!-- <span class="badge rounded-pill text-bg-secondary custom-badge">eng</span>
-                        <span class="badge rounded-pill text-bg-success custom-badge">kor</span> -->
-                        
-                        <!-- Divider-->
-                        <hr class="my-4" />
-                        <!-- Post preview-->
-                        <div class="post-preview">
-                            <a href="posts/?id=240805_gs/">
-                                <h3 class="post-title">A Comprehensive Analysis of Gaussian Splatting Rasterization</h3>
-                                <h5 class="post-subtitle">Understanding 3D GS's Rasterization Algorithm </h5>
-                            </a>
-                            <p class="post-meta">
-                                August 08, 2024
-                            </p>
-                            <div class="post-tags" style="display: none;">
-                                nerf, gs, gaussian splatting, rasterization, differentiable, cuda, kernel, reconstruction, neural rendering
-                            </div>
-                        </div>
-                        <!-- <span class="badge rounded-pill text-bg-secondary custom-badge">eng</span>
-                        <span class="badge rounded-pill text-bg-success custom-badge">kor</span> -->
-                        
-                        <!-- Divider-->
-                        <hr class="my-4" />
-                        <!-- Post preview-->
-                        <div class="post-preview">
-                            <a href="posts/?id=240721_sfm/">
-                                <h3 class="post-title">
-                                    Radiance Fields from Deep-based Structure-from-Motion
-                                </h3>
-                                <h5 class="post-subtitle">
-                                    Comparison of VGGSfM & MAsT3R
-                                </h5>
-                            </a>
-                            <p class="post-meta">
-                                July 21, 2024
-                            </p>
-                            <div class="post-tags" style="display: none;">
-                                nerf, gs, gaussian splatting, rasterization, differentiable, cuda, kernel, reconstruction, neural rendering, sfm, dust3r, mast3r, colmap, vggsfm, vggt, correspondence
-                            </div>
-                        </div>
-                        <!-- <span class="badge rounded-pill text-bg-secondary custom-badge">eng</span> -->
-                        
-                        <!-- Divider-->
-                        <hr class="my-4" />
-                        <!-- Post preview-->
-                        <div class="post-preview">
-                            <a href="posts/?id=240602_2dgs/">
-                                <h3 class="post-title">
-                                    Under the 3D: Geometrically Accurate 2D Gaussian Splatting 
-                                </h3>
-                                <h5 class="post-subtitle">
-                                    Detailed Review of 2D Gaussian Splatting for Geometrically Accurate Radiance Fields 
-                                </h5>
-                            </a>
-                            <p class="post-meta">
-                                June 02, 2024
-                            </p>
-                            <div class="post-tags" style="display: none;">
-                                nerf, gs, gaussian splatting, rasterization, differentiable, cuda, kernel, reconstruction, mesh, sdf, 
-                            </div>
-                        </div>
-                        <!-- <span class="badge rounded-pill text-bg-secondary custom-badge">eng</span>
-                        <span class="badge rounded-pill text-bg-success custom-badge">kor</span> -->
-                        
-                        <!-- Divider-->
-                        <hr class="my-4" />
-                        <!-- Post preview-->
-                        <div class="post-preview">
-                            <a href="posts/?id=240426_diffusion_depth/">
-                                <h3 class="post-title">
-                                    Is Diffusion's Estimated Depth Really Good?
-                                </h3>
-                                <h5 class="post-subtitle">
-                                    Making Mesh from Estimated Depth Map by Diffusion
-                                </h5>
-                            </a>
-                            <p class="post-meta">
-                                April 26, 2024
-                            </p>
-                            <div class="post-tags" style="display: none;">
-                                diffusion, mesh, graphics, generation
-                            </div>
-                        </div>
-                        <!-- <span class="badge rounded-pill text-bg-secondary custom-badge">eng</span>
-                        <span class="badge rounded-pill text-bg-success custom-badge">kor</span> -->
-                        
-                        <!-- Divider-->
-                        <hr class="my-4" />
-                        <!-- Post preview-->
-                        <div class="post-preview">
-                            <a href="posts/?id=240226_sora/">
-                                <h3 class="post-title">
-                                    Can Sora Understand 3D?
-                                </h3>
-                                <h5 class="post-subtitle">
-                                    Radiance Fields Reconstruction from Video Generative AI 
-                                </h5>
-                            </a>
-                            <p class="post-meta">
-                                Febrary 26, 2024
-                            </p>
-                            <div class="post-tags" style="display: none;">
-                                nerf, gs, gaussian splatting, radiance fields, sora, video gen, generation, colmap, 
-                            </div>
-                        </div>
-                        <!-- <span class="badge rounded-pill text-bg-secondary custom-badge">eng</span> -->
-
-                        <!-- Divider-->
-                        <hr class="my-4" />
-                        <!-- Post preview-->
-                        <div class="post-preview">
-                            <a href="posts/?id=231130_nerf_in_game/">
-                                <h3 class="post-title">
-                                    Can NeRF be Used in Game?
-                                </h3>
-                                <h5 class="post-subtitle">
-                                    Explore Limitations of NeRF
-                                </h5>
-                            </a>
-                            <p class="post-meta">
-                                November 30, 2023
-                            </p>
-                            <div class="post-tags" style="display: none;">
-                                nerf, gs, gaussian splatting, gaussian ray tracing, reconstruction, neural rendering, path tracing, rendering equation, pbr, physics based rendering, rendering effect, rasterization
-                            </div>
-                        </div>
-                        <!-- <span class="badge rounded-pill text-bg-secondary custom-badge">eng</span>
-                        <span class="badge rounded-pill text-bg-success custom-badge">kor</span> -->
-
-                        <!-- Divider-->
-                        <hr class="my-4" />
-                        <!-- Post preview-->
-                        <div class="post-preview">
-                            <a href="posts/?id=230202_ngp/">
-                                <h3 class="post-title">
-                                    Instant-NGP Review & Re-Implementation
-                                </h3>
-                                <h5 class="post-subtitle">
-                                    Review of Instant-NGP and PyTorch Re-Implementation
-                                </h5>
-                            </a>
-                            <p class="post-meta">
-                                Febrary 02, 2023
-                            </p>
-                            <div class="post-tags" style="display: none;">
-                                nerf, gs, gaussian splatting, gaussian ray tracing, reconstruction, neural rendering, graphics, primitive, accelerate, fast, 
-                            </div>
-                        </div>
-                        <!-- <span class="badge rounded-pill text-bg-secondary custom-badge">eng</span> -->
-                        <!-- Divider-->
-                        <hr class="my-4" />
-                        <!-- Post preview-->
-                        <div class="post-preview">
-                            <a href="posts/?id=211128_fourier/">
-                                <h3 class="post-title">
-                                    Why Positional Encoding Makes NeRF more Powerful 
-                                </h3>
-                                <h5 class="post-subtitle">
-                                    Review of Fourier Features Let Networks Learn High-Frequency Functions in Low-Dimensional Domains
-                                </h5>
-                            </a>
-                            <p class="post-meta">
-                                November 28, 2021
-                            </p>
-                            <div class="post-tags" style="display: none;">
-                                nerf, reconstruction, neural rendering, machine learning, ntk, neural tangent kernel, stationary, positional encoding, embedding, 
-                            </div>
+    
+                        <div class="tab-pane fade" id="notes-tab">
                         </div>
                     </div>
-                    <!-- <span class="badge rounded-pill text-bg-secondary custom-badge">eng</span> -->
-                    <!-- <br/><br/> -->
+
                     <!-- Divider-->
                     <!-- Pager-->
                     <div class="mb-5" style="text-align: center;">
@@ -398,6 +206,8 @@
         </footer>
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="./js/posts-data.js"></script>
+        <script src="./js/main-list.js"></script>
         <!-- Core theme JS-->
         <!-- <script src="js/scripts.js"></script> -->
         <script>
@@ -443,33 +253,59 @@
         </script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('searchInput');
-            // 검색 대상이 될 모든 post-preview 요소를 선택합니다.
-            const posts = document.querySelectorAll('.post-preview');
+                const searchInput = document.getElementById('searchInput');
 
+                // 검색 이벤트 리스너
                 searchInput.addEventListener('keyup', function(e) {
                     const searchTerm = e.target.value.toLowerCase();
 
-                    posts.forEach(post => {
-                        const title = post.querySelector('.post-title').textContent.toLowerCase();
-                        const subtitle = post.querySelector('.post-subtitle').textContent.toLowerCase();
-                        const tags = post.querySelector('.post-tags').textContent.toLowerCase();
+                    // 모든 탭의 콘텐츠를 검색 대상으로 포함
+                    const postsToSearch = document.querySelectorAll('.post-preview');
+                    const seriesToSearch = document.querySelectorAll('.series-group');
 
-                        // 제목 또는 부제에 검색어가 포함되어 있는지 확인합니다.
-                        if (title.includes(searchTerm) || subtitle.includes(searchTerm) || tags.includes(searchTerm)) {
-                            // 포함되어 있다면 해당 게시물과 구분선을 보이게 합니다.
+                    // 'Posts' 탭과 'Notes' 탭의 게시물 필터링
+                    postsToSearch.forEach(post => {
+                        const title = post.querySelector('.post-title').textContent.toLowerCase();
+                        const subtitleElement = post.querySelector('.post-subtitle');
+                        const subtitle = subtitleElement ? subtitleElement.textContent.toLowerCase() : '';
+
+                        // 제목 또는 부제목에 검색어가 포함되어 있는지 확인
+                        if (title.includes(searchTerm) || subtitle.includes(searchTerm)) {
                             post.style.display = 'block';
                             const nextHr = post.nextElementSibling;
                             if (nextHr && nextHr.tagName === 'HR') {
                                 nextHr.style.display = 'block';
                             }
                         } else {
-                            // 포함되어 있지 않다면 숨깁니다.
                             post.style.display = 'none';
                             const nextHr = post.nextElementSibling;
                             if (nextHr && nextHr.tagName === 'HR') {
                                 nextHr.style.display = 'none';
                             }
+                        }
+                    });
+
+                    // 'Series' 탭의 게시물 필터링
+                    seriesToSearch.forEach(series => {
+                        const seriesTitle = series.querySelector('.series-title').textContent.toLowerCase();
+                        const postsInSeries = series.querySelectorAll('li');
+                        let hasVisiblePost = false;
+
+                        postsInSeries.forEach(post => {
+                            const postTitle = post.querySelector('a').textContent.toLowerCase();
+                            if (postTitle.includes(searchTerm)) {
+                                post.style.display = 'list-item';
+                                hasVisiblePost = true;
+                            } else {
+                                post.style.display = 'none';
+                            }
+                        });
+
+                        // 시리즈 제목 또는 시리즈 내 게시물에 검색어가 포함된 경우 시리즈 전체를 표시
+                        if (seriesTitle.includes(searchTerm) || hasVisiblePost) {
+                            series.style.display = 'block';
+                        } else {
+                            series.style.display = 'none';
                         }
                     });
                 });

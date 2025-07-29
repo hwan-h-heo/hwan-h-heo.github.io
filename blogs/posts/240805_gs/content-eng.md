@@ -1,0 +1,660 @@
+title: A Comprehensive Analysis of Gaussian Splatting Rasterization
+date: August 08, 2024
+author: Hwan Heo
+--- 여기부터 실제 콘텐츠 ---
+
+<button id="copyButton">
+    <i class="bi bi-share-fill"></i>
+</button>
+
+<div id="myshare_modal" class="share_modal">
+    <div class="share_modal-content">
+        <span class="share_modal_close">×</span>
+        <p><strong>Link Copied!</strong></p>
+        <div class="copy_indicator-container">
+        <div class="copy_indicator" id="share_modalIndicator"></div>
+        </div>
+    </div>
+</div>
+
+<nav class="toc">
+    <ul>
+        <li><a href="#sec1"> 3D Gaussian as Primitive Kernel</a></li>
+        <li>
+            <a href="#sec2"> Splatting (Projection of Primitives)</a>
+        </li>
+        <ul>
+            <li>
+                <a href="#sec2.1"> Projection </a>
+            </li>
+            <li>
+                <a href="#sec2.2"> Density of the projected Gaussian </a>
+            </li>
+        </ul>
+        <li><a href="#sec3"> Parallel Rasterization</a></li>
+        <li>
+            <a href="#sec4"> MISC</a>
+        </li>
+        <ul>
+            <li>
+                <a href="#sec4.1"> Camera Model </a>
+            </li>
+            <li>
+                <a href="#sec4.2"> Mimic Luma AI </a>
+            </li>
+        </ul>
+        <li><a href="#closing">Closing</a></li>
+    </ul>
+</nav>
+
+
+<br/>
+<h2 id="intro">Introduction</h2>
+<figure>
+    <img src="./240805_gs/assets/teaser.gif" alt="Gaussian Splatting Teaser by Luma AI" width="100%">
+    <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 1.</strong> 3D GS by Luma AI</figcaption>
+</figure>
+<p class="lang eng">
+    One of the most significant advantages of 3D Gaussian Splatting lies in its exceptional rendering speed, exceeding 100 frames per second (fps). 
+    This performance, faster than any other NeRF-based method, is achieved through a well-designed tile-based rasterization process. 
+    This article aims to explore 3D Gaussian Splatting from the perspective of rasterization, providing an in-depth understanding of its underlying mechanisms.
+</p>
+<br/>
+
+<h2 id="sec1">1. 3D Gaussian as Primitive Kernel</h2>
+<br/>
+<figure>
+    <img src="./240805_gs/assets/gs.jpg" alt="3D Gaussian as Primitive Kernel" width="100%">
+    <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 2.</strong> NeRF vs 3D GS, source: <span style="text-decoration: underline;"><a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">Kate's medium</a></span></figcaption>
+</figure>
+<p class="lang eng">
+    The basic idea of 3D Gaussian Splatting is to represent a scene with explicit, learnable primitives, contrasting with the implicit approach utilized in NeRF (Neural Radiance Fields). 
+    The explicit representation offers several advantages, as discussed in a previous review of 2D Gaussian Splatting 
+    (please refer to the <a href="../240602_2dgs/">linked article</a>. for more details).
+</p>
+<p class="lang eng">
+    The authors define the kernel for these primitives (particles)  using the following 3D Gaussian function:
+</p>
+<div class="math-container">
+    $$G(x) = \exp \left( {- \frac{1}{2} x^{\rm T} \Sigma^{-1} x} \right )$$
+</div>
+
+<p class="lang eng"> 
+    The choice of the kernel design is justified by several factors outlined in the paper:
+</p>
+<ul class="lang eng">
+    <li> 
+        <strong>Differentiability for Training:</strong> The function's differentiability facilitates gradient-based optimization during the training process.
+    </li>
+    <br/>
+    <li> 
+        <strong>Ease of Projection to 2D: </strong> The Gaussian function allows for straightforward and well-defined projection to 2D, enabling fast alpha blending.
+    </li>
+</ul>
+
+<p class="lang eng">
+    The covariance matrix $\Sigma$ is critical in defining the kernel's shape, and its physical meaning is preserved only if it is <em>positive definite</em>.
+    The authors suggest organizing the covariance matrix in the following form to facilitate learning: 
+</p>
+
+<div class="math-container">
+    $$ \Sigma = RSS^{\rm T}R^{\rm T} $$
+</div>
+<p class="lang eng"> 
+    Here, $R$ and  $S$ are ${3 \times 3}$ rotation and scale matrices, respectively. 
+</p>
+<p class="lang eng">
+    This formulation can be further rewritten to emphasize its equivalence to the 3D ellipsoid (anisotropic) matrix, implying that 3D Gaussian Splatting employs an semitransparent ellipsoid in 3D space, 
+    with density defined by a Gaussian distribution, as its primitive kernel.
+</p>
+<div class="math-container">
+    $$ \begin{aligned}
+    \Sigma 
+    & = R (SS^{\rm T}) R^{\rm T} \\ \\
+    & = R 
+    \begin{bmatrix} 
+    s_1^2 & 0 & 0 \\
+    0 & s_2^2 & 0 \\
+    0 & 0 & s_3^2 \\
+    \end{bmatrix}
+    R^{\rm T}
+    \end{aligned} $$
+</div>
+
+<blockquote>
+    <p class="lang eng">
+        <strong>Tip.</strong> When dealing with quadratic forms like ($A^{-1}MA$), it is often insightful to interpret $M$ as a transformation within the coordinate system defined by $A$. 
+        This perspective is also applicable to eigendecomposition, which analyzes the significance of each axis (eigenvalues) in a coordinate system where the axes' orientation (eigenvectors) remains unchanged under linear transformation. 
+        This understanding elucidates the relationship between Principal Component Analysis (PCA) and eigendecomposition.
+    </p>
+</blockquote>
+
+<p class="lang eng">
+    In summary, the covariance matrix $\Sigma$ can be interpreted as:
+</p>
+<ul class="lang eng">
+    <li>
+        <p>
+            An intensity matrix (squared scale) within the coordinate system where each principal axis of the ellipsoid serves as a basis.
+        </p>
+    </li>
+    <li> 
+        <p>
+            A method of expressing the primitive kernel in the world coordinate system.
+        </p>
+    </li>
+</ul>
+
+
+
+```cpp
+// compute 3D covariance matrix
+glm::mat3 S = glm::mat3(1.0f);
+S[0][0] = mod * scale.x;
+S[1][1] = mod * scale.y;
+S[2][2] = mod * scale.z;
+
+glm::mat3 R = glm::mat3(
+    1.f - 2.f * (y * y + z * z), 2.f * (x * y - r * z), 2.f * (x * z + r * y),
+    2.f * (x * y + r * z), 1.f - 2.f * (x * x + z * z), 2.f * (y * z - r * x),
+    2.f * (x * z - r * y), 2.f * (y * z + r * x), 1.f - 2.f * (x * x + y * y)
+);
+
+glm::mat3 M = S * R;
+glm::mat3 Sigma = glm::transpose(M) * M;
+
+cov3D[0] = Sigma[0][0];
+cov3D[1] = Sigma[0][1];
+cov3D[2] = Sigma[0][2];
+cov3D[3] = Sigma[1][1];
+cov3D[4] = Sigma[1][2];
+cov3D[5] = Sigma[2][2];
+```
+
+
+<p class="lang eng"> Here, Note that </p>
+<ul class="lang eng">
+    <li> $S$: 3x3 diagonal matrix,</li>
+    <br/>
+    <li> $R$: Calculated using the <span style="text-decoration: underline;"><a href="https://en.m.wikipedia.org/wiki/Quaternions_and_spatial_rotation">quaternion to rotation matrix</a></span> formula
+    <div class="math-container">
+        $$ R = \begin{bmatrix}
+        1 - 2y^2 - 2z^2 & 2xy - 2zw & 2xz + 2yw \\
+        2xy + 2zw & 1 - 2x^2 - 2z^2 & 2yz - 2xw \\
+        2xz - 2yw & 2yz + 2xw & 1 - 2x^2 - 2y^2
+        \end{bmatrix} $$
+    </div>
+    </li>
+    <li> <em>cov3D</em>: Since the covariance matrix is symmetric, we only need to store the right upper triangle.</li>
+</ul>
+
+<br/>
+
+<h2 id="sec2">2. Splatting (Projection of Primitives)</h2>
+<br/>
+<h3 id="sec2.1">2.1. Projection</h3>
+<figure>
+    <img src="./240805_gs/assets/splatting.jpg" alt="Splatting of primitives" style="width:55%">
+    <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 3.</strong> Projection of 3D Gaussian, <br/> source: <span style="text-decoration: underline;"><a href="https://dl.acm.org/doi/10.1145/3355089.3356513"><em>Differentiable Surface Splatting for Point-based Geometry Processing </em></a></span> </figcaption>
+</figure> 
+
+
+<p class="lang eng">
+    To render a 3D scene onto a 2D image, it is necessary to project the covariance matrix of the Gaussian. 
+    The authors address this projection using a method proposed in Elliptical Weighted Average (EWA) Splatting:
+</p>
+
+<div class="math-container">
+    $$ \Sigma^{\prime} = JW\Sigma (JW)^{\rm T} $$
+</div>
+
+
+<ul class="lang eng">
+    <li> 
+        <p>
+            This transformation can be understood through the same aspect as quadratic forms: converting the covariance matrix from <em>world coordinate system → camera space → ray space</em>.
+        </p>
+    </li>
+    <li> 
+        <p>
+            Here, $J$ represents the <strong>Jacobian matrix (affine approximation) of the perspective projection</strong>, transforming coordinates from camera space to ray space. 
+            The approximated transformation $\phi$ is represented as
+            <div class="math-container">
+                $$ \phi(x) = \phi(t) + J \cdot (x - t). $$
+            </div>
+            As this is a first-order Taylor approximation, there should be an approximation error as a point moves away from the center of the Gaussian. 
+            Recent studies have highlighted this perspective error as a limitation of Gaussian Splatting and proposed methods to address it.
+        </p>
+    </li>
+</ul>
+
+
+<p class="lang eng"> The Jacobian matrix $J$ for the perspective projection is derived as follows: </p>
+
+<div class="math-container">
+    $$
+    \begin{bmatrix} 
+    1 / t_2 & 0 & -t_0 / t_2^2 \\
+    0 & 1 / t_2 &  -t_1 / t_2^2 \\
+    t_0 / \| t\| & t_1 / \| t\|   & t_2 / \| t \|  \\
+    \end{bmatrix}
+    $$
+</div>
+<p class="lang eng"> 
+    In practical, when considering
+</p>
+
+<ul>
+    <li>
+        <p> 
+            the image space pixel $(u,v)$ in a pinhole camera model,
+            <figure>
+                <img src="./240805_gs/assets/pinhole.jpg" width="60%" height="50%">
+                <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 4.</strong> Pinhole camera model, by Fusion of Imaging and Inertial Sensors for Navigation</figcaption>
+            </figure>
+        </p>
+    </li>
+    <li>
+        <p class="lang eng"> 
+            and the covariance matrix in image space is of 2x2 (so the 3rd row of the projected covariance remains unused),
+        </p>
+    </li>
+</ul>
+
+<p class="lang eng"> the implementation proceeds as follows: </p>
+<div class="math-container">
+    $$
+    \begin{bmatrix} 
+    f_x / t_2 & 0 & -f_x \cdot t_0 / t_2^2 \\
+    0 & f_y / t_2 &  - f_y \cdot t_1 / t_2^2 \\
+    0 & 0 & 0 \\
+    \end{bmatrix}
+    $$
+</div>
+
+```cpp
+// affine approximation of the Jacobian matrix of viewmatrix to rayspace
+glm::mat3 J = glm::mat3(
+    focal_x / t.z, 0.0f, -(focal_x * t.x) / (t.z * t.z),
+    0.0f, focal_y / t.z, -(focal_y * t.y) / (t.z * t.z),
+    0, 0, 0);
+
+// W: w2c matrix 
+glm::mat3 W = glm::mat3(
+    viewmatrix[0], viewmatrix[4], viewmatrix[8],
+    viewmatrix[1], viewmatrix[5], viewmatrix[9],
+    viewmatrix[2], viewmatrix[6], viewmatrix[10]);
+    
+glm::mat3 T = W * J;
+glm::mat3 Vrk = glm::mat3(
+    cov3D[0], cov3D[1], cov3D[2],
+    cov3D[1], cov3D[3], cov3D[4],
+    cov3D[2], cov3D[4], cov3D[5]);
+
+glm::mat3 cov = glm::transpose(T) * glm::transpose(Vrk) * T;
+```
+<br/>
+
+<h3 id="sec2.2">2.2. Density of the Projected Gaussian </h3>
+<p class="lang eng">
+    For a point $p$ in 3D space, the density $f_i(p)$ of the $i$th Gaussian can be defined as follows:
+</p>
+
+<div class="math-container">
+    $$ f_i(p) = \exp \left( - \frac{1}{2} (\mu_i -p)^{\rm T} \Sigma_i^{-1} (\mu_i - p ) \right ) $$
+</div>
+<p class="lang eng"> Rendering relies on this Gaussian density value multiplied by an opacity value $\sigma(\alpha_i)$.</p>
+
+<ul>
+    <li> 
+        <p class="lang eng">
+            This equation represents a <em>weighted (by opacity) probability density function</em> for a multivariate (3D) normal distribution.
+        </p>
+    </li>
+    <li> 
+        <p class="lang eng">
+            The inner exponential term corresponds to the <a href="https://en.wikipedia.org/wiki/Mahalanobis_distance">Mahalanobis Distance</a>, 
+            which quantifies the distance (or similarity) within an ellipsoid based on its scale. 
+            Intuitively, the closer a 3D point is to the Gaussian center, the more opaque the Gaussian appears, leading to a higher response.
+        </p>
+    </li>
+</ul>
+
+<div class="lang eng">
+    <p>
+        To calculate the density value, the inverse of the projected covariance matrix is required. 
+        The following code snippet illustrates the implementation, incorporating linear algebra techniques to ensure numerical stability.
+    </p>
+    <p>
+        Recap the earlier computation to get 2D covariance matrix. 
+        The actual end of this code is implemented as follows, 
+    </p>
+</div>
+
+
+```cpp
+// compute cov 2D
+cov[0][0] += 0.3f;
+cov[1][1] += 0.3f;
+
+return { float(cov[0][0]), float(cov[0][1]), float(cov[1][1]) };
+```
+<p class="lang eng">  
+    which is the same as finding the inverse of the following inverse matrix, $(A=(RS)^{\rm T})$
+</p>
+
+<p> $$ A^{\rm T}A+\lambda \mathbf{I} $$</p>
+
+<p class="lang eng">
+    Since the covariance matrix is <em>positive semidefinite</em>, adding a small $\lambda$ ensures that the covariance matrix 
+    remains positive definite, preventing numerical instability during matrix inversion.
+</p>
+
+<div class="math-container">
+    $$
+    x^T A^T Ax + \lambda x^T x > 0  
+    $$
+</div>
+
+```cpp
+// compute inverse of the covariance 2D
+float det = (cov.x * cov.z - cov.y * cov.y);
+if (det == 0.0f)
+	return;
+float det_inv = 1.f / det;
+float3 conic = { cov.z * det_inv, -cov.y * det_inv, cov.x * det_inv };
+```
+<br/>
+
+<ul>
+    <li>
+        <p class="lang eng">
+            Note that the inverse matirx formula for 2x2 matrix is
+        </p>
+        <div class="math-container">
+            $$
+            A=\begin{bmatrix}
+            a & b \\ 
+            b & c 
+            \end{bmatrix},
+                \quad 
+            A^{-1} = \frac{1}{\det(A)} 
+            \begin{bmatrix}
+            c & -b \\ 
+            -b & a 
+            \end{bmatrix} 
+            $$
+        </div>
+    </li>
+    <li>
+        <p class="lang eng">
+            Also note that the inverse of cov is called conic, presumably because the definition of <a href="https://en.wikipedia.org/wiki/Conic_section">conic section</a>. 
+        </p>
+        <img src="./240805_gs/assets/conic.jpg" width="60%">
+    </li>
+</ul>
+<br/>
+
+<p class="lang eng">
+    Finally, the radius of each splat is calculated to ensure it covers at least 99.7% of the Gaussian distribution:                            
+</p>
+
+<div class="math-container">
+    $$ r = 3 \times \max_i \textit{standard deviation}_i
+    $$
+</div>
+<p class="lang eng">
+    It is used for Gaussian culling (masking) purposes. (Otherwise, you would have to query all Gaussians in the scene....)
+</p>
+
+<p class="lang eng">
+    The standard deviation of the 3D Gaussian, defined by the covariance matrix, corresponds to the eigenvalue,
+    which can be obtained using the following <a href="https://en.wikipedia.org/wiki/Characteristic_polynomial">Characteristic equation</a>:
+</p>
+
+<div class="math-container">
+    $$
+    \det \left ( A -\lambda \mathbf{I} \right ) = 0, \\ \rightarrow (a- \lambda)(c-\lambda) - b^2 = 0.
+    $$
+</div>
+
+<p class="lang eng">
+    Since this is a quadratic equation for $\lambda$, it has the famous closed form solution :) The code also uses the quadratic formula to find the value of the lambda. 
+</p>
+
+```cpp
+// compute inverse of the covariance 2D
+float mid = 0.5f * (cov.x + cov.z);
+float lambda1 = mid + sqrt(max(0.1f, mid * mid - det));
+float lambda2 = mid - sqrt(max(0.1f, mid * mid - det));
+
+float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));
+```
+<br/>
+
+<h2 id="sec3">3. Parallel Rasterization </h2>
+<div class="lang eng">
+    <p>
+        Having established the Gaussian kernel and its projection into image space, we can proceed with rasterizing the 3D scene. 
+        The goal is to efficiently render a 3D Gaussian Splatting scene as a 2D image by accumulating density and opacity values of Gaussians that intersect with the camera's ray.
+    </p>
+    <p>
+        3D Gaussian Splatting employs a tile-based rasterization approach, leveraging the hardware capabilities of GPUs to parallelize the computation. Each tile is processed independently, with its own set of Gaussian primitives. 
+        The final image is obtained by blending the contributions from all tiles, ensuring that overlapping Gaussians are handled correctly to prevent artifacts such as holes or seams in the rendered image. 
+    </p>
+    <p> 
+        The rasterization algorithm presented in the 3D Gaussian Splatting paper is a key element in achieving its remarkable rendering speed. 
+        Let’s break down the algorithm step-by-step:
+    </p>
+</div>
+
+<figure>
+    <img src="./240805_gs/assets/rasterization.jpg" width="100%">
+    <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 5.</strong> An illustration of the forward process of 3D GS, <br/> source: <span style="text-decoration: underline;"><a href="https://arxiv.org/abs/2401.03890"><em>A Survey on 3D Gaussian Splatting </em></a></span> </figcaption>
+</figure>
+
+<ol>
+    <li>
+        <p class="lang eng">
+            <strong> Tile-Based Division. </strong> <br/>
+            The first step involves dividing the screen into 16x16 size tiles.
+            This division is essential for CUDA parallelization, enabling efficient rasterization by allowing the GPU to process multiple tiles simultaneously.
+        </p>
+    </li>
+    <li>
+        <p class="lang eng">
+            <strong> Frustum Culling. </strong> <br/>
+            Once the screen is divided into tiles, the algorithm performs frustum culling. 
+            This step involves discarding Gaussians that fall outside the camera's view frustum, ensuring that only relevant Gaussians are processed. 
+        </p>
+        <img src="./240805_gs/assets/culling.jpg" width="50%" height="40%" alt="Frustum Culling">
+    </li>
+    <br/>
+    <li>
+        <p class="lang eng">
+            <strong> Instantiation of Gaussians.</strong> (Instantiate) <br/>
+            Gaussians that overlap with multiple tiles are duplicated, a process known as instantiation. 
+            This ensures that each tile contains all relevant Gaussians for accurate rendering.
+        </p>
+    </li>
+    <li>
+        <p class="lang eng">
+            <strong> Sorting the Gaussians (in each tile) in depth order. </strong> <br/>
+            For each tile, the Gaussians are sorted in depth order using a GPU-accelerated radix sort. 
+            Sorting is crucial because the covariance matrix used for rendering is already projected into image space. 
+            Without depth sorting, the rendering would result in visually disordered overlapping Gaussians. 
+            Importantly, this sorting is done before the execution of each CUDA thread block, ensuring that primitives are pre-sorted, rather than sorting them on a per-tile basis during rendering.
+        </p>
+    </li>
+    <li>
+        <p class="lang eng">
+            <strong> Parallel Rasterization.</strong> <br/>
+            The next step involves setting the working range for each tile using the sorted Gaussians. CUDA thread blocks are then deployed in parallel, with each block responsible for rasterizing a specific tile. 
+            To minimize memory bottlenecks, thread blocks store necessary information, such as Gaussian properties, in shared memory. 
+            The final color value for each pixel is calculated by accumulating opacity and color along the sorted Gaussians.
+        </p>
+        <figure>
+            <img class="img-fluid" src="./240805_gs/assets/presort.jpg" width="70%" height="60%" alt="Gaussian Accumulation">
+            <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 6.</strong>  An illustration of the tile based parallel rendering, <br/> source: <span style="text-decoration: underline;"><a href="https://arxiv.org/abs/2401.03890"><em>A Survey on 3D Gaussian Splatting </em></a></span> </figcaption>
+        </figure>
+    </li>
+</ol>
+
+<p class="lang eng">
+    The <code>__shared__</code> variable is utilized to store variables like IDs, opacity values, and pixel coordinates. The relevant data, including the projected covariance and spherical harmonics color of each Gaussian, is precomputed and stored in shared memory before the rasterization of each tile begins.
+</p>
+<pre class="language-cpp" style="font-size: 16px;"><code>// Allocate storage for batches of collectively fetched data.
+__shared__ int collected_id[BLOCK_SIZE];
+__shared__ float2 collected_xy[BLOCK_SIZE];
+__shared__ float4 collected_conic_opacity[BLOCK_SIZE];</code></pre>
+<br/>
+
+<div class="math-container">
+    $$ 
+    C(\mathbf{x}) = \sum_{i \in N} T_i \, g_i^{2D}(x) \, \alpha_i \, \mathbf{c}_i , \quad \text{where } T_i = \prod_{j=1}^{i-1} \left(1 - g_j^{2D}(x) \, \alpha_j\right) 
+    $$
+</div>
+<p class="lang eng">
+    This formula highlights a key difference from NeRF-based methods:
+</p>
+<ul class="lang eng">
+    <li>
+        <p>
+            NeRF requires sampling points along the ray and querying a Multi-Layer Perceptron (MLP) for the opacity and color at each point.
+        </p>
+    </li>
+    <li>
+        <p>
+            3D Gaussian Splatting accumulates these values while traversing through the pre-sorted Gaussians projected onto the tile.
+        </p>
+    </li>
+</ul>
+<figure>
+    <img class="img-fluid" src="./240805_gs/assets/nerf_vs_gs.jpg" width="70%">
+    <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 7.</strong> NeRF vs 3D GS, source: <span style="text-decoration: underline;"><a href="https://arxiv.org/abs/2401.03890"><em>A Survey on 3D Gaussian Splatting </em></a></span> </figcaption>
+</figure>
+<p class="lang eng">
+    In other words, since NeRF samples rays, it queries the MLP for each different point sampled by $r(t)$ (3D), whereas 3D GS queries the MLP for the same point $x$ (2D).
+</p>
+
+<br/>
+<h2 id="sec4"> 4. Miscellaneous </h2>
+<br/>
+
+<h3 id="sec4.1"> 4.1. Camera Model </h3>
+<div class="lang eng">
+    <p>
+        In the current implementation, the matrix $J$ serves as an approximation of the perspective projection 
+        in a pinhole camera model. Consequently, it is not suitable for rendering images using different 
+        camera models. To support other camera models, appropriate approximations must be developed.
+    </p>
+    <p>
+        For instance, an affine approximation $J$ for a spherical camera model (<em>i.e.,</em> equirectangular projection)
+        can be formulated as follows:
+    </p>
+</div>
+<pre class="language-cpp" style="font-size: 16px;"><code>float t_length = sqrtf(t.x * t.x + t.y * t.y + t.z * t.z);
+float3 t_unit_focal = {0.0f, 0.0f, t_length};
+glm::mat3 J = glm::mat3(
+	focal_x / t_unit_focal.z, 0.0f, -(focal_x * t_unit_focal.x) / (t_unit_focal.z * t_unit_focal.z),
+	0.0f, focal_x / t_unit_focal.z, -(focal_x * t_unit_focal.y) / (t_unit_focal.z * t_unit_focal.z),
+    0, 0, 0);</code></pre>
+<p class="lang eng">
+    This approximation enables the rasterization of 360-degree images with 3D Gaussian Splatting's Rasterization, 
+    as shown in the following:
+</p>
+<table>
+    <tr>
+        <th> 360 Image </th>
+        <th> Rasterization </th>
+    </tr>
+    <tr>
+        <td><img src="./240805_gs/assets/360img.jpg" alt="360 image" width="100%"></td>
+        <td><img src="./240805_gs/assets/360ptc.jpg" alt="360 ptc" width="100%"></td>
+    </tr>
+</table>
+<div class="lang eng">
+    <p>
+        However, it is important to note that the approximation error in this case is significantly larger 
+        than that of the perspective projection. As a result, the reconstruction quality is inferior 
+        when using spherical camera models compared to pinhole images.
+    </p>
+    <p>
+        For more details, refer to <a href="https://github.com/inuex35/360-gaussian-splatting">360 Gaussian Splatting</a>
+    </p>
+</div>
+
+
+<h3 id="sec4.2"> 4.2. Mimic Luma AI </h3>
+<div class="lang eng">
+    <p>
+        The article's teaser video showcases a rendering by Luma AI. 
+        I recently came across this fascinating 3D scene rendering and decided to give it a try. 
+        Here’s a brief overview of my approach:
+    </p>
+    <ol>
+        <li> <strong>Render with Near-to-Far Plane:</strong> Loading the point cloud (within blakc background) by traversing from the near to the far plane of the current view frustum. </li>
+        <br/>
+        <li> <strong>Radius-Based Rendering:</strong> Increase the radius from the center (typically defined as the mean of the training camera positions, though it can be set manually) and render only the splats within the sphere defined by this radius. </li>
+    </ol>
+</div>
+
+<table>
+    <tr>
+        <th>Scene #1</th>
+        <td><img class="img-fluid" src="./240805_gs/assets/bicycle.gif" alt="Scene 1"></td>
+    </tr>
+    <tr>
+        <th>Scene #2</th>
+        <td><img class="img-fluid" src="./240805_gs/assets/garden.gif" alt="Scene 2"></td>
+    </tr>
+</table>
+<br/>
+
+
+<h2 id="closing">Closing</h2>
+<div class="lang eng">
+    <p>
+        In this article, we have explored the intricacies of 3D Gaussian Splatting within the context of 
+        rasterization, highlighting its exceptional rendering speed and efficiency. 
+    </p>
+    <p>
+        We delved into the mathematical foundations of the technique, examining the role of the 3D Gaussian function 
+        as a primitive kernel and its implications for differentiability, projection, and opacity.
+        The transformation of the 3D covariance matrix into image space was crucial 
+        in achieving smooth and visually coherent results.
+    </p>
+    <p>
+        Note that, this article focuses on the forward function of the <a href="https://github.com/graphdeco-inria/diff-gaussian-rasterization">diff-gaussian-rasterizer</a> by the INRIA group, 
+        but the actual implementation also includes the calculation of RGB colors from Spherical Harmonics, allocation of CUDA thread blocks, and backward through the rasterization process. 
+        The backward is almost the inverse of the forward computation described above, computing the gradient while traversing back-to-front as opposed to front-to-back in the forward step.
+    </p>
+</div>
+
+<hr/>
+<p>
+    You may also like, 
+</p>
+<ul>
+    <li>
+        <a href="./?id=240823_grt/">
+            <span style="text-decoration: underline;">Don't Rasterize But Ray Trace Gaussian</span>
+        </a>
+    </li>
+    <li>
+        <a href="./?id=240602_2dgs/">
+            <span style="text-decoration: underline;">Under the 3D: Geometrically Accurate 2D Gaussian Splatting </span>
+        </a>
+    </li>
+    <li>
+        <a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">
+            <span style="text-decoration: underline;">A Comprehensive Overview of Gaussian Splatting</span>
+        </a>
+    </li>
+    <li>
+        <a href="https://github.com/kwea123/gaussian_splatting_notes">
+            <span style="text-decoration: underline;">Gaussian Splatting Notes</span>
+        </a>
+    </li>
+</ul>
+<br/>

@@ -115,15 +115,19 @@
         <!-- Navigation -->
         <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
             <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href="../">HwanHeo's Blog</a>
+                <a class="navbar-brand" href="../">Blog Home</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                     Menu
                     <i class="fas fa-bars"></i>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../">Post</a></li>
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../../">HwanHeo's log</a></li>
+                        <!-- <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../">Post</a></li> -->
+                        <!-- <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="../../">HwanHeo's log</a></li> -->
+                        <li class="nav-item">
+                            <a id="lang-toggle-post" class="btn nav-link px-lg-3 py-3 py-lg-4" style="font-size:0.7rem">
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -138,10 +142,10 @@
                             <br/>
                             <h2 id="post-title"></h2>
                             <span class="meta" id="post-meta"></span>
-                            <div style="text-align: center;">
-                                <button type="button" class="btn custom-btn" onclick="setLanguage('eng')" style="font-size: 13px;">eng</button>
-                                |
-                                <button type="button" class="btn custom-btn" onclick="setLanguage('kor')" style="font-size: 13px;">kor</button>
+                            <div class="col-6" style="text-align: center;">
+                                <!-- <button type="button" class="btn custom-btn" onclick="setLanguage('eng')" style="font-size: 13px;">eng</button> -->
+                                <hr/>
+                                <!-- <button type="button" class="btn custom-btn" onclick="setLanguage('kor')" style="font-size: 13px;">kor</button> -->
                             </div>
                         </div>
                     </div>
@@ -165,46 +169,46 @@
                                     <div class="accordion-body">
                                         <ol>
                                             <li>
-                                                <a href="?id=211128_fourier/">Why Positional Encoding Makes NeRF more Powerful</a>
+                                                <a href="?id=211128_fourier">Why Positional Encoding Makes NeRF more Powerful</a>
                                             </li>
                                             <li>
-                                                <a href="?id=230202_ngp/">Instant NGP Review & Re-implementation</a>
+                                                <a href="?id=230202_ngp">Instant NGP Review & Re-implementation</a>
                                             </li>
                                             <li>
-                                                <a href="?id=231130_nerf_in_game/">Can NeRF be Used in Game?</a>
+                                                <a href="?id=231130_nerf_in_game">Can NeRF be Used in Game?</a>
                                             </li>
                                             <li>
-                                                <a href="?id=240226_sora/">Can Sora Understand 3D?</a>
+                                                <a href="?id=240226_sora">Can Sora Understand 3D?</a>
                                             </li>
                                             <li>
-                                                <a href="?id=240426_diffusion_depth/">Is Diffusion's Estimated Depth Really Good?</a>
+                                                <a href="?id=240426_diffusion_depth">Is Diffusion's Estimated Depth Really Good?</a>
                                             </li>
                                             <li>
-                                                <a href="?id=240602_2dgs/">Under the 3D: Geometrically Accurate 2D Gaussian Splatting </a>
+                                                <a href="?id=240602_2dgs">Under the 3D: Geometrically Accurate 2D Gaussian Splatting </a>
                                             </li>
                                             <li>
-                                                <a href="?id=240721_sfm/">Radiance Fields from Deep-based Structure-from-Motion</a>
+                                                <a href="?id=240721_sfm">Radiance Fields from Deep-based Structure-from-Motion</a>
                                             </li>
                                             <li>
-                                                <a href="?id=240805_gs/">A Comprehensive Analysis of Gaussian Splatting Rasterization</a>
+                                                <a href="?id=240805_gs">A Comprehensive Analysis of Gaussian Splatting Rasterization</a>
                                             </li>
                                             <li>
-                                                <a href="?id=240823_grt/">Don't Rasterize, But Ray Trace 3D Gaussian</a>
+                                                <a href="?id=240823_grt">Don't Rasterize, But Ray Trace 3D Gaussian</a>
                                             </li>
                                             <li>
-                                                <a href="?id=240917_3djs/">Add Gaussian Splatting to Your Website</a>
+                                                <a href="?id=240917_3djs">Add Gaussian Splatting to Your Website</a>
                                             </li>
                                             <li>
-                                                <a href="?id=250106_tomography/">Neural Rendering Beyond Photography</a>
+                                                <a href="?id=250106_tomography">Neural Rendering Beyond Photography</a>
                                             </li>
                                             <li>
-                                                <a href="?id=250302_3d_latent_diffusion/">Deep Dive into 3D Latent Diffusion</a>
+                                                <a href="?id=250302_3d_latent_diffusion">Deep Dive into 3D Latent Diffusion</a>
                                             </li>
                                             <li>
-                                                <a href="?id=250310_model_viewer/">3D Model Viewer in Web</a>
+                                                <a href="?id=250310_model_viewer">3D Model Viewer in Web</a>
                                             </li>
                                             <li>
-                                                <a href="?id=250702_building_large_3d_1/">Building Large 3D Generative Model (1) Data pre-processing</a>
+                                                <a href="?id=250702_building_large_3d_1">Building Large 3D Generative Model (1) Data pre-processing</a>
                                             </li>
                                         </ol>
                                     </div>
@@ -249,216 +253,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         
         <!-- Main script to fetch and render content -->
-        <script>
-            function setLanguage(lang) {
-                localStorage.setItem('language', lang);
-
-                document.querySelectorAll('.lang').forEach(el => {
-                    if (!el.classList.contains('fixed')) {
-                        el.style.display = el.classList.contains(lang) ? 'block' : 'none';
-                    }
-                });
-            }
-
-            function generateTOC(htmlContent) {
-                const tempElement = document.createElement('div');
-                tempElement.innerHTML = htmlContent;
-                const headings = tempElement.querySelectorAll('h2, h3');
-
-                if (headings.length === 0) {
-                    return { tocHtml: '', contentHtml: htmlContent };
-                }
-
-                let tocHTML = '<ul>';
-                let currentH2 = null;
-
-                headings.forEach((heading, index) => {
-                    let headingId = heading.id;
-                    // ID가 없으면 자동으로 생성
-                    if (!headingId) {
-                        headingId = `toc-heading-${index}`;
-                        heading.id = headingId;
-                    }
-
-                    const tagName = heading.tagName;
-                    const headingText = heading.innerHTML; // 이미 파싱된 HTML이므로 innerHTML 사용
-
-                    if (tagName === 'H2') {
-                        if (currentH2) {
-                            tocHTML += '</ul></li>';
-                        }
-                        tocHTML += `<li><a href="#${headingId}">${headingText}</a><ul>`;
-                        currentH2 = heading;
-                    } else if (tagName === 'H3' && currentH2) {
-                        tocHTML += `<li><a href="#${headingId}">${headingText}</a></li>`;
-                    }
-                });
-
-                if (currentH2) {
-                    tocHTML += '</ul></li>';
-                }
-                tocHTML += '</ul>';
-
-                return { tocHtml: tocHTML, contentHtml: tempElement.innerHTML };
-            }
-
-        
-            document.addEventListener("DOMContentLoaded", function() {
-                const urlParams = new URLSearchParams(window.location.search);
-                const postId = urlParams.get('id');
-
-                function setupNavigationAndHighlighting() {
-                    const seriesLinks = document.querySelectorAll('#series ol li a');
-                    if (seriesLinks.length === 0) return; // 시리즈 목록이 없으면 종료
-
-                    // 1. DOM에서 게시물 목록을 배열로 변환
-                    const postList = Array.from(seriesLinks).map(anchor => {
-                        const href = anchor.getAttribute('href');
-                        const linkUrlParams = new URLSearchParams(href.split('?')[1]);
-                        const id = linkUrlParams.get('id');
-                        return { id, href, anchorElement: anchor };
-                    }).filter(post => post.id);
-
-                    // 2. 현재 게시물의 인덱스 찾기
-                    const currentIndex = postList.findIndex(post => post.id === postId);
-                    if (currentIndex === -1) return; // 목록에 없으면 종료
-
-                    // 3. 현재 게시물을 시리즈 목록에서 볼드 처리
-                    const currentPostAnchor = postList[currentIndex].anchorElement;
-                    const listItem = currentPostAnchor.parentElement; // <li> 태그
-                    listItem.innerHTML = `<strong>${currentPostAnchor.textContent} </strong>`;
-                    
-                    // 4. 이전/다음 글 버튼 생성
-                    // 목록은 시간순(오래된 글이 위)이므로, 이전 글은 index - 1, 다음 글은 index + 1
-                    const olderPost = postList[currentIndex - 1];
-                    const nextPost = postList[currentIndex + 1];
-                    
-                    const navContainer = document.getElementById('post-navigation');
-                    const navDiv = document.createElement('div');
-                    navDiv.className = 'd-flex justify-content-between mb-4';
-
-                    if (olderPost) {
-                        const olderLink = document.createElement('a');
-                        olderLink.className = 'btn btn-primary text-uppercase';
-                        olderLink.href = olderPost.href;
-                        olderLink.innerHTML = '← Older Post';
-                        navDiv.appendChild(olderLink);
-                    } else {
-                        // 버튼이 한쪽에만 있을 때 레이아웃이 깨지지 않도록 빈 div 추가
-                        navDiv.appendChild(document.createElement('div'));
-                    }
-
-                    if (nextPost) {
-                        const nextLink = document.createElement('a');
-                        nextLink.className = 'btn btn-primary text-uppercase';
-                        nextLink.href = nextPost.href;
-                        nextLink.innerHTML = 'Next Post →';
-                        navDiv.appendChild(nextLink);
-                    }
-                    
-                    navContainer.appendChild(navDiv);
-                }
-
-                if (postId) {
-                    fetch(postId + '/content.md')
-                        .then(response => {
-                            if (!response.ok) throw new Error('Network response was not ok');
-                            return response.text();
-                        })
-                        .then(text => {
-                            // --- 메타데이터와 콘텐츠 분리 ---
-                            const parts = text.split('--- 여기부터 실제 콘텐츠 ---');
-                            const metadata = parts[0];
-                            const content = parts.length > 1 ? parts[1] : '';
-                            
-                            const lines = metadata.split('\n');
-                            const title = lines[0].replace('title: ', '').trim();
-                            const date = lines[1].replace('date: ', '').trim();
-                            const author = lines[2].replace('author: ', '').trim();
-        
-                            // --- HTML에 정보 삽입 ---
-                            document.getElementById('post-title').innerText = title;
-                            document.title = title;
-                            document.getElementById('post-meta').innerText = `Posted by ${author} on ${date}`;
-                            
-                            const postContentEl = document.getElementById('post-content');
-                            // postContentEl.innerHTML = marked.parse(content);
-
-                            // toc 
-                            let finalHtmlContent;
-
-                            // 1. content.md에 이미 TOC가 있는지 확인
-                            if (content.includes('<nav class="toc">')) {
-                                // 이미 있다면, 그대로 파싱만 진행
-                                finalHtmlContent = marked.parse(content);
-                            } else {
-                                // TOC가 없다면, 자동 생성 로직 실행
-                                const parsedBodyContent = marked.parse(content);
-                                const { tocHtml, contentHtml } = generateTOC(parsedBodyContent);
-                                
-                                if (tocHtml) {
-                                    const tocNavHtml = `<nav class="toc">${tocHtml}</nav>`;
-                                    finalHtmlContent = tocNavHtml + contentHtml;
-                                } else {
-                                    finalHtmlContent = contentHtml;
-                                }
-                            }
-                            
-                            postContentEl.innerHTML = finalHtmlContent;
-
-                            // 0. 이전/다음 글 내비게이션 생성 및 현재 글 강조
-                            setupNavigationAndHighlighting();
-        
-                            // 1. Prism.js 코드 하이라이팅
-                            Prism.highlightAllUnder(postContentEl);
-        
-                            // 2. KaTeX 수학 공식 렌더링
-                            renderMathInElement(postContentEl, {
-                                delimiters: [
-                                    {left: '$$', right: '$$', display: true},
-                                    {left: '$', right: '$', display: false},
-                                    {left: '\\\\(', right: '\\\\)', display: false},
-                                    {left: '\\\\[', right: '\\\\]', display: true}
-                                ],
-                                throwOnError: false
-                            });
-
-                            if (typeof initializeToc === 'function') initializeToc();
-                            if (typeof initializeLanguageToggle === 'function') initializeLanguageToggle();
-                            if (typeof initializeKoreanFonts === 'function') initializeKoreanFonts();
-
-                            console.log(postId)
-                            if (postId === '240917_3djs/') { 
-                                console.log('aaaa')
-                                import('../3DViewer/js/gaussian_viewer.js')
-                                    .then(module => {
-                                        // 모듈 로드가 성공하면, export된 함수를 실행합니다.
-                                        module.initGaussianViewer();
-                                    })
-                                    .catch(err => {
-                                        console.error("Failed to load the Gaussian viewer script:", err);
-                                    });
-                            }
-        
-                            // 3. 공유 버튼 기능 초기화
-                            if (typeof initializeShareFunctionality === 'function') {
-                                initializeShareFunctionality();
-                            }
-                            
-                            // 4. 언어 토글 기능의 초기 상태 설정 (기본으로 영어 표시)
-                            const savedLanguage = localStorage.getItem('language') || 'eng';
-
-                            setLanguage(savedLanguage);
-                        })
-                        .catch(error => {
-                            console.error('Error fetching post:', error);
-                            document.getElementById('post-content').innerText = 'Failed to load post content.';
-                        });
-                }
-            });
-        </script>
-
-        <!-- Scripts from original file for interactivity -->
+        <script src="../js/blog_render.js"></script>
         <script>
             // Functions for Google Model Viewer interactivity
             var window_state = {};
