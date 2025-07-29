@@ -24,12 +24,36 @@ export function initGaussianViewer() {
     camera.up = new THREE.Vector3().fromArray([0, -1, -0.6]).normalize();
     camera.lookAt(new THREE.Vector3().fromArray([0, 3, 0]));
 
+    // const viewer = new GaussianSplats3D.Viewer({
+    //     'selfDrivenMode': false, // selfDrivenMode는 false로 하고 수동으로 update를 호출하는 것이 안정적입니다.
+    //     'renderer': renderer,
+    //     'camera': camera,
+    //     'useBuiltInControls': true,
+    //     // ... 나머지 옵션들은 그대로 ...
+    // });
+
     const viewer = new GaussianSplats3D.Viewer({
-        'selfDrivenMode': false, // selfDrivenMode는 false로 하고 수동으로 update를 호출하는 것이 안정적입니다.
+        'selfDrivenMode': true,
         'renderer': renderer,
         'camera': camera,
         'useBuiltInControls': true,
-        // ... 나머지 옵션들은 그대로 ...
+        'ignoreDevicePixelRatio': false,
+        'gpuAcceleratedSort': true,
+        'enableSIMDInSort': true,
+        'sharedMemoryForWorkers': false,
+        'integerBasedSort': true,
+        'halfPrecisionCovariancesOnGPU': true,
+        'dynamicScene': false,
+        'webXRMode': GaussianSplats3D.WebXRMode.None,
+        'renderMode': GaussianSplats3D.RenderMode.OnChange,
+        'sceneRevealMode': GaussianSplats3D.SceneRevealMode.Instant,
+        'antialiased': false,
+        'focalAdjustment': 1.0,
+        'logLevel': GaussianSplats3D.LogLevel.None,
+        'sphericalHarmonicsDegree': 0,
+        'enableOptionalEffects': false,
+        'plyInMemoryCompressionLevel': 2,
+        'freeIntermediateSplatData': false
     });
 
     viewer.addSplatScene('https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/guitar_gs.ksplat', {
