@@ -187,7 +187,7 @@ const postsData = [
     {
         id: '210602_cv4',
         title_eng: 'Computer Vision (4): 3D Stereo Vision and Epipolar Geometry',
-        title_kor: 'Computer Vision (4): 3D Stereo Vision and Epipolar Geometry',
+        title_kor: '컴퓨터 비전 (4): 3D Stereo Vision and Epipolar Geometry',
         subtitle_eng: 'Camera Projection, Stereo, and Epipolar Geometry',
         subtitle_kor: 'Camera Projection, Stereo, and Epipolar Geometry',
         date: '2021-06-02',
@@ -198,7 +198,7 @@ const postsData = [
     {
         id: '210502_cv3',
         title_eng: 'Computer Vision (3): Homography and Image Alignment',
-        title_kor: 'Computer Vision (3): Homography and Image Alignment',
+        title_kor: '컴퓨터 비전 (3): Homography and Image Alignment',
         subtitle_eng: 'Image Transformation, Homography, and Correspondence Matching',
         subtitle_kor: 'Image Transformation, Homography, and Correspondence Matching',
         date: '2021-05-02',
@@ -209,7 +209,7 @@ const postsData = [
     {
         id: '210402_cv2',
         title_eng: 'Computer Vision (2): Feature Extraction and Detection',
-        title_kor: 'Computer Vision (2): Feature Extraction and Detection',
+        title_kor: '컴퓨터 비전 (2): Feature Extraction and Detection',
         subtitle_eng: 'Image Gradient, Sobel Filter, LoG, and Detection',
         subtitle_kor: 'Image Gradient, Sobel Filter, LoG, and Detection',
         date: '2021-04-02',
@@ -220,7 +220,7 @@ const postsData = [
     {
         id: '210302_cv1',
         title_eng: 'Computer Vision (1): Image Filter and Morphology',
-        title_kor: 'Computer Vision (1): Image Filer and Morphology',
+        title_kor: '컴퓨터 비전 (1): Image Filer and Morphology',
         subtitle_eng: 'Various Image Filters and Morphology (Erosion & Dilation)',
         subtitle_kor: '다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여',
         date: '2021-03-02',
