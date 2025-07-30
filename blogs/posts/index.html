@@ -46,6 +46,13 @@
                 height: 100vh; 
                 margin-bottom: 3px;
             }
+            .main-content a {
+                color: #15B886;
+                text-decoration: none;
+            }
+            .main-content a:hover{
+                color: #11926b;
+            }
             table {
                 width: 100%;
                 border-collapse: collapse;
@@ -158,65 +165,9 @@
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7" id="series">
-                        <div class="accordion" id="accordionExample">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    <strong> Series </strong>
-                                </button>
-                                </h2>
-                                <div id="collapseOne" class="accordion-collapse collapse collapse" data-bs-parent="#accordionExample">
-                                    <div class="accordion-body">
-                                        <ol>
-                                            <li>
-                                                <a href="?id=211128_fourier">Why Positional Encoding Makes NeRF more Powerful</a>
-                                            </li>
-                                            <li>
-                                                <a href="?id=230202_ngp">Instant NGP Review & Re-implementation</a>
-                                            </li>
-                                            <li>
-                                                <a href="?id=231130_nerf_in_game">Can NeRF be Used in Game?</a>
-                                            </li>
-                                            <li>
-                                                <a href="?id=240226_sora">Can Sora Understand 3D?</a>
-                                            </li>
-                                            <li>
-                                                <a href="?id=240426_diffusion_depth">Is Diffusion's Estimated Depth Really Good?</a>
-                                            </li>
-                                            <li>
-                                                <a href="?id=240602_2dgs">Under the 3D: Geometrically Accurate 2D Gaussian Splatting </a>
-                                            </li>
-                                            <li>
-                                                <a href="?id=240721_sfm">Radiance Fields from Deep-based Structure-from-Motion</a>
-                                            </li>
-                                            <li>
-                                                <a href="?id=240805_gs">A Comprehensive Analysis of Gaussian Splatting Rasterization</a>
-                                            </li>
-                                            <li>
-                                                <a href="?id=240823_grt">Don't Rasterize, But Ray Trace 3D Gaussian</a>
-                                            </li>
-                                            <li>
-                                                <a href="?id=240917_3djs">Add Gaussian Splatting to Your Website</a>
-                                            </li>
-                                            <li>
-                                                <a href="?id=250106_tomography">Neural Rendering Beyond Photography</a>
-                                            </li>
-                                            <li>
-                                                <a href="?id=250302_3d_latent_diffusion">Deep Dive into 3D Latent Diffusion</a>
-                                            </li>
-                                            <li>
-                                                <a href="?id=250310_model_viewer">3D Model Viewer in Web</a>
-                                            </li>
-                                            <li>
-                                                <a href="?id=250702_building_large_3d_1">Building Large 3D Generative Model (1) Data pre-processing</a>
-                                            </li>
-                                        </ol>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- Content from markdown will be injected here -->
                     </div>
-                    <div class="col-md-10 col-lg-8 col-xl-7" id="post-content">
+                    <div class="col-md-10 col-lg-8 col-xl-7 main-content" id="post-content">
                         <!-- Content from markdown will be injected here -->
                     </div>
                     <div class="col-md-10 col-lg-8 col-xl-7" id="post-nav-block">
@@ -253,6 +204,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         
         <!-- Main script to fetch and render content -->
+        <script src="../js/posts-data.js"></script>
         <script src="../js/blog_render.js"></script>
         <script>
             // Functions for Google Model Viewer interactivity

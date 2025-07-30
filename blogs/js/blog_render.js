@@ -8,42 +8,168 @@ const postLangToggleButton = document.getElementById('lang-toggle-post');
  * @param {string} postId - 현재 포스트의 ID
  * @param {string} lang - 로드할 언어 ('eng' 또는 'kor')
  */
+function getPostTitle(post, lang) {
+    return post[`title_${lang}`] || post.title_eng;
+}
+
+function renderSeries(postId, lang) {
+    const seriesContainer = document.getElementById('series');
+    if (!postsData || !seriesInfo) {
+        seriesContainer.style.display = 'none';
+        return;
+    }
+
+    const currentPost = postsData.find(p => p.id === postId);
+    if (!currentPost || !currentPost.series) {
+        seriesContainer.style.display = 'none';
+        return;
+    }
+
+    const seriesId = currentPost.series;
+    const postsInSeries = postsData
+        .filter(p => p.series === seriesId)
+        .sort((a, b) => new Date(a.date) - new Date(b.date)); 
+
+    if (postsInSeries.length <= 1) {
+        seriesContainer.style.display = 'none';
+        return;
+    }
+
+    const seriesTitle = seriesInfo[seriesId]?.[lang] || seriesInfo[seriesId]?.['eng'] || 'Series';
+
+    const listItems = postsInSeries.map(post => {
+        const title = getPostTitle(post, lang);
+        if (post.id === postId) {
+            return `<li><strong>${title}</strong></li>`;
+        } else {
+            return `<li><a href="?id=${post.id}">${title}</a></li>`;
+        }
+    }).join('');
+
+    const seriesHtml = `
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        <strong>${seriesTitle}</strong>
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <ol>${listItems}</ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    seriesContainer.innerHTML = seriesHtml;
+    seriesContainer.style.display = 'block';
+}
+
+function setupPostNavigation(postId, lang) {
+    const navContainer = document.getElementById('post-navigation');
+    navContainer.innerHTML = ''; // 기존 내비게이션 초기화
+
+    const currentPost = postsData.find(p => p.id === postId);
+    if (!currentPost || !currentPost.series) {
+        return; // 시리즈가 없는 경우 내비게이션 생성 안 함
+    }
+
+    const postsInSeries = postsData
+        .filter(p => p.series === currentPost.series)
+        .sort((a, b) => new Date(b.date) - new Date(a.date)); // 최신순 정렬
+
+    const currentIndex = postsInSeries.findIndex(p => p.id === postId);
+    const olderPost = postsInSeries[currentIndex + 1];
+    const nextPost = postsInSeries[currentIndex - 1];
+
+    const navDiv = document.createElement('div');
+    navDiv.className = 'd-flex justify-content-between mb-4';
+
+    if (olderPost) {
+        const title = getPostTitle(olderPost, lang);
+        const truncatedTitle = title.length > 25 ? title.substring(0, 25) + '...' : title;
+        const olderLink = document.createElement('a');
+        olderLink.className = 'btn btn-light text-uppercase';
+        olderLink.href = `?id=${olderPost.id}`;
+        olderLink.innerHTML = `← Older Post<br><small style="font-size: 0.7rem; text-transform: none;">${truncatedTitle}</small>`;
+
+        olderLink.style.width = '40%';
+        olderLink.style.textAlign = 'center';
+
+        navDiv.appendChild(olderLink);
+    } else {
+        if (nextPost) {
+            navDiv.appendChild(document.createElement('div'));
+       }
+    }
+
+    if (nextPost) {
+        const title = getPostTitle(nextPost, lang);
+        const truncatedTitle = title.length > 25 ? title.substring(0, 25) + '...' : title;
+        const nextLink = document.createElement('a');
+        nextLink.className = 'btn btn-light text-uppercase';
+        nextLink.href = `?id=${nextPost.id}`;
+        nextLink.innerHTML = `Next Post →<br><small style="font-size: 0.7rem; text-transform: none;">${truncatedTitle}</small>`;
+
+        nextLink.style.width = '40%';
+        nextLink.style.textAlign = 'center';
+        navDiv.appendChild(nextLink);
+    } else {
+        const allSeriesIds = Object.keys(seriesInfo);
+        const otherSeriesIds = allSeriesIds.filter(id => id !== currentPost.series);
+
+        if (otherSeriesIds.length > 0) {
+            const randomSeriesId = otherSeriesIds[Math.floor(Math.random() * otherSeriesIds.length)];
+            const latestPostInRandomSeries = postsData
+                .filter(p => p.series === randomSeriesId)
+                .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+
+            if (latestPostInRandomSeries) {
+                const seriesTitle = seriesInfo[randomSeriesId][lang] || seriesInfo[randomSeriesId]['eng'];
+                const recLink = document.createElement('a');
+                recLink.className = 'btn btn-outline-secondary text-uppercase'; 
+                recLink.href = `?id=${latestPostInRandomSeries.id}`;
+                recLink.innerHTML = `Explore Series<br><small style="font-size: 0.7rem; text-transform: none;">${seriesTitle}</small>`;
+                recLink.style.width = '40%';
+                navDiv.appendChild(recLink);
+            }
+        } else {
+            navDiv.appendChild(document.createElement('div')); // 공간 차지
+        }
+    }
+
+    navContainer.appendChild(navDiv);
+}
+
 function loadAndRenderPost(postId, lang) {
     if (!postId) {
-        console.error("포스트 ID가 없습니다.");
+        console.error("There is no Post ID.");
         return;
     }
 
     const postContentEl = document.getElementById('post-content');
-    
-    // UI를 즉시 업데이트하여 사용자에게 현재 로드 중인 언어를 알려줍니다.
     updatePostToggleUI(lang);
 
     const primaryUrl = `${postId}/content-${lang}.md`;
     const fallbackUrl = `${postId}/content-eng.md`;
 
-    // 1. 선택된 언어의 마크다운 파일을 먼저 요청합니다.
     fetch(primaryUrl)
         .then(response => {
-            // 2. 요청이 실패했고(예: 404 Not Found) 그 언어가 기본 언어(eng)가 아니라면,
             if (!response.ok && lang !== 'eng') {
-                console.warn(`'${primaryUrl}' 파일을 찾을 수 없습니다. 기본 언어(영어)로 대체합니다.`);
-                // 3. 기본 언어(영어) 파일로 다시 요청을 시도합니다.
+                console.warn(`'${primaryUrl}' Cannot find md file, changed to english`);
                 return fetch(fallbackUrl);
             }
-            return response; // 처음 요청이 성공했으면 그대로 반환합니다.
+            return response; 
         })
         .then(response => {
-            // 대체 요청까지 실패했다면 에러를 발생시킵니다.
             if (!response.ok) {
-                throw new Error(`'${fallbackUrl}' 파일도 찾을 수 없습니다. 포스트가 존재하지 않을 수 있습니다.`);
+                throw new Error(`'${fallbackUrl}' also cannot find.`);
             }
             return response.text();
         })
         .then(text => {
-            // --- 4. 성공적으로 가져온 텍스트로 페이지를 렌더링합니다. (이 부분은 기존 로직과 유사) ---
-            
-            // 메타데이터와 콘텐츠 분리
             const parts = text.split('--- 여기부터 실제 콘텐츠 ---');
             const metadata = parts[0];
             const content = parts.length > 1 ? parts[1].trim() : '';
@@ -74,12 +200,11 @@ function loadAndRenderPost(postId, lang) {
 
             postContentEl.innerHTML = finalHtmlContent;
 
-            
-            if (!document.querySelector('#post-navigation div')) {
-                setupNavigationAndHighlighting();
-            }
+            const postId = primaryUrl.split('/')[0]
+            console.log(postId)
+            setupPostNavigation(postId, lang);
 
-            Prism.highlightAllUnder(postContentEl); // 코드 하이라이팅
+            Prism.highlightAllUnder(postContentEl); 
             renderMathInElement(postContentEl, {
                     delimiters: [
                         {left: '$$', right: '$$', display: true},
@@ -88,17 +213,16 @@ function loadAndRenderPost(postId, lang) {
                         {left: '\\[', right: '\\]', display: true}
                     ],
                     throwOnError : false
-                }); // 수학 공식 렌더링
-            if (typeof initializeToc === 'function') initializeToc(); // 목차 스크롤 기능
+                }); 
+            if (typeof initializeToc === 'function') initializeToc(); 
+            if (typeof initializeShareFunctionality === 'function') initializeShareFunctionality();
             
-            // 특정 포스트를 위한 커스텀 스크립트 로드
-            const postId = primaryUrl.split('/')[0]
-            console.log(postId)
+            // custom script code for three-js viewer
+            
             if (postId === '240917_3djs') { 
                 console.log('aaaa')
                 import('../3DViewer/js/gaussian_viewer.js')
                     .then(module => {
-                        // 모듈 로드가 성공하면, export된 함수를 실행합니다.
                         module.initGaussianViewer();
                     })
                     .catch(err => {
@@ -106,30 +230,21 @@ function loadAndRenderPost(postId, lang) {
                     });
             }
 
-            if (typeof initializeShareFunctionality === 'function') initializeShareFunctionality();
+            
         })
         .catch(error => {
-            console.error('포스트 콘텐츠 로딩 중 에러 발생:', error);
-            postContentEl.innerHTML = '<p style="text-align: center;">포스트를 불러오는 데 실패했습니다.<br>페이지가 존재하지 않거나, 준비 중일 수 있습니다.</p>';
+            console.error('Error Loading:', error);
+            postContentEl.innerHTML = '<p style="text-align: center;">Faild to Load the Content.</p>';
         });
 }
 
 
-// --- 3. 헬퍼 및 이벤트 핸들러 함수들 ---
-
-/**
- * 포스트 페이지의 언어 토글 버튼 UI를 업데이트하는 함수
- */
 function updatePostToggleUI(lang) {
     if (postLangToggleButton) {
-        // "한"은 너무 작아서 "KOR" 과 "ENG" 로 변경하는 것을 추천합니다.
         postLangToggleButton.textContent = (lang === 'eng') ? 'kor' : 'eng';
     }
 }
 
-/**
- * 언어 토글 버튼 클릭 이벤트 리스너
- */
 if (postLangToggleButton) {
     postLangToggleButton.addEventListener('click', function() {
         const urlParams = new URLSearchParams(window.location.search);
@@ -138,31 +253,23 @@ if (postLangToggleButton) {
         const currentLang = localStorage.getItem('language') || 'eng';
         const newLang = (currentLang === 'eng') ? 'kor' : 'eng';
         
-        // 1. localStorage에 새로운 언어 설정을 저장합니다.
         localStorage.setItem('language', newLang);
 
-        // 2. 저장된 새 언어로 콘텐츠를 다시 로드합니다.
+        renderSeries(postId, newLang); 
         loadAndRenderPost(postId, newLang);
     });
 }
 
-/**
- * 페이지가 처음 로드되었을 때 실행되는 메인 로직
- */
 document.addEventListener("DOMContentLoaded", function() {
     const urlParams = new URLSearchParams(window.location.search);
     const postId = urlParams.get('id');
-
-    // localStorage에서 언어 설정을 가져오거나, 없으면 'eng'를 기본값으로 사용합니다.
     const lang = localStorage.getItem('language') || 'eng';
 
-    // 가져온 설정으로 포스트를 로드합니다.
-    loadAndRenderPost(postId, lang);
+    if (postId) {
+        renderSeries(postId, lang);
+        loadAndRenderPost(postId, lang);
+    }
 });
-
-
-// --- 4. 기존에 있던 독립적인 함수들 (수정 없이 그대로 사용) ---
-// (generateTOC, setupNavigationAndHighlighting 등은 여기에 위치합니다)
 
 function generateTOC(htmlContent) {
     const tempElement = document.createElement('div');

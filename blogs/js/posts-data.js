@@ -1,10 +1,21 @@
 const postsData = [
     {
+        id: '250710_building_large_3d_2',
+        title_eng: 'Building Large 3D Generative Model (2) VAE and DiT Deep Dive',
+        title_kor: 'Large 3D Generative Model 구축하기 (2) VAE and DiT 톺아보기',
+        subtitle_eng: 'VAE and DiT Architecture for Vecset vs. Sparse-Voxel',
+        subtitle_kor: 'VAE and DiT 구조 분석 for Vecset vs. Sparse-Voxel',
+        date: '2025-07-10',
+        category: 'post', // 'post' 또는 'note'
+        series: '3d-generation',   // 시리즈가 있으면 시리즈 ID, 없으면 null
+        languages: ['kor']
+    },
+    {
         id: '250702_building_large_3d_1',
         title_eng: 'Building Large 3D Generative Model (1) Data pre-processing',
         title_kor: 'Large 3D Generative Model 구축하기 (1) Data pre-processing',
-        subtitle_eng: 'Watertight mesh conversion and Salient edge sampling',
-        subtitle_kor: 'Watertight mesh 변환과 salient edge sampling',
+        subtitle_eng: 'Watertight Mesh Conversion and Salient Edge Sampling',
+        subtitle_kor: 'Watertight Mesh 변환과 Salient Edge Sampling',
         date: '2025-07-02',
         category: 'post', // 'post' 또는 'note'
         series: '3d-generation',   // 시리즈가 있으면 시리즈 ID, 없으면 null
@@ -121,7 +132,7 @@ const postsData = [
     {
         id: '231130_nerf_in_game',
         title_eng: 'Can NeRF be used in Game?',
-        title_kor: 'NeRF를 게임 제작에서 이용할 수 있을까?',
+        title_kor: 'NeRF 를 게임 제작에서 이용할 수 있을까?',
         subtitle_eng: 'Explore Limitations of NeRF',
         subtitle_kor: 'NeRF 의 단점을 살펴보자',
         date: '2023-11-30',
@@ -147,38 +158,82 @@ const postsData = [
         subtitle_eng: 'Review of Fourier Features Let Networks Learn High-Frequency Functions',
         subtitle_kor: 'Fourier Features Let Networks Learn High-Frequency Functions 리뷰',
         date: '2021-11-28',
-        category: 'note',
+        category: 'post',
         series: 'nerf-and-gs',
         languages: ['eng']
     },
     {
-        id: '210909_lin_alg_2',
-        title_eng: 'Linear Algebra for Deeplearning (2): Advanced',
-        title_kor: '딥러닝을 위한 선형대수 (2)',
-        subtitle_eng: 'Essentials of Linear Algebra and Its Intuitions',
-        subtitle_kor: '선형대수의 필수 개념들과 이에 대한 직관 정리',
-        date: '2021-09-09',
+        id: '210910_lin_alg_2',
+        title_eng: 'Linear Algebra for Deeplearning (2): Change of Basis',
+        title_kor: '딥러닝을 위한 선형대수 (2): Change of Basis',
+        subtitle_eng: 'Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)',
+        subtitle_kor: '대각화와 고윳값, 특이값 분해, Principal Component Analysis (PCA)',
+        date: '2021-09-10',
         category: 'note',
-        series: null,
+        series: 'linear-algebra',
         languages: ['kor']
     }, 
     {
         id: '210909_lin_alg_1',
-        title_eng: 'Linear Algebra for Deeplearning (1): Linear Systems',
-        title_kor: '딥러닝을 위한 선형대수 (1)',
-        subtitle_eng: 'Essentials of Linear Algebra and Its Intuitions',
-        subtitle_kor: '선형대수의 필수 개념들과 이에 대한 직관 정리',
+        title_eng: 'Linear Algebra for Deeplearning (1): Linear System',
+        title_kor: '딥러닝을 위한 선형대수 (1): Linear System',
+        subtitle_eng: 'Linear System, Linear Transformation, and its Intuitions',
+        subtitle_kor: '선형시스템과 선형변환, 이에 대한 직관들',
         date: '2021-09-09',
         category: 'note',
-        series: null,
+        series: 'linear-algebra',
+        languages: ['kor']
+    }, 
+    {
+        id: '210602_cv4',
+        title_eng: 'Computer Vision (4): 3D Stereo Vision and Epipolar Geometry',
+        title_kor: 'Computer Vision (4): 3D Stereo Vision and Epipolar Geometry',
+        subtitle_eng: 'Camera Projection, Stereo, and Epipolar Geometry',
+        subtitle_kor: 'Camera Projection, Stereo, and Epipolar Geometry',
+        date: '2021-06-02',
+        category: 'note',
+        series: 'computer-vision',
+        languages: ['kor']
+    }, 
+    {
+        id: '210502_cv3',
+        title_eng: 'Computer Vision (3): Homography and Image Alignment',
+        title_kor: 'Computer Vision (3): Homography and Image Alignment',
+        subtitle_eng: 'Image Transformation, Homography, and Correspondence Matching',
+        subtitle_kor: 'Image Transformation, Homography, and Correspondence Matching',
+        date: '2021-05-02',
+        category: 'note',
+        series: 'computer-vision',
+        languages: ['kor']
+    }, 
+    {
+        id: '210402_cv2',
+        title_eng: 'Computer Vision (2): Feature Extraction and Detection',
+        title_kor: 'Computer Vision (2): Feature Extraction and Detection',
+        subtitle_eng: 'Image Gradient, Sobel Filter, LoG, and Detection',
+        subtitle_kor: 'Image Gradient, Sobel Filter, LoG, and Detection',
+        date: '2021-04-02',
+        category: 'note',
+        series: 'computer-vision',
+        languages: ['kor']
+    }, 
+    {
+        id: '210302_cv1',
+        title_eng: 'Computer Vision (1): Image Filter and Morphology',
+        title_kor: 'Computer Vision (1): Image Filer and Morphology',
+        subtitle_eng: 'Various Image Filters and Morphology (Erosion & Dilation)',
+        subtitle_kor: '다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여',
+        date: '2021-03-02',
+        category: 'note',
+        series: 'computer-vision',
         languages: ['kor']
     }, 
 ];
 
 const seriesInfo = {
     'nerf-and-gs': {
-        eng: 'Radiance Fields & Gausian Splatting', 
-        kor: 'Radiance Fields Gaussian Splatting 완전 정복',
+        eng: 'Radiance Fields & Gaussian Splatting', 
+        kor: 'Radiance Fields & Gaussian Splatting',
     },
     '3d-generation': {
         eng:'3D Generative AI',
@@ -187,5 +242,13 @@ const seriesInfo = {
     'web-3d': {
         eng:'3D in Web',
         kor:'웹에서 3D 구현하기'
+    },
+    'linear-algebra': {
+        eng:'Linear Algrebra for Deeplearning',
+        kor:'딥러닝을 위한 선형대수'
+    },
+    'computer-vision': {
+        eng:'Classical Computer Vision',
+        kor:'고전 Computer Vision'
     },
 };

@@ -205,12 +205,12 @@ body {
 .toc {
   position: fixed;
   top: 50%;
-  left: 75vw;
+  left: 76vw;
   right: 5vw;
   padding: 1em;
-  width: 25vw;
+  width: 24vw;
   line-height: 2;
-  font-size: 0.8em;
+  font-size: 0.77em;
   display: none;
   transform: translateY(-50%);
 }
@@ -11100,8 +11100,8 @@ header.masthead .post-heading .meta a {
   cursor: pointer;
   position: fixed;
   display: none;
-  top: 35%;
-  right: 77vw;
+  top: 40%;
+  right: 78vw;
   z-index: 2;
 }
 

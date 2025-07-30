@@ -37,8 +37,17 @@ def process_markdown_file(post_path, post_folder_name, md_file_path):
 
         # 'http' 또는 'www'로 시작하는 외부 이미지 링크를 찾는 정규식
         # 지원하는 확장자: png, jpg, jpeg, webp, gif
-        img_pattern = re.compile(r'<img[^>]+src="((?:https?:\/\/|www\.)[^"]+\.(?:png|jpg|jpeg|webp|gif))"', re.IGNORECASE)
-        external_images = img_pattern.findall(content)
+        # img_pattern = re.compile(r'"((?:?:\/\/|www\.)[^"]+\.(?:png|jpg|jpeg|webp|gif))"', re.IGNORECASE)
+        # img_pattern = re.compile(r'!\[.*?\]\((https?:\/\/[^\s)]+\.(?:png|jpg|jpeg|webp|gif))\)', re.IGNORECASE)
+        # external_images = img_pattern.findall(content)
+        md_img_pattern = re.compile(
+            r'!\[.*?\]\((https?:\/\/[^\s)]+\.(?:png|jpg|jpeg|webp|gif))\)', re.IGNORECASE)
+
+        html_img_pattern = re.compile(
+            r'<img[^>]+src=[\'"](https?:\/\/[^\'"]+\.(?:png|jpg|jpeg|webp|gif))[\'"]', re.IGNORECASE)
+
+        external_images = md_img_pattern.findall(content) + html_img_pattern.findall(content)
+
 
         if not external_images:
             print("외부 이미지를 찾지 못했습니다. 다음 게시글로 넘어갑니다.")

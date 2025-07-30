@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let allPostsHTML = '';
         sortedPosts.forEach(post => {
+            if (post.category != 'post') return;
             allPostsHTML += createPostPreviewHTML(post, lang);
         });
 
@@ -105,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
             seriesHTML += `
                 <div class="series-group mb-5">
                     <h3 class="series-title">${seriesTitle}</h3>
-                    <ol class="series-post-list">
+                    <ul class="series-post-list">
             `;
             
             postsInSeries.forEach(post => {
@@ -118,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
             });
 
-            seriesHTML += `</ol></div>`;
+            seriesHTML += `</ul></div>`;
         }
 
         if (seriesHTML === '') {
@@ -139,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
         renderSeries(lang);
 
         if (langToggleButton) {
-            langToggleButton.textContent = (lang === 'eng') ? 'kor' : 'eng';
+            langToggleButton.textContent = (lang === 'eng') ? 'KOR' : 'ENG';
         }
     }
 
