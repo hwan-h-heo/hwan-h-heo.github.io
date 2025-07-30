@@ -1,0 +1,36 @@
+<svg width="400" height="250" xmlns="http://www.w3.org/2000/svg">
+<style>
+.label { font-family: Arial, sans-serif; font-size: 12px; }
+.title { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; text-anchor: middle; }
+.original-signal { stroke: #4a90e2; stroke-width: 2; fill: none; }
+.aliased-signal { stroke: #d0021b; stroke-width: 2; fill: none; stroke-dasharray: 5,5; }
+.sample-points { fill: #d0021b; }
+.grid { stroke: #ccc; stroke-width: 0.5; }
+</style>
+
+
+<!-- Grid Lines -->
+<path d="M 50 50 H 350 M 50 140 H 350 M 50 230 H 350" class="grid" />
+
+<!-- Original Signal -->
+<path id="original" d="M 50 140 C 75 50, 125 50, 150 140 S 225 230, 250 140 S 325 50, 350 140" class="original-signal"/>
+
+<!-- Aliased Signal from Samples -->
+<path d="M 50 140 C 150 230, 250 50, 350 140" class="aliased-signal"/>
+
+<!-- Sample Points -->
+<circle cx="50" cy="140" r="4" class="sample-points"/>
+<circle cx="116.67" cy="65.5" r="4" class="sample-points"/>
+<circle cx="183.33" cy="192.5" r="4" class="sample-points"/>
+<circle cx="250" cy="140" r="4" class="sample-points"/>
+<circle cx="316.67" cy="87.5" r="4" class="sample-points"/>
+<circle cx="350" cy="140" r="4" class="sample-points"/>
+
+<!-- Legend -->
+<line x1="50" y1="210" x2="80" y2="210" style="stroke:#4a90e2; stroke-width:2;"/>
+<text x="90" y="215" class="label">Original Signal</text>
+<line x1="50" y1="230" x2="80" y2="230" style="stroke:#d0021b; stroke-width:2; stroke-dasharray:5,5;"/>
+<text x="90" y="235" class="label">Aliased Signal</text>
+<circle cx="200" cy="220" r="3" class="sample-points"/>
+<text x="210" y="225" class="label">Sampled Points</text>
+</svg>

@@ -1,4 +1,4 @@
-title: Linear Algebra for Deep Learning (2)
+title: Linear Algebra for Deep Learning (2): Change of Basis
 date: September 09, 2021
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
@@ -24,11 +24,17 @@ https://www.deeplearningbook.org/contents/linear_algebra.html -->
 
 ---
 
-- [이전 글](./?id=210909_lin_1)에 이어...
+- [이전 글](./?id=210909_lin_alg_1)에 이어...
+
+#### TL;DR
+이 글에서는 basis 변화를 통해 선형변환을 해석하는 기하학적 관점을 중심으로, 다양한 행렬 분해 (decomposition)와 그 의미를 살펴본다.
+이를 통해 선형변환의 본질은 좌표계 (basis) 와의 상호작용 속에 있고, 이를 잘 이해하면 다양한 분해 방식과 딥러닝에서의 응용까지 자연스럽게 연결된다는 것을 이해해보자.
+
+---
 
 ## 3. Change of basis
 
-### 3.1. **Quadratic Form $A^{-1}MA$ 의 해석**
+### 3.1. **Quadratic Form**
 
 - 선형방정식계를 통해서, $A^{-1}MA$  꼴로 나타내지는 quadratic form 의 기하학적인 해석이 가능하다. 다음을 보자
     
@@ -182,7 +188,7 @@ $$
 
 ### 3.5. **Moore-Penrose pseudo-inverse Matrix**
 
-책에는 간단히 결과만 나와있으므로, 해당 유도 과정을 자세하게 기술하겠다. 
+유도 과정을 자세하게 보자.
 
 $$
 Ax = b
@@ -203,8 +209,7 @@ $$
 </p>
 
 즉 pseudo inverse matrix 는 $A^TA$의 eigenvalue의 역수로 정의되는 값을 singular value 로 가지는 행렬이다. 
-
-책의 앞쪽에 등장하는식은 원래 least square solution 의 상황에서 L2 regularization 을 고려한 문제에서 비롯된 공식이다. 
+앞쪽에 등장하는식은 원래 least square solution 의 상황에서 L2 regularization 을 고려한 문제에서 비롯된 공식이다. 
 
 <p>
 $$
@@ -212,7 +217,8 @@ $$
 $$
 </p>
 
-책에 기술되어 있는 least square solution 이 $\min \|x \|_2$ 인 해를 갖는 이유를 기하학적으로 접근하는 방식도 있으나 그림을 그리기 어려운 관계로 이는 생략하겠다. 고등 기하와벡터 정도의 내용으로 그리 어렵진 않다. 
+기술되어 있는 least square solution 이 $\min \|x \|_2$ 인 해를 갖는 이유를 기하학적으로 접근하는 방식도 있으나 그림을 그리기 어려운 관계로 이는 생략하겠다. 
+고등 기하와벡터 정도의 내용으로 그리 어렵진 않다. (이젠 고등이 아닌...)
 
 ## 4. Trace Operator & Norm
 
@@ -222,9 +228,11 @@ $$
 \|x \|_p = (\sum _i x_i ^p ) ^{1 \over p }
 $$
 
+<p>
 $$
-\|A \|_F = \sqrt {\sum_{i,j} A_{i,j}^2}
+\| A {\|}_F = \sqrt{ \sum_{i, j} A_{i,j}^2}
 $$
+</p>
 
 ### 4.2. Trace Operator
 
@@ -270,7 +278,8 @@ $$
 
 ## 5. Principal Component Analysis
 
-책에 기술된 것 이외의 PCA 수식 유도 과정에서 lagrangian multiplier 를 사용하는 것이 일반적이기 때문에 후에 duality 를 다룬 이후에 다시 설명하도록 하겠다. 대신에 자주 사용하는 covariance matrix 에 대해 간단하게 기술하고, lagrangian multiplier 외의 방법으로 PCA와 eigen-decomposition 간의 관계를 살펴본 후 1주차를 마치고자 한다. 
+PCA 수식 유도 과정에서 lagrangian multiplier 를 사용하는 것이 일반적이기 때문에 후에 duality 를 다룬 이후에 다시 설명하도록 하겠다. 
+대신에 자주 사용하는 covariance matrix 에 대해 간단하게 기술하고, lagrangian multiplier 외의 방법으로 PCA와 eigen-decomposition 간의 관계를 살펴보자. 
 
 ### 5.1. Covariance Matrix
 
@@ -301,7 +310,7 @@ $$
 </p>
 
 이라는 형태가 나오는데,  $d^TX^TXd$ 는 $X^TX$ induced ellipsoid 임을 간단하게 알 수 있다.
-책의 수식에서 간단한 첨언을 하면, 제약조건으로써 제시하고 있는 $\|D \|_F = I$ 이라는 수식은 maximization 문제를 풀 때, 단순히 D 행렬의 크기만을 키우면 objective function 값이 커지기 때문에 이 값에 제약을 둔 것이다.  
+수식에서 간단한 첨언을 하면, 제약조건으로써 제시하고 있는 $\|D \|_F = I$ 이라는 수식은 maximization 문제를 풀 때, 단순히 D 행렬의 크기만을 키우면 objective function 값이 커지기 때문에 이 값에 제약을 둔 것이다.  
 
 $X^TX$ 는 symmetric matrix 이므로,  $X ^TX = P^T AP$ 를 만족하는 eigendecomposition diagonal matrix $A$ 를 만들 수 있다. 따라서, $Pd' = d$  인 $d'$  에 대하여,  
 

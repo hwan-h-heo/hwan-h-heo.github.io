@@ -1,0 +1,63 @@
+<svg width="640" height="280" xmlns="http://www.w3.org/2000/svg">
+<style>
+.background { fill: #f0f0f0; }
+.window { fill: none; stroke: red; stroke-width: 2; stroke-dasharray: 4; }
+.text-label { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; text-anchor: middle; }
+.desc-text { font-family: Arial, sans-serif; font-size: 12px; text-anchor: middle; }
+.arrow { stroke: blue; stroke-width: 2; marker-end: url(#arrowhead); }
+.pattern-line { stroke: black; stroke-width: 4; }
+</style>
+
+<defs>
+<marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+<polygon points="0 0, 10 3.5, 0 7" fill="blue" />
+</marker>
+</defs>
+
+<g transform="translate(100, 140)">
+<rect x="-75" y="-100" width="150" height="200" fill="#ffffff" stroke="#cccccc"/>
+<text x="0" y="-80" class="text-label">Flat Region</text>
+
+<rect x="-50" y="-50" width="100" height="100" class="background"/>
+
+<rect x="-20" y="-20" width="40" height="40" class="window"/>
+
+<line x1="0" y1="0" x2="30" y2="30" class="arrow" />
+<line x1="0" y1="0" x2="-30" y2="30" class="arrow" />
+
+<text x="0" y="70" class="desc-text">No change when</text>
+<text x="0" y="85" class="desc-text">window is shifted.</text>
+
+</g>
+
+<g transform="translate(320, 140)">
+<rect x="-75" y="-100" width="150" height="200" fill="#ffffff" stroke="#cccccc"/>
+<text x="0" y="-80" class="text-label">Edge</text>
+
+<rect x="-50" y="-50" width="100" height="100" class="background"/>
+<line x1="0" y1="-50" x2="0" y2="50" class="pattern-line"/>
+
+<rect x="-20" y="-20" width="40" height="40" class="window"/>
+
+<line x1="0" y1="0" x2="0" y2="40" class="arrow" stroke="gray" /> <line x1="0" y1="0" x2="40" y2="0" class="arrow" /> <text x="0" y="70" class="desc-text">No change along</text>
+<text x="0" y="85" class="desc-text">the edge direction.</text>
+
+</g>
+
+<g transform="translate(540, 140)">
+<rect x="-75" y="-100" width="150" height="200" fill="#ffffff" stroke="#cccccc"/>
+<text x="0" y="-80" class="text-label">Corner</text>
+
+<rect x="-50" y="-50" width="100" height="100" class="background"/>
+<path d="M 0 -50 L 0 0 L 50 0" class="pattern-line"/>
+
+<rect x="-20" y="-20" width="40" height="40" class="window"/>
+
+<line x1="0" y1="0" x2="30" y2="30" class="arrow" />
+<line x1="0" y1="0" x2="-30" y2="30" class="arrow" />
+
+<text x="0" y="70" class="desc-text">Large change in</text>
+<text x="0" y="85" class="desc-text">all directions.</text>
+
+</g>
+</svg>

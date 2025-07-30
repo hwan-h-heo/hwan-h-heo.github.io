@@ -1,0 +1,47 @@
+<svg width="600" height="220" xmlns="http://www.w3.org/2000/svg">
+<style>
+.label { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; text-anchor: middle; }
+.desc { font-family: Arial, sans-serif; font-size: 12px; text-anchor: middle; }
+.arrow { stroke: #333; stroke-width: 2; marker-end: url(#arrowhead); }
+.img-bg { fill: #f0f4f8; stroke: #aab; }
+.energy { fill: #ffdddd; }
+.seam { stroke: red; stroke-width: 6; stroke-dasharray: 8 4; }
+</style>
+<defs>
+<marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+<polygon points="0 0, 10 3.5, 0 7" fill="#333" />
+</marker>
+</defs>
+
+<!-- Step 1: Energy Calculation -->
+<g transform="translate(100, 110)">
+<rect x="-70" y="-70" width="140" height="140" class="img-bg"/>
+<path d="M -50 -50 L 50 50 M -50 50 L 50 -50" stroke="#88f" stroke-width="10"/>
+<path d="M -50 -50 L 50 -50 L 50 50 L -50 50 Z" class="energy" fill-opacity="0.5"/>
+<text y="-80" class="label">1. 에너지 계산</text>
+<text y="85" class="desc">그래디언트 계산</text>
+</g>
+
+<!-- Arrow 1 -->
+<line x1="180" y1="110" x2="230" y2="110" class="arrow"/>
+
+<!-- Step 2: Optimal Seam Finding -->
+<g transform="translate(300, 110)">
+<rect x="-70" y="-70" width="140" height="140" class="img-bg"/>
+<path d="M -50 -50 L 50 50 M -50 50 L 50 -50" stroke="#88f" stroke-width="10"/>
+<path d="M 0,-70 C 10,-30 -10,30 0,70" class="seam"/>
+<text y="-80" class="label">2. 최적 Seam 탐색</text>
+<text y="85" class="desc">에너지 합이 최소인 경로</text>
+</g>
+
+<!-- Arrow 2 -->
+<line x1="380" y1="110" x2="430" y2="110" class="arrow"/>
+
+<!-- Step 3: Seam Removal -->
+<g transform="translate(500, 110)">
+<rect x="-60" y="-70" width="120" height="140" class="img-bg"/>
+<path d="M -40 -50 L 40 50 M -40 50 L 40 -50" stroke="#88f" stroke-width="10"/>
+<text y="-80" class="label">3. Seam 제거</text>
+<text y="85" class="desc">이미지 폭 감소</text>
+</g>
+</svg>
