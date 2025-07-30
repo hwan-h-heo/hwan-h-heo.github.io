@@ -187,7 +187,7 @@ $$
     즉 **determinant 의 계산적인 의미는, 원래 span 에서 의미하는 넓이가 얼마만큼 바뀌게 되는지에 관한 값** 이 된다. 
     
 
-<img src='./210909_lin_alg/assets/image.png'>
+<img src='./210909_lin_alg_1/assets/image.png'>
 
 - 따라서 **역행렬이 없는 determinant 가 0인 경우에는, 영역의 넓이를 보존하지 않는다** 로도 해석할 수 있다. 3차원 이상의 dimension 에서는 마찬가지로 영역의 부피를 scaling 하는 값으로 해석된다. 또한 determinant 값이 음수라는 의미는,  basis 방향이 바뀌었다는 의미로 해석할 수 있다.
 
@@ -209,15 +209,15 @@ $$
 $x = A^{-1}b$ 가 될 것이다. 
 Determinant를 통해 square matrix 인 경우 선형방정식계의 해를 구할 수 있는 Cramer's rule 을 기하학적으로 해석하는 것이 가능하다. 아래 그림을 보자. 
 
-<img src='./210909_lin_alg/assets/image-1.png'>
+<img src='./210909_lin_alg_1/assets/image-1.png'>
 
 위의 점을 $(x,y)$ 라고 하자, 그렇다면, x와 y의 값을 넓이로 가지는 영역은 아래와 같이 그릴 수 있다. 
 
-<img src='./210909_lin_alg/assets/image-2.png'>
+<img src='./210909_lin_alg_1/assets/image-2.png'>
 
 각각 $(1,0), (x,y)$ 를 변으로 갖는 넓이가 y인 영역, $(x,y), (0,1)$을 변으로 갖는 넓이가 x인 영역이다. 이 영역을 어떤 행렬 A를 통해 linear transformation 하면, 각각 $det(A) \cdot y , \ det(A) \cdot x$ 의 넓이를 가지게 된다 (determinan 의 성질). 이는 곧 각각 $i' , (x,y)$ 과 $(x,y), j'$ 이 이루는 영역의 넓이가 된다 (아래 그림).  즉, y 와 x 가 의미하는 바는 변환된 basis에서 $i', \ j'$ 을 $(x,y)$ 로 각각 대체하였을 때의 넓이의 비가 된다.
 
-<img src='./210909_lin_alg/assets/image-3.png'>
+<img src='./210909_lin_alg_1/assets/image-3.png'>
 
 예를 들어 아래와 같은 2차 정사각 행렬의 선형방정식계가 있을 때, 
 
