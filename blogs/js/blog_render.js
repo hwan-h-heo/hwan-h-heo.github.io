@@ -150,6 +150,15 @@ function loadAndRenderPost(postId, lang) {
     }
 
     const postContentEl = document.getElementById('post-content');
+    postContentEl.style.fontSize = '1.2rem';
+
+    if (lang === 'kor') {
+        postContentEl.style.fontFamily = "'Noto Sans KR', sans-serif"; 
+    } else {
+        postContentEl.style.fontSize = '';
+        postContentEl.style.fontFamily = '';
+    }
+
     updatePostToggleUI(lang);
 
     const primaryUrl = `${postId}/content-${lang}.md`;

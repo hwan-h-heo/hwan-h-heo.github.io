@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <!-- Add your CSS and JS links here -->
+</head>
+<body>
+    <header>
+        <h1>{{ title }}</h1>
+        <p>Posted by {{ author }} on {{ date }}</p>
+        <nav>
+            {% for lang in available_languages %}
+                <a href="{{ lang.url }}">{{ lang.name }}</a>
+            {% endfor %}
+        </nav>
+    </header>
+    <main>
+        {{ content | safe }}
+    </main>
+</body>
+</html>
