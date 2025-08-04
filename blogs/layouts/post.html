@@ -1,23 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
-    <!-- Add your CSS and JS links here -->
-</head>
-<body>
-    <header>
-        <h1>{{ title }}</h1>
-        <p>Posted by {{ author }} on {{ date }}</p>
-        <nav>
-            {% for lang in available_languages %}
-                <a href="{{ lang.url }}">{{ lang.name }}</a>
-            {% endfor %}
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>{{ title }}</title>
+        <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
+        
+        <!-- Import Maps for three.js -->
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.module.js",
+                    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.150.0/examples/jsm/",
+                    "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
+                }
+            }
+        </script>
+        
+        <!-- External Libraries -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/25.0.0/tween.umd.js"></script>
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+        
+        <!-- Prism.js CSS for Code Highlighting -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+        
+        <!-- Core and Custom CSS -->
+        <link href="../../css/blog_style.css" rel="stylesheet" />
+        <link href="../css/blog_post_specific.css" rel="stylesheet" />
+
+        <!-- Google Model Viewer -->
+        <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+        
+        <!-- Custom Styles from original post -->
+        <style>
+            simple-model-viewer { 
+                display: block; 
+                background-color: #eeeeee;
+                width: 100vw; 
+                height: 100vh; 
+                margin-bottom: 3px;
+            }
+            .main-content a {
+                color: #15B886;
+                text-decoration: none;
+            }
+            .main-content a:hover{
+                color: #11926b;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                width: 50%;
+                border: 1px solid #ddd;
+                padding: 10px;
+                text-align: center;
+                vertical-align: middle;
+            }
+            th {
+                width: 15%; /* Reduced width of the header column */
+                background-color: #f2f2f2; 
+            }
+            pre {
+                background-color: #f4f4f4;
+                padding: 10px;
+                border-radius: 5px;
+                overflow-x: auto;
+                font-size: 0.9rem !important;
+            }
+            pre code {
+                font-size: 0.9rem !important; /* 원하는 크기로 조절하세요. 14px, 1em 등 다른 단위도 가능합니다. */
+            }
+            .wp-block-image figcaption {
+                font-size: 4px;
+                color: #000000;
+            }
+            .custom-btn {
+                color: #d3d3d3;
+                border: none;
+            }
+            .custom-btn:hover {
+                color: black;
+            }
+            @media (min-width: 1920px) { .modal-xl { --bs-modal-width: 1600px; } }
+            @media (min-width: 2560px) { .modal-xl { --bs-modal-width: 1920px; } }
+            #threeCanvas { width: 50%; height: 50%; margin-bottom: 20px; }
+            #controls { position: fixed; top: 10px; left: 10px; z-index: 100; }
+        </style>
+
+        <!-- KaTeX for MathJax -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+        
+        <!-- Other Scripts -->
+        <script src="../../js/include.js"></script>
+        <script src="../../js/script_md.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+        <script src="../../js/share_md.js" defer></script>
+        
+        <!-- Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-RF7ETSKPK9');
+        </script>
+
+        <!-- Marked.js for Markdown Parsing -->
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    </head>
+    <body>
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="../">Blog Home</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                        <li class="nav-item">
+                            <a id="lang-toggle-post" class="btn nav-link px-lg-3 py-3 py-lg-4" style="font-size:0.7rem">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </nav>
-    </header>
-    <main>
-        {{ content | safe }}
-    </main>
-</body>
+
+        <!-- Page Header -->
+        <header class="masthead" style="background-image: url('../../assets/image_fx_.jpg')">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="post-heading">
+                            <br/>
+                            <h2 id="post-title">{{ title }}</h2>
+                            <span class="meta" id="post-meta">Posted by {{ author }} on {{ date }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Post Content -->
+        <article class="mb-4">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7" id="series">
+                        {% if series %}
+                        <div class="accordion" id="accordionExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                        <strong>{{ series.title }}</strong>
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <ol>
+                                        {% for post in series.posts %}
+                                            {% if post.id == current_post_id %}
+                                            <li><strong>{{ post.title }}</strong></li>
+                                            {% else %}
+                                            <li><a href="{{ post.url }}">{{ post.title }}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-10 col-lg-8 col-xl-7 main-content" id="post-content">
+                        {{ content | safe }}
+                    </div>
+                    <div class="col-md-10 col-lg-8 col-xl-7" id="post-nav-block">
+                        <div id="post-navigation">
+                            <div class="d-flex justify-content-between mb-4">
+                                {% if older_post %}
+                                <a class="btn btn-light text-uppercase" href="{{ older_post.url }}" style="width: 40%; text-align: center;">
+                                    &larr; Older Post<br><small style="font-size: 0.7rem; text-transform: none;">{{ older_post.title }}</small>
+                                </a>
+                                {% endif %}
+                                {% if next_post %}
+                                <a class="btn btn-light text-uppercase" href="{{ next_post.url }}" style="width: 40%; text-align: center;">
+                                    Next Post &rarr;<br><small style="font-size: 0.7rem; text-transform: none;">{{ next_post.title }}</small>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Footer -->
+        <footer class="border-top">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <ul class="list-inline text-center">
+                            <li class="list-inline-item">
+                                <a href="https://www.linkedin.com/in/hwan-heo-0905korea/">
+                                    <span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i><i class="fab fa-linkedin fa-stack-1x fa-inverse"></i></span>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="https://github.com/hwanhuh">
+                                    <span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i><i class="fab fa-github fa-stack-1x fa-inverse"></i></span>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="small text-center text-muted fst-italic">Copyright &copy; Hwan Heo</div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        
+        <!-- Prism.js for Code Highlighting -->
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+        <!-- Custom SimpleModelViewer and its dependencies -->
+        <script type="module">
+            import { SimpleModelViewer } from '../../js/simple-model-viewer.js';
+    
+            // Resize handler for viewers
+            window.addEventListener('resize', () => {
+                const viewers = document.querySelectorAll('simple-model-viewer');
+                viewers.forEach(viewer => viewer.resizeRenderer());
+            });
+        </script>
+    </body>
 </html>

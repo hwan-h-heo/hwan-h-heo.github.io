@@ -1,5 +1,6 @@
 
 
+
 import os
 import re
 import json
@@ -14,6 +15,13 @@ POSTS_DIR = os.path.join(BASE_DIR, 'posts')
 LAYOUTS_DIR = os.path.join(BASE_DIR, 'layouts')
 JS_OUTPUT_PATH = os.path.join(BASE_DIR, 'js', 'posts-data.js')
 SITE_OUTPUT_DIR = os.path.join(BASE_DIR, '_site')
+SERIES_INFO = {
+    'nerf-and-gs': {'eng': 'Radiance Fields & Gaussian Splatting', 'kor': 'Radiance Fields & Gaussian Splatting'},
+    '3d-generation': {'eng': '3D Generative AI', 'kor': '3D 생성 AI'},
+    'web-3d': {'eng': '3D in Web', 'kor': '웹에서 3D 구현하기'},
+    'linear-algebra': {'eng': 'Linear Algrebra for Deeplearning', 'kor': '딥러닝을 위한 선형대수'},
+    'computer-vision': {'eng': 'Classical Computer Vision', 'kor': '고전 Computer Vision'},
+}
 
 # --- 1. DATA GATHERING & JS FILE GENERATION ---
 
@@ -83,7 +91,8 @@ def get_all_posts_data():
     all_posts.sort(key=lambda x: x['date'], reverse=True)
     return all_posts
 
-def generate_posts_data_js(posts):
+def generate_posts_data_js(posts, debug=False):
+    js_output_path = os.path.join(BASE_DIR, 'js', 'posts-data_debug.js') if debug else JS_OUTPUT_PATH
     posts_for_js = []
     for post in posts:
         js_post = {
@@ -94,77 +103,125 @@ def generate_posts_data_js(posts):
         }
         posts_for_js.append(js_post)
 
-    series_info = {
-        'nerf-and-gs': {'eng': 'Radiance Fields & Gaussian Splatting', 'kor': 'Radiance Fields & Gaussian Splatting'},
-        '3d-generation': {'eng': '3D Generative AI', 'kor': '3D 생성 AI'},
-        'web-3d': {'eng': '3D in Web', 'kor': '웹에서 3D 구현하기'},
-        'linear-algebra': {'eng': 'Linear Algrebra for Deeplearning', 'kor': '딥러닝을 위한 선형대수'},
-        'computer-vision': {'eng': 'Classical Computer Vision', 'kor': '고전 Computer Vision'},
-    }
-
-    js_content = f"const postsData = {json.dumps(posts_for_js, indent=4)};\n\nconst seriesInfo = {json.dumps(series_info, indent=4)};"
-    with open(JS_OUTPUT_PATH, 'w', encoding='utf-8') as f:
+    js_content = f"const postsData = {json.dumps(posts_for_js, indent=4)};\n\nconst seriesInfo = {json.dumps(SERIES_INFO, indent=4)};"
+    with open(js_output_path, 'w', encoding='utf-8') as f:
         f.write(js_content)
-    print(f"Successfully generated {JS_OUTPUT_PATH}")
+    print(f"Successfully generated {js_output_path}")
 
 # --- 2. STATIC SITE GENERATION ---
 
-def generate_static_site(posts):
+def generate_static_site(posts, debug=False):
     env = Environment(loader=FileSystemLoader(LAYOUTS_DIR))
-    if os.path.exists(SITE_OUTPUT_DIR):
-        shutil.rmtree(SITE_OUTPUT_DIR)
-    os.makedirs(SITE_OUTPUT_DIR)
 
+    if debug:
+        # Debug mode: Generate only the latest post and a debug index
+        latest_post = posts[0]
+        posts_to_build = [latest_post]
+        home_output_path = os.path.join(BASE_DIR, 'index_debug.html')
+        post_output_dir_base = os.path.join(POSTS_DIR, latest_post['id'])
+        os.makedirs(post_output_dir_base, exist_ok=True)
+        post_output_path = os.path.join(post_output_dir_base, 'index_debug.html')
+    else:
+        # Normal mode: Clean and create the full site directory
+        if os.path.exists(SITE_OUTPUT_DIR):
+            shutil.rmtree(SITE_OUTPUT_DIR)
+        os.makedirs(SITE_OUTPUT_DIR)
+        posts_to_build = posts
+        home_output_path = os.path.join(SITE_OUTPUT_DIR, 'index.html')
+
+
+    # Generate post pages
     post_template = env.get_template('post.html')
-    for post in posts:
-        for lang in post['languages']:
-            post_output_dir = os.path.join(SITE_OUTPUT_DIR, 'posts', post['id'], lang)
-            os.makedirs(post_output_dir, exist_ok=True)
-
+    for post in posts_to_build:
+        # In debug mode, we write to a different path
+        if debug:
+            # For simplicity, let's just use the first available language for the debug post
+            lang = post['languages'][0]
             content_html = markdown.markdown(post[f'content_{lang}'])
-            
-            available_languages = []
-            for other_lang in post['languages']:
-                if other_lang != lang:
-                    available_languages.append({
-                        'name': 'English' if other_lang == 'eng' else '한국어',
-                        'url': f'../{other_lang}/',
-                    })
-
             render_context = {
                 'title': post.get(f'title_{lang}', ''),
                 'author': post.get(f'author_{lang}', 'Hwan Heo'),
                 'date': post['date'],
                 'content': content_html,
-                'available_languages': available_languages
+                'available_languages': [] # Simplified for debug
             }
-            
-            with open(os.path.join(post_output_dir, 'index.html'), 'w', encoding='utf-8') as f:
+            with open(post_output_path, 'w', encoding='utf-8') as f:
                 f.write(post_template.render(render_context))
+            print(f"Generated debug post: {post_output_path}")
 
-    print(f"Generated {sum(len(p['languages']) for p in posts)} post pages in {len(posts)} posts.")
+        else: # Normal mode logic
+            for lang in post['languages']:
+                post_output_dir = os.path.join(SITE_OUTPUT_DIR, 'posts', post['id'], lang)
+                os.makedirs(post_output_dir, exist_ok=True)
+                content_html = markdown.markdown(post[f'content_{lang}'])
+                available_languages = [{'name': 'English' if other_lang == 'eng' else '한국어', 'url': f'../{other_lang}/'} for other_lang in post['languages'] if other_lang != lang]
+                render_context = {
+                    'title': post.get(f'title_{lang}', ''), 'author': post.get(f'author_{lang}', 'Hwan Heo'),
+                    'date': post['date'], 'content': content_html, 'available_languages': available_languages
+                }
+                with open(os.path.join(post_output_dir, 'index.html'), 'w', encoding='utf-8') as f:
+                    f.write(post_template.render(render_context))
 
+    if not debug:
+        print(f"Generated {sum(len(p['languages']) for p in posts)} post pages in {len(posts)} posts.")
+
+    # Generate home page
     home_template = env.get_template('home.html')
-    home_posts_context = []
+
+    posts_context = []
+    notes_context = []
+    series_context = {}
+
     for post in posts:
         default_lang = 'eng' if 'eng' in post['languages'] else 'kor'
-        home_posts_context.append({
+        post_entry = {
             'title': post.get(f'title_{default_lang}', 'No Title'),
             'subtitle': post.get(f'subtitle_{default_lang}', ''),
             'date': post['date'],
-            'url': f'/posts/{post["id"]}/{default_lang}/'
-        })
+            'url': f'./posts/{post["id"]}/' if not debug else f'./posts/{post["id"]}/index_debug.html'
+        }
 
-    with open(os.path.join(SITE_OUTPUT_DIR, 'index.html'), 'w', encoding='utf-8') as f:
-        f.write(home_template.render(posts=home_posts_context))
-    
-    print("Generated home page.")
-    print(f"\nBuild finished. Static site is in: {SITE_OUTPUT_DIR}")
+        if post.get('category') == 'note':
+            notes_context.append(post_entry)
+        else:
+            posts_context.append(post_entry)
 
-def main():
+        if post.get('series'):
+            series_id = post['series']
+            if series_id not in series_context:
+                series_context[series_id] = {
+                    'title': SERIES_INFO.get(series_id, {}).get(default_lang, series_id),
+                    'posts': []
+                }
+            series_context[series_id]['posts'].append(post_entry)
+
+    # Sort posts within each series by date
+    for series_id in series_context:
+        series_context[series_id]['posts'].sort(key=lambda p: p['date'], reverse=True)
+
+    render_context = {
+        'posts': posts_context,
+        'notes': notes_context,
+        'series': series_context
+    }
+
+    with open(home_output_path, 'w', encoding='utf-8') as f:
+        f.write(home_template.render(**render_context))
+
+    if debug:
+        print(f"Generated debug home page: {home_output_path}")
+    else:
+        print("Generated home page.")
+        print(f"\nBuild finished. Static site is in: {SITE_OUTPUT_DIR}")
+
+def main(debug=False):
     all_posts_data = get_all_posts_data()
-    generate_posts_data_js(all_posts_data)
-    generate_static_site(all_posts_data)
+    generate_posts_data_js(all_posts_data, debug=debug)
+    generate_static_site(all_posts_data, debug=debug)
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    parser = argparse.ArgumentParser(description='Build the static blog.')
+    parser.add_argument('--debug', action='store_true', help='Enable debug mode to build only the latest post.')
+    args = parser.parse_args()
+    main(debug=args.debug)
