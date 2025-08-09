@@ -22,7 +22,7 @@ author: Hwan Heo
 
 ## Introduction 
 
-[지난 글](https://velog.io/@gjghks950/Building-Large-3D-Generative-Models-from-Scratch-1-3D-Data-Pre-processing#introduction-rise-of-3d-generative-models) 에서는 Large 3D Generative Model 을 구축하기 위한 첫 단계로, 데이터셋을 준비하고 필수적인 데이터 전처리 과정에 대해서 수학적, 위상학적 원리부터 실제 알고리즘 구현까지 심도 깊게 다뤄보았다.
+[지난 글](./?id=250702_building_large_3d_1) 에서는 Large 3D Generative Model 을 구축하기 위한 첫 단계로, 데이터셋을 준비하고 필수적인 데이터 전처리 과정에 대해서 수학적, 위상학적 원리부터 실제 알고리즘 구현까지 심도 깊게 다뤄보았다.
 
 이번 글에서는 3D Generative Pipeline 에서도 가장 core 에 해당하는 Shape Generative Model 의 구조를 본격적으로 파헤쳐보자. 
 

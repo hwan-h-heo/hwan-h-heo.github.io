@@ -506,7 +506,9 @@ figure {
 
 img,
 svg {
-  vertical-align: middle;
+  /* vertical-align: middle; */
+  margin: auto;
+  display: block;
 }
 
 table {

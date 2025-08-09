@@ -1,14 +1,25 @@
 const postsData = [
     {
+        id: '250809_gwn',
+        title_eng: 'Generalized Winding Number',
+        title_kor: 'Generalized Winding Number 란 무엇인가?',
+        subtitle_eng: 'How to make a robust SDF using GWN from Mesh',
+        subtitle_kor: 'Mesh 에서 GWN 을 이용하여 견고한 SDF 를 계산하는 방법',
+        date: '2025-08-09',
+        category: 'note', // 
+        series: 'graphics',   
+        languages: ['eng', 'kor']
+    },
+    {
         id: '250710_building_large_3d_2',
         title_eng: 'Building Large 3D Generative Model (2) VAE and DiT Deep Dive',
         title_kor: 'Large 3D Generative Model 구축하기 (2) VAE and DiT 톺아보기',
         subtitle_eng: 'VAE and DiT Architecture for Vecset vs. Sparse-Voxel',
         subtitle_kor: 'VAE and DiT 구조 분석 for Vecset vs. Sparse-Voxel',
         date: '2025-07-10',
-        category: 'post', // 'post' 또는 'note'
-        series: '3d-generation',   // 시리즈가 있으면 시리즈 ID, 없으면 null
-        languages: ['kor']
+        category: 'post', // 
+        series: '3d-generation',   // 
+        languages: ['eng', 'kor']
     },
     {
         id: '250702_building_large_3d_1',
@@ -17,9 +28,9 @@ const postsData = [
         subtitle_eng: 'Watertight Mesh Conversion and Salient Edge Sampling',
         subtitle_kor: 'Watertight Mesh 변환과 Salient Edge Sampling',
         date: '2025-07-02',
-        category: 'post', // 'post' 또는 'note'
-        series: '3d-generation',   // 시리즈가 있으면 시리즈 ID, 없으면 null
-        languages: ['kor']
+        category: 'post', // 
+        series: '3d-generation',   // 
+        languages: ['eng', 'kor']
     },
     {
         id: '250310_model_viewer',
@@ -28,8 +39,8 @@ const postsData = [
         subtitle_eng: 'Custom Threejs 3D Model Viewer',
         subtitle_kor: '커스텀 Three.js 3D 모델 뷰어',
         date: '2025-03-10',
-        category: 'post', // 'post' 또는 'note'
-        series: 'web-3d',   // 시리즈가 있으면 시리즈 ID, 없으면 null
+        category: 'post', // 
+        series: 'web-3d',   // 
         languages: ['eng', 'kor']
     },
     {
@@ -164,8 +175,8 @@ const postsData = [
     },
     {
         id: '210910_lin_alg_2',
-        title_eng: 'Linear Algebra for Deeplearning (2): Change of Basis',
-        title_kor: '딥러닝을 위한 선형대수 (2): Change of Basis',
+        title_eng: 'Change of Basis',
+        title_kor: 'Change of Basis',
         subtitle_eng: 'Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)',
         subtitle_kor: '대각화와 고윳값, 특이값 분해, Principal Component Analysis (PCA)',
         date: '2021-09-10',
@@ -175,8 +186,8 @@ const postsData = [
     }, 
     {
         id: '210909_lin_alg_1',
-        title_eng: 'Linear Algebra for Deeplearning (1): Linear System',
-        title_kor: '딥러닝을 위한 선형대수 (1): Linear System',
+        title_eng: 'Linear System',
+        title_kor: 'Linear System',
         subtitle_eng: 'Linear System, Linear Transformation, and its Intuitions',
         subtitle_kor: '선형시스템과 선형변환, 이에 대한 직관들',
         date: '2021-09-09',
@@ -186,8 +197,8 @@ const postsData = [
     }, 
     {
         id: '210602_cv4',
-        title_eng: 'Computer Vision (4): 3D Stereo Vision and Epipolar Geometry',
-        title_kor: '컴퓨터 비전 (4): 3D Stereo Vision and Epipolar Geometry',
+        title_eng: '3D Stereo Vision and Epipolar Geometry',
+        title_kor: '3D Stereo Vision and Epipolar Geometry',
         subtitle_eng: 'Camera Projection, Stereo, and Epipolar Geometry',
         subtitle_kor: 'Camera Projection, Stereo, and Epipolar Geometry',
         date: '2021-06-02',
@@ -197,8 +208,8 @@ const postsData = [
     }, 
     {
         id: '210502_cv3',
-        title_eng: 'Computer Vision (3): Homography and Image Alignment',
-        title_kor: '컴퓨터 비전 (3): Homography and Image Alignment',
+        title_eng: 'Homography and Image Alignment',
+        title_kor: 'Homography and Image Alignment',
         subtitle_eng: 'Image Transformation, Homography, and Correspondence Matching',
         subtitle_kor: 'Image Transformation, Homography, and Correspondence Matching',
         date: '2021-05-02',
@@ -208,8 +219,8 @@ const postsData = [
     }, 
     {
         id: '210402_cv2',
-        title_eng: 'Computer Vision (2): Feature Extraction and Detection',
-        title_kor: '컴퓨터 비전 (2): Feature Extraction and Detection',
+        title_eng: 'Feature Extraction and Detection',
+        title_kor: 'Feature Extraction and Detection',
         subtitle_eng: 'Image Gradient, Sobel Filter, LoG, and Detection',
         subtitle_kor: 'Image Gradient, Sobel Filter, LoG, and Detection',
         date: '2021-04-02',
@@ -219,8 +230,8 @@ const postsData = [
     }, 
     {
         id: '210302_cv1',
-        title_eng: 'Computer Vision (1): Image Filter and Morphology',
-        title_kor: '컴퓨터 비전 (1): Image Filer and Morphology',
+        title_eng: 'Image Filter and Morphology',
+        title_kor: 'Image Filter and Morphology',
         subtitle_eng: 'Various Image Filters and Morphology (Erosion & Dilation)',
         subtitle_kor: '다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여',
         date: '2021-03-02',
@@ -250,5 +261,9 @@ const seriesInfo = {
     'computer-vision': {
         eng:'Classical Computer Vision',
         kor:'고전 Computer Vision'
+    },
+    'graphics': {
+        eng:'Computer Graphics',
+        kor:'Computer Graphics'
     },
 };
