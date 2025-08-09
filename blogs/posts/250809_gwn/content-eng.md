@@ -30,7 +30,7 @@ Calculating the Signed Distance Field (SDF) in graphics is essential for animati
 As its name suggests, SDF is a 'signed distance function,' which outputs the *closest distance from a point to an object*, with a positive value if the point is outside the object and a negative value if it is inside. 
 
 <figure id="figure-2" >
-  <img src='/blogs/posts/250809_gwn/assets/image-3.png' alt='img alt' width='70%'>
+  <img src='./250809_gwn/assets/image-3.png' alt='img alt' width='70%'>
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Signed Distance Field</figcaption>
 </figure>
 
@@ -45,7 +45,7 @@ In this post, we will explore the ***Generalized Winding Number***, which define
 <br/>
 
 <figure id="figure-1" >
-  <img src='/blogs/posts/250809_gwn/assets/image.png' alt='img alt' width='70%'>
+  <img src='./250809_gwn/assets/image.png' alt='img alt' width='70%'>
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Winding Number</figcaption>
 </figure>
 
@@ -89,7 +89,7 @@ $$
 $$
     Here, $\arg(w)$ is the argument of the complex number $w$, meaning the angle from the origin. 
 
-    ![image.png](/blogs/posts/250809_gwn/assets/image-2.png)
+    ![image.png](./250809_gwn/assets/image-2.png)
 
     Therefore, the expression $$\oint_\gamma \frac{1}{z-a} dz$$ is equivalent to finding the change in $\log(z-a)$ along the path $\gamma$. Since the path is closed, the starting and ending values of the $ \ln|z-a| $ part are the same, so they do not affect the integral value ([Cauchy’s Integral Theorem](https://en.wikipedia.org/wiki/Cauchy%27s_integral_theorem)). 
 
@@ -215,7 +215,7 @@ Here, $\Omega(p, T)$ denotes the solid angle subtended by triangle $T$ at point 
 The biggest advantage of GWN is **Robustness**. While traditional methods require the mesh to be "clean" (e.g., no holes, no self-intersections, normal-consistent, watertight manifold), GWN can calculate meaningful values even on **Broken Meshes** where these assumptions are violated.
 
 <figure id="figure-2" >
-  <img src='/blogs/posts/250809_gwn/assets/image-5.png' alt='img alt' width='70%'>
+  <img src='./250809_gwn/assets/image-5.png' alt='img alt' width='70%'>
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> GWN + UDF from Polygonal Mesh </figcaption>
 </figure>
 
@@ -254,7 +254,7 @@ GWN's greatest strength is its **Robustness**. It calculates meaningful values e
 
 
 <figure id="figure-2" >
-  <img src='/blogs/posts/250809_gwn/assets/image-4.png' alt='img alt' width='70%'>
+  <img src='./250809_gwn/assets/image-4.png' alt='img alt' width='70%'>
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Mesh Repair with GWN</figcaption>
 </figure>
     

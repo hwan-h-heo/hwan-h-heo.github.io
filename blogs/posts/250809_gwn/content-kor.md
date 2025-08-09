@@ -30,7 +30,7 @@ Graphics 에서 Signed Distance Field (SDF) 를 계산하는 것은 애니메이
 SDF 는 그 이름과 같이, '부호를 가진 거리 함수' 인데, *어떤 점으로부터 물체까지의 가장 가까운 거리* 에, 물체의 외부라면 positive, 내부이면 negative 의 값을 내뱉는 함수이다. 
 
 <figure id="figure-2" >
-  <img src='/blogs/posts/250809_gwn/assets/image-3.png' alt='img alt' width='70%'>
+  <img src='./250809_gwn/assets/image-3.png' alt='img alt' width='70%'>
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Signed Distance Field</figcaption>
 </figure>
 
@@ -45,7 +45,7 @@ SDF 는 그 이름과 같이, '부호를 가진 거리 함수' 인데, *어떤 �
 <br/>
 
 <figure id="figure-1" >
-  <img src='/blogs/posts/250809_gwn/assets/image.png' alt='img alt' width='70%'>
+  <img src='./250809_gwn/assets/image.png' alt='img alt' width='70%'>
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Winding Number</figcaption>
 </figure>
 
@@ -88,7 +88,7 @@ $$
 \log(w) = \ln|w| + i \arg(w)
 $$
     여기서 $ \arg(w) $는 복소수 $w$의 편각 ([argument](https://en.wikipedia.org/wiki/Argument_(complex_analysis))), 즉 원점으로부터의 각도를 의미한다. 
-    ![image.png](/blogs/posts/250809_gwn/assets/image-2.png)
+    ![image.png](./250809_gwn/assets/image-2.png)
 
     따라서 식 $$ \oint_\gamma \frac{1}{z-a} dz $$ 는, 경로 $\gamma$ 를 따라 $ \log(z-a) $ 의 변화량을 구하는 것과 같다. 경로가 닫혀 있으므로 $ \ln|z-a| $ 부분의 시작점과 끝점의 값은 같아져 적분 값에 영향을 주지 않는다 ([Cauchy’s Integral Theorem](https://en.wikipedia.org/wiki/Cauchy%27s_integral_theorem)). 
     결국 이 적분은 경로 $\gamma$ 를 따라 점 $a$를 기준으로 한 각도, 즉 $ \arg(z-a) $ 의 총 변화량을 나타낸다.
@@ -213,7 +213,7 @@ $$
 GWN의 가장 큰 장점은 **Robustness** 이다. 전통적인 방법들은 메시가 "깔끔할 것"(e.g., no holes, no Self-intersections, normal-consistent, watertight manifold) 을 요구하지만, GWN 은 이러한 가정이 깨진 **Broken Mesh** 에서도 의미 있는 값을 계산할 수 있다.
 
 <figure id="figure-2" >
-  <img src='/blogs/posts/250809_gwn/assets/image-5.png' alt='img alt' width='70%'>
+  <img src='./250809_gwn/assets/image-5.png' alt='img alt' width='70%'>
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> GWN + UDF from Polygonal Mesh </figcaption>
 </figure>
 
@@ -254,7 +254,7 @@ GWN의 가장 큰 힘은 **Robustness** 에 있다. 입력 메시가 **열려 �
 
 
 <figure id="figure-2" >
-  <img src='/blogs/posts/250809_gwn/assets/image-4.png' alt='img alt' width='70%'>
+  <img src='./250809_gwn/assets/image-4.png' alt='img alt' width='70%'>
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Mesh Repair with GWN</figcaption>
 </figure>
     
