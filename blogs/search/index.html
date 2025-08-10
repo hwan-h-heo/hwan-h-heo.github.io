@@ -6,14 +6,14 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>HwanHeo's Blog</title>
-        <link rel="icon" type="image/x-icon" href="../assets/favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
         <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
         <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="../css/blog_style.css" rel="stylesheet" />
+        <link href="../../css/blog_style.css" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
         <script>
@@ -64,14 +64,14 @@
                 margin-left: 10px;
             }
         </style>
-    <link href="css/sidebar.css" rel="stylesheet">
+    <link href="../css/sidebar.css" rel="stylesheet">
     </head>
     <body>
         <header id="header" class="header dark-background d-flex flex-column">
             <i class="header-toggle d-xl-none bi bi-list"></i>
         
             <div class="profile-img">
-              <img src="../assets/icon.webp" alt="" class="img-fluid rounded-circle">
+              <img src="../../assets/icon.webp" alt="" class="img-fluid rounded-circle">
             </div>
         
             <a href="../" class="logo d-flex align-items-center justify-content-center">
@@ -87,26 +87,15 @@
         
             <nav id="navmenu" class="navmenu">
                 <ul>
-                    <li><a href="../"><i class="bi bi-house navicon"></i>Home</a></li>
-                    <li><a href="./" class="active"> <i class="bi bi-keyboard navicon"></i> Blog Home </a></li>
+                    <li><a href="../../"><i class="bi bi-house navicon"></i>Home</a></li>
+                    <li><a href="../" class="active"> <i class="bi bi-keyboard navicon"></i> Blog Home </a></li>
                     <hr/>
-                    <li style="padding-left: 1rem;"><a href="./3DViewer/"><i class="bi bi-box navicon"></i>3D Viewer</a></li>
-                    <li style="padding-left: 1rem;"><a href="./editor/"><i class="bi bi-pencil-square navicon"></i>Editor</a></li>
+                    <li style="padding-left: 1rem;"><a href="../3DViewer/"><i class="bi bi-box navicon"></i>3D Viewer</a></li>
+                    <li style="padding-left: 1rem;"><a href="../editor/"><i class="bi bi-pencil-square navicon"></i>Editor</a></li>
                 </ul>
-                <div class="my-4" style="position: fixed; bottom: 0px; width: 275px">
-                    <!-- <input type="text" id="searchInput" class="form-control" placeholder="Search posts by title or keyword"> -->
-                    <form id="search-form">
-                        <br/>
-                        <div class="input-group">
-                            <input type="text" id="searchInput" class="form-control" placeholder="Enter search term...">
-                            <button class="btn btn-dark" type="submit" id="search-button" aria-label="Search">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                <!-- <div class="my-4" style="position: fixed; bottom: 0px; width: 275px">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search posts by title or keyword">
+                </div> -->
             </nav>
 
         </header>
@@ -129,7 +118,7 @@
             </div>
         </nav>
         <!-- Page Header-->
-        <header class="masthead" style="background-image: url('../assets/image_fx_.jpg');  background-position: center 34%; background-size: cover;">
+        <!-- <header class="masthead" style="background-image: url('../../assets/image_fx_.jpg');  background-position: center 34%; background-size: cover;">
             <div class="container position-relative px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7" style="padding-top: 2rem;">
@@ -142,36 +131,31 @@
                     </div>
                 </div>
             </div>
-        </header>
+        </header> -->
         <!-- Main Content-->
         <div class="container px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-7">
-                    <ul class="nav nav-tabs nav-justified mb-4" style='font-size: 1rem;'>
-                        <li class="nav-item">
-                            <a class="nav-link active" data-bs-toggle="tab" href="#posts-tab">Posts</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#series-tab">Series</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#notes-tab">Notes</a>
-                        </li>
-                    </ul>
-    
-                    <div class="tab-content">
-                        <div class="tab-pane fade show active" id="posts-tab">
+                    <form id="search-form" class="mb-4">
+                        <br/>
+                        <label for="search-input" class="form-label h4">Search Results</label>
+                        <div class="input-group">
+                            <input type="text" id="search-input" class="form-control form-control-lg" placeholder="Enter search term...">
+                            <button class="btn btn-primary" type="submit" id="search-button" aria-label="Search">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                </svg>
+                            </button>
                         </div>
-                        
-                        <div class="tab-pane fade" id="series-tab">
-                        </div>
-    
-                        <div class="tab-pane fade" id="notes-tab">
-                        </div>
+                    </form>
+                    <hr class="my-4" />
+
+                    <!-- 검색 결과가 여기에 동적으로 삽입됩니다 -->
+                    <div id="search-results-container">
+                        <!-- 로딩 스피너 (선택 사항) -->
+                        <p>Loading results, please wait...</p>
                     </div>
 
-                    <!-- Divider-->
-                    <!-- Pager-->
                     <div class="mb-5 d-flex justify-content-end">
                         <!-- <button class="btn btn-primary rounded-pill btn-sm d-inline scroll-top" id="scroll-top"><strong><i class="bi bi-arrow-up-short"></i></strong></button> -->
                         <button id="scroll-top" class="scroll-top button_top d-flex align-items-center justify-content-center">
@@ -197,8 +181,7 @@
         </footer>
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="./js/posts-data.js"></script>
-        <script src="./js/main-list.js"></script>
+        <script src="../js/posts-data.js"></script>
         <!-- Core theme JS-->
         <!-- <script src="js/scripts.js"></script> -->
         <script>
@@ -243,87 +226,114 @@
             document.addEventListener('scroll', toggleScrollTop);
         </script>
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', async function() {
+                // 1. DOM 요소 선택
+                const resultsContainer = document.getElementById('search-results-container');
                 const searchForm = document.getElementById('search-form');
-                const searchInput = document.getElementById('searchInput');
+                const searchInput = document.getElementById('search-input');
 
+                // URL에서 검색어 추출
+                const urlParams = new URLSearchParams(window.location.search);
+                const searchTerm = urlParams.get('q')?.trim().toLowerCase() || '';
+
+                // 2. 검색창에 현재 검색어 채우기
                 if (searchInput) {
-                    searchInput.addEventListener('keyup', function(e) {
-                        // Enter 키를 눌렀을 때만 동작
-                        if (e.key === 'Enter') {
-                            const searchTerm = searchInput.value.trim();
-
-                            // 검색어가 있을 경우에만 검색 페이지로 이동
-                            if (searchTerm) {
-                                // encodeURIComponent를 사용해 특수문자나 공백을 안전하게 URL에 포함시킵니다.
-                                window.location.href = `/blogs/search/?q=${encodeURIComponent(searchTerm)}`;
-                            }
-                        }
-                    });
+                    searchInput.value = urlParams.get('q') || ''; // 소문자 변환 전 원본 검색어 표시
                 }
+                
+                // 검색어가 없으면 실행 중단
+                if (!searchTerm || !resultsContainer) {
+                    if(resultsContainer) resultsContainer.innerHTML = '<p>Please enter a search term in the box above.</p>';
+                    return;
+                }
+
+                // 3. 새로운 검색 실행 리스너 (폼 제출 시)
                 if (searchForm) {
                     searchForm.addEventListener('submit', function(e) {
                         e.preventDefault(); // 기본 폼 제출 동작 방지
                         const newSearchTerm = searchInput.value.trim();
                         if (newSearchTerm) {
+                            // 새로운 검색어로 URL을 변경하여 페이지를 다시 로드
                             window.location.href = `/blogs/search/?q=${encodeURIComponent(newSearchTerm)}`;
                         }
                     });
                 }
-                // 검색 이벤트 리스너
-                // searchInput.addEventListener('keyup', function(e) {
-                //     const searchTerm = e.target.value.toLowerCase();
 
-                //     // 모든 탭의 콘텐츠를 검색 대상으로 포함
-                //     const postsToSearch = document.querySelectorAll('.post-preview');
-                //     const seriesToSearch = document.querySelectorAll('.series-group');
+                // 본문 캐시 객체
+                const postContentCache = {};
 
-                //     // 'Posts' 탭과 'Notes' 탭의 게시물 필터링
-                //     postsToSearch.forEach(post => {
-                //         const title = post.querySelector('.post-title').textContent.toLowerCase();
-                //         const subtitleElement = post.querySelector('.post-subtitle');
-                //         const subtitle = subtitleElement ? subtitleElement.textContent.toLowerCase() : '';
+                // 4. 모든 게시물 본문 미리 가져오기
+                async function fetchAllPostContents() {
+                    await Promise.all(postsData.map(async (post) => {
+                        const postId = post.id;
+                        try {
+                            const [korResponse, engResponse] = await Promise.all([
+                                fetch(`../posts/${postId}/content-kor.md`),
+                                fetch(`../posts/${postId}/content-eng.md`)
+                            ]);
+                            let content = '';
+                            if (korResponse.ok) content += (await korResponse.text()).toLowerCase();
+                            if (engResponse.ok) content += ' ' + (await engResponse.text()).toLowerCase();
+                            postContentCache[postId] = content;
+                        } catch (error) {
+                            console.error(`ID ${postId} 콘텐츠 로딩 오류:`, error);
+                            postContentCache[postId] = '';
+                        }
+                    }));
+                }
 
-                //         // 제목 또는 부제목에 검색어가 포함되어 있는지 확인
-                //         if (title.includes(searchTerm) || subtitle.includes(searchTerm)) {
-                //             post.style.display = 'block';
-                //             const nextHr = post.nextElementSibling;
-                //             if (nextHr && nextHr.tagName === 'HR') {
-                //                 nextHr.style.display = 'block';
-                //             }
-                //         } else {
-                //             post.style.display = 'none';
-                //             const nextHr = post.nextElementSibling;
-                //             if (nextHr && nextHr.tagName === 'HR') {
-                //                 nextHr.style.display = 'none';
-                //             }
-                //         }
-                //     });
+                // 5. 검색 결과를 바탕으로 HTML 생성 및 렌더링
+                function renderResults(filteredPosts) {
+                    if (filteredPosts.length === 0) {
+                        resultsContainer.innerHTML = '<p>No results found matching your criteria.</p>';
+                        return;
+                    }
 
-                //     // 'Series' 탭의 게시물 필터링
-                //     seriesToSearch.forEach(series => {
-                //         const seriesTitle = series.querySelector('.series-title').textContent.toLowerCase();
-                //         const postsInSeries = series.querySelectorAll('li');
-                //         let hasVisiblePost = false;
+                    const lang = localStorage.getItem('language') || 'eng';
+                    let resultsHTML = filteredPosts.map(post => {
+                        const title = post[`title_${lang}`] || post.title_eng;
+                        const subtitle = post[`subtitle_${lang}`] || post.subtitle_eng;
+                        if (!title) return '';
 
-                //         postsInSeries.forEach(post => {
-                //             const postTitle = post.querySelector('a').textContent.toLowerCase();
-                //             if (postTitle.includes(searchTerm)) {
-                //                 post.style.display = 'list-item';
-                //                 hasVisiblePost = true;
-                //             } else {
-                //                 post.style.display = 'none';
-                //             }
-                //         });
+                        return `
+                        <div class="post-preview">
+                            <a href="../posts/?id=${post.id}">
+                                <h4>${title}</h3>
+                                ${subtitle ? `<h6 class="post-subtitle">${subtitle}</h5>` : ''}
+                            </a>
+                            <p class="post-meta">
+                                Category: ${post.category} | On ${new Date(post.date).toLocaleDateString()}
+                            </p>
+                        </div>
+                        <hr class="my-4" />`;
+                    }).join('');
+                    
+                    resultsContainer.innerHTML = resultsHTML;
+                }
+                
+                // --- 메인 실행 로직 ---
+                
+                // 본문 로딩 표시
+                resultsContainer.innerHTML = '<p>Searching, please wait...</p>';
+                
+                await fetchAllPostContents();
 
-                //         // 시리즈 제목 또는 시리즈 내 게시물에 검색어가 포함된 경우 시리즈 전체를 표시
-                //         if (seriesTitle.includes(searchTerm) || hasVisiblePost) {
-                //             series.style.display = 'block';
-                //         } else {
-                //             series.style.display = 'none';
-                //         }
-                //     });
-                // });
+                const sortedPosts = postsData.sort((a, b) => new Date(b.date) - new Date(a.date));
+                const filteredData = sortedPosts.filter(post => {
+                    const title_kor = post.title_kor?.toLowerCase() || '';
+                    const subtitle_kor = post.subtitle_kor?.toLowerCase() || '';
+                    const title_eng = post.title_eng?.toLowerCase() || '';
+                    const subtitle_eng = post.subtitle_eng?.toLowerCase() || '';
+                    const content = postContentCache[post.id] || '';
+
+                    return title_kor.includes(searchTerm) ||
+                        subtitle_kor.includes(searchTerm) ||
+                        title_eng.includes(searchTerm) ||
+                        subtitle_eng.includes(searchTerm) ||
+                        content.includes(searchTerm);
+                });
+
+                renderResults(filteredData);
             });
         </script>
     </main>
