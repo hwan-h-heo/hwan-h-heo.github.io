@@ -1,8 +1,19 @@
 const postsData = [
     {
+        id: '250810_flow',
+        title_eng: 'From Flow Matching to Optimal Transport: A Physics-based View of Generative Models',
+        title_kor: 'From Flow Matching to Optimal Transport: A Physics-based View of Generative Models',
+        subtitle_eng: 'Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow',
+        subtitle_kor: 'Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구',
+        date: '2025-08-10',
+        category: 'post', // 
+        series: '3d-generation',   // 
+        languages: ['eng', 'kor']
+    },
+    {
         id: '250809_gwn',
         title_eng: 'Generalized Winding Number',
-        title_kor: 'Generalized Winding Number 란 무엇인가?',
+        title_kor: 'Generalized Winding Number',
         subtitle_eng: 'How to make a robust SDF using GWN from Mesh',
         subtitle_kor: 'Mesh 에서 GWN 을 이용하여 견고한 SDF 를 계산하는 방법',
         date: '2025-08-09',
@@ -13,7 +24,7 @@ const postsData = [
     {
         id: '250710_building_large_3d_2',
         title_eng: 'Building Large 3D Generative Model (2) VAE and DiT Deep Dive',
-        title_kor: 'Large 3D Generative Model 구축하기 (2) VAE and DiT 톺아보기',
+        title_kor: 'Large 3D Generative Model 구축하기 (2) VAE and DiT 분석',
         subtitle_eng: 'VAE and DiT Architecture for Vecset vs. Sparse-Voxel',
         subtitle_kor: 'VAE and DiT 구조 분석 for Vecset vs. Sparse-Voxel',
         date: '2025-07-10',
@@ -24,7 +35,7 @@ const postsData = [
     {
         id: '250702_building_large_3d_1',
         title_eng: 'Building Large 3D Generative Model (1) Data pre-processing',
-        title_kor: 'Large 3D Generative Model 구축하기 (1) Data pre-processing',
+        title_kor: 'Large 3D Generative Model 구축하기 (1) 데이터 전처리',
         subtitle_eng: 'Watertight Mesh Conversion and Salient Edge Sampling',
         subtitle_kor: 'Watertight Mesh 변환과 Salient Edge Sampling',
         date: '2025-07-02',

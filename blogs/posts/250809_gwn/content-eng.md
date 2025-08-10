@@ -1,5 +1,5 @@
 title: Generalized Winding Number
-date: July 31, 2025
+date: August 09, 2025
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 

@@ -539,7 +539,7 @@ def training_step(self, data, iteration):
 
 Diffusion 모델의 복잡한 score-matching 목적 함수 대신, "_직선 경로의 방향을 예측하라_"는 매우 간단하고 명확한 MSE Loss를 사용함으로써 빠르고 안정적인 학습을 가능하게 한다.
 
-이 Rectified Flow 및 Flow Matching 에 대한 물리적, 수학적 자세한 설명은 다음을 참고: [From Flow Matching to Optimal Transport: A Physics-based View of Generative Models](https://velog.io/@gjghks950/From-Flow-Matching-to-Optimal-Transport-A-Physics-based-View-of-Generative-Models)
+이 Rectified Flow 및 Flow Matching 에 대한 물리적, 수학적 자세한 설명은 다음을 참고: [From Flow Matching to Optimal Transport: A Physics-based View of Generative Models](./?id=250810_flow)
 
 - Flow 에 대한 수학적 정의들과, 왜 Rectified Flow 가 직선 경로를 선택하는지에 대해 물리학적으로 (Optimal Transport, Least Action Principle) 연관지어 설명한다.  
 
@@ -626,7 +626,7 @@ Vecset-based VAE는 Point Cloud 를 이용해 3D shape 의 reconstruction 에만
 
 ~~이 시리즈의 다음 글에서는 본격적으로 Multi-Node, Multi-GPU 환경을 구축하고, DeepSpeed와 FSDP 같은 메모리 최적화 라이브러리의 sharding 전략을 사용하여 거대한 3D Generative Model 을 효율적으로 학습시키는 실전 전략에 대해 다뤄볼 예정이다.~~
 
-원래 이 글의 후속으로 multi-node 학습을 다루려 했으나, Flow Matching 의 중요성을 깊이 있게 설명할 필요성을 느껴 (Section D 중간에 있었으나 Flow 에 대한 자세한 설명이 길어지다 못해 글의 분량을 다 잡아 먹을 것 같아...) Flow A-to-Z 를 상세하게 설명하는 별도의 글로 분리하였다: [From Flow Matching to Optimal Transport: A Physics-based View of Generative Models](https://velog.io/@gjghks950/From-Flow-Matching-to-Optimal-Transport-A-Physics-based-View-of-Generative-Models)
+원래 이 글의 후속으로 multi-node 학습을 다루려 했으나, Flow Matching 의 중요성을 깊이 있게 설명할 필요성을 느껴 (Section D 중간에 있었으나 Flow 에 대한 자세한 설명이 길어지다 못해 글의 분량을 다 잡아 먹을 것 같아...) Flow A-to-Z 를 상세하게 설명하는 별도의 글로 분리하였다: [From Flow Matching to Optimal Transport: A Physics-based View of Generative Models](./?id=250810_flow)
 해당 글에서는 Normalizing Flow 의 정의에서부터 Recitified Flow 까지 자세하게 설명하고, Optimal Transport 와 연결하여 대체 왜? Recitified Flow 가 직선 경로를 채택하였는지 상세하게 설명한다. 
 
 _**Stay Tuned!**_
@@ -638,7 +638,7 @@ You may also like
 - [3D 생성에서 NeRF 와 SDS 는 도태될 수밖에 없는가? (kor)](https://velog.io/@gjghks950/3d)
 - [3D 생성 모델의 시대](./?id=250302_3d_latent_diffusion)
 - [Building Large 3D Generative Models (1) - 3D Data Pre-processing](./id?=250702_building_large_3d_1)
-- [From Flow Matching to Optimal Transport: A Physics-based View of Generative Models (kor)](https://velog.io/@gjghks950/From-Flow-Matching-to-Optimal-Transport-A-Physics-based-View-of-Generative-Models)
+- [From Flow Matching to Optimal Transport: A Physics-based View of Generative Models (kor)](./?id=250810_flow)
 
 ---
 

@@ -524,7 +524,7 @@ def training_step(self, data, iteration):
 
 Instead of the complex score-matching objective function of diffusion models, using a very simple and clear MSE Loss—"predict the direction of the straight path"—enables fast and stable training.
 
-For a detailed physical and mathematical explanation of Rectified Flow and Flow Matching, please refer to the following: [From Flow Matching to Optimal Transport: A Physics-based View of Generative Models](https://velog.io/@gjghks950/From-Flow-Matching-to-Optimal-Transport-A-Physics-based-View-of-Generative-Models)
+For a detailed physical and mathematical explanation of Rectified Flow and Flow Matching, please refer to the following: [From Flow Matching to Optimal Transport: A Physics-based View of Generative Models](./?id=250810_flow)
 
 -   This explains the mathematical definitions of Flow and connects Rectified Flow's choice of a straight path to physics-based concepts (Optimal Transport, Least Action Principle).
 
