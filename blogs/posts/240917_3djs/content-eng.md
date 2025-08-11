@@ -207,17 +207,17 @@ function update() {
 </p>
 <ul>
     <li>
-        <a href="./?id=240805_gs/">
+        <a href="/blogs/posts/?id=240805_gs">
             <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
         </a>
     </li>
     <li>
-        <a href="./?id=240823_grt/">
+        <a href="/blogs/posts/?id=240823_grt">
             <span style="text-decoration: underline;">Don't Rasterize But Ray Trace Gaussian</span>
         </a>
     </li>
     <li>
-        <a href="./?id=240602_2dgs/">
+        <a href="/blogs/posts/?id=240602_2dgs">
             <span style="text-decoration: underline;">Under the 3D: Geometrically Accurate 2D Gaussian Splatting </span>
         </a>
     </li>

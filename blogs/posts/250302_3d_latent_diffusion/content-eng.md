@@ -477,12 +477,12 @@ $$</p>
 </p>
 <ul>
     <li>
-        <a href="./?id=240426_diffusion_depth/">
+        <a href="/blogs/posts/?id=240426_diffusion_depth">
             <span style="text-decoration: underline;">Is Diffusion's Estimated Depth Really Good?</span>
         </a>
     </li>
     <li>
-        <a href="./?id=240805_gs/">
+        <a href="/blogs/posts/?id=240805_gs">
             <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
         </a>
     </li>

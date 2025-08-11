@@ -379,17 +379,17 @@ mesh.export("output.obj")
 </p>
 <ul>
     <li>
-        <a href="./?id=230202_ngp/">
+        <a href="/blogs/posts/?id=230202_ngp">
             <span style="text-decoration: underline;">Instant-NGP Review & Re-Implementation</span>
         </a>
     </li>
     <li>
-        <a href="./?id=211128_fourier/">
+        <a href="/blogs/posts/?id=211128_fourier">
             <span style="text-decoration: underline;">Why Positional Encoding Makes NeRF more Powerful</span>
         </a>
     </li>
     <li>
-        <a href="./?id=240805_gs/">
+        <a href="/blogs/posts/?id=240805_gs">
             <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
         </a>
     </li>

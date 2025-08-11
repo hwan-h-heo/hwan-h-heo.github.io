@@ -563,12 +563,12 @@ author: Hwan Heo
 </p>
 <ul>
     <li>
-        <a href="./?id=240805_gs/">
+        <a href="/blogs/posts/?id=240805_gs">
             <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
         </a>
     </li>
     <li>
-        <a href="./?id=240823_grt/">
+        <a href="/blogs/posts/?id=240823_grt/">
             <span style="text-decoration: underline;">Don't Rasterize, But Ray Trace 3D Gaussian</span>
         </a>
     </li>

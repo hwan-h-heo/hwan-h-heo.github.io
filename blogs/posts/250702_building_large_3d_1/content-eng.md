@@ -553,6 +553,6 @@ The next article in this series will delve into the architectures of ShapeVAE an
 **You may also like:**
 
 -   [Is the Era of NeRF and SDS in 3D Generation Coming to an End? (kor)](https://velog.io/@gjghks950/3d)
--   [The Age of 3D Generative Models](./?id=250302_3d_latent_diffusion)
+-   [The Age of 3D Generative Models](/blogs/posts/?id=250302_3d_latent_diffusion)
 <!-- -   [Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D](https://velog.io/@gjghks950/Building-Large-3D-Generative-Models-from-Scratch-2-Model-Architecture-Deep-Dive-VAE-DiT-and-Flow)
 -   [From Flow Matching to Optimal Transport: A Physics-based View of Generative Models](https://velog.io/@gjghks950/From-Flow-Matching-to-Optimal-Transport-A-Physics-based-View-of-Generative-Models) -->

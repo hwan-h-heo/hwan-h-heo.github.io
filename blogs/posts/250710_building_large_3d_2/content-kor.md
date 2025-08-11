@@ -636,9 +636,9 @@ _**Stay Tuned!**_
 You may also like
 
 - [3D 생성에서 NeRF 와 SDS 는 도태될 수밖에 없는가? (kor)](https://velog.io/@gjghks950/3d)
-- [3D 생성 모델의 시대](./?id=250302_3d_latent_diffusion)
-- [Building Large 3D Generative Models (1) - 3D Data Pre-processing](./id?=250702_building_large_3d_1)
-- [From Flow Matching to Optimal Transport: A Physics-based View of Generative Models (kor)](./?id=250810_flow)
+- [3D 생성 모델의 시대](/blogs/posts/?id=250302_3d_latent_diffusion)
+- [Building Large 3D Generative Models (1) - 3D Data Pre-processing](/blogs/posts/id?=250702_building_large_3d_1)
+- [From Flow Matching to Optimal Transport: A Physics-based View of Generative Models (kor)](/blogs/posts/?id=250810_flow)
 
 ---
 

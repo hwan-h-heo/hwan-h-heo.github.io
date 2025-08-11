@@ -941,12 +941,12 @@ export { SimpleModelViewer };
 </p>
 <ul>
     <li>
-        <a href="./?id=240917_3djs/">
+        <a href="/blogs/posts/?id=240917_3djs">
             <span style="text-decoration: underline;">Add Gaussian Splatting to your Website</span>
         </a>
     </li>
     <li>
-        <a href="./?id=250302_3d_latent_diffusion/">
+        <a href="/blogs/posts/?id=250302_3d_latent_diffusion">
             <span style="text-decoration: underline;">A Deep Dive into 3D Latent Diffusion</span>
         </a>
     </li>

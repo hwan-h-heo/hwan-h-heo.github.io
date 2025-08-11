@@ -575,4 +575,4 @@ salient_points = mesh.salient_point_sample(64000, thresh_bihedral=30)
 You may also likes
 
 - [3D 생성에서 NeRF 와 SDS 는 도태될 수밖에 없는가? (velog)](https://velog.io/@gjghks950/3d)
-- [3D 생성 모델의 시대](./?id=250302_3d_latent_diffusion)
+- [3D 생성 모델의 시대](/blogs/posts/?id=250302_3d_latent_diffusion)

@@ -1012,9 +1012,9 @@ Flow 는 최근 이미지, 비디오 뿐만 아니라 3D 생성에서도 Network
 You may also likes
 
 - [3D 생성에서 NeRF 와 SDS 는 도태될 수밖에 없는가?](https://velog.io/@gjghks950/3d)
-- [3D 생성 모델의 시대](https://velog.io/@gjghks950/3D-%EC%83%9D%EC%84%B1-%EB%AA%A8%EB%8D%B8%EC%9D%98-%EC%8B%9C%EB%8C%80-from-ShapeVAE-to-Trellis-Hunyuan3D)
-- [Building Large 3D Generative Models (1) - 3D Data Pre-processing](https://velog.io/@gjghks950/Building-Large-3D-Generative-Models-from-Scratch-1-3D-Data-Pre-processing)
-- [Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D](https://velog.io/@gjghks950/Building-Large-3D-Generative-Models-from-Scratch-2-Model-Architecture-Deep-Dive-VAE-DiT-and-Flow)
+- [3D 생성 모델의 시대](/blogs/posts/?id=250302_3d_latent_diffusion)
+- [Building Large 3D Generative Models (1) - 3D Data Pre-processing](/blogs/posts/?id=250702_build_large_3d_1)
+- [Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D](/blogs/posts/?id=250710_build_large_3d_2)
 
 **References**
 
