@@ -1,4 +1,4 @@
 # hwan-h-heo.io
-Personal Blog of Hwan Heo 
+Personal Portpolio & Blog of Hwan Heo 
 
-Cite: https://hwan-h-heo.github.io/hwan-h-heo.io/
+Cite: https://hwan-h-heo.github.io
