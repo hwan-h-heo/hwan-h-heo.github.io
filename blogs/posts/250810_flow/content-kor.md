@@ -25,7 +25,7 @@ author: Hwan Heo
 
 ---
 
-# Introduction
+#### Introduction
 
 최근 생성 모델의 흐름은 크게 두 가지 접근법으로 나눌 수 있다. 
 
@@ -499,7 +499,7 @@ $$
 
 ---
 
-### **3.3. Rectified Flow**
+### 3.3. Rectified Flow
 
 CFM 의 틀 안에서, 우리는 어떤 **_'Conditional Path'_** 든 자유롭게 설계할 수 있다. 여기서 Rectified Flow는 가장 단순하고 직관적인 선택을 한다.
 
@@ -517,9 +517,11 @@ $
 이다.
 
 이제 CFM 의 loss function 에 이를 대입하면 Rectified Flow 의 최종 목표 함수가 완성된다.
+<p>
 $$
 \mathcal{L} = \mathbb{E}_{t \sim U, x_0 \sim p_0, x_1 \sim p_1} \left[ \left\| v_\theta((1-t)x_0 + tx_1, t) - (x_1 - x_0) \right\|^2 \right]
 $$
+</p>
 
 신경망은 중간 지점 $x_t$를 보고, 최종 목적지에서 출발지를 뺀 방향 벡터 ($x_1 - x_0$) 를 맞추는 _**아주 간단한 regression 문제**_ 를 풀게 된다. 이 단순함이 비약적인 학습 속도와 안정성을 가져온다.
 
@@ -991,7 +993,7 @@ Rectified Flow 의 성공은 '단순한 직선'이라는 아름다운 편견 덕
 
 --- 
 
-# 마치며 
+#### 마치며 
 
 여기까지 긴 글을 읽어주셔서 감사합니다. 
 

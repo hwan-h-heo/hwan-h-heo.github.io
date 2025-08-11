@@ -173,7 +173,6 @@
                     <!-- Divider-->
                     <!-- Pager-->
                     <div class="mb-5 d-flex justify-content-end">
-                        <!-- <button class="btn btn-primary rounded-pill btn-sm d-inline scroll-top" id="scroll-top"><strong><i class="bi bi-arrow-up-short"></i></strong></button> -->
                         <button id="scroll-top" class="scroll-top button_top d-flex align-items-center justify-content-center">
                             <svg class="svgIcon" viewBox="0 0 384 512">
                               <path
@@ -249,13 +248,10 @@
 
                 if (searchInput) {
                     searchInput.addEventListener('keyup', function(e) {
-                        // Enter 키를 눌렀을 때만 동작
                         if (e.key === 'Enter') {
                             const searchTerm = searchInput.value.trim();
 
-                            // 검색어가 있을 경우에만 검색 페이지로 이동
                             if (searchTerm) {
-                                // encodeURIComponent를 사용해 특수문자나 공백을 안전하게 URL에 포함시킵니다.
                                 window.location.href = `/blogs/search/?q=${encodeURIComponent(searchTerm)}`;
                             }
                         }
@@ -263,67 +259,13 @@
                 }
                 if (searchForm) {
                     searchForm.addEventListener('submit', function(e) {
-                        e.preventDefault(); // 기본 폼 제출 동작 방지
+                        e.preventDefault(); 
                         const newSearchTerm = searchInput.value.trim();
                         if (newSearchTerm) {
                             window.location.href = `/blogs/search/?q=${encodeURIComponent(newSearchTerm)}`;
                         }
                     });
                 }
-                // 검색 이벤트 리스너
-                // searchInput.addEventListener('keyup', function(e) {
-                //     const searchTerm = e.target.value.toLowerCase();
-
-                //     // 모든 탭의 콘텐츠를 검색 대상으로 포함
-                //     const postsToSearch = document.querySelectorAll('.post-preview');
-                //     const seriesToSearch = document.querySelectorAll('.series-group');
-
-                //     // 'Posts' 탭과 'Notes' 탭의 게시물 필터링
-                //     postsToSearch.forEach(post => {
-                //         const title = post.querySelector('.post-title').textContent.toLowerCase();
-                //         const subtitleElement = post.querySelector('.post-subtitle');
-                //         const subtitle = subtitleElement ? subtitleElement.textContent.toLowerCase() : '';
-
-                //         // 제목 또는 부제목에 검색어가 포함되어 있는지 확인
-                //         if (title.includes(searchTerm) || subtitle.includes(searchTerm)) {
-                //             post.style.display = 'block';
-                //             const nextHr = post.nextElementSibling;
-                //             if (nextHr && nextHr.tagName === 'HR') {
-                //                 nextHr.style.display = 'block';
-                //             }
-                //         } else {
-                //             post.style.display = 'none';
-                //             const nextHr = post.nextElementSibling;
-                //             if (nextHr && nextHr.tagName === 'HR') {
-                //                 nextHr.style.display = 'none';
-                //             }
-                //         }
-                //     });
-
-                //     // 'Series' 탭의 게시물 필터링
-                //     seriesToSearch.forEach(series => {
-                //         const seriesTitle = series.querySelector('.series-title').textContent.toLowerCase();
-                //         const postsInSeries = series.querySelectorAll('li');
-                //         let hasVisiblePost = false;
-
-                //         postsInSeries.forEach(post => {
-                //             const postTitle = post.querySelector('a').textContent.toLowerCase();
-                //             if (postTitle.includes(searchTerm)) {
-                //                 post.style.display = 'list-item';
-                //                 hasVisiblePost = true;
-                //             } else {
-                //                 post.style.display = 'none';
-                //             }
-                //         });
-
-                //         // 시리즈 제목 또는 시리즈 내 게시물에 검색어가 포함된 경우 시리즈 전체를 표시
-                //         if (seriesTitle.includes(searchTerm) || hasVisiblePost) {
-                //             series.style.display = 'block';
-                //         } else {
-                //             series.style.display = 'none';
-                //         }
-                //     });
-                // });
             });
         </script>
     </main>

@@ -150,6 +150,7 @@ function loadAndRenderPost(postId, lang) {
     }
 
     const postContentEl = document.getElementById('post-content');
+    const back2topEl = document.getElementById('back-to-top');
     postContentEl.style.fontSize = '1.2rem';
 
     if (lang === 'kor') {
@@ -191,7 +192,7 @@ function loadAndRenderPost(postId, lang) {
             // 페이지 제목 및 메타 정보 업데이트
             document.getElementById('post-title').innerText = title;
             document.title = title;
-            document.getElementById('post-meta').innerText = `Posted by ${author} on ${date}`;
+            document.getElementById('post-meta').innerText = `Posted on ${date}`; // by ${author} 
             
             let finalHtmlContent;
 
@@ -225,6 +226,8 @@ function loadAndRenderPost(postId, lang) {
                 }); 
             if (typeof initializeToc === 'function') initializeToc(); 
             if (typeof initializeShareFunctionality === 'function') initializeShareFunctionality();
+
+            back2topEl.style.visibility = 'visible';
             
             // custom script code for three-js viewer
             
@@ -238,8 +241,6 @@ function loadAndRenderPost(postId, lang) {
                         console.error("Failed to load the Gaussian viewer script:", err);
                     });
             }
-
-            
         })
         .catch(error => {
             console.error('Error Loading:', error);

@@ -25,7 +25,7 @@ author: Hwan Heo
 
 ---
 
-# Introduction
+#### Introduction
 
 The recent landscape of generative models can be broadly divided into two main approaches.
 
@@ -474,7 +474,7 @@ This idea of a **_'deterministic path connecting two points'_** aligns with the 
 
 ---
 
-### **3.3. Rectified Flow**
+### 3.3. Rectified Flow
 
 Within the framework of CFM, we are free to design any **_'Conditional Path'_**. Here, Rectified Flow makes the simplest and most intuitive choice.
 
@@ -491,9 +491,11 @@ $  u_t(x_t|x_0, x_1) = \frac{dx_t}{dt} = x_1 - x_0
 $
 
 Now, substituting this into the CFM loss function completes the final objective function for Rectified Flow.
+<p>
 $$
 \mathcal{L} = \mathbb{E}_{t \sim U, x_0 \sim p_0, x_1 \sim p_1} \left[ \left\| v_\theta((1-t)x_0 + tx_1, t) - (x_1 - x_0) \right\|^2 \right]
 $$
+</p>
 
 The neural network learns to solve a _**very simple regression problem**_: given an intermediate point $x_t$, predict the direction vector from the start point to the destination ($x_1 - x_0$). This simplicity brings about dramatic improvements in training speed and stability.
 
@@ -952,7 +954,7 @@ The success of Rectified Flow is indeed thanks to the beautiful bias of a 'simpl
 
 ---
 
-# In Closing
+#### In Closing
 
 Thank you for reading this long article.
 
