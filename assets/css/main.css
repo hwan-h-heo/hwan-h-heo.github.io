@@ -560,6 +560,7 @@ section,
   height: 100%;
   object-fit: cover;
   z-index: 1;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
 }
 
 @media (max-width: 768px) {

@@ -591,7 +591,8 @@ $$
 유튜브 veritasium 에 action 에 대해서 정말 훌륭하게 설명하는 영상이 있으므로 참고하길 바란다: [영상 link](https://www.youtube.com/watch?v=Q10_srZ-pbs&t=1658s)
 
 <img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/253304cd-36b1-4d87-a4f5-10e9906b00b8/image.png'>
-- _[Fermat's Principle](https://en.wikipedia.org/wiki/Fermat%27s_principle) 로 알려진 빛의 굴절 현상도 (거리가 아닌 시간 최소화) Least Action Principle 의 한 예이다. _
+
+- [Fermat's Principle](https://en.wikipedia.org/wiki/Fermat%27s_principle) 로 알려진 빛의 굴절 현상도 (거리가 아닌 시간 최소화) Least Action Principle 의 한 예이다. 
 
 이제 가장 간단한 경우, 즉 아무런 힘 (중력, 마찰 등)이 작용하지 않는 **자유 공간을 움직이는 단일 입자**를 생각해보자. 이 경우 위치 에너지는 $V=0$ 이며, 라그랑지언은 순수하게 운동 에너지만 남게된다.
 

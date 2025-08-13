@@ -561,7 +561,8 @@ $$
 The YouTube channel Veritasium has an excellent video explaining action, which I highly recommend: [video link](https://www.youtube.com/watch?v=Q10_srZ-pbs&t=1658s)
 
 <img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/253304cd-36b1-4d87-a4f5-10e9906b00b8/image.png'>
-- _The phenomenon of light refraction, known as [Fermat's Principle](https://en.wikipedia.org/wiki/Fermat%27s_principle) (minimizing time, not distance), is also an example of the Least Action Principle._
+
+- The phenomenon of light refraction, known as [Fermat's Principle](https://en.wikipedia.org/wiki/Fermat%27s_principle) (minimizing time, not distance), is also an example of the Least Action Principle.
 
 Now, let's consider the simplest case: a **single particle moving in free space** where no forces (like gravity or friction) are acting upon it. In this case, the potential energy is $V=0$, and the Lagrangian is purely kinetic energy.
 
