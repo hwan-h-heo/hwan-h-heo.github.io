@@ -315,9 +315,11 @@ While Continuous Normalizing Flow (CNF) facilitated computation by replacing the
 
 The ideal loss function for training a velocity field $v_\theta(x_t, t)$ with a Neural Network is as follows:
 
+<p>
 $$
 \mathcal{L} = \mathbb{E}_{t \sim \mathcal{U}, x_t \sim p_t} [\|v_\theta(x_t, t) - u_t(x_t)\|^2]
 $$
+</p>
 
 This loss function is a regression problem that predicts the actual velocity field $u_t(x_t)$ at a point, given a sample $x_t$ at time $t$.
 
@@ -410,9 +412,12 @@ $$
 > **_ Therefore, the total loss function is equivalent to the conditional loss function._**
 
 From the first fact, it is proven that the ideal but computationally infeasible loss function we wanted to solve is equivalent to the computable conditional loss function.
+
+<p>
 $$
 \mathcal{L}_{\text{marginal}} = \mathbb{E}_{t, x_t} [\|v_\theta - u_t\|^2] \\ \iff \\ \mathcal{L}_{\text{CFM}} = \mathbb{E}_{t, x_1, x_t|x_1} [\|v_\theta - u_t(\cdot|x_1)\|^2] + C
 $$
+</p>
 
 The reason the two losses are equivalent becomes clear when we examine the inner product term that appears when expanding the loss function.
 <p>

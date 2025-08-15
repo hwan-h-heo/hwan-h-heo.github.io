@@ -1,81 +1,70 @@
-/**
-* Template Name: iPortfolio
-* Template URL: https://bootstrapmade.com/iportfolio-bootstrap-portfolio-websites-template/
-* Updated: Jun 29 2024 with Bootstrap v5.3.3
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
-
-(function() {
-  "use strict";
-
-  /**
-   * Header toggle
-   */
+document.addEventListener('DOMContentLoaded', () => {
+  const header = document.getElementById('header');
+  const hero = document.getElementById('home');
   const headerToggleBtn = document.querySelector('.header-toggle');
+  let observer;
 
   function headerToggle() {
-    document.querySelector('#header').classList.toggle('header-show');
+    // 모바일에서 토글 시 hidden 클래스를 사용
+    header.classList.toggle('hidden');
     headerToggleBtn.classList.toggle('bi-list');
     headerToggleBtn.classList.toggle('bi-x');
   }
+
+  function setupDesktopObserver() {
+    if (!hero) return;
+    observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        // hero 섹션이 보이면 헤더 숨김, 안 보이면 헤더 표시
+        if (entry.isIntersecting) {
+          header.classList.add('hidden');
+        } else {
+          header.classList.remove('hidden');
+        }
+      });
+    }, { threshold: 0.2 });
+    observer.observe(hero);
+  }
+
+  function handleHeaderState() {
+    if (window.innerWidth >= 1200) {
+      // 데스크톱 상태 관리
+      headerToggleBtn.classList.remove('bi-x');
+      headerToggleBtn.classList.add('bi-list');
+      // Observer가 없으면 새로 생성
+      if (!observer) {
+        setupDesktopObserver();
+      }
+    } else {
+      // 모바일 상태 관리
+      if (observer) {
+        observer.disconnect();
+        observer = null; // Observer 참조 제거
+      }
+      // 모바일에서는 토글 버튼 클릭 전까지 항상 숨김
+      header.classList.add('hidden');
+      headerToggleBtn.classList.remove('bi-x');
+      headerToggleBtn.classList.add('bi-list');
+    }
+  }
+
   headerToggleBtn.addEventListener('click', headerToggle);
 
-  /**
-   * Hide mobile nav on same-page/hash links
-   */
   document.querySelectorAll('#navmenu a').forEach(navmenu => {
     navmenu.addEventListener('click', () => {
-      if (document.querySelector('.header-show')) {
+      if (window.innerWidth < 1200 && !header.classList.contains('hidden')) {
         headerToggle();
       }
     });
-
   });
 
-  /**
-   * Toggle mobile nav dropdowns
-   */
-  document.querySelectorAll('.navmenu .toggle-dropdown').forEach(navmenu => {
-    navmenu.addEventListener('click', function(e) {
-      e.preventDefault();
-      this.parentNode.classList.toggle('active');
-      this.parentNode.nextElementSibling.classList.toggle('dropdown-active');
-      e.stopImmediatePropagation();
-    });
-  });
+  // 초기 로드 시 및 창 크기 변경 시 상태 핸들러 실행
+  handleHeaderState();
+  window.addEventListener('resize', handleHeaderState);
+});
 
-  /**
-   * Preloader
-   */
-  const preloader = document.querySelector('#preloader');
-  if (preloader) {
-    window.addEventListener('load', () => {
-      preloader.remove();
-    });
-  }
-
-  /**
-   * Scroll top button
-   */
-  let scrollTop = document.querySelector('.scroll-top');
-
-  function toggleScrollTop() {
-    if (scrollTop) {
-      window.scrollY > 100 ? scrollTop.classList.add('active') : scrollTop.classList.remove('active');
-    }
-  }
-  scrollTop.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  });
-
-  window.addEventListener('load', toggleScrollTop);
-  document.addEventListener('scroll', toggleScrollTop);
-
+(function() {
+  "use strict";
   /**
    * Animation on scroll function and init
    */
@@ -137,19 +126,26 @@
   /**
    * Init isotope layout and filters
    */
+  const isotopeInstances = [];
+
   document.querySelectorAll('.isotope-layout').forEach(function(isotopeItem) {
     let layout = isotopeItem.getAttribute('data-layout') ?? 'masonry';
     let filter = isotopeItem.getAttribute('data-default-filter') ?? '*';
     let sort = isotopeItem.getAttribute('data-sort') ?? 'original-order';
 
+    const isotopeContainer = isotopeItem.querySelector('.isotope-container');
     let initIsotope;
-    imagesLoaded(isotopeItem.querySelector('.isotope-container'), function() {
-      initIsotope = new Isotope(isotopeItem.querySelector('.isotope-container'), {
+
+    imagesLoaded(isotopeContainer, function() {
+      initIsotope = new Isotope(isotopeContainer, {
         itemSelector: '.isotope-item',
         layoutMode: layout,
         filter: filter,
-        sortBy: sort
+        sortBy: sort,
+        percentPosition: true
       });
+
+      isotopeInstances.push(initIsotope);
     });
 
     isotopeItem.querySelectorAll('.isotope-filters li').forEach(function(filters) {
@@ -164,7 +160,30 @@
         }
       }, false);
     });
+  });
 
+  // 3. Lazy Loading 
+  const lazyImages = document.querySelectorAll('.lazy-image');
+  const lazyImageObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const lazyImage = entry.target;
+
+        lazyImage.addEventListener('load', () => {
+          isotopeInstances.forEach(instance => {
+            instance.layout();
+          });
+        }, { once: true });
+
+        lazyImage.src = lazyImage.dataset.src;
+        lazyImage.classList.remove('lazy-image');
+        observer.unobserve(lazyImage);
+      }
+    });
+  });
+
+  lazyImages.forEach(lazyImage => {
+    lazyImageObserver.observe(lazyImage);
   });
 
   /**
@@ -227,3 +246,29 @@
   document.addEventListener('scroll', navmenuScrollspy);
 
 })();
+
+document.addEventListener('DOMContentLoaded', () => {
+  "use strict";
+
+  /**
+   * Scroll top button
+   */
+  const scrollTop = document.querySelector('#scroll-top');
+
+  if (scrollTop) {
+    const togglescrollTop = function() {
+      window.scrollY > 100 ? scrollTop.classList.add('active') : scrollTop.classList.remove('active');
+    }
+    
+    window.addEventListener('load', togglescrollTop);
+    document.addEventListener('scroll', togglescrollTop);
+    
+    scrollTop.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  }
+
+});

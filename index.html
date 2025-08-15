@@ -5,16 +5,18 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Hwan Heo's Log</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
+  <meta name="description" content="Hwan Heo's personal portfolio site" />
+  <meta name="author" content="Hwan Heo" />
 
   <!-- Favicons -->
   <link href="assets/favicon.ico" rel="icon">
   <link href="assets/favicon.ico" rel="apple-touch-icon">
 
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link rel="preconnect" href="<https://fonts.googleapis.com>">
+  <link rel="preconnect" href="<https://fonts.gstatic.com>" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
@@ -25,11 +27,9 @@
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
   <!-- Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet">
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.17/fullpage.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.17/fullpage.js"></script>
+  <link href="assets/css/used.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1.9.1/css/academicons.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
@@ -43,9 +43,10 @@
 
 <body class="index-page">
 
-  <header id="header" class="header dark-background d-flex flex-column">
+  <div class="mobile-topbar">
     <i class="header-toggle d-xl-none bi bi-list"></i>
-
+  </div>
+  <header id="header" class="header hidden dark-background d-flex flex-column">
     <div class="profile-img">
       <img src="assets/icon.webp" alt="" class="img-fluid rounded-circle">
     </div>
@@ -58,7 +59,7 @@
       <a href="https://github.com/hwanhuh" class="github"><i class="bi bi-github"></i></a>
       <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin"><i class="bi bi-linkedin"></i></a>
       <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram"><i class="ai ai-google-scholar"></i></a>
-      <a href="mailto:gjghks950@naver.com" class="google-plus"><i class="bi bi-envelope"></i></a>
+      <a href="mailto:gjghks950@naver.com" class="google-plus"><i class="bi bi-envelope-fill"></i></a>
     </div>
 
     <nav id="navmenu" class="navmenu">
@@ -70,23 +71,30 @@
         <li><a href="#blog"> <i class="bi bi-keyboard navicon"></i> Blog </a></li>
       </ul>
     </nav>
-
   </header>
 
   <main class="main">
     <!-- Hero Section -->
     <section id="home" class="hero section dark-background">
-      <img src="assets/photo2.jpg" alt="" data-aos="fade-in" class="">
-      <div class="container" data-aos="fade-up" data-aos-delay="100" style="margin-left: 3rem;">
-        <h2>Hwan Heo</h2>
-        <hr/ style="width: 50%; border-top: 0.15em solid">
-        <p>Hello, I'm <span class="typed" data-typed-items="AI Researcher, AI Engineer">AI Researcher</span><span class="typed-cursor typed-cursor--blink" aria-hidden="true"></span><span class="typed-cursor typed-cursor--blink" aria-hidden="true"></span></p>
+      <div class="hero-content">
+        <img alt="Hwan Heo" class="rounded-circle mb-4" src="./assets/icon.webp" style="width: 120px; height: 120px;" />
+        <h1>Hwan Heo</h1>
+        <hr/>
+        <p class="subtitle">
+          Hello, I'm <span class="typed" data-typed-items="AI Researcher, AI Engineer"></span>
+        </p>
+        <p class="lead">Exploring the frontiers of 3D Computer Vision & Machine Learning</p>
+        <div class="social-links">
+            <a aria-label="GitHub" href="https://github.com/hwanhuh"><i class="bi bi-github"></i></a>
+            <a aria-label="LinkedIn" href="https://www.linkedin.com/in/hwan-heo-0905korea/"><i class="bi bi-linkedin"></i></a>
+            <a aria-label="Google Scholar" href="https://scholar.google.com/citations?user=RulvYTkAAAAJ"><i class="ai ai-google-scholar"></i></a>
+            <a aria-label="Email" href="mailto:gjghks950@naver.com"><i class="bi bi-envelope-fill"></i></a>
+        </div>
       </div>
     </section><!-- /Hero Section -->
 
     <!-- About Section -->
     <section id="about" class="about section">
-
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2>About</h2>
@@ -98,7 +106,7 @@
       <div class="container" data-aos="fade-up" data-aos-delay="100">
 
         <div class="row gy-4 justify-content-center">
-          <div class="col-lg-4">
+          <div class="col-lg-4" style="transition: 0.3s ease-in-out;">
             <img src="assets/prof2.jpg" class="img-fluid" alt="">
           </div>
           <div class="col-lg-8 content">
@@ -126,7 +134,7 @@
         </div>
 
       </div>
-
+      <a href="#about" class="scroll-down-arrow" aria-label="Scroll down"><i class="bi bi-chevron-double-down"></i></a>
     </section><!-- /About Section -->
 
     <!-- Resume Section -->
@@ -183,48 +191,44 @@
           </div>
 
           <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200" style="padding-right: 1rem; padding-left: 2rem;">
-            <h3 class="resume-title">Professional Experience</h3>
+            <h3 class="resume-title">Experience</h3>
             <div class="resume-item">
-              <h4>AI Researcher</h4>
+              <h4><i class="bi bi-building-fill"></i> AI Researcher</h4>
               <h5>2025 - Present</h5>
               <p><em>3D Generation, NC AI </em></p>
               <ul>
-                <li>Designed and developed core algorithms for Varco 3D, NC AI's flagship 3D generation service <a href="https://www.varco.ai/3d" class="bi bi-link-45deg"></a> </li>
+                <li>Designed and developed core algorithms for <em>Varco 3D</em>, NC AI's flagship 3D generation service <a href="https://www.varco.ai/3d" class="bi bi-link-45deg"></a> </li>
               </ul>
             </div><!-- Edn Resume Item -->
 
             <div class="resume-item">
-              <h4>AI Researcher</h4>
+              <h4><i class="bi bi-building-fill"></i> AI Researcher</h4>
               <h5>2023 - 2025</h5>
               <p><em>Neural Rendering &amp; 3D Generation, NCSOFT Research </em></p>
               <ul>
-                <li>Led research and development of 3D asset generation, focusing on 3D Latent Diffusion and Texture Synthesis. <a href="https://ncsoft.github.io/CaPa/" class="bi bi-link-45deg"></a> </li>
+                <li>Led research and development of 3D asset generation, focusing on 3D Latent Diffusion and Texture Synthesis: <em>CaPa</em> <a href="https://ncsoft.github.io/CaPa/" class="bi bi-link-45deg"></a> </li>
                 <li>
                   Developed and applied novel Neural Rendering solutions, including:
-                  <ul>
-                    <li>
-                      Integrating Gaussian Splatting into a proprietary game engine <a href="projects/nerf_in_game/" class="bi bi-link-45deg"></a>.
-                    </li>
-                    <li>
-                      Creating a high-speed Neural Facial Avatar for multi-camera systems <a href="projects/face_nerf/" class="bi bi-link-45deg"></a>.
-                    </li>
-                  </ul>
                 </li>
+                <ul>
+                  <li>
+                    Integrating Gaussian Splatting into a proprietary game engine <a href="projects/nerf_in_game/" class="bi bi-link-45deg"></a>
+                  </li>
+                  <li>
+                    Creating a high-speed Neural Facial Avatar for multi-camera systems <a href="projects/face_nerf/" class="bi bi-link-45deg"></a>
+                  </li>
+                </ul>
               </ul>
             </div><!-- Edn Resume Item -->
 
             <div class="resume-item">
-              <h4>AI Researcher (Intern)</h4>
+              <h4><i class="bi bi-building-fill"></i> AI Researcher, Intern</h4>
               <h5>2022</h5>
               <p><em>Generation Research, NAVER AI Lab</em></p>
               <ul>
                 <li>
-                  Researched a novel Neural Rendering method using joint optimization of camera poses and hash grid radiance fields.
+                  Researched a novel neural rendering method using joint optimization of camera poses and hash grid radiance fields
                   <a href="https://dl.acm.org/doi/10.5555/3618408.3618936" class="bi bi-link-45deg"></a></p>
-                </li>
-                <li>
-                  Image-to-Image Translation model specifically for equirectangular (360-degree) images.
-                  <a href="https://arxiv.org/abs/2304.04960" class="bi bi-link-45deg"></a></p>
                 </li>
               </ul>
             </div><!-- Edn Resume Item -->
@@ -249,7 +253,7 @@
         <h5>Featured Publications &amp Projects</h5>
       </div><!-- End Section Title -->
 
-      <div class="container">
+      <div class="container col-12">
         <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
           <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
             <li data-filter="*" class="filter-active">All</li>
@@ -258,245 +262,112 @@
             <li data-filter=".filter-per">Personal</li>
           </ul><!-- End Portfolio Filters -->
 
-          <div class="row gy-4 isotope-container" >
+          <div class="row gy-4 isotope-container" data-aos="fade-up">
             <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-app"> 
-              <a class="portfolio-box" href="https://www.varco.ai/3d">
-                  <div class="polaroid">
-                      <div class="aspect-ratio-box">
+                <a class="portfolio-box" href="https://www.varco.ai/3d" target="_blank" rel="noopener noreferrer">
+                    <div class="aspect-ratio-box">
                         <video id="video-1" autoplay loop muted playsinline>
-                          <source src='https://www.varco.ai/3d/assets/HeroVideo-CSmSoyJu.mp4' type='video/mp4'>
+                            <source src='https://www.varco.ai/3d/assets/HeroVideo-CSmSoyJu.mp4' type='video/mp4'>
                         </video>
-                      </div>
-                      <div class="top-left"> <h6><span class="badge text-bg-secondary">Commercial AI Service</span></h6> </div>
-                      <div class="polar_content">
-                        <h6 style="color:#f1f1f1">Varco 3D: A Cutting-edge Commercial AI Service for 3D Generation. </h6>
-                      </div>
-                  </div>
-                    
-                  <div class="portfolio-box-caption">
-                      <div class="project-name">
-                        <h6 style="color:#f1f1f1">Architected core generative AI models for a commercial image/text-to-3D service.</h6>
-                      </div>
-                      <div class="project-category text-white-50">NC AI</div>
-                  </div>
-              </a>
-          </div>
-
-          <div class="row gy-4 isotope-container" >
-            <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-research filter-app"> 
-              <a class="portfolio-box" href="projects/capa/">
-                  <div class="polaroid">
-                      <div class="aspect-ratio-box"><img class="img-fluid lazy-image" data-src="https://github.com/ncsoft/CaPa/raw/main/assets/teaser.gif" alt="CaPa teaser"></div>
-                      <div class="top-left"> <h6><span class="badge text-bg-success">Featured on HuggingFace Daily Papers, TLDR AI</span></h6> </div>
-                      <div class="polar_content">
-                        <h6 style="color:#f1f1f1">CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation</h6>
-                      </div>
-                  </div>
-                    
-                  <div class="portfolio-box-caption">
-                      <div class="project-name">
-                        <h6 style="color:#f1f1f1">3D asset generation scheme that generates <em>4K Textured Mesh</em> under 30 seconds</h6>
-                      </div>
-                      <div class="project-category text-white-50">NC Research</div>
-                  </div>
-              </a>
-          </div>
-
-          <div class="row gy-4 isotope-container" >
-            <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-research"> 
-              <a class="portfolio-box" href="projects/instant_pose/">
-                  <div class="polaroid">
-                      <div class="aspect-ratio-box"><img class="img-fluid lazy-image" data-src="projects/instant_pose/assets/pose_fig2.jpg" alt="Pose teaser"></div>
-                      <div class="top-left"> <h6><span class="badge text-bg-primary">ICML 2023</span></h6> </div>
-                      <div class="polar_content">
-                        <h6 style="color:#f1f1f1">Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</h6>
-                      </div>
-                  </div>
-                    
-                  <div class="portfolio-box-caption">
-                      <div class="project-name">
-                        <h6 style="color:#f1f1f1">Joint optimization of camera poses and hash-grid NeRF (Instant-NGP) </h6>
-                      </div>
-                      <div class="project-category text-white-50">Naver AI Lab</div>
-                  </div>
-              </a>
-          </div>
-
-          <div class="row gy-4 isotope-container" >
-            <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-research"> 
-              <a class="portfolio-box" href="projects/few_nerf/">
-                  <div class="polaroid">
-                      <div class="aspect-ratio-box">
-                        <img class="img-fluid lazy-image" data-src="projects/few_nerf/assets/main.jpg" alt="Occ-NeRF teaser">
-                      </div>
-                      <div class="top-left"> <h6><span class="badge text-bg-primary">arXiv 2023</span></h6> </div>
-                      <div class="polar_content">
-                        <h6 style="color:#f1f1f1">Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild</h6>
-                      </div>
-                  </div>
-                    
-                  <div class="portfolio-box-caption">
-                      <div class="project-name">
-                        <h6 style="color:#f1f1f1"> Neural scene reconstruction from a small number of unconstrained in-the-wild photos. </h6>
-                      </div>
-                      <div class="project-category text-white-50">Korea University</div>
-                  </div>
-              </a>
-          </div>
-
-          <div class="row gy-4 isotope-container" >
-            <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-app"> 
-              <a class="portfolio-box" href="projects/nerf_in_game/">
-                  <div class="polaroid">
-                      <div class="aspect-ratio-box">
-                        <img class="img-fluid lazy-image" data-src="projects/nerf_in_game/teaser.jpg" alt="NeRF Game teaser">
-                      </div>
-                      <div class="polar_content">
-                        <h6 style="color:#f1f1f1">Neural Rendering in Game Engine </h6>
-                      </div>
-                  </div>
-                    
-                  <div class="portfolio-box-caption">
-                      <div class="project-name">
-                        <h6 style="color:#f1f1f1"> Integration Gaussian Splatting from 360 cameras to the Game Engine </h6>
-                      </div>
-                      <div class="project-category text-white-50">NC Research</div>
-                  </div>
-              </a>
-          </div>
-
-          <div class="row gy-4 isotope-container" >
-            <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-per filter-app"> 
-              <a class="portfolio-box" href="projects/deepsfm/">
-                  <div class="polaroid">
-                      <div class="aspect-ratio-box">
-                        <img class="img-fluid lazy-image" data-src="https://hwan-h-heo.github.io/blogs/posts/240721_sfm/assets/pen_sparse_vggsfm_2dgs.gif" alt="NeRF Face teaser">
-                      </div>
-                      <div class="top-left"> <h6><span class="badge text-bg-success">Featured on Github (200+ stars)</span></h6> </div>
-                      <div class="polar_content">
-                        <h6 style="color:#f1f1f1"> Radiance Fields from Deep-based Structure-from-Motion </h6>
-                      </div>
-                  </div>
-                    
-                  <div class="portfolio-box-caption">
-                      <div class="project-name">
-                        <h6 style="color:#f1f1f1"> Exploring Gaussian Splatting reconstruction from VGGSfM and MaST3R </h6>
-                      </div>
-                      <div class="project-category text-white-50">Personal Project</div>
-                  </div>
-              </a>
-          </div>
-
-          <div class="row gy-4 isotope-container" >
-              <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-per filter-app"> 
-                <a class="portfolio-box" href="projects/2dgs_viewer/">
-                    <div class="polaroid">
-                        <div class="aspect-ratio-box">
-                          <img class="img-fluid lazy-image" data-src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_train.gif" alt="NeRF light teaser">
-                        </div>
-                        <div class="top-left"> <h6><span class="badge text-bg-success">Featured on Github (150+ stars)</span></h6> </div>
-                        <div class="polar_content">
-                          <h6 style="color:#f1f1f1"> Custom Web Viewer for 2D Gaussian Splatting </h6>
-                        </div>
                     </div>
-                      
-                    <div class="portfolio-box-caption">
-                        <div class="project-name">
-                          <h6 style="color:#f1f1f1"> First public viewer for 2D Gaussian Splatting using nerfstudio's viser </h6>
-                        </div>
-                        <div class="project-category text-white-50">Personal Project</div>
+                    <div class="top-left"> <h6><span class="badge text-bg-secondary">Commercial AI Service</span></h6> </div>
+                    <div class="polar_content">
+                        <h6>Varco 3D: A Cutting-edge Commercial AI Service for 3D Generation <i class="bi bi-box-arrow-up-right"></i> </h6>
                     </div>
                 </a>
-          </div>
-
-          <div class="row gy-4 isotope-container" >
+            </div>
+        
+            <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-research"> 
+                <a class="portfolio-box" href="projects/capa/"  rel="noopener noreferrer">
+                    <div class="aspect-ratio-box"><img class="img-fluid lazy-image" data-src="https://github.com/ncsoft/CaPa/raw/main/assets/teaser.gif" alt="CaPa teaser"></div>
+                    <div class="top-left"> <h6><span class="badge text-bg-success">Featured on HuggingFace</span></h6> </div>
+                    <div class="polar_content">
+                        <h6>CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation</h6>
+                    </div>
+                </a>
+            </div>
+        
+            <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-research"> 
+                <a class="portfolio-box" href="projects/instant_pose/"  rel="noopener noreferrer">
+                    <div class="aspect-ratio-box"><img class="img-fluid lazy-image" data-src="projects/instant_pose/assets/pose_fig2.jpg" alt="Pose teaser"></div>
+                    <div class="top-left"> <h6><span class="badge text-bg-primary">ICML 2023</span></h6> </div>
+                    <div class="polar_content">
+                        <h6>Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</h6>
+                    </div>
+                </a>
+            </div>
+        
+            <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-research"> 
+                <a class="portfolio-box" href="projects/few_nerf/"  rel="noopener noreferrer">
+                    <div class="aspect-ratio-box">
+                        <img class="img-fluid lazy-image" data-src="projects/few_nerf/assets/main.jpg" alt="Occ-NeRF teaser">
+                    </div>
+                    <div class="top-left"> <h6><span class="badge text-bg-primary">arXiv 2023</span></h6> </div>
+                    <div class="polar_content">
+                        <h6>Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild</h6>
+                    </div>
+                </a>
+            </div>
+        
             <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-app"> 
-              <a class="portfolio-box" href="projects/ref_nerf/">
-                  <div class="polaroid">
-                      <div class="aspect-ratio-box">
+                <a class="portfolio-box" href="projects/nerf_in_game/"  rel="noopener noreferrer">
+                    <div class="aspect-ratio-box">
+                        <img class="img-fluid lazy-image" data-src="projects/nerf_in_game/teaser.jpg" alt="NeRF Game teaser">
+                    </div>
+                    <div class="polar_content">
+                        <h6>Custom Spherical Gaussian Splatting in Unity & Unreal</h6>
+                    </div>
+                </a>
+            </div>
+        
+            <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-per filter-app"> 
+                <a class="portfolio-box" href="projects/deepsfm/"  rel="noopener noreferrer">
+                    <div class="aspect-ratio-box">
+                        <img class="img-fluid lazy-image" data-src="https://hwan-h-heo.github.io/blogs/posts/240721_sfm/assets/pen_sparse_vggsfm_2dgs.gif" alt="NeRF Face teaser">
+                    </div>
+                    <div class="top-left"> <h6><span class="badge text-bg-success">Featured on Github (200+ stars)</span></h6> </div>
+                    <div class="polar_content">
+                        <h6>Radiance Fields from Deep-based Structure-from-Motion: MaST3R & VGGSfM</h6>
+                    </div>
+                </a>
+            </div>
+        
+            <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-per filter-app"> 
+                <a class="portfolio-box" href="projects/2dgs_viewer/"  rel="noopener noreferrer">
+                    <div class="aspect-ratio-box">
+                        <img class="img-fluid lazy-image" data-src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_train.gif" alt="NeRF light teaser">
+                    </div>
+                    <div class="top-left"> <h6><span class="badge text-bg-success">Featured on Github (150+ stars)</span></h6> </div>
+                    <div class="polar_content">
+                        <h6>Custom Web Viewer Implementation for 2D Gaussian Splatting</h6>
+                    </div>
+                </a>
+            </div>
+        
+            <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-app"> 
+                <a class="portfolio-box" href="projects/ref_nerf/"  rel="noopener noreferrer">
+                    <div class="aspect-ratio-box">
                         <img class="img-fluid lazy-image" data-src="projects/ref_nerf/assets/image.jpg" alt="NeRF light teaser">
-                      </div>
-                      <div class="polar_content">
-                        <h6 style="color:#f1f1f1"> Specular-Diffuse Disentanglement w/ Hash-Grid NeRF (feat. nerfstudio's NeRFacto) </h6>
-                      </div>
-                  </div>
-                    
-                  <div class="portfolio-box-caption">
-                      <div class="project-name">
-                        <h6 style="color:#f1f1f1"> Light disentanglement modeling on the Instnat-NGP-based NeRF model </h6>
-                      </div>
-                      <div class="project-category text-white-50">NC Research</div>
-                  </div>
-              </a>
-          </div>
-
-          <div class="row gy-4 isotope-container" >
+                    </div>
+                    <div class="polar_content">
+                        <h6>Specular-Diffuse Disentanglement w/ Nerfstudio's NeRFacto</h6>
+                    </div>
+                </a>
+            </div>
+        
             <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-app"> 
-              <a class="portfolio-box" href="projects/face_nerf/">
-                  <div class="polaroid">
-                      <div class="aspect-ratio-box">
+                <a class="portfolio-box" href="projects/face_nerf/"  rel="noopener noreferrer">
+                    <div class="aspect-ratio-box">
                         <img class="img-fluid lazy-image" data-src="projects/face_nerf/assets/image.jpg" alt="NeRF Face teaser">
-                      </div>
-                      <div class="polar_content">
-                        <h6 style="color:#f1f1f1"> Fast Neural Facial Avatar for Multi-Camera System  </h6>
-                      </div>
-                  </div>
-                    
-                  <div class="portfolio-box-caption">
-                      <div class="project-name">
-                        <h6 style="color:#f1f1f1"> Fast NeRF face avatar reconstruction from multi-camera system </h6>
-                      </div>
-                      <div class="project-category text-white-50">NC Research</div>
-                  </div>
-              </a>
-          </div>
-
-          <!-- <div class="row gy-4 isotope-container" >
-            <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-research"> 
-              <a class="portfolio-box" href="projects/hoi/">
-                  <div class="polaroid">
-                      <div class="aspect-ratio-box">
-                        <img class="img-fluid lazy-image" data-src="projects/hoi/fig2_dot.jpg" alt="NeRF light teaser">
-                      </div>
-                      <div class="top-left"> <h6><span class="badge text-bg-primary">CVPR 2022</span></h6> </div>
-                      <div class="polar_content">
-                        <h6 style="color:#f1f1f1"> Consistency Learning via Decoding Path Augmentation for Transformers in Human Object Interaction Detection </h6>
-                      </div>
-                  </div>
-                    
-                  <div class="portfolio-box-caption">
-                      <div class="project-name">
-                        <h6 style="color:#f1f1f1"> Enhance DeTR-based Human-object interaction detection using consistency regularization </h6>
-                      </div>
-                      <div class="project-category text-white-50">Korea University</div>
-                  </div>
-              </a>
-          </div> -->
-
-          <!-- <div class="row gy-4 isotope-container">
-            <div class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-research"> 
-              <a class="portfolio-box" href="projects/adv/">
-                  <div class="polaroid">
-                      <div class="aspect-ratio-box">
-                        <img class="img-fluid lazy-image" data-src="projects/adv/main_figure.jpg" alt="NeRF light teaser">
-                      </div>
-                      <div class="top-left"> <h6><span class="badge text-bg-primary">IEEE Access 2021</span></h6> </div>
-                      <div class="polar_content">
-                        <h6 style="color:#f1f1f1"> Search-and-Attack: Temporally Sparse Adversarial Attack on Videos </h6>
-                      </div>
-                  </div>
-                    
-                  <div class="portfolio-box-caption">
-                      <div class="project-name">
-                        <h6 style="color:#f1f1f1"> Adversarial Attack for video action recognition model </h6>
-                      </div>
-                      <div class="project-category text-white-50">Korea University</div>
-                  </div>
-              </a>
-          </div> -->
+                    </div>
+                    <div class="polar_content">
+                        <h6>Fast Neural Facial Avatar Reconstruction with Multi-Cameras System</h6>
+                    </div>
+                </a>
+            </div>
           </div>
           <br/>
-          <div class="row gy-4 isotope-container">
+          <div class="row gy-4 isotope-container" data-aos="fade-up">
             <div class="col-12 portfolio-item isotope-item filter-active filter-research filter-app filter-per"> 
               <br/>
               <h5>Publications</h5>
@@ -631,18 +502,14 @@
       </div>
     </section>
     <!-- Testimonials Section -->
-    <section id="blog" class="testimonials section light-background">
-
+    <section id="blog" class="testimonials section light-background" data-aos="fade-up">
       <!-- Section Title -->
       <div class="container section-title">
-        <h2>Blog: <a href="blogs/">link</a> <span style="color: #149ddd">|</span> <a href="https://velog.io/@gjghks950/posts">velog (kor)</a></h2>
-        <p>
-          Featured Recent Posts:
-        </p>
+        <h2><a href="blogs/">Blogs <i class="bi bi-box-arrow-up-right"></i> </a></h2>
+        <p>Posts about 3D computer vision and machine learning, especially for the neural rendering and 3D generation.</p>
       </div><!-- End Section Title -->
-
       <div class="container">
-
+        <h5>Featured Recent Posts</h5>
         <div class="swiper init-swiper">
           <script type="application/json" class="swiper-config">
             {
@@ -660,7 +527,7 @@
               "breakpoints": {
                 "320": {
                   "slidesPerView": 1,
-                  "spaceBetween": 40
+                  "spaceBetween": 20
                 },
                 "576": {
                   "slidesPerView": 2,
@@ -674,151 +541,97 @@
             }
           </script>
           <div class="swiper-wrapper">
-            <!-- Start -->
-
             <div class="swiper-slide">
-              <div class="testimonial-item">
-                <p>
-                  <a href="blogs/posts/?id=250810_flow">
-                    <i class="bi bi-quote quote-icon-left"></i>
-                    <span>
-                      From Flow Matching to Optimal Transport: A Physics-based View of Generative Models
-                    </span>
-                    <i class="bi bi-quote quote-icon-right"></i>
-                  </a>
-                  <br/>
-                  <br/>
-                  <img data-src="https://velog.velcdn.com/images/gjghks950/post/ca65945c-c165-4ce3-93a8-04431b02e37f/image.png" class="img-fluid lazy-image" alt="">
-                </p>
-              </div>
+              <a href="blogs/posts/?id=250810_flow" class="testimonial-link">
+                <div class="testimonial-item">
+                  <div class="testimonial-content">
+                    <h6>From Flow Matching to Optimal Transport: A Physics-based View of Generative Models</h6>
+                  </div>
+                  <div class="testimonial-img">
+                    <img data-src="https://velog.velcdn.com/images/gjghks950/post/ca65945c-c165-4ce3-93a8-04431b02e37f/image.png" class="img-fluid lazy-image" alt="">
+                  </div>
+                </div>
+              </a>
             </div><!-- End testimonial item -->
-
-            <div class="swiper-slide">
-              <div class="testimonial-item">
-                <p>
-                  <a href="blogs/posts/?id=250702_building_large_3d_1">
-                    <i class="bi bi-quote quote-icon-left"></i>
-                    <span>
-                      Building Large 3D Generative Model (1) Data Processing
-                    </span>
-                    <i class="bi bi-quote quote-icon-right"></i>
-                  </a>
-                  <br/>
-                  <br/>
-                  <img data-src="blogs/posts/250702_building_large_3d_1/assets/image-10.png" class="img-fluid lazy-image" alt="">
-                </p>
-              </div>
-            </div><!-- End testimonial item -->
-
-            <div class="swiper-slide">
-              <div class="testimonial-item">
-                <p>
-                  <a href="blogs/posts/?id=250310_model_viewer">
-                    <i class="bi bi-quote quote-icon-left"></i>
-                    <span>
-                      3D Model Viewer in Web
-                    </span>
-                    <i class="bi bi-quote quote-icon-right"></i>
-                  </a>
-                  <br/>
-                  <br/>
-                  <img data-src="blogs/posts/250310_model_viewer/assets/image.png" class="img-fluid lazy-image" alt="">
-                </p>
-              </div>
-            </div><!-- End testimonial item -->
-
-            <div class="swiper-slide">
-              <div class="testimonial-item">
-                <p>
-                  <a href="blogs/posts/?id=250302_3d_latent_diffusion">
-                    <i class="bi bi-quote quote-icon-left"></i>
-                    <span>
-                      An Era of 3D Generation
-                    </span>
-                    <i class="bi bi-quote quote-icon-right"></i>
-                  </a>
-                  <br/>
-                  <br/>
-                  <img data-src="blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif" class="img-fluid lazy-image" alt="">
-                </p>
-              </div>
-            </div><!-- End testimonial item -->
-
             
-
             <div class="swiper-slide">
-              <div class="testimonial-item">
-                <p>
-                  <a href="blogs/posts/?id=240823_grt">
-                    <i class="bi bi-quote quote-icon-left"></i>
-                    <span>
-                      Review &amp Analysis: Gaussian Ray Tracing
-                    </span>
-                    <i class="bi bi-quote quote-icon-right"></i>
-                  </a>
-                  <br/>
-                  <br/>
-                  <img data-src="blogs/posts/240823_grt/assets/teaser.gif" class="img-fluid lazy-image" alt="">
-                </p>
-              </div>
+              <a href="blogs/posts/?id=250702_building_large_3d_1" class="testimonial-link">
+                <div class="testimonial-item">
+                  <div class="testimonial-content">
+                    <h6>Building Large 3D Generative Model (1) Data Processing</h6>
+                  </div>
+                  <div class="testimonial-img">
+                    <img data-src="blogs/posts/250702_building_large_3d_1/assets/image-10.png" class="img-fluid lazy-image" alt="">
+                  </div>
+                </div>
+              </a>
             </div><!-- End testimonial item -->
-
+            
             <div class="swiper-slide">
-              <div class="testimonial-item">
-                <p>
-                  <a href="blogs/posts/?id=240805_gs">
-                    <i class="bi bi-quote quote-icon-left"></i>
-                    <span>
-                      Analysis of Gaussian Splatting Rasterization Algorithm
-                    </span>
-                    <i class="bi bi-quote quote-icon-right"></i>
-                  </a>
-                  <br/>
-                  <br/>
-                  <img data-src="blogs/posts/240805_gs/assets/garden.gif" class="img-fluid lazy-image" alt="">
-                </p>
-              </div>
+              <a href="blogs/posts/?id=250310_model_viewer" class="testimonial-link">
+                <div class="testimonial-item">
+                  <div class="testimonial-content">
+                    <h6>3D Model Viewer in Web: Three.js vs. Google Model Viewer</h6>
+                  </div>
+                  <div class="testimonial-img">
+                    <img data-src="blogs/posts/250310_model_viewer/assets/image.png" class="img-fluid lazy-image" alt="">
+                  </div>
+                </div>
+              </a>
             </div><!-- End testimonial item -->
-
-            <!-- <div class="swiper-slide">
-              <div class="testimonial-item">
-                <p>
-                  <a href="blogs/posts/240602_2dgs/">
-                    <i class="bi bi-quote quote-icon-left"></i>
-                    <span>
-                      Review &amp Viewer Development: <br/> 2D Gaussian Splatting
-                    </span>
-                    <i class="bi bi-quote quote-icon-right"></i>
-                  </a>
-                  <br/>
-                  <br/>
-                  <img src="blogs/posts/240602_2dgs/assets/teaser.gif" class="img-fluid" alt="">
-                </p>
-              </div>
-            </div> -->
-            <!-- End testimonial item -->
-
-
+            
+            <div class="swiper-slide">
+              <a href="blogs/posts/?id=250302_3d_latent_diffusion" class="testimonial-link">
+                <div class="testimonial-item">
+                  <div class="testimonial-content">
+                    <h6>An Era of 3D Generation: Introduction to 3D Latent Diffusion</h6>
+                  </div>
+                  <div class="testimonial-img">
+                    <img data-src="blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif" class="img-fluid lazy-image" alt="">
+                  </div>
+                </div>
+              </a>
+            </div><!-- End testimonial item -->
+            
+            <div class="swiper-slide">
+              <a href="blogs/posts/?id=240823_grt" class="testimonial-link">
+                <div class="testimonial-item">
+                  <div class="testimonial-content">
+                    <h6>Review &amp; Analysis: Fast Ray Tracing Design for 3D Gaussian Primitives</h6>
+                  </div>
+                  <div class="testimonial-img">
+                    <img data-src="blogs/posts/240823_grt/assets/teaser.gif" class="img-fluid lazy-image" alt="">
+                  </div>
+                </div>
+              </a>
+            </div><!-- End testimonial item -->
+            
+            <div class="swiper-slide">
+              <a href="blogs/posts/?id=240805_gs" class="testimonial-link">
+                <div class="testimonial-item">
+                  <div class="testimonial-content">
+                    <h6>Detailed Analysis of Gaussian Splatting Rasterization Algorithm</h6>
+                  </div>
+                  <div class="testimonial-img">
+                    <img data-src="blogs/posts/240805_gs/assets/garden.gif" class="img-fluid lazy-image" alt="">
+                  </div>
+                </div>
+              </a>
+            </div><!-- End testimonial item -->
           </div>
+          <p><br/></p>
           <div class="swiper-pagination"></div>
         </div>
-
       </div>
-
     </section><!-- /Testimonials Section -->
   </main>
 
   <footer id="footer" class="footer position-relative light-background">
-
     <div class="container">
       <div class="copyright text-center ">
         <p>© <span>Copyright</span> <strong class="px-1 sitename"> Hwan Heo </strong> <span>All Rights Reserved</span></p>
       </div>
-      <!-- <div class="credits">
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a>
-      </div> -->
     </div>
-
   </footer>
 
   <!-- Scroll Top -->
@@ -829,30 +642,9 @@
       ></path>
     </svg>
   </button>
-  <!-- <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a> -->
 
   <!-- Preloader -->
   <div id="preloader"></div>
-
-  <!-- Vendor JS Files -->
-  <script>
-    const lazyImages = document.querySelectorAll('.lazy-image');
-
-    const observer = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const lazyImage = entry.target;
-          lazyImage.src = lazyImage.dataset.src; // data-src -> src 
-          lazyImage.classList.remove('lazy-image'); // 
-          observer.unobserve(lazyImage); // 
-        }
-      });
-    });
-
-    lazyImages.forEach(lazyImage => {
-      observer.observe(lazyImage);
-    });
-  </script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
@@ -866,7 +658,5 @@
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
-
 </body>
-
 </html>

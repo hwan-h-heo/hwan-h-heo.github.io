@@ -333,9 +333,11 @@ Continuous Normalizing Flow (CNF)는 Jacobian determinant 을 trace 의 적분�
 
 Neural Network 로 velocity field $v_\theta(x_t, t)$ 를 학습시키기 위한 이상적인 loss function 은 다음과 같다.
 
+<p>
 $$
 \mathcal{L} = \mathbb{E}_{t \sim \mathcal{U}, x_t \sim p_t} [\|v_\theta(x_t, t) - u_t(x_t)\|^2]
 $$
+</p>
 
 이 loss function 은 시간 $t$의 샘플 $x_t$ 를 보고, 그 지점에서의 실제 속도장 $u_t(x_t)$ 를 예측하는 regression 문제이다. 
 
@@ -432,9 +434,12 @@ $$
 > **_[2] 따라서, 전체 loss function 은 conditional loss function 과 동등하다._**
 
 첫 번째 사실로부터, 우리가 풀고 싶었던 이상적이지만 계산 불가능한 loss function 이, 계산 가능한 conditional loss function 과 동등하다는 것이 증명된다.
+
+<p>
 $$
 \mathcal{L}_{\text{marginal}} = \mathbb{E}_{t, x_t} [\|v_\theta - u_t\|^2] \\ \iff \\ \mathcal{L}_{\text{CFM}} = \mathbb{E}_{t, x_1, x_t|x_1} [\|v_\theta - u_t(\cdot|x_1)\|^2] + C
 $$
+</p>
 
 두 loss 가 동등한 이유는 loss function 을 전개했을 때 나타나는 inner product 항을 살펴보면 명확해진다.
 <p>
