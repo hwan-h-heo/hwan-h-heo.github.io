@@ -191,8 +191,12 @@ body { color: var(--default-color); background-color: var(--background-color); f
 a { color: var(--accent-color); text-decoration: none; transition: 0.3s; }
 a:hover { color: color-mix(in srgb, var(--accent-color), transparent 25%); text-decoration: none; }
 h1, h2, h3, h4, h5, h6 { color: var(--heading-color); font-family: var(--heading-font); }
-.mobile-topbar .header-toggle { color: var(--contrast-color); background-color: var(--accent-color); font-size: 22px; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; position: fixed; top: 15px; right: 15px; z-index: 9999; transition: background-color 0.3s; }
+.mobile-topbar .header-toggle { color: var(--contrast-color); visibility: hidden; opacity: 0; background-color: var(--accent-color); font-size: 22px; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; position: fixed; top: 15px; right: 15px; z-index: 9999; transition: background-color 0.3s; }
 .mobile-topbar .header-toggle:hover {color: var(--contrast-color); background-color: color-mix(in srgb, var(--accent-color) 90%, white 15%);}
+.mobile-topbar .header-toggle.active {
+  visibility: visible;
+  opacity: 1;
+}
 .header { color: var(--default-color); background-color: var(--background-color); position: fixed; top: 0px; left: 0px; bottom: 0px; padding: 0px 15px; width: 300px; transition: 0.3s ease-in-out; overflow-y: auto; z-index: 997; border-right: 1px solid color-mix(in srgb, var(--default-color), transparent 90%); }
 .header .profile-img img { margin: 15px auto; display: block; width: 120px; border: 8px solid color-mix(in srgb, var(--default-color), transparent 85%); align-items: center; justify-content: center; }
 .header .logo { line-height: 1; margin-bottom: 15px; }

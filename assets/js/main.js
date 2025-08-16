@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let observer;
 
   function headerToggle() {
-    // 모바일에서 토글 시 hidden 클래스를 사용
     header.classList.toggle('hidden');
     headerToggleBtn.classList.toggle('bi-list');
     headerToggleBtn.classList.toggle('bi-x');
@@ -15,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!hero) return;
     observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        // hero 섹션이 보이면 헤더 숨김, 안 보이면 헤더 표시
         if (entry.isIntersecting) {
           header.classList.add('hidden');
         } else {
@@ -28,20 +26,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function handleHeaderState() {
     if (window.innerWidth >= 1200) {
-      // 데스크톱 상태 관리
       headerToggleBtn.classList.remove('bi-x');
       headerToggleBtn.classList.add('bi-list');
-      // Observer가 없으면 새로 생성
       if (!observer) {
         setupDesktopObserver();
       }
     } else {
-      // 모바일 상태 관리
       if (observer) {
         observer.disconnect();
-        observer = null; // Observer 참조 제거
+        observer = null; 
       }
-      // 모바일에서는 토글 버튼 클릭 전까지 항상 숨김
       header.classList.add('hidden');
       headerToggleBtn.classList.remove('bi-x');
       headerToggleBtn.classList.add('bi-list');
@@ -58,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 초기 로드 시 및 창 크기 변경 시 상태 핸들러 실행
   handleHeaderState();
   window.addEventListener('resize', handleHeaderState);
 });
@@ -254,6 +247,15 @@ document.addEventListener('DOMContentLoaded', () => {
    * Scroll top button
    */
   const scrollTop = document.querySelector('#scroll-top');
+  const headerToggleBtn = document.querySelector('.header-toggle');
+
+  if (headerToggleBtn) {
+    const toggleheaderToggleBtn = function() {
+      window.scrollY > 100 ? headerToggleBtn.classList.add('active') : headerToggleBtn.classList.remove('active');
+    }
+    window.addEventListener('load', toggleheaderToggleBtn);
+    document.addEventListener('scroll', toggleheaderToggleBtn);
+  }
 
   if (scrollTop) {
     const togglescrollTop = function() {
