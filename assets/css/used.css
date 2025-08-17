@@ -1,25 +1,19 @@
 :root {
-  /* Font Variables (기존 폰트 유지) */
   --default-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --heading-font: "Satoshi", "Raleway", sans-serif;
   --nav-font: "Poppins", sans-serif;
-
-  /* --- Modern Light-Themed Color Palette --- */
 
   /* Core Colors */
   --background-color: #F8F9FA;      /* 거의 흰색에 가까운 부드러운 배경색 */
   --surface-color: #FFFFFF;         /* 카드, 섹션 등 콘텐츠 영역의 순백색 */
   --accent-color: #007BFF;          /* 선명하고 신뢰감 있는 파란색 포인트 */
   
-  /* Text Colors */
   --heading-color: #212529;         /* 제목에 사용할 짙은 회색 (가독성 확보) */
   --default-color: #495057;         /* 본문에 사용할 부드러운 회색 */
   --contrast-color: #FFFFFF;        /* 포인트 색상 위의 텍스트 (주로 흰색) */
   
-  /* Border Color */
   --border-color: #DEE2E6;          /* 은은한 테두리 및 구분선 색상 */
 
-  /* Navigation Colors (Light Theme에 맞게 조정) */
   --nav-color: #495057;             /* 기본 네비게이션 텍스트 색상 */
   --nav-hover-color: #007BFF;       /* 호버 시 포인트 색상으로 변경 */
   --nav-mobile-background-color: #FFFFFF;
@@ -30,14 +24,12 @@
   --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* 별도 클래스에 따른 색상 설정 */
 /* light-background는 이제 기본값과 거의 유사해집니다. */
 .light-background {
   --background-color: #F8F9FA;
   --surface-color: #FFFFFF;
 }
 
-/* dark-background는 그대로 유지하거나 필요시 조정할 수 있습니다. */
 .dark-background {
   --background-color: #040b14;
   --default-color: #ffffff;

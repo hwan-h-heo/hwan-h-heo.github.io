@@ -10778,7 +10778,11 @@ p a {
 
 blockquote {
   font-style: italic;
+  font-weight: 550;
   color: #6c757d;
+  background-color: #F8F9FA;
+  padding: 0.2rem 2rem;
+  border-left: 3px solid #ced4da;
 }
 
 .btn {

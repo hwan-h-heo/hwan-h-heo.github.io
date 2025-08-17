@@ -918,7 +918,7 @@ $$
 
 <p>
 $$
-\psi_t(x_0|x_1) = \text{exp}*{x_0} (t \cdot \text{log}*{x_0}(x_1))
+\psi_t(x_0|x_1) = \text{exp}_{x_0} (t \cdot \text{log}_{x_0}(x_1))
 $$
 </p>
 
