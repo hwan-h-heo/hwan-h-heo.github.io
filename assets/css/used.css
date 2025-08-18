@@ -589,7 +589,7 @@ a.testimonial-link:hover {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition-duration: 0.3s;
+    transition: 0.3s ease;
     overflow: hidden;
     position: fixed;      
     bottom: 15px;       
@@ -598,12 +598,12 @@ a.testimonial-link:hover {
 .button_top:hover { 
     width: 140px;
     border-radius: 50px;
-    transition-duration: 0.3s;
+    transition: 0.3s ease;
     background-color: rgb(181, 160, 255);
     align-items: center;
     }
 .button_top:hover .svgIcon { 
-    transition-duration: 0.3s;
+  transition: 0.3s ease;
     transform: translateY(-200%);
 }
 .button_top::before { 
@@ -617,7 +617,7 @@ a.testimonial-link:hover {
     font-size: 11px;
     opacity: 1;
     bottom: unset;
-    transition-duration: 0.3s;
+    transition: 0.3s ease;
 }
 .svgIcon { width: 10px; transition-duration: 0.3s; }
 .svgIcon path { fill: white; }

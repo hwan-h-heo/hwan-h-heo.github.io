@@ -249,6 +249,12 @@ svg {
 /* vertical-align: middle; */
 margin: auto;
 display: block;
+transition: transform 0.3s ease;
+width: 100%;
+}
+
+img:hover {
+    transform: scale(1.05);
 }
 
 table {
@@ -1381,7 +1387,7 @@ text-decoration: underline;
 blockquote {
 font-style: italic;
 font-weight: 550;
-color: #6c757d;
+color: #3c444a;
 background-color: #F8F9FA;
 padding: 0.2rem 2rem;
 border-left: 3px solid #ced4da;
@@ -2730,10 +2736,11 @@ text-transform: uppercase;
 #mainNav.is-fixed {
     /* when the user scrolls down, we hide the header right above the viewport */
     position: fixed;
-    top: -83px;
+    top: 0;
     transition: transform 0.2s;
     border-bottom: 1px solid white;
     background-color: rgba(255, 255, 255, 0.9);
+    transform: translateY(-100%);
 }
 #mainNav.is-fixed .navbar-brand {
     color: #212529;
@@ -2749,7 +2756,7 @@ text-transform: uppercase;
 }
 #mainNav.is-visible {
     /* if the user changes the scrolling direction, we show the header */
-    transform: translate3d(0, 100%, 0);
+    transform: translateY(0);
 }
 }
 
@@ -3029,7 +3036,7 @@ align-items: center;
 justify-content: center;
 /* box-shadow: 0px 0px 0px 4px rgba(180, 160, 255, 0.253); */
 cursor: pointer;
-transition-duration: 0.3s;
+transition: 0.3s ease;
 overflow: hidden;
 /* position: fixed;      
 bottom: 15px;        
@@ -3038,7 +3045,7 @@ right: 15px; */
 
 .svgIcon {
 width: 10px;
-transition-duration: 0.3s;
+transition: 0.3s ease;
 }
 
 .svgIcon path {
@@ -3048,13 +3055,13 @@ fill: #F8F9FA;
 .button_top:hover { /* Changed from .button:hover to .button_top:hover */
 width: 140px;
 border-radius: 50px;
-transition-duration: 0.3s;
+transition: 0.3s ease;
 background-color: #212529;
 align-items: center;
 }
 
 .button_top:hover .svgIcon { /* Changed from .button:hover .svgIcon to .button_top:hover .svgIcon */
-transition-duration: 0.3s;
+transition: 0.3s ease;
 transform: translateY(-200%);
 }
 

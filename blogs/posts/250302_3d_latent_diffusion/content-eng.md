@@ -39,13 +39,11 @@ author: Hwan Heo
 <tr>
 <th>RBF Network</th>
 <th>Gaussian Mixture Model</th>
-<th>3D Gaussian Splatting</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><img id="img-1" src="./250302_3d_latent_diffusion/assets/image-8.png" width="200px" /></td>
-<td><img id="img-2" src="./250302_3d_latent_diffusion/assets/image-2.png" width="200px" /></td>
-<td><img id="img-3" src="./250302_3d_latent_diffusion/assets/image-4.png" width="200px" /></td>
+<td><img id="img-1" src="./250302_3d_latent_diffusion/assets/image-8.png" /></td>
+<td><img id="img-2" src="./250302_3d_latent_diffusion/assets/image-2.png" /></td>
 </tr>
 </tbody></table>
 <p id="p-8">Consider classical machine learning concepts like Radial Basis Function (RBF) networks and Gaussian Mixture Models (GMMs).  The core idea of both is to approximate a data distribution (or function) by combining:</p>
@@ -53,11 +51,15 @@ author: Hwan Heo
 <li id="li-2">Several basis functions, and</li>
 <li id="li-3">The weight of each basis function.</li>
 </ul>
-<p id="p-9">$$
+
+<p id="p-9">
+$$
 f(x) \approx \sum_{i=1}^{N} w_i \phi(||x - c_i||)
-$$</p>
+$$
+</p>
 
 <p id="p-10">Equation: Radial Basis Function (RBF)</p>
+<img id="img-3" src="./250302_3d_latent_diffusion/assets/image-4.png" />
 <p id="p-11">From a similar perspective, 3D Gaussian Splatting can also be interpreted as approximating data (multi-view observations of a 3D scene) through a combination of:</p>
 <ul id="ul-3">
 <li id="li-4">Multiple basis functions (3D Gaussian primitives), and</li>
