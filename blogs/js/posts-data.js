@@ -1,5 +1,16 @@
 const postsData = [
     {
+        id: '250823_sdf',
+        title_eng: 'SDF and Eikonal Equation',
+        title_kor: 'SDF 와 Eikonal Equation 의 관계는?',
+        subtitle_eng: 'Why signed distance field induces eikonal equation',
+        subtitle_kor: 'Eikonal equation 의 해가 왜 signed distance field 인지 알아보자',
+        date: '2025-08-23',
+        category: 'note', // 
+        series: 'graphics',   // 
+        languages: ['eng', 'kor']
+    },
+    {
         id: '250810_flow',
         title_eng: 'From Flow Matching to Optimal Transport: A Physics-based View of Generative Models',
         title_kor: 'From Flow Matching to Optimal Transport: A Physics-based View of Generative Models',

@@ -267,7 +267,7 @@ These characteristics make GWN very effective for determining the inside/outside
 
 Through this post, we explored the definition of winding number, its generalization to Generalized Winding Number, and how this concept can be used for Signed Distance Field calculation. 
 
-Since watertight conversion is essential in mesh pre-processing for 3D generation (cf: [Building Large 3D Generative Model (1)](/blogs/posts/?id=250702_build_large_3d_1)), I think it is necessary for those working in this field to understand in detail the methods used in graphics to construct watertight meshes. 
+Since watertight conversion is essential in mesh pre-processing for 3D generation (cf: [Building Large 3D Generative Model (1)](/blogs/posts/?id=250702_building_large_3d_1)), I think it is necessary for those working in this field to understand in detail the methods used in graphics to construct watertight meshes. 
 
 Of course, GWN also has a high computational cost and is not a perfect way to fix broken meshes, so methods for calculating SDF using diffusion simulation of normal vectors, such as the heat method ([GSD](https://nzfeng.github.io/research/SignedHeatMethod/index.html)), have been proposed. In the next post, we will explore methods for calculating unsigned distance fields through heat diffusion, and GSD. 
 

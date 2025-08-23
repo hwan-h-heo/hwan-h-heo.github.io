@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ${subtitle ? `<h5 class="post-subtitle">${subtitle}</h5>` : ''}
             </a>
             <p class="post-meta">
-                ${new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                ${seriesInfo[post.series]['eng']} | ${new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
         </div>
         <hr class="my-4" />

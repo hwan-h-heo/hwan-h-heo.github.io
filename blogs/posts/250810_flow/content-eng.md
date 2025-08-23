@@ -949,17 +949,6 @@ Therefore, our assumption changes from the strong one that "the million-dimensio
 
 ---
 
-#### Conclusion
-
-The success of Rectified Flow is indeed thanks to the beautiful bias of a 'simple straight line'. But behind it, a complex interplay of sophisticated mechanisms is at work:
-
-1. The essence of the vector field, which learns a 'gravitational field' towards the manifold through **conditional expectation**.
-2. The ability of **deep neural networks** to implicitly straighten the space.
-3. The cleverness of starting in a well-straightened space like the **VAE latent space**.
-4. The process of gradually correcting the path towards the ideal through **Reflow**.
-
----
-
 #### In Closing
 
 Thank you for reading this long article.
@@ -979,8 +968,8 @@ Thank you :)
 You may also like
 
 - [An Era of 3D Generative Models](/blogs/posts/?id=250302_3d_latent_diffusion)
-- [Building Large 3D Generative Models (1) - 3D Data Pre-processing](/blogs/posts/?id=250702_build_large_3d_1)
-- [Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D](/blogs/posts/?id=250710_build_large_3d_2)
+- [Building Large 3D Generative Models (1) - 3D Data Pre-processing](/blogs/posts/?id=250702_building_large_3d_1)
+- [Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D](/blogs/posts/?id=250710_building_large_3d_2)
 
 
 **References**

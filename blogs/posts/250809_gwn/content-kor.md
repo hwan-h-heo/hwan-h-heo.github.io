@@ -267,7 +267,7 @@ GWN의 가장 큰 힘은 **Robustness** 에 있다. 입력 메시가 **열려 �
 
 이 글을 통해 우리는 winding number 의 정의와, 이를 일반화한 Generalized Winding Number 에 대해서 알아보고 이 개념이 어떻게 Signed Distance Field 계산에 쓰일 수 있는지 알아보았다. 
 
-3D Gen 분야의 mesh pre-processing 에서 watertight conversion 이 필수적이기 때문에 (cf: [Building Large 3D Generative Model (1)](/blogs/posts/?id=250702_build_large_3d_1)), 해당 분야 종사자라면 graphics 에서 watertight mesh 를 구축하기 위해 어떤 방법들이 쓰이는지 자세하게 알 필요가 있는 것 같다. 
+3D Gen 분야의 mesh pre-processing 에서 watertight conversion 이 필수적이기 때문에 (cf: [Building Large 3D Generative Model (1)](/blogs/posts/?id=250702_building_large_3d_1)), 해당 분야 종사자라면 graphics 에서 watertight mesh 를 구축하기 위해 어떤 방법들이 쓰이는지 자세하게 알 필요가 있는 것 같다. 
 
 물론 GWN 또한 계산 비용이 크고 broken mesh 를 완벽하게 고치는 방법은 아니기 때문에 heat method 처럼 normal vector 에 대한 diffusion simulation 으로 SDF 를 계산하는 방법 ([GSD](https://nzfeng.github.io/research/SignedHeatMethod/index.html)) 등이 제시되고 있다. 다음 글에서는 heat diffusion 을 통해 unsinged distance field 를 계산하는 방법과, GSD 등에 대해서 알아보도록 하겠다. 
 

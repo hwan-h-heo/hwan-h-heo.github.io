@@ -289,7 +289,7 @@
                                 ${subtitle ? `<h6 class="post-subtitle">${subtitle}</h5>` : ''}
                             </a>
                             <p class="post-meta">
-                                Category: ${post.category} | On ${new Date(post.date).toLocaleDateString()}
+                                ${seriesInfo[post.series]['eng']} | ${new Date(post.date).toLocaleDateString()}
                             </p>
                         </div>
                         <hr class="my-4" />`;

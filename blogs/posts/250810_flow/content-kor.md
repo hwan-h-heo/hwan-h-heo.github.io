@@ -984,19 +984,6 @@ VAE latent space 는 이미지를 의미적으로 풍부하고 구조화된 공�
 
 따라서 우리의 가정은 "수백만 차원의 이미지 공간이 평평하다"는 강한 가정이 아니라, **"VAE가 학습한 수천 차원의 '개념의 공간'이 (상대적으로) 평평하다"** 는 훨씬 더 약하고 합리적인 가정으로 바뀌게 된다. 이는 Rectified Flow 가 놀라운 성능을 내는 가장 실용적인 이유 중 하나이다.
 
----
-
-#### Conclusion
-
-Rectified Flow 의 성공은 '단순한 직선'이라는 아름다운 편견 덕분이 맞다. 하지만 그 이면에는,
-
-1. **조건부 기댓값**을 통해 manifold로 향하는 '중력장'을 학습하는 벡터장의 본질
-2. **심층 신경망**이 암묵적으로 공간을 펴주는 능력
-3. **VAE 잠재 공간**이라는 잘 펴진 공간에서 시작하는 영리함
-4. **Reflow**를 통해 경로를 점진적으로 이상향에 가깝게 교정하는 과정
-
-이라는 정교한 메커니즘들이 복합적으로 작용하고 있다.
-
 --- 
 
 #### 마치며 
@@ -1019,8 +1006,8 @@ You may also likes
 
 - [3D 생성에서 NeRF 와 SDS 는 도태될 수밖에 없는가?](https://velog.io/@gjghks950/3d)
 - [3D 생성 모델의 시대](/blogs/posts/?id=250302_3d_latent_diffusion)
-- [Building Large 3D Generative Models (1) - 3D Data Pre-processing](/blogs/posts/?id=250702_build_large_3d_1)
-- [Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D](/blogs/posts/?id=250710_build_large_3d_2)
+- [Building Large 3D Generative Models (1) - 3D Data Pre-processing](/blogs/posts/?id=250702_building_large_3d_1)
+- [Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D](/blogs/posts/?id=250710_building_large_3d_2)
 
 **References**
 
