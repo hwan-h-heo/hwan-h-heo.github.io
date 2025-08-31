@@ -9,7 +9,7 @@ svg:not(:host).svg-inline--fa, svg:not(:root).svg-inline--fa { overflow: visible
 body { margin: 0px; font-family: var(--bs-body-font-family); font-size: var(--bs-body-font-size); font-weight: var(--bs-body-font-weight); line-height: var(--bs-body-line-height); color: var(--bs-body-color); text-align: var(--bs-body-text-align); background-color: var(--bs-body-bg); text-size-adjust: 100%; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
 .hangul-text {
 font-family: 'NanumGothic';
-font-size: 1.2rem;
+font-size: 1.1rem;
 font-weight: var(--bs-body-font-weight);
 line-height: var(--bs-body-line-height);
 color: var(--bs-body-color);
@@ -57,7 +57,7 @@ opacity: 0.25;
 }
 
 h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
-margin-top: 0;
+margin-top: 0.5rem;
 margin-bottom: 0.5rem;
 font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 font-weight: 800;
@@ -69,7 +69,7 @@ font-size: calc(1.375rem + 1.5vw);
 }
 @media (min-width: 1200px) {
 h1, .h1 {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
 }
 }
 
@@ -250,7 +250,8 @@ svg {
 margin: auto;
 display: block;
 transition: transform 0.3s ease;
-width: 100%;
+max-width: 100%;
+min-width: 30%;
 }
 
 img:hover {
@@ -1369,7 +1370,7 @@ display: block !important;
 @media (min-width: 1200px) {
 .d-xl-none { display: none !important; }
 }
-body { font-size: 1.25rem; }
+body { font-size: 1.1rem; }
 
 hr {
 border-color: #dee2e6;
@@ -2654,6 +2655,7 @@ border-left: 3px solid #ced4da;
 
 .accordion-header {
   margin-bottom: 0;
+  margin-top: 0;
 }
 
 .accordion-item {

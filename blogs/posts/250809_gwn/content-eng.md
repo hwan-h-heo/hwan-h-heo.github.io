@@ -45,7 +45,7 @@ In this post, we will explore the ***Generalized Winding Number***, which define
 <br/>
 
 <figure id="figure-1" >
-  <img src='./250809_gwn/assets/image.png' alt='img alt' width='70%'>
+  <img src='./250809_gwn/assets/image.png' alt='img alt' style="width:70%;">
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Winding Number</figcaption>
 </figure>
 
