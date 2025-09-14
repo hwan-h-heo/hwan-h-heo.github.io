@@ -873,7 +873,7 @@ Euclidean Space 에서는 두 벡터의 차이를 L2 norm으로 측정했다. Ma
 따라서, Riemannian Conditional Flow Matching **(RCFM)** 의 Loss 함수는 다음과 같다.
 <p>
 $$
-\mathcal{L}*{\text{RCFM}}(\theta) = \mathbb{E}_{t, x_1, x_t|x_1} \left[ \left\| u_t(x_t|x_1) - v_\theta(x_t, t) \right\|^2_g \right]
+\mathcal{L}_{\text{RCFM}}(\theta) = \mathbb{E}_{t, x_1, x_t|x_1} \left[ \left\| u_t(x_t|x_1) - v_\theta(x_t, t) \right\|^2_g \right]
 $$
 </p>
 여기서 $||·||^2_g$ 는 metric $g$에 의해 유도된 squared norm 으로, 두 속도 벡터 $u$ 와 $v$ 가 동일한 tangent space $T_{x_t}M$ 내에 존재할 때 그 차이를 측정한다.

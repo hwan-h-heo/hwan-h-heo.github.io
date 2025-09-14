@@ -45,7 +45,7 @@ Let's compare and analyze how these two approaches lead to different architectur
 
 ### C.1. VecSet VAE
 
-> Summary: _From Mesh to an Unordered Set of Tokens_
+TLDR: _From Mesh to an Unordered Set of Tokens_
 
 As the name suggests, the vecset-based VAE treats a 3D mesh as a set of vectors, specifically a **PointCloud**. This method was devised to naturally handle the challenges of _1) the variable number of vertices_ in a mesh and _2) the need for Rotation/Translation Invariance_.
 <img src='./250710_building_large_3d_2/assets/image-13.png' width=70%>
@@ -151,15 +151,15 @@ The problems that arise during this process are as follows:
 -   **Reconstruction Error (Quantization Error)**: Finally, after all this inference, in the process of sampling the generated continuous SDF function back onto a discrete voxel grid to extract a mesh, Quantization Error occurs, and details are lost once more.
 
 >**Summary**
-- VecSet VAE: Converts 3D data into a token sequence. The latent is also a **token sequence** of shape [B, N, C] -> this means **no patchifying is needed** when designing a DiT model.
-- It suffers from information loss on both ends—input (Sampling Error) and output (Quantization Error)—and must solve the difficult inference problem (Ill-posed Problem) of bridging the gap in between.
+> - VecSet VAE: Converts 3D data into a token sequence. The latent is also a **token sequence** of shape [B, N, C] -> this means **no patchifying is needed** when designing a DiT model.
+> - It suffers from information loss on both ends—input (Sampling Error) and output (Quantization Error)—and must solve the difficult inference problem (Ill-posed Problem) of bridging the gap in between.
 >
 
 ---
 
 ### C.2. Sparse Voxel VAE
 
-> Summary: _3D as a Spatial Grid_
+TLDR: _3D as a Spatial Grid_
 
 In contrast, the Sparse Voxel VAE treats 3D data as an extension of a 2D image, i.e., a **3D spatial grid**. This approach, used by models like Trellis, adopts a 3D Convolutional Network structure similar to a U-Net.
 
@@ -314,8 +314,8 @@ In conclusion, the summary is as follows:
 Due to this fundamental difference, the **Sparse Voxel VAE is structurally in a much more advantageous position** in terms of shape preservation and detail reconstruction. While the advantage of the vecset-based approach lies in its input data flexibility (it can directly process point clouds, not just meshes), it is true that it has more structural limitations in generating high-quality 3D shapes. This is being demonstrated by the recent progress in sparse-voxel based research, which we will discuss in more depth in [Section E].
 
 >**Summary**
-- Sparse Voxel VAE: Maintains the **3D spatial grid structure**. The latent is also a **3D grid** of shape ```[B, C, D, H, W]``` -> this **requires 3D Patchifying** when designing a DiT.
-- It does not suffer from the modality conversion problem faced by Vecset-based VAEs, which allows for flexible scalability.
+> - Sparse Voxel VAE: Maintains the **3D spatial grid structure**. The latent is also a **3D grid** of shape ```[B, C, D, H, W]``` -> this **requires 3D Patchifying** when designing a DiT.
+> - It does not suffer from the modality conversion problem faced by Vecset-based VAEs, which allows for flexible scalability.
 
 ---
 

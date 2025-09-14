@@ -48,7 +48,7 @@ author: Hwan Heo
 
 ### C.1. VecSet VAE
 
-> Summary: _From Mesh to an Unordered Set of Tokens_
+TLDR: _From Mesh to an Unordered Set of Tokens_
 
 이름에서 알 수 있듯, vecset-based VAE는 3D Mesh를 벡터의 집합 (Vector Set), 즉 **PointCloud** 형태로 다룬다. 이 방식은 Mesh가 가진 _1) 가변적인 꼭짓점 (vertex) 개수_ 문제와 _2) Rotation/Translation Invariancy_ 를 자연스럽게 처리하기 위해 고안되었다.
 <img src='./250710_building_large_3d_2/assets/image-13.png' width=70%>
@@ -156,8 +156,8 @@ def query(self, query_points: torch.Tensor, hidden_states: torch.Tensor):
 - **Reconstruction Error (Quantization Error)**: 최종적으로 이 모든 추론을 거쳐 만들어낸 연속적인 SDF 함수를 다시 discreate voxel grid 에 샘플링하여 mesh 를 추출하는 과정에서 Quantization Error 가 발생하며, 디테일이 한 번 더 손실된다.
 
 >**Summary**
-- VecSet VAE: 3D 를 token sequence 로 변환. latent 도 [B, N, C] 형태의 **token sequence** -> DiT 모델 설계시 **patchfy 가 필요 없다**.
-- 입력 정보의 손실 (Sampling Error) 과 출력 정보의 손실 (Quantization Error) 이라는 양쪽의 정보 손실을 겪으며, 그 사이의 간극을 메우는 어려운 추론 문제 (Ill-posed Problem) 까지 풀어야한다.
+> - VecSet VAE: 3D 를 token sequence 로 변환. latent 도 [B, N, C] 형태의 **token sequence** -> DiT 모델 설계시 **patchfy 가 필요 없다**.
+> - 입력 정보의 손실 (Sampling Error) 과 출력 정보의 손실 (Quantization Error) 이라는 양쪽의 정보 손실을 겪으며, 그 사이의 간극을 메우는 어려운 추론 문제 (Ill-posed Problem) 까지 풀어야한다.
 >
 
 
@@ -165,7 +165,7 @@ def query(self, query_points: torch.Tensor, hidden_states: torch.Tensor):
 
 ### C.2. Sparse Voxel VAE
 
-> Summary: _3D as a Spatial Grid_
+TLDR: _3D as a Spatial Grid_
 
 반면, Sparse Voxel VAE는 3D 데이터를 2D 이미지의 확장판, 즉 **3D 공간 그리드 (Grid)**로 취급한다. Trellis 와 같은 모델에서 사용하는 이 방식은 U-Net 과 비슷한 3D Convolutional Network 구조를 차용한다.
 
@@ -323,8 +323,8 @@ def pixel_shuffle_3d(x: torch.Tensor, scale_factor: int) -> torch.Tensor:
 이러한 근본적인 차이 때문에, shape preservation 과 detail reconstruction 측면에서는 **Sparse Voxel VAE 가 구조적으로 훨씬 더 유리한 고지**에 서 있다고 할 수 있다. Vecset-based 접근법의 장점은 입력 데이터의 유연성 (메쉬가 아닌 포인트 클라우드도 바로 처리 가능) 에 있지만, 고품질의 3D 형태를 생성하는 데에는 더 많은 구조적 한계를 가지는 것이 사실이다. 이는 최근 Sparse-Voxel 기반 연구들의 약진으로 증명되고 있는데, [Section E] 에서 이에 대해 좀 더 깊게 논의해보도록 하겠다.
 
 >**Summary**
-- Sparse Voxel VAE: **3D 의 spatial grid structure** 를 유지. latent 도 ```[B, C, D, H, W]``` 형태의 **3D grid** -> DiT 설계 시 **3D 에 대한 Patchfy 필요**하다.
-- Vecset-based VAE 가 겪는 modality conversion 문제를 겪지 않기 때문에 유연한 확장성을 지닌다. 
+> - Sparse Voxel VAE: **3D 의 spatial grid structure** 를 유지. latent 도 ```[B, C, D, H, W]``` 형태의 **3D grid** -> DiT 설계 시 **3D 에 대한 Patchfy 필요**하다.
+> - Vecset-based VAE 가 겪는 modality conversion 문제를 겪지 않기 때문에 유연한 확장성을 지닌다. 
 
 ---
 

@@ -151,7 +151,7 @@ function loadAndRenderPost(postId, lang) {
 
     const postContentEl = document.getElementById('post-content');
     const back2topEl = document.getElementById('back-to-top');
-    postContentEl.style.fontSize = '1.2rem';
+    // postContentEl.style.fontSize = '1.2rem';
 
     if (lang === 'kor') {
         postContentEl.style.fontFamily = "'Noto Sans KR', sans-serif"; 
