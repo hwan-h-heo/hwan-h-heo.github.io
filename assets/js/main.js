@@ -274,3 +274,59 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 });
+
+/* ===================================================================
+ * Portfolio Hover Media Play
+ * ------------------------------------------------------------------- */
+document.addEventListener('DOMContentLoaded', () => {
+  "use strict";
+
+  const portfolioBoxes = document.querySelectorAll('.portfolio-box');
+
+  portfolioBoxes.forEach(box => {
+    const video = box.querySelector('video');
+    const image = box.querySelector('img[data-gif]');
+    
+    // HTML ex:
+    // <img src="placeholder.jpg" 
+    //      data-src="path/to/static.jpg" 
+    //      data-static="path/to/static.jpg" 
+    //      data-gif="path/to/animated.gif" ... >
+
+    let staticSrc = image ? image.getAttribute('data-static') || image.src : null;
+
+    // 마우스를 올렸을 때
+    box.addEventListener('mouseenter', () => {
+      // 비디오가 있으면 재생 시도
+      if (video) {
+        // play()는 프로미스를 반환하므로, 사용자가 페이지와 상호작용하기 전에 자동 재생을 시도할 때 발생하는 오류를 catch로 처리해주는 것이 좋습니다.
+        video.play().catch(error => {
+          console.log("Video play was prevented.", error);
+        });
+      }
+      
+      // GIF 이미지가 있으면 동적 GIF로 교체
+      if (image && image.dataset.gif) {
+        // 만약 staticSrc가 아직 설정되지 않았다면 (lazy loading 이전 등) 현재 src를 저장
+        if (!staticSrc || staticSrc.includes('placeholder')) {
+            staticSrc = image.src;
+        }
+        image.src = image.dataset.gif;
+      }
+    });
+
+    // 마우스가 벗어났을 때
+    box.addEventListener('mouseleave', () => {
+      // 비디오가 있으면 일시정지하고 처음으로 되감기
+      if (video) {
+        video.pause();
+        video.load();
+      }
+      
+      // GIF 이미지가 있으면 저장해둔 정적 이미지로 복원
+      if (image && staticSrc) {
+        image.src = staticSrc;
+      }
+    });
+  });
+});

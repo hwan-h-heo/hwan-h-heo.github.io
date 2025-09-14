@@ -2931,18 +2931,19 @@ display: none;
 position: fixed;
 z-index: 1031;
 right: 0.55%;
-top: 1.5%;
+top: 1.5rem;
 width: 80%;
 max-width: 250px;
 height: auto;
 overflow: visible;
 background-color: rgba(0, 255, 0, 0.4);
+animation: slideInFade 0.4s ease-out forwards;
 }
 
 .share_modal-content {
-background-color: rgb(7, 188, 12);
+background-color: rgb(67, 205, 72);
 color:rgb(255, 255, 255);
-font-size:medium;
+font-size: 0.9rem;
 margin: 0 auto;
 padding: 10px;
 border: 1px solid #888;
@@ -2971,18 +2972,22 @@ text-decoration: none;
 }
 
 #copyButton {
-padding: 5px 10px;
-background-color: #ffffff;
-color: #858E96;
-border: none;
-border: 1px solid #858E96; /* 212529 */
-border-radius: 50%; /* 더 둥근 모서리 */
-cursor: pointer;
-position: fixed;
-display: none;
-top: 40%;
-right: 78vw;
-z-index: 2;
+  padding: 7px 12px; 
+  background-color: #ffffff;
+  color: #858E96;
+  border: none; 
+  border-radius: 50%; 
+  cursor: pointer;
+  
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+  position: fixed;
+  display: none; 
+  top: 40%;
+  right: 78vw;
+  z-index: 2;
+
+  transition: all 0.2s ease-in-out;
 }
 
 @media (min-width: 1920px) {
@@ -3003,9 +3008,9 @@ z-index: 2;
 }
 }
 
-#copyButton :hover{
-color: #212529;
-/* border: 1px solid #212529;  */
+#copyButton:hover {
+  background-color: #e9ecef; /* 호버 시 배경색만 변경 */
+  color: #212529;
 }
 
 .copy_indicator-container {
@@ -3026,6 +3031,11 @@ background-color: #ddd;
 
 
 .button_top { /* Changed from .button to .button_top */
+/* position: fixed; */
+display: none;
+/* bottom: 14rem;
+left: 76vw;
+right: 5vw; */
 width: 40px;
 height: 40px;
 border-radius: 50%;
@@ -3033,16 +3043,16 @@ background-color: #212529;
 color: #F8F9FA;
 border: none;
 font-weight: 500;
-display: flex;
+display: none;
 align-items: center;
 justify-content: center;
 /* box-shadow: 0px 0px 0px 4px rgba(180, 160, 255, 0.253); */
 cursor: pointer;
 transition: 0.3s ease;
 overflow: hidden;
-/* position: fixed;      
+position: fixed;      
 bottom: 15px;        
-right: 15px; */
+right: 15px;
 }
 
 .svgIcon {
