@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ===================================================================
- * Portfolio Hover Media Play
+ * Portfolio Hover Media Play (with Loading Spinner)
  * ------------------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
   "use strict";
@@ -286,20 +286,57 @@ document.addEventListener('DOMContentLoaded', () => {
   portfolioBoxes.forEach(box => {
     const video = box.querySelector('video');
     const image = box.querySelector('img[data-gif]');
+    const spinner = box.querySelector('.loading-spinner');
+    const titleElement = box.querySelector('.polar_content h6');
     
-    // HTML ex:
-    // <img src="placeholder.jpg" 
-    //      data-src="path/to/static.jpg" 
-    //      data-static="path/to/static.jpg" 
-    //      data-gif="path/to/animated.gif" ... >
+    if (!titleElement) return; 
 
+    const originalTitleHtml = titleElement.innerHTML; 
+    const hoverTypingText = titleElement.getAttribute('data-hover-text');
+    
     let staticSrc = image ? image.getAttribute('data-static') || image.src : null;
+    let typeInterval;
+
+    // --- 타이핑 효과 함수 ---
+    const startTyping = () => {
+      let i = 0;
+      titleElement.innerHTML = ""; // 내용 비우기
+      titleElement.classList.remove('typing-done');
+      clearInterval(typeInterval);
+      
+      const textSpan = document.createElement('span');
+      titleElement.appendChild(textSpan);
+
+      typeInterval = setInterval(() => {
+        if (hoverTypingText && i < hoverTypingText.length) {
+          textSpan.innerHTML += hoverTypingText.charAt(i);
+          i++;
+        } else {
+          clearInterval(typeInterval);
+          if (iconHtml) {
+            titleElement.innerHTML += " " + iconHtml;
+          }
+          titleElement.classList.add('typing-done');
+        }
+      }, 50); // 타이핑 속도
+    };
 
     // 마우스를 올렸을 때
     box.addEventListener('mouseenter', () => {
-      // 비디오가 있으면 재생 시도
+      if (hoverTypingText) {
+        startTyping();
+      }
+
       if (video) {
-        // play()는 프로미스를 반환하므로, 사용자가 페이지와 상호작용하기 전에 자동 재생을 시도할 때 발생하는 오류를 catch로 처리해주는 것이 좋습니다.
+        // 데이터를 기다려야 할 때 스피너 표시
+        video.addEventListener('waiting', () => {
+          spinner.style.display = 'block';
+        });
+        // 재생이 가능해지면 스피너 숨김
+        video.addEventListener('canplay', () => {
+          spinner.style.display = 'none';
+        });
+
         video.play().catch(error => {
           console.log("Video play was prevented.", error);
         });
@@ -307,25 +344,50 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // GIF 이미지가 있으면 동적 GIF로 교체
       if (image && image.dataset.gif) {
-        // 만약 staticSrc가 아직 설정되지 않았다면 (lazy loading 이전 등) 현재 src를 저장
         if (!staticSrc || staticSrc.includes('placeholder')) {
             staticSrc = image.src;
         }
-        image.src = image.dataset.gif;
+
+        // 먼저 스피너를 보여줌
+        spinner.style.display = 'block';
+
+        // GIF를 미리 로드하여 캐싱
+        const gifLoader = new Image();
+        gifLoader.onload = () => {
+          // 로딩이 완료되면 실제 이미지 src를 변경하고 스피너를 숨김
+          image.src = image.dataset.gif;
+          spinner.style.display = 'none';
+        };
+        gifLoader.onerror = () => {
+          // 에러 발생 시 스피너 숨김
+          spinner.style.display = 'none';
+          console.log("Failed to load GIF.");
+        };
+        gifLoader.src = image.dataset.gif; // 이 시점에 로딩 시작
       }
     });
 
     // 마우스가 벗어났을 때
     box.addEventListener('mouseleave', () => {
+      clearInterval(typeInterval);
+      
+      titleElement.innerHTML = originalTitleHtml;
+      titleElement.classList.remove('typing-done');
+
       // 비디오가 있으면 일시정지하고 처음으로 되감기
       if (video) {
         video.pause();
-        video.load();
+        video.currentTime = 0; // load() 대신 currentTime을 0으로 설정하는 것이 더 효율적일 수 있습니다.
       }
       
       // GIF 이미지가 있으면 저장해둔 정적 이미지로 복원
       if (image && staticSrc) {
         image.src = staticSrc;
+      }
+
+      // 마우스가 벗어날 때 스피너는 항상 숨김
+      if(spinner) {
+        spinner.style.display = 'none';
       }
     });
   });

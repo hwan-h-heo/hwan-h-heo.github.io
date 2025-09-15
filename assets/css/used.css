@@ -503,9 +503,31 @@ a.testimonial-link:hover {
 }
 
 .portfolio-box:hover {
-  transform: translateY(-8px) scale(1.02);
+  transform: translateY(-8px) scale(1.05);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   z-index: 10;
+}
+
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  display: none;
+  margin-top: -20px; 
+  margin-left: -20px; 
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 10; 
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .aspect-ratio-box {
@@ -543,6 +565,7 @@ a.testimonial-link:hover {
   backdrop-filter: blur(2px);
   /* border-top: 1px solid rgba(255, 255, 255, 0.1);  */
   flex-shrink: 0; 
+  transition: background-color 0.3s ease;
 }
 
 .polar_content h6 {
@@ -551,11 +574,57 @@ a.testimonial-link:hover {
   /* margin-bottom: 0.5rem; */
   font-size: 0.9rem;
   line-height: 1.3;
+  min-height: 2.6em;
   font-weight: 450;
+  display: flex;
+  align-items: flex-start;
 }
 .portfolio-box-caption {
   display: none;
 }
+
+.polar_content h6::after {
+  content: '▋';
+  animation: blink 0.7s infinite;
+  opacity: 0; 
+  transition: opacity 0.2s;
+  margin-left: 2px;
+}
+@keyframes blink {
+  50% { opacity: 1; }
+}
+
+.click-prompt {
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  position: absolute; 
+  bottom: 0.7rem; 
+  right: 1.05rem;  
+  font-size: 0.8rem;
+  opacity: 0; 
+  transition: opacity 0.3s ease 0.8s; 
+}
+
+.portfolio-box:hover .polar_content {
+  background: rgba(54, 132, 234, 0.7); /* 호버 시 변경될 배경색 */
+}
+
+.portfolio-box:hover img {
+  transform: scale(1.05); /* 미디어 확대 효과 */
+}
+
+.portfolio-box:hover .polar_content h6::after {
+  opacity: 1;
+}
+
+.portfolio-box .polar_content h6.typing-done::after {
+  opacity: 0;
+}
+
+.portfolio-box:hover .click-prompt {
+  opacity: 1;
+}
+
 .top-left .badge {
   font-size: 0.8rem;
   font-weight: 600;
