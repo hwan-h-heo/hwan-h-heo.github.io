@@ -318,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
           titleElement.classList.add('typing-done');
         }
-      }, 50); // 타이핑 속도
+      }, 30); // 타이핑 속도
     };
 
     // 마우스를 올렸을 때

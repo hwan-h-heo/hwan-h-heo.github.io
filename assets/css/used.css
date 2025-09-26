@@ -503,7 +503,7 @@ a.testimonial-link:hover {
 }
 
 .portfolio-box:hover {
-  transform: translateY(-8px) scale(1.05);
+  transform: translateY(-8px) scale(1.1);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   z-index: 10;
 }
@@ -549,7 +549,7 @@ a.testimonial-link:hover {
 
 .portfolio-box:hover .aspect-ratio-box img,
 .portfolio-box:hover .aspect-ratio-box video {
-  transform: scale(1.05); 
+  transform: scale(1.1); 
 }
 
 .polar_content {
@@ -610,7 +610,7 @@ a.testimonial-link:hover {
 }
 
 .portfolio-box:hover img {
-  transform: scale(1.05); /* 미디어 확대 효과 */
+  transform: scale(1.1); /* 미디어 확대 효과 */
 }
 
 .portfolio-box:hover .polar_content h6::after {
