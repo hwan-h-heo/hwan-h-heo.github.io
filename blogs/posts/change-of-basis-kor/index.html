@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="대각화와 고윳값, 특이값 분해, Principal Component Analysis (PCA)" />
+    <meta name="keywords" content="note, linear-algebra, 3D graphics, computer vision, machine learning" />
+    <meta name="author" content="Hwan Heo" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://hwan-h-heo.io/blogs/posts/change-of-basis-kor/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://hwan-h-heo.io/blogs/posts/change-of-basis-kor/" />
+    <meta property="og:title" content="Change of Basis" />
+    <meta property="og:description" content="대각화와 고윳값, 특이값 분해, Principal Component Analysis (PCA)" />
+    <meta property="og:image" content="https://hwan-h-heo.io/assets/image_fx_.jpg" />
+    <meta property="og:site_name" content="HwanHeo's Blog" />
+    <meta property="article:published_time" content="2021-09-10T00:00:00.000Z" />
+    <meta property="article:author" content="Hwan Heo" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://hwan-h-heo.io/blogs/posts/change-of-basis-kor/" />
+    <meta name="twitter:title" content="Change of Basis" />
+    <meta name="twitter:description" content="대각화와 고윳값, 특이값 분해, Principal Component Analysis (PCA)" />
+    <meta name="twitter:image" content="https://hwan-h-heo.io/assets/image_fx_.jpg" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Change of Basis",
+  "description": "대각화와 고윳값, 특이값 분해, Principal Component Analysis (PCA)",
+  "image": "https://hwan-h-heo.io/assets/image_fx_.jpg",
+  "author": {
+    "@type": "Person",
+    "name": "Hwan Heo",
+    "url": "https://hwan-h-heo.io"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Hwan Heo",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://hwan-h-heo.io/assets/favicon.ico"
+    }
+  },
+  "datePublished": "2021-09-10T00:00:00.000Z",
+  "dateModified": "2021-09-10T00:00:00.000Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://hwan-h-heo.io/blogs/posts/change-of-basis-kor/"
+  },
+  "inLanguage": "ko"
+}
+    </script>
+
+    <title>Change of Basis - HwanHeo's Blog</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+
+    <!-- Import Maps for three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.150.0/examples/jsm/",
+                "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
+            }
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/25.0.0/tween.umd.js"></script>
+    <script src="https://use.fontawesome.com/releases/v6.5.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+    <link href="/blogs/css/used.css" rel="stylesheet" />
+    <link href="/blogs/css/blog_post_specific.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1.9.1/css/academicons.min.css">
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+    <style>
+        pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; font-size: 0.9rem !important; }
+        pre code { font-size: 0.9rem !important; }
+        .main-content a { color: #15B886; text-decoration: none; }
+        .main-content a:hover { color: #11926b; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; }
+        th { width: 15%; background-color: #f2f2f2; }
+    </style>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RF7ETSKPK9');
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="/blogs/">Blog Home</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+                Menu <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item">
+                        <a href="../change-of-basis/" class="btn nav-link px-lg-3 py-3 py-lg-4" style="font-size:0.7rem">
+                            ENG
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="masthead" style="background-image: url('/assets/image_fx_.jpg')">
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="post-heading">
+                        <br/>
+                        <h2>Change of Basis</h2>
+                        <span class="meta">Posted on September 10, 2021</span>
+                        <hr/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <article class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Series Navigation -->
+                    <div id="series-container"></div>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 main-content">
+                    <nav class="toc"><ul><li><a href="#toc-heading-0">3. Change of basis</a><ul><li><a href="#toc-heading-1">3.1. <strong>Quadratic Form</strong></a></li><li><a href="#toc-heading-2">3.2. <strong>Eigen-Decomposition</strong></a></li><li><a href="#toc-heading-3">3.3. <strong>Similar Matrix</strong></a></li><li><a href="#toc-heading-4">3.4. <strong>Singular Value Decomposition</strong></a></li><li><a href="#toc-heading-5">3.5. <strong>Moore-Penrose pseudo-inverse Matrix</strong></a></li></ul></li><li><a href="#toc-heading-6">4. Trace Operator &amp; Norm</a><ul><li><a href="#toc-heading-7">4.1. Norm</a></li><li><a href="#toc-heading-8">4.2. Trace Operator</a></li></ul></li><li><a href="#toc-heading-9">5. Principal Component Analysis</a><ul><li><a href="#toc-heading-10">5.1. Covariance Matrix</a></li><li><a href="#toc-heading-11">5.2. Principal Component Analysis :</a></li></ul></li></ul></nav><button id="copyButton">
+    <i class="bi bi-share-fill"></i>
+</button>
+
+<div id="myshare_modal" class="share_modal">
+    <div class="share_modal-content">
+        <span class="share_modal_close">×</span>
+        <p><strong>Link Copied!</strong></p>
+        <div class="copy_indicator-container">
+        <div class="copy_indicator" id="share_modalIndicator"></div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ***- DL Book 이외의 중요한 내용을 일부 추가하였음.***
+
+https://www.deeplearningbook.org/contents/linear_algebra.html -->
+
+<hr>
+<ul>
+<li><a href="./?id=210909_lin_alg_1">이전 글</a>에 이어...</li>
+</ul>
+<h4>TL;DR</h4>
+<p>이 글에서는 basis 변화를 통해 선형변환을 해석하는 기하학적 관점을 중심으로, 다양한 행렬 분해 (decomposition)와 그 의미를 살펴본다.
+이를 통해 선형변환의 본질은 좌표계 (basis) 와의 상호작용 속에 있고, 이를 잘 이해하면 다양한 분해 방식과 딥러닝에서의 응용까지 자연스럽게 연결된다는 것을 이해해보자.</p>
+<hr>
+<h2 id="toc-heading-0">3. Change of basis</h2>
+<h3 id="toc-heading-1">3.1. <strong>Quadratic Form</strong></h3>
+<ul>
+<li><p>선형방정식계를 통해서, $A^{-1}MA$  꼴로 나타내지는 quadratic form 의 기하학적인 해석이 가능하다. 다음을 보자</p>
+  <p>
+  $$
+  \begin{bmatrix} 
+  a & c \\
+  b & d \\
+  \end{bmatrix} 
+  \begin{bmatrix} 
+  x  \\
+  y  \\
+  \end{bmatrix} 
+   = 
+  \begin{bmatrix} 
+  x'  \\
+  y'  \\
+  \end{bmatrix} 
+  $$
+  </p>
+  
+<p>  위 선형방정식 계를, basis 가 변하는 관점에서 해석한다면 basis 가 $(a,b), \ (c,d)$인 span 에서 $(x,y)$인 점이, basis 가 $(0,1),\ (1,0)$인 span 에서 $(x&#39;, y&#39;)$ 으로 나타난다는 의미이다. 즉 점$(x&#39;, y&#39;)$은, $A$에서의 $(x,y)$점을 일반적인 좌표계에서 해석한 것이다. </p>
+<p>  이를 이용하여 $A^{-1}MA$  를 해석해보자면, $A$로 정의되는 span 에서 일반적으로 사용하는 x,y,z 좌표계로의 변환 이후, $M$ 이라는 선형변환이 이루어지고 이를 다시 $A$가 정의하는 span으로 바꾼 것이라고 해석할 수 있다. 
+  즉 quadratic form $A^{-1}MA$ 는 $A$에서의 변환 $M$ 이라고 해석 가능하다.</p>
+</li>
+</ul>
+<h3 id="toc-heading-2">3.2. <strong>Eigen-Decomposition</strong></h3>
+<p>basis 의 변화라는 관점에서 eigendecomposition 을 살펴보자. </p>
+<p>
+$$
+A \vec v = \lambda \vec v \ 
+(= \lambda {\rm I}  \vec v ) \\ \rightarrow (A- \lambda \rm I) {\it \vec v} = 0
+$$
+</p>
+
+<ul>
+<li>위 식을 만족시키는 상수 $\lambda$ 의 값을 eigenvalue, 벡터 $\vec v$를 eigenvector 라고 한다. 즉 자기 자신을 선형변환 했을 때, 오직 scale 만 바뀌는 벡터가 eigenvector, 바뀌는 scale 정도가 eigenvalue 로 정의된다.</li>
+</ul>
+<p>이는 곧 span 변화의 회전축이라고 생각할 수 있다 (span의 변화에 상관없이 그 위치가 변하지 않기 때문에 &#39;eigen&#39; 이라는 이름이 붙지 않았나 생각한다). 
+$\vec v$ 가 영벡터가 아닐 때 위 식을 만족하기 위해서는 span이 축소되는 경우밖에 없으며, 따라서 위 식에서 변환 $A-\lambda {\rm I}$ 의 determinant 값은 0이 되어야만 한다. 이로부터 우리가 암기하고 있는 </p>
+<p>$$
+det(A-\lambda {\rm I} ) = 0
+$$</p>
+<p>라는 characteristic equation 이 유도된다. </p>
+<ul>
+<li><p>이제 행렬의 모든 column이 모든 eigenvector로 이루어져있는 행렬 $V$를 생각하자 (span의 basis가 eigenvector 인 상황, 보통 eigenbasis 라고 부른다). 위 행렬 $V$를 통해서 $V^{-1}AV$ 라는 quadratic form을 구성할 수 있는데, 이는 고윳값을 대각선 성분으로 갖는 diagonal matrix 가 된다. 다시 써보면,</p>
+  <p>
+  $$
+  V^{-1}AV = \\ 
+  \begin{bmatrix} 
+  \lambda_1 &  &... &  & 0\\
+  . & \lambda_2 & &  &. \\
+  . & & \lambda_3 &   &. \\
+  . &  &  & \lambda_4 &. \\
+  0 &  & ... &  &\lambda_5 \\
+  \end{bmatrix} 
+  $$
+  </p>
+  
+<p>  이다. change of basis 의 관점에서 살펴보면, 이는 $V$ span 에서의 $A$ 변환이다. 그런데 $V$는 basis가 eigenvector 인 변환이므로, $A$에서 오직 scaling 하기만 하는 coordinate system 으로 변환된 것이다. 즉 diagonal matrix 일 수밖에 없고, 이 scale 하는 정도가 eigenvalue 로 나타내어지기 때문에 위 quadratic form 은 이렇게 eigenvalue 로 이루어진 diagonal matrix를 갖게 된다. </p>
+</li>
+<li><p>이를 통해 역으로 $A$ 를 구성해보면,</p>
+<p>  $$
+  A = V diag(\lambda ) V^{-1}
+  $$</p>
+<p>  라는 우리가 알고 있는 eigend-decomposition 을 이끌어낼 수 있다. 즉 eigen-decomposition은 선형변환을 통해서 $A$라는 span에 구애받지 않는 회전축을 구하고, 이를 통해 공간을 원하는 방향으로 확장할 수 있게 해주는 도구이다. 간단한 예제로써 선형 변환의 반복적인 적용 작업에 이를 많이 이용하는데, quadratic form 의 앞뒤 형태가 서로 역행렬이기 때문이라는 수치해석적인 접근 말고도, 애초에 eigen-decomposition이 의미하는 바가 span에 구애받지 않고 scaling 이기 때문에 같은 해석이 가능하다. </p>
+<p>  또한 이는 PCA 등에서 covariance matrix를 maximize 하는 feature extraction 이 covariance matrix 의 eigenvalue 가 큰 eigenvector 를 선택하는 것과 일맥상통한다. eigenbasis를 통해서는 선형 변환 이후에도 점을 기술하는 방식이 바뀌지 않으므로 큰 기여도를 갖는 방향의 순서대로 basis를 선택하는 것을 PCA라고도 해석할 수 있다. </p>
+</li>
+<li><p>$A = V diag(\lambda ) V^{-1}$ 인 eigen-decomposition 으로 나타내었을 때, determinant의 성질에 따라 $det(A) = \Pi _i \lambda _i$ 임을 쉽게 알 수 있다. 따라서 만약 행렬이 nonsingular matrix 라는 의미는, $\forall _i \lambda _i \neq 0$  이라는 말과 같다. 이를 통해서 postitive definite, semidefinite matrix 등이 정의되는데, 이는 span 이 축소되지 않으면서 basis 들의 순서가 바뀌지 않는 eigenvector 를 지니는 matrix 들을 총칭하는 의미가 된다.</p>
+</li>
+</ul>
+<h3 id="toc-heading-3">3.3. <strong>Similar Matrix</strong></h3>
+<p>$$
+B = P^{-1}AP
+$$</p>
+<ul>
+<li><p>nonsingular matrix P에 대해, A와 B를 위와같이 나타낼 수 있을 때 A와 B 를 서로 similar 하다고 정의한다. change of basis 관점에서 이는 같은 변환이지만 서로 다른 span에서의 표현이라고 알 수 있다. 또한 determinant 의 성질에 의해서 $det(B) = det(A)$ 임을 알 수 있다. 또한 다음을 통해 similar matrix 의 eigenvalue 값이 동일함을 유도할 수 있다.</p>
+  <p>
+  $$
+  B−λI=P^{−1}AP−λP^{−1}P=P^{−1}(A−λI)P \\ \therefore det(B−λI)=det(P^{−1}(A−λI)P)=det(A−λI)
+  $$
+  </p>
+  
+<p>  이를 이용해 꽤 유용한 성질 하나를 유도할 수 있다. 다음을 보자 </p>
+<p>  <em>&quot;$C=P^TAP$ 를 만족하는 orthogonal matrix P가 존재할 때, A는 symmetric 이면 eigenvector 는 서로 orthogonal이다. &quot;</em></p>
+  <p>
+  $$
+  Av_j = \lambda _j v_j \\ \rightarrow v_i^T (Av_j) = (v_i^TA^T) v_j  = (Av_i)^T v_j \\ = \lambda _i \cdot v_i^T \cdot v_j \\ = \lambda _j \cdot v_i^T \cdot v_j
+  $$
+  </p>
+  
+<p>  $\lambda_i \neq \lambda _j$  이기 때문에 어떤 eigenvector 도 서로의 내적값이 0 이 됨을 알 수 있다. orthogonal matrix 로 matrix factorization 을 하면 eigen-decomposition 에 더해서 특이한 성질을 하나 발견할 수 있는데, basis 들끼리 서로 orthogonal 하므로 직교하는 축들의 모임이라고 해석할 수 있고, 즉 이 orthogonal column matrix 자체를 회전변환이라고 해석할 수 있다. (원래의 basis 들도 서로 orthogoanal 한 관계를 이루므로)</p>
+</li>
+</ul>
+<h3 id="toc-heading-4">3.4. <strong>Singular Value Decomposition</strong></h3>
+<p>이제 단순히 eigen-decomposition 의 non-square matrix 으로 확장하는 대신, 위에서 상기한 orthogonal similar 개념을 통해서 SVD를 다시 생각해보자. </p>
+<ul>
+<li>$A \in \textrm R^{m\times n}$ 인 matrix 를 생각하자. ($m \neq n)$ 이는 곧 span 이 collapse 하거나 expansion 하는 변환을 의미하고, 따라서 eigen-decomposition이 정의되지 않는다. 대신에 아래 두가지 symmetric matrix 를 구성할 수 있는데,</li>
+</ul>
+<ol>
+<li>$A^TA$ : $n \times n$  symmetric matrix, 즉 eigenbasis 가 each orthogonal &amp; independent 하며, basis 는 $A$의 column dimension을 rank로 갖는 를 span 으로 갖는다. </li>
+<li>$AA^T$ : $m \times m$ symmetric matrix 이다. span의 rank가 $A$ 의 row dimension 이 된다.</li>
+</ol>
+<p>각 symmetric matrix 의 의미를 잘 떠올리면서 정의에 따라 SVD 를 구성해보자. </p>
+<p>
+$$
+A= U \Sigma V^T \\ U, V : \text{each orthonormal}
+$$
+</p>
+
+<p>이고, 이에 따라 $A^TA$ 와 $AA^T$ 를 나타내보면, </p>
+<p>
+$$
+A^T A = V \Sigma ^T \Sigma V^T \\ A A^T = U \Sigma  \Sigma^T U^T 
+$$
+</p>
+
+<p>이다. 즉 $\Sigma ^T \Sigma$ 는 $A^TA$ 의 each orthogonal 한 eigenbasis 의 행렬이며, $U$ 는 $AA^T$ 에서 그렇다. 위에서 첫번째 식을 이용해 각각의 의미를 좀 더 살펴보도록 하겠다. 양변의 오른쪽에 행렬 $V$를 곱해보자. </p>
+<p>
+$$
+A^TA v_j = \sigma _j^2 v_j  \ (A^TA V = V \Sigma^T \Sigma)
+$$
+</p>
+
+<ol>
+<li><p>$AA^T (Av_j ) = \sigma _j^2 (Av_j)$  : 
+eigenvector 의 정의에 의해 $Av_j$  는 $AA^T$의  eigenvector 이다. (이때, $v_j$는 $V$의 한 column인 $A^TA$의 eigenvector 중 하나이다)</p>
+</li>
+<li><p>$v_j^T A^TAv_j = \sigma_j^2 v_j^T v_j \quad \rightarrow \quad (Av_j)^T (Av_j) = \sigma_j^2$
+즉 $Av / \sigma$ 는 $AA^T$의 unit eigenvector $u$ 이다. ($u \in U$ ) 따라서,</p>
+</li>
+</ol>
+<p>
+$$
+Av_j= \sigma _j u_j \\ \rightarrow AV = U \Sigma \\  \rightarrow A = U \Sigma V^T  
+$$
+</p>
+
+<p>위를 통해 SVD 가 non square matrix 로부터 비롯되는 symmetric square matrix $A^TA$를 통해서 정의됨을 알 수 있다. 이는 기하학적으로도 eigen-decomposition과 유사한 의미를 갖는데, $U, V$ 가 모두 each orthonormal 한 column 으로 이루어진 square matrix 이기 때문에 이는 회전변환의 의미를, $\Sigma$는 $A^TA$의 eigenvalue 를 diagonal element 로 갖는 scaling 변환의 의미를 갖는다. $U$와 $V$는 서로  <strong>dimension 이 다를 수 있지만</strong>, 둘 다 회전 변환이라는 본질적인 성질을 공유한다.</p>
+<h3 id="toc-heading-5">3.5. <strong>Moore-Penrose pseudo-inverse Matrix</strong></h3>
+<p>유도 과정을 자세하게 보자.</p>
+<p>$$
+Ax = b
+$$</p>
+<p>라는 선형방정식에서, $A$ 가 non square 혹은 non singular matrix 일 경우에는 역행렬을 통한 일반해를 구할 수 없다. 따라서 위의 SVD 에서 했던 것처럼, $A$를 통해 다루기 편한 symmetric 이고 square 인 matrix 를 만드는 것으로 이를 유도할 수 있다.</p>
+<p>
+$$
+A^TA x = A^T b \\ \rightarrow x = (A^T A)^{-1} A^T b
+$$
+</p>
+
+<p>
+$$
+(A^TA)^{-1} A^T  = \{ (V \Sigma ^T U^T) (U \Sigma V^T) \}^{-1} V \Sigma^T U^T \\ = V (\Sigma ^T \Sigma )^{-1} \Sigma ^T U^T  \\ = V diag (\sigma ^{-1} ) U^T
+$$
+</p>
+
+<p>즉 pseudo inverse matrix 는 $A^TA$의 eigenvalue의 역수로 정의되는 값을 singular value 로 가지는 행렬이다. 
+앞쪽에 등장하는식은 원래 least square solution 의 상황에서 L2 regularization 을 고려한 문제에서 비롯된 공식이다. </p>
+<p>
+$$
+{d \over dx} {\| Ax - b\| ^2 _2 + \alpha \| x\| ^2 _2 }  \\ = (A^TA + \alpha I )x \\ \rightarrow \hat x =  (A^TA + \alpha I )^{-1} A^T b
+$$
+</p>
+
+<p>기술되어 있는 least square solution 이 $\min |x |_2$ 인 해를 갖는 이유를 기하학적으로 접근하는 방식도 있으나 그림을 그리기 어려운 관계로 이는 생략하겠다. 
+고등 기하와벡터 정도의 내용으로 그리 어렵진 않다. (이젠 고등이 아닌...)</p>
+<h2 id="toc-heading-6">4. Trace Operator &amp; Norm</h2>
+<h3 id="toc-heading-7">4.1. Norm</h3>
+<p>$$
+|x |_p = (\sum _i x_i ^p ) ^{1 \over p }
+$$</p>
+<p>
+$$
+\| A {\|}_F = \sqrt{ \sum_{i, j} A_{i,j}^2}
+$$
+</p>
+
+<h3 id="toc-heading-8">4.2. Trace Operator</h3>
+<p>$$
+tr (A) = \sum_i A_{i,i}
+$$</p>
+<p>trace operator 에는 여러가지 흥미로운 성질들이 존재한다. 일부 유용한 성질들과 간단한 증명을 기술하겠다. </p>
+<ol>
+<li><p>Linearity : $tr(cA + dB) = c  \cdot tr (A) + d \cdot  tr (B)$</p>
+</li>
+<li><p>$tr(A) = tr(A^T) \quad$ (by definition)</p>
+</li>
+<li><p>Cyclic moving :  $tr(AB) = tr(BA)$</p>
+</li>
+</ol>
+<p>
+$$
+\sum_i (AB)_{i,i} = \sum _i \sum _j a_{i,j} b_{j,i} = \sum_j \sum _i b_{j,i}a_{i,j} = \sum _j (BA) _{j,j}
+$$
+</p>
+
+<ol start="4">
+<li>$tr(A)= \sum \lambda$</li>
+</ol>
+<p>
+$$
+tr(A) = tr(V diag(\lambda)V^{-1} ) \\ = tr(V^{-1} V diag(\lambda)) \\ = tr(diag(\lambda)) \\  = \sum \lambda
+$$
+</p>
+
+<ol start="5">
+<li>Frobenious Norm : $|A|_F ^2 = tr(AA^T) = tr(A^TA)$</li>
+</ol>
+<p>
+$$
+AV = U\Sigma \\ \rightarrow \| AV \|_F ^2= \| U\Sigma \| _F^2 \\ \rightarrow \|A \| _F ^2= \| \Sigma \| _F ^2 = \sum \sigma ^2
+$$
+</p>
+
+<p>
+$$
+A^TA = V (\Sigma ^T \Sigma ) V^T \\ \therefore tr(A^TA) = tr(AA^T) = \sum \sigma ^2 \\ \|A \|_F = \sqrt { tr(A^TA) }
+$$
+</p>
+
+<h2 id="toc-heading-9">5. Principal Component Analysis</h2>
+<p>PCA 수식 유도 과정에서 lagrangian multiplier 를 사용하는 것이 일반적이기 때문에 후에 duality 를 다룬 이후에 다시 설명하도록 하겠다. 
+대신에 자주 사용하는 covariance matrix 에 대해 간단하게 기술하고, lagrangian multiplier 외의 방법으로 PCA와 eigen-decomposition 간의 관계를 살펴보자. </p>
+<h3 id="toc-heading-10">5.1. Covariance Matrix</h3>
+<p>$$
+cov(A) = {1 \over n} (A - \vec \mu ) ^T (A- \vec  \mu)
+$$</p>
+<p>위 식에서 $A- \vec \mu = X$ 라 하자. 그렇다면, 이를 통해 eigen-decomposition 이 가능하다. </p>
+<p>
+$$
+X^TX = V^{-1} \Sigma V \\ = V^T \Sigma V^{-T} \quad (\because X^TX : \text {symmetric}) \\ \rightarrow VV^T \Sigma (V^TV) ^{-1} = \Sigma \\ \therefore VV^T = I 
+$$
+</p>
+
+<p>따라서 위 등식이 성립하고, 이는 즉 covariance matrix 의 eigenbasis 는 서로 orthogonal 하다는 의미이다. covariance matrix 를 이루는 basis 가 서로 내적값이 0이므로, 이를 uncorrelated 되었다고도 한다. </p>
+<p>PCA 에서 이를 최대화 하는 방향으로 feature extraction 을 진행하는 것은, data 를 통해 구축한 covariance matrix는 data 가 얼만큼 퍼져있는지를 나타내고 있기 때문이다. 즉 분산을 최대한 보존하는 방향으로 진행해야 dimension reduction 이 일어나도 정보의 손실이 최소화 되는 것이다 (lessy compression). </p>
+<h3 id="toc-heading-11">5.2. Principal Component Analysis :</h3>
+<p>encoder matrix 의 최종 derivation form 인 아래 식을 통해서 PCA 와 eigen-decomposition 간의 관계를 살펴볼 수 있다. DL book의 유도에 따르면 PCA는 곧,</p>
+<p>
+$$
+\argmax _d \ Tr(d^T X^TXd) \quad \text{where } d^T d = 1
+$$
+</p>
+
+<p>이라는 형태가 나오는데,  $d^TX^TXd$ 는 $X^TX$ induced ellipsoid 임을 간단하게 알 수 있다.
+수식에서 간단한 첨언을 하면, 제약조건으로써 제시하고 있는 $|D |_F = I$ 이라는 수식은 maximization 문제를 풀 때, 단순히 D 행렬의 크기만을 키우면 objective function 값이 커지기 때문에 이 값에 제약을 둔 것이다.  </p>
+<p>$X^TX$ 는 symmetric matrix 이므로,  $X ^TX = P^T AP$ 를 만족하는 eigendecomposition diagonal matrix $A$ 를 만들 수 있다. 따라서, $Pd&#39; = d$  인 $d&#39;$  에 대하여,  </p>
+<p>
+$$
+d^TX^TXd = (Pd')^T X^TX (Pd') \quad  \quad \quad  \\  = d'^T (P^TX^TXP)d' 
+$$
+</p>
+
+<p>를 만족하고, $P^TX^TXP$ 는 eigenvalue 를 diagonal element 로 가지는 matrix 가 된다. 즉 eigenbasis 로 이루어지는 span 상의 ellipsoid plane 을 의미하고, 이 ellipse 를 이루는 axis 중에 가장 큰 것을 고른다는 의미가 된다. 구체적으로 ellipse 식을 구해보자면, </p>
+<p>
+$$
+\begin{bmatrix} 
+a_1 &  &... &  & a_n \\
+\end{bmatrix} 
+\begin{bmatrix} 
+\lambda_1 &  &... &  & 0\\
+. &  .& &  &. \\
+. & &  .&   &. \\
+. &  &  & . &. \\
+0 &  & ... &  & \lambda _n\\
+\end{bmatrix} 
+\begin{bmatrix} 
+a_1 \\
+. \\
+. \\
+. \\
+a_n \\
+\end{bmatrix}  \\ = \lambda_1 (a_1)^2 + \lambda _2 (a_2)^2 + ... + \lambda_n (a_n)^2 \\ \text{where } d'^T = \begin{bmatrix} 
+a_1 &  &... &  & a_n \\
+\end{bmatrix} 
+$$
+</p>
+
+<p>즉, eigenbasis 로 이루어진 coordinate system 의 ellipse 임을 확인할 수 있다. </p>
+<p>기하학적인 설명 이외에 $d$ 가 eigenvector 일 때, eigenvalue 가 max 값인 이유또한 수식적으로 간단하게 유도해볼 수 있다. 다음을 보자. </p>
+<p>
+$$
+\ d^T X^TX d  \quad \text{where } d^T d = 1 \\ = d^T (\lambda d ) \\ = \lambda \  d^Td \ \ \\ = \lambda  
+\quad 
+$$
+</p>
+
+<p>따라서 $d$ 가 eigenvector 일 때, 해당 식의 값이 eigenvalue 값과 동일하고, 따라서 최대 eigenvalue 에 해당하는 eigenvector 를 찾는 것이 PCA 임을 확인할 수 있다. 즉 $cov(X^TX)$  의 최대 eigenvalue 에 해당하는 eigenvector 를 찾는 작업이 곧 PCA 이다. </p>
+<p>또한 이를 eigen-decomposition 의 정의에서 오는 직관을 통해 유추해볼 수 있는데, 큰 값의 eigenvalue 는 data 를 기술하는데 큰 기여를 하는 axis 이고 (scaling 의 민감도가 높기 때문에), 따라서 이것의 크기 순서대로 보존하는 것이 전체 data 를 이루는데 많은 기여를 하는 axis 들만 남겨놓는 것이라고도 해석할 수 있다.</p>
+
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Post Navigation -->
+                    <div id="post-navigation" class="mt-4"></div>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <footer class="border-top">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="small text-center text-muted fst-italic">Copyright © Hwan Heo</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="/blogs/js/posts-data.js"></script>
+    <script>
+        // Math rendering
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            }
+
+            // Share button functionality
+            const copyButton = document.getElementById('copyButton');
+            const shareModal = document.getElementById('myshare_modal');
+            const closeModal = shareModal ? shareModal.querySelector('.share_modal_close') : null;
+            const indicator = document.getElementById('share_modalIndicator');
+
+            if (copyButton && shareModal) {
+                let animationId;
+
+                function updateShareButtonVisibility() {
+                    var headerHeight = document.querySelector('.masthead').offsetHeight;
+                    if (window.innerWidth > 1280 && window.scrollY > headerHeight) {
+                        copyButton.style.display = 'block';
+                    } else {
+                        copyButton.style.display = 'none';
+                    }
+                }
+
+                function animateIndicator() {
+                    let startTime = null;
+                    const duration = 1500;
+
+                    function step(timestamp) {
+                        if (!startTime) startTime = timestamp;
+                        const progress = Math.min((timestamp - startTime) / duration, 1);
+                        indicator.style.width = `${(1 - progress) * 100}%`;
+
+                        if (progress < 1) {
+                            animationId = requestAnimationFrame(step);
+                        } else {
+                            shareModal.style.display = 'none';
+                        }
+                    }
+
+                    cancelAnimationFrame(animationId);
+                    animationId = requestAnimationFrame(step);
+                }
+
+                function closeShareModal() {
+                    cancelAnimationFrame(animationId);
+                    shareModal.style.display = 'none';
+                    indicator.style.width = '0%';
+                }
+
+                // Scroll event for share button visibility
+                document.addEventListener('scroll', updateShareButtonVisibility);
+                window.addEventListener('resize', updateShareButtonVisibility);
+
+                copyButton.addEventListener('click', function() {
+                    const url = new URL(window.location.href);
+                    url.hash = '';
+                    const urlWithoutHash = url.href;
+
+                    navigator.clipboard.writeText(urlWithoutHash).then(function() {
+                        shareModal.style.display = 'block';
+                        indicator.style.width = '100%';
+                        animateIndicator();
+                    }).catch(function(err) {
+                        console.error('Link Copy Failed:', err);
+                        alert('링크 복사에 실패했습니다.');
+                    });
+                });
+
+                if (closeModal) {
+                    closeModal.addEventListener('click', closeShareModal);
+                }
+
+                window.addEventListener('click', function(event) {
+                    if (event.target === shareModal) {
+                        closeShareModal();
+                    }
+                });
+
+                updateShareButtonVisibility();
+            }
+
+            // Series navigation
+            const postId = '210910_lin_alg_2';
+            const lang = 'kor';
+            renderSeriesNavigation(postId, lang);
+
+            // TOC scroll tracking
+            initializeTOC();
+
+            // Custom script for specific posts with 3D viewers
+            if (postId === '240917_3djs') {
+                import('/blogs/3DViewer/js/gaussian_viewer.js')
+                    .then(module => {
+                        module.initGaussianViewer();
+                    })
+                    .catch(err => {
+                        console.error("Failed to load the Gaussian viewer script:", err);
+                    });
+            }
+
+            if (postId === '250310_model_viewer') {
+                import('/blogs/3DViewer/js/gaussian_viewer.js')
+                    .then(module => {
+                        module.initGaussianViewer();
+                    })
+                    .catch(err => {
+                        console.error("Failed to load the Gaussian viewer script:", err);
+                    });
+            }
+        });
+
+        function initializeTOC() {
+            const toc = document.querySelector('.toc');
+            if (!toc) return;
+
+            let tocItems = [];
+
+            // Scroll에 따라 TOC 표시/숨김
+            function updateTocVisibility() {
+                const headerHeight = document.querySelector('.masthead')?.offsetHeight || 300;
+                if (window.scrollY > headerHeight) {
+                    toc.style.display = 'block';
+                } else {
+                    toc.style.display = 'none';
+                }
+            }
+
+            document.addEventListener('scroll', updateTocVisibility);
+
+            // 초기 상태 설정
+            const headerHeight = document.querySelector('.masthead')?.offsetHeight || 300;
+            toc.style.display = window.scrollY > headerHeight ? 'block' : 'none';
+
+            // 스크롤에 따라 현재 섹션 활성화
+            const TOP_MARGIN = 0.1;
+            const BOTTOM_MARGIN = 0.2;
+
+            function initTocItems() {
+                tocItems = Array.from(toc.querySelectorAll('li')).map(function(item) {
+                    const anchor = item.querySelector('a');
+                    if (!anchor) return null;
+                    const href = anchor.getAttribute('href');
+                    if (!href || href === '#') return null;
+                    const target = document.getElementById(href.slice(1));
+                    return { listItem: item, anchor: anchor, target: target };
+                }).filter(item => item && item.target);
+            }
+
+            function syncToc() {
+                const windowHeight = window.innerHeight;
+                let currentSection = null;
+
+                tocItems.forEach(function(item) {
+                    const targetBounds = item.target.getBoundingClientRect();
+                    if (targetBounds.top <= windowHeight * (1 - BOTTOM_MARGIN)) {
+                        currentSection = item;
+                    }
+                });
+
+                tocItems.forEach(function(item) {
+                    if (item === currentSection) {
+                        item.listItem.classList.add('active');
+                    } else {
+                        item.listItem.classList.remove('active');
+                    }
+                });
+            }
+
+            initTocItems();
+            syncToc();
+            window.addEventListener('scroll', syncToc, false);
+        }
+
+        function getPostTitle(post, lang) {
+            return post['title_' + lang] || post.title_eng;
+        }
+
+        function renderSeriesNavigation(postId, lang) {
+            const seriesContainer = document.getElementById('series-container');
+            const navContainer = document.getElementById('post-navigation');
+
+            if (!postsData || !seriesInfo || !seriesContainer) return;
+
+            const currentPost = postsData.find(p => p.id === postId);
+            if (!currentPost || !currentPost.series) return;
+
+            const seriesId = currentPost.series;
+            const postsInSeries = postsData
+                .filter(p => p.series === seriesId)
+                .sort((a, b) => new Date(b.date) - new Date(a.date)); // 최신순 정렬
+
+            if (postsInSeries.length <= 1) return;
+
+            const seriesTitle = seriesInfo[seriesId]?.[lang] || seriesInfo[seriesId]?.['eng'] || 'Series';
+
+            // Render series accordion
+            const listItems = postsInSeries.map(post => {
+                const title = getPostTitle(post, lang);
+                const slug = post.slug || post.id;
+                const postLang = lang === 'eng' ? slug : slug + '-kor';
+                if (post.id === postId) {
+                    return '<li><strong>' + title + '</strong></li>';
+                } else {
+                    return '<li><a href="/blogs/posts/' + postLang + '/">' + title + '</a></li>';
+                }
+            }).join('');
+
+            seriesContainer.innerHTML = `
+                <div class="accordion mb-4" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                <strong>${seriesTitle}</strong>
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <ol>${listItems}</ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Render post navigation (prev/next)
+            const currentIndex = postsInSeries.findIndex(p => p.id === postId);
+            const olderPost = postsInSeries[currentIndex + 1];
+            const nextPost = postsInSeries[currentIndex - 1];
+
+            if (olderPost || nextPost) {
+                let navHtml = '<div class="d-flex justify-content-between mb-4">';
+
+                if (olderPost) {
+                    const olderTitle = getPostTitle(olderPost, lang);
+                    const truncatedTitle = olderTitle.length > 25 ? olderTitle.substring(0, 25) + '...' : olderTitle;
+                    const olderSlug = olderPost.slug || olderPost.id;
+                    const olderLang = lang === 'eng' ? olderSlug : olderSlug + '-kor';
+                    navHtml += `<a class="btn btn-light text-uppercase" href="/blogs/posts/${olderLang}/" style="width: 40%; text-align: center;">← Older Post<br><small style="font-size: 0.7rem; text-transform: none;">${truncatedTitle}</small></a>`;
+                } else {
+                    if (nextPost) {
+                        navHtml += '<div></div>';
+                    }
+                }
+
+                if (nextPost) {
+                    const nextTitle = getPostTitle(nextPost, lang);
+                    const truncatedTitle = nextTitle.length > 25 ? nextTitle.substring(0, 25) + '...' : nextTitle;
+                    const nextSlug = nextPost.slug || nextPost.id;
+                    const nextLang = lang === 'eng' ? nextSlug : nextSlug + '-kor';
+                    navHtml += `<a class="btn btn-light text-uppercase" href="/blogs/posts/${nextLang}/" style="width: 40%; text-align: center;">Next Post →<br><small style="font-size: 0.7rem; text-transform: none;">${truncatedTitle}</small></a>`;
+                } else {
+                    const allSeriesIds = Object.keys(seriesInfo);
+                    const otherSeriesIds = allSeriesIds.filter(id => id !== currentPost.series);
+
+                    if (otherSeriesIds.length > 0) {
+                        const randomSeriesId = otherSeriesIds[Math.floor(Math.random() * otherSeriesIds.length)];
+                        const latestPostInRandomSeries = postsData
+                            .filter(p => p.series === randomSeriesId)
+                            .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+
+                        if (latestPostInRandomSeries) {
+                            const seriesTitle = seriesInfo[randomSeriesId][lang] || seriesInfo[randomSeriesId]['eng'];
+                            const recSlug = latestPostInRandomSeries.slug || latestPostInRandomSeries.id;
+                            const recLang = lang === 'eng' ? recSlug : recSlug + '-kor';
+                            navHtml += `<a class="btn btn-outline-secondary text-uppercase" href="/blogs/posts/${recLang}/" style="width: 40%; text-align: center;">Explore Series<br><small style="font-size: 0.7rem; text-transform: none;">${seriesTitle}</small></a>`;
+                        }
+                    } else {
+                        navHtml += '<div></div>';
+                    }
+                }
+
+                navHtml += '</div>';
+                navContainer.innerHTML = navHtml;
+            }
+        }
+    </script>
+</body>
+</html>

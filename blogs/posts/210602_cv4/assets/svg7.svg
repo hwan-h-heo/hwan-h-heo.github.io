@@ -1,0 +1,29 @@
+<svg width="500" height="350" xmlns="http://www.w3.org/2000/svg">
+<style>
+.ground { fill: #e0e0e0; }
+.sky { fill: #d4e6f1; }
+.road { fill: #777; stroke: #666; stroke-width: 1; }
+.line { stroke: white; stroke-width: 3; stroke-dasharray: 20 15; }
+.horizon { stroke: #3498db; stroke-width: 1.5; }
+.vp { fill: red; }
+.label { font-family: Arial, sans-serif; font-size: 14px; fill: #333; }
+</style>
+
+<!-- 하늘과 땅이 만나는 y=175 지점이 지평선(소실선)이 됩니다. -->
+<rect x="0" y="0" width="500" height="175" class="sky"/>
+<rect x="0" y="175" width="500" height="175" class="ground"/>
+
+<!-- 지평선(소실선) -->
+<line x1="0" y1="175" x2="500" y2="175" class="horizon"/>
+<text x="360" y="170" class="label">Horizon Line (Vanishing Line)</text>
+
+<!-- 도로: 다각형의 상단 꼭짓점을 소실점(250, 175)으로 일치시켰습니다. -->
+<polygon points="180,350 320,350 250,175" class="road"/>
+
+<!-- 중앙선: 소실점에서 시작하여 도로의 중앙을 가로지릅니다. -->
+<line x1="250" y1="175" x2="250" y2="350" class="line"/>
+
+<!-- 소실점: 지평선 위에 위치합니다. -->
+<circle cx="250" cy="175" r="5" class="vp"/>
+<text x="260" y="195" class="label">Vanishing Point</text>
+</svg>

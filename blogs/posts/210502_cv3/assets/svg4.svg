@@ -1,0 +1,36 @@
+
+<svg width="650" height="180" xmlns="http://www.w3.org/2000/svg">
+<style>
+.label { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; text-anchor: middle; }
+.shape { fill: #cceeff; stroke: #0077cc; stroke-width: 2; }
+.arrow { stroke: #333; stroke-width: 2; marker-end: url(#arrowhead8); }
+</style>
+<defs>
+<marker id="arrowhead8" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+<polygon points="0 0, 10 3.5, 0 7" fill="#333" />
+</marker>
+</defs>
+
+<g transform="translate(60, 90)">
+<text y="-60" class="label">Rigid</text>
+<polygon points="-30,-30 30,-30 30,30 -30,30" class="shape" transform="translate(10, 5) rotate(15)"/>
+</g>
+<line x1="120" y1="90" x2="160" y2="90" class="arrow"/>
+
+<g transform="translate(200, 90)">
+<text y="-60" class="label">Similarity</text>
+<polygon points="-30,-30 30,-30 30,30 -30,30" class="shape" transform="scale(0.8) translate(10, 5) rotate(15)"/>
+</g>
+<line x1="260" y1="90" x2="300" y2="90" class="arrow"/>
+
+<g transform="translate(350, 90)">
+<text y="-60" class="label">Affine</text>
+<polygon points="-30,-30 30,-30 30,30 -30,30" class="shape" transform="matrix(0.8, 0.2, -0.1, 1, 0, 0)"/>
+</g>
+<line x1="410" y1="90" x2="450" y2="90" class="arrow"/>
+
+<g transform="translate(540, 90)">
+<text y="-60" class="label">Projective</text>
+<polygon points="-40,-40 50,-30 40,40 -50,50" class="shape"/>
+</g>
+</svg>

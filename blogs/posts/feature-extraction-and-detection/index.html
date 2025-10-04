@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Image Gradient, Sobel Filter, LoG, and Detection" />
+    <meta name="keywords" content="note, computer-vision, 3D graphics, computer vision, machine learning" />
+    <meta name="author" content="Hwan Heo" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://hwan-h-heo.io/blogs/posts/feature-extraction-and-detection/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://hwan-h-heo.io/blogs/posts/feature-extraction-and-detection/" />
+    <meta property="og:title" content="Feature Extraction and Detection" />
+    <meta property="og:description" content="Image Gradient, Sobel Filter, LoG, and Detection" />
+    <meta property="og:image" content="https://hwan-h-heo.io/assets/image_fx_.jpg" />
+    <meta property="og:site_name" content="HwanHeo's Blog" />
+    <meta property="article:published_time" content="2021-04-02T00:00:00.000Z" />
+    <meta property="article:author" content="Hwan Heo" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://hwan-h-heo.io/blogs/posts/feature-extraction-and-detection/" />
+    <meta name="twitter:title" content="Feature Extraction and Detection" />
+    <meta name="twitter:description" content="Image Gradient, Sobel Filter, LoG, and Detection" />
+    <meta name="twitter:image" content="https://hwan-h-heo.io/assets/image_fx_.jpg" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Feature Extraction and Detection",
+  "description": "Image Gradient, Sobel Filter, LoG, and Detection",
+  "image": "https://hwan-h-heo.io/assets/image_fx_.jpg",
+  "author": {
+    "@type": "Person",
+    "name": "Hwan Heo",
+    "url": "https://hwan-h-heo.io"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Hwan Heo",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://hwan-h-heo.io/assets/favicon.ico"
+    }
+  },
+  "datePublished": "2021-04-02T00:00:00.000Z",
+  "dateModified": "2021-04-02T00:00:00.000Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://hwan-h-heo.io/blogs/posts/feature-extraction-and-detection/"
+  },
+  "inLanguage": "en"
+}
+    </script>
+
+    <title>Feature Extraction and Detection - HwanHeo's Blog</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+
+    <!-- Import Maps for three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.150.0/examples/jsm/",
+                "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
+            }
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/25.0.0/tween.umd.js"></script>
+    <script src="https://use.fontawesome.com/releases/v6.5.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+    <link href="/blogs/css/used.css" rel="stylesheet" />
+    <link href="/blogs/css/blog_post_specific.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1.9.1/css/academicons.min.css">
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+    <style>
+        pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; font-size: 0.9rem !important; }
+        pre code { font-size: 0.9rem !important; }
+        .main-content a { color: #15B886; text-decoration: none; }
+        .main-content a:hover { color: #11926b; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; }
+        th { width: 15%; background-color: #f2f2f2; }
+    </style>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RF7ETSKPK9');
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="/blogs/">Blog Home</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+                Menu <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item">
+                        <a href="../feature-extraction-and-detection-kor/" class="btn nav-link px-lg-3 py-3 py-lg-4" style="font-size:0.7rem">
+                            KOR
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="masthead" style="background-image: url('/assets/image_fx_.jpg')">
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="post-heading">
+                        <br/>
+                        <h2>Feature Extraction and Detection</h2>
+                        <span class="meta">Posted on April 2, 2021</span>
+                        <hr/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <article class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Series Navigation -->
+                    <div id="series-container"></div>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 main-content">
+                    <nav class="toc"><ul><li><a href="#toc-heading-0">3. Feature Extraction and Edge Detection</a><ul><li><a href="#toc-heading-1">Opencv Example</a></li></ul></li><li><a href="#toc-heading-2">4. Resampling and Resizing</a><ul><li><a href="#toc-heading-3">Opencv Example</a></li></ul></li><li><a href="#toc-heading-4">5. Corner Detection</a><ul><li><a href="#toc-heading-5">Opencv Example</a></li></ul></li></ul></nav><button id="copyButton">
+<i class="bi bi-share-fill"></i>
+</button>
+
+<div id="myshare_modal" class="share_modal">
+<div class="share_modal-content">
+<span class="share_modal_close">×</span>
+<p><strong>Link Copied!</strong></p>
+<div class="copy_indicator-container">
+<div class="copy_indicator" id="share_modalIndicator"></div>
+</div>
+</div>
+</div>
+
+<br/>
+
+<h2 id="toc-heading-0">3. Feature Extraction and Edge Detection</h2>
+<hr>
+<h4>Image Gradients for Edge Detection</h4>
+<p>Edges in an image are locations with a sharp change in intensity. These changes can be detected by analyzing the image&#39;s derivatives. The first derivative of the intensity function will have a local extremum (maximum or minimum) at an edge location. Consequently, the second derivative will have a zero-crossing at that same location.</p>
+<p>The gradient of an image $I(x,y)$ is a vector that points in the direction of the greatest intensity increase:</p>
+<p>$$ \nabla I = \left[ \frac{\partial I}{\partial x}, \frac{\partial I}{\partial y} \right]^T = [I_x, I_y]^T
+$$</p>
+<p>In a discrete image, derivatives are approximated using finite differences with filter kernels.</p>
+<ul>
+<li><p><strong>Forward difference for $I_x$</strong>: $ I(x+1, y) - I(x, y)$, implemented by the kernel $[-1, 1]$.</p>
+</li>
+<li><p><strong>Forward difference for $I_y$</strong>: $ I(x, y+1) - I(x, y)$, implemented by the kernel $[-1, 1]^T$.</p>
+</li>
+</ul>
+<p>The <strong>gradient magnitude</strong> (intensity) and <strong>orientation</strong> (direction) are:</p>
+<ul>
+<li><p><strong>Magnitude</strong>: 
+$$ ||\nabla I|| = \sqrt{I_x^2 + I_y^2}
+$$</p>
+</li>
+<li><p><strong>Orientation</strong>: 
+$$ \theta = \tan^{-1}\left(\frac{I_y}{I_x}\right)
+$$</p>
+</li>
+</ul>
+<p>A significant issue is that differentiation amplifies noise. To mitigate this, it&#39;s common practice to first smooth the image (e.g., with a Gaussian filter) and then compute the derivative. Due to the <strong>derivative theorem of convolution</strong>, this is equivalent to convolving the image with the derivative of the Gaussian kernel:</p>
+<p>$$ \frac{\partial}{\partial x}(g * I) = (\frac{\partial g}{\partial x}) * I
+$$</p>
+<p>This combines smoothing and differentiation into a single, efficient step.</p>
+<h4>Sobel Filter</h4>
+<p>The Sobel filter is a popular operator for edge detection that approximates the image gradient. It uses two 3x3 kernels to compute the horizontal and vertical derivatives, incorporating a degree of smoothing to reduce noise sensitivity.</p>
+<ul>
+<li><p><strong>Horizontal Gradient ($G_x$)</strong>: Detects <em>vertical</em> edges.</p>
+<p>
+$$ G_x = \begin{bmatrix} -1 & 0 & +1 \\ -2 & 0 & +2 \\ -1 & 0 & +1 \end{bmatrix} * I
+$$
+</p>
+</li>
+<li><p><strong>Vertical Gradient ($G_y$)</strong>: Detects <em>horizontal</em> edges.</p>
+<p>
+$$ G_y = \begin{bmatrix} -1 & -2 & -1 \\ 0 & 0 & 0 \\ +1 & +2 & +1 \end{bmatrix} * I
+$$
+</p></li>
+</ul>
+<p>The kernels can be seen as combining a differencing operation $[1, 0, -1]$ with a smoothing operation $[1, 2, 1]^T$.</p>
+<h4>Laplacian of Gaussian (LoG) for Edge Detection</h4>
+<p>The Laplacian is a 2D isotropic measure of the 2nd spatial derivative of an image. It is defined as:
+$$ \nabla^2 I = \frac{\partial^2 I}{\partial x^2} + \frac{\partial^2 I}{\partial y^2}
+$$</p>
+<p>Zero-crossings in the Laplacian of a Gaussian-smoothed image correspond to edges. The LoG operator combines these two steps into one:</p>
+<p>$$ \nabla^{2} (g * I) = (\nabla^{2} g) * I
+$$</p>
+<p>The $(\nabla^2 g)$ kernel, often called the &quot;Mexican hat&quot; filter, detects edges at a specific scale determined by the Gaussian&#39;s standard deviation, $\sigma$.</p>
+<h4>Seam Carving for Content-Aware Resizing</h4>
+<p>Seam carving is an algorithm for content-aware image resizing that reduces image size by removing &quot;seams&quot; of low importance rather than by uniform scaling or cropping. A seam is a continuous path of pixels from one edge of the image to the other (e.g., top to bottom).</p>
+<p>The process involves:</p>
+<img src='/blogs/posts/210402_cv2/assets/svg1.svg' width=100%>
+
+<ol>
+<li><p><strong>Energy Calculation</strong>: An &quot;energy function&quot; is defined to measure the importance of each pixel. A common choice is the gradient magnitude, as pixels with high gradients are part of edges and are perceptually important.
+$$ e(I) = ||\nabla I||
+$$</p>
+</li>
+<li><p><strong>Optimal Seam Finding</strong>: Dynamic programming is used to find the seam with the minimum total energy. Let $M(i, j)$ be the minimum cumulative energy of a seam ending at pixel $(i, j)$. It is calculated recursively:
+$$ M(i, j) = e(i, j) + \min_{k \in [-1, 0, 1]}M(i-1, j+k)
+$$</p>
+</li>
+<li><p><strong>Seam Removal</strong>: Once the minimum energy value in the last row is found, the algorithm backtracks to find the entire minimum-energy seam, which is then removed from the image.</p>
+</li>
+</ol>
+<p>This process is repeated to reduce the image to the desired dimensions.</p>
+<h4>The Canny Edge Detection Pipeline</h4>
+<p>The Canny edge detector is a multi-stage algorithm widely considered to be the standard in edge detection.</p>
+<ol>
+<li><p><strong>Noise Reduction</strong>: The image is first smoothed using a Gaussian filter to suppress noise.</p>
+</li>
+<li><p><strong>Gradient Calculation</strong>: The image gradient intensity and orientation are computed using an operator like Sobel.</p>
+</li>
+<li><p><strong>Non-Maximum Suppression (NMS)</strong>: This step thins the wide ridges around edges down to a single pixel width. For each pixel, its gradient magnitude is compared to the two neighbors along its gradient direction. If the pixel&#39;s magnitude is not the maximum among the three, it is suppressed (set to zero). This ensures sharp, single-pixel-wide edges.</p>
+</li>
+<li><p><strong>Hysteresis Thresholding</strong>: Two thresholds, <code>high</code> and <code>weak</code>, are used to link edges.</p>
+<ul>
+<li><p>Any pixel with a gradient magnitude above <code>high</code> is immediately marked as a &quot;strong&quot; edge pixel.</p>
+</li>
+<li><p>Any pixel with a magnitude between <code>weak</code> and <code>high</code> is marked as a &quot;weak&quot; edge pixel.</p>
+</li>
+<li><p>Pixels with magnitudes below <code>weak</code> are suppressed.</p>
+</li>
+<li><p>The final edge map is produced by performing a connectivity analysis: weak pixels that are connected to strong pixels are kept as part of an edge. This allows for the inclusion of faint but legitimate edge sections while discarding isolated noise pixels.</p>
+</li>
+</ul>
+</li>
+</ol>
+<h4>Template Matching</h4>
+<p>Template matching is a method for finding a specific pattern (template) within a larger image. It works by sliding the template across the search image and computing a similarity score at each location. A common similarity metric is the <strong>cross-correlation score</strong>. The location with the highest score indicates the best match for the template.</p>
+<hr>
+<h3 id="toc-heading-1">Opencv Example</h3>
+<p>This example compares the <strong>Sobel operator</strong> for gradient calculation with the more advanced <strong>Canny edge detector</strong>. Sobel provides gradient magnitude, which can be thresholded, while Canny incorporates non-maximum suppression and hysteresis thresholding for cleaner, single-pixel-wide edges.</p>
+<pre><code class="language-python"># Sobel vs. Canny Edge Detection
+
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+# 1. Load an image (or create one)
+# Create a sample image with geometric shapes
+image = np.zeros((300, 300), dtype=np.uint8)
+cv2.circle(image, (100, 100), 50, 255, 3)
+cv2.rectangle(image, (150, 150), (250, 250), 255, -1)
+cv2.line(image, (50, 250), (250, 50), 255, 5)
+
+# 2. Apply Sobel and Canny detectors
+# Sobel operator to find gradients
+sobel_x = cv2.Sobel(image, cv2.CV_64F, 1, 0, ksize=5)
+sobel_y = cv2.Sobel(image, cv2.CV_64F, 0, 1, ksize=5)
+# Compute magnitude and normalize
+sobel_magnitude = np.sqrt(sobel_x**2 + sobel_y**2)
+sobel_magnitude = np.uint8(255 * sobel_magnitude / np.max(sobel_magnitude))
+
+# Canny edge detector
+canny_edges = cv2.Canny(image, threshold1=100, threshold2=200)
+
+# 3. Visualize results
+titles = [&#39;Original Image&#39;, &#39;Sobel Gradient Magnitude&#39;, &#39;Canny Edges&#39;]
+images = [image, sobel_magnitude, canny_edges]
+
+plt.figure(figsize=(15, 5))
+for i in range(3):
+    plt.subplot(1, 3, i + 1)
+    plt.imshow(images[i], cmap=&#39;gray&#39;)
+    plt.title(titles[i])
+    plt.xticks([]), plt.yticks([])
+plt.suptitle(&quot;Edge Detection Techniques&quot;, fontsize=16)
+plt.show()
+
+# Canny produces clean, thin lines, while Sobel shows the gradient intensity,
+# resulting in thick, bright areas around edges.
+</code></pre>
+<br/>
+
+<h4>Results:</h4>
+<img src='./210302_cv1/assets/image-3.jpg' width=100%>
+
+<hr>
+<h2 id="toc-heading-2">4. Resampling and Resizing</h2>
+<br/>
+
+<h4>Aliasing and the Nyquist Theorem</h4>
+<img src='/blogs/posts/210402_cv2/assets/svg2.svg' width=100%>
+
+<p><strong>Aliasing</strong> is an effect that causes different signals to become indistinguishable when sampled. In images, it manifests as jagged edges, moiré patterns, or other artifacts when an image is downsampled without proper filtering.</p>
+<p>The <strong>Nyquist-Shannon sampling theorem</strong> states that to perfectly reconstruct a signal, the sampling rate must be at least twice the maximum frequency present in the signal ($f_{sample} \ge 2f_{max}$). To prevent aliasing when downsampling an image, we must first remove the high frequencies that would otherwise be misinterpreted. This is achieved by applying a <strong>low-pass filter</strong> (e.g., a Gaussian blur) before resampling the pixels.</p>
+<h4>Gaussian and Laplacian Pyramids</h4>
+<p>Image pyramids are multi-scale representations of an image, created by repeatedly smoothing and downsampling.</p>
+<ul>
+<li><p><strong>Gaussian Pyramid</strong>: A sequence of images where each subsequent level ($G_{i+1}$) is created by Gaussian blurring the previous level ($G_i$) and then downsampling it (typically by a factor of 2).
+$$ G_{i+1} = \text{Downsample}(\text{GaussianFilter}(G_i))
+$$</p>
+</li>
+<li><p><strong>Laplacian Pyramid</strong>: A pyramid that stores the difference between a level in the Gaussian pyramid and its upsampled, blurred predecessor. This captures the high-frequency detail lost between levels. Let $U(G_{i+1})$ be the upsampled version of $G_{i+1}$.
+$L_i = G_i - U(G_{i+1})$
+The original image can be perfectly reconstructed by summing all the levels of the Laplacian pyramid, plus the final level of the Gaussian pyramid.</p>
+</li>
+</ul>
+<h4>Interpolation Methods</h4>
+<p>When resizing an image, interpolation is needed to estimate the pixel values at new coordinates.</p>
+<ul>
+<li><p><strong>Bilinear Interpolation</strong>: Estimates a pixel&#39;s value by performing linear interpolation in both the horizontal and vertical directions. It considers a 2x2 neighborhood of known pixels.</p>
+</li>
+<li><p><strong>Bicubic Interpolation</strong>: A more advanced method that considers a 4x4 neighborhood of pixels. It fits a cubic polynomial to these pixels, resulting in a smoother, more accurate interpolation than bilinear, but with higher computational cost.</p>
+</li>
+</ul>
+<hr>
+<h3 id="toc-heading-3">Opencv Example</h3>
+<p>This code demonstrates the creation of a <strong>Gaussian Pyramid</strong>, a multi-scale representation of an image created by repeatedly blurring and downsampling.</p>
+<pre><code class="language-python"># Gaussian Pyramid
+
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+# 1. Load an image
+# To make this runnable without external files, we create a sample image.
+# For a real case: image = cv2.imread(&#39;your_image.jpg&#39;)
+image = np.zeros((256, 256, 3), dtype=np.uint8)
+cv2.putText(image, &#39;CV&#39;, (30, 180), cv2.FONT_HERSHEY_SIMPLEX, 5, (255, 255, 255), 10)
+
+# 2. Generate the Gaussian pyramid
+pyramid_levels = 4
+pyramid = [image]
+temp_image = image
+for i in range(pyramid_levels - 1):
+    # Blur and downsample
+    temp_image = cv2.pyrDown(temp_image)
+    pyramid.append(temp_image)
+
+# 3. Visualize the pyramid
+plt.figure(figsize=(10, 5))
+# Display images in a row
+total_width = sum(img.shape[1] for img in pyramid)
+display_image = np.ones((image.shape[0], total_width, 3), dtype=np.uint8) * 255
+
+current_x = 0
+for level in pyramid:
+    h, w, _ = level.shape
+    display_image[0:h, current_x:current_x+w] = level
+    current_x += w
+
+plt.imshow(cv2.cvtColor(display_image, cv2.COLOR_BGR2RGB))
+plt.title(f&#39;Gaussian Pyramid ({pyramid_levels} Levels)&#39;)
+plt.xticks([]), plt.yticks([])
+plt.show()
+</code></pre>
+<br/>
+
+<h4>Results:</h4>
+<img src='./210302_cv1/assets/image-4.jpg' width=100%>
+
+<hr>
+<h2 id="toc-heading-4">5. Corner Detection</h2>
+<br/>
+
+<h4>The Intuition Behind Corner Detection</h4>
+<p>Edges and corners are important features for tasks like matching and tracking. While an edge is characterized by a significant intensity change in one direction, a <strong>corner</strong> is a point where there is a significant change in all directions. A sliding window analysis reveals this:</p>
+<img src='/blogs/posts/210402_cv2/assets/svg3.svg' width=100%>
+
+<ul>
+<li><p><strong>Flat Region</strong>: No change when the window is shifted.</p>
+</li>
+<li><p><strong>Edge</strong>: No change when shifted along the edge direction, but a large change when shifted perpendicular to it.</p>
+</li>
+<li><p><strong>Corner</strong>: A large change when the window is shifted in any direction.</p>
+</li>
+</ul>
+<br/>
+
+<h4>Harris Corner Detector</h4>
+<p>The Harris corner detector formalizes this intuition. It analyzes the change in intensity caused by a small shift $(u, v)$. 
+The sum of squared differences (SSD) error $E(u, v)$ is:
+$$ E(u,v) = \sum_{x,y \in W} [I(x+u, y+v) - I(x,y)]^2
+$$
+where <code>W</code> is the sliding window. </p>
+<p>Using a first-order Taylor expansion, this can be approximated as:</p>
+<p>
+$$ E(u,v) \approx \sum_{W} [I_x u + I_y v]^2 = [u, v] \left( \sum_{W} \begin{bmatrix} I_x^2 & I_x I_y \\ I_x I_y & I_y^2 \end{bmatrix} \right) \begin{bmatrix} u \\ v \end{bmatrix}
+$$
+</p>
+
+<p>This can be written compactly as:
+$$ E(u,v) \approx [u, v] H \begin{bmatrix} u \ v \end{bmatrix}
+$$
+where $H$ is the <strong>structure tensor</strong> or Harris matrix, which sums the gradient information over the window $W$.</p>
+<p>The behavior of $E(u,v)$ is determined by the eigenvalues, $\lambda_1$ and $\lambda_2$, of $H$.</p>
+<ul>
+<li><p><strong>Flat Region</strong>: Both $\lambda_1$ and $\lambda_2$ are small.</p>
+</li>
+<li><p><strong>Edge</strong>: One eigenvalue is large, and the other is small ($\lambda_1 \gg \lambda_2$ or $\lambda_2 \gg \lambda_1$).</p>
+</li>
+<li><p><strong>Corner</strong>: Both $\lambda_1$ and $\lambda_2$ are large.</p>
+</li>
+</ul>
+<p>Since computing eigenvalues is expensive, the Harris detector uses a response function $R$:
+$$ R = \det(H) - k \cdot (\text{trace}(H))^2 = \lambda_1 \lambda_2 - k(\lambda_1 + \lambda_2)^2
+$$
+where $k$ is an empirical constant (typically 0.04-0.06). A pixel is classified as a corner if its response $R$ is above a certain threshold.</p>
+<h4>Equivariance vs. Invariance</h4>
+<p>These terms describe how a function&#39;s output behaves under a transformation of its input.</p>
+<ul>
+<li><p><strong>Equivariance</strong>: A function $f$ is equivariant to a transformation $T$ if transforming the input is equivalent to transforming the output: $$ T(f(x)) = f(T(x)) $$. A corner detector is ideally equivariant to geometric transformations like rotation; if an image is rotated, the detected corner locations should also rotate.</p>
+</li>
+<li><p><strong>Invariance</strong>: A function $f$ is invariant to a transformation $T$ if the output does not change when the input is transformed: $$ f(x) = f(T(x) $)$. A feature descriptor is ideally invariant to photometric transformations like brightness changes; the descriptor should remain the same even if the lighting changes.</p>
+</li>
+</ul>
+<h4>Blob Detection with Laplacian of Gaussian (LoG)</h4>
+<p><strong>Blobs</strong> are image regions that are roughly circular and differ in properties (e.g., brightness or color) from their surroundings. The <strong>Laplacian of Gaussian (LoG)</strong> operator is an excellent blob detector. The LoG filter responds strongly to regions that match its size (determined by $\sigma$) and have a sharp intensity change. To find blobs of unknown sizes, one can apply LoG filters at multiple scales and look for local extrema in the 3D scale-space volume. The scale that gives the maximum response corresponds to the characteristic scale of the blob.</p>
+<hr>
+<h3 id="toc-heading-5">Opencv Example</h3>
+<p>The code finds corners in an image using the <strong>Harris Corner Detection</strong> algorithm and marks them with circles.</p>
+<pre><code class="language-python"># Harris Corner Detector
+
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+# 1. Load an image or create a synthetic one
+# Create a synthetic image with corners
+image = np.zeros((300, 300), dtype=np.uint8)
+cv2.rectangle(image, (50, 50), (250, 250), 255, 3)
+cv2.rectangle(image, (100, 100), (200, 200), 255, 3)
+image_color = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR) # For drawing colored circles
+
+# 2. Apply Harris Corner Detector
+gray = np.float32(image)
+# harris_corners = cv2.cornerHarris(src, blockSize, ksize, k)
+harris_corners = cv2.cornerHarris(gray, 2, 3, 0.04)
+
+# Dilate the corner image to make the corners more visible
+harris_corners = cv2.dilate(harris_corners, None)
+
+# 3. Threshold and visualize the corners
+# Mark the detected corners on the original image
+image_color[harris_corners &gt; 0.01 * harris_corners.max()] = [0, 0, 255] # Red
+
+plt.figure(figsize=(8, 8))
+plt.imshow(cv2.cvtColor(image_color, cv2.COLOR_BGR2RGB))
+plt.title(&#39;Harris Corner Detection Results&#39;)
+plt.xticks([]), plt.yticks([])
+plt.show()
+</code></pre>
+<br/>
+
+<h4>Results:</h4>
+<img src='./210302_cv1/assets/image-5.jpg' width=100%>
+
+<hr/>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Post Navigation -->
+                    <div id="post-navigation" class="mt-4"></div>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <footer class="border-top">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="small text-center text-muted fst-italic">Copyright © Hwan Heo</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="/blogs/js/posts-data.js"></script>
+    <script>
+        // Math rendering
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            }
+
+            // Share button functionality
+            const copyButton = document.getElementById('copyButton');
+            const shareModal = document.getElementById('myshare_modal');
+            const closeModal = shareModal ? shareModal.querySelector('.share_modal_close') : null;
+            const indicator = document.getElementById('share_modalIndicator');
+
+            if (copyButton && shareModal) {
+                let animationId;
+
+                function updateShareButtonVisibility() {
+                    var headerHeight = document.querySelector('.masthead').offsetHeight;
+                    if (window.innerWidth > 1280 && window.scrollY > headerHeight) {
+                        copyButton.style.display = 'block';
+                    } else {
+                        copyButton.style.display = 'none';
+                    }
+                }
+
+                function animateIndicator() {
+                    let startTime = null;
+                    const duration = 1500;
+
+                    function step(timestamp) {
+                        if (!startTime) startTime = timestamp;
+                        const progress = Math.min((timestamp - startTime) / duration, 1);
+                        indicator.style.width = `${(1 - progress) * 100}%`;
+
+                        if (progress < 1) {
+                            animationId = requestAnimationFrame(step);
+                        } else {
+                            shareModal.style.display = 'none';
+                        }
+                    }
+
+                    cancelAnimationFrame(animationId);
+                    animationId = requestAnimationFrame(step);
+                }
+
+                function closeShareModal() {
+                    cancelAnimationFrame(animationId);
+                    shareModal.style.display = 'none';
+                    indicator.style.width = '0%';
+                }
+
+                // Scroll event for share button visibility
+                document.addEventListener('scroll', updateShareButtonVisibility);
+                window.addEventListener('resize', updateShareButtonVisibility);
+
+                copyButton.addEventListener('click', function() {
+                    const url = new URL(window.location.href);
+                    url.hash = '';
+                    const urlWithoutHash = url.href;
+
+                    navigator.clipboard.writeText(urlWithoutHash).then(function() {
+                        shareModal.style.display = 'block';
+                        indicator.style.width = '100%';
+                        animateIndicator();
+                    }).catch(function(err) {
+                        console.error('Link Copy Failed:', err);
+                        alert('링크 복사에 실패했습니다.');
+                    });
+                });
+
+                if (closeModal) {
+                    closeModal.addEventListener('click', closeShareModal);
+                }
+
+                window.addEventListener('click', function(event) {
+                    if (event.target === shareModal) {
+                        closeShareModal();
+                    }
+                });
+
+                updateShareButtonVisibility();
+            }
+
+            // Series navigation
+            const postId = '210402_cv2';
+            const lang = 'eng';
+            renderSeriesNavigation(postId, lang);
+
+            // TOC scroll tracking
+            initializeTOC();
+
+            // Custom script for specific posts with 3D viewers
+            if (postId === '240917_3djs') {
+                import('/blogs/3DViewer/js/gaussian_viewer.js')
+                    .then(module => {
+                        module.initGaussianViewer();
+                    })
+                    .catch(err => {
+                        console.error("Failed to load the Gaussian viewer script:", err);
+                    });
+            }
+
+            if (postId === '250310_model_viewer') {
+                import('/blogs/3DViewer/js/gaussian_viewer.js')
+                    .then(module => {
+                        module.initGaussianViewer();
+                    })
+                    .catch(err => {
+                        console.error("Failed to load the Gaussian viewer script:", err);
+                    });
+            }
+        });
+
+        function initializeTOC() {
+            const toc = document.querySelector('.toc');
+            if (!toc) return;
+
+            let tocItems = [];
+
+            // Scroll에 따라 TOC 표시/숨김
+            function updateTocVisibility() {
+                const headerHeight = document.querySelector('.masthead')?.offsetHeight || 300;
+                if (window.scrollY > headerHeight) {
+                    toc.style.display = 'block';
+                } else {
+                    toc.style.display = 'none';
+                }
+            }
+
+            document.addEventListener('scroll', updateTocVisibility);
+
+            // 초기 상태 설정
+            const headerHeight = document.querySelector('.masthead')?.offsetHeight || 300;
+            toc.style.display = window.scrollY > headerHeight ? 'block' : 'none';
+
+            // 스크롤에 따라 현재 섹션 활성화
+            const TOP_MARGIN = 0.1;
+            const BOTTOM_MARGIN = 0.2;
+
+            function initTocItems() {
+                tocItems = Array.from(toc.querySelectorAll('li')).map(function(item) {
+                    const anchor = item.querySelector('a');
+                    if (!anchor) return null;
+                    const href = anchor.getAttribute('href');
+                    if (!href || href === '#') return null;
+                    const target = document.getElementById(href.slice(1));
+                    return { listItem: item, anchor: anchor, target: target };
+                }).filter(item => item && item.target);
+            }
+
+            function syncToc() {
+                const windowHeight = window.innerHeight;
+                let currentSection = null;
+
+                tocItems.forEach(function(item) {
+                    const targetBounds = item.target.getBoundingClientRect();
+                    if (targetBounds.top <= windowHeight * (1 - BOTTOM_MARGIN)) {
+                        currentSection = item;
+                    }
+                });
+
+                tocItems.forEach(function(item) {
+                    if (item === currentSection) {
+                        item.listItem.classList.add('active');
+                    } else {
+                        item.listItem.classList.remove('active');
+                    }
+                });
+            }
+
+            initTocItems();
+            syncToc();
+            window.addEventListener('scroll', syncToc, false);
+        }
+
+        function getPostTitle(post, lang) {
+            return post['title_' + lang] || post.title_eng;
+        }
+
+        function renderSeriesNavigation(postId, lang) {
+            const seriesContainer = document.getElementById('series-container');
+            const navContainer = document.getElementById('post-navigation');
+
+            if (!postsData || !seriesInfo || !seriesContainer) return;
+
+            const currentPost = postsData.find(p => p.id === postId);
+            if (!currentPost || !currentPost.series) return;
+
+            const seriesId = currentPost.series;
+            const postsInSeries = postsData
+                .filter(p => p.series === seriesId)
+                .sort((a, b) => new Date(b.date) - new Date(a.date)); // 최신순 정렬
+
+            if (postsInSeries.length <= 1) return;
+
+            const seriesTitle = seriesInfo[seriesId]?.[lang] || seriesInfo[seriesId]?.['eng'] || 'Series';
+
+            // Render series accordion
+            const listItems = postsInSeries.map(post => {
+                const title = getPostTitle(post, lang);
+                const slug = post.slug || post.id;
+                const postLang = lang === 'eng' ? slug : slug + '-kor';
+                if (post.id === postId) {
+                    return '<li><strong>' + title + '</strong></li>';
+                } else {
+                    return '<li><a href="/blogs/posts/' + postLang + '/">' + title + '</a></li>';
+                }
+            }).join('');
+
+            seriesContainer.innerHTML = `
+                <div class="accordion mb-4" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                <strong>${seriesTitle}</strong>
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <ol>${listItems}</ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Render post navigation (prev/next)
+            const currentIndex = postsInSeries.findIndex(p => p.id === postId);
+            const olderPost = postsInSeries[currentIndex + 1];
+            const nextPost = postsInSeries[currentIndex - 1];
+
+            if (olderPost || nextPost) {
+                let navHtml = '<div class="d-flex justify-content-between mb-4">';
+
+                if (olderPost) {
+                    const olderTitle = getPostTitle(olderPost, lang);
+                    const truncatedTitle = olderTitle.length > 25 ? olderTitle.substring(0, 25) + '...' : olderTitle;
+                    const olderSlug = olderPost.slug || olderPost.id;
+                    const olderLang = lang === 'eng' ? olderSlug : olderSlug + '-kor';
+                    navHtml += `<a class="btn btn-light text-uppercase" href="/blogs/posts/${olderLang}/" style="width: 40%; text-align: center;">← Older Post<br><small style="font-size: 0.7rem; text-transform: none;">${truncatedTitle}</small></a>`;
+                } else {
+                    if (nextPost) {
+                        navHtml += '<div></div>';
+                    }
+                }
+
+                if (nextPost) {
+                    const nextTitle = getPostTitle(nextPost, lang);
+                    const truncatedTitle = nextTitle.length > 25 ? nextTitle.substring(0, 25) + '...' : nextTitle;
+                    const nextSlug = nextPost.slug || nextPost.id;
+                    const nextLang = lang === 'eng' ? nextSlug : nextSlug + '-kor';
+                    navHtml += `<a class="btn btn-light text-uppercase" href="/blogs/posts/${nextLang}/" style="width: 40%; text-align: center;">Next Post →<br><small style="font-size: 0.7rem; text-transform: none;">${truncatedTitle}</small></a>`;
+                } else {
+                    const allSeriesIds = Object.keys(seriesInfo);
+                    const otherSeriesIds = allSeriesIds.filter(id => id !== currentPost.series);
+
+                    if (otherSeriesIds.length > 0) {
+                        const randomSeriesId = otherSeriesIds[Math.floor(Math.random() * otherSeriesIds.length)];
+                        const latestPostInRandomSeries = postsData
+                            .filter(p => p.series === randomSeriesId)
+                            .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+
+                        if (latestPostInRandomSeries) {
+                            const seriesTitle = seriesInfo[randomSeriesId][lang] || seriesInfo[randomSeriesId]['eng'];
+                            const recSlug = latestPostInRandomSeries.slug || latestPostInRandomSeries.id;
+                            const recLang = lang === 'eng' ? recSlug : recSlug + '-kor';
+                            navHtml += `<a class="btn btn-outline-secondary text-uppercase" href="/blogs/posts/${recLang}/" style="width: 40%; text-align: center;">Explore Series<br><small style="font-size: 0.7rem; text-transform: none;">${seriesTitle}</small></a>`;
+                        }
+                    } else {
+                        navHtml += '<div></div>';
+                    }
+                }
+
+                navHtml += '</div>';
+                navContainer.innerHTML = navHtml;
+            }
+        }
+    </script>
+</body>
+</html>

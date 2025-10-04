@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Various Image Filters and Morphology (Erosion & Dilation)" />
+    <meta name="keywords" content="note, computer-vision, 3D graphics, computer vision, machine learning" />
+    <meta name="author" content="Hwan Heo" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://hwan-h-heo.io/blogs/posts/image-filter-and-morphology/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://hwan-h-heo.io/blogs/posts/image-filter-and-morphology/" />
+    <meta property="og:title" content="Image Filter and Morphology" />
+    <meta property="og:description" content="Various Image Filters and Morphology (Erosion & Dilation)" />
+    <meta property="og:image" content="https://hwan-h-heo.io/assets/image_fx_.jpg" />
+    <meta property="og:site_name" content="HwanHeo's Blog" />
+    <meta property="article:published_time" content="2021-03-02T00:00:00.000Z" />
+    <meta property="article:author" content="Hwan Heo" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://hwan-h-heo.io/blogs/posts/image-filter-and-morphology/" />
+    <meta name="twitter:title" content="Image Filter and Morphology" />
+    <meta name="twitter:description" content="Various Image Filters and Morphology (Erosion & Dilation)" />
+    <meta name="twitter:image" content="https://hwan-h-heo.io/assets/image_fx_.jpg" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Image Filter and Morphology",
+  "description": "Various Image Filters and Morphology (Erosion & Dilation)",
+  "image": "https://hwan-h-heo.io/assets/image_fx_.jpg",
+  "author": {
+    "@type": "Person",
+    "name": "Hwan Heo",
+    "url": "https://hwan-h-heo.io"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Hwan Heo",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://hwan-h-heo.io/assets/favicon.ico"
+    }
+  },
+  "datePublished": "2021-03-02T00:00:00.000Z",
+  "dateModified": "2021-03-02T00:00:00.000Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://hwan-h-heo.io/blogs/posts/image-filter-and-morphology/"
+  },
+  "inLanguage": "en"
+}
+    </script>
+
+    <title>Image Filter and Morphology - HwanHeo's Blog</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+
+    <!-- Import Maps for three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.150.0/examples/jsm/",
+                "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
+            }
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/25.0.0/tween.umd.js"></script>
+    <script src="https://use.fontawesome.com/releases/v6.5.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+    <link href="/blogs/css/used.css" rel="stylesheet" />
+    <link href="/blogs/css/blog_post_specific.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1.9.1/css/academicons.min.css">
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+    <style>
+        pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; font-size: 0.9rem !important; }
+        pre code { font-size: 0.9rem !important; }
+        .main-content a { color: #15B886; text-decoration: none; }
+        .main-content a:hover { color: #11926b; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; }
+        th { width: 15%; background-color: #f2f2f2; }
+    </style>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RF7ETSKPK9');
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="/blogs/">Blog Home</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+                Menu <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item">
+                        <a href="../image-filter-and-morphology-kor/" class="btn nav-link px-lg-3 py-3 py-lg-4" style="font-size:0.7rem">
+                            KOR
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="masthead" style="background-image: url('/assets/image_fx_.jpg')">
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="post-heading">
+                        <br/>
+                        <h2>Image Filter and Morphology</h2>
+                        <span class="meta">Posted on March 2, 2021</span>
+                        <hr/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <article class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Series Navigation -->
+                    <div id="series-container"></div>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 main-content">
+                    <nav class="toc"><ul><li><a href="#toc-heading-0">1. Image Filtering</a><ul><li><a href="#toc-heading-1">Opencv Example</a></li></ul></li><li><a href="#toc-heading-2">2. Morphology</a><ul><li><a href="#toc-heading-3">Opencv Example</a></li></ul></li></ul></nav><button id="copyButton">
+<i class="bi bi-share-fill"></i>
+</button>
+
+<div id="myshare_modal" class="share_modal">
+<div class="share_modal-content">
+<span class="share_modal_close">×</span>
+<p><strong>Link Copied!</strong></p>
+<div class="copy_indicator-container">
+<div class="copy_indicator" id="share_modalIndicator"></div>
+</div>
+</div>
+</div>
+
+<hr>
+<h2 id="toc-heading-0">1. Image Filtering</h2>
+<p>Image filtering is a fundamental process in computer vision used to modify or enhance an image. Common applications include denoising, resizing, and sharpening. Filters can be broadly categorized as linear or non-linear.</p>
+<h4>Linear Filters</h4>
+<p>A linear filter is a system that modifies an image by applying a linear operator. This operation can be represented as a matrix-vector multiplication. If we &quot;unroll&quot; an image <code>x</code> into a single column vector, the filtered output image <code>y</code> is given by:</p>
+<p>$$ y = L x
+$$</p>
+<p>where <code>L</code> is a matrix representing the filter. Two key properties define linear filters:</p>
+<ol>
+<li><strong>Superposition (Additivity)</strong>: $L(x_1 + x_2) = L(x_1) + L(x_2)$</li>
+<li><strong>Homogeneity (Scaling)</strong>: $L(a \cdot x) = a \cdot L(x)$</li>
+</ol>
+<p>Additionally, most filters used in image processing are <strong>shift-invariant</strong> (or more accurately, equivariant), meaning that shifting the input image results in a corresponding shift of the output image.</p>
+<p>$$ L(\text{shift}(x)) = \text{shift}(y)
+$$</p>
+<p>A system that is both linear and shift-invariant is known as a Linear Time-Invariant (LTI) system, and its operation is equivalent to convolution.</p>
+<h4>Convolution and Matrix-Vector Multiplication</h4>
+<p>Convolution is the process of sliding a small matrix, called a <strong>kernel</strong> or <strong>filter</strong>, over an image and computing a weighted sum of the pixel values in the neighborhood defined by the kernel.</p>
+<p>For an $n \times n$ image convolved with a $k \times k$ kernel, the output size depends on padding.</p>
+<ul>
+<li><p><strong>No Padding (Valid Convolution)</strong>: The output size is reduced. The resulting output can be represented as a vector in $\mathbb{R}^{(n-k+1)^2 \times n^2}$.</p>
+</li>
+<li><p><strong>Zero-Padding (Same Convolution)</strong>: The input image is padded with zeros around the border, typically to preserve the original image dimensions in the output. For a kernel of size $k \times k$, the required padding is $p = (k-1)/2$ on each side (assuming $k$ is odd). The output can be represented as a vector in $\mathbb{R}^{(n+2p-k+1)^2 \times n^2}$.</p>
+</li>
+</ul>
+<h4>Correlation vs. Convolution</h4>
+<p>Correlation and convolution are very similar operations. The key difference lies in how the kernel is applied.</p>
+<ul>
+<li><p><strong>Correlation</strong>: The kernel is directly applied to the image neighborhood. The output at $(i, j)$ is a weighted sum of neighbors, finding the similarity between the kernel and the image patch.
+$$ G(i,j) = \sum_{u=-k}^{k}\sum_{v=-k}^{k} H(u,v) F(i+u, j+v)
+$$</p>
+</li>
+<li><p><strong>Convolution</strong>: The kernel is first flipped by 180 degrees before being applied. This property is crucial for many mathematical properties, such as the Convolution Theorem.
+$$ G(i,j) = \sum_{u=-k}^{k}\sum_{v=-k}^{k} H(u,v) F(i-u, j-v)
+$$</p>
+</li>
+</ul>
+<p>In deep learning, the term &quot;convolution&quot; is often used to refer to what is mathematically a correlation operation, as the kernel weights are learned during training, making the initial flip irrelevant.</p>
+<h4>Common Filter Types</h4>
+<hr/>
+
+<h5>1. Linear Filters</h5>
+<ul>
+<li><p><strong>Box Filter (Averaging Filter)</strong>: A simple filter where all kernel elements are equal. It is a low-pass filter used for blurring and noise reduction. It is a separable filter, meaning the 2D convolution can be performed as two separate 1D convolutions (one horizontal, one vertical), which is computationally more efficient.</p>
+</li>
+<li><p><strong>Sharpening Filter</strong>: Enhances details and edges in an image. It can be constructed by adding a high-pass version of the image back to the original. Assuming an image can be decomposed into low-frequency (content) and high-frequency (detail) components, a sharpening filter amplifies the detail.</p>
+<ul>
+<li>Let $F$ be the original image and $F_{low}$ be the low-pass filtered (blurred) version.</li>
+<li>The high-pass component is 
+  $$ F_{high} = F - F_{low}. 
+  $$</li>
+<li>The sharpened image is 
+  $$ F_{sharp} = F + \alpha \cdot F_{high} = F + \alpha(F - F_{low}). 
+  $$</li>
+<li>This can be rewritten as $(1+\alpha)F - \alpha F_{low}$. The operation can be implemented with a single kernel that combines an identity filter (a pulse at the center) and a scaled negative blurring filter.</li>
+</ul>
+</li>
+</ul>
+<br/>
+
+<h5>2. Non-Linear Filters</h5>
+<ul>
+<li><p><strong>Median Filter</strong>: A non-linear filter that is highly effective at removing &quot;salt-and-pepper&quot; noise (random black and white pixels). It operates by sliding a window over the image and replacing the center pixel&#39;s value with the <em>median</em> of all pixel values in the window.</p>
+<ul>
+<li><strong>Outlier Robustness</strong>: Because the median is used instead of the mean, extreme outlier values (like salt or pepper noise) do not significantly affect the output.</li>
+<li><strong>Edge Preservation</strong>: It is better at preserving sharp edges compared to a mean (box) filter of similar size, which tends to blur edges.</li>
+</ul>
+</li>
+<li><p><strong>Gaussian Filter</strong>: The Gaussian filter is a low-pass filter that uses a kernel derived from a 2D Gaussian function. Unlike the box filter which weights all neighbors equally, the Gaussian filter assigns more weight to the central pixel and less to distant neighbors. This results in a smoother, more natural-looking blur and makes it highly effective for removing Gaussian-distributed noise while better preserving edges compared to a simple averaging filter. It is also a separable filter, allowing for efficient computation.</p>
+</li>
+<li><p><strong>Derivative Filters</strong>: These filters are designed to approximate the spatial derivatives of an image. They are fundamental to edge detection and feature extraction.</p>
+<ul>
+<li><p><strong>Prewitt and Sobel Operators</strong>: As discussed in Chapter 3, these operators compute an approximation of the image gradient. The Sobel operator, for example, includes a smoothing component (weights of $[1, 2, 1]$) in addition to the differencing component, making it slightly more robust to noise than the Prewitt operator.</p>
+</li>
+<li><p><strong>Laplacian Operator</strong>: This operator approximates the second derivative and is used to find areas of rapid intensity change (edges) and for blob detection. A common 3x3 kernel is $[[0, 1, 0], [1, -4, 1], [0, 1, 0]]$.</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="toc-heading-1">Opencv Example</h3>
+<p>This example demonstrates the effects of different filters on an image with &quot;salt-and-pepper&quot; noise. The <strong>Median Filter</strong> is non-linear and excels at removing this type of noise, while linear filters like <strong>Gaussian</strong> and <strong>Box</strong> filters primarily blur the image.</p>
+<pre><code class="language-python"># Linear and Non-Linear Filtering for Denoising
+
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+# 1. Create a sample image and add salt-and-pepper noise
+# Using a simple gray image with a black square
+image = np.full((300, 300, 3), 128, dtype=np.uint8)
+cv2.rectangle(image, (100, 100), (200, 200), (0, 0, 0), -1)
+
+# Add salt-and-pepper noise
+salt_pepper = np.random.rand(image.shape[0], image.shape[1])
+image[salt_pepper &gt; 0.95] = 255  # Salt
+image[salt_pepper &lt; 0.05] = 0    # Pepper
+
+# 2. Apply different filters
+# Box filter (Averaging)
+box_filtered = cv2.blur(image, (5, 5))
+
+# Gaussian filter
+gaussian_filtered = cv2.GaussianBlur(image, (5, 5), 0)
+
+# Median filter
+median_filtered = cv2.medianBlur(image, 5)
+
+# 3. Visualize results
+titles = [&#39;Original with Noise&#39;, &#39;Box Filter&#39;, &#39;Gaussian Filter&#39;, &#39;Median Filter&#39;]
+images = [image, box_filtered, gaussian_filtered, median_filtered]
+
+plt.figure(figsize=(12, 8))
+for i in range(4):
+    plt.subplot(2, 2, i + 1)
+    plt.imshow(cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB))
+    plt.title(titles[i])
+    plt.xticks([]), plt.yticks([])
+plt.suptitle(&quot;Comparison of Denoising Filters&quot;, fontsize=16)
+plt.show()
+plt.savefig(&#39;image-1.jpg&#39;, dpi=200)
+# The median filter is most effective at removing salt-and-pepper noise while preserving edges,
+# whereas the box and Gaussian filters blur the noise along with the image features.
+</code></pre>
+<br/>
+
+<h4>Result:</h4>
+<img src='/blogs/posts/210302_cv1/assets/image-1.jpg' width=100%>
+
+<hr>
+<h2 id="toc-heading-2">2. Morphology</h2>
+<p>Morphological image processing is a collection of non-linear techniques for analyzing and processing geometric structures in an image. It operates by probing an image with a small shape or template known as a <strong>structuring element (SE)</strong>. The SE is positioned at all possible locations in the image and is compared with the corresponding neighborhood of pixels.</p>
+<h4>Core Operations</h4>
+<p>The two fundamental morphological operations are dilation and erosion. They are typically applied to binary or grayscale images.</p>
+<ol>
+<li><strong>Dilation</strong>: This operation expands or thickens the bright regions of an image. The value of the output pixel is the <em>maximum</em> value of all pixels in the input neighborhood defined by the structuring element. Dilation is used to fill small gaps and connect disjoint objects.</li>
+</ol>
+<p>$$ (I \oplus S)(x,y) = \max_{(i,j) \in S} {I(x-i, y-j)}
+$$</p>
+<ol start="2">
+<li><strong>Erosion</strong>: This operation shrinks or thins the bright regions. The value of the output pixel is the <em>minimum</em> value of all pixels in the input neighborhood. Erosion is used to remove small-scale noise, break thin connections, and separate touching objects.</li>
+</ol>
+<p>$$ (I \ominus S)(x,y) = \min_{(i,j) \in S} {I(x+i, y+j)}
+$$</p>
+<h4>Compound Operations</h4>
+<p>By combining dilation and erosion, more complex and useful operations can be created.</p>
+<ol>
+<li><strong>Opening</strong>: An erosion followed by a dilation using the same structuring element.<ul>
+<li>$I \circ S = (I \ominus S) \oplus S$</li>
+<li><strong>Effect</strong>: Opening smooths object contours, breaks narrow connections, and removes small, isolated bright pixels (salt noise). It is &quot;idempotent,&quot; meaning applying it multiple times has no further effect. It does not significantly shrink the overall size of large objects.</li>
+</ul>
+</li>
+<li><strong>Closing</strong>: A dilation followed by an erosion using the same structuring element.<ul>
+<li>$I \bullet S = (I \oplus S) \ominus S$</li>
+<li><strong>Effect</strong>: Closing tends to fill small holes within objects, connect objects that are close together, and smooth contours from the inside. It is also idempotent and is useful for filling in small dark gaps (pepper noise).</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="toc-heading-3">Opencv Example</h3>
+<p>This example shows the four main morphological operations on a noisy binary image. <strong>Opening</strong> removes small &quot;salt&quot; noise, while <strong>Closing</strong> fills small &quot;pepper&quot; holes.</p>
+<pre><code class="language-python"># New Chapter: Morphological Image Processing
+# Topic: Dilation, Erosion, Opening, and Closing
+
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+# 1. Create a noisy binary image
+image = np.zeros((300, 500), dtype=np.uint8)
+cv2.putText(image, &quot;OpenCV&quot;, (30, 180), cv2.FONT_HERSHEY_SIMPLEX, 3, (255), 10)
+# Add &quot;pepper&quot; noise (holes)
+image[100:150, 150:200] = 0
+# Add &quot;salt&quot; noise (small specks)
+cv2.circle(image, (400, 100), 5, 255, -1)
+cv2.circle(image, (50, 50), 5, 255, -1)
+
+# 2. Define a structuring element and apply operations
+kernel = np.ones((7, 7), np.uint8)
+
+# Erosion shrinks bright regions
+erosion = cv2.erode(image, kernel, iterations=1)
+# Dilation expands bright regions
+dilation = cv2.dilate(image, kernel, iterations=1)
+# Opening = erosion followed by dilation (removes salt noise)
+opening = cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
+# Closing = dilation followed by erosion (fills pepper holes)
+closing = cv2.morphologyEx(image, cv2.MORPH_CLOSE, kernel)
+
+# 3. Visualize results
+titles = [&#39;Original Noisy&#39;, &#39;Erosion&#39;, &#39;Dilation&#39;, &#39;Opening&#39;, &#39;Closing&#39;]
+images = [image, erosion, dilation, opening, closing]
+
+plt.figure(figsize=(15, 7))
+for i in range(5):
+    plt.subplot(2, 3, i + 1)
+    plt.imshow(images[i], &#39;gray&#39;)
+    plt.title(titles[i])
+    plt.xticks([]), plt.yticks([])
+plt.suptitle(&quot;Morphological Operations&quot;, fontsize=16)
+plt.show()
+</code></pre>
+<br/>
+
+<h4>Result:</h4>
+<img src='/blogs/posts/210302_cv1/assets/image-2.jpg' width=100%>
+
+<br/>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Post Navigation -->
+                    <div id="post-navigation" class="mt-4"></div>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <footer class="border-top">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="small text-center text-muted fst-italic">Copyright © Hwan Heo</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="/blogs/js/posts-data.js"></script>
+    <script>
+        // Math rendering
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            }
+
+            // Share button functionality
+            const copyButton = document.getElementById('copyButton');
+            const shareModal = document.getElementById('myshare_modal');
+            const closeModal = shareModal ? shareModal.querySelector('.share_modal_close') : null;
+            const indicator = document.getElementById('share_modalIndicator');
+
+            if (copyButton && shareModal) {
+                let animationId;
+
+                function updateShareButtonVisibility() {
+                    var headerHeight = document.querySelector('.masthead').offsetHeight;
+                    if (window.innerWidth > 1280 && window.scrollY > headerHeight) {
+                        copyButton.style.display = 'block';
+                    } else {
+                        copyButton.style.display = 'none';
+                    }
+                }
+
+                function animateIndicator() {
+                    let startTime = null;
+                    const duration = 1500;
+
+                    function step(timestamp) {
+                        if (!startTime) startTime = timestamp;
+                        const progress = Math.min((timestamp - startTime) / duration, 1);
+                        indicator.style.width = `${(1 - progress) * 100}%`;
+
+                        if (progress < 1) {
+                            animationId = requestAnimationFrame(step);
+                        } else {
+                            shareModal.style.display = 'none';
+                        }
+                    }
+
+                    cancelAnimationFrame(animationId);
+                    animationId = requestAnimationFrame(step);
+                }
+
+                function closeShareModal() {
+                    cancelAnimationFrame(animationId);
+                    shareModal.style.display = 'none';
+                    indicator.style.width = '0%';
+                }
+
+                // Scroll event for share button visibility
+                document.addEventListener('scroll', updateShareButtonVisibility);
+                window.addEventListener('resize', updateShareButtonVisibility);
+
+                copyButton.addEventListener('click', function() {
+                    const url = new URL(window.location.href);
+                    url.hash = '';
+                    const urlWithoutHash = url.href;
+
+                    navigator.clipboard.writeText(urlWithoutHash).then(function() {
+                        shareModal.style.display = 'block';
+                        indicator.style.width = '100%';
+                        animateIndicator();
+                    }).catch(function(err) {
+                        console.error('Link Copy Failed:', err);
+                        alert('링크 복사에 실패했습니다.');
+                    });
+                });
+
+                if (closeModal) {
+                    closeModal.addEventListener('click', closeShareModal);
+                }
+
+                window.addEventListener('click', function(event) {
+                    if (event.target === shareModal) {
+                        closeShareModal();
+                    }
+                });
+
+                updateShareButtonVisibility();
+            }
+
+            // Series navigation
+            const postId = '210302_cv1';
+            const lang = 'eng';
+            renderSeriesNavigation(postId, lang);
+
+            // TOC scroll tracking
+            initializeTOC();
+
+            // Custom script for specific posts with 3D viewers
+            if (postId === '240917_3djs') {
+                import('/blogs/3DViewer/js/gaussian_viewer.js')
+                    .then(module => {
+                        module.initGaussianViewer();
+                    })
+                    .catch(err => {
+                        console.error("Failed to load the Gaussian viewer script:", err);
+                    });
+            }
+
+            if (postId === '250310_model_viewer') {
+                import('/blogs/3DViewer/js/gaussian_viewer.js')
+                    .then(module => {
+                        module.initGaussianViewer();
+                    })
+                    .catch(err => {
+                        console.error("Failed to load the Gaussian viewer script:", err);
+                    });
+            }
+        });
+
+        function initializeTOC() {
+            const toc = document.querySelector('.toc');
+            if (!toc) return;
+
+            let tocItems = [];
+
+            // Scroll에 따라 TOC 표시/숨김
+            function updateTocVisibility() {
+                const headerHeight = document.querySelector('.masthead')?.offsetHeight || 300;
+                if (window.scrollY > headerHeight) {
+                    toc.style.display = 'block';
+                } else {
+                    toc.style.display = 'none';
+                }
+            }
+
+            document.addEventListener('scroll', updateTocVisibility);
+
+            // 초기 상태 설정
+            const headerHeight = document.querySelector('.masthead')?.offsetHeight || 300;
+            toc.style.display = window.scrollY > headerHeight ? 'block' : 'none';
+
+            // 스크롤에 따라 현재 섹션 활성화
+            const TOP_MARGIN = 0.1;
+            const BOTTOM_MARGIN = 0.2;
+
+            function initTocItems() {
+                tocItems = Array.from(toc.querySelectorAll('li')).map(function(item) {
+                    const anchor = item.querySelector('a');
+                    if (!anchor) return null;
+                    const href = anchor.getAttribute('href');
+                    if (!href || href === '#') return null;
+                    const target = document.getElementById(href.slice(1));
+                    return { listItem: item, anchor: anchor, target: target };
+                }).filter(item => item && item.target);
+            }
+
+            function syncToc() {
+                const windowHeight = window.innerHeight;
+                let currentSection = null;
+
+                tocItems.forEach(function(item) {
+                    const targetBounds = item.target.getBoundingClientRect();
+                    if (targetBounds.top <= windowHeight * (1 - BOTTOM_MARGIN)) {
+                        currentSection = item;
+                    }
+                });
+
+                tocItems.forEach(function(item) {
+                    if (item === currentSection) {
+                        item.listItem.classList.add('active');
+                    } else {
+                        item.listItem.classList.remove('active');
+                    }
+                });
+            }
+
+            initTocItems();
+            syncToc();
+            window.addEventListener('scroll', syncToc, false);
+        }
+
+        function getPostTitle(post, lang) {
+            return post['title_' + lang] || post.title_eng;
+        }
+
+        function renderSeriesNavigation(postId, lang) {
+            const seriesContainer = document.getElementById('series-container');
+            const navContainer = document.getElementById('post-navigation');
+
+            if (!postsData || !seriesInfo || !seriesContainer) return;
+
+            const currentPost = postsData.find(p => p.id === postId);
+            if (!currentPost || !currentPost.series) return;
+
+            const seriesId = currentPost.series;
+            const postsInSeries = postsData
+                .filter(p => p.series === seriesId)
+                .sort((a, b) => new Date(b.date) - new Date(a.date)); // 최신순 정렬
+
+            if (postsInSeries.length <= 1) return;
+
+            const seriesTitle = seriesInfo[seriesId]?.[lang] || seriesInfo[seriesId]?.['eng'] || 'Series';
+
+            // Render series accordion
+            const listItems = postsInSeries.map(post => {
+                const title = getPostTitle(post, lang);
+                const slug = post.slug || post.id;
+                const postLang = lang === 'eng' ? slug : slug + '-kor';
+                if (post.id === postId) {
+                    return '<li><strong>' + title + '</strong></li>';
+                } else {
+                    return '<li><a href="/blogs/posts/' + postLang + '/">' + title + '</a></li>';
+                }
+            }).join('');
+
+            seriesContainer.innerHTML = `
+                <div class="accordion mb-4" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                <strong>${seriesTitle}</strong>
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <ol>${listItems}</ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Render post navigation (prev/next)
+            const currentIndex = postsInSeries.findIndex(p => p.id === postId);
+            const olderPost = postsInSeries[currentIndex + 1];
+            const nextPost = postsInSeries[currentIndex - 1];
+
+            if (olderPost || nextPost) {
+                let navHtml = '<div class="d-flex justify-content-between mb-4">';
+
+                if (olderPost) {
+                    const olderTitle = getPostTitle(olderPost, lang);
+                    const truncatedTitle = olderTitle.length > 25 ? olderTitle.substring(0, 25) + '...' : olderTitle;
+                    const olderSlug = olderPost.slug || olderPost.id;
+                    const olderLang = lang === 'eng' ? olderSlug : olderSlug + '-kor';
+                    navHtml += `<a class="btn btn-light text-uppercase" href="/blogs/posts/${olderLang}/" style="width: 40%; text-align: center;">← Older Post<br><small style="font-size: 0.7rem; text-transform: none;">${truncatedTitle}</small></a>`;
+                } else {
+                    if (nextPost) {
+                        navHtml += '<div></div>';
+                    }
+                }
+
+                if (nextPost) {
+                    const nextTitle = getPostTitle(nextPost, lang);
+                    const truncatedTitle = nextTitle.length > 25 ? nextTitle.substring(0, 25) + '...' : nextTitle;
+                    const nextSlug = nextPost.slug || nextPost.id;
+                    const nextLang = lang === 'eng' ? nextSlug : nextSlug + '-kor';
+                    navHtml += `<a class="btn btn-light text-uppercase" href="/blogs/posts/${nextLang}/" style="width: 40%; text-align: center;">Next Post →<br><small style="font-size: 0.7rem; text-transform: none;">${truncatedTitle}</small></a>`;
+                } else {
+                    const allSeriesIds = Object.keys(seriesInfo);
+                    const otherSeriesIds = allSeriesIds.filter(id => id !== currentPost.series);
+
+                    if (otherSeriesIds.length > 0) {
+                        const randomSeriesId = otherSeriesIds[Math.floor(Math.random() * otherSeriesIds.length)];
+                        const latestPostInRandomSeries = postsData
+                            .filter(p => p.series === randomSeriesId)
+                            .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+
+                        if (latestPostInRandomSeries) {
+                            const seriesTitle = seriesInfo[randomSeriesId][lang] || seriesInfo[randomSeriesId]['eng'];
+                            const recSlug = latestPostInRandomSeries.slug || latestPostInRandomSeries.id;
+                            const recLang = lang === 'eng' ? recSlug : recSlug + '-kor';
+                            navHtml += `<a class="btn btn-outline-secondary text-uppercase" href="/blogs/posts/${recLang}/" style="width: 40%; text-align: center;">Explore Series<br><small style="font-size: 0.7rem; text-transform: none;">${seriesTitle}</small></a>`;
+                        }
+                    } else {
+                        navHtml += '<div></div>';
+                    }
+                }
+
+                navHtml += '</div>';
+                navContainer.innerHTML = navHtml;
+            }
+        }
+    </script>
+</body>
+</html>

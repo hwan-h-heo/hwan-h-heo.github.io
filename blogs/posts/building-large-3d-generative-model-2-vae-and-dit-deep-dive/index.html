@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="VAE and DiT Architecture for Vecset vs. Sparse-Voxel" />
+    <meta name="keywords" content="post, 3d-generation, 3D graphics, computer vision, machine learning" />
+    <meta name="author" content="Hwan Heo" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://hwan-h-heo.io/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://hwan-h-heo.io/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/" />
+    <meta property="og:title" content="Building Large 3D Generative Model (2) VAE and DiT Deep Dive" />
+    <meta property="og:description" content="VAE and DiT Architecture for Vecset vs. Sparse-Voxel" />
+    <meta property="og:image" content="https://hwan-h-heo.io/assets/image_fx_.jpg" />
+    <meta property="og:site_name" content="HwanHeo's Blog" />
+    <meta property="article:published_time" content="2025-07-10T00:00:00.000Z" />
+    <meta property="article:author" content="Hwan Heo" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://hwan-h-heo.io/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/" />
+    <meta name="twitter:title" content="Building Large 3D Generative Model (2) VAE and DiT Deep Dive" />
+    <meta name="twitter:description" content="VAE and DiT Architecture for Vecset vs. Sparse-Voxel" />
+    <meta name="twitter:image" content="https://hwan-h-heo.io/assets/image_fx_.jpg" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Building Large 3D Generative Model (2) VAE and DiT Deep Dive",
+  "description": "VAE and DiT Architecture for Vecset vs. Sparse-Voxel",
+  "image": "https://hwan-h-heo.io/assets/image_fx_.jpg",
+  "author": {
+    "@type": "Person",
+    "name": "Hwan Heo",
+    "url": "https://hwan-h-heo.io"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Hwan Heo",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://hwan-h-heo.io/assets/favicon.ico"
+    }
+  },
+  "datePublished": "2025-07-10T00:00:00.000Z",
+  "dateModified": "2025-07-10T00:00:00.000Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://hwan-h-heo.io/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/"
+  },
+  "inLanguage": "en"
+}
+    </script>
+
+    <title>Building Large 3D Generative Model (2) VAE and DiT Deep Dive - HwanHeo's Blog</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+
+    <!-- Import Maps for three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.150.0/examples/jsm/",
+                "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
+            }
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/25.0.0/tween.umd.js"></script>
+    <script src="https://use.fontawesome.com/releases/v6.5.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+    <link href="/blogs/css/used.css" rel="stylesheet" />
+    <link href="/blogs/css/blog_post_specific.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1.9.1/css/academicons.min.css">
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+    <style>
+        pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; font-size: 0.9rem !important; }
+        pre code { font-size: 0.9rem !important; }
+        .main-content a { color: #15B886; text-decoration: none; }
+        .main-content a:hover { color: #11926b; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; }
+        th { width: 15%; background-color: #f2f2f2; }
+    </style>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RF7ETSKPK9');
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="/blogs/">Blog Home</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+                Menu <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item">
+                        <a href="../building-large-3d-generative-model-2-vae-and-dit-deep-dive-kor/" class="btn nav-link px-lg-3 py-3 py-lg-4" style="font-size:0.7rem">
+                            KOR
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="masthead" style="background-image: url('/assets/image_fx_.jpg')">
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="post-heading">
+                        <br/>
+                        <h2>Building Large 3D Generative Model (2) VAE and DiT Deep Dive</h2>
+                        <span class="meta">Posted on July 10, 2025</span>
+                        <hr/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <article class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Series Navigation -->
+                    <div id="series-container"></div>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 main-content">
+                    <nav class="toc"><ul><li><a href="#toc-heading-0">Introduction</a><ul></ul></li><li><a href="#toc-heading-1">C. VAE Architecture</a><ul><li><a href="#toc-heading-2">C.1. VecSet VAE</a></li><li><a href="#toc-heading-3">C.2. Sparse Voxel VAE</a></li></ul></li><li><a href="#toc-heading-4">D. DiT on Latent Space</a><ul><li><a href="#toc-heading-5">D.1. Diffusion Transformer</a></li><li><a href="#toc-heading-6">D.2. VecSet DiT</a></li><li><a href="#toc-heading-7">D.3. Sparse Voxel DiT</a></li><li><a href="#toc-heading-8">D.4. Training with Rectified Flow</a></li></ul></li><li><a href="#toc-heading-9">E. Discussion: Semantic vs. Spatial</a><ul><li><a href="#toc-heading-10">E.1. Reconstruction vs. Generation Dilemma</a></li><li><a href="#toc-heading-11">E.2. VA-VAE and 3D Generation</a></li><li><a href="#toc-heading-12">E.3. Back to Spatial Fundamentals?</a></li></ul></li><li><a href="#toc-heading-13">Conclusion</a><ul><li><a href="#toc-heading-14">References</a></li></ul></li></ul></nav><button id="copyButton">
+    <i class="bi bi-share-fill"></i>
+</button>
+
+<div id="myshare_modal" class="share_modal">
+    <div class="share_modal-content">
+        <span class="share_modal_close">×</span>
+        <p><strong>Link Copied!</strong></p>
+        <div class="copy_indicator-container">
+        <div class="copy_indicator" id="share_modalIndicator"></div>
+        </div>
+    </div>
+</div>
+
+<hr>
+<h2 id="toc-heading-0">Introduction</h2>
+<p>In the <a href="./?id=250702_building_large_3d_1">previous article</a>, as the first step toward building a large 3D generative model, we took a deep dive into preparing the dataset and the essential data preprocessing pipeline, covering everything from mathematical and topological principles to actual algorithm implementation.</p>
+<p>In this article, we will dissect the architecture of the Shape Generative Model, which lies at the very core of the 3D Generative Pipeline.</p>
+<p>As briefly touched upon in previous posts, we will explore in detail the two different approaches within VAEs, from the VAE itself to the final generative model:</p>
+<ul>
+<li><strong>vecset-based</strong></li>
+<li><strong>sparse voxel</strong></li>
+</ul>
+<hr>
+<h2 id="toc-heading-1">C. VAE Architecture</h2>
+<p>There are two primary methods for compressing 3D data using a VAE. This choice goes beyond a mere implementation difference; it reflects a fundamental divergence in perspective on how to interpret 3D data.</p>
+<ul>
+<li><strong>Vecset-based VAE</strong>: Regards a 3D shape as an &#39;<em>unordered set of points</em>&#39;.</li>
+<li><strong>Sparse Voxel VAE</strong>: Regards a 3D shape as a &#39;<em>3D grid with spatial structure</em>&#39;.</li>
+</ul>
+<p>Let&#39;s compare and analyze how these two approaches lead to different architectures.</p>
+<hr>
+<h3 id="toc-heading-2">C.1. VecSet VAE</h3>
+<p>TLDR: <em>From Mesh to an Unordered Set of Tokens</em></p>
+<p>As the name suggests, the vecset-based VAE treats a 3D mesh as a set of vectors, specifically a <strong>PointCloud</strong>. This method was devised to naturally handle the challenges of <em>1) the variable number of vertices</em> in a mesh and <em>2) the need for Rotation/Translation Invariance</em>.
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-13.png' width=70%></p>
+<ul>
+<li>Figure: <a href="https://3d-models.hunyuan.tencent.com/">Hunyuan 3D 2.0&#39;s VAE</a>. This showcases a vecset-based VAE architecture where sampled point clouds undergo Fourier featuring and are then passed through a Transformer Encoder/Decoder to predict an isosurface (SDF).</li>
+</ul>
+<p>The latent encoding/decoding process of a Vecset-based VAE is relatively straightforward:</p>
+<ol>
+<li><p><strong>Surface Point Sampling</strong>: A fixed number of points (e.g., 4096) are sampled from the surface of a <em>watertight</em> mesh.</p>
+</li>
+<li><p><strong>Fourier Feature Encoding</strong>: Positional Encoding (Fourier featuring) is applied to the 3D coordinates ($x, y, z$) of each sampled point. This encourages the model to focus on the <strong>relative positional relationships between points</strong> rather than absolute coordinates, thereby stabilizing the training process.</p>
+</li>
+<li><p><strong>Transformer Encoder</strong>: The <em><strong>point vector sequence</strong></em> with applied Fourier features is passed through Transformer blocks to capture the global relationships between points, ultimately predicting a latent vector.</p>
+</li>
+</ol>
+<p>The core of this method is the conversion of the 3D structure into a &#39;<em><strong>Token Sequence</strong></em>&#39; at the input data stage. The VAE&#39;s output, the latent vector, also takes the form of a &#39;<em>tokenized</em>&#39; set of points with the shape <code>[Batch, Num_points, Latent_dim]</code>. This means that the subsequent generative model can directly receive the data without any separate preprocessing (like patchifying).</p>
+<p>Now, let&#39;s take a detailed look at how this process is implemented in actual code.</p>
+<h4>1. Encoder: PointCloud to Latent Vector</h4>
+<p>The goal of the Encoder is to <em><strong>compress</strong></em> the point cloud into a fixed-size feature vector sequence that the VAE can handle.</p>
+<p>First, after applying Fourier featuring to the 3D coordinates (<code>x,y,z</code>), instead of processing all points at once, a small number of representative points (<code>pointcloud_query</code>) extracted via Farthest Point Sampling (FPS) are used as Queries. The entire set of points serves as the Keys/Values for Cross-Attention. This can be interpreted as asking the model to &quot;summarize the entire shape from the perspective of these representative points,&quot; enabling efficient information compression.</p>
+<pre><code class="language-python"># vae/model.py : encode()
+
+# ... FPS ...
+fps_indices = data[&quot;fps_indices&quot;]
+pointcloud_query = torch.gather(pointcloud, 1, fps_indices.unsqueeze(-1).expand(-1, -1, pointcloud.shape[-1]))
+
+# Perceiver: Cross-Attention
+hidden_states = self.perceiver(pointcloud_query, pointcloud)
+
+# Encoder: Self-Attention
+for block in self.encoder:
+    hidden_states = block(hidden_states)
+</code></pre>
+<p>The features that pass through the Perceiver then go through multiple layers of Self-Attention blocks, exchanging information among themselves and ultimately learning high-level relationships about the 3D shape.</p>
+<h4>2. Bottleneck</h4>
+<p>The reason a VAE can go beyond a simple autoencoder and enable sampling → generation in Generative AI lies in the ‘Reparameterization trick’ implemented through the <code>DiagonalGaussianDistribution</code> class in the bottleneck layer.</p>
+<pre><code class="language-python"># vae/utils.py
+
+class DiagonalGaussianDistribution:
+    def __init__(self, mean, logvar, deterministic=False):
+        self.mean, self.logvar = mean, logvar
+        self.std = torch.exp(0.5 * self.logvar)
+        # ...
+
+    def sample(self, weight: float = 1.0):
+        # Reparameterization Trick
+        sample = weight * torch.randn(self.mean.shape, device=self.mean.device)
+        x = self.mean + self.std * sample
+        return x
+</code></pre>
+<p>The feature vector (latent vector) output by the Encoder is converted into a mean and log variance (logvar), which define the latent space. In <code>__init__</code>, these values define the mean and variance, i.e., the &#39;position&#39; and &#39;degree of uncertainty&#39; within the latent space.</p>
+<p>The key here is the <strong>Reparameterization Trick</strong> implemented in the <code>sample()</code> method (drawing noise from a Gaussian distribution and using the mean and std to generate unnormalized noise). Thanks to this technique, <em><strong>backpropagation is possible across the entire model</strong></em>, even though it includes a <em><strong>non-differentiable &#39;sampling&#39; process</strong></em>.
+$ \epsilon &#39; = \mu + \sigma \cdot \epsilon, \quad \epsilon \sim N(0, I)
+$</p>
+<h4>3. Decoder: Latent Vector to SDF</h4>
+<p>The Decoder&#39;s objective is to create a &quot;continuous function&quot; from the compressed latent vector, a function that can provide the <em><strong>SDF value for any arbitrary 3D coordinate</strong></em> we query.</p>
+<pre><code class="language-python"># vae/model.py : decode() &amp; query()
+
+def decode(self, latent: torch.Tensor):
+    hidden_states = self.proj_up(latent)
+    for block in self.decoder:
+        hidden_states = block(hidden_states)
+    return hidden_states
+
+def query(self, query_points: torch.Tensor, hidden_states: torch.Tensor):
+    # query_points: 3D coordinates
+    query_points = self.fourier_encoding(query_points)
+    query_points = self.proj_query(query_points)
+
+    query_output = self.attn_query(query_points, hidden_states)
+    pred = self.proj_out(query_output)
+    return pred
+</code></pre>
+<p>The <code>decode()</code> function uses the latent vector to perform Cross-Attention with the 3D coordinates for which we want to know the SDF values (<code>query_points</code>), ultimately predicting the final SDF value.</p>
+<p>An important point to note is that the Vecset-based VAE approach carries the fundamental burden of having to solve two difficult problems simultaneously: <em><strong>(Compression + Modality Conversion)</strong></em>.</p>
+<ol>
+<li><strong>Compression</strong>: Compressing the PointCloud, which represents the original mesh, into a low-resolution latent vector.</li>
+<li><strong>Modality Conversion</strong>: Generating a continuous 3D SDF from a discrete point cloud.</li>
+</ol>
+<p>The problems that arise during this process are as follows:</p>
+<ul>
+<li><strong>Sampling Error</strong>: When sampling the PointCloud at the input stage, high-frequency details of the original mesh (like sharp edges or complex curved surfaces) are <strong>permanently lost</strong>.</li>
+<li><strong>Ill-posed Problem</strong>: The Decoder must infer the &quot;empty space&quot; between the sampled points. This is an <em>ill-posed problem</em> for which there is no single correct answer.</li>
+<li><strong>Smoothing Effect</strong>: Because the loss function the model learns is typically based on an L1/L2 norm Reconstruction Loss, sharp features are naturally <strong>smoothed</strong> out and become blurry.</li>
+<li><strong>Reconstruction Error (Quantization Error)</strong>: Finally, after all this inference, in the process of sampling the generated continuous SDF function back onto a discrete voxel grid to extract a mesh, Quantization Error occurs, and details are lost once more.</li>
+</ul>
+<blockquote>
+<p><strong>Summary</strong></p>
+<ul>
+<li>VecSet VAE: Converts 3D data into a token sequence. The latent is also a <strong>token sequence</strong> of shape [B, N, C] -&gt; this means <strong>no patchifying is needed</strong> when designing a DiT model.</li>
+<li>It suffers from information loss on both ends—input (Sampling Error) and output (Quantization Error)—and must solve the difficult inference problem (Ill-posed Problem) of bridging the gap in between.</li>
+</ul>
+</blockquote>
+<hr>
+<h3 id="toc-heading-3">C.2. Sparse Voxel VAE</h3>
+<p>TLDR: <em>3D as a Spatial Grid</em></p>
+<p>In contrast, the Sparse Voxel VAE treats 3D data as an extension of a 2D image, i.e., a <strong>3D spatial grid</strong>. This approach, used by models like Trellis, adopts a 3D Convolutional Network structure similar to a U-Net.</p>
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-6.png' width=100%>
+
+<p>The core of this approach lies in treating the 3D shape as a <em><strong>tensor with a clear spatial structure</strong></em>. Sparse-voxel based VAE models learn local features and hierarchical structures through Convolution operations instead of a Transformer.</p>
+<h4>1. Encoder</h4>
+<p>The encoder progressively downsamples the input 3D grid (<code>[B, C, D, H, W]</code>) using <code>ResBlock3d</code> and <code>DownsampleBlock3d</code> (3D Convolution or 3D Pooling).</p>
+<pre><code class="language-python"># Trellis/models/sparse_structure.py
+
+class SparseStructureEncoder(nn.Module):
+    def __init__(self, in_channels: int, latent_channels: int, channels: List[int], ...):
+        super().__init__()
+        # Input Layer
+        self.input_layer = nn.Conv3d(in_channels, channels[0], 3, padding=1)
+
+        # Downsampling Blocks
+        self.blocks = nn.ModuleList([])
+        for i, ch in enumerate(channels):
+            self.blocks.extend([ResBlock3d(ch, ch) for _ in range(num_res_blocks)])
+            if i &lt; len(channels) - 1:
+                self.blocks.append(DownsampleBlock3d(ch, channels[i+1]))
+
+        # Bottleneck
+        self.middle_block = nn.Sequential(...)
+        self.out_layer = nn.Sequential(..., nn.Conv3d(channels[-1], latent_channels*2, 3, padding=1))
+
+    def forward(self, x: torch.Tensor, ...):
+        # x: [B, C, D, H, W], a 3D grid
+        h = self.input_layer(x)
+        for block in self.blocks:
+            h = block(h) # Convolutions and Downsampling
+
+        h = self.middle_block(h)
+        h = self.out_layer(h)
+
+        mean, logvar = h.chunk(2, dim=1) # Split channels in half for mean and logvar
+        # ... Reparameterization Trick ...
+        return z # Latent z is also a 3D grid: [B, latent_C, D&#39;, H&#39;, W&#39;]
+</code></pre>
+<p>This code is virtually identical to the Encoder structure of a typical 3D U-Net. The <code>ResBlock3d</code>, composed of 3D Convolutions and Skip-connections, effectively learns feature representations. The <code>DownsampleBlock3d</code> uses a convolution with <code>stride=2</code> to halve the spatial dimensions (D, H, W) while increasing the feature dimension (C) to compress information.</p>
+<p>What&#39;s noteworthy is the final part of the <code>forward</code> function. The channels of the final output <code>h</code> are split in half to be used as the <em><strong>mean and log variance (logvar)</strong></em> respectively. This means that the final latent representation <code>z</code> is also a small <strong>&#39;Latent Grid&#39;</strong> of shape <code>[B, latent_C, D&#39;, H&#39;, W&#39;]</code>. This is a fundamental difference from the vecset-based VAE, which outputs a vector sequence. Here, the latent representation itself maintains a spatial structure.</p>
+<h4>2. Decoder: Feature Upsampling</h4>
+<p>The Decoder has a perfectly symmetrical structure to the Encoder. It takes the compressed &#39;Latent Grid&#39; as input and progressively restores it to the original 3D Grid resolution using <code>UpsampleBlock3d</code>.</p>
+<pre><code class="language-python"># Trellis/models/sparse_structure.py
+
+class UpsampleBlock3d(nn.Module):
+    def __init__(self, in_channels: int, out_channels: int, mode: Literal[&quot;conv&quot;, &quot;nearest&quot;] = &quot;conv&quot;):
+        # ...
+        if mode == &quot;conv&quot;:
+            self.conv = nn.Conv3d(in_channels, out_channels*8, 3, padding=1)
+
+    def forward(self, x: torch.Tensor) -&gt; torch.Tensor:
+        # ...
+        x = self.conv(x)
+        return pixel_shuffle_3d(x, 2) # (D,H,W) -&gt; (2D,2H,2W)
+
+class SparseStructureDecoder(nn.Module):
+    def __init__(self, out_channels: int, latent_channels: int, ...):
+        super().__init__()
+        self.input_layer = nn.Conv3d(latent_channels, channels[0], 3, padding=1)
+        self.middle_block = nn.Sequential(...)
+        self.blocks = nn.ModuleList([])
+        # ... Upsampling Blocks ...
+
+    def forward(self, x: torch.Tensor) -&gt; torch.Tensor:
+        # x: Latent Grid [B, latent_C, D&#39;, H&#39;, W&#39;]
+        h = self.input_layer(x)
+        h = self.middle_block(h)
+        for block in self.blocks:
+            h = block(h) # Convolutions and Upsampling
+        h = self.out_layer(h)
+        return h # Reconstructed Grid [B, C, D, H, W]
+</code></pre>
+<p><code>UpsampleBlock3d</code> uses the <code>pixel_shuffle_3d</code> technique. This performs a role similar to 3D Transposed Convolution but is known to be more advantageous in terms of computational efficiency and avoiding checkerboard artifacts. It is a highly effective alternative for efficiently increasing spatial resolution while avoiding the potential problems of 3D Transposed Convolution.</p>
+<pre><code class="language-python">def pixel_shuffle_3d(x: torch.Tensor, scale_factor: int) -&gt; torch.Tensor:
+    &quot;&quot;&quot;
+    3D pixel shuffle.
+    &quot;&quot;&quot;
+    # 1. init state
+    B, C, H, W, D = x.shape
+
+    # 2. Channel Decomposition
+    C_ = C // scale_factor**3
+    x = x.reshape(B, C_, scale_factor, scale_factor, scale_factor, D, H, W)
+
+    # 3. Dimension Re-Permutation 
+    x = x.permute(0, 1, 5, 2, 6, 3, 7, 4) # (B, C_, H, scale_d, W, scale_h, D, scale_w)
+
+    # 4. Reshaping
+    x = x.reshape(B, C_, H*scale_factor, W*scale_factor, D*scale_factor)
+
+    return x
+</code></pre>
+<p>When <code>scale_factor=2</code>, let&#39;s assume the initial shape of <code>x</code> is <code>[B, 8C&#39;, H, W, D]</code> (this is precisely why <code>out_channels*8</code> was used in <code>UpsampleBlock3d</code>).</p>
+<p>The <code>pixel_shuffle_3d</code> kernel performs the inverse operation of downsampling, reducing the channel dimension while doubling the spatial dimensions.</p>
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-8.png' width=70%>
+
+<p>That is, through:</p>
+<ul>
+<li><code>x = x.reshape(B, C_, scale_factor, scale_factor, scale_factor, D, H, W)</code></li>
+<li><code>x = x.permute(0, 1, 5, 2, 6, 3, 7, 4)</code></li>
+</ul>
+<p>the order of the tensor&#39;s dimensions is shuffled, bringing the spatial information that was in the channel dimension next to the actual spatial dimensions.</p>
+<ul>
+<li>Before <code>permute</code>: <code>(B, C&#39;, scale_h, scale_w, scale_d, H, W, D)</code> (logical order)</li>
+<li>After <code>permute</code>: <code>(B, C&#39;, H, scale_h, W, scale_w, D, scale_d)</code></li>
+</ul>
+<p>Now, immediately after each spatial dimension (<code>H</code>, <code>W</code>, <code>D</code>), the <code>scale_factor</code> that will expand that space is positioned, and the data&#39;s order in memory is rearranged. Afterward, reshaping merges adjacent dimensions, so <code>(H, scale_h)</code> becomes <code>H*2</code>, <code>(W, scale_w)</code> becomes <code>W*2</code>, and <code>(D, scale_d)</code> becomes <code>D*2</code>.</p>
+<p>As a result, the tensor that was <code>[B, 8C&#39;, H, W, D]</code> is transformed into a tensor where the channel dimension is reduced to <code>C&#39;</code> but the spatial resolution is increased by a factor of 2 in each dimension to <code>[B, C&#39;, 2H, 2W, 2D]</code>.</p>
+<h4>Why is it better than Transposed Convolution?</h4>
+<ol>
+<li><strong>Computational Efficiency</strong>: <code>pixel_shuffle</code> mainly consists of memory rearrangement operations (<code>reshape</code>, <code>permute</code>), making it very computationally inexpensive. The main computation is just a single standard <code>Conv3d</code> performed beforehand.</li>
+<li><strong>Checkerboard Artifacts</strong>: Transposed Convolution has a chronic problem of creating checkerboard-like grid noise in the output due to the way its kernel overlaps. This can significantly degrade visual quality, especially in generative models. <code>pixel_shuffle</code> avoids kernel overlap as each pixel is calculated independently and then rearranged, thus preventing such artifacts.</li>
+<li><strong>Training Stability</strong>: Simpler, more direct operations tend to facilitate a smoother gradient flow, making training more stable.</li>
+</ol>
+<hr>
+<h4>vs. VecSet-Based VAE</h4>
+<p>Do you remember the various problems associated with the VecSet-based VAE discussed earlier? The advantages of the Sparse-Voxel based VAE become clear when compared to the vecset-based approach.</p>
+<ul>
+<li><strong>No Sampling Error</strong>: Since the input itself is an SDF grid containing the overall geometric information of the original mesh, there is no information loss due to sampling. (Of course, quantization error from the initial preprocessing step exists, but this is outside the scope of the VAE model&#39;s training.)</li>
+<li><strong>Well-posed Problem</strong>: The model doesn&#39;t need to solve the difficult problem of &quot;inferring the space between points.&quot; It simply needs to focus on restoring an <strong>&quot;SDF grid to an SDF grid,&quot;</strong> i.e., a compression and reconstruction problem within the same modality.</li>
+<li><strong>No Modality Conversion Burden</strong>: Since the input and output formats are the same, the VAE can focus solely on the efficient compression and reconstruction of information.</li>
+</ul>
+<p>In conclusion, the summary is as follows:</p>
+<ul>
+<li><em>&quot;While a Vecset-based VAE is a &#39;Modality Conversion + Compression&#39; model that entails information loss and difficult inference problems, a Sparse Voxel VAE is a much more well-defined &#39;Compression&#39; model.&quot;</em></li>
+</ul>
+<p>Due to this fundamental difference, the <strong>Sparse Voxel VAE is structurally in a much more advantageous position</strong> in terms of shape preservation and detail reconstruction. While the advantage of the vecset-based approach lies in its input data flexibility (it can directly process point clouds, not just meshes), it is true that it has more structural limitations in generating high-quality 3D shapes. This is being demonstrated by the recent progress in sparse-voxel based research, which we will discuss in more depth in [Section E].</p>
+<blockquote>
+<p><strong>Summary</strong></p>
+<ul>
+<li>Sparse Voxel VAE: Maintains the <strong>3D spatial grid structure</strong>. The latent is also a <strong>3D grid</strong> of shape <code>[B, C, D, H, W]</code> -&gt; this <strong>requires 3D Patchifying</strong> when designing a DiT.</li>
+<li>It does not suffer from the modality conversion problem faced by Vecset-based VAEs, which allows for flexible scalability.</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="toc-heading-4">D. DiT on Latent Space</h2>
+<p>Now, let&#39;s examine how DiT-based generative models are designed differently on top of the two types of latent spaces created by the VAEs.</p>
+<h3 id="toc-heading-5">D.1. Diffusion Transformer</h3>
+<p>The innovation of DiT in 2D image generation began by adopting the methodology of the Vision Transformer (ViT). ViT divides an image into fixed-size <strong>patches</strong>, treats each patch as a single <strong>token</strong>, and uses them as the input sequence for a Transformer.
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-12.png' width=50%></p>
+<p>This process is clearly visible when looking at the original 2D DiT code:</p>
+<pre><code class="language-python"># From Original DiT by Facebook Research
+class DiT(nn.Module):
+    def __init__(self, input_size=32, patch_size=2, ...):
+        super().__init__()
+        # ...
+        self.x_embedder = PatchEmbed(input_size, patch_size, in_channels, hidden_size, bias=True)
+        # ...
+
+    def forward(self, x, t, y):
+        # x: (N, C, H, W) tensor of spatial inputs (images)
+        # The first step is to patchify the image `x`
+        x = self.x_embedder(x) + self.pos_embed  # (N, T, D), T = num_patches
+        # ...
+</code></pre>
+<p>The <code>x_embedder</code> uses <code>nn.Conv2d</code> to <em>divide the image into patches</em> and applies a linear transformation to each patch to create a <em><strong>token sequence</strong></em> of shape <code>(N, T, D)</code>. In other words, a <strong>Patchify process that converts spatial Grid data into a token sequence is essential</strong>.</p>
+<p>With this clearly in mind, let&#39;s look at how subsequent DiTs in 3D are designed.</p>
+<hr>
+<h3 id="toc-heading-6">D.2. VecSet DiT</h3>
+<p>Recall from the previous step that we used a vecset-based VAE to transform a 3D Mesh into a vecset-based latent, which is a latent vector in the form of a PointCloud. The shape of this data is <code>[Batch, Num_points, Latent_dim]</code>.</p>
+<p>This means that the output of the Vec-set VAE is <strong>already a token sequence of shape <code>[B, N, C]</code></strong>. Therefore, the DiT can process this sequence directly, and the <strong>Patchify process required in the 2D image DiT becomes unnecessary.</strong></p>
+<p>In this case, the DiT model is simply composed of a set of standard Transformer blocks consisting of cross-attention and self-attention, with perhaps a simple linear layer to match the feature dimensions.</p>
+<pre><code class="language-python"># DiT w/ vecset-based VAE
+# ...
+class DiTLayer(nn.Module):
+    def __init__(self, dim, num_heads, qknorm=False, gradient_checkpointing=True, qknorm_type=&quot;LayerNorm&quot;):
+        super().__init__()
+        self.dim = dim
+        self.num_heads = num_heads
+        self.gradient_checkpointing = gradient_checkpointing
+
+        self.norm1 = nn.LayerNorm(dim, eps=1e-6, elementwise_affine=False)
+        self.attn1 = SelfAttention(dim, num_heads, qknorm=qknorm, qknorm_type=qknorm_type)
+        self.norm2 = nn.LayerNorm(dim, eps=1e-6, elementwise_affine=False)
+        self.attn2 = CrossAttention(dim, num_heads, context_dim=dim, qknorm=qknorm, qknorm_type=qknorm_type)
+        self.norm3 = nn.LayerNorm(dim, eps=1e-6, elementwise_affine=False)
+        self.ff = FeedForward(dim)
+        self.adaln_linear = nn.Linear(dim, dim * 6, bias=True)
+   # ...
+
+class DiT(nn.Module):
+    def __init__(self, latent_dim=8, hidden_dim=1024, ...):
+        super().__init__()
+        # No PatchEmbed layer, but projection linear layer!
+        self.proj_in = nn.Linear(latent_dim, hidden_dim) # Simple projection
+        # timestep encoding
+        self.timestep_embed = TimestepEmbedder(hidden_dim)
+
+        # transformer layers
+        self.layers = nn.ModuleList(
+            [DiTLayer(hidden_dim, num_heads, qknorm, gradient_checkpointing, qknorm_type) for _ in range(num_layers)]
+        )
+
+        # project out
+        self.norm_out = nn.LayerNorm(hidden_dim, eps=1e-6, elementwise_affine=False)
+        self.proj_out = nn.Linear(hidden_dim, latent_dim)
+    # ...
+</code></pre>
+<p>In some interpretations, the point cloud sampling itself could be considered to imply token sampling.</p>
+<hr>
+<h3 id="toc-heading-7">D.3. Sparse Voxel DiT</h3>
+<p>On the other hand, the output of the Sparse Voxel VAE is a <strong>3D Latent Grid</strong> of shape <code>[B, C, D, H, W]</code>. For a Transformer to process this data, which has a spatial structure, a <strong>Patchify process is once again necessary, just like in the 2D DiT.</strong></p>
+<pre><code class="language-python"># From Trellis (Voxel-based)
+class SparseStructureFlowModel(nn.Module):
+    def forward(self, x: torch.Tensor, ...):
+        # x: [B, C, D, H, W], a 3D grid latent space
+        h = patchify(x, self.patch_size) # Patchify the 3D grid
+        h = h.view(*h.shape[:2], -1).permute(0, 2, 1).contiguous()
+        h = h + self.pos_emb[None] # Add 3D positional embeddings
+        # ... Transformer blocks process the token sequence ...
+        h = unpatchify(h, self.patch_size) # Unpatchify back to a grid
+        return h
+</code></pre>
+<ul>
+<li>The 3D Voxel Grid <code>x</code> is divided into 3D patches, which are then converted into a token sequence and fed into the Transformer.</li>
+</ul>
+<p><strong>Trellis&#39;s patchfy function:</strong></p>
+<pre><code class="language-python">def patchify(x: torch.Tensor, patch_size: int):
+    &quot;&quot;&quot;
+    Patchify a tensor.
+
+    Args:
+        x (torch.Tensor): (N, C, *spatial) tensor
+        patch_size (int): Patch size
+    &quot;&quot;&quot;
+    DIM = x.dim() - 2
+    for d in range(2, DIM + 2):
+        assert x.shape[d] % patch_size == 0, f&quot;Dimension {d} of input tensor must be divisible by patch size, got {x.shape[d]} and {patch_size}&quot;
+
+    x = x.reshape(*x.shape[:2], *sum([[x.shape[d] // patch_size, patch_size] for d in range(2, DIM + 2)], []))
+    x = x.permute(0, 1, *([2 * i + 3 for i in range(DIM)] + [2 * i + 2 for i in range(DIM)]))
+    x = x.reshape(x.shape[0], x.shape[1] * (patch_size ** DIM), *(x.shape[-DIM:]))
+    return x
+</code></pre>
+<p>The spatial information maintained at the VAE stage is converted into a sequence at the Transformer&#39;s input stage!
+This means that Trellis&#39;s DiT can be seen as a <strong>3D extension of the 2D DiT</strong>.
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-9.png' width=70%></p>
+<ul>
+<li>Figure from <a href="https://arxiv.org/abs/2212.09748">Scalable Diffusion Models with Transformers</a></li>
+</ul>
+<hr>
+<h3 id="toc-heading-8">D.4. Training with Rectified Flow</h3>
+<p>Now let&#39;s explore how this DiT is trained.</p>
+<p>As mentioned in a previous post, the Shape generation models in the recent 3D Generative Pipeline operate on the <strong>Rectified Flow</strong> framework.
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-10.png' width=60%></p>
+<ul>
+<li><strong>Source ($z_0 \sim p_0$)</strong>: The source distribution (typically a standard normal distribution $\mathcal{N}(0, I)$).</li>
+<li><strong>Target ($z_1 \sim p_1$)</strong>: A target sample from the target distribution (the data&#39;s latent space distribution $q_{data}$).</li>
+</ul>
+<p>Here, the model&#39;s training objective is to predict the <em><strong>transformation path</strong></em> from the source distribution to the target distribution.</p>
+<p>Specifically, Rectified Flow defines a path of probability distributions $p_t$ that changes over time $t$, and assumes this path to be the simplest possible form: a <strong>linear interpolation</strong>.</p>
+<p>
+$$
+z_t = (1-t)z_0 + t z_1
+$$
+</p>
+
+<p>Given a point $z_t$ at a specific time $t$ on this path, the role of the model (DiT) is to predict the <strong><em>velocity vector</em></strong> of this linear path. The velocity of this path can be found by differentiating with respect to time $t$,</p>
+<p>
+$$
+v_t = \frac{d z_t}{dt} = z_1 - z_0
+$$
+</p>
+
+<p>which shows that this velocity is always a <strong>constant vector</strong> $v = z_1 - z_0$, independent of time $t$ or position $z_t$. Therefore, the model $v_\theta(z_t, t)$ is trained to <strong>predict this constant velocity vector $z_1 - z_0$</strong> given the current position $z_t$ and time $t$.</p>
+<p>If we formulate the above into a general Objective Function, we can see that it becomes what is commonly known as the <strong>Conditional Flow Matching (CFM) Loss</strong>.</p>
+<p>
+$$
+\mathcal{L}_{CFM}(\theta) = \mathbb{E}_{t \sim U(0,1), z_0 \sim p_0, z_1 \sim p_1} \left[ || v_\theta(z_t, t) - (z_1 - z_0) ||^2 \right]
+$$
+</p>
+
+<p>This is the core idea of Rectified Flow.</p>
+<p>The <code>training_step</code> code of an actual 3D Flow Matching model also faithfully reflects this CFM idea.</p>
+<pre><code class="language-python"># From Model.training_step
+def training_step(self, data, iteration):
+    # ...
+    # 1. Get Condition `c` from image
+    cond = self.get_cond(cond_images.view(-1, C, H, W), cond_num_part)
+
+    with torch.no_grad():
+        # 2. Get Target Latent `z_1` from VAE
+        # posterior = self.vae.encode(data)
+        latent = posterior.mode().float().nan_to_num_(0)  # z_1
+
+        # 3. Create a point `z_t` on the straight path
+        #    z_t = t*z_1 + (1-t)*z_0, where z_0 is noise
+        noisy_latent, noise, timesteps = self.scheduler.add_noise(
+            latent, self.config.logitnorm_mean, self.config.logitnorm_std
+        ) # noisy_latent is z_t, noise is z_0
+
+    # 4. Predict the velocity vector with DiT
+    noisy_latent = noisy_latent.to(dtype=self.precision)
+    model_pred = self.dit(noisy_latent, cond, timesteps)
+
+    # 5. Calculate Loss
+    # The velocity vector v = z_1 - z_0 = latent - noise
+    # The code uses target = noise - latent, which is -v. This is also a valid objective.
+    target = noise - latent
+    loss = F.mse_loss(model_pred.float(), target.float())
+
+    return output, loss
+</code></pre>
+<ul>
+<li><strong>Condition</strong>: Extract <strong>DINOv2 features</strong> from the input image to create the image condition $c$.</li>
+<li><strong>Target $z_1$</strong>: Use a pre-trained VAE to encode the latent ($z_1$) from the Ground Truth 3D data.</li>
+<li><strong>Trajectory $z_t$</strong>: The <code>scheduler.add_noise</code> function randomly samples a time $t$ and uses the formula $z_t = t \cdot z_1 + (1-t) \cdot z_0$ to generate a point <code>noisy_latent</code> ($z_t$) between the noise $z_0$ and the target $z_1$.</li>
+<li><strong>Velocity Estimation</strong>: The DiT model $v_\theta$ takes $z_t$, condition $c$, and time $t$ as input to predict the velocity vector (or its negative) (<code>model_pred</code>).</li>
+<li><strong>Loss</strong>: Calculates the MSE Loss between the predicted velocity <code>model_pred</code> and the actual velocity <code>target</code> to minimize the $\mathcal{L}_{CFM}$ defined above.</li>
+</ul>
+<p>Instead of the complex score-matching objective function of diffusion models, using a very simple and clear MSE Loss—&quot;predict the direction of the straight path&quot;—enables fast and stable training.</p>
+<p>For a detailed physical and mathematical explanation of Rectified Flow and Flow Matching, please refer to the following: <a href="./?id=250810_flow">From Flow Matching to Optimal Transport: A Physics-based View of Generative Models</a></p>
+<ul>
+<li>This explains the mathematical definitions of Flow and connects Rectified Flow&#39;s choice of a straight path to physics-based concepts (Optimal Transport, Least Action Principle).</li>
+</ul>
+<hr>
+<h2 id="toc-heading-9">E. Discussion: Semantic vs. Spatial</h2>
+<p>So far, we have analyzed in detail the VAE and DiT architectures for 3D generation, as well as their training methodology. Taking a step further, let&#39;s discuss a key question the research community is currently posing about the future direction of 3D generative models.</p>
+<blockquote>
+<p><strong><em>&quot;To build a good 3D generative model, what should we align with? The Semantic Structure of a Vision Foundation Model (2D), or the inherent Spatial Structure of 3D?&quot;</em></strong></p>
+</blockquote>
+<h3 id="toc-heading-10">E.1. Reconstruction vs. Generation Dilemma</h3>
+<p>A recent study in the 2D image generation field, <a href="https://arxiv.org/abs/2501.01423">VA-VAE (Vision-Aligned VAE)</a>, presents an important observation.</p>
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-15.png' width=100%>
+
+<ul>
+<li><em>As the VAE&#39;s latent space acquires a <strong>higher dimension</strong>, the original image <strong>reconstruction quality improves</strong>, but the performance of the <strong>generative model (DiT)</strong> that has to learn on this complex latent space actually <strong>degrades</strong>.</em></li>
+</ul>
+<p>Why does this phenomenon occur? The authors argue it&#39;s because the latent space of a VAE trained solely for high reconstruction quality is not semantically well-structured.
+In other words, the vectors in the latent space are scattered chaotically, making it very difficult for the generative model to learn a specific concept like &#39;cat&#39;.</p>
+<p>VA-VAE&#39;s solution is simple yet effective: <strong>align the VAE&#39;s latent space with the feature space of a Vision Foundation Model (e.g., DINO)</strong>. Simply adding a loss that increases the cosine similarity between the latent vector and the DINO feature vector during VAE training provides the following benefits to the latent space:</p>
+<ul>
+<li><p><strong>Semantically Rich &amp; Well-structured</strong>: Semantically similar objects cluster together in the latent space.</p>
+</li>
+<li><p><strong>Faster Convergence</strong>: Thanks to the semantically structured latent space, the DiT can focus on learning relationships between high-level semantic units instead of low-level pixel combinations, leading to dramatically faster training.
+(VA-VAE: 1400 epochs → 80 epochs)</p>
+</li>
+</ul>
+<hr>
+<h3 id="toc-heading-11">E.2. VA-VAE and 3D Generation</h3>
+<p>The Vecset-based VAE, which uses Point Clouds and focuses solely on reconstructing 3D shapes, has aspects similar to the &#39;<em>reconstruction-specialized</em>&#39; VAE pointed out by VA-VAE. This leads to the <em><strong>hypothesis that since the DiT (Flow Model) must inefficiently search a vast, unstructured latent space to generate a shape matching the input condition (2D), its convergence may be slow and its performance limited.</strong></em></p>
+<p>On the other hand, Trellis can be seen as having already implemented an idea similar to VA-VAE in 3D with its concept of <strong>SLAT (Structured Latent)</strong>. SLAT uses the DINO feature map itself as the VAE&#39;s training target, creating a semantic latent space that possesses spatial structure. In essence, the approach is: &quot;<strong>DINO is already good enough, so let&#39;s just map it directly onto the 3D space!</strong>&quot;
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-14.png' width=70%></p>
+<p>However, this method has the problem of effectively splitting the VAE&#39;s latent space in two. That is, it is composed of <strong>Structure</strong>, which determines <em><strong>&#39;where the shape exists?&#39;</strong></em>, and <strong>Feature</strong>, which determines <em><strong>&#39;what exists there?&#39;</strong></em>. This leads to a complex 2-stage generation pipeline.</p>
+<ul>
+<li><strong>1) Structure Generation</strong>: First, a model must generate the <strong>indices of the Sparse Structure</strong>, which determines which voxels are activated. Trellis trains a separate <strong>Conditional Flow Matching (CFM) model</strong> for this purpose.</li>
+<li><strong>2) Feature Generation</strong>: Conditioned on the Sparse Structure generated in the first stage, a second model (a DiT-like Transformer) generates the <strong>SLAT, i.e., the projected DINO feature</strong>, corresponding to each activated voxel location. The training objective of this model is the highly complex mapping from &#39;Gaussian Noise → the projected DINO feature of the corresponding voxel&#39;.</li>
+</ul>
+<p>As a result, the VAE was now tasked with the much more difficult challenge of reconstructing not just a simple 3D structure (SDF values), but the complex <strong>projected DINO features</strong> themselves for each voxel. This increased the model&#39;s capacity and training burden. The fact that Trellis was limited to a relatively low resolution of $64^3$ was not so much a technical choice as an inevitable consequence of the task of reconstructing DINO features. Consequently, the detail in the generated 3D shapes was bound to be blurry and smoothed out.</p>
+<p>This has been demonstrated by the overwhelming 3D shape generation capabilities of models like Hunyuan 3D 2.0 and TripoSG released earlier this year, which surpassed Trellis.</p>
+<hr>
+<h3 id="toc-heading-12">E.3. Back to Spatial Fundamentals?</h3>
+<p>However, recent follow-up studies to Trellis (such as <a href="https://arxiv.org/abs/2503.21732">SparseFlex</a>, <a href="https://arxiv.org/abs/2505.17412">Direct3D-S2</a>, and <a href="https://arxiv.org/abs/2505.14521">Sparc3D</a>) are showing a noteworthy change.</p>
+<table>
+<thead>
+<tr>
+<th align="left">Trellis / Hunyuan-2.0 / TripoSG / Hi3DGen / Direct 3D-s2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><img src='/blogs/posts/250710_building_large_3d_2/assets/image-5.png' width=100%></td>
+</tr>
+</tbody></table>
+<p>These models boldly discard Trellis&#39;s SLAT, i.e., the direct alignment with DINO, and instead <em>focus their technical efforts on increasing the resolution of the 3D latent grid (e.g., to 256^3) and more efficiently compressing 3D spatial relations</em>.</p>
+<p>This may be evidence that for 3D shape generation, <strong>capturing the part-whole relationships and topological structure of the 3D space itself at high resolution</strong> is more important than <strong>semantic alignment with a 2D Vision Foundation Model</strong>. The &#39;semantic&#39; information of a 2D image and the &#39;structure&#39; of a 3D shape are fundamentally different kinds of information, and the core of 3D shape generation lies in the latter.</p>
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-7.png' width=100%>
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-11.png' width=100%>
+
+<ul>
+<li>Figure: <a href="https://arxiv.org/abs/2505.14521">Sparc3D</a>&#39;s efficient Sparconv-VAE, which directly compresses Voxel indices and SDF values instead of DINO features.</li>
+</ul>
+<p>These two contrasting viewpoints can be thought of as diverging into two potential paths for the future of 3D generative models:</p>
+<ul>
+<li><p>By applying the ideas of VA-VAE to vecset-based models, can we create a semantically structured latent space to achieve both faster training and better performance?</p>
+</li>
+<li><p>Or, as is the current trend, is the answer to part ways with Vision Models and focus purely on modeling the spatial and topological properties of 3D data at high resolution?</p>
+</li>
+</ul>
+<p>I believe the process of finding the answer to this question will be the central focus of the next generation of 3D Foundation model research.</p>
+<hr>
+<h2 id="toc-heading-13">Conclusion</h2>
+<p>In this article, we have conducted a deep comparative analysis of the internals of DiT-based models for 3D shape generation, focusing on the differences in data representation (Vecset vs. Voxel).</p>
+<p><del>The next article in this series was planned to cover practical strategies for efficiently training massive 3D Generative Models by setting up a Multi-Node, Multi-GPU environment and using memory optimization libraries like DeepSpeed and FSDP with their sharding strategies.</del></p>
+<p>While I originally planned to cover multi-node training as a follow-up to this article, I felt a deep need to explain the importance of Flow Matching more thoroughly (it was briefly in the middle of Section D, but a detailed explanation of Flow became too long and threatened to take over the entire article...). Therefore, I have spun it off into a separate article that explains Flow A-to-Z in detail.
+In the next article, I provide a detailed explanation from the definition of Normalizing Flow to Rectified Flow, and connect it to Optimal Transport to explain in detail why Rectified Flow adopted a straight-line path.</p>
+<p><em><strong>Stay Tuned!</strong></em></p>
+<hr>
+<p>You may also like</p>
+<ul>
+<li><a href="/blogs/posts/?id=250302_3d_latent_diffusion">An Era of 3D Generative AI</a></li>
+<li><a href="/blogs/posts/id?=250702_building_large_3d_1">Building Large 3D Generative Models (1) - 3D Data Pre-processing</a></li>
+<li><a href="/blogs/posts/?id=250810_flow">From Flow Matching to Optimal Transport: A Physics-based View of Generative Models (kor)</a></li>
+</ul>
+<hr>
+<h3 id="toc-heading-14">References</h3>
+<p>Vecset-based VAE</p>
+<ul>
+<li><a href="https://arxiv.org/abs/2301.11445">3DShape2VecSet</a></li>
+<li><a href="https://arxiv.org/abs/2306.17115">Michelangelo</a></li>
+<li><a href="https://arxiv.org/abs/2412.17808">Dora</a></li>
+</ul>
+<p>3D Generation w/ vecset-based VAE</p>
+<ul>
+<li><a href="https://arxiv.org/abs/2406.13897">CLAY</a></li>
+<li><a href="https://arxiv.org/abs/2405.14979">CraftsMan3D</a></li>
+<li><a href="https://arxiv.org/abs/2405.14832">Direct3D</a> </li>
+<li><a href="https://arxiv.org/abs/2501.12202">Hunyuan3D 2.0</a> </li>
+<li><a href="https://arxiv.org/abs/2503.16302">Flash VDM</a> </li>
+<li><a href="https://arxiv.org/abs/2503.22236">Hi3DGen</a>  </li>
+<li><a href="https://arxiv.org/abs/2502.06608">TripoSG</a> </li>
+<li><a href="https://arxiv.org/abs/2506.15442">Hunyuan3D 2.1</a> </li>
+<li><a href="https://arxiv.org/abs/2506.16504">Hunyuan3D 2.5</a></li>
+</ul>
+<p>Sparse-Voxel VAE (&amp; its 3D Generation)</p>
+<ul>
+<li><a href="https://arxiv.org/abs/2412.01506">Trellis</a>  </li>
+<li><a href="https://arxiv.org/abs/2503.21732">SparseFlex</a> </li>
+<li><a href="https://arxiv.org/abs/2505.17412">Direct3D-S2</a> </li>
+<li><a href="https://arxiv.org/abs/2505.14521">Sparc3D</a></li>
+</ul>
+<br/>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Post Navigation -->
+                    <div id="post-navigation" class="mt-4"></div>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <footer class="border-top">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="small text-center text-muted fst-italic">Copyright © Hwan Heo</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="/blogs/js/posts-data.js"></script>
+    <script>
+        // Math rendering
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            }
+
+            // Share button functionality
+            const copyButton = document.getElementById('copyButton');
+            const shareModal = document.getElementById('myshare_modal');
+            const closeModal = shareModal ? shareModal.querySelector('.share_modal_close') : null;
+            const indicator = document.getElementById('share_modalIndicator');
+
+            if (copyButton && shareModal) {
+                let animationId;
+
+                function updateShareButtonVisibility() {
+                    var headerHeight = document.querySelector('.masthead').offsetHeight;
+                    if (window.innerWidth > 1280 && window.scrollY > headerHeight) {
+                        copyButton.style.display = 'block';
+                    } else {
+                        copyButton.style.display = 'none';
+                    }
+                }
+
+                function animateIndicator() {
+                    let startTime = null;
+                    const duration = 1500;
+
+                    function step(timestamp) {
+                        if (!startTime) startTime = timestamp;
+                        const progress = Math.min((timestamp - startTime) / duration, 1);
+                        indicator.style.width = `${(1 - progress) * 100}%`;
+
+                        if (progress < 1) {
+                            animationId = requestAnimationFrame(step);
+                        } else {
+                            shareModal.style.display = 'none';
+                        }
+                    }
+
+                    cancelAnimationFrame(animationId);
+                    animationId = requestAnimationFrame(step);
+                }
+
+                function closeShareModal() {
+                    cancelAnimationFrame(animationId);
+                    shareModal.style.display = 'none';
+                    indicator.style.width = '0%';
+                }
+
+                // Scroll event for share button visibility
+                document.addEventListener('scroll', updateShareButtonVisibility);
+                window.addEventListener('resize', updateShareButtonVisibility);
+
+                copyButton.addEventListener('click', function() {
+                    const url = new URL(window.location.href);
+                    url.hash = '';
+                    const urlWithoutHash = url.href;
+
+                    navigator.clipboard.writeText(urlWithoutHash).then(function() {
+                        shareModal.style.display = 'block';
+                        indicator.style.width = '100%';
+                        animateIndicator();
+                    }).catch(function(err) {
+                        console.error('Link Copy Failed:', err);
+                        alert('링크 복사에 실패했습니다.');
+                    });
+                });
+
+                if (closeModal) {
+                    closeModal.addEventListener('click', closeShareModal);
+                }
+
+                window.addEventListener('click', function(event) {
+                    if (event.target === shareModal) {
+                        closeShareModal();
+                    }
+                });
+
+                updateShareButtonVisibility();
+            }
+
+            // Series navigation
+            const postId = '250710_building_large_3d_2';
+            const lang = 'eng';
+            renderSeriesNavigation(postId, lang);
+
+            // TOC scroll tracking
+            initializeTOC();
+
+            // Custom script for specific posts with 3D viewers
+            if (postId === '240917_3djs') {
+                import('/blogs/3DViewer/js/gaussian_viewer.js')
+                    .then(module => {
+                        module.initGaussianViewer();
+                    })
+                    .catch(err => {
+                        console.error("Failed to load the Gaussian viewer script:", err);
+                    });
+            }
+
+            if (postId === '250310_model_viewer') {
+                import('/blogs/3DViewer/js/gaussian_viewer.js')
+                    .then(module => {
+                        module.initGaussianViewer();
+                    })
+                    .catch(err => {
+                        console.error("Failed to load the Gaussian viewer script:", err);
+                    });
+            }
+        });
+
+        function initializeTOC() {
+            const toc = document.querySelector('.toc');
+            if (!toc) return;
+
+            let tocItems = [];
+
+            // Scroll에 따라 TOC 표시/숨김
+            function updateTocVisibility() {
+                const headerHeight = document.querySelector('.masthead')?.offsetHeight || 300;
+                if (window.scrollY > headerHeight) {
+                    toc.style.display = 'block';
+                } else {
+                    toc.style.display = 'none';
+                }
+            }
+
+            document.addEventListener('scroll', updateTocVisibility);
+
+            // 초기 상태 설정
+            const headerHeight = document.querySelector('.masthead')?.offsetHeight || 300;
+            toc.style.display = window.scrollY > headerHeight ? 'block' : 'none';
+
+            // 스크롤에 따라 현재 섹션 활성화
+            const TOP_MARGIN = 0.1;
+            const BOTTOM_MARGIN = 0.2;
+
+            function initTocItems() {
+                tocItems = Array.from(toc.querySelectorAll('li')).map(function(item) {
+                    const anchor = item.querySelector('a');
+                    if (!anchor) return null;
+                    const href = anchor.getAttribute('href');
+                    if (!href || href === '#') return null;
+                    const target = document.getElementById(href.slice(1));
+                    return { listItem: item, anchor: anchor, target: target };
+                }).filter(item => item && item.target);
+            }
+
+            function syncToc() {
+                const windowHeight = window.innerHeight;
+                let currentSection = null;
+
+                tocItems.forEach(function(item) {
+                    const targetBounds = item.target.getBoundingClientRect();
+                    if (targetBounds.top <= windowHeight * (1 - BOTTOM_MARGIN)) {
+                        currentSection = item;
+                    }
+                });
+
+                tocItems.forEach(function(item) {
+                    if (item === currentSection) {
+                        item.listItem.classList.add('active');
+                    } else {
+                        item.listItem.classList.remove('active');
+                    }
+                });
+            }
+
+            initTocItems();
+            syncToc();
+            window.addEventListener('scroll', syncToc, false);
+        }
+
+        function getPostTitle(post, lang) {
+            return post['title_' + lang] || post.title_eng;
+        }
+
+        function renderSeriesNavigation(postId, lang) {
+            const seriesContainer = document.getElementById('series-container');
+            const navContainer = document.getElementById('post-navigation');
+
+            if (!postsData || !seriesInfo || !seriesContainer) return;
+
+            const currentPost = postsData.find(p => p.id === postId);
+            if (!currentPost || !currentPost.series) return;
+
+            const seriesId = currentPost.series;
+            const postsInSeries = postsData
+                .filter(p => p.series === seriesId)
+                .sort((a, b) => new Date(b.date) - new Date(a.date)); // 최신순 정렬
+
+            if (postsInSeries.length <= 1) return;
+
+            const seriesTitle = seriesInfo[seriesId]?.[lang] || seriesInfo[seriesId]?.['eng'] || 'Series';
+
+            // Render series accordion
+            const listItems = postsInSeries.map(post => {
+                const title = getPostTitle(post, lang);
+                const slug = post.slug || post.id;
+                const postLang = lang === 'eng' ? slug : slug + '-kor';
+                if (post.id === postId) {
+                    return '<li><strong>' + title + '</strong></li>';
+                } else {
+                    return '<li><a href="/blogs/posts/' + postLang + '/">' + title + '</a></li>';
+                }
+            }).join('');
+
+            seriesContainer.innerHTML = `
+                <div class="accordion mb-4" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                <strong>${seriesTitle}</strong>
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <ol>${listItems}</ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Render post navigation (prev/next)
+            const currentIndex = postsInSeries.findIndex(p => p.id === postId);
+            const olderPost = postsInSeries[currentIndex + 1];
+            const nextPost = postsInSeries[currentIndex - 1];
+
+            if (olderPost || nextPost) {
+                let navHtml = '<div class="d-flex justify-content-between mb-4">';
+
+                if (olderPost) {
+                    const olderTitle = getPostTitle(olderPost, lang);
+                    const truncatedTitle = olderTitle.length > 25 ? olderTitle.substring(0, 25) + '...' : olderTitle;
+                    const olderSlug = olderPost.slug || olderPost.id;
+                    const olderLang = lang === 'eng' ? olderSlug : olderSlug + '-kor';
+                    navHtml += `<a class="btn btn-light text-uppercase" href="/blogs/posts/${olderLang}/" style="width: 40%; text-align: center;">← Older Post<br><small style="font-size: 0.7rem; text-transform: none;">${truncatedTitle}</small></a>`;
+                } else {
+                    if (nextPost) {
+                        navHtml += '<div></div>';
+                    }
+                }
+
+                if (nextPost) {
+                    const nextTitle = getPostTitle(nextPost, lang);
+                    const truncatedTitle = nextTitle.length > 25 ? nextTitle.substring(0, 25) + '...' : nextTitle;
+                    const nextSlug = nextPost.slug || nextPost.id;
+                    const nextLang = lang === 'eng' ? nextSlug : nextSlug + '-kor';
+                    navHtml += `<a class="btn btn-light text-uppercase" href="/blogs/posts/${nextLang}/" style="width: 40%; text-align: center;">Next Post →<br><small style="font-size: 0.7rem; text-transform: none;">${truncatedTitle}</small></a>`;
+                } else {
+                    const allSeriesIds = Object.keys(seriesInfo);
+                    const otherSeriesIds = allSeriesIds.filter(id => id !== currentPost.series);
+
+                    if (otherSeriesIds.length > 0) {
+                        const randomSeriesId = otherSeriesIds[Math.floor(Math.random() * otherSeriesIds.length)];
+                        const latestPostInRandomSeries = postsData
+                            .filter(p => p.series === randomSeriesId)
+                            .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+
+                        if (latestPostInRandomSeries) {
+                            const seriesTitle = seriesInfo[randomSeriesId][lang] || seriesInfo[randomSeriesId]['eng'];
+                            const recSlug = latestPostInRandomSeries.slug || latestPostInRandomSeries.id;
+                            const recLang = lang === 'eng' ? recSlug : recSlug + '-kor';
+                            navHtml += `<a class="btn btn-outline-secondary text-uppercase" href="/blogs/posts/${recLang}/" style="width: 40%; text-align: center;">Explore Series<br><small style="font-size: 0.7rem; text-transform: none;">${seriesTitle}</small></a>`;
+                        }
+                    } else {
+                        navHtml += '<div></div>';
+                    }
+                }
+
+                navHtml += '</div>';
+                navContainer.innerHTML = navHtml;
+            }
+        }
+    </script>
+</body>
+</html>

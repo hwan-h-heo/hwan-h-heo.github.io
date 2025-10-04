@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Why signed distance field induces eikonal equation" />
+    <meta name="keywords" content="note, graphics, 3D graphics, computer vision, machine learning" />
+    <meta name="author" content="Hwan Heo" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://hwan-h-heo.io/blogs/posts/sdf-and-eikonal-equation/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://hwan-h-heo.io/blogs/posts/sdf-and-eikonal-equation/" />
+    <meta property="og:title" content="SDF and Eikonal Equation" />
+    <meta property="og:description" content="Why signed distance field induces eikonal equation" />
+    <meta property="og:image" content="https://hwan-h-heo.io/assets/image_fx_.jpg" />
+    <meta property="og:site_name" content="HwanHeo's Blog" />
+    <meta property="article:published_time" content="2025-08-23T00:00:00.000Z" />
+    <meta property="article:author" content="Hwan Heo" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://hwan-h-heo.io/blogs/posts/sdf-and-eikonal-equation/" />
+    <meta name="twitter:title" content="SDF and Eikonal Equation" />
+    <meta name="twitter:description" content="Why signed distance field induces eikonal equation" />
+    <meta name="twitter:image" content="https://hwan-h-heo.io/assets/image_fx_.jpg" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "SDF and Eikonal Equation",
+  "description": "Why signed distance field induces eikonal equation",
+  "image": "https://hwan-h-heo.io/assets/image_fx_.jpg",
+  "author": {
+    "@type": "Person",
+    "name": "Hwan Heo",
+    "url": "https://hwan-h-heo.io"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Hwan Heo",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://hwan-h-heo.io/assets/favicon.ico"
+    }
+  },
+  "datePublished": "2025-08-23T00:00:00.000Z",
+  "dateModified": "2025-08-23T00:00:00.000Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://hwan-h-heo.io/blogs/posts/sdf-and-eikonal-equation/"
+  },
+  "inLanguage": "en"
+}
+    </script>
+
+    <title>SDF and Eikonal Equation - HwanHeo's Blog</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+
+    <!-- Import Maps for three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.150.0/examples/jsm/",
+                "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
+            }
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/25.0.0/tween.umd.js"></script>
+    <script src="https://use.fontawesome.com/releases/v6.5.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+    <link href="/blogs/css/used.css" rel="stylesheet" />
+    <link href="/blogs/css/blog_post_specific.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1.9.1/css/academicons.min.css">
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+    <style>
+        pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; font-size: 0.9rem !important; }
+        pre code { font-size: 0.9rem !important; }
+        .main-content a { color: #15B886; text-decoration: none; }
+        .main-content a:hover { color: #11926b; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; }
+        th { width: 15%; background-color: #f2f2f2; }
+    </style>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RF7ETSKPK9');
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="/blogs/">Blog Home</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+                Menu <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item">
+                        <a href="../sdf-and-eikonal-equation-kor/" class="btn nav-link px-lg-3 py-3 py-lg-4" style="font-size:0.7rem">
+                            KOR
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="masthead" style="background-image: url('/assets/image_fx_.jpg')">
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="post-heading">
+                        <br/>
+                        <h2>SDF and Eikonal Equation</h2>
+                        <span class="meta">Posted on August 23, 2025</span>
+                        <hr/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <article class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Series Navigation -->
+                    <div id="series-container"></div>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 main-content">
+                    <nav class="toc"><ul><li><a href="#toc-heading-0">Introduction</a><ul></ul></li><li><a href="#toc-heading-1">From SDF to the Eikonal Equation</a><ul></ul></li><li><a href="#toc-heading-2">Proof 1</a><ul><li><a href="#toc-heading-3">1.1. Supremum of the SDF Gradient</a></li><li><a href="#toc-heading-4">1.2. Infimum of the SDF Gradient</a></li><li><a href="#toc-heading-5">1.3. Conclusion</a></li></ul></li><li><a href="#toc-heading-6">Proof 2</a><ul><li><a href="#toc-heading-7">2.1. Gradient Calculation</a></li><li><a href="#toc-heading-8">2.2. Gradient&#39;s Norm</a></li></ul></li><li><a href="#toc-heading-9">Discussion</a><ul></ul></li></ul></nav><button id="copyButton">
+<i class="bi bi-share-fill"></i>
+</button>
+
+<div id="myshare_modal" class="share_modal">
+<div class="share_modal-content">
+<span class="share_modal_close">×</span>
+<p><strong>Link Copied!</strong></p>
+<div class="copy_indicator-container">
+<div class="copy_indicator" id="share_modalIndicator"></div>
+</div>
+</div>
+</div>
+
+<hr>
+<h4>TL;DR</h4>
+<p>Let&#39;s explore the derivation and proof of the relationship between a Signed Distance Field (SDF) and the Eikonal Equation.
+While I&#39;ve written a similar post on velog before, this article aims to provide a more rigorous treatment of the subject.</p>
+<h2 id="toc-heading-0">Introduction</h2>
+<p>A <strong>SDF</strong> (Signed Distance Function) is a representation that, for each point in space, provides the shortest distance to a surface. The set of points where this distance value is zero—the zero-level set or isosurface—defines the actual surface.</p>
+<p><img src="https://ar5iv.labs.arxiv.org/html/1901.05103/assets/x2.png" alt=""></p>
+<p>SDFs are critical not only in modern fields like 3D generative AI and neural surface reconstruction but also in classical computer graphics for tasks such as physical simulation, animation, and mesh repair for watertightness.</p>
+<p>When reading papers related to SDFs, one inevitably encounters the <a href="https://en.wikipedia.org/wiki/Eikonal_equation">Eikonal equation</a>:
+$$ | \nabla f_\text{SDF} | = 1 \
+$$
+and the Eikonal regularization term (or Eikonal loss) derived from it:</p>
+<p>$$ \arg \min_\theta \mathbb E_x \left ( | \nabla f_{\text{SDF}}(x) | -1   \right )^2
+$$</p>
+<p>where $\theta$ represents the MLP&#39;s parameters. In this post, we will explore why an SDF can be defined by this Eikonal equation.</p>
+<hr>
+<h2 id="toc-heading-1">From SDF to the Eikonal Equation</h2>
+<p>First, let&#39;s establish a rigorous definition of an SDF.</p>
+<p>For a set $\Omega \subset \mathbb{R}^n$ and its boundary $\partial\Omega$, the Signed Distance Function (SDF) $f: \mathbb{R}^n \to \mathbb{R}$ is defined as follows:</p>
+<p id="p-2">$$ f(x) = \begin{cases} d(x, \partial\Omega) & \text{if } x \in \Omega^c \\ 0 & \text{if } x \in \partial\Omega \\ -d(x, \partial\Omega) & \text{if } x \in \Omega \end{cases}
+$$</p>
+
+<p>Here, $$d(x, \partial\Omega) = \inf_{y \in \partial\Omega} |x - y|$$ is the Euclidean Distance between a point $x$ and the set $\partial\Omega$.</p>
+<p>What we aim to prove is the <strong>Eikonal Equation</strong>, which states that for every point $x$ where $f$ is differentiable:</p>
+<p>$$ |\nabla f(x)| = 1
+$$</p>
+<hr>
+<h2 id="toc-heading-2">Proof 1</h2>
+<blockquote>
+<p><em>Proof using Lipschitz Continuity</em></p>
+</blockquote>
+<p>This proof will rigorously use the triangle inequality to show that $f$ is a function with a Lipschitz constant of 1. From this, we will first derive the supremum of the gradient ($|\nabla f| \le 1$). The infimum ($|\nabla f| \ge 1$) will then be proven by considering the direction in which the SDF value changes most rapidly.</p>
+<h3 id="toc-heading-3">1.1. Supremum of the SDF Gradient</h3>
+<!--$$\|\nabla f(x)\| \le 1-->
+<!--$$-->
+
+<p>For any two points $x_1, x_2 \in \mathbb{R}^n$, let $p_1 \in \partial\Omega$ be the closest point on the boundary to $x_1$. Then,
+$$ d(x_1, \partial\Omega) = |x_1-p_1|
+$$
+This relationship follows from the definition of the SDF.</p>
+<p>Furthermore, by the definition of $f(x_1)$, the following holds for any point $p_2 \in \partial\Omega$:
+$$ f(x_1) \le d(x_1, \partial\Omega) \le |x_1-p_2|
+$$
+Thus, for $f(x_1)$ and $f(x_2)$, we can establish the following relationship:</p>
+<p>
+$$
+\begin{aligned}
+f(x_2) - f(x_1) & \ge d(x_2, \partial\Omega) - \|x_1-p_2\| \\ &= \|x_2-p_2\| - \|x_1-p_2\| .
+\end{aligned}
+$$
+</p>
+Using the reverse triangle inequality, this can be simplified as follows:
+<p>
+$$
+\begin{aligned}
+f(x_2) - f(x_1) &\ge -\|(x_2-p_2) - (x_1-p_2)\| \\ & = -\|x_2-x_1\| \\  \therefore |f(x_1) - f(x_2)| & \le \|x_1-x_2\|
+\end{aligned}
+$$
+</p>
+
+<p><em>cf.</em> $ |a|-|b| \ge -|a-b| $ </p>
+<p>This shows that the function $f$ is a <strong><a href="https://en.wikipedia.org/wiki/Lipschitz_continuity">1-Lipschitz Continuous Function</a></strong>, meaning the distance between the function&#39;s values does not increase more than the distance between the points themselves.</p>
+<p>If $f$ is differentiable at a point $x$, then by the definition of the gradient, we have:</p>
+<p>
+$$
+\begin{aligned}
+|\nabla f(x) \cdot v| & = \lim_{t \to 0} \frac{|f(x+tv) - f(x)|}{t} \\ & \le \lim_{t \to 0} \frac{\|tv\|}{t} = \|v\|
+\end{aligned}
+$$
+</p>
+
+<p>Now, let&#39;s choose the unit vector $v = \frac{\nabla f(x)}{|\nabla f(x)|}$ (assuming $\nabla f(x) \neq 0$):
+$$\left | \nabla f(x) \cdot \frac{\nabla f(x)}{|\nabla f(x)|} \right | = \frac{|\nabla f(x)|^2}{|\nabla f(x)|} = |\nabla f(x)|$$
+Therefore,
+$$|\nabla f(x)| \le \left |\frac{\nabla f(x)}{|\nabla f(x)|} \right | = 1$$ 
+which implies $|\nabla f(x)| \le 1$.</p>
+<hr>
+<h3 id="toc-heading-4">1.2. Infimum of the SDF Gradient</h3>
+<p>Next, we will prove that $|\nabla f(x)| \ge 1$ to establish the lower bound (infimum) of the gradient&#39;s magnitude.</p>
+<p>Let&#39;s consider a point $x \in \mathbb{R}^n \setminus \partial\Omega$ where $f$ is differentiable. We also assume there exists a <strong>unique</strong> closest point $p \in \partial\Omega$ to $x$. (Such points constitute most of the space, excluding the &#39;medial axis&#39;.)</p>
+<p>Now, consider the unit vector $$ n = \frac{x-p}{|x-p|} $$, which points from $p$ to $x$, representing the direction of fastest movement away from the boundary.</p>
+<p>To analyze the directional derivative in this direction, consider the point $x+tn$ for a sufficiently small positive number $t &gt; 0$. Under the assumption that $p$ is the unique closest point to $x$, for a small enough $t$, the closest point to $x+tn$ will also be $p$. Therefore, the distance function value is calculated as:</p>
+<p>
+$$
+\begin{aligned}
+d(x+tn, \partial\Omega) &= \|(x+tn) - p\| \\ &= \|(x-p) + tn\| \\ & = \|\|x-p\|n + tn\| \\ & = (\|x-p\|+t) = d(x, \partial\Omega)+t
+\end{aligned}
+$$
+</p>
+
+<p>Applying the sign from the SDF definition, we get the following:</p>
+<ul>
+<li>If $x \in \Omega^c$ $(f &gt; 0)$, then $f(x) = d(x, \partial\Omega)$, so $$ f(x+tn) = d(x, \partial\Omega)+t = f(x)+t$$ </li>
+<li>If $x \in \Omega$ $(f &lt; 0)$, then $f(x) = -d(x, \partial\Omega)$, so $$f(x+tn) = -(d(x, \partial\Omega)+t) = f(x)-t$$</li>
+</ul>
+<p>Now, we can compute the directional derivative along $n$:</p>
+<ul>
+<li>For $x \in \Omega^c$:
+  $$
+  \nabla f(x) \cdot n = \lim_{t\to 0^+} \frac{f(x+tn)-f(x)}{t} = \lim_{t\to 0^+} \frac{t}{t} = 1
+  $$</li>
+<li>For $x \in \Omega$ (where the direction of fastest increase is $-n$):
+  $$
+  \nabla f(x) \cdot (-n) = \lim_{t\to 0^+} \frac{f(x-tn)-f(x)}{t} = \lim_{t\to 0^+} \frac{t}{t} = 1
+  $$
+  Therefore, $\nabla f(x) \cdot n = -1$.</li>
+</ul>
+<p>In both cases, $|\nabla f(x) \cdot n| = 1$.
+From the Cauchy-Schwarz inequality, $|\nabla f(x) \cdot n| \le |\nabla f(x)| |n|$, and the fact that $|n|=1$, we can conclude:</p>
+<p>$$ 1 \le |\nabla f(x)| $$</p>
+<h3 id="toc-heading-5">1.3. Conclusion</h3>
+<p>From $|\nabla f(x)| \le 1$ proven in section 1.1 and $|\nabla f(x)| \ge 1$ proven in section 1.2, it follows that for all points $x$ where $f$ is differentiable, the Eikonal equation holds:</p>
+<p>$$
+|\nabla f(x)| = 1
+$$</p>
+<hr>
+<h2 id="toc-heading-6">Proof 2</h2>
+<blockquote>
+<p><em>Proof using Geometric Properties of Distance Function</em></p>
+</blockquote>
+<p>The second proof offers a more intuitive approach using the geometric properties of the distance function. For rigor, we first state the following well-known theorem regarding the gradient of a distance function.</p>
+<blockquote>
+<p><strong>Theorem.</strong> If the distance function $d(x, S)$ is differentiable at a point $x$, and $p$ is the unique closest point to $x$ on $S$, then the gradient of $d$ is given by:
+$$ \nabla d(x, S) = \frac{x-p}{|x-p|} $$</p>
+<p>This theorem is derived from the geometric fact that the level sets of the distance function are sets of points equidistant from $S$. The gradient is perpendicular to these level sets and points in the direction of the fastest increase in value. This direction is precisely the unit vector from $p$ to $x$.</p>
+</blockquote>
+<h3 id="toc-heading-7">2.1. Gradient Calculation</h3>
+<p>As in the first proof, we assume a point $x \in \mathbb{R}^n \setminus \partial\Omega$ where $f$ is differentiable, and a unique closest point $p$ on $\partial\Omega$. We can calculate $\nabla f(x)$ by considering two cases.</p>
+<p><strong>Case 1: $x \in \Omega^c$</strong></p>
+<p>In this case, by the definition of an SDF, $f(x) = d(x, \partial\Omega)$. Applying the theorem directly gives:
+$$ \nabla f(x) = \nabla d(x, \partial\Omega) = \frac{x-p}{|x-p|} $$</p>
+<p><strong>Case 2: $x \in \Omega$</strong></p>
+<p>In this case, $f(x) = -d(x, \partial\Omega)$, so the gradient is:
+$$ \nabla f(x) = -\nabla d(x, \partial\Omega) = -\frac{x-p}{|x-p|} $$</p>
+<h3 id="toc-heading-8">2.2. Gradient&#39;s Norm</h3>
+<p>In both cases, the gradient $\nabla f(x)$ is either a unit vector or a unit vector multiplied by -1. Therefore, calculating the Euclidean norm of the gradient yields:</p>
+<p>
+$$ 
+\begin{aligned}
+\|\nabla f(x)\| &= \left\| \pm \frac{x-p}{\|x-p\|} \right\| \\ & = \frac{\|x-p\|}{\|x-p\|} = 1 
+\end{aligned}
+$$
+</p>
+
+<p>This shows that $f$ satisfies the Eikonal equation at all points where it is differentiable.</p>
+<hr>
+<h2 id="toc-heading-9">Discussion</h2>
+<p><strong>Rigor and Assumptions</strong>: Both proofs rely on the assumptions of <strong>differentiability</strong> of $f$ and the <strong>uniqueness of the closest point</strong>. In reality, an SDF is not differentiable at all points in space. The set of non-differentiable points is called the <a href="https://en.wikipedia.org/wiki/Medial_axis">&#39;medial axis&#39;</a> or &#39;skeleton&#39;, which corresponds to the set of points that are equidistant to two or more points on $\partial\Omega$. However, since this set has a Lebesgue measure of 0, it is most accurate to state that an SDF satisfies the Eikonal equation <em><strong>almost everywhere</strong></em>.</p>
+<p>The Eikonal loss plays a critical role by forcing the scalar field output by the network to be more than just an implicit function; it compels the field to represent a true physical &#39;distance&#39; in space. This ensures that the level sets remain stable and allows for the direct and accurate calculation of the surface normal vectors via the gradient, which is essential for high-quality rendering and geometric analysis.</p>
+<p>In 3D reconstruction using Implicit Neural Networks (INNs), such as in NeRF, SDFs are often learned to reconstruct surfaces. Calculating the Eikonal loss term in this context requires the second derivative of the MLP. However, the <code>tcnn</code> library, which is essential for training INNs, does not officially support second derivatives. Consequently, SDF methods that use a hash-grid (or feature-grid) representation compute the gradient not analytically but numerically, using <em><strong>finite differences</strong></em> to obtain a <em><strong>numerical gradient</strong></em>.</p>
+<video id="video-2"  controls style='width: 100%' autoplay playsinline loop >
+    <source src='https://research.nvidia.com/labs/dir/neuralangelo/assets/numerical_gradient.mp4' type='video/mp4'>
+</video>
+
+<p>A prime example is <a href="https://research.nvidia.com/labs/dir/neuralangelo/">Neuralangelo</a>, which calculates gradients in this manner.
+This is partly to circumvent the technical limitations of the tcnn library, but more importantly, the numerical gradient provides a smoothing effect on the gradient field, which helps stabilize optimization in the early stages of training. Neuralangelo actively leverages this by employing a coarse-to-fine strategy that progressively recovers finer details as training advances, leading to the generation of incredible geometric detail as the hash grid resolution increases.</p>
+<video id="video-1"  controls style='width: 100%' autoplay playsinline loop >
+    <source src='https://research.nvidia.com/labs/dir/neuralangelo/assets/coarse_to_fine.mp4' type='video/mp4'>
+</video>
+
+<p><em>Ref</em>: <a href="https://arxiv.org/pdf/2409.01774">Boundary regularity for the distance functions, and the eikonal equation</a></p>
+
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Post Navigation -->
+                    <div id="post-navigation" class="mt-4"></div>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <footer class="border-top">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="small text-center text-muted fst-italic">Copyright © Hwan Heo</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="/blogs/js/posts-data.js"></script>
+    <script>
+        // Math rendering
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            }
+
+            // Share button functionality
+            const copyButton = document.getElementById('copyButton');
+            const shareModal = document.getElementById('myshare_modal');
+            const closeModal = shareModal ? shareModal.querySelector('.share_modal_close') : null;
+            const indicator = document.getElementById('share_modalIndicator');
+
+            if (copyButton && shareModal) {
+                let animationId;
+
+                function updateShareButtonVisibility() {
+                    var headerHeight = document.querySelector('.masthead').offsetHeight;
+                    if (window.innerWidth > 1280 && window.scrollY > headerHeight) {
+                        copyButton.style.display = 'block';
+                    } else {
+                        copyButton.style.display = 'none';
+                    }
+                }
+
+                function animateIndicator() {
+                    let startTime = null;
+                    const duration = 1500;
+
+                    function step(timestamp) {
+                        if (!startTime) startTime = timestamp;
+                        const progress = Math.min((timestamp - startTime) / duration, 1);
+                        indicator.style.width = `${(1 - progress) * 100}%`;
+
+                        if (progress < 1) {
+                            animationId = requestAnimationFrame(step);
+                        } else {
+                            shareModal.style.display = 'none';
+                        }
+                    }
+
+                    cancelAnimationFrame(animationId);
+                    animationId = requestAnimationFrame(step);
+                }
+
+                function closeShareModal() {
+                    cancelAnimationFrame(animationId);
+                    shareModal.style.display = 'none';
+                    indicator.style.width = '0%';
+                }
+
+                // Scroll event for share button visibility
+                document.addEventListener('scroll', updateShareButtonVisibility);
+                window.addEventListener('resize', updateShareButtonVisibility);
+
+                copyButton.addEventListener('click', function() {
+                    const url = new URL(window.location.href);
+                    url.hash = '';
+                    const urlWithoutHash = url.href;
+
+                    navigator.clipboard.writeText(urlWithoutHash).then(function() {
+                        shareModal.style.display = 'block';
+                        indicator.style.width = '100%';
+                        animateIndicator();
+                    }).catch(function(err) {
+                        console.error('Link Copy Failed:', err);
+                        alert('링크 복사에 실패했습니다.');
+                    });
+                });
+
+                if (closeModal) {
+                    closeModal.addEventListener('click', closeShareModal);
+                }
+
+                window.addEventListener('click', function(event) {
+                    if (event.target === shareModal) {
+                        closeShareModal();
+                    }
+                });
+
+                updateShareButtonVisibility();
+            }
+
+            // Series navigation
+            const postId = '250823_sdf';
+            const lang = 'eng';
+            renderSeriesNavigation(postId, lang);
+
+            // TOC scroll tracking
+            initializeTOC();
+
+            // Custom script for specific posts with 3D viewers
+            if (postId === '240917_3djs') {
+                import('/blogs/3DViewer/js/gaussian_viewer.js')
+                    .then(module => {
+                        module.initGaussianViewer();
+                    })
+                    .catch(err => {
+                        console.error("Failed to load the Gaussian viewer script:", err);
+                    });
+            }
+
+            if (postId === '250310_model_viewer') {
+                import('/blogs/3DViewer/js/gaussian_viewer.js')
+                    .then(module => {
+                        module.initGaussianViewer();
+                    })
+                    .catch(err => {
+                        console.error("Failed to load the Gaussian viewer script:", err);
+                    });
+            }
+        });
+
+        function initializeTOC() {
+            const toc = document.querySelector('.toc');
+            if (!toc) return;
+
+            let tocItems = [];
+
+            // Scroll에 따라 TOC 표시/숨김
+            function updateTocVisibility() {
+                const headerHeight = document.querySelector('.masthead')?.offsetHeight || 300;
+                if (window.scrollY > headerHeight) {
+                    toc.style.display = 'block';
+                } else {
+                    toc.style.display = 'none';
+                }
+            }
+
+            document.addEventListener('scroll', updateTocVisibility);
+
+            // 초기 상태 설정
+            const headerHeight = document.querySelector('.masthead')?.offsetHeight || 300;
+            toc.style.display = window.scrollY > headerHeight ? 'block' : 'none';
+
+            // 스크롤에 따라 현재 섹션 활성화
+            const TOP_MARGIN = 0.1;
+            const BOTTOM_MARGIN = 0.2;
+
+            function initTocItems() {
+                tocItems = Array.from(toc.querySelectorAll('li')).map(function(item) {
+                    const anchor = item.querySelector('a');
+                    if (!anchor) return null;
+                    const href = anchor.getAttribute('href');
+                    if (!href || href === '#') return null;
+                    const target = document.getElementById(href.slice(1));
+                    return { listItem: item, anchor: anchor, target: target };
+                }).filter(item => item && item.target);
+            }
+
+            function syncToc() {
+                const windowHeight = window.innerHeight;
+                let currentSection = null;
+
+                tocItems.forEach(function(item) {
+                    const targetBounds = item.target.getBoundingClientRect();
+                    if (targetBounds.top <= windowHeight * (1 - BOTTOM_MARGIN)) {
+                        currentSection = item;
+                    }
+                });
+
+                tocItems.forEach(function(item) {
+                    if (item === currentSection) {
+                        item.listItem.classList.add('active');
+                    } else {
+                        item.listItem.classList.remove('active');
+                    }
+                });
+            }
+
+            initTocItems();
+            syncToc();
+            window.addEventListener('scroll', syncToc, false);
+        }
+
+        function getPostTitle(post, lang) {
+            return post['title_' + lang] || post.title_eng;
+        }
+
+        function renderSeriesNavigation(postId, lang) {
+            const seriesContainer = document.getElementById('series-container');
+            const navContainer = document.getElementById('post-navigation');
+
+            if (!postsData || !seriesInfo || !seriesContainer) return;
+
+            const currentPost = postsData.find(p => p.id === postId);
+            if (!currentPost || !currentPost.series) return;
+
+            const seriesId = currentPost.series;
+            const postsInSeries = postsData
+                .filter(p => p.series === seriesId)
+                .sort((a, b) => new Date(b.date) - new Date(a.date)); // 최신순 정렬
+
+            if (postsInSeries.length <= 1) return;
+
+            const seriesTitle = seriesInfo[seriesId]?.[lang] || seriesInfo[seriesId]?.['eng'] || 'Series';
+
+            // Render series accordion
+            const listItems = postsInSeries.map(post => {
+                const title = getPostTitle(post, lang);
+                const slug = post.slug || post.id;
+                const postLang = lang === 'eng' ? slug : slug + '-kor';
+                if (post.id === postId) {
+                    return '<li><strong>' + title + '</strong></li>';
+                } else {
+                    return '<li><a href="/blogs/posts/' + postLang + '/">' + title + '</a></li>';
+                }
+            }).join('');
+
+            seriesContainer.innerHTML = `
+                <div class="accordion mb-4" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                <strong>${seriesTitle}</strong>
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <ol>${listItems}</ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Render post navigation (prev/next)
+            const currentIndex = postsInSeries.findIndex(p => p.id === postId);
+            const olderPost = postsInSeries[currentIndex + 1];
+            const nextPost = postsInSeries[currentIndex - 1];
+
+            if (olderPost || nextPost) {
+                let navHtml = '<div class="d-flex justify-content-between mb-4">';
+
+                if (olderPost) {
+                    const olderTitle = getPostTitle(olderPost, lang);
+                    const truncatedTitle = olderTitle.length > 25 ? olderTitle.substring(0, 25) + '...' : olderTitle;
+                    const olderSlug = olderPost.slug || olderPost.id;
+                    const olderLang = lang === 'eng' ? olderSlug : olderSlug + '-kor';
+                    navHtml += `<a class="btn btn-light text-uppercase" href="/blogs/posts/${olderLang}/" style="width: 40%; text-align: center;">← Older Post<br><small style="font-size: 0.7rem; text-transform: none;">${truncatedTitle}</small></a>`;
+                } else {
+                    if (nextPost) {
+                        navHtml += '<div></div>';
+                    }
+                }
+
+                if (nextPost) {
+                    const nextTitle = getPostTitle(nextPost, lang);
+                    const truncatedTitle = nextTitle.length > 25 ? nextTitle.substring(0, 25) + '...' : nextTitle;
+                    const nextSlug = nextPost.slug || nextPost.id;
+                    const nextLang = lang === 'eng' ? nextSlug : nextSlug + '-kor';
+                    navHtml += `<a class="btn btn-light text-uppercase" href="/blogs/posts/${nextLang}/" style="width: 40%; text-align: center;">Next Post →<br><small style="font-size: 0.7rem; text-transform: none;">${truncatedTitle}</small></a>`;
+                } else {
+                    const allSeriesIds = Object.keys(seriesInfo);
+                    const otherSeriesIds = allSeriesIds.filter(id => id !== currentPost.series);
+
+                    if (otherSeriesIds.length > 0) {
+                        const randomSeriesId = otherSeriesIds[Math.floor(Math.random() * otherSeriesIds.length)];
+                        const latestPostInRandomSeries = postsData
+                            .filter(p => p.series === randomSeriesId)
+                            .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+
+                        if (latestPostInRandomSeries) {
+                            const seriesTitle = seriesInfo[randomSeriesId][lang] || seriesInfo[randomSeriesId]['eng'];
+                            const recSlug = latestPostInRandomSeries.slug || latestPostInRandomSeries.id;
+                            const recLang = lang === 'eng' ? recSlug : recSlug + '-kor';
+                            navHtml += `<a class="btn btn-outline-secondary text-uppercase" href="/blogs/posts/${recLang}/" style="width: 40%; text-align: center;">Explore Series<br><small style="font-size: 0.7rem; text-transform: none;">${seriesTitle}</small></a>`;
+                        }
+                    } else {
+                        navHtml += '<div></div>';
+                    }
+                }
+
+                navHtml += '</div>';
+                navContainer.innerHTML = navHtml;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<svg width="700" height="250" xmlns="http://www.w3.org/2000/svg">
+<style>
+.img-box { fill: #f0f4f8; stroke: #aab; fill-opacity: 0.9; }
+.label { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; text-anchor: middle; }
+.desc { font-family: Arial, sans-serif; font-size: 12px; text-anchor: middle; }
+.arrow { stroke: #333; stroke-width: 2; marker-end: url(#arrowhead); }
+.kp { fill: red; }
+.match-line { stroke: rgba(0,200,0,0.7); stroke-width: 1.5; }
+</style>
+<defs>
+<!-- 산 모양을 좀 더 길게 수정하여 파노라마 효과를 명확하게 함 -->
+<marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#333"/></marker>
+<path id="mountain" d="M0,50 C20,-10 40,-10 60,50 S100,110 120,50 C140,-10 160,-10 180,50" stroke="#663300" stroke-width="4" fill="none"/>
+</defs>
+
+<!-- Image 1 (Left Image) -->
+<g transform="translate(100, 120)">
+<rect x="-80" y="-60" width="160" height="120" class="img-box"/>
+<!-- 산의 왼쪽 부분을 보여주도록 위치 조정 -->
+<use href="#mountain" transform="translate(-30, -30)"/>
+<!-- 특징점 위치를 산 봉우리에 맞게 재조정 -->
+<circle cx="30" cy="10" r="3" class="kp"/><!-- Abs: 130, 130 -->
+<circle cx="90" cy="20" r="3" class="kp"/><!-- Abs: 190, 200 -->
+<text y="-70" class="label">Image 1</text>
+</g>
+
+<!-- Image 2 (Right Image) -->
+<g transform="translate(320, 120)">
+<rect x="-80" y="-60" width="160" height="120" class="img-box"/>
+<!-- 산의 오른쪽 부분을 보여주도록 위치 조정 -->
+<use href="#mountain" transform="translate(-90, -30)"/>
+<!-- 특징점 위치를 산 봉우리에 맞게 재조정 -->
+<circle cx="-30" cy="10" r="3" class="kp"/><!-- Abs: 290, 130 -->
+<circle cx="30" cy="20" r="3" class="kp"/><!-- Abs: 350, 200 -->
+<text y="-70" class="label">Image 2</text>
+</g>
+
+<!-- Text & Match Lines -->
+<text x="210" y="40" class="desc"> Feature Matching</text>
+<!-- 매칭 라인 좌표를 새로운 특징점 위치에 맞게 수정 -->
+<line x1="130" y1="130" x2="290" y2="130" class="match-line"/>
+<line x1="190" y1="140" x2="350" y2="140" class="match-line"/>
+
+<!-- Arrow -->
+<line x1="430" y1="120" x2="460" y2="120" class="arrow"/>
+<text x="450" y="40" class="desc"> Estimate Homography</text>
+<text x="450" y="60" class="desc"> (Warp and Blend) </text>
+
+<!-- Stitched Image -->
+<g transform="translate(580, 120)">
+<text y="-70" class="label">Stitched Image</text>
+<!-- Image 1 (기준 이미지)의 배경과 산 -->
+<g>
+<rect x="-80" y="-60" width="160" height="120" class="img-box"/>
+<use href="#mountain" transform="translate(-30, -30)"/>
+</g>
+<!-- Image 2를 변환(Warp)하여 Image 1에 연결 -->
+<!-- 사용자의 그림처럼 오른쪽 이미지가 변형되어 합쳐지는 것을 표현 -->
+<g transform="matrix(1, 0, -0.2, 1, 95, 0)">
+<rect x="-80" y="-60" width="160" height="120" class="img-box"/>
+<use href="#mountain" transform="translate(-90, -30)"/>
+</g>
+</g>
+</svg>

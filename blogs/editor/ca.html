@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>면접 스케줄 어레인지</title>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.css' rel='stylesheet' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f5f5f5; }
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; }
+        h1, h2, h3 { margin-bottom: 15px; color: #333; }
+        #calendar { border: 1px solid #ccc; padding: 10px; margin-bottom: 20px; background-color: white; }
+        .selectors { display: flex; justify-content: space-around; margin-bottom: 20px; background-color: white; padding: 15px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .selector label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .selector input[type="number"] { width: 60px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .input-area { margin-top: 20px; }
+        .interviewer-form, .applicant-form { background-color: white; border-radius: 5px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .time-selector { padding: 10px; background-color: #fafafa; border-radius: 4px; margin-top: 10px; }
+        .timeline { display: flex; overflow-x: auto; padding: 10px; border: 1px solid #ddd; }
+        .time-slot { width: 40px; height: 30px; border: 1px solid #ccc; text-align: center; cursor: pointer; font-size: 12px; }
+        .time-slot.selected { background-color: #007bff; color: white; }
+        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f0f0f0; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>면접 스케줄 어레인지</h1>
+        <div id="calendar"></div>
+        <div class="selectors">
+            <div class="selector">
+                <label for="interviewerCount">면접관 수:</label>
+                <input type="number" id="interviewerCount" value="2" min="1" step="1">
+            </div>
+            <div class="selector">
+                <label for="applicantCount">지원자 수:</label>
+                <input type="number" id="applicantCount" value="13" min="1" step="1">
+            </div>
+        </div>
+        <button id="setButton">설정</button>
+        <div id="inputArea" class="input-area" style="display: none;"></div>
+        <button id="arrangeButton" style="display: none;">어레인지!</button>
+        <div id="scheduleArea" style="display: none;">
+            <h2>면접 스케줄</h2>
+            <div id="scheduleTable"></div>
+        </div>
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            selectable: true,
+            select: function(info) {
+                let startDate = info.startStr;
+                let endDate = info.endStr;
+                endDate = moment(endDate).subtract(1, 'days').format('YYYY-MM-DD');
+                window.interviewPeriod = { start: startDate, end: endDate };
+                alert('면접 기간: ' + startDate + ' ~ ' + endDate);
+            }
+        });
+        calendar.render();
+
+        const setButton = document.getElementById('setButton');
+        const inputArea = document.getElementById('inputArea');
+        const arrangeButton = document.getElementById('arrangeButton');
+        const scheduleArea = document.getElementById('scheduleArea');
+
+        setButton.addEventListener('click', function() {
+            const interviewerCount = parseInt(document.getElementById('interviewerCount').value);
+            const applicantCount = parseInt(document.getElementById('applicantCount').value);
+
+            generateInputForms(interviewerCount, applicantCount);
+            calendar.setOption('selectable', false);
+            setButton.style.display = 'none';
+            inputArea.style.display = 'block';
+            arrangeButton.style.display = 'block';
+        });
+
+        arrangeButton.addEventListener('click', function() {
+            arrangeSchedule();
+            inputArea.style.display = 'none';
+            arrangeButton.style.display = 'none';
+            scheduleArea.style.display = 'block';
+        });
+    });
+
+    function generateInputForms(interviewerCount, applicantCount) {
+        const inputArea = document.getElementById('inputArea');
+        inputArea.innerHTML = '';
+
+        generateInterviewerInputForms(interviewerCount, inputArea);
+        generateApplicantInputForms(applicantCount, inputArea);
+        setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
+    }
+
+    function generateInterviewerInputForms(interviewerCount, inputArea) {
+        const interviewerInputDiv = document.createElement('div');
+        interviewerInputDiv.innerHTML = '<h2>면접관 정보 입력</h2>';
+        inputArea.appendChild(interviewerInputDiv);
+
+        window.interviewers = [];
+
+        for (let i = 0; i < interviewerCount; i++) {
+            const interviewerForm = document.createElement('div');
+            interviewerForm.classList.add('interviewer-form');
+            interviewerForm.innerHTML = `
+                <h3>면접관 ${i + 1}</h3>
+                <label>이름:</label>
+                <input type="text" class="interviewer-name" placeholder="면접관 이름">
+                <div class="availability-calendar" id="interviewerCalendar${i}"></div>
+                <div class="time-selector" id="interviewerTimeSelector${i}"></div>
+            `;
+            interviewerInputDiv.appendChild(interviewerForm);
+            createInterviewerCalendarAndTimeSelector(i);
+        }
+    }
+
+    function createInterviewerCalendarAndTimeSelector(interviewerIndex) {
+        const calendarEl = document.getElementById(`interviewerCalendar${interviewerIndex}`);
+        const timeSelectorDiv = document.getElementById(`interviewerTimeSelector${interviewerIndex}`);
+        let interviewerAvailability = {};
+        window.interviewers[interviewerIndex] = { availability: interviewerAvailability, calendar: null };
+
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            validRange: window.interviewPeriod,
+            height: 'auto',
+            dateClick: function(info) {
+                const clickedDate = info.dateStr;
+                if (!interviewerAvailability[clickedDate]) {
+                    interviewerAvailability[clickedDate] = [];
+                }
+                createTimeSelector(timeSelectorDiv, clickedDate, interviewerAvailability[clickedDate], 'interviewer', interviewerIndex);
+            }
+        });
+        calendar.render();
+        window.interviewers[interviewerIndex].calendar = calendar;
+    }
+
+    function generateApplicantInputForms(applicantCount, inputArea) {
+        const applicantInputDiv = document.createElement('div');
+        applicantInputDiv.innerHTML = '<h2>지원자 정보 입력</h2>';
+        inputArea.appendChild(applicantInputDiv);
+
+        window.applicants = [];
+
+        for (let i = 0; i < applicantCount; i++) {
+            const applicantForm = document.createElement('div');
+            applicantForm.classList.add('applicant-form');
+            applicantForm.innerHTML = `
+                <h3>지원자 ${i + 1}</h3>
+                <label>이름:</label>
+                <input type="text" class="applicant-name" placeholder="지원자 이름">
+                <div class="availability-calendar" id="applicantCalendar${i}"></div>
+                <div class="time-selector" id="applicantTimeSelector${i}"></div>
+            `;
+            applicantInputDiv.appendChild(applicantForm);
+            createApplicantCalendarAndTimeSelector(i);
+        }
+    }
+
+    function createApplicantCalendarAndTimeSelector(applicantIndex) {
+        const calendarEl = document.getElementById(`applicantCalendar${applicantIndex}`);
+        const timeSelectorDiv = document.getElementById(`applicantTimeSelector${applicantIndex}`);
+        let applicantAvailability = {};
+        window.applicants[applicantIndex] = { availability: applicantAvailability, calendar: null };
+
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            validRange: window.interviewPeriod,
+            height: 'auto',
+            dateClick: function(info) {
+                const clickedDate = info.dateStr;
+                if (!applicantAvailability[clickedDate]) {
+                    applicantAvailability[clickedDate] = [];
+                }
+                createTimeSelector(timeSelectorDiv, clickedDate, applicantAvailability[clickedDate], 'applicant', applicantIndex);
+            }
+        });
+        calendar.render();
+        window.applicants[applicantIndex].calendar = calendar;
+    }
+
+    function createTimeSelector(timeSelectorDiv, date, availabilityForDate, personType, personIndex) {
+        timeSelectorDiv.innerHTML = `<h4>${date} 가용 시간 선택</h4><div class="timeline" id="timeline-${personType}-${personIndex}-${date}"></div>`;
+        const timeline = document.getElementById(`timeline-${personType}-${personIndex}-${date}`);
+        const timeOptions = generate30MinSlots();
+
+        timeOptions.forEach(time => {
+            const slot = document.createElement('div');
+            slot.className = 'time-slot';
+            slot.textContent = time;
+            slot.dataset.time = time;
+            if (availabilityForDate.includes(time)) {
+                slot.classList.add('selected');
+            }
+            timeline.appendChild(slot);
+
+            slot.addEventListener('click', function(e) {
+                toggleTimeSlot(slot, availabilityForDate, personType, personIndex, date);
+            });
+        });
+
+        let isDragging = false;
+        timeline.addEventListener('mousedown', () => isDragging = true);
+        timeline.addEventListener('mouseup', () => isDragging = false);
+        timeline.addEventListener('mouseleave', () => isDragging = false);
+        timeline.addEventListener('mousemove', (e) => {
+            if (isDragging && e.target.classList.contains('time-slot')) {
+                toggleTimeSlot(e.target, availabilityForDate, personType, personIndex, date);
+            }
+        });
+    }
+
+    function toggleTimeSlot(slot, availabilityForDate, personType, personIndex, date) {
+        const time = slot.dataset.time;
+        const index = availabilityForDate.indexOf(time);
+        const personArray = personType === 'interviewer' ? window.interviewers : window.applicants;
+        const fcCalendar = personArray[personIndex].calendar;
+
+        if (index === -1) {
+            availabilityForDate.push(time);
+            slot.classList.add('selected');
+        } else {
+            availabilityForDate.splice(index, 1);
+            slot.classList.remove('selected');
+        }
+
+        if (fcCalendar) {
+            fcCalendar.getEvents().forEach(event => event.remove());
+            if (availabilityForDate.length > 0) {
+                fcCalendar.addEvent({
+                    start: date,
+                    end: date,
+                    display: 'background',
+                    classNames: ['completed-day']
+                });
+            }
+        }
+
+        if (personType === 'interviewer') {
+            window.interviewers[personIndex].availability[date] = availabilityForDate;
+        } else {
+            window.applicants[personIndex].availability[date] = availabilityForDate;
+        }
+    }
+
+    function generate30MinSlots() {
+        const slots = [];
+        let currentTime = moment('09:00', 'HH:mm');
+        const endTime = moment('21:00', 'HH:mm');
+        while (currentTime.isBefore(endTime)) {
+            slots.push(currentTime.format('HH:mm'));
+            currentTime.add(30, 'minutes');
+        }
+        return slots;
+    }
+
+    function arrangeSchedule() {
+        const interviewerCount = parseInt(document.getElementById('interviewerCount').value);
+        const applicantCount = parseInt(document.getElementById('applicantCount').value);
+        const interviewPeriod = window.interviewPeriod;
+        const interviewers = [];
+        const applicants = [];
+
+        for (let i = 0; i < interviewerCount; i++) {
+            const interviewerName = document.querySelector(`.interviewer-form:nth-child(${i + 2}) .interviewer-name`).value || `면접관${i+1}`;
+            const availability = window.interviewers[i] ? window.interviewers[i].availability : {};
+            interviewers.push({ name: interviewerName, availability: availability });
+        }
+
+        for (let i = 0; i < applicantCount; i++) {
+            const applicantName = document.querySelector(`.applicant-form:nth-child(${i + 2}) .applicant-name`).value || `지원자${i+1}`;
+            const availability = window.applicants[i] ? window.applicants[i].availability : {};
+            applicants.push({ name: applicantName, availability: availability });
+        }
+
+        const scheduleSlots = getAvailableSlotsForWeb(applicants, interviewers, interviewPeriod);
+        displayScheduleTable(scheduleSlots);
+    }
+
+    // function getAvailableSlotsForWeb(applicants, interviewers, interviewPeriod) {
+    //     const slots = [];
+    //     const possibleDates = getDatesInRange(interviewPeriod.start, interviewPeriod.end);
+    //     const timeSlots = generate30MinSlots();
+    //     const assignedInterviewers = {}; // 시간대별 배정된 면접관 추적
+
+    //     for (const date of possibleDates) {
+    //         assignedInterviewers[date] = {};
+    //         for (const timeSlot of timeSlots) {
+    //             assignedInterviewers[date][timeSlot] = new Set();
+    //         }
+    //     }
+
+    //     for (const date of possibleDates) {
+    //         for (const applicant of applicants) {
+    //             for (const timeSlot of timeSlots) {
+    //                 if (isApplicantAvailable(applicant, date, timeSlot)) {
+    //                     const { startTime, endTime } = getTimeForSlot(timeSlot);
+    //                     const availableInterviewers = interviewers.filter(i => 
+    //                         isInterviewerAvailable(i, date, timeSlot) && 
+    //                         !assignedInterviewers[date][timeSlot].has(i.name)
+    //                     );
+                        
+    //                     if (availableInterviewers.length >= 1) {
+    //                         const interviewer = availableInterviewers[0];
+    //                         assignedInterviewers[date][timeSlot].add(interviewer.name);
+    //                         slots.push({
+    //                             date: date,
+    //                             startTime: startTime,
+    //                             endTime: endTime,
+    //                             applicant: applicant.name,
+    //                             interviewer: interviewer.name
+    //                         });
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return slots;
+    // }
+    function getAvailableSlotsForWeb(applicants, interviewers, interviewPeriod) {
+        const slots = [];
+        const possibleDates = getDatesInRange(interviewPeriod.start, interviewPeriod.end);
+        const timeSlots = generate30MinSlots();
+        const assignedInterviewers = {};
+
+        for (const date of possibleDates) {
+            assignedInterviewers[date] = {};
+            for (const timeSlot of timeSlots) {
+                assignedInterviewers[date][timeSlot] = new Set();
+            }
+        }
+
+        for (const date of possibleDates) {
+            for (const applicant of applicants) {
+                for (const timeSlot of timeSlots) {
+                    if (isApplicantAvailable(applicant, date, timeSlot)) {
+                        const { start, end } = getTimeForSlot(timeSlot); // 변수명 수정
+                        const availableInterviewers = interviewers.filter(i => 
+                            isInterviewerAvailable(i, date, timeSlot) && 
+                            !assignedInterviewers[date][timeSlot].has(i.name)
+                        );
+                        
+                        if (availableInterviewers.length >= 1) {
+                            const interviewer = availableInterviewers[0];
+                            assignedInterviewers[date][timeSlot].add(interviewer.name);
+                            slots.push({
+                                date: date,
+                                startTime: start, // startTime 대신 start 사용
+                                endTime: end,     // endTime 대신 end 사용
+                                applicant: applicant.name,
+                                interviewer: interviewer.name
+                            });
+                        }
+                    }
+                }
+            }
+        }
+        return slots;
+    }
+
+    function getDatesInRange(startDate, endDate) {
+        let dates = [];
+        let currentDate = moment(startDate);
+        let lastDate = moment(endDate);
+        while (currentDate <= lastDate) {
+            dates.push(currentDate.format("YYYY-MM-DD"));
+            currentDate.add(1, 'days');
+        }
+        return dates;
+    }
+
+    function isApplicantAvailable(applicant, date, timeSlot) {
+        const availability = applicant.availability[date];
+        return availability && availability.includes(timeSlot);
+    }
+
+    function isInterviewerAvailable(interviewer, date, timeSlot) {
+        const availability = interviewer.availability[date];
+        return availability && availability.includes(timeSlot);
+    }
+
+    // function getTimeForSlot(timeSlot) {
+    //     const start = moment(timeSlot, 'HH:mm');
+    //     const end = moment(timeSlot, 'HH:mm').add(1, 'hour');
+    //     return { start: start.format('HH:mm'), end: end.format('HH:mm') };
+    // }
+    function getTimeForSlot(timeSlot) {
+        const start = moment(timeSlot, 'HH:mm');
+        if (!start.isValid()) {
+            console.error('Invalid timeSlot:', timeSlot); // 디버깅용
+            return { start: '09:00', end: '10:00' }; // 기본값
+        }
+        const end = start.clone().add(1, 'hour');
+        return { 
+            start: start.format('HH:mm'), 
+            end: end.format('HH:mm') 
+        };
+    }
+
+    function displayScheduleTable(scheduleSlots) {
+        const scheduleTableDiv = document.getElementById('scheduleTable');
+        scheduleTableDiv.innerHTML = '';
+
+        if (scheduleSlots.length === 0) {
+            scheduleTableDiv.innerHTML = "<p>가능한 면접 스케줄이 없습니다.</p>";
+            return;
+        }
+
+        const table = document.createElement('table');
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th>날짜</th>
+                    <th>시간</th>
+                    <th>지원자</th>
+                    <th>면접관</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        `;
+        const tbody = table.querySelector('tbody');
+
+        scheduleSlots.forEach(slot => {
+            const row = tbody.insertRow();
+            row.insertCell().textContent = slot.date;
+            row.insertCell().textContent = `${slot.startTime} ~ ${slot.endTime}`;
+            row.insertCell().textContent = slot.applicant;
+            row.insertCell().textContent = slot.interviewer;
+        });
+
+        scheduleTableDiv.appendChild(table);
+    }
+</script>
+</body>
+</html>

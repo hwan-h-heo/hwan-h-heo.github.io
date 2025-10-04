@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Watertight Mesh Conversion and Salient Edge Sampling" />
+    <meta name="keywords" content="post, 3d-generation, 3D graphics, computer vision, machine learning" />
+    <meta name="author" content="Hwan Heo" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://hwan-h-heo.io/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://hwan-h-heo.io/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/" />
+    <meta property="og:title" content="Building Large 3D Generative Model (1) Data pre-processing" />
+    <meta property="og:description" content="Watertight Mesh Conversion and Salient Edge Sampling" />
+    <meta property="og:image" content="https://hwan-h-heo.io/assets/image_fx_.jpg" />
+    <meta property="og:site_name" content="HwanHeo's Blog" />
+    <meta property="article:published_time" content="2025-07-02T00:00:00.000Z" />
+    <meta property="article:author" content="Hwan Heo" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://hwan-h-heo.io/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/" />
+    <meta name="twitter:title" content="Building Large 3D Generative Model (1) Data pre-processing" />
+    <meta name="twitter:description" content="Watertight Mesh Conversion and Salient Edge Sampling" />
+    <meta name="twitter:image" content="https://hwan-h-heo.io/assets/image_fx_.jpg" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Building Large 3D Generative Model (1) Data pre-processing",
+  "description": "Watertight Mesh Conversion and Salient Edge Sampling",
+  "image": "https://hwan-h-heo.io/assets/image_fx_.jpg",
+  "author": {
+    "@type": "Person",
+    "name": "Hwan Heo",
+    "url": "https://hwan-h-heo.io"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Hwan Heo",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://hwan-h-heo.io/assets/favicon.ico"
+    }
+  },
+  "datePublished": "2025-07-02T00:00:00.000Z",
+  "dateModified": "2025-07-02T00:00:00.000Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://hwan-h-heo.io/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/"
+  },
+  "inLanguage": "en"
+}
+    </script>
+
+    <title>Building Large 3D Generative Model (1) Data pre-processing - HwanHeo's Blog</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+
+    <!-- Import Maps for three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.150.0/examples/jsm/",
+                "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
+            }
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/25.0.0/tween.umd.js"></script>
+    <script src="https://use.fontawesome.com/releases/v6.5.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+    <link href="/blogs/css/used.css" rel="stylesheet" />
+    <link href="/blogs/css/blog_post_specific.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1.9.1/css/academicons.min.css">
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+    <style>
+        pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; font-size: 0.9rem !important; }
+        pre code { font-size: 0.9rem !important; }
+        .main-content a { color: #15B886; text-decoration: none; }
+        .main-content a:hover { color: #11926b; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; }
+        th { width: 15%; background-color: #f2f2f2; }
+    </style>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RF7ETSKPK9');
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="/blogs/">Blog Home</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+                Menu <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item">
+                        <a href="../building-large-3d-generative-model-1-data-pre-processing-kor/" class="btn nav-link px-lg-3 py-3 py-lg-4" style="font-size:0.7rem">
+                            KOR
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="masthead" style="background-image: url('/assets/image_fx_.jpg')">
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="post-heading">
+                        <br/>
+                        <h2>Building Large 3D Generative Model (1) Data pre-processing</h2>
+                        <span class="meta">Posted on July 2, 2025</span>
+                        <hr/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <article class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Series Navigation -->
+                    <div id="series-container"></div>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 main-content">
+                    <nav class="toc"><ul><li><a href="#toc-heading-0">Introduction: Rise of 3D Generative AI</a><ul></ul></li><li><a href="#toc-heading-1">A. Dataset</a><ul></ul></li><li><a href="#toc-heading-2">B. Pre-processing for the Shape VAE</a><ul><li><a href="#toc-heading-3">B.1. 3D Representation</a></li><li><a href="#toc-heading-4">B.2. VAE for 3D: The Vecset-based VAE</a></li><li><a href="#toc-heading-5">B.3. Watertight Meshes in Mathematics</a></li><li><a href="#toc-heading-6">B.4. How to Make it Watertight</a></li><li><a href="#toc-heading-7">B.5. Pointcloud Sampling</a></li></ul></li><li><a href="#toc-heading-8">Conclusion</a><ul></ul></li></ul></nav><button id="copyButton">
+    <i class="bi bi-share-fill"></i>
+</button>
+
+<div id="myshare_modal" class="share_modal">
+    <div class="share_modal-content">
+        <span class="share_modal_close">×</span>
+        <p><strong>Link Copied!</strong></p>
+        <div class="copy_indicator-container">
+        <div class="copy_indicator" id="share_modalIndicator"></div>
+        </div>
+    </div>
+</div>
+
+<!-- - 3D Generation from [CaPa](https://www.youtube.com/watch?v=AtQNAuQY4-A) :) -->
+
+<hr>
+<h2 id="toc-heading-0">Introduction: Rise of 3D Generative AI</h2>
+<p>Since the latter half of 2024, starting with CLAY (Rodin), a wave of 3D Generative Models has been released, including <a href="https://github.com/Tencent-Hunyuan/Hunyuan3D-2">Hunyuan3D</a>, <a href="https://microsoft.github.io/TRELLIS/">Trellis</a>, <a href="https://yg256li.github.io/TripoSG-Page/">TripoSG</a>, <a href="https://stable-x.github.io/Hi3DGen/">Hi3DGen</a>, and <a href="https://nju-3dv.github.io/projects/Direct3D-S2/">Direct3D-S2</a>.</p>
+<p>All of these methods follow a common design blueprint:</p>
+<ul>
+<li><p><strong>Shape Generation</strong>: A generative model (<em>Diffusion, Flow</em>) for the &#39;3D Shape (Mesh)&#39;.</p>
+</li>
+<li><p><strong>Texture Generation</strong>: Shape-conditioned, multi-view consistent image generation (though some models employ slightly different designs for PBR textures, the fundamental framework is similar).</p>
+</li>
+</ul>
+<img src="/blogs/posts/250702_building_large_3d_1/assets/image-4.png" width=100%>
+
+<p>This can be interpreted as decoupling the 3D asset creation process into <strong>1) Shape Generation ↔︎ 2) Texturing</strong>, which allows for the application of the proven &#39;2D Generative Model&#39; methodology (Latent Generative Models).</p>
+<p>In other words, similar to 2D generative models, a 3D shape is created using a <strong>high-quality latent space</strong> (via a <em>VAE</em> to compress computational cost) and a <strong>generative model trained on this latent space</strong> (<em>Diffusion or Rectified Flow</em>). A texture is then generated using a multi-view consistent image generation model conditioned on the created shape. This approach has delivered tremendous fidelity improvements and has become the industry standard, replacing previous lifting-based methods and NeRF/GS-based reconstruction models (LRM, LGM). (cf: <a href="https://velog.io/@gjghks950/3d">Is the Era of NeRF and SDS in 3D Generation Coming to an End?</a>, <a href="./?id=250302_3d_latent_diffusion/">The Age of 3D Generative Models</a>)</p>
+<p>To build such a 3D Generative Foundation Model, one needs not only a fundamental understanding of generative modeling theory and coding skills but also a deep comprehension of the unique properties of 3D data and the ability to handle complex pre/post-processing workflows.</p>
+<p>The complexity of 3D data can be a significant moat for newcomers to the domain. Therefore, this article series aims to minimize that difficulty by providing a detailed, from-scratch guide on how to build a 3D generation scheme.</p>
+<p>As the first post in the series, today&#39;s article will focus on the pre-processing of 3D data.</p>
+<img src="/blogs/posts/250702_building_large_3d_1/assets/image-2.png" width=60%>
+
+<hr>
+<h2 id="toc-heading-1">A. Dataset</h2>
+<p>A fundamental point to grasp is that 3D data is significantly more scarce than 2D images. The release of the <a href="https://objaverse.allenai.org/">Objaverse</a> dataset, which aggregates license-free assets from platforms like GitHub and Sketchfab, has been a game-changer. Most of the aforementioned methods use this dataset as their primary source for 3D generation.</p>
+<figure id="figure-1" >
+  <img src='/blogs/posts/250702_building_large_3d_1/assets/image-5.png' alt='img alt' width='100%'>
+  <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Objaverse</figcaption>
+</figure>
+
+<p>Although Objaverse contains over <strong>10M+</strong> 3D assets (polygonal meshes), a large portion consists of <em>low-quality assets</em> that are not conducive to training. Consequently, rather than using the entire dataset, researchers filter for high-quality assets based on their own criteria.</p>
+<p>Since 3D data instances can be quite large, I recommend using publicly available filtered subsets instead of implementing a personalized filtering pipeline.</p>
+<p>Two convenient Objaverse subsets are:</p>
+<ul>
+<li><p><a href="https://huggingface.co/datasets/JeffreyXiang/TRELLIS-500K">Trellis-500K</a></p>
+</li>
+<li><p><a href="https://www.modelscope.cn/datasets/stepfun-ai/Step1X-3D-obj-data">Step1X-800K</a></p>
+</li>
+</ul>
+<p>These subsets contain the Objaverse UIDs that Trellis and Step1X, respectively, used to train their 3D generative models.</p>
+<pre><code>pip install objaverse pandas
+</code></pre>
+<p>You can download the data as follows (warning: the dataset is extremely large, around ~10TB).</p>
+<pre><code class="language-python">import os
+import pandas as pd
+import objaverse.xl as oxl
+
+def download(metadata, output_dir=&#39;/temp&#39;):    
+    os.makedirs(os.path.join(output_dir, &#39;raw&#39;), exist_ok=True)
+
+    # download annotations
+    annotations = oxl.get_annotations()
+    annotations = annotations[annotations[&#39;sha256&#39;].isin(metadata[&#39;sha256&#39;].values)]
+    
+    # download and render objects
+    file_paths = oxl.download_objects(
+        annotations,
+        download_dir=os.path.join(output_dir, &quot;raw&quot;),
+        save_repo_format=&quot;zip&quot;,
+    )
+    
+    downloaded = {}
+    metadata = metadata.set_index(&quot;file_identifier&quot;)
+    for k, v in file_paths.items():
+        sha256 = metadata.loc[k, &quot;sha256&quot;]
+        downloaded[sha256] = os.path.relpath(v, output_dir)
+
+    return pd.DataFrame(downloaded.items(), columns=[&#39;sha256&#39;, &#39;local_path&#39;])
+
+metadata = pd.read_csv(&quot;hf://datasets/JeffreyXiang/TRELLIS-500K/ObjaverseXL_github.csv&quot;)
+download(metadata)
+</code></pre>
+<p>On a side note, <a href="https://yg256li.github.io/TripoSG-Page/">TripoSG</a> built its own high-quality dataset of 2M assets using the following data curation rules:</p>
+<ul>
+<li><p><strong>Scoring</strong></p>
+<ul>
+<li>Randomly select 10K 3D models and render 4-view normal maps (using Blender).</li>
+<li><em><strong>Hire 10 professional 3D modelers</strong></em> to manually score the models from 1 to 5.</li>
+<li>Use this labeled data to train a <em><strong>linear regression scoring model</strong></em> (with CLIP and DINOv2 features as input).</li>
+</ul>
+</li>
+<li><p><strong>Filtering</strong></p>
+<ul>
+<li>Remove meshes where different surface patches are classified as a single plane (likely calculated using normal vectors and checking if patch centers lie on the plane).</li>
+<li>For animated models, fix the model to frame 0 and remove it if significant rendering errors occur.</li>
+<li>For scenes with multiple objects, use connected component analysis to isolate and remove extraneous objects (likely using functionality from <code>trimesh</code>).</li>
+</ul>
+</li>
+</ul>
+<p>Furthermore, they employed advanced pre-processing techniques like training an <em>orientation model</em> to ensure all meshes face forward and using their proprietary <em>texturing model to generate pseudo-textures</em> for untextured models, which were then used as diffuse maps.</p>
+<p>From hiring a team of 10 3D modelers for labeling to training specialized scoring and orientation models, this level of curation is nearly impossible for an individual to replicate...</p>
+<hr>
+<h2 id="toc-heading-2">B. Pre-processing for the Shape VAE</h2>
+<h3 id="toc-heading-3">B.1. 3D Representation</h3>
+<p>Once the data is prepared, the most critical prerequisite for training a 3D Generative Model is to convert every 3D mesh into a <strong>Normalized, Watertight Mesh</strong>. To understand why all meshes must be made watertight, let&#39;s first examine the characteristics of 3D representations.</p>
+<p>3D representations can be broadly divided into two categories, each with distinct properties:</p>
+<img src='/blogs/posts/250702_building_large_3d_1/assets/image-6.png' width=100%>
+
+<ul>
+<li><p><strong>Implicit</strong>: SDF (Signed Distance Field), UDF, <em>NeRF</em>, …</p>
+<ul>
+<li>Continuous</li>
+<li><em>Easy to decide inside ↔︎ outside</em></li>
+<li>Hard to sample (render) → ultimately requires conversion to an explicit form</li>
+</ul>
+</li>
+<li><p><strong>Explicit</strong>: Polygonal mesh, occupancy grid (voxel), <em>Gaussian Splatting</em>, …</p>
+<ul>
+<li>Discrete</li>
+<li><em>Hard to decide inside ↔︎ outside</em></li>
+<li>Easy to sample (render)</li>
+</ul>
+</li>
+</ul>
+<p>Among these, the mesh is an <em>explicit representation</em>, specifically defined by a set of:</p>
+<ul>
+<li>$V$: vertices (3D vectors)</li>
+<li>$E$: edges (pairs of vertex indices)</li>
+<li>$F$: faces (N-tuples of vertex indices)</li>
+</ul>
+<hr>
+<h3 id="toc-heading-4">B.2. VAE for 3D: The Vecset-based VAE</h3>
+<p>Let&#39;s revisit the primary objective of training a 3D Generative Model for shapes.</p>
+<p>Before we can train a Diffusion or Flow model, we need a <strong>well-defined latent space</strong>. As in 2D, the need for such a space arises from two factors: <strong>1) reducing computational cost</strong> and <strong>2) the fact that neural networks train more effectively on a semantically meaningful, continuous space</strong>.</p>
+<p>From this perspective, a 3D Mesh is not an ideal domain for a VAE to learn a latent space. VAEs, being neural networks, are optimized for fixed-size vectors or tensors. But what about meshes? The number of vertices ($V$), edges ($E$), and faces ($F$) varies from model to model, making it extremely difficult to define a stable input/output structure for a VAE.</p>
+<p>Furthermore, we must consider the inherent <em><strong>shift/rotation-invariance</strong></em> of a mesh. If you translate or rotate the vertices of a mesh, it is still the same object. This means the mesh&#39;s vertices are translation/rotation invariant, and using them directly as a learning objective would likely lead to highly unstable training.</p>
+<p>Therefore, vecset-based VAEs in 3D Generative Models adopt the following design (figure from 3DShape2vecset):</p>
+<img src='/blogs/posts/250702_building_large_3d_1/assets/image-7.png' width=100%>
+
+<ul>
+<li><p><strong>Input</strong>: A <em><strong>point cloud</strong></em> sampled from the mesh&#39;s surface.</p>
+</li>
+<li><p><strong>Processing</strong>: Applying <em><strong>Fourier features</strong></em> (positional encoding) to the points allows the neural network to focus solely on the <em><strong>relative relations</strong></em> between points, ensuring stationary training. This removes the ambiguity caused by the mesh&#39;s translation/rotation invariance. (cf: <a href="./?id=211128_fourier/">Fourier Features Let Networks Learn High-Frequency Functions in Low-Dimensional Domains</a>)</p>
+</li>
+<li><p><strong>Training</strong>: The VAE learns a latent space through the encode ↔︎ decode reconstruction process on these point cloud samples. (The bottleneck space, learned with a KL divergence loss, becomes the learnable space for the subsequent Diffusion/Flow model).</p>
+</li>
+</ul>
+<p>In this process, the VAE decoder outputs not a mesh representation, but an <strong><em>Implicit Representation</em></strong>, specifically an SDF or an Occupancy Field.</p>
+<p>Since an implicit representation defines space as a function, the VAE decoder is trained as a parametric model that approximates the SDF from a latent vector. This makes it easy to query the SDF on a voxel grid and reconstruct a mesh using algorithms like Marching Cubes.</p>
+<p>But what is the essential characteristic of an Implicit Representation? It is that it&#39;s:</p>
+<blockquote>
+<p>&quot;Easy to decide inside ↔︎ outside&quot;</p>
+</blockquote>
+<p>An SDF, $f(x)$, is defined as:</p>
+<p id="p-2" >$$ f(x) = \begin{cases} d(x, \partial \Omega) & \text{if } x \in \Omega \\ -d(x, \partial \Omega) & \text{if } x \in \Omega^c \end{cases} \\ \\ {} \\ \text{where } d(x, \partial \Omega) = \inf_{y \in \partial \Omega} \|x - y\| $$ </p>
+
+<p>The SDF $f(x)$ has negative values inside the surface and positive values outside, while an Occupancy field is 1 inside and 0 outside. In short, these functions presuppose a clear distinction between &#39;inside&#39; and &#39;outside&#39;.</p>
+<hr>
+<h3 id="toc-heading-5">B.3. Watertight Meshes in Mathematics</h3>
+<p>What if the training data, the meshes, have holes or torn faces? It becomes impossible to clearly define &#39;inside&#39; and &#39;outside&#39;. This means we cannot determine the sign of the SDF or the 0/1 value of the Occupancy field. A model cannot learn effectively from such ambiguous ground truth.</p>
+<img src="/blogs/posts/250702_building_large_3d_1/assets/image-1.png" width=50%>
+
+<ul>
+<li>Fig. Non-Watertight / Watertight</li>
+</ul>
+<p>This is why we must ensure every mesh is &#39;watertight&#39;. Mathematically, this is defined as:</p>
+<blockquote>
+<p>&quot;Every edge is shared by exactly two faces.&quot;</p>
+</blockquote>
+<p>This is the minimum condition for a mesh to be a topologically stable 2-Manifold. A 2-Manifold is a space where any point on the surface, when zoomed in sufficiently, looks like a flat 2D disk. (This is the same reason flat-earthers think the Earth is flat—it&#39;s a 2-Manifold!).</p>
+<p>This concept is further clarified by the cornerstone of topology, the <em><strong>Euler Characteristic</strong></em>.</p>
+<p>For any closed manifold, i.e., a Watertight Mesh, the relationship between the number of vertices ($V$), edges ($E$), and faces ($F$) is always:</p>
+<p>$$ V - E + F = 2 - 2g
+$$</p>
+<p>(Here, $g$ is the number of <a href="https://en.wikipedia.org/wiki/Genus_(mathematics)">Genus</a> (handles or holes)).</p>
+<ul>
+<li><p>$g=0$ (<em>e.g.,</em> Sphere): $V - E + F = 2$</p>
+</li>
+<li><p>$g=1$ (<em>e.g.</em> Torus): $V - E + F = 0$</p>
+</li>
+</ul>
+<p>For a convex manifold with $g=0$, the formula $V - E + F = 2$ is well-known (<em>e.g.,</em> a cube: $V=8, E=12, F=6$). We can easily generalize this by considering the process of adding a hole, which explains the $-2g$ term.</p>
+<ol>
+<li>Consider a watertight mesh with $g=0$ (Euler characteristic = 2).</li>
+<li>Remove two faces from its surface ($\triangle F = -2$). The mesh becomes non-watertight, and the value of $V-E+F$ decreases by 2.</li>
+<li>Now, connect the boundaries of the two holes with a tube to make it watertight again. Since the number of new faces ($n$) equals the number of new edges ($n$), the value of $V-E+F$ remains unchanged ($\triangle V-\triangle E+ \triangle F = 0-n+n = 0$).</li>
+</ol>
+<p>The crucial point is that this formula <em><strong>only holds for watertight meshes</strong></em>. A non-watertight mesh has a boundary, so the formula does not apply.</p>
+<p>Therefore, having a mix of watertight and non-watertight objects in the VAE&#39;s training dataset means we are forcing the model to learn from topologically distinct categories of objects, even if they look similar to us. This prevents the VAE from forming a consistent latent space and destabilizes training.</p>
+<p>Consequently, ensuring the watertightness of all meshes is the most fundamental pre-processing step for stable 3D generative model training.</p>
+<blockquote>
+<p>The &#39;voxelization&#39; step in methods like <a href="https://microsoft.github.io/TRELLIS/">Trellis</a> and <a href="https://nju-3dv.github.io/projects/Direct3D-S2/">Direct3D-S2</a>, which use a spatial voxel grid, serves a similar purpose. The process of determining activated voxels reduces the topological ambiguity of the 3D representation. A detailed comparison between vecset-based VAEs and spatial voxel-based VAEs will be covered in a future post in this series.</p>
+</blockquote>
+<hr>
+<h3 id="toc-heading-6">B.4. How to Make it Watertight</h3>
+<p>So, we now understand the mathematical and topological reasons &#39;why&#39; we need watertight meshes. The question that remains is:</p>
+<blockquote>
+<p>&#39;How do we make a non-watertight mesh watertight?&#39;</p>
+</blockquote>
+<p>A well-known implementation, as seen in Dora, uses an algorithm that effectively wraps the entire original mesh in a thin, closed shell. (cf: <a href="https://github.com/Seed3D/Dora/blob/main/sharp_edge_sampling/to_watertight_mesh.py">Dora&#39;s to watertightmesh.py</a>)</p>
+<img src="/blogs/posts/250702_building_large_3d_1/assets/image-3.png" width=50%>
+
+<pre><code class="language-python">diffdmc = DiffDMC(dtype=torch.float32).cuda()
+vertices, faces = diffdmc(grid_udf, isovalue=eps, normalize= False)
+</code></pre>
+<p>While it&#39;s difficult to determine if a point is inside or outside a non-watertight mesh, calculating the unsigned distance field (UDF) to its surface is straightforward. This method first computes the UDF, then creates a thin shell offset from the original surface by a small <code>eps</code>. It then treats everything within this shell (<code>UDF &lt; eps</code>) as &#39;inside&#39;, effectively creating a pseudo-isosurface. This is what the <code>isovalue=eps</code> parameter in <a href="https://github.com/SarahWeiii/diso">Differentiable Dual Marching Cubes</a> does. However, this introduces not only quantization errors but also results in a mesh that is <em><strong>dilated and distorted by <code>eps</code></strong></em> from the original surface.</p>
+<p>Another, more robust method involves calculating the UDF and then using the <a href="https://en.wikipedia.org/wiki/Flood_fill"><em><strong>flood-fill algorithm</strong></em></a> to convert it into a watertight mesh. While conceptually similar to reconstructing a mesh with a non-zero isovalue, this approach provides a clearer algorithmic intuition. Let&#39;s describe this method.</p>
+<h4>Core Idea: Mesh Reconstruction</h4>
+<p>Fundamentally, this algorithm is based on the idea of wrapping the original mesh in a thin shell. In other words, it doesn&#39;t &quot;repair&quot; the incomplete original mesh. Instead, it reconstructs a new, watertight mesh that mimics the original&#39;s form.</p>
+<h4>Step 1: Voxelization &amp; Unsigned Distance Field</h4>
+<p>The first step is to convert the continuous 3D space and the variable mesh structure into a fixed-size grid that is easy to work with.</p>
+<pre><code class="language-python">resolution = 512
+grid_points = torch.stack(
+    torch.meshgrid(
+        torch.linspace(-1, 1, resolution, device=device),
+        torch.linspace(-1, 1, resolution, device=device),
+        torch.linspace(-1, 1, resolution, device=device),
+        indexing=&quot;ij&quot;,
+    ), dim=-1,
+) # [N, N, N, 3]
+</code></pre>
+<p>Next, a Bounding Volume Hierarchy (BVH) is used to efficiently compute the unsigned distance field from every point in this grid to the mesh.</p>
+<p>Install <a href="https://github.com/ashawkey/cubvh">cubvh</a> for efficient BVH computation:</p>
+<pre><code>pip install git+https://github.com/ashawkey/cubvh
+</code></pre>
+<p>Python:</p>
+<pre><code class="language-python">vertices = torch.from_numpy(mesh.vertices).float().to(device)
+triangles = torch.from_numpy(mesh.faces).long().to(device)
+
+# 2. Build BVH for fast distance query
+# using cubvh package!
+BVH = cubvh.cuBVH(vertices, triangles)
+
+# 3. Create a voxel grid and query unsigned distance
+udf, _, _ = BVH.unsigned_distance(points.view(-1, 3), ...)
+udf = udf.view(opt.res, opt.res, opt.res)
+</code></pre>
+<p>Let&#39;s look at a part of the <code>unsigned_distance_kernel</code> function inside <a href="https://github.com/ashawkey/cubvh">cubvh</a>:</p>
+<pre><code class="language-cpp">__global__ void unsigned_distance_kernel(
+    uint32_t n_elements, const Vector3f* __restrict__ positions,
+    float* __restrict__ distances, int64_t* __restrict__ face_id, Vector3f* __restrict__ uvw,
+    const TriangleBvhNode* __restrict__ bvhnodes, const Triangle* __restrict__ triangles, bool use_existing_distances_as_upper_bounds
+) {
+    uint32_t i = blockIdx.x * blockDim.x + threadIdx.x;
+    if (i &gt;= n_elements) return;
+
+    float max_distance = use_existing_distances_as_upper_bounds ? distances[i] : MAX_DIST;
+    Vector3f point = positions[i];
+
+    // udf result
+    auto res = TriangleBvh4::closest_triangle(point, bvhnodes, triangles, max_distance*max_distance);
+    distances[i] = res.second;
+    face_id[i] = triangles[res.first].id;
+}
+
+// C++/CUDA: Inside closest_triangle function
+while (!query_stack.empty()) {
+    // ...
+    // Pruning: if a bounding box is farther than the closest triangle found so far...
+    if (children[i].dist &lt;= shortest_distance_sq) {
+        query_stack.push(children[i].idx); // ...explore it.
+    }
+}
+</code></pre>
+<ul>
+<li><p><strong><a href="https://en.wikipedia.org/wiki/Bounding_volume_hierarchy">BVH</a></strong>: A brute-force calculation of the distance between every voxel and every face is computationally expensive. <code>cubvh</code> first constructs a BVH tree structure, which dramatically improves search performance by pruning entire groups of distant faces from the search space (<code>children[i].dist &lt;= shortest_distance_sq</code>).</p>
+</li>
+<li><p><strong>UDF</strong>: The CUDA kernel is invoked and executed <em>in parallel</em> across the GPU&#39;s numerous threads. Each thread takes one voxel point and calculates the unsigned distance to the nearest triangle using the BVH.</p>
+</li>
+</ul>
+<p>At the end of this stage, we have a 3D volume data—the UDF—that captures the shape of the original mesh. However, we still don&#39;t know which parts are &#39;inside&#39; and which are &#39;outside&#39;.</p>
+<h4>Step 2: Flood Fill</h4>
+<p>The Flood Fill algorithm is used to clearly delineate the interior and exterior.</p>
+<img src='/blogs/posts/250702_building_large_3d_1/assets/image.gif' width=30%>
+
+<p>Python Code:</p>
+<pre><code class="language-python"># 1. Define the mesh &quot;shell&quot; or &quot;wall&quot;
+eps = 2 / opt.res 
+occ = udf &lt; eps # Occupancy grid: True if a voxel is on the surface, i.e., make thin shell
+
+# 2. Perform flood fill from an outer corner
+#    (internally calls initLabels, hook, compress kernels)
+floodfill_mask = cubvh.floodfill(occ)
+
+# 3. Identify all voxels connected to the outside
+empty_label = floodfill_mask[0, 0, 0].item()
+empty_mask = (floodfill_mask == empty_label)
+</code></pre>
+<ul>
+<li><strong>Thin Shell</strong> (<code>occ = udf &lt; eps</code>): Voxels very close to the original mesh surface are set to <code>True</code> (the wall), and the rest are set to <code>False</code> (empty space), creating a &quot;shell&quot; of the mesh. This shell may still contain the holes and gaps from the original mesh (if the gaps are larger than <code>eps</code>).</li>
+</ul>
+<p>cubvh&#39;s floodfill kernel:</p>
+<pre><code class="language-cpp">// C++/CUDA: Inside hook kernel
+int best = labels[idx];
+// ... check 6 neighbors ...
+// idx +- 1, idx +- W, idx +- W*H
+if (x &gt; 0 &amp;&amp; grid[idx-1]==0) best = min(best, labels[idx-1]);
+// ... (5 more neighbors)
+
+if (best &lt; labels[idx]) {
+    labels[idx] = best;
+    atomicOr(changed, 1); // Mark that a change occurred
+}
+</code></pre>
+<p>(Labeling &amp; Spreading)</p>
+<ul>
+<li>Every voxel in the grid is assigned a <em>unique ID</em>.</li>
+<li><strong>hook &amp; compress</strong>: &quot;Water&quot; starts filling from a corner of the grid, <code>[0,0,0]</code>, which is guaranteed to be outside. Each &quot;empty space&quot; voxel checks the labels of its 6 neighbors and <em>updates its own label to the minimum value</em>. This process cannot pass through the &quot;wall&quot; (<code>occ=True</code>), and its propagation speed is accelerated by the <code>compress</code> kernel (pointer jumping).</li>
+<li><strong>Final Determination</strong>: Once propagation is complete, all voxels with the same label as <code>[0,0,0]</code> are confirmed to be &#39;exterior space&#39; (<code>empty_mask</code>).</li>
+</ul>
+<p>This is analogous to running a &#39;<strong>simulation of pouring water</strong>&#39; from the outside of the canonical space where the mesh is defined. The holes and gaps in the non-watertight mesh are naturally &quot;sealed&quot; by the <code>occ</code> shell, and the flood fill yields a volume where the inside and outside are perfectly separated.</p>
+<h4>Step 3: Signed Distance Field</h4>
+<p>Now, we convert the UDF into an SDF that can be used by Marching Cubes.</p>
+<p>Python Code:</p>
+<pre><code class="language-python"># 1. Invert the empty mask to get inside + shell
+occ_mask = ~empty_mask
+
+# 2. Initialize SDF: surface is 0, outside is positive
+sdf = udf - eps
+
+# 3. Assign negative sign to the inside
+inner_mask = occ_mask &amp; (sdf &gt; 0)
+sdf[inner_mask] *= -1
+</code></pre>
+<ul>
+<li><code>occ_mask</code> includes both the &#39;wall&#39; (shell) and the &#39;true interior&#39; that was not identified as &#39;exterior&#39; by the flood fill.</li>
+<li><code>sdf = udf - eps</code> adjusts the values near the surface to be close to 0.</li>
+<li>Using <code>occ_mask</code>, the SDF values of voxels corresponding to the interior are multiplied by -1 to make them negative.</li>
+</ul>
+<p>The result is a perfect Signed Distance Field where the interior is negative, the exterior is positive, and the surface is 0.</p>
+<h4>Step 4: Marching Cubes</h4>
+<p>Finally, we extract a new, watertight mesh from this perfect SDF volume.
+<img src='/blogs/posts/250702_building_large_3d_1/assets/image-8.png' width=100%></p>
+<p>Python Code:</p>
+<pre><code class="language-python"># 1. Extract the iso-surface where sdf = 0
+vertices, triangles = mcubes.marching_cubes(sdf, 0)
+
+# 2. Normalize vertices and convert to a trimesh object
+vertices = vertices / (opt.res - 1.0) * 2 - 1
+watertight_mesh = trimesh.Trimesh(vertices, triangles)
+
+# 3. Restore original scale and save
+watertight_mesh.vertices = watertight_mesh.vertices * original_radius + original_center
+watertight_mesh.export(f&#39;{opt.workspace}/{name}.obj&#39;)
+</code></pre>
+<p>The Marching Cubes algorithm takes 3D grid data (the SDF) as input and generates a triangle mesh by finding the points where the SDF value is 0 (the isosurface). By its very definition, the output of this algorithm is always a closed surface—i.e., watertight.</p>
+<hr>
+<h3 id="toc-heading-7">B.5. Pointcloud Sampling</h3>
+<p>With watertight conversion complete, the final part of the mesh pre-processing stage is point cloud sampling. While uniform sampling from the mesh surface is not difficult, recent works like <a href="https://aruichen.github.io/Dora/">Dora</a>, <a href="https://github.com/Tencent-Hunyuan/Hunyuan3D-2">Hunyuan3D</a>, and <a href="https://yg256li.github.io/TripoSG-Page/">TripoSG</a> have reported that sampling more points from salient edges significantly improves VAE reconstruction performance.</p>
+<figure id="figure-2" >
+  <img src='/blogs/posts/250702_building_large_3d_1/assets/image-9.png' alt='img alt' width='100%'>
+  <figcaption style='text-align: center; font-size: 15px;'><strong>Fig. Left:</strong> Salient sampling, <strong>Right:</strong> Uniform Sampling</figcaption>
+</figure>
+
+
+<p>An implementation for Salient Edge Sampling (SES) is provided in the <a href="https://github.com/Seed3D/Dora/blob/main/sharp_edge_sampling/sharp_sample.py">Dora github</a>, but it requires a Blender installation and the <code>bpy</code> library, making the sampling process heavyweight.</p>
+<p>Therefore, below, we will implement salient edge sampling in <em>pure Python</em> without relying on Blender&#39;s functionality.</p>
+<h4>Step 1: Identifying Salient Edges</h4>
+<ul>
+<li><strong>Assumption</strong>: A &quot;salient edge&quot; is an edge where the <em>dihedral angle between its two adjacent faces is large</em>.</li>
+</ul>
+<p>This means we can identify &#39;salient edges&#39; by calculating the dot product of the normal vectors of adjacent faces in the mesh and checking if the angle exceeds a certain threshold.</p>
+<pre><code class="language-python">salient_edges = []
+total_edge_length = 0.0
+
+# mesh.face_adjacency stores pairs of adjacent face indices
+for i, face_pair in enumerate(mesh.face_adjacency):
+    face1_idx, face2_idx = face_pair
+    normal1 = mesh.face_normals[face1_idx]
+    normal2 = mesh.face_normals[face2_idx]
+    
+    angle = np.arccos(np.clip(np.dot(normal1, normal2), -1.0, 1.0))
+
+    if angle &gt; thresh_angle_rad:
+        # mesh.face_adjacency_edges stores the vertex indices of the shared edge
+        edge_vertices_indices = mesh.face_adjacency_edges[i]
+        v1_idx, v2_idx = edge_vertices_indices
+        
+        v1 = mesh.vertices[v1_idx]
+        v2 = mesh.vertices[v2_idx]
+        length = np.linalg.norm(v1 - v2)
+        
+        if length &gt; 1e-8:
+            total_edge_length += length
+            salient_edges.append((v1_idx, v2_idx, length))
+</code></pre>
+<p>As shown above, we calculate the angle between the two normal vectors by taking the <code>arccos</code> of their dot product.</p>
+<h4>Step 2: Initial Sampling</h4>
+<p>The first step of sampling is to <strong>sample the endpoints (vertices) of the salient edges</strong>. We iterate through the <code>salient_edges</code> list found in Step 1 and use the start (<code>v1_idx</code>) and end (<code>v2_idx</code>) vertex indices as our initial samples.</p>
+<pre><code class="language-python">initial_samples = []
+added_vertex_indices = set()
+for v1_idx, v2_idx, _ in salient_edges:
+    if v1_idx not in added_vertex_indices:
+        initial_samples.append(mesh.vertices[v1_idx])
+        added_vertex_indices.add(v1_idx)
+    if v2_idx not in added_vertex_indices:
+        initial_samples.append(mesh.vertices[v2_idx])
+        added_vertex_indices.add(v2_idx)
+
+samples = np.array(initial_samples)
+</code></pre>
+<h4>Step 3: Interpolation</h4>
+<p>Since the number of vertices collected in Step 2 may be less than our target sample count, we <strong>additionally sample points along the salient edges</strong>. We assume that longer edges contain more features, so we allocate the number of extra samples to be added <em>proportionally to the length of each edge</em>.</p>
+<pre><code class="language-python">num_extra = num_samples - len(samples)
+extra_samples = []
+if total_edge_length &gt; 0:
+    for v1_idx, v2_idx, length in salient_edges:
+        # based on the edge length, proportionally distribute extra samples
+        extra_this_edge = math.ceil(num_extra * length / total_edge_length)
+        
+        v1 = mesh.vertices[v1_idx]
+        v2 = mesh.vertices[v2_idx]
+        
+        for j in range(extra_this_edge):
+            t = (j + 1.0) / (extra_this_edge + 1.0) # Uniformly space points
+            new_point = v1 + (v2 - v1) * t
+            extra_samples.append(new_point)
+</code></pre>
+<p>Here, we use linear interpolation to ensure uniform sampling within each edge.</p>
+<h4>Final Step</h4>
+<p>Finally, we use <strong>FPS (Farthest Point Sampling)</strong> to select exactly <code>num_samples</code> points.</p>
+<p>Install the Farthest Point Sampling package:</p>
+<pre><code>pip install fpsample
+</code></pre>
+<p>Python:</p>
+<pre><code class="language-python">if len(all_samples) &gt; num_samples:
+    indices = fpsample.bucket_fps_kdline_sampling(all_samples, num_samples, h=5)
+    return all_samples[indices]
+</code></pre>
+<ul>
+<li><strong>Result</strong> (Left: Input Mesh, Right: Output Salient Sampling Point Cloud)</li>
+</ul>
+<img src='/blogs/posts/250702_building_large_3d_1/assets/image-10.png' width=100%>
+
+<p>While this is a functional conceptual implementation, the <a href="https://github.com/ashawkey/meshiki">meshiki</a> package provides a much faster implementation in C++. Using it, you can perform SES directly as follows:</p>
+<pre><code class="language-python"># pip install meshiki
+from meshiki import Mesh, fps, load_mesh, triangulate
+
+vertices, faces = load_mesh(mesh_path, clean=True)
+faces = triangulate(faces)
+mesh = Mesh(vertices, faces)
+
+# sample 64K salient points
+salient_points = mesh.salient_point_sample(64000, thresh_bihedral=30)
+</code></pre>
+<hr>
+<h2 id="toc-heading-8">Conclusion</h2>
+<p>In this article, we took a deep dive into the first step of building a 3D Generative Model: data pre-processing.</p>
+<p>In addition to the processing steps discussed above, a complete pre-processing pipeline for a 3D Generative Model also requires multi-view rendering of the mesh. This means one must also be proficient with Blender rendering scripts using tools like <code>bpy</code>. (cf: <a href="https://github.com/DLR-RM/BlenderProc">Blenderproc</a>, <a href="https://github.com/microsoft/TRELLIS/tree/main/dataset_toolkits">Trellis dataset toolkits</a>)</p>
+<p>While not on the scale of LLMs, training a 3D Generative Model is still a cost-consuming task, typically requiring a 1B to 3B parameter model, at least 64 GPUs with 80GB+ VRAM each, and over 20TB of NAS for handling the 3D data.</p>
+<p>However, excellent open-source models are continuously being released. To leverage these foundation models for tasks like fine-tuning or LoRA-Adapter Training while minimizing the use of the most expensive resource—GPUs—a solid command of 3D data pre-processing is absolutely essential.</p>
+<p>Since working on the CaPa Project last year, I have been training our own 3D generative model and developing a 3D generation service based on it. We plan to announce it publicly soon, and I hope to be able to introduce it then.</p>
+<p><a href="https://www.youtube.com/watch?v=AtQNAuQY4-A"><img src="https://img.youtube.com/vi/AtQNAuQY4-A/0.jpg" alt="IMAGE ALT TEXT HERE"></a></p>
+<p>The next article in this series will delve into the architectures of ShapeVAE and Flow Models, as well as strategies for efficiently training 3D Generative Models by setting up a multi-node environment and using the sharding strategies of DeepSpeed v3 and FSDP.</p>
+<p><strong><em>Stay Tuned!</em></strong></p>
+<hr>
+<p><strong>You may also like:</strong></p>
+<ul>
+<li><a href="https://velog.io/@gjghks950/3d">Is the Era of NeRF and SDS in 3D Generation Coming to an End? (kor)</a></li>
+<li><a href="/blogs/posts/?id=250302_3d_latent_diffusion">The Age of 3D Generative Models</a><!-- -   [Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D](https://velog.io/@gjghks950/Building-Large-3D-Generative-Models-from-Scratch-2-Model-Architecture-Deep-Dive-VAE-DiT-and-Flow)</li>
+<li><a href="https://velog.io/@gjghks950/From-Flow-Matching-to-Optimal-Transport-A-Physics-based-View-of-Generative-Models">From Flow Matching to Optimal Transport: A Physics-based View of Generative Models</a> --&gt;</li>
+</ul>
+
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Post Navigation -->
+                    <div id="post-navigation" class="mt-4"></div>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <footer class="border-top">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="small text-center text-muted fst-italic">Copyright © Hwan Heo</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="/blogs/js/posts-data.js"></script>
+    <script>
+        // Math rendering
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            }
+
+            // Share button functionality
+            const copyButton = document.getElementById('copyButton');
+            const shareModal = document.getElementById('myshare_modal');
+            const closeModal = shareModal ? shareModal.querySelector('.share_modal_close') : null;
+            const indicator = document.getElementById('share_modalIndicator');
+
+            if (copyButton && shareModal) {
+                let animationId;
+
+                function updateShareButtonVisibility() {
+                    var headerHeight = document.querySelector('.masthead').offsetHeight;
+                    if (window.innerWidth > 1280 && window.scrollY > headerHeight) {
+                        copyButton.style.display = 'block';
+                    } else {
+                        copyButton.style.display = 'none';
+                    }
+                }
+
+                function animateIndicator() {
+                    let startTime = null;
+                    const duration = 1500;
+
+                    function step(timestamp) {
+                        if (!startTime) startTime = timestamp;
+                        const progress = Math.min((timestamp - startTime) / duration, 1);
+                        indicator.style.width = `${(1 - progress) * 100}%`;
+
+                        if (progress < 1) {
+                            animationId = requestAnimationFrame(step);
+                        } else {
+                            shareModal.style.display = 'none';
+                        }
+                    }
+
+                    cancelAnimationFrame(animationId);
+                    animationId = requestAnimationFrame(step);
+                }
+
+                function closeShareModal() {
+                    cancelAnimationFrame(animationId);
+                    shareModal.style.display = 'none';
+                    indicator.style.width = '0%';
+                }
+
+                // Scroll event for share button visibility
+                document.addEventListener('scroll', updateShareButtonVisibility);
+                window.addEventListener('resize', updateShareButtonVisibility);
+
+                copyButton.addEventListener('click', function() {
+                    const url = new URL(window.location.href);
+                    url.hash = '';
+                    const urlWithoutHash = url.href;
+
+                    navigator.clipboard.writeText(urlWithoutHash).then(function() {
+                        shareModal.style.display = 'block';
+                        indicator.style.width = '100%';
+                        animateIndicator();
+                    }).catch(function(err) {
+                        console.error('Link Copy Failed:', err);
+                        alert('링크 복사에 실패했습니다.');
+                    });
+                });
+
+                if (closeModal) {
+                    closeModal.addEventListener('click', closeShareModal);
+                }
+
+                window.addEventListener('click', function(event) {
+                    if (event.target === shareModal) {
+                        closeShareModal();
+                    }
+                });
+
+                updateShareButtonVisibility();
+            }
+
+            // Series navigation
+            const postId = '250702_building_large_3d_1';
+            const lang = 'eng';
+            renderSeriesNavigation(postId, lang);
+
+            // TOC scroll tracking
+            initializeTOC();
+
+            // Custom script for specific posts with 3D viewers
+            if (postId === '240917_3djs') {
+                import('/blogs/3DViewer/js/gaussian_viewer.js')
+                    .then(module => {
+                        module.initGaussianViewer();
+                    })
+                    .catch(err => {
+                        console.error("Failed to load the Gaussian viewer script:", err);
+                    });
+            }
+
+            if (postId === '250310_model_viewer') {
+                import('/blogs/3DViewer/js/gaussian_viewer.js')
+                    .then(module => {
+                        module.initGaussianViewer();
+                    })
+                    .catch(err => {
+                        console.error("Failed to load the Gaussian viewer script:", err);
+                    });
+            }
+        });
+
+        function initializeTOC() {
+            const toc = document.querySelector('.toc');
+            if (!toc) return;
+
+            let tocItems = [];
+
+            // Scroll에 따라 TOC 표시/숨김
+            function updateTocVisibility() {
+                const headerHeight = document.querySelector('.masthead')?.offsetHeight || 300;
+                if (window.scrollY > headerHeight) {
+                    toc.style.display = 'block';
+                } else {
+                    toc.style.display = 'none';
+                }
+            }
+
+            document.addEventListener('scroll', updateTocVisibility);
+
+            // 초기 상태 설정
+            const headerHeight = document.querySelector('.masthead')?.offsetHeight || 300;
+            toc.style.display = window.scrollY > headerHeight ? 'block' : 'none';
+
+            // 스크롤에 따라 현재 섹션 활성화
+            const TOP_MARGIN = 0.1;
+            const BOTTOM_MARGIN = 0.2;
+
+            function initTocItems() {
+                tocItems = Array.from(toc.querySelectorAll('li')).map(function(item) {
+                    const anchor = item.querySelector('a');
+                    if (!anchor) return null;
+                    const href = anchor.getAttribute('href');
+                    if (!href || href === '#') return null;
+                    const target = document.getElementById(href.slice(1));
+                    return { listItem: item, anchor: anchor, target: target };
+                }).filter(item => item && item.target);
+            }
+
+            function syncToc() {
+                const windowHeight = window.innerHeight;
+                let currentSection = null;
+
+                tocItems.forEach(function(item) {
+                    const targetBounds = item.target.getBoundingClientRect();
+                    if (targetBounds.top <= windowHeight * (1 - BOTTOM_MARGIN)) {
+                        currentSection = item;
+                    }
+                });
+
+                tocItems.forEach(function(item) {
+                    if (item === currentSection) {
+                        item.listItem.classList.add('active');
+                    } else {
+                        item.listItem.classList.remove('active');
+                    }
+                });
+            }
+
+            initTocItems();
+            syncToc();
+            window.addEventListener('scroll', syncToc, false);
+        }
+
+        function getPostTitle(post, lang) {
+            return post['title_' + lang] || post.title_eng;
+        }
+
+        function renderSeriesNavigation(postId, lang) {
+            const seriesContainer = document.getElementById('series-container');
+            const navContainer = document.getElementById('post-navigation');
+
+            if (!postsData || !seriesInfo || !seriesContainer) return;
+
+            const currentPost = postsData.find(p => p.id === postId);
+            if (!currentPost || !currentPost.series) return;
+
+            const seriesId = currentPost.series;
+            const postsInSeries = postsData
+                .filter(p => p.series === seriesId)
+                .sort((a, b) => new Date(b.date) - new Date(a.date)); // 최신순 정렬
+
+            if (postsInSeries.length <= 1) return;
+
+            const seriesTitle = seriesInfo[seriesId]?.[lang] || seriesInfo[seriesId]?.['eng'] || 'Series';
+
+            // Render series accordion
+            const listItems = postsInSeries.map(post => {
+                const title = getPostTitle(post, lang);
+                const slug = post.slug || post.id;
+                const postLang = lang === 'eng' ? slug : slug + '-kor';
+                if (post.id === postId) {
+                    return '<li><strong>' + title + '</strong></li>';
+                } else {
+                    return '<li><a href="/blogs/posts/' + postLang + '/">' + title + '</a></li>';
+                }
+            }).join('');
+
+            seriesContainer.innerHTML = `
+                <div class="accordion mb-4" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                <strong>${seriesTitle}</strong>
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <ol>${listItems}</ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Render post navigation (prev/next)
+            const currentIndex = postsInSeries.findIndex(p => p.id === postId);
+            const olderPost = postsInSeries[currentIndex + 1];
+            const nextPost = postsInSeries[currentIndex - 1];
+
+            if (olderPost || nextPost) {
+                let navHtml = '<div class="d-flex justify-content-between mb-4">';
+
+                if (olderPost) {
+                    const olderTitle = getPostTitle(olderPost, lang);
+                    const truncatedTitle = olderTitle.length > 25 ? olderTitle.substring(0, 25) + '...' : olderTitle;
+                    const olderSlug = olderPost.slug || olderPost.id;
+                    const olderLang = lang === 'eng' ? olderSlug : olderSlug + '-kor';
+                    navHtml += `<a class="btn btn-light text-uppercase" href="/blogs/posts/${olderLang}/" style="width: 40%; text-align: center;">← Older Post<br><small style="font-size: 0.7rem; text-transform: none;">${truncatedTitle}</small></a>`;
+                } else {
+                    if (nextPost) {
+                        navHtml += '<div></div>';
+                    }
+                }
+
+                if (nextPost) {
+                    const nextTitle = getPostTitle(nextPost, lang);
+                    const truncatedTitle = nextTitle.length > 25 ? nextTitle.substring(0, 25) + '...' : nextTitle;
+                    const nextSlug = nextPost.slug || nextPost.id;
+                    const nextLang = lang === 'eng' ? nextSlug : nextSlug + '-kor';
+                    navHtml += `<a class="btn btn-light text-uppercase" href="/blogs/posts/${nextLang}/" style="width: 40%; text-align: center;">Next Post →<br><small style="font-size: 0.7rem; text-transform: none;">${truncatedTitle}</small></a>`;
+                } else {
+                    const allSeriesIds = Object.keys(seriesInfo);
+                    const otherSeriesIds = allSeriesIds.filter(id => id !== currentPost.series);
+
+                    if (otherSeriesIds.length > 0) {
+                        const randomSeriesId = otherSeriesIds[Math.floor(Math.random() * otherSeriesIds.length)];
+                        const latestPostInRandomSeries = postsData
+                            .filter(p => p.series === randomSeriesId)
+                            .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+
+                        if (latestPostInRandomSeries) {
+                            const seriesTitle = seriesInfo[randomSeriesId][lang] || seriesInfo[randomSeriesId]['eng'];
+                            const recSlug = latestPostInRandomSeries.slug || latestPostInRandomSeries.id;
+                            const recLang = lang === 'eng' ? recSlug : recSlug + '-kor';
+                            navHtml += `<a class="btn btn-outline-secondary text-uppercase" href="/blogs/posts/${recLang}/" style="width: 40%; text-align: center;">Explore Series<br><small style="font-size: 0.7rem; text-transform: none;">${seriesTitle}</small></a>`;
+                        }
+                    } else {
+                        navHtml += '<div></div>';
+                    }
+                }
+
+                navHtml += '</div>';
+                navContainer.innerHTML = navHtml;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="NeRF for Tomography & Tip for NeRF Viewer" />
+    <meta name="keywords" content="post, nerf-and-gs, 3D graphics, computer vision, machine learning" />
+    <meta name="author" content="Hwan Heo" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://hwan-h-heo.io/blogs/posts/neural-rendering-beyond-photography/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://hwan-h-heo.io/blogs/posts/neural-rendering-beyond-photography/" />
+    <meta property="og:title" content="Neural Rendering Beyond Photography" />
+    <meta property="og:description" content="NeRF for Tomography & Tip for NeRF Viewer" />
+    <meta property="og:image" content="https://hwan-h-heo.io/assets/image_fx_.jpg" />
+    <meta property="og:site_name" content="HwanHeo's Blog" />
+    <meta property="article:published_time" content="2025-01-06T00:00:00.000Z" />
+    <meta property="article:author" content="Hwan Heo" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://hwan-h-heo.io/blogs/posts/neural-rendering-beyond-photography/" />
+    <meta name="twitter:title" content="Neural Rendering Beyond Photography" />
+    <meta name="twitter:description" content="NeRF for Tomography & Tip for NeRF Viewer" />
+    <meta name="twitter:image" content="https://hwan-h-heo.io/assets/image_fx_.jpg" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Neural Rendering Beyond Photography",
+  "description": "NeRF for Tomography & Tip for NeRF Viewer",
+  "image": "https://hwan-h-heo.io/assets/image_fx_.jpg",
+  "author": {
+    "@type": "Person",
+    "name": "Hwan Heo",
+    "url": "https://hwan-h-heo.io"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Hwan Heo",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://hwan-h-heo.io/assets/favicon.ico"
+    }
+  },
+  "datePublished": "2025-01-06T00:00:00.000Z",
+  "dateModified": "2025-01-06T00:00:00.000Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://hwan-h-heo.io/blogs/posts/neural-rendering-beyond-photography/"
+  },
+  "inLanguage": "en"
+}
+    </script>
+
+    <title>Neural Rendering Beyond Photography - HwanHeo's Blog</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+
+    <!-- Import Maps for three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.150.0/examples/jsm/",
+                "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
+            }
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/25.0.0/tween.umd.js"></script>
+    <script src="https://use.fontawesome.com/releases/v6.5.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+    <link href="/blogs/css/used.css" rel="stylesheet" />
+    <link href="/blogs/css/blog_post_specific.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1.9.1/css/academicons.min.css">
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+    <style>
+        pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; font-size: 0.9rem !important; }
+        pre code { font-size: 0.9rem !important; }
+        .main-content a { color: #15B886; text-decoration: none; }
+        .main-content a:hover { color: #11926b; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; }
+        th { width: 15%; background-color: #f2f2f2; }
+    </style>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RF7ETSKPK9');
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="/blogs/">Blog Home</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+                Menu <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item">
+                        <a href="../neural-rendering-beyond-photography-kor/" class="btn nav-link px-lg-3 py-3 py-lg-4" style="font-size:0.7rem">
+                            KOR
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="masthead" style="background-image: url('/assets/image_fx_.jpg')">
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="post-heading">
+                        <br/>
+                        <h2>Neural Rendering Beyond Photography</h2>
+                        <span class="meta">Posted on January 6, 2025</span>
+                        <hr/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <article class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Series Navigation -->
+                    <div id="series-container"></div>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 main-content">
+                    <!-- <div style="text-align: center;">
+    <button type="button" class="btn custom-btn" onclick="setLanguage('eng')" style="font-size: 13px;">eng</button>
+    |
+    <button type="button" class="btn custom-btn" onclick="setLanguage('kor')" style="font-size: 13px;">kor</button>
+</div> -->
+
+<button id="copyButton">
+    <i class="bi bi-share-fill"></i>
+</button>
+<div id="myshare_modal" class="share_modal">
+    <div class="share_modal-content">
+        <span class="share_modal_close">×</span>
+        <p><strong>Link Copied!</strong></p>
+        <div class="copy_indicator-container">
+        <div class="copy_indicator" id="share_modalIndicator"></div>
+        </div>
+    </div>
+</div>
+
+<nav class="toc">
+    <ul>
+        <li><a href="#introduction">Introduction</a></li>
+        <li><a href="#tomography-vs-photography">Tomography vs. Photography</a>
+            <ul>
+                <li><a href="#photography">Photography</a></li>
+                <li><a href="#tomography">Tomography</a></li>
+            </ul>
+        </li>
+        <li><a href="#modeling">Modeling</a></li>
+        <li><a href="#quick-viewer-development-tip"> Viewer Tip</a>
+            <ul>
+                <li><a href="#viser-viewer">Viser Viewer</a></li>
+                <li><a href="#marching-cube-extraction">Marching Cube Extraction</a></li>
+            </ul>
+        </li>
+        <li><a href="#concluding-remarks">Concluding Remarks</a></li>
+    </ul>
+</nav>
+
+<p class="lang eng">
+    <strong> TL; DR. </strong>
+    In this article, we will explore how to apply radiance fields technique (NeRF and Gaussian Splatting) beyond photometric domain. 
+    Also, I will post the short tip for the quick development of the NeRF / GS viewer which has no official viewer.
+</p>
+<hr/>
+<h2 id="introduction">Introduction</h2>
+<p class="lang eng">Recently, I had the serendipitous opportunity to explore how Neural Rendering could be applied within the medical domain, specifically in Tomography (X-ray), referencing <a href='https://github.com/caiyuanhao1998/SAX-NeRF'>SAX-NeRF</a>.</p>
+<p class="lang eng">Unlike photography, which captures the reflection of visible light, tomography constructs images based on signals that have penetrated a substance. In tracing the authors' investigative process of how to adapt the standard Neural Rendering setting for Tomography, I was able to deepen my abstract intuition and comprehension of Neural Rendering.</p>
+<p class="lang eng">In this post, I aim to elucidate the foundational intuitions behind Neural Rendering, NeRF, and GS through a personal review of SAX-NeRF. Additionally, I will offer insights into a technique for creating a simple web viewer using viser when an official viewer is unavailable.</p>
+<h2 id="tomography-vs-photography">1. Tomography vs. Photography</h2>
+<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image1.png" width="100%" alt="Tomography vs Photography" />
+<br/> 
+<h3 id="photography">1.1. Photography</h3>
+<p class="lang eng">- What are the underlying physical principles of the act of <code>'seeing'</code>?</p>
+<p class="lang eng">'Seeing' physically denotes the process where light emitted from a source interacts with an object, causing the object's surface to absorb or reflect specific wavelengths (or energy) of light. The unabsorbed, reflected light then reaches the observer's eye (or detection device), leading to visual perception.</p>
+<p class="lang eng">This process encompasses the interaction between light and an object (absorption and reflection) and the subsequent transmission of the interaction's result to the observer's visual system.</p>
+<p class="lang eng">Neural Rendering and Novel View Synthesis primarily focus on scenes <code>'observed within the visible light spectrum'</code>. Consequently, the standard NeRF rendering equation (emission-absorption ray casting) mathematically represents the intuition behind the act of 'seeing'.</p>
+<p>$$ C(r) = \int_{t_n}^{t_f} T(t) \cdot \sigma ({\rm \textbf{r}}(t))  \cdot c({\rm \textbf{r}}(t), {\rm \textbf{d}} ) \ dt  $$</p>
+<p>$$ \text{where }T(t) = \text{exp} \bigg( - \int_{t_n}^{t}\sigma ({\rm \textbf{r}}(s)) ds \bigg ) $$</p>
+<p class="lang eng">In this equation, $C(r)$ represents the final accumulated color along a ray. The constituent components of the equation are interpreted as follows:</p>
+<ul class="lang eng">
+    <li>$\textbf{r}(t)$ : Represents the ray of light.</li>
+    <li>$\sigma ({\rm \textbf{r}}(t))$: The density (opacity) or absorption coefficient at a point $t$ along the ray, indicating the extent of interaction between the ray and the object.</li>
+    <li>$c({\rm \textbf{r}}(t), {\rm \textbf{d}})$: The color of the light reflected by the object at that point. (d is used to reflect view-dependent color.)</li>
+    <li>$T(t)$: The accumulated transmittance, indicating whether previously encountered objects blocked (opaque) or allowed passage (transparent) of the ray.</li>
+</ul>
+<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image2.png" alt="NeRF Rendering Equation" />
+<p class="lang eng">Thus, NeRF's rendering equation mathematically formalizes the process of visual object perception. By integrating all elements of the physical light-object interaction (absorption, reflection, transparency, etc.), NeRF calculates the cumulative contribution of light along the ray path to ultimately generate an image.</p>
+<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image3.png" alt="NeRF Image Generation" />
+<br/>
+
+<h3 id="tomography">1.2. Tomography</h3>
+<p class="lang eng">So, what considerations are necessary for applying Neural Rendering to domains outside the visible light spectrum?</p>
+<p class="lang eng">A quintessential example in this domain is Tomography, including X-ray and CT scans. Tomography utilizes X-rays, which have shorter wavelengths (and higher energy) than visible light. Instead of reflection, the process is based on the <strong><em>penetration</em></strong> of X-rays through an object and the <strong><em>attenuation</em></strong> of the light's intensity by the object's internal density. This contrasts with the reflection-based nature of visible light, and the internal structure of the object is reconstructed by analyzing the intensity of the light that passes through and reaches the detector.</p>
+<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image5.png" alt="Tomography Process" />
+<p class="lang eng">In Tomography, this penetration and attenuation process is modeled by the <a href="https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law">Beer-Lambert Law</a>, which is specifically expressed as:</p>
+<p class="lang eng">$$ I_\text{gt}(\mathbf{r}) = I_o \cdot \exp \left ( - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt \right ) $$</p>
+<ul class="lang eng">
+    <li>Here, $I_\text{gt}(\mathbf{r})$ is the final intensity measured by the detector, and $I_0$ is the initial intensity value.</li>
+    <li>$\rho$ is the radiodensity value, representing the degree to which X-rays are attenuated.</li>
+</ul>
+<p class="lang eng">The resemblance of the exponential term is notable. It exhibits an identical form to the Accumulated Transmittance equation used in NeRF modeling. In fact, both terms share the fundamental assumption that the degree of intensity reduction is proportional to both the current light intensity and the opacity at the current point.</p>
+<p class="lang eng">The underlying intuition regarding light intensity in this modeling is further elucidated by the following derivation:</p>
+<p> <strong> * Derivation of Beer-Lambert Law</strong>  (which mirrors the derivation of Accumulated Transmittance)</p>
+<p>$$ I_\text{gt}(\mathbf{r}) = I_o \cdot \exp \left ( - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt \right ) $$</p>
+<p>$$ \rightarrow \ln(I_\text{gt}(\mathbf{r}) ) - \ln (I_o) = - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt $$</p>
+<p>$$ \rightarrow \int_{t_n}^{t_f } \frac{1}{I(\mathbf{r}(t))} dI(\mathbf{r}(t)) = - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt $$</p>
+<p>$$ \rightarrow \frac{1}{I(\mathbf{r}(t))} dI(\mathbf{r}(t)) = -\rho(\mathbf{r}(t)) dt $$</p>
+<p>$$ \therefore \frac{d}{dt}I(t) = -I(t)\cdot \rho(t) $$</p>
+<p class="lang eng">The reconstruction of a NeRF model from Tomography data necessitates the substitution of the conventional emission-absorption ray casting with a rendering equation grounded in the Beer-Lambert Law.</p>
+<p class="lang eng">The ultimate intensity rendering term is expressed in a discretized form, analogous to that in NeRF, as follows:</p>
+<p>
+$$ I_{pred}(\mathbf{r}) = I_0 \cdot \exp\left(-\sum_{i=1}^{N} \rho_i \delta_i\right) 
+$$
+</p>
+<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image6.png" alt="Tomography Intensity Rendering" />
+<br/>
+
+<h2 id="modeling">2. Modeling</h2>
+<p class="lang eng">Returning our focus to NeRF, while variations such as Hash Grid NeRF and TensoRF exist, the fundamental principle of NeRF is to parameterize and represent a 3D scene.</p>
+<p class="lang eng">When this parameterization is achieved through an MLP, it is classified within the NeRF family, whereas the utilization of explicit 3D Gaussians or 2D Gaussian surfels aligns it with the Gaussian Splatting methodology.</p>
+<p class="lang eng">Conventionally, these parameter models are designed to receive a 3D Cartesian Coordinate $(x,y,z)$ as input, subsequently producing the density and color $(\sigma, c)$ at the specified location.</p>
+<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image7.png" alt="NeRF Modeling" />
+<p class="lang eng">However, the rendering equation pertinent to Tomography necessitates the radiodensity $\rho$ as opposed to $(\sigma, c)$. Consequently, the application of NeRF to Tomography mandates a distinct modeling strategy compared to that employed in Photography.</p>
+<p class="lang eng">Given that the rendering equation for Tomography, adapted based on the Beer-Lambert Law, exhibits sole dependency on radiodensity $\rho$, a Tomography-NeRF model can be architected to accept a 3D Cartesian Coordinate $(x,y,z)$ as input and exclusively generate $\rho$ as the output.</p>
+<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image8.png" alt="Tomography NeRF Modeling" />
+<p class="lang eng">Subsequently, SAX-NeRF introduces an alternative design, favoring a Transformer architecture over an MLP to accommodate X-Ray specific attributes, and incorporating ray-wise locality inductive bias within the attention mechanism. However, considering this aspect to be of secondary importance to the central discussion, I will proceed without further elaboration. Readers seeking further details are encouraged to consult the original publication.</p>
+<br/>
+
+<h2 id="quick-viewer-development-tip">3. Quick Viewer Development Tip</h2>
+<br/>
+<h3 id="viser-viewer">3.1. Viser Viewer</h3>
+<p class="lang eng">While the code for SAX-NeRF is publicly available, it lacks an official viewer. Consequently, the basic visualization code provided is limited, necessitating the implementation of a viewer for more interactive exploration of the results.</p>
+<p class="lang eng"><em>To interactively visualize a NeRF/GS model, certain key elements are required:</em></p>
+<ol class="lang eng">
+    <li>Information about the viewing angle of the 3D scene ($[\mathbf{R|t}]$).</li>
+    <li>Rays generated from that angle.</li>
+    <li>Rendering (applying the rendering equation).</li>
+</ol>
+<p class="lang eng">Typically, the implementation of elements 2) and 3) is less challenging, provided that the corresponding code is publicly accessible. However, camera coordinate systems can vary across projects, particularly between OpenGL and OpenCV, which often leads to errors. Therefore, it is crucial to generate rays specifically tailored to the project being implemented.</p>
+<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image9.png" alt="Coordinate Systems" />
+<p class="lang eng">Another challenge lies in the difficulty of custom implementing 1) to control the scene as desired. Fortunately, <a href="https://github.com/nerfstudio-project/viser">viser</a>, developed by the NeRFStudio team, offers a remarkably easy solution. A 2D Gaussian Splatting viewer I developed previously also utilized this viser project.</p>
+<p class="lang eng">Below is a very simple SAX-NeRF viewer implemented using viser. This implementation utilizes the <code>nerfview</code> package, which provides minimal features within the viser project.</p>
+<div class="accordion accordion-flush" id="accordionFlushExample1">
+<div class="accordion-item">
+<h2 class="accordion-header">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+    <strong><em>viewer.py</em></strong>
+</button>
+</h2>
+<div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+<div class="accordion-body">
+
+<pre><code class="language-python">from typing import Tuple
+import time
+import viser
+import nerfview
+import tyro
+
+import os
+import torch
+import numpy as np
+import argparse
+import matplotlib.pyplot as plt
+
+from src.network import get_network
+from src.encoder import get_encoder
+from src.config.configloading import load_config
+from src.render import render
+
+def normalize(img):
+    max_val = img.max()
+    min_val = img.min()
+    return (img - min_val) / (max_val - min_val)
+
+@torch.no_grad()
+def make_rays(K, c2w, img_wh, dsd=1.5, device=&#39;cuda&#39;):
+    H, W = img_wh
+    pose = create_sax_pose_from_camera(c2w, DSO=1.0)
+    i, j = torch.meshgrid(torch.linspace(0, W - 1, W, device=device),
+                            torch.linspace(0, H - 1, H, device=device), indexing=&quot;ij&quot;)
+    uu = (i.t() + 0.5 - W / 2) * 0.001
+    vv = (j.t() + 0.5 - H / 2) * 0.001
+    dirs = torch.stack([uu / dsd, vv / dsd, torch.ones_like(uu)], -1)
+    rays_d = torch.sum(torch.matmul(pose[:3,:3], dirs[..., None]).to(device), -1)
+    rays_o = pose[:3, -1].expand(rays_d.shape)
+
+    rays = torch.cat([rays_o, rays_d,
+                    torch.full_like(rays_o[..., :1], 0.904),
+                    torch.full_like(rays_o[..., :1], 1.1)], dim=-1)
+    return rays.reshape(-1, 8)
+
+@torch.no_grad()
+def create_sax_pose_from_camera(c2w: torch.Tensor, DSO: float):
+    forward_vector = c2w[:3, 2]
+    angle = np.arctan2(forward_vector[1], forward_vector[0])
+    
+    phi1 = -np.pi / 2
+    R1 = np.array([[1.0, 0.0, 0.0],
+                    [0.0, np.cos(phi1), -np.sin(phi1)],
+                    [0.0, np.sin(phi1), np.cos(phi1)]])
+
+    phi2 = np.pi / 2
+    R2 = np.array([[np.cos(phi2), -np.sin(phi2), 0.0],
+                    [np.sin(phi2), np.cos(phi2), 0.0],
+                    [0.0, 0.0, 1.0]])
+
+    R3 = np.array([[np.cos(angle), -np.sin(angle), 0.0],
+                    [np.sin(angle), np.cos(angle), 0.0],
+                    [0.0, 0.0, 1.0]])
+
+    rot = np.dot(np.dot(R3, R2), R1)
+    trans = np.array([DSO * np.cos(angle), DSO * np.sin(angle), 0])
+    # rot = c2w[:3, :3].T
+    # trans = np.array([DSO, DSO, 0])
+
+    pose = np.eye(4)
+    pose[:-1, :-1] = rot
+    pose[:-1, -1] = trans
+
+    return torch.tensor(pose, dtype=torch.float32, device=&#39;cuda&#39;)
+
+class NerfViewer:
+    def __init__(self, args):
+        self.args = args
+        os.environ[&quot;CUDA_DEVICE_ORDER&quot;] = &#39;PCI_BUS_ID&#39;
+        os.environ[&quot;CUDA_VISIBLE_DEVICES&quot;] = args.gpu_id
+
+        self.cfg = load_config(args.config)
+        self.device = torch.device(&quot;cuda&quot;)
+        self.dsd_value = 1.5
+        self.clm_colors = torch.tensor(plt.cm.get_cmap(&quot;turbo&quot;).colors, device=&quot;cuda&quot;)
+
+        self.network = get_network(self.cfg[&quot;network&quot;][&quot;net_type&quot;])
+        self.cfg[&quot;network&quot;].pop(&quot;net_type&quot;, None)
+        self.encoder = get_encoder(**self.cfg[&quot;encoder&quot;])
+        self.model = self.network(self.encoder, **self.cfg[&quot;network&quot;]).to(self.device)
+        self.model_fine = None
+        n_fine = self.cfg[&quot;render&quot;][&quot;n_fine&quot;]
+
+        if n_fine &gt; 0:
+            self.model_fine = self.network(self.encoder, **self.cfg[&quot;network&quot;]).to(self.device)
+
+        ckpt = torch.load(args.weights)
+        print(ckpt[&quot;epoch&quot;])
+        self.model.load_state_dict(ckpt[&quot;network&quot;])
+
+        if n_fine &gt; 0:
+            self.model_fine.load_state_dict(ckpt[&quot;network_fine&quot;])
+        self.model.eval()
+
+        self.render_W = args.size
+        self.render_H = args.size
+
+    @torch.no_grad()
+    def render_fn(self, camera_state: nerfview.CameraState, img_wh: Tuple[int, int]) -&gt; np.ndarray:
+        W, H = img_wh
+        render_img_wh = (self.render_W, self.render_H)
+
+        c2w = camera_state.c2w
+        K = camera_state.get_K(img_wh)
+        rays = make_rays(K, c2w, render_img_wh, self.dsd_value, device=self.device)
+        chunk_size = 1048576
+        num_rays = rays.shape[0]
+        all_imgs = []
+
+        for i in range(0, num_rays, chunk_size):
+            start = i
+            end = min(i + chunk_size, num_rays)
+            rays_chunk = rays[start:end]
+            rendered_chunk = render(rays_chunk, self.model, self.model_fine, **self.cfg[&quot;render&quot;])[&quot;acc&quot;]
+            all_imgs.append(rendered_chunk)
+
+        img = torch.cat(all_imgs, dim=0).reshape(self.render_H, self.render_W, 1)
+        img = img.repeat(1, 1, 3)
+        img = torch.nn.functional.interpolate(img.unsqueeze(0).permute(0, 3, 1, 2), size=(H, W), mode=&#39;bilinear&#39;, align_corners=False).squeeze(0).permute(1, 2, 0)
+        img = (normalize(img.cpu().numpy()) * 255).astype(np.uint8)
+        return img
+
+    def update_dsd(self, value):
+        self.dsd_value = value
+
+def config_parser():
+    cat = &#39;foot&#39;
+    parser = argparse.ArgumentParser()
+    parser.add_argument(&quot;--gpu_id&quot;, default=&quot;0&quot;, help=&quot;gpu to use&quot;)
+    parser.add_argument(&quot;--method&quot;, default=f&quot;Lineformer&quot;, help=&quot;name of the tested method&quot;)
+    parser.add_argument(&quot;--category&quot;, default=f&quot;{cat}&quot;, help=&quot;category of the tested scene&quot;)
+    parser.add_argument(&quot;--config&quot;, default=f&quot;config/Lineformer/{cat}_50.yaml&quot;, help=&quot;path to configs file&quot;)
+    parser.add_argument(&quot;--weights&quot;, default=f&quot;pretrained/{cat}.tar&quot;, help=&quot;path to the experiments&quot;)
+    parser.add_argument(&quot;--output_path&quot;, default=f&quot;output&quot;, help=&quot;path to the output folder&quot;)
+    parser.add_argument(&quot;--vis&quot;, default=&quot;True&quot;, help=&quot;visualization or not?&quot;)
+    parser.add_argument(&quot;--size&quot;, default=256)
+    return parser
+
+def main(args):
+    nerf_viewer = NerfViewer(args)
+    with torch.no_grad():
+        server = viser.ViserServer(verbose=True, port=9123, )
+        _ = nerfview.Viewer(server=server, render_fn=nerf_viewer.render_fn, mode=&#39;rendering&#39;)
+        dsd_val = server.add_gui_slider(
+            &quot;DSD&quot;,
+            min=0.1,
+            max=2.0,
+            step=0.05,
+            initial_value=nerf_viewer.dsd_value,
+        )
+        @dsd_val.on_update
+        def _(_) -&gt; None:
+            nerf_viewer.update_dsd(dsd_val.value)
+    while True:
+        time.sleep(1.0)
+
+if __name__ == &quot;__main__&quot;:
+    parser = config_parser()
+    args = parser.parse_args()
+    tyro.cli(lambda: main(args)) 
+</code></pre>
+</div>
+</div>
+</div>
+</div>
+<br/>
+
+<p><strong>Captured Results:</strong></p>
+<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/viewer_capture.gif" alt="viewer capture" />
+<p class="lang eng">As demonstrated, a viewer for a new NeRF / GS model can be quickly created with minimal coding. I initially considered uploading this to GitHub, but due to its simplicity, I will only include it in this blog post.</p>
+
+<h3 id="marching-cube-extraction">3.2. Marching Cube Extraction</h3>
+<p class="lang eng">Another method for interactively examining a NeRF / GS scene is by using scalar field to polygonal mesh conversion algorithms, such as marching cubes.</p>
+<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image10.png" style="width: 70%;" alt="Marching Cubes" />
+<p class="lang eng">However, it is important to note that standard NeRF or GS models, which are not specifically designed for surface reconstruction like 2D GS or SDF, may not align perfectly with conventional mesh conversion algorithms. The density field obtained from NeRF or GS represents a volumetric density rather than a clear surface. Therefore, the extracted mesh might appear noisy or require careful tuning of the isosurface value.</p>
+    NeRF/GS 에서 얻은 density field 는 volumetric density 를 나타내기 때문에, 추출된 mesh 에 noise 가 많아 보이거나 isosurface 값을 신중하게 조정해야 할 수 있다.
+</p>
+<p class="lang eng">This should be considered as a supplementary approach for gaining a rough geometric understanding of the scene.</p>
+<p class="lang eng">Below is an example code snippet for generating a simple mesh from SAX-NeRF using <code>scikit-image</code>:</p>
+<div class="accordion accordion-flush" id="accordionFlushExample1">
+<div class="accordion-item">
+<h2 class="accordion-header">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+    <strong><em>marching_cube.py</em></strong>
+</button>
+</h2>
+<div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+<div class="accordion-body">
+
+<pre><code class="language-python">
+from skimage import measure
+import trimesh
+
+from src.config.configloading import load_config
+from src.network import get_network
+from src.encoder import get_encoder
+from src.render import render, run_network
+
+# init model 
+&#39;&#39;&#39;
+    load SAX NeRF model, see: test.py in SAX-NeRF
+&#39;&#39;&#39;
+
+# make voxel 
+voxel_size = 128 
+x, y, z = np.mgrid[:voxel_size, :voxel_size, :voxel_size]
+x = (x - (voxel_size - 1) / 2) / (voxel_size / 2)
+y = (y - (voxel_size - 1) / 2) / (voxel_size / 2)
+z = (z - (voxel_size - 1) / 2) / (voxel_size / 2)
+voxel = np.stack([x, y, z], axis=-1)
+voxel /= 16
+
+# marching cube
+threshold = 0.4
+voxel_estimated = run_network(voxel, model_fine if model_fine is not None else model, netchunk)
+voxel_estimated = voxel_estimated.squeeze(dim=-1).cpu().numpy()
+verts, faces, _, _ = measure.marching_cubes(voxel_estimated, level=threshold)
+mesh = trimesh.Trimesh(vertices=verts, faces=faces)
+mesh.export(&quot;output.obj&quot;) 
+</code></pre>
+</div>
+</div>
+</div>
+</div>
+<br/>
+<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/foot_gif.gif" alt="foot capture" />
+<h2 id="concluding-remarks">Concluding Remarks</h2>
+<p class="lang eng">Through the exploration of SAX-NeRF, we've seen how the foundational principles of Neural Rendering can be adapted beyond the realm of traditional photography. By understanding the underlying physical phenomena, such as the Beer-Lambert Law in tomography, we can modify the rendering equation and model architecture to suit different imaging modalities. This adaptation underscores the abstract nature of Neural Rendering and its potential applicability across various scientific domains.</p>
+<p class="lang eng">Ultimately, the ability to apply Neural Rendering to diverse data types and the ease with which we can now visualize these results opens up exciting possibilities for future research and applications across various fields.</p>
+<hr/>
+<p>
+    You may also like, 
+</p>
+<ul>
+    <li>
+        <a href="/blogs/posts/?id=230202_ngp">
+            <span style="text-decoration: underline;">Instant-NGP Review & Re-Implementation</span>
+        </a>
+    </li>
+    <li>
+        <a href="/blogs/posts/?id=211128_fourier">
+            <span style="text-decoration: underline;">Why Positional Encoding Makes NeRF more Powerful</span>
+        </a>
+    </li>
+    <li>
+        <a href="/blogs/posts/?id=240805_gs">
+            <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
+        </a>
+    </li>
+</ul>
+<br/>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Post Navigation -->
+                    <div id="post-navigation" class="mt-4"></div>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <footer class="border-top">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="small text-center text-muted fst-italic">Copyright © Hwan Heo</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="/blogs/js/posts-data.js"></script>
+    <script>
+        // Math rendering
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            }
+
+            // Share button functionality
+            const copyButton = document.getElementById('copyButton');
+            const shareModal = document.getElementById('myshare_modal');
+            const closeModal = shareModal ? shareModal.querySelector('.share_modal_close') : null;
+            const indicator = document.getElementById('share_modalIndicator');
+
+            if (copyButton && shareModal) {
+                let animationId;
+
+                function updateShareButtonVisibility() {
+                    var headerHeight = document.querySelector('.masthead').offsetHeight;
+                    if (window.innerWidth > 1280 && window.scrollY > headerHeight) {
+                        copyButton.style.display = 'block';
+                    } else {
+                        copyButton.style.display = 'none';
+                    }
+                }
+
+                function animateIndicator() {
+                    let startTime = null;
+                    const duration = 1500;
+
+                    function step(timestamp) {
+                        if (!startTime) startTime = timestamp;
+                        const progress = Math.min((timestamp - startTime) / duration, 1);
+                        indicator.style.width = `${(1 - progress) * 100}%`;
+
+                        if (progress < 1) {
+                            animationId = requestAnimationFrame(step);
+                        } else {
+                            shareModal.style.display = 'none';
+                        }
+                    }
+
+                    cancelAnimationFrame(animationId);
+                    animationId = requestAnimationFrame(step);
+                }
+
+                function closeShareModal() {
+                    cancelAnimationFrame(animationId);
+                    shareModal.style.display = 'none';
+                    indicator.style.width = '0%';
+                }
+
+                // Scroll event for share button visibility
+                document.addEventListener('scroll', updateShareButtonVisibility);
+                window.addEventListener('resize', updateShareButtonVisibility);
+
+                copyButton.addEventListener('click', function() {
+                    const url = new URL(window.location.href);
+                    url.hash = '';
+                    const urlWithoutHash = url.href;
+
+                    navigator.clipboard.writeText(urlWithoutHash).then(function() {
+                        shareModal.style.display = 'block';
+                        indicator.style.width = '100%';
+                        animateIndicator();
+                    }).catch(function(err) {
+                        console.error('Link Copy Failed:', err);
+                        alert('링크 복사에 실패했습니다.');
+                    });
+                });
+
+                if (closeModal) {
+                    closeModal.addEventListener('click', closeShareModal);
+                }
+
+                window.addEventListener('click', function(event) {
+                    if (event.target === shareModal) {
+                        closeShareModal();
+                    }
+                });
+
+                updateShareButtonVisibility();
+            }
+
+            // Series navigation
+            const postId = '250106_tomography';
+            const lang = 'eng';
+            renderSeriesNavigation(postId, lang);
+
+            // TOC scroll tracking
+            initializeTOC();
+
+            // Custom script for specific posts with 3D viewers
+            if (postId === '240917_3djs') {
+                import('/blogs/3DViewer/js/gaussian_viewer.js')
+                    .then(module => {
+                        module.initGaussianViewer();
+                    })
+                    .catch(err => {
+                        console.error("Failed to load the Gaussian viewer script:", err);
+                    });
+            }
+
+            if (postId === '250310_model_viewer') {
+                import('/blogs/3DViewer/js/gaussian_viewer.js')
+                    .then(module => {
+                        module.initGaussianViewer();
+                    })
+                    .catch(err => {
+                        console.error("Failed to load the Gaussian viewer script:", err);
+                    });
+            }
+        });
+
+        function initializeTOC() {
+            const toc = document.querySelector('.toc');
+            if (!toc) return;
+
+            let tocItems = [];
+
+            // Scroll에 따라 TOC 표시/숨김
+            function updateTocVisibility() {
+                const headerHeight = document.querySelector('.masthead')?.offsetHeight || 300;
+                if (window.scrollY > headerHeight) {
+                    toc.style.display = 'block';
+                } else {
+                    toc.style.display = 'none';
+                }
+            }
+
+            document.addEventListener('scroll', updateTocVisibility);
+
+            // 초기 상태 설정
+            const headerHeight = document.querySelector('.masthead')?.offsetHeight || 300;
+            toc.style.display = window.scrollY > headerHeight ? 'block' : 'none';
+
+            // 스크롤에 따라 현재 섹션 활성화
+            const TOP_MARGIN = 0.1;
+            const BOTTOM_MARGIN = 0.2;
+
+            function initTocItems() {
+                tocItems = Array.from(toc.querySelectorAll('li')).map(function(item) {
+                    const anchor = item.querySelector('a');
+                    if (!anchor) return null;
+                    const href = anchor.getAttribute('href');
+                    if (!href || href === '#') return null;
+                    const target = document.getElementById(href.slice(1));
+                    return { listItem: item, anchor: anchor, target: target };
+                }).filter(item => item && item.target);
+            }
+
+            function syncToc() {
+                const windowHeight = window.innerHeight;
+                let currentSection = null;
+
+                tocItems.forEach(function(item) {
+                    const targetBounds = item.target.getBoundingClientRect();
+                    if (targetBounds.top <= windowHeight * (1 - BOTTOM_MARGIN)) {
+                        currentSection = item;
+                    }
+                });
+
+                tocItems.forEach(function(item) {
+                    if (item === currentSection) {
+                        item.listItem.classList.add('active');
+                    } else {
+                        item.listItem.classList.remove('active');
+                    }
+                });
+            }
+
+            initTocItems();
+            syncToc();
+            window.addEventListener('scroll', syncToc, false);
+        }
+
+        function getPostTitle(post, lang) {
+            return post['title_' + lang] || post.title_eng;
+        }
+
+        function renderSeriesNavigation(postId, lang) {
+            const seriesContainer = document.getElementById('series-container');
+            const navContainer = document.getElementById('post-navigation');
+
+            if (!postsData || !seriesInfo || !seriesContainer) return;
+
+            const currentPost = postsData.find(p => p.id === postId);
+            if (!currentPost || !currentPost.series) return;
+
+            const seriesId = currentPost.series;
+            const postsInSeries = postsData
+                .filter(p => p.series === seriesId)
+                .sort((a, b) => new Date(b.date) - new Date(a.date)); // 최신순 정렬
+
+            if (postsInSeries.length <= 1) return;
+
+            const seriesTitle = seriesInfo[seriesId]?.[lang] || seriesInfo[seriesId]?.['eng'] || 'Series';
+
+            // Render series accordion
+            const listItems = postsInSeries.map(post => {
+                const title = getPostTitle(post, lang);
+                const slug = post.slug || post.id;
+                const postLang = lang === 'eng' ? slug : slug + '-kor';
+                if (post.id === postId) {
+                    return '<li><strong>' + title + '</strong></li>';
+                } else {
+                    return '<li><a href="/blogs/posts/' + postLang + '/">' + title + '</a></li>';
+                }
+            }).join('');
+
+            seriesContainer.innerHTML = `
+                <div class="accordion mb-4" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                <strong>${seriesTitle}</strong>
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <ol>${listItems}</ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Render post navigation (prev/next)
+            const currentIndex = postsInSeries.findIndex(p => p.id === postId);
+            const olderPost = postsInSeries[currentIndex + 1];
+            const nextPost = postsInSeries[currentIndex - 1];
+
+            if (olderPost || nextPost) {
+                let navHtml = '<div class="d-flex justify-content-between mb-4">';
+
+                if (olderPost) {
+                    const olderTitle = getPostTitle(olderPost, lang);
+                    const truncatedTitle = olderTitle.length > 25 ? olderTitle.substring(0, 25) + '...' : olderTitle;
+                    const olderSlug = olderPost.slug || olderPost.id;
+                    const olderLang = lang === 'eng' ? olderSlug : olderSlug + '-kor';
+                    navHtml += `<a class="btn btn-light text-uppercase" href="/blogs/posts/${olderLang}/" style="width: 40%; text-align: center;">← Older Post<br><small style="font-size: 0.7rem; text-transform: none;">${truncatedTitle}</small></a>`;
+                } else {
+                    if (nextPost) {
+                        navHtml += '<div></div>';
+                    }
+                }
+
+                if (nextPost) {
+                    const nextTitle = getPostTitle(nextPost, lang);
+                    const truncatedTitle = nextTitle.length > 25 ? nextTitle.substring(0, 25) + '...' : nextTitle;
+                    const nextSlug = nextPost.slug || nextPost.id;
+                    const nextLang = lang === 'eng' ? nextSlug : nextSlug + '-kor';
+                    navHtml += `<a class="btn btn-light text-uppercase" href="/blogs/posts/${nextLang}/" style="width: 40%; text-align: center;">Next Post →<br><small style="font-size: 0.7rem; text-transform: none;">${truncatedTitle}</small></a>`;
+                } else {
+                    const allSeriesIds = Object.keys(seriesInfo);
+                    const otherSeriesIds = allSeriesIds.filter(id => id !== currentPost.series);
+
+                    if (otherSeriesIds.length > 0) {
+                        const randomSeriesId = otherSeriesIds[Math.floor(Math.random() * otherSeriesIds.length)];
+                        const latestPostInRandomSeries = postsData
+                            .filter(p => p.series === randomSeriesId)
+                            .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+
+                        if (latestPostInRandomSeries) {
+                            const seriesTitle = seriesInfo[randomSeriesId][lang] || seriesInfo[randomSeriesId]['eng'];
+                            const recSlug = latestPostInRandomSeries.slug || latestPostInRandomSeries.id;
+                            const recLang = lang === 'eng' ? recSlug : recSlug + '-kor';
+                            navHtml += `<a class="btn btn-outline-secondary text-uppercase" href="/blogs/posts/${recLang}/" style="width: 40%; text-align: center;">Explore Series<br><small style="font-size: 0.7rem; text-transform: none;">${seriesTitle}</small></a>`;
+                        }
+                    } else {
+                        navHtml += '<div></div>';
+                    }
+                }
+
+                navHtml += '</div>';
+                navContainer.innerHTML = navHtml;
+            }
+        }
+    </script>
+</body>
+</html>

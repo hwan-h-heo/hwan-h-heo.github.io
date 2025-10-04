@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="Hwan Heo's Blog Search Engine" />
+        <meta name="author" content="Hwan Heo" />
+        <title>HwanHeo's Blog</title>
+        <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="../css/used.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1.9.1/css/academicons.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-RF7ETSKPK9');
+        </script>
+        <style>
+            html {
+                overflow-y: scroll;
+            }
+            .custom-badge {
+                display: inline-block;
+                padding: 0.5em 1em; 
+                font-size: 14px; 
+            }
+            .series-group .series-title {
+                font-size: 1.3rem;
+                margin-bottom: 1rem;
+                border-left: 4px solid #007bff;
+                padding-left: 10px;
+            }
+
+            .series-group .series-post-list {
+                list-style-type: circle;
+                padding-left: 1.5rem;
+            }
+
+            .series-group .series-post-list li {
+                padding: 8px 0;
+                border-bottom: 1px solid #eee;
+            }
+
+            .series-group .series-post-list li a {
+                text-decoration: none;
+                font-size: 1rem;
+                color: #212529;
+            }
+
+            .series-group .series-post-list li a:hover {
+                color: #007bff;
+            }
+
+            .post-meta-sm {
+                font-size: 0.8rem;
+                color: #6c757d;
+                margin-left: 10px;
+            }
+        </style>
+    <link href="../css/sidebar.css" rel="stylesheet">
+    </head>
+    <body>
+        <header id="header" class="header dark-background d-flex flex-column">
+            <i class="header-toggle d-xl-none bi bi-list"></i>
+        
+            <div class="profile-img">
+              <img src="../../assets/icon.webp" alt="" class="img-fluid rounded-circle">
+            </div>
+        
+            <a href="../" class="logo d-flex align-items-center justify-content-center">
+              <h1 class="sitename">Hwan Heo</h1>
+            </a>
+        
+            <div class="social-links text-center">
+              <a href="https://github.com/hwanhuh" class="github"><i class="bi bi-github"></i></a>
+              <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin"><i class="bi bi-linkedin"></i></a>
+              <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram"><i class="ai ai-google-scholar"></i></a>
+              <a href="mailto:gjghks950@naver.com" class="google-plus"><i class="bi bi-envelope-fill"></i></a>
+            </div>
+        
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="../../"><i class="bi bi-house navicon"></i>Home</a></li>
+                    <li><a href="../"> <i class="bi bi-keyboard navicon"></i> Blog Home </a></li>
+                    <hr/>
+                    <li style="padding-left: 1rem;"><a href="../3DViewer/"><i class="bi bi-box navicon"></i>3D Viewer</a></li>
+                    <li style="padding-left: 1rem;"><a href="../editor/"><i class="bi bi-pencil-square navicon"></i>Editor</a></li>
+                </ul>
+                <!-- <div class="my-4" style="position: fixed; bottom: 0px; width: 275px">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search posts by title or keyword">
+                </div> -->
+            </nav>
+
+        </header>
+        <main class="main">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+            <div class="container px-2 px-lg-3">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Setting
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                        <div class="language-toggle text-center my-3">
+                            <a id="lang-toggle-main" class="btn btn-sm" style="color: #ccc; font-size: 0.7rem">
+                            </a>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Main Content-->
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <form id="search-form" class="mb-4">
+                        <br/>
+                        <label for="search-input" class="form-label">Search Results</label>
+                        <div class="input-group">
+                            <input type="text" id="search-input" class="form-control form-control-lg" placeholder="Enter search term...">
+                            <button class="btn btn-dark" type="submit" id="search-button" aria-label="Search">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                    <hr class="my-4" />
+
+                    <!-- 검색 결과가 여기에 동적으로 삽입됩니다 -->
+                    <div id="search-results-container">
+                        <!-- 로딩 스피너 (선택 사항) -->
+                        <p>Loading results, please wait...</p>
+                    </div>
+
+                    <div class="mb-5 d-flex justify-content-end">
+                        <!-- <button class="btn btn-primary rounded-pill btn-sm d-inline scroll-top" id="scroll-top"><strong><i class="bi bi-arrow-up-short"></i></strong></button> -->
+                        <button id="scroll-top" class="scroll-top button_top d-flex align-items-center justify-content-center">
+                            <svg class="svgIcon" viewBox="0 0 384 512">
+                              <path
+                                d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+                              ></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer-->
+        <footer class="border-top">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="small text-center text-muted fst-italic">Copyright &copy; Hwan Heo</div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="../js/posts-data.js"></script>
+        <!-- Core theme JS-->
+        <!-- <script src="js/scripts.js"></script> -->
+        <script>
+            const headerToggleBtn = document.querySelector('.header-toggle');
+
+            function headerToggle() {
+            document.querySelector('#header').classList.toggle('header-show');
+            headerToggleBtn.classList.toggle('bi-list');
+            headerToggleBtn.classList.toggle('bi-x');
+            }
+            headerToggleBtn.addEventListener('click', headerToggle);
+
+            /**
+             * Hide mobile nav on same-page/hash links
+             */
+            document.querySelectorAll('#navmenu a').forEach(navmenu => {
+            navmenu.addEventListener('click', () => {
+                if (document.querySelector('.header-show')) {
+                headerToggle();
+                }
+            });
+
+            });
+        </script>
+        <script>
+            let scrollTop = document.querySelector('.scroll-top');
+
+            function toggleScrollTop() {
+                if (scrollTop) {
+                    window.scrollY > 100 ? scrollTop.classList.add('active') : scrollTop.classList.remove('active');
+                }
+            }
+            scrollTop.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            window.addEventListener('load', toggleScrollTop);
+            document.addEventListener('scroll', toggleScrollTop);
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', async function() {
+                // 1. DOM 요소 선택
+                const resultsContainer = document.getElementById('search-results-container');
+                const searchForm = document.getElementById('search-form');
+                const searchInput = document.getElementById('search-input');
+
+                // URL에서 검색어 추출
+                const urlParams = new URLSearchParams(window.location.search);
+                const searchTerm = urlParams.get('q')?.trim().toLowerCase() || '';
+
+                // 2. 검색창에 현재 검색어 채우기
+                if (searchInput) {
+                    searchInput.value = urlParams.get('q') || ''; // 소문자 변환 전 원본 검색어 표시
+                }
+                
+                // 검색어가 없으면 실행 중단
+                if (!searchTerm || !resultsContainer) {
+                    if(resultsContainer) resultsContainer.innerHTML = '<p>Please enter a search term in the box above.</p>';
+                    return;
+                }
+
+                // 3. 새로운 검색 실행 리스너 (폼 제출 시)
+                if (searchForm) {
+                    searchForm.addEventListener('submit', function(e) {
+                        e.preventDefault(); // 기본 폼 제출 동작 방지
+                        const newSearchTerm = searchInput.value.trim();
+                        if (newSearchTerm) {
+                            // 새로운 검색어로 URL을 변경하여 페이지를 다시 로드
+                            window.location.href = `/blogs/search/?q=${encodeURIComponent(newSearchTerm)}`;
+                        }
+                    });
+                }
+
+                // 본문 캐시 객체
+                const postContentCache = {};
+
+                // 4. 모든 게시물 본문 미리 가져오기
+                async function fetchAllPostContents() {
+                    await Promise.all(postsData.map(async (post) => {
+                        const postId = post.id;
+                        try {
+                            const [korResponse, engResponse] = await Promise.all([
+                                fetch(`../posts/${postId}/content-kor.md`),
+                                fetch(`../posts/${postId}/content-eng.md`)
+                            ]);
+                            let content = '';
+                            if (korResponse.ok) content += (await korResponse.text()).toLowerCase();
+                            if (engResponse.ok) content += ' ' + (await engResponse.text()).toLowerCase();
+                            postContentCache[postId] = content;
+                        } catch (error) {
+                            console.error(`ID ${postId} 콘텐츠 로딩 오류:`, error);
+                            postContentCache[postId] = '';
+                        }
+                    }));
+                }
+
+                // 5. 검색 결과를 바탕으로 HTML 생성 및 렌더링
+                function renderResults(filteredPosts) {
+                    if (filteredPosts.length === 0) {
+                        resultsContainer.innerHTML = '<p>No results found matching your criteria.</p>';
+                        return;
+                    }
+
+                    const lang = localStorage.getItem('language') || 'eng';
+                    let resultsHTML = filteredPosts.map(post => {
+                        const title = post[`title_${lang}`] || post.title_eng;
+                        const subtitle = post[`subtitle_${lang}`] || post.subtitle_eng;
+                        if (!title) return '';
+
+                        return `
+                        <div class="post-preview">
+                            <a href="../posts/?id=${post.id}">
+                                <h4>${title}</h3>
+                                ${subtitle ? `<h6 class="post-subtitle">${subtitle}</h5>` : ''}
+                            </a>
+                            <p class="post-meta">
+                                ${seriesInfo[post.series]['eng']} | ${new Date(post.date).toLocaleDateString()}
+                            </p>
+                        </div>
+                        <hr class="my-4" />`;
+                    }).join('');
+                    
+                    resultsContainer.innerHTML = resultsHTML;
+                }
+                
+                // --- 메인 실행 로직 ---
+                
+                // 본문 로딩 표시
+                resultsContainer.innerHTML = '<p>Searching, please wait...</p>';
+                
+                await fetchAllPostContents();
+
+                const sortedPosts = postsData.sort((a, b) => new Date(b.date) - new Date(a.date));
+                const filteredData = sortedPosts.filter(post => {
+                    const title_kor = post.title_kor?.toLowerCase() || '';
+                    const subtitle_kor = post.subtitle_kor?.toLowerCase() || '';
+                    const title_eng = post.title_eng?.toLowerCase() || '';
+                    const subtitle_eng = post.subtitle_eng?.toLowerCase() || '';
+                    const content = postContentCache[post.id] || '';
+
+                    return title_kor.includes(searchTerm) ||
+                        subtitle_kor.includes(searchTerm) ||
+                        title_eng.includes(searchTerm) ||
+                        subtitle_eng.includes(searchTerm) ||
+                        content.includes(searchTerm);
+                });
+
+                renderResults(filteredData);
+            });
+        </script>
+    </main>
+    </body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Accelerated Face NeRF with Multi-Camera Captures</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="../../assets/favicon.ico" rel="icon">
+  <link href="../../assets/favicon.ico" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link rel="preconnect" href="<https://fonts.googleapis.com>">
+  <link rel="preconnect" href="<https://fonts.gstatic.com>">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../../assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="../../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="../../assets/css/used.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1.9.1/css/academicons.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <script src="../../js/mathjax-config.js"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({            
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}            
+        });
+    </script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            width: 50%;
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        th {
+            width: 15%; /* Reduced width of the header column */
+            background-color: #f2f2f2; 
+        }
+        .progress-bar {
+          height: 0.4rem;
+          background: #6EA8FE;
+          width: 0%;
+          z-index: 9999;
+          position: fixed;
+        }
+    </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RF7ETSKPK9');
+    </script>
+</head>
+<div class="progress-container">
+    <div class="progress-bar" id="myBar"></div>
+  </div>
+<body class="portfolio-details-page">
+
+  <header id="header" class="header dark-background d-flex flex-column">
+    <i class="header-toggle d-xl-none bi bi-list"></i>
+
+    <div class="profile-img">
+      <img src="../../assets/icon.webp" alt="" class="img-fluid rounded-circle">
+    </div>
+
+    <a href="index.html" class="logo d-flex align-items-center justify-content-center">
+      <h1 class="sitename">Hwan Heo</h1>
+    </a>
+
+    <div class="social-links text-center">
+      <a href="https://github.com/hwanhuh" class="github"><i class="bi bi-github"></i></a>
+      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin"><i class="bi bi-linkedin"></i></a>
+      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram"><i class="ai ai-google-scholar"></i></i></a>
+      <a href="mailto:gjghks950@naver.com" class="google-plus"><i class="bi bi-envelope"></i></a>
+    </div>
+
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="../../#home"><i class="bi bi-house navicon"></i>Home</a></li>
+        <li><a href="../../#about"><i class="bi bi-person navicon"></i> About</a></li>
+        <li><a href="../../#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
+        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Portfolio</a></li>
+        <li><a href="../../#blog"><i class="bi bi-keyboard navicon"></i> Blog </a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title dark-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <!-- <h1 class="mb-2 mb-lg-0">Title</h1> -->
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="../../">Home</a></li>
+            <li class="current">Accelerated Face NeRF with Multi-Camera Captures</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- Portfolio Details Section -->
+    <section id="portfolio-details" class="portfolio-details section">
+        <div class="row gx-5 justify-content-center text-center mb-5">
+          <div class="col-9 col-lg-8 col-xl-7 col-xxl-6">
+              <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline"> Accelerated Face NeRF <br/> with Multi-Camera Captures </span></h1>
+              <div class="fs-3 fw-light text-muted"> NC Research </div>
+          </div>
+        </div>
+        <div class="row gx-5 justify-content-center">
+            <div class="col-9 col-lg-8 col-xl-7 col-xxl-6">
+                <div class="fs-6"> <strong>TL; DR:</strong> This project presents an accelerated facial NeRF pipeline utilizing multi-camera setups to capture multi-view data for novel view synthesis. </div>
+                <div class="fs-6"> <strong>Keywords:</strong> Facial NeRF, Multi-Camera Setup, 3D Morphable Model (3DMM) </div>
+                <p> <br/> </p>
+                <h2> Overview </h2>
+                <hr/>
+                <p>
+                    This project introduces an accelerated method for face NeRF using multi-camera captures to gather multi-view data for novel view synthesis (NVS). By utilizing a feed-forward approach to estimate 3D Morphable Model (3DMM) parameters, we significantly reduce preprocessing times compared to traditional methods. We further adapt the reconstructed mesh for efficient ray-casting in a perspective projection, optimizing both speed and accuracy for facial reconstruction tasks.
+                </p>
+                <p> <br/> </p>
+
+                <h2> Key Structures </h2>
+                <hr/>
+                <h3> Multi-Camera Face Captures </h3>
+                <DIV style ="text-align:center";>
+                    <img class="img-fluid" src="assets/aligned_mesh_vis.jpg" width="60%" />
+                </DIV>
+                <p> In traditional neural radiance field (NeRF) setups, monocular portrait synthesis has been a common approach, often limited by the reliance on single-view data, which constrains the performance of novel view synthesis (NVS). Our project addresses this limitation by employing multi-camera captures, enabling us to gather richer, multi-view data essential for improved NVS performance. </p>
+                <DIV style ="text-align:center";>
+                    <img class="img-fluid" src="assets/cam_vis_mediapipe_lmks2.jpg" width="100%" />
+                </DIV>
+                <p> <br/> </p>
+
+                <h3> Fast Feed-Forward Face Blendshape Prediction </h3>
+                <DIV style ="text-align:center";>
+                    <img class="img-fluid" src="https://zielon.github.io/assets/img/mica/teaser.jpg" width="100%" />
+                </DIV>
+                <p>
+                    To efficiently estimate the 3D Morphable Model (3DMM) parameters, we implemented a feed-forward approach. 
+                    While methods like MICA utilize a frame-wise, mesh-based differentiable rendering pipeline for parameter estimation, this technique, though accurate, is computationally expensive, requiring over 15 hours of preprocessing for just 3-5 minutes of video. 
+                </p>
+                <p>
+                    Given that extreme precision in 3DMM parameter estimation is not critical for our purposes, we adopted the faster feed-forward method. This allows us to trade off some reconstruction accuracy while dramatically reducing the preprocessing time to just a few minutes for the same input video duration.
+                </p>
+                <p>
+                    Below is the comparison between famouse optimization-based 3DMM estimation method: <a href="https://zielon.github.io/mica/">MICA</a>  and feed-forward-based method: <a href="https://emoca.is.tue.mpg.de/">EMOCA</a>. (Data: a famouse president obama)
+                </p>
+                <table>
+                    <tr>
+                        <th>MICA</th>
+                        <th>EMOCA</th>
+                        <th>Comparison</th>
+                    </tr>
+                </table>
+                <div style="text-align: center;">
+                    <video style="width: 100%" muted autoplay playsinline loop>
+                        <source src="assets/obm-ezgif.com-resize-video.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <p> <br/> </p>
+                <h3> Mesh Adaptation for Multi-Camera System </h3>
+                <p>
+                    Once the 3DMM parameters are estimated, we construct a 3D mesh that serves as a proxy for ray-casting operations. 
+                    The challenge here lies in adapting the pre-trained network, which was trained under the assumption of an orthographic camera model. 
+                </p>
+                <p>
+                    Since we are working within a perspective projection framework, we reverse-projected the mesh to fit how it would appear under a perspective camera model. 
+                    Using this back-projection, we construct a coarse mesh in the world coordinate system, which serves as the basis for building a bounding volume hierarchy (BVH) to facilitate efficient ray-casting during rendering.
+                </p>
+                <p>
+                    Below is a visualization of our back-projected canonical mesh. The first column displays the canonical mesh used for 3DMM estimation, while the third through fifth columns show the back-projected canonical mesh from different camera perspectives. 
+                </p>
+
+                <table>
+                    <tr>
+                        <th>Canonical</th>
+                        <th>EMOCA</th>
+                        <th>Cam #1</th>
+                        <th>Cam #2</th>
+                        <th>Cam #3</th>
+                    </tr>
+                </table>
+                <div style="text-align: center;">
+                    <video style="width: 100%" muted autoplay playsinline loop>
+                        <source src="assets/hwan_vis_mesh_pose_multicam-ezgif.com-crop-video.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <p> <br/> </p>
+                
+                <h3> Reconstructed Neural Portrait </h3>
+                <hr/>
+                <p>
+                    Below is the reconstructed neural portrait result. Unlike monocular reconstruction algorithms, our method correctly captures torso movement as well. The use of multi-view images obtained from multi-camera setups ensures high visual fidelity in the output. Additionally, since the structure is based on predicting face deformations through 3DMM parameters, the reconstructed neural avatar can be manipulated for further adjustments.
+                </p>
+                <table>
+                    <tr>
+                        <th>Reconstructed Neural Portrait</th>
+                        <th>Novel View Synthesis</th>
+                    </tr>
+                </table>
+                <div style="text-align: center;">
+                    <video style="width: 100%" muted autoplay playsinline loop>
+                        <source src="assets/hwan_nerf.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <hr/>
+                <p>
+                    This project successfully integrates multi-camera setups with accelerated facial NeRF, showcasing the potential for efficient and high-fidelity facial reconstruction. By leveraging feed-forward methods for 3DMM estimation and adapting ray-casting for perspective projections, we achieve a significant reduction in preprocessing time while maintaining high visual fidelity.
+                </p>
+            </div>
+        </div>
+    </section><!-- /Portfolio Details Section -->
+
+  </main>
+
+  <footer id="footer" class="footer position-relative light-background">
+
+    <div class="container">
+      <div class="copyright text-center ">
+        <p>© <span>Copyright</span> <strong class="px-1 sitename">Hwan Heo</strong> <span>All Rights Reserved</span></p>
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../../assets/vendor/php-email-form/validate.js"></script>
+  <script src="../../assets/vendor/aos/aos.js"></script>
+  <script src="../../assets/vendor/typed.js/typed.umd.js"></script>
+  <script src="../../assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="../../assets/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="../../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../../assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="../../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="../../assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="../../assets/js/main.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const observer = new IntersectionObserver(() => {
+            updateScrollIndicator();
+        });
+
+        document.querySelectorAll("model-viewer").forEach((viewer) => observer.observe(viewer));
+
+        window.onscroll = updateScrollIndicator;
+        window.onresize = updateScrollIndicator;
+
+        function updateScrollIndicator() {
+            var winScroll = document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            if (height > 0) {
+                var scrolled = (winScroll / height) * 100;
+                document.getElementById("myBar").style.width = scrolled + "%";
+            }
+        }
+    });
+  </script>
+</body>
+
+</html>
