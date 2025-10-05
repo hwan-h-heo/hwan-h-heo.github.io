@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .message {
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="message">
+        <p>Redirecting to the new blog location...</p>
+    </div>
+
+    <script src="/blogs/js/slug-mapping.js"></script>
+    <script>
+        // Get the post ID from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('id');
+
+        if (postId && typeof slugMapping !== 'undefined' && slugMapping[postId]) {
+            // Redirect to new slug-based URL
+            const slug = slugMapping[postId];
+            window.location.href = `/blogs/posts/${slug}/`;
+        } else {
+            // Fallback: redirect to blog home if post ID not found
+            window.location.href = '/blogs/';
+        }
+    </script>
+</body>
+</html>

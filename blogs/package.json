@@ -1,0 +1,18 @@
+{
+  "name": "hwan-blog",
+  "version": "1.0.0",
+  "description": "Hwan Heo's blog with static site generation",
+  "scripts": {
+    "build": "node build-static.js",
+    "dev": "npm run build && npx http-server dist -p 8080 -o",
+    "deploy": "npm run build && gh-pages -d dist",
+    "edit": "node editor-server.js"
+  },
+  "dependencies": {
+    "marked": "^12.0.0"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.1",
+    "http-server": "^14.1.1"
+  }
+}

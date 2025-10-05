@@ -1,0 +1,103 @@
+/* Code block copy button styles */
+.copy-code-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #495057;
+    transition: all 0.2s ease;
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+}
+
+pre:hover .copy-code-button {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.copy-code-button:hover {
+    background: #fff;
+    color: #0085A1;
+    border-color: #0085A1;
+    transform: scale(1.05);
+}
+
+.copy-code-button:active {
+    transform: scale(0.95);
+}
+
+.copy-code-button.copied {
+    background: #198754;
+    color: white;
+    border-color: #198754;
+}
+
+.copy-code-button i {
+    pointer-events: none;
+}
+
+/* Make sure pre blocks have relative positioning */
+pre {
+    position: relative !important;
+}
+
+/* Adjust for dark code blocks */
+pre[class*="language-"] .copy-code-button {
+    background: rgba(40, 44, 52, 0.9);
+    color: #abb2bf;
+    border-color: #4b5263;
+}
+
+pre[class*="language-"]:hover .copy-code-button {
+    background: rgba(40, 44, 52, 1);
+}
+
+pre[class*="language-"] .copy-code-button:hover {
+    background: rgba(61, 66, 77, 1);
+    color: #61afef;
+    border-color: #61afef;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .copy-code-button {
+        opacity: 1;
+        pointer-events: auto;
+        top: 4px;
+        right: 4px;
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+}
+
+/* Tooltip alternative (optional) */
+.copy-code-button::after {
+    content: attr(title);
+    position: absolute;
+    top: -30px;
+    right: 0;
+    background: #212529;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.copy-code-button:hover::after {
+    opacity: 1;
+}
+
+.copy-code-button.copied::after {
+    content: 'Copied!';
+    opacity: 1;
+}

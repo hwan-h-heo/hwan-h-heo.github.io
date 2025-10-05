@@ -228,6 +228,20 @@
         
         <!-- Main script to fetch and render content -->
         <script src="../js/posts-data.js"></script>
+        <script src="../js/slug-mapping.js"></script>
+        <script>
+            // Legacy URL redirect handler
+            (function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const postId = urlParams.get('id');
+
+                if (postId && typeof slugMapping !== 'undefined' && slugMapping[postId]) {
+                    // Redirect to new slug-based URL
+                    const slug = slugMapping[postId];
+                    window.location.href = `/blogs/posts/${slug}/`;
+                }
+            })();
+        </script>
         <script src="../js/blog_render.js"></script>
         <script>
             // Functions for Google Model Viewer interactivity
