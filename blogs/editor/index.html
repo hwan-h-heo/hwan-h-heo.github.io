@@ -114,14 +114,15 @@
             display: flex;
             height: 100vh;
             padding-top: 120px;
+            position: relative;
         }
 
         #editor-pane {
             width: 50%;
             height: calc(100vh - 120px);
             overflow-y: auto;
-            border-right: 1px solid #dee2e6;
-            background: #f8f9fa;
+            background: #1e1e1e;
+            position: relative;
         }
 
         #editor-textarea {
@@ -133,8 +134,13 @@
             font-size: 14px;
             line-height: 1.6;
             resize: none;
-            background: #f8f9fa;
+            background: #1e1e1e;
+            color: #d4d4d4;
             outline: none;
+        }
+
+        #editor-textarea::selection {
+            background: #264f78;
         }
 
         #preview-pane {
@@ -142,6 +148,32 @@
             height: calc(100vh - 120px);
             overflow-y: auto;
             padding: 20px;
+            background: #ffffff;
+        }
+
+        #resizer {
+            width: 5px;
+            height: calc(100vh - 120px);
+            background: #dee2e6;
+            cursor: col-resize;
+            position: relative;
+            transition: background 0.2s;
+        }
+
+        #resizer:hover {
+            background: #0085A1;
+        }
+
+        #resizer::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 3px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
         }
 
         #preview-content {
@@ -343,6 +375,12 @@
             <span class="toolbar-separator"></span>
             <button onclick="downloadMarkdown()">⬇️ Download</button>
             <button onclick="uploadMarkdown()">⬆️ Upload</button>
+            <button onclick="backupToGoogleDrive()">☁️ Backup to Drive</button>
+            <span class="toolbar-separator"></span>
+            <button onclick="toggleFullscreen()">⛶ Fullscreen</button>
+            <label style="display: inline-flex; align-items: center; margin: 0; font-size: 13px;">
+                <input type="checkbox" id="auto-save-toggle" style="width: auto; margin: 0 5px 0 0;"> Auto-save
+            </label>
         </div>
 
         <!-- Row 2: Formatting Toolbar -->
@@ -373,6 +411,9 @@
     <div id="container">
         <!-- Editor Pane -->
         <div id="editor-pane">
+            <div id="editor-stats" style="position: absolute; top: 10px; right: 20px; color: #858585; font-size: 12px; z-index: 10;">
+                <span id="word-count">0 words</span> | <span id="char-count">0 chars</span>
+            </div>
             <textarea id="editor-textarea" placeholder="Write your markdown here...">## Introduction
 
 This is a sample blog post written in **Markdown**.
@@ -397,6 +438,9 @@ function hello() {
 Happy writing!
 </textarea>
         </div>
+
+        <!-- Resizable Divider -->
+        <div id="resizer"></div>
 
         <!-- Preview Pane -->
         <div id="preview-pane">
@@ -446,7 +490,11 @@ Happy writing!
         // Update preview
         function updatePreview() {
             const markdown = editor.value;
-            const html = marked.parse(markdown);
+            let html = marked.parse(markdown);
+
+            // Convert relative draft-assets paths to server paths for preview
+            html = html.replace(/\.\/draft-assets\//g, '/editor/draft-assets/');
+
             preview.innerHTML = html;
 
             // Render math
@@ -475,13 +523,155 @@ Happy writing!
             };
         }
 
+        // Update word and character count
+        function updateStats() {
+            const text = editor.value;
+            const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+            const chars = text.length;
+            document.getElementById('word-count').textContent = `${words} words`;
+            document.getElementById('char-count').textContent = `${chars} chars`;
+        }
+
+        // Clipboard image paste handler
+        editor.addEventListener('paste', async (e) => {
+            const items = e.clipboardData.items;
+
+            for (let item of items) {
+                if (item.type.indexOf('image') !== -1) {
+                    e.preventDefault();
+
+                    const file = item.getAsFile();
+                    const reader = new FileReader();
+
+                    reader.onload = async (event) => {
+                        try {
+                            // Show loading indicator
+                            const loadingText = '\n![Uploading image...]()\n';
+                            insertMarkdown(loadingText, '');
+
+                            // Convert to WebP
+                            const webpBlob = await convertToWebP(event.target.result);
+
+                            // Upload to server
+                            const filename = `image-${Date.now()}.webp`;
+                            const uploadResult = await uploadImage(webpBlob, filename);
+
+                            if (uploadResult.success) {
+                                // Replace loading text with actual image markdown
+                                // Use server path for preview, but keep relative path in markdown
+                                const imagePath = uploadResult.relativePath; // ./draft-assets/...
+                                const imageMarkdown = `![Image](${imagePath})`;
+                                editor.value = editor.value.replace(loadingText, `\n${imageMarkdown}\n`);
+                                updatePreview();
+
+                                console.log(`Image uploaded: ${uploadResult.filename} at ${uploadResult.serverPath}`);
+                            } else {
+                                alert(`Failed to upload image: ${uploadResult.error}`);
+                                editor.value = editor.value.replace(loadingText, '');
+                            }
+                        } catch (err) {
+                            console.error('Image paste error:', err);
+                            alert('Failed to process image');
+                        }
+                    };
+
+                    reader.readAsDataURL(file);
+                    break;
+                }
+            }
+        });
+
+        // Convert image to WebP format
+        async function convertToWebP(dataUrl) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+
+                    canvas.toBlob((blob) => {
+                        if (blob) {
+                            resolve(blob);
+                        } else {
+                            reject(new Error('Failed to convert to WebP'));
+                        }
+                    }, 'image/webp', 0.9);
+                };
+                img.onerror = () => reject(new Error('Failed to load image'));
+                img.src = dataUrl;
+            });
+        }
+
+        // Upload image to server
+        async function uploadImage(blob, filename) {
+            const formData = new FormData();
+            formData.append('image', blob, filename);
+
+            try {
+                const response = await fetch(`${API_BASE}/upload-image`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                return await response.json();
+            } catch (err) {
+                return { success: false, error: err.message };
+            }
+        }
+
         // Listen to editor changes
-        editor.addEventListener('input', debounce(updatePreview, 300));
+        editor.addEventListener('input', debounce(() => {
+            updatePreview();
+            updateStats();
+            if (document.getElementById('auto-save-toggle').checked) {
+                autoSaveDraft();
+            }
+        }, 300));
 
         // Initial preview
         document.addEventListener('DOMContentLoaded', () => {
             updatePreview();
+            updateStats();
+            setupResizer();
         });
+
+        // Resizable pane functionality
+        function setupResizer() {
+            const resizer = document.getElementById('resizer');
+            const editorPane = document.getElementById('editor-pane');
+            const previewPane = document.getElementById('preview-pane');
+            let isResizing = false;
+
+            resizer.addEventListener('mousedown', (e) => {
+                isResizing = true;
+                document.body.style.cursor = 'col-resize';
+                document.body.style.userSelect = 'none';
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isResizing) return;
+
+                const containerWidth = document.getElementById('container').offsetWidth;
+                const newEditorWidth = (e.clientX / containerWidth) * 100;
+
+                if (newEditorWidth > 20 && newEditorWidth < 80) {
+                    editorPane.style.width = `${newEditorWidth}%`;
+                    previewPane.style.width = `${100 - newEditorWidth}%`;
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isResizing) {
+                    isResizing = false;
+                    document.body.style.cursor = '';
+                    document.body.style.userSelect = '';
+                }
+            });
+        }
 
         // Open insert modal
         function openInsertModal(type) {
@@ -860,7 +1050,16 @@ Happy writing!
                 return;
             }
 
-            if (!confirm(`Save to posts/${postId}/content-${language}.md?`)) return;
+            // Count assets that will be migrated
+            const assetMatches = editor.value.match(/\.\/draft-assets\/[^\s\)]+/g);
+            const assetCount = assetMatches ? assetMatches.length : 0;
+
+            let confirmMsg = `Save to posts/${postId}/content-${language}.md?`;
+            if (assetCount > 0) {
+                confirmMsg += `\n\n${assetCount} image(s) will be migrated to posts/${postId}/assets/`;
+            }
+
+            if (!confirm(confirmMsg)) return;
 
             try {
                 const response = await fetch(`${API_BASE}/post`, {
@@ -875,7 +1074,11 @@ Happy writing!
 
                 const result = await response.json();
                 if (result.success) {
-                    alert(`Saved to ${result.path}`);
+                    let successMsg = `✅ Saved to ${result.path}`;
+                    if (result.assetsMigrated > 0) {
+                        successMsg += `\n\n📦 ${result.assetsMigrated} asset(s) migrated to posts/${postId}/assets/`;
+                    }
+                    alert(successMsg);
                 } else {
                     alert(`Error: ${result.error}`);
                 }
@@ -925,6 +1128,83 @@ Happy writing!
             modalOverlay.style.display = 'none';
         }
 
+        // Auto-save functionality
+        let autoSaveTimer;
+        function autoSaveDraft() {
+            clearTimeout(autoSaveTimer);
+            autoSaveTimer = setTimeout(async () => {
+                if (!document.body.classList.contains('edit-mode')) return;
+
+                const filename = `autosave-${Date.now()}.md`;
+                try {
+                    await fetch(`${API_BASE}/draft`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            filename: filename,
+                            content: editor.value
+                        })
+                    });
+                    console.log('Auto-saved:', filename);
+                } catch (err) {
+                    console.error('Auto-save failed:', err);
+                }
+            }, 5000); // Auto-save after 5 seconds of inactivity
+        }
+
+        // Google Drive backup
+        function backupToGoogleDrive() {
+            const CLIENT_ID = prompt('Enter your Google Drive Client ID (or leave blank to use local backup):');
+
+            if (!CLIENT_ID) {
+                // Fallback to local download
+                alert('Google Drive not configured. Downloading locally instead.');
+                downloadMarkdown();
+                return;
+            }
+
+            // Initialize Google Drive API
+            gapi.load('client:auth2', () => {
+                gapi.client.init({
+                    clientId: CLIENT_ID,
+                    scope: 'https://www.googleapis.com/auth/drive.file'
+                }).then(() => {
+                    return gapi.auth2.getAuthInstance().signIn();
+                }).then(() => {
+                    const content = editor.value;
+                    const filename = `blog-backup-${Date.now()}.md`;
+                    const metadata = {
+                        name: filename,
+                        mimeType: 'text/markdown'
+                    };
+
+                    const form = new FormData();
+                    form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+                    form.append('file', new Blob([content], { type: 'text/markdown' }));
+
+                    return fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+                        method: 'POST',
+                        headers: new Headers({ 'Authorization': 'Bearer ' + gapi.auth.getToken().access_token }),
+                        body: form
+                    });
+                }).then(response => response.json()).then(data => {
+                    alert(`Backed up to Google Drive: ${data.name}`);
+                }).catch(err => {
+                    console.error('Google Drive backup failed:', err);
+                    alert('Failed to backup to Google Drive. Check console for details.');
+                });
+            });
+        }
+
+        // Fullscreen toggle
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             // Ctrl/Cmd + S to save
@@ -948,7 +1228,15 @@ Happy writing!
                 e.preventDefault();
                 insertMarkdown('*', '*');
             }
+
+            // F11 for fullscreen
+            if (e.key === 'F11') {
+                e.preventDefault();
+                toggleFullscreen();
+            }
         });
     </script>
+    <!-- Google Drive API (loaded on demand) -->
+    <script src="https://apis.google.com/js/api.js"></script>
 </body>
 </html>

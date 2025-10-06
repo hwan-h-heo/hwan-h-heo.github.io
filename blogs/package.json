@@ -1,7 +1,7 @@
 {
   "name": "hwan-blog",
-  "version": "1.0.0",
-  "description": "Hwan Heo's blog with static site generation",
+  "version": "2.0.0",
+  "description": "Hwan Heo's blog with static site generation and enhanced markdown editor",
   "scripts": {
     "build": "node build-static.js",
     "dev": "npm run build && npx http-server dist -p 8080 -o",
@@ -14,5 +14,8 @@
   "devDependencies": {
     "gh-pages": "^6.1.1",
     "http-server": "^14.1.1"
+  },
+  "optionalDependencies": {
+    "googleapis": "^140.0.0"
   }
 }
