@@ -157,29 +157,6 @@ fs.writeFileSync(
     `const slugMapping = ${JSON.stringify(slugMapping, null, 2)};\nconst slugToId = ${JSON.stringify(Object.fromEntries(Object.entries(slugMapping).map(([k, v]) => [v, k])), null, 2)};`
 );
 
-// Calculate reading time based on word count
-function calculateReadingTime(content) {
-    // Remove HTML tags and code blocks for accurate word count
-    const textContent = content
-        .replace(/<[^>]*>/g, '') // Remove HTML tags
-        .replace(/```[\s\S]*?```/g, '') // Remove code blocks
-        .replace(/`[^`]*`/g, '') // Remove inline code
-        .trim();
-
-    // Count words (split by whitespace)
-    const words = textContent.split(/\s+/).filter(word => word.length > 0).length;
-
-    // Average reading speed: 200 words per minute
-    const readingSpeed = 200;
-    const minutes = Math.ceil(words / readingSpeed);
-
-    return {
-        words,
-        minutes,
-        text: minutes === 1 ? '1 min read' : `${minutes} min read`
-    };
-}
-
 // Template for post pages
 function getPostTemplate(post, lang, content, metaDescription) {
     const title = post[`title_${lang}`] || post.title_eng;
@@ -189,7 +166,6 @@ function getPostTemplate(post, lang, content, metaDescription) {
     const slug = lang === 'eng' ? post.slug : `${post.slug}-kor`;
     const canonicalUrl = `https://hwan-h-heo.io/blogs/posts/${slug}/`;
     const ogImage = `https://hwan-h-heo.io/assets/image_fx_.jpg`; // Default OG image
-    const readingTime = calculateReadingTime(content);
 
     // Generate keywords from post data
     const keywords = [
@@ -285,7 +261,6 @@ function getPostTemplate(post, lang, content, metaDescription) {
     <link href="/blogs/css/used.css" rel="stylesheet" />
     <link href="/blogs/css/blog_post_specific.css" rel="stylesheet" />
     <link href="/blogs/css/code-copy.css" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1.9.1/css/academicons.min.css">
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
@@ -338,11 +313,7 @@ function getPostTemplate(post, lang, content, metaDescription) {
                     <div class="post-heading">
                         <br/>
                         <h2>${title}</h2>
-                        <span class="meta">
-                            Posted on ${date}
-                            <span style="margin: 0 8px;">•</span>
-                            <i class="bi bi-clock" style="margin-right: 4px;"></i>${readingTime.text}
-                        </span>
+                        <span class="meta">Posted on ${date}</span>
                         <hr/>
                     </div>
                 </div>
@@ -382,7 +353,6 @@ function getPostTemplate(post, lang, content, metaDescription) {
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="/blogs/js/code-copy.js"></script>
-    <script src="/blogs/js/scroll-progress.js"></script>
     <script src="/blogs/js/posts-data.js"></script>
     <script>
         // Math rendering
