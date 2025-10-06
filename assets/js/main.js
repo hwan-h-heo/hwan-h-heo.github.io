@@ -282,28 +282,30 @@ document.addEventListener('DOMContentLoaded', () => {
   "use strict";
 
   const portfolioBoxes = document.querySelectorAll('.portfolio-box');
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
   portfolioBoxes.forEach(box => {
     const video = box.querySelector('video');
     const image = box.querySelector('img[data-gif]');
     const spinner = box.querySelector('.loading-spinner');
     const titleElement = box.querySelector('.polar_content h6');
-    
-    if (!titleElement) return; 
 
-    const originalTitleHtml = titleElement.innerHTML; 
+    if (!titleElement) return;
+
+    const originalTitleHtml = titleElement.innerHTML;
     const hoverTypingText = titleElement.getAttribute('data-hover-text');
-    
+
     let staticSrc = image ? image.getAttribute('data-static') || image.src : null;
     let typeInterval;
+    let isActive = false; // 터치 디바이스에서 활성 상태 추적
 
     // --- 타이핑 효과 함수 ---
     const startTyping = () => {
       let i = 0;
-      titleElement.innerHTML = ""; // 내용 비우기
+      titleElement.innerHTML = "";
       titleElement.classList.remove('typing-done');
       clearInterval(typeInterval);
-      
+
       const textSpan = document.createElement('span');
       titleElement.appendChild(textSpan);
 
@@ -313,82 +315,102 @@ document.addEventListener('DOMContentLoaded', () => {
           i++;
         } else {
           clearInterval(typeInterval);
-          if (iconHtml) {
-            titleElement.innerHTML += " " + iconHtml;
-          }
           titleElement.classList.add('typing-done');
         }
-      }, 30); // 타이핑 속도
+      }, 30);
     };
 
-    // 마우스를 올렸을 때
-    box.addEventListener('mouseenter', () => {
+    const activateMedia = () => {
       if (hoverTypingText) {
         startTyping();
       }
 
       if (video) {
-        // 데이터를 기다려야 할 때 스피너 표시
-        video.addEventListener('waiting', () => {
-          spinner.style.display = 'block';
-        });
-        // 재생이 가능해지면 스피너 숨김
-        video.addEventListener('canplay', () => {
-          spinner.style.display = 'none';
-        });
+        if (spinner) {
+          video.addEventListener('waiting', () => {
+            spinner.style.display = 'block';
+          });
+          video.addEventListener('canplay', () => {
+            spinner.style.display = 'none';
+          });
+        }
 
         video.play().catch(error => {
           console.log("Video play was prevented.", error);
         });
       }
-      
-      // GIF 이미지가 있으면 동적 GIF로 교체
+
       if (image && image.dataset.gif) {
         if (!staticSrc || staticSrc.includes('placeholder')) {
             staticSrc = image.src;
         }
 
-        // 먼저 스피너를 보여줌
-        spinner.style.display = 'block';
+        if (spinner) {
+          spinner.style.display = 'block';
+        }
 
-        // GIF를 미리 로드하여 캐싱
         const gifLoader = new Image();
         gifLoader.onload = () => {
-          // 로딩이 완료되면 실제 이미지 src를 변경하고 스피너를 숨김
           image.src = image.dataset.gif;
-          spinner.style.display = 'none';
+          if (spinner) {
+            spinner.style.display = 'none';
+          }
         };
         gifLoader.onerror = () => {
-          // 에러 발생 시 스피너 숨김
-          spinner.style.display = 'none';
+          if (spinner) {
+            spinner.style.display = 'none';
+          }
           console.log("Failed to load GIF.");
         };
-        gifLoader.src = image.dataset.gif; // 이 시점에 로딩 시작
+        gifLoader.src = image.dataset.gif;
       }
-    });
+    };
 
-    // 마우스가 벗어났을 때
-    box.addEventListener('mouseleave', () => {
+    const deactivateMedia = () => {
       clearInterval(typeInterval);
-      
+
       titleElement.innerHTML = originalTitleHtml;
       titleElement.classList.remove('typing-done');
 
-      // 비디오가 있으면 일시정지하고 처음으로 되감기
       if (video) {
         video.pause();
-        video.currentTime = 0; // load() 대신 currentTime을 0으로 설정하는 것이 더 효율적일 수 있습니다.
+        video.currentTime = 0;
       }
-      
-      // GIF 이미지가 있으면 저장해둔 정적 이미지로 복원
+
       if (image && staticSrc) {
         image.src = staticSrc;
       }
 
-      // 마우스가 벗어날 때 스피너는 항상 숨김
-      if(spinner) {
+      if (spinner) {
         spinner.style.display = 'none';
       }
-    });
+    };
+
+    // 터치 디바이스용 이벤트 처리
+    if (isTouchDevice) {
+      box.addEventListener('click', (e) => {
+        // 링크로 이동하는 것을 막지 않되, 미디어 활성화 토글
+        if (!isActive) {
+          e.preventDefault();
+          isActive = true;
+          activateMedia();
+        } else {
+          // 두 번째 탭에서는 링크로 이동
+          isActive = false;
+        }
+      });
+
+      // 다른 곳을 터치하면 비활성화
+      document.addEventListener('touchstart', (e) => {
+        if (isActive && !box.contains(e.target)) {
+          isActive = false;
+          deactivateMedia();
+        }
+      });
+    } else {
+      // 데스크톱용 마우스 이벤트
+      box.addEventListener('mouseenter', activateMedia);
+      box.addEventListener('mouseleave', deactivateMedia);
+    }
   });
 });
