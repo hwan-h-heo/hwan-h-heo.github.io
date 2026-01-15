@@ -1,4 +1,5 @@
 const slugMapping = {
+  "260115_Varco3D": "varco3d-a-year-in-review-2025-retrospective",
   "250823_sdf": "sdf-and-eikonal-equation",
   "250810_flow": "from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models",
   "250809_gwn": "generalized-winding-number",
@@ -25,6 +26,7 @@ const slugMapping = {
   "210302_cv1": "image-filter-and-morphology"
 };
 const slugToId = {
+  "varco3d-a-year-in-review-2025-retrospective": "260115_Varco3D",
   "sdf-and-eikonal-equation": "250823_sdf",
   "from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models": "250810_flow",
   "generalized-winding-number": "250809_gwn",

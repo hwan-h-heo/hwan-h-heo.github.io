@@ -1,5 +1,20 @@
 const postsData = [
   {
+    "id": "260115_Varco3D",
+    "title_eng": "Varco3D: A Year in Review — 2025 Retrospective",
+    "title_kor": "3D 생성형 AI 서비스; Varco3D 개발기",
+    "subtitle_eng": "Delving into SOTA 3D Generative AIs",
+    "subtitle_kor": "Follower 의 눈으로 살펴보는 SOTA 3D Generative AI",
+    "date": "2026-01-15",
+    "category": "post",
+    "series": "3d-generation",
+    "languages": [
+      "eng",
+      "kor"
+    ],
+    "slug": "varco3d-a-year-in-review-2025-retrospective"
+  },
+  {
     "id": "250823_sdf",
     "title_eng": "SDF and Eikonal Equation",
     "title_kor": "SDF 와 Eikonal Equation 의 관계는?",

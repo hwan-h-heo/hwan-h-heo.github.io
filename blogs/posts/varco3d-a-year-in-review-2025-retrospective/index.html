@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Delving into SOTA 3D Generative AIs" />
+    <meta name="keywords" content="post, 3d-generation, 3D graphics, computer vision, machine learning" />
+    <meta name="author" content="Hwan Heo" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://hwan-h-heo.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://hwan-h-heo.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" />
+    <meta property="og:title" content="Varco3D: A Year in Review — 2025 Retrospective" />
+    <meta property="og:description" content="Delving into SOTA 3D Generative AIs" />
+    <meta property="og:image" content="https://hwan-h-heo.io/assets/image_fx_.jpg" />
+    <meta property="og:site_name" content="HwanHeo's Blog" />
+    <meta property="article:published_time" content="2026-01-15T00:00:00.000Z" />
+    <meta property="article:author" content="Hwan Heo" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://hwan-h-heo.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" />
+    <meta name="twitter:title" content="Varco3D: A Year in Review — 2025 Retrospective" />
+    <meta name="twitter:description" content="Delving into SOTA 3D Generative AIs" />
+    <meta name="twitter:image" content="https://hwan-h-heo.io/assets/image_fx_.jpg" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Varco3D: A Year in Review — 2025 Retrospective",
+  "description": "Delving into SOTA 3D Generative AIs",
+  "image": "https://hwan-h-heo.io/assets/image_fx_.jpg",
+  "author": {
+    "@type": "Person",
+    "name": "Hwan Heo",
+    "url": "https://hwan-h-heo.io"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Hwan Heo",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://hwan-h-heo.io/assets/favicon.ico"
+    }
+  },
+  "datePublished": "2026-01-15T00:00:00.000Z",
+  "dateModified": "2026-01-15T00:00:00.000Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://hwan-h-heo.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective/"
+  },
+  "inLanguage": "en"
+}
+    </script>
+
+    <title>Varco3D: A Year in Review — 2025 Retrospective - HwanHeo's Blog</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+
+    <!-- Import Maps for three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.150.0/examples/jsm/",
+                "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
+            }
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/25.0.0/tween.umd.js"></script>
+    <script src="https://use.fontawesome.com/releases/v6.5.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+    <link href="/blogs/css/used.css" rel="stylesheet" />
+    <link href="/blogs/css/blog_post_specific.css" rel="stylesheet" />
+    <link href="/blogs/css/code-copy.css" rel="stylesheet" />
+    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1.9.1/css/academicons.min.css">
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+    <style>
+        pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; font-size: 0.9rem !important; }
+        pre code { font-size: 0.9rem !important; }
+        .main-content a { color: #15B886; text-decoration: none; }
+        .main-content a:hover { color: #11926b; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; }
+        th { width: 15%; background-color: #f2f2f2; }
+    </style>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RF7ETSKPK9');
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="/blogs/">Blog Home</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+                Menu <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item">
+                        <a href="../varco3d-a-year-in-review-2025-retrospective-kor/" class="btn nav-link px-lg-3 py-3 py-lg-4" style="font-size:0.7rem">
+                            KOR
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="masthead" style="background-image: url('/assets/image_fx_.jpg')">
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="post-heading">
+                        <br/>
+                        <h2>Varco3D: A Year in Review — 2025 Retrospective</h2>
+                        <span class="meta">
+                            Posted on January 15, 2026
+                            <span style="margin: 0 8px;">•</span>
+                            <i class="bi bi-clock" style="margin-right: 4px;"></i>20 min read
+                        </span>
+                        <hr/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <article class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Series Navigation -->
+                    <div id="series-container"></div>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 main-content">
+                    <nav class="toc"><ul><li><a href="#toc-heading-0">Introduction</a><ul></ul></li><li><a href="#toc-heading-1">1. Back to 2024</a><ul><li><a href="#toc-heading-2">1.1 <em>Non-Native</em> 3D Generation</a></li><li><a href="#toc-heading-3">1.2 <em>Texture</em> Generative AI</a></li><li><a href="#toc-heading-4">1.3 Beyond SDS; Native 3D Generation</a></li></ul></li><li><a href="#toc-heading-5">2. Pursue SOTA: 3D Sovereign AI</a><ul><li><a href="#toc-heading-6">2.1 Varco3D-alpha</a></li><li><a href="#toc-heading-7">2.2 SOTA Sparse Voxel Method</a></li><li><a href="#toc-heading-8">2.3 Varco3D 1.0-preview</a></li></ul></li><li><a href="#toc-heading-9">3. Back to VecSet</a><ul><li><a href="#toc-heading-10">3.1 Lattice</a></li><li><a href="#toc-heading-11">3.2 FlashVDM; Vice-Versa of Lattice?</a></li><li><a href="#toc-heading-12">3.3 Varco3D-Lattice</a></li></ul></li><li><a href="#toc-heading-13">4. Next Step in 3D Generation</a><ul><li><a href="#toc-heading-14">4.1 Sparse Voxel vs. VecSet</a></li><li><a href="#toc-heading-15">4.2 Beyond SDF: Trellis 2 &amp; Faith-Contouring</a></li></ul></li><li><a href="#toc-heading-16">Epilogue</a><ul></ul></li></ul></nav><button id="copyButton">
+    <i class="bi bi-share-fill"></i>
+</button>
+
+<div id="myshare_modal" class="share_modal">
+    <div class="share_modal-content">
+        <span class="share_modal_close">×</span>
+        <p><strong>Link Copied!</strong></p>
+        <div class="copy_indicator-container">
+        <div class="copy_indicator" id="share_modalIndicator"></div>
+        </div>
+    </div>
+</div>
+
+<h2 id="toc-heading-0">Introduction</h2>
+<p>I have never been particularly adept at documenting personal reflections. Nevertheless, 2025 brought far too many changes to dismiss as merely another year passing. It was a year in which I experienced the sensation of my life&#39;s trajectory being abruptly twisted—both professionally and personally. In particular, the spin-off of &#39;NC AI&#39; as an independent entity and the technical and organizational upheaval I encountered throughout that process became a defining catalyst that fundamentally redefined the direction of my work. I would like to begin this piece by reflecting on the year alongside that record.</p>
+<img src='https://velog.velcdn.com/images/gjghks950/post/c6ffdcc4-0f99-4778-92a9-6ffaba60cf6f/image.gif' width=60%>
+
+<ul>
+<li><em>Generated by Varco3D, NC AI&#39;s proprietary 3D Generative Model</em></li>
+</ul>
+<hr>
+<h4>Records Leading Up to Early 2025</h4>
+<p>&#39;NC AI,&#39; where I am currently employed, was originally a research division under NCSOFT. The peculiar structure of a massive 200-person research organization coexisting within a 4,000-person gaming company was something that, even as an insider, constantly raised doubts about its long-term sustainability. Especially before 2024, when the organization&#39;s direction remained ambiguous, my time there felt closer to stagnation than growth.</p>
+<p>Despite the label of &#39;AI Research Lab,&#39; research outcomes were disconnected from practical applications, and points of contact with actual product development were sparse. To alleviate the frustration born from this void, I began dedicating myself to external side projects starting mid-2024. To be frank, this was both preparation for a career transition and a form of escape.</p>
+<p>In November 2024, just as I was contemplating leaving and with my mandatory military research service basic training imminent, news of NC Research&#39;s spin-off arrived. The organization was engulfed in a wave of departures that could aptly be called an &#39;exodus.&#39; Swept along by the chaotic current of daily farewell announcements, I too cast applications to various companies in search of an exit.</p>
+<p>Yet in the midst of this turbulent spin-off, I encountered an unexpected inflection point: the leader of my current team, who had been conceiving a 3D generation service in a different department within the company. His distinctive execution capability, honed through startup founding experience, and his attitude of transforming crisis into opportunity left a powerful impression. Above all, his vision of &#39;actually turning 3D generative AI into a real service&#39; presented a clear direction to someone like me, who had been wandering between research and reality. For the first time, I thought, &#39;With this team, I could achieve something essential that I had never experienced at NC.&#39;</p>
+<p>Standing at the crossroads of leaving versus staying, my anguish deepened as acceptance letters and job offers arrived. Moving to the new team could quench my thirst for vision, but it was difficult to ignore the practical differences in conditions compared to external offers. After much deliberation, I requested a meeting with the executive leadership, where I confirmed the possibility of satisfying both technical challenges and reasonable compensation. And so, I joined the 3D generative AI service development team and immersed myself in generative model research.</p>
+<hr>
+<h2 id="toc-heading-1">1. Back to 2024</h2>
+<p>Before discussing Varco3D in earnest, I want to first lay out the technical background. Let us travel back to 2024, when 3D generation research was in its nascent stages, and examine the research trends and the evolution of internal projects at that time.</p>
+<h3 id="toc-heading-2">1.1 <em>Non-Native</em> 3D Generation</h3>
+<p>Prior to 2024, &#39;3D generation&#39; was advancing primarily through optimization-based methods led by SDS (Score Distillation Sampling).</p>
+<p>The success of 2D image generation models, represented by Stable Diffusion, led to the hypothesis that &#39;2D models might inherently understand 3D information.&#39; Combining this with NeRF (Neural Radiance Fields), SDS became an irresistibly compelling research topic. The fact that optimization-based methods required relatively fewer GPU resources to generate a single asset was also an advantage that made it easily accessible in resource-constrained research labs.</p>
+<p>At that time, there was a prevailing perception in the gaming industry that pure reconstruction research (NeRF/GS) would be difficult to translate into actual productivity. Consequently, aligning with the SDS trend, the entire team&#39;s research direction was reorganized toward &#39;3D generation.&#39; However, overcoming the inherent performance limitations of SDS through loss term design alone proved difficult. SDS can be viewed as forcibly constraining a well-trained 2D Diffusion (or Flow) model to act as a mode seeker, which caused the following problems:</p>
+<ol>
+<li><strong>Saturated Color</strong>: Due to the use of high CFG scale to enforce mode seeking</li>
+<li><strong>Janus Problem (multi-face problem)</strong>: Frontal bias of 2D models &amp; lack of multi-view consistency
+<img src="https://velog.velcdn.com/images/gjghks950/post/9c770a68-fb0e-490e-9121-ff82e9556a0d/image.png" alt=""></li>
+<li><strong>Slow speed</strong>: Because generating an asset requires hundreds of 2D model inferences while updating NeRF or 3D Gaussian Splatting (GS)</li>
+<li><strong>Noisy Geometry</strong></li>
+</ol>
+<p>As SDS research progressed, issues like color saturation and the Janus problem were somewhat alleviated, but geometric quality and speed remained challenging. In particular, even the results of &#39;Dreamcraft3D&#39;—which was SOTA at the time in 2024—showed dismal geometry quality when converted to polygonal mesh, starkly demonstrating SDS&#39;s limitations.</p>
+<img src='https://velog.velcdn.com/images/gjghks950/post/c8b109b4-eece-4d87-80fd-14eebfc3f114/image.png' width=70%>
+
+<p>The cause of these problems can be traced to SDS&#39;s optimization objective.</p>
+<p>
+$$ \nabla_{\theta} \mathcal{L}_{SDS} \approx \mathbb{E}_{t, \epsilon} \left[ w(t) ( \underbrace{\epsilon_{\phi}(x; y, t) - \epsilon}_{\text{Guidance Term (Residual)}} ) \frac{\partial x}{\partial \theta} \right]
+\\
+\text{where } \theta : \text{3D model, } x : \text{rendered image} \\ {}
+$$
+</p>
+
+<p>
+$$ 
+\frac{\partial C}{\partial \theta} = \underbrace{\frac{\partial C}{\partial c} \frac{\partial c}{\partial \theta}}_{\text{Color update}} + \underbrace{\frac{\partial C}{\partial \sigma} \frac{\partial \sigma}{\partial \theta}}_{\text{Geometry update}} \rightarrow \Delta \sigma \propto (\epsilon_{\phi} - \epsilon) \cdot \frac{\partial C}{\partial \sigma}
+$$
+</p>
+
+<p>When updating a 3D model with SDS loss, following the chain rule reveals that the update terms for texture and geometry are not separated. As a result, high-frequency noise from the 2D model is directly transferred to the geometry update, causing the mesh surface to appear extremely rough when viewed without texture.</p>
+<blockquote>
+<p><strong>Remarks on Noisy Geometry</strong></p>
+<p>a. Whether you choose NeRF or GS as the 3D representation for SDS, converting either representation to a clean mesh is itself an extremely difficult problem.</p>
+<p>b. Using NeRF or GS directly without converting to a polygonal mesh also presents many problems. Although many engines support GS rendering, features like deformation, rigid body setup, and collision detection are incomparable to mesh in terms of performance and stability.</p>
+</blockquote>
+<hr>
+<h3 id="toc-heading-3">1.2 <em>Texture</em> Generative AI</h3>
+<p>Around the same time, another team within the company was researching Texture Copilot, which generates and edits the texture of polygonal meshes using 2D generative AI.</p>
+<p><a href="https://ncsoft.github.io/ncresearch/3f0ba4889e331ddbed68c9dd48d845fa18d874de">NC Research Blog: Texture Copilot</a></p>
+<iframe width="640" height="360" src="https://www.youtube-nocookie.com/embed/HvyPxxDzrwo?si=1A8HVOcStAQE4rAS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<p>This approach involved rendering a given mesh as depth and normal maps from multiple angles, then using ControlNet to generate multi-view images and back-projecting them onto the mesh.</p>
+<img src='https://velog.velcdn.com/images/gjghks950/post/5791f4d3-96f1-430f-a768-f17078d27b8d/image.png' width=50%>
+
+<ul>
+<li><em>Visualization of multi-view images back-projection on mesh</em></li>
+</ul>
+<p>It was an innovative approach and achieved results that were applied to actual game development pipelines. However, it had drawbacks such as the Janus problem caused by the frontal view bias inherent in 2D models, and the service&#39;s inherent requirement for pre-existing geometry.</p>
+<hr>
+<h3 id="toc-heading-4">1.3 Beyond SDS; Native 3D Generation</h3>
+<p>Around that time, on another axis of 3D generation research, 3D diffusion model research using 3D Native VAE was expanding. This approach, represented by <strong>&#39;VecSet VAE,&#39;</strong> is a VAE structure that compresses point clouds sampled from polygonal meshes into a latent space and then reconstructs an SDF field from that space. (For details, refer to <a href="https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation/">The Era of 3D Generative Models</a>)</p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/8dface2a-a920-4884-830a-893bfe9aac18/image.png" alt=""></p>
+<ul>
+<li><em>ShapeVAE illustration</em></li>
+</ul>
+<p>Through such ShapeVAE, training a Diffusion Model or Flow Matching model from a latent space that compresses meshes with hundreds of thousands of faces into roughly 2K–8K token length is the basic framework of <strong>&#39;3D Native Generative Models.&#39;</strong></p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/0dbcb900-9bc1-429a-83e5-ab9bbb6f6149/image.png" alt=""></p>
+<ul>
+<li>Sample results from <a href="https://nju-3dv.github.io/projects/Direct3D/">Direct3D</a>, one of the 3D DiT models trained on ShapeVAE</li>
+</ul>
+<p>I judged that by combining this 3D native geometry generation research with the ideas from Texture Copilot, it would be possible to build a complete pipeline that circumvents SDS&#39;s chronic problems. Based on this belief, at the end of 2024, I undertook the CaPa project, which involved directly training ShapeVAE and DiT models, as well as designing attention modules for multi-view generation to solve the Janus problem in texturing.</p>
+<p><a href="https://ncsoft.github.io/CaPa/"><strong>CaPa Project Page</strong></a>
+<img src='https://velog.velcdn.com/images/gjghks950/post/4b0b7f5b-9ed7-49f3-891e-786aaa7df2c6/image.png' width=70%></p>
+<p>Working on this project, I became convinced that optimization-based 3D generation methodologies would eventually reach their limits. DiT based on ShapeVAE is a feed-forward method, making it much faster for asset generation than SDS, and scaling up the DiT model size allows extending the success of scaling laws to the 3D domain.</p>
+<hr>
+<h2 id="toc-heading-5">2. Pursue SOTA: 3D Sovereign AI</h2>
+<h3 id="toc-heading-6">2.1 Varco3D-alpha</h3>
+<p>After moving to the new team, my first task was to expand the CaPa pipeline and launch Varco3D-α, our in-house 3D generation service. The model architecture followed a typical 3D generation pipeline inherited from CaPa.</p>
+<ol>
+<li><strong>Geometry Generation</strong>: ShapeVAE + DiT</li>
+<li><strong>Texture Generation</strong>: Multi-View Image Synthesis to Mesh Back-projection, leveraging 2D Generative Models</li>
+</ol>
+<iframe width="640" height="360" src="https://www.youtube-nocookie.com/embed/AtQNAuQY4-A?si=pQWlS8qawVOyFSqK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<p>One important intuition I gained while training this model was that training a &#39;Geometry VAE&#39; requires far less data and resources than 2D generative models. This is based on the assumption that the distribution of 3D geometry is simpler than that of RGB images. Indeed, artist-crafted polygonal meshes, unlike RGB images, do not have much variation in high-frequency details or complex backgrounds.</p>
+<p>Additionally, high-performance open-source models at the time were unavailable for commercial use due to licensing issues. This background became the catalyst for forming an internal consensus that &#39;we must continuously advance our own models.&#39;</p>
+<p><em><strong>cf.</strong></em> Denoising process visualization; Varco3D-α (Rectified Flow Model)</p>
+<table>
+<thead>
+<tr>
+<th>Dragon Head</th>
+<th>Steampunk Machine</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src='https://velog.velcdn.com/images/gjghks950/post/a242006f-8df6-436a-b2e1-73554fceaa6a/image.gif' width=100%></td>
+<td><img src='https://velog.velcdn.com/images/gjghks950/post/1dae42a8-40a7-41f0-86e2-e017540d2c6b/image.gif' width=100%></td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="toc-heading-7">2.2 SOTA Sparse Voxel Method</h3>
+<p>After the alpha release, the team encountered a significant technical inflection point. Methods based on sparse voxels (sparse grid-based) emerged, demonstrating overwhelming detail compared to existing VecSet-based approaches.</p>
+<p>In particular, Microsoft&#39;s <a href="https://microsoft.github.io/TRELLIS/">Trellis</a> and the subsequent <a href="https://lizhihao6.github.io/Sparc3D/">Sparc3D</a> delivered a significant shock, showing a resolution (LoD) difference of two or more levels compared to previous models.</p>
+<table>
+<thead>
+<tr>
+<th>Hunyuan3D 2.5</th>
+<th>Sparc3D</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src='https://velog.velcdn.com/images/gjghks950/post/aeb6614c-ee1f-443d-979b-e9b2686035ad/image.png' width=500px></td>
+<td><img src='https://velog.velcdn.com/images/gjghks950/post/e0425769-0bbb-4d93-8a3e-9f0a5360fb36/image.png' width=490px></td>
+</tr>
+</tbody></table>
+<p>At that time, observing Hunyuan 3D 2.5—a 10B-scale model released before Sparc3D—I believed that high-quality mesh generation was a domain achievable only through scaling laws.</p>
+<p>However, Sparc3D proved that by actively adopting sparse operations, it was possible to train high-quality mesh generation models at low cost. (While VecSet VAE took more than two weeks to converge on 32 A100 GPUs, Sparse Voxel VAE was sufficient in just two days.)</p>
+<blockquote>
+<p><em><strong>Why does such a difference arise?</strong></em></p>
+</blockquote>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/5dd57129-4236-4e6c-a314-0bf9db58ab94/image.png" alt=""></p>
+<ul>
+<li><em>Reconstruction of Sparc3D&#39;s inference pipeline illustration</em></li>
+</ul>
+<p>The secret behind this performance difference lies in the structural characteristics.
+As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resolution sparse voxel latent grid</em> to a <em>high-resolution sparse voxel SDF grid</em>. In other words, sparse voxel VAE is essentially a form of <strong>&#39;3D super-resolution.&#39;</strong></p>
+<p>In this structure, instead of creating the overall shape, the generative model (DiT) focuses on recovering fine details within already-defined active voxels. By decoupling global shape and detail generation, training efficiency could be dramatically maximized.</p>
+<blockquote>
+<p><em>Remember the assumption of &#39;when the information of active voxels is known.&#39; This means another model is needed to handle global shape generation.</em></p>
+</blockquote>
+<p>Under this potential, reimplementing Sparc3D to secure a SOTA-level 3D generation model became our goal for the second half of 2025.</p>
+<hr>
+<h3 id="toc-heading-8">2.3 Varco3D 1.0-preview</h3>
+<p>Upon deciding to switch geometry generation to a sparse voxel basis, the core challenge we faced was:</p>
+<p><em>&#39;Who will be responsible for generating active voxels?&#39;</em></p>
+<p>As mentioned earlier, sparse voxel-based 3D generation models are essentially 3D SR models, so a method was needed to generate the &#39;input for SR&#39;—that is, approximate global shape information.</p>
+<p>Trellis, which pioneered the direction of sparse voxel-based 3D generation, uses a separately designed model for this purpose. However, to use this model for mesh generation at resolutions of $1024^3$ or higher rather than the existing $256^3$, the resolution of active voxels also needed to be raised to the $128^3$ level, which caused serious computational issues.</p>
+<img src='https://velog.velcdn.com/images/gjghks950/post/962a05ea-f1ff-4c9a-b86a-76a5be185889/image.png' width=60%>
+
+<p>In Trellis&#39;s model formulation, this is equivalent to training and inferring a diffusion-based model on a dense voxel grid of $32^3$. In other words, it&#39;s a model with full attention cost of $32^3 \times 32^3$, or $1M$ tokens, and training this with our resources at the time was nearly impossible.</p>
+<p>At this point, I proposed the idea of <strong>&#39;voxelizing the coarse mesh created by Varco3D-α (VecSet) and using it as input to the DiT.&#39;</strong> This strategy was to leverage the already-proven global shape generation capability of the VecSet model while circumventing the high-resolution computation problem. (By the time of this writing, this has already become a common idea.)</p>
+<table>
+<thead>
+<tr>
+<th>Coarse mesh from Varco3D-α</th>
+<th>its voxelized ($128^3$ resolution)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/cce0d145-7f64-4b44-b7b5-df55bd03dccf/image.png" alt="Image"></td>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/045698e6-b168-49e1-a163-e273b44ad68f/image.png" alt="Image"></td>
+</tr>
+</tbody></table>
+<p>For this, I implemented a CUDA kernel that computes the distance between mesh and voxel centers in parallel, and as a result, I was able to reduce the process from coarse mesh generation to active voxel generation to under 5 seconds.</p>
+<p>After solving this and various other issues, and successfully training on AWS&#39;s 64 A100 GPUs (8 multi-node), we were able to present Varco3D 1.0-preview—our own sparse voxel-based 3D generation model—around November 2025.</p>
+<p>Below are the results of <a href="https://3d.varco.ai/explore"><em><strong>Varco3D 1.0-preview</strong></em></a>, a sparse voxel-based 3D generation model.</p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/febf339b-fb85-4cd6-b3cc-2272b4f304b1/image.png" alt=""></p>
+<hr>
+<h2 id="toc-heading-9">3. Back to VecSet</h2>
+<h3 id="toc-heading-10">3.1 Lattice</h3>
+<p>Do you remember that sparse voxel-based methodologies (Sparc3D, etc.) dramatically improved training efficiency and quality by separating global shape and local detail generation?</p>
+<p><a href="https://lattice3d.github.io/"><strong>Lattice</strong></a> is the core structure behind Hunyuan3D 2.5/3.0&#39;s geometry generation model released by Tencent. Like Sparc3D and others, it applies a two-stage approach to the VecSet methodology—first generating a global shape, then using that result as guidance to generate local details.
+<em>(In fact, considering the release timing of Hunyuan3D 2.5, it appears that Tencent internally validated and completed training on the coarse-to-fine structure much earlier than research like Sparc3D)</em></p>
+<img src='https://velog.velcdn.com/images/gjghks950/post/757ef66c-ba84-4276-9ee8-2d8d7e19549c/image.png' width=50%>
+
+<p>Specifically, it consists of the following two-stage pipeline:</p>
+<ul>
+<li><strong>Coarse Generation</strong>: Generate a coarse mesh using existing VecSet models, etc.</li>
+<li><strong>Voxelize &amp; Sampling</strong>: Voxelize this, then extract representative points within each voxel through FPS (Farthest Point Sampling).</li>
+<li><strong>Structure-Aware DiT</strong>: Use the coordinates of these points as <strong>&#39;Voxel Query&#39;</strong> and apply RoPE (Rotary Positional Embeddings) to the coordinate information before inputting to the DiT.</li>
+</ul>
+<p>${}$<img src='https://velog.velcdn.com/images/gjghks950/post/247a1e4d-3701-4b00-9b60-a80490dcec71/image.png' width=30%></p>
+<hr>
+<h3 id="toc-heading-11">3.2 FlashVDM; Vice-Versa of Lattice?</h3>
+<p>I speculate that the idea for this paper originated from experiments in <a href="https://github.com/Tencent-Hunyuan/FlashVDM"><strong>FlashVDM</strong></a>, a study on accelerating VecSet decoding (the authors are also the same). FlashVDM proposed <strong>octree-decoding (Hierarchical Decoding)</strong> for the existing VecSet decoding stage, which required <strong>dense grid point queries</strong> for SDF extraction, reducing decoding time by tens of times.</p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/f3f44325-05ae-4891-8088-9a1f14759ca0/image.png" alt=""></p>
+<ul>
+<li><em><strong>Visualization of FlashVDM.</strong></em> When reconstructing the mesh on the <em>Right</em> through the VAE decoder, FlashVDM first identifies active voxels at a coarse resolution (Left → Right), then increases resolution only within the range of these active voxels to reconstruct high-resolution SDF.</li>
+</ul>
+<img src='https://velog.velcdn.com/images/gjghks950/post/55d404e1-be95-42f8-b677-7ddd004657f3/image.png' width=50%>
+
+<p>Beyond octree-decoding, an important characteristic of VecSet VAE reported in FlashVDM is that <strong>when the VecSet VAE Decoder receives point queries to decode SDF values, spatially adjacent point queries focus only on attention with similar latent tokens.</strong> Reversing this discovery leads to the conclusion that VecSet&#39;s latent tokens already have a close relationship with spatial location and inherently possess strong locality.</p>
+<p>This leads to the assumption that if positional information is provided correctly, fine details can be filled in without needing to relearn the entire structure. In other words, if we can convey the connection to 3D spatial location when training/inferring the DiT model, we can design a refinement model that knows information about the global shape, just like sparse voxel methodologies. The DiT doesn&#39;t create shapes from scratch in empty space, but rather focuses only on local detail generation while receiving strong guidance about the global shape.</p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/2fe2f746-9665-4321-8895-7e1229328f7b/image.png" alt=""></p>
+<p>Lattice drastically shortened training efficiency and enabled a coarse-to-fine structure in VecSet by voxelizing the coarse mesh, then injecting the sampled representative coordinates through RoPE embedding.</p>
+<p>There are also incidental benefits of voxelization. While existing VecSet accepts <em>&#39;any point coordinates&#39;</em> in space as input, voxelization causes RoPE embedding to concentrate on points on a regular grid, significantly reducing the search space for the generative model. By providing inductive bias, the model rapidly acquires spatial prior knowledge.</p>
+<hr>
+<h3 id="toc-heading-12">3.3 Varco3D-Lattice</h3>
+<p>Based on the Lattice structure, I trained a Structure-aware DiT model by adding Voxel query RoPE to the Varco3D-α model architecture. The results were remarkable—unlike the existing VecSet DiT, which took over a month to converge on 64 A100 GPUs, the DiT model converged in just one day.</p>
+<p>Below is a visualization of the high-quality mesh generation process through Varco3D-Lattice: 1) coarse mesh generation, 2) voxelize &amp; voxel query sampling, 3) fine mesh generation.</p>
+<table>
+<thead>
+<tr>
+<th>Coarse Mesh</th>
+<th>Voxel Query</th>
+<th>Fine Mesh</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/b583be7b-4b38-4247-8d14-e7a9f2d04b8e/image.png" alt=""></td>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/6d8d2b6b-6c51-425c-b313-f931136437b2/image.png" alt=""></td>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/e0b5cbcf-b3b5-4cf7-a21c-cc1d6b273b11/image.png" alt=""></td>
+</tr>
+</tbody></table>
+<h4><em>vs.</em> Sparse-Voxel Method</h4>
+<p>It was encouraging that the model outputs showed detail equal to or better than Varco3D 1.0-preview (Sparse Voxel), while also demonstrating much more robust mesh topology and fewer artifacts. This model will be officially updated as the Varco3D 1.0 model after going through inference optimization.</p>
+<p>Below are some comparisons with Varco3D 1.0 preview, which uses the same coarse-to-fine approach.</p>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th><strong>Varco3D 1.0-preview (sparse voxel)</strong> <em>vs.</em> <strong>Varco3D 1.0 (VecSet-Lattice)</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/19762800-5a01-429f-bc6c-32256235cd5c/image.png" alt=""></td>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/46cd00b9-dff6-4102-9c18-d333214b72e0/image.png" alt=""></td>
+</tr>
+</tbody></table>
+<p>While the sparse voxel-based Varco3D 1.0 preview model also generates excessive detail and artifacts, the Varco3D 1.0 model produces clean and robust outputs.</p>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th><strong>Varco3D 1.0-preview</strong> <em>vs.</em> <strong>Varco3D 1.0</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/a0b2e8af-7334-48a6-bf37-523e6a7d6c67/image.png" alt=""></td>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/60f06b88-8772-4c67-b53f-e883e191fb57/image.png" alt=""></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="toc-heading-13">4. Next Step in 3D Generation</h2>
+<p>As we enter 2026, I would like to conclude this piece by organizing my thoughts on the technical balance between &#39;Sparse Voxel&#39; and &#39;VecSet&#39; that I perceived during the Varco3D 1.0 development process, as well as the possibilities of new 3D representations beyond these.</p>
+<h3 id="toc-heading-14">4.1 Sparse Voxel vs. VecSet</h3>
+<p>For the time being, the contest for dominance between the Sparse Voxel and VecSet camps will likely continue. Having personally trained and served both models, I would summarize the pros and cons as follows:</p>
+<h4>Sparse Voxel</h4>
+<p><strong><em>Advantage</em> — Detailed Generation</strong>: Unlike Lattice, which samples via FPS, sparse voxel methods use all active voxels, often excelling over Lattice in terms of local detail.</p>
+<p><strong><em>Disadvantage</em> — Instability</strong>: There are significant shortcomings in terms of training and inference stability. Token length varies for each piece of data, and the number of active voxels at $128^3$ resolution alone averages over 80K. Additionally, because all active voxels are used, the quality is highly dependent on the quality of active voxels.</p>
+<p>At this token length, full attention training is practically impossible, so one must either use Sliding Window Attention like Swin Transformer or downsample to 64/32 resolution for full attention and then upsample again, which introduces structural instability in the process.</p>
+<img src='https://velog.velcdn.com/images/gjghks950/post/494309cf-9b97-4753-b7a9-52ee3cba592f/image.png' width=70%>
+
+<ul>
+<li>Direct3D-S2&#39;s 3D sliding window attention mechanism</li>
+</ul>
+<hr>
+<h4>VecSet</h4>
+<p><strong><em>Advantage</em> — Full Attention</strong>: By adopting the Lattice structure, training is possible with far fewer tokens (approximately 6K), allowing full attention to be applied stably.</p>
+<p><strong><em>Advantage</em> — Inference Time Scaling</strong>: The biggest advantage is the ability to perform inference time scaling by increasing the number of tokens to 32K or more to maximize detail. Since the number of tokens is not fixed in VecSet, more tokens can be used at inference time to obtain more refined results.</p>
+<p><strong><em>Disadvantage</em> — Decoding Time</strong>: VecSet has a structure that requires querying all points of a dense grid to the decoder to reconstruct the 3D representation during decoding. While decoding time can be reduced with FlashVDM and similar methods, even then it takes several minutes for high-resolution meshes, which is longer compared to sparse voxel methodologies.</p>
+<hr>
+<h3 id="toc-heading-15">4.2 Beyond SDF: Trellis 2 &amp; Faith-Contouring</h3>
+<p>Finally, what I am paying attention to in the 3D generation field in 2026 is <strong>the change in 3D representation itself.</strong></p>
+<p>All the methods described so far have been under the shadow of SDF (Signed Distance Function). SDF is a value that indicates how far a point in space is from an object&#39;s surface (Distance) and whether it is inside or outside (Sign). This is converted to a mesh through the Marching Cubes algorithm, but there is a critical constraint: <strong>&#39;it must be a closed object (watertight).&#39;</strong> Since only sealed shapes that do not leak water can be represented, there were clear limitations in generating &#39;open surfaces&#39; such as torn collar edges, thin paper, or cross-sections of transparent glass.</p>
+<p>Recently released <a href="https://microsoft.github.io/TRELLIS.2/">Trellis-2</a> and <a href="https://github.com/Luo-Yihao/FaithC">FaithC</a> chose an approach where AI directly predicts <strong>QEM (Quadric Error Metric)</strong> parameters instead of predicting SDF values to solve this problem.</p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/dd98c4b4-dca3-428b-888d-87928fb4c249/image.png" alt=""></p>
+<ul>
+<li><em>Illustration of FaithC</em></li>
+</ul>
+<p>Of course, there are clear trade-offs with this approach as well. The biggest problem I noticed through direct generation was &#39;topological discontinuity&#39;—in simple terms, the phenomenon of results being torn. I believe this occurs because, with the strong continuity constraint of SDF removed, the predicted values of each voxel generated by the model fail to connect smoothly with each other.</p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/340bb5e1-9542-4ad4-a183-51fb00441fe9/image.png" alt=""></p>
+<ul>
+<li>Generated by Trellis 2</li>
+</ul>
+<p>Since SDF is mathematically defined in a &#39;continuous function&#39; space, the surface is guaranteed to be smoothly closed regardless of resolution. However, methods like Trellis2/FaithC that predict values on a discrete voxel grid frequently produced artifacts such as holes in the surface or torn meshes when the model failed to perfectly learn the connectivity between adjacent voxels.</p>
+<p>As an idea to solve this problem, one could consider predicting information that guarantees surface continuity, like UDF (Unsigned Distance Function), as an additional channel alongside the existing Q matrix. If we guide topological continuity between adjacent voxels through UDF gradients without forcing &#39;closed shapes&#39; like SDF, I believe it might be possible to achieve robust native 3D generation that creates &quot;open surfaces that don&#39;t tear&quot; without post-processing.</p>
+<hr>
+<h2 id="toc-heading-16">Epilogue</h2>
+<p>As I conclude this piece, I want to share some honest reflections that have settled in a corner of my heart as a researcher.</p>
+<p>Objectively speaking, the current Varco3D is still difficult to claim as superior when compared to closed SOTA models released by global big tech companies. Facing their capital power, which deploys thousands or tens of thousands of H100 GPUs, the reality of having to train models with 64 A100s sometimes brings a sense of helplessness. While saying &quot;we lack resources&quot; sometimes feels like a cowardly excuse, at the same time, anxiety rushes in when I find myself struggling just to keep up with the new research that pours out every morning.</p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/a6061cdb-918f-406b-94e9-e208aa46073f/image.png" alt=""></p>
+<ul>
+<li>Varco3D-1.0 <em>vs.</em> Hunyuan3D-3.1 <em>vs.</em> Meshy-6</li>
+</ul>
+<p>Yet this anxiety paradoxically leads to an intense yearning for &#39;pure research.&#39; I want to answer fundamental questions—not simply being consumed with more efficiently following paths that others have paved, but rather exploring what the essence of 3D representation is, how to translate mathematical continuity into the language of deep learning. I believe that the &#39;practicality gap&#39; that current 3D AI services cannot overcome can only be bridged by innovating the essence of 3D, such as representation methods, rather than by the size of parameters.</p>
+<p>The reason for insisting on our own models under the grand slogan of &#39;Sovereign AI&#39; is not simply due to licensing issues. It is the will to not merely be a follower tracing the footsteps of big tech, but to create a &#39;sharp crack&#39; that changes the technological landscape from our own perspective. So that the limits of resources do not become the limits of imagination—in 2026 as well, I wish to remain someone who does not linger in the sensation of stagnation, but who pushes against the turbulent current.</p>
+
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Post Navigation -->
+                    <div id="post-navigation" class="mt-4"></div>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <footer class="border-top">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="small text-center text-muted fst-italic">Copyright © Hwan Heo</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="/blogs/js/code-copy.js"></script>
+    <script src="/blogs/js/scroll-progress.js"></script>
+    <script src="/blogs/js/posts-data.js"></script>
+    <script>
+        // Math rendering
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            }
+
+            // Share button functionality
+            const copyButton = document.getElementById('copyButton');
+            const shareModal = document.getElementById('myshare_modal');
+            const closeModal = shareModal ? shareModal.querySelector('.share_modal_close') : null;
+            const indicator = document.getElementById('share_modalIndicator');
+
+            if (copyButton && shareModal) {
+                let animationId;
+
+                function updateShareButtonVisibility() {
+                    var headerHeight = document.querySelector('.masthead').offsetHeight;
+                    if (window.innerWidth > 1280 && window.scrollY > headerHeight) {
+                        copyButton.style.display = 'block';
+                    } else {
+                        copyButton.style.display = 'none';
+                    }
+                }
+
+                function animateIndicator() {
+                    let startTime = null;
+                    const duration = 1500;
+
+                    function step(timestamp) {
+                        if (!startTime) startTime = timestamp;
+                        const progress = Math.min((timestamp - startTime) / duration, 1);
+                        indicator.style.width = `${(1 - progress) * 100}%`;
+
+                        if (progress < 1) {
+                            animationId = requestAnimationFrame(step);
+                        } else {
+                            shareModal.style.display = 'none';
+                        }
+                    }
+
+                    cancelAnimationFrame(animationId);
+                    animationId = requestAnimationFrame(step);
+                }
+
+                function closeShareModal() {
+                    cancelAnimationFrame(animationId);
+                    shareModal.style.display = 'none';
+                    indicator.style.width = '0%';
+                }
+
+                // Scroll event for share button visibility
+                document.addEventListener('scroll', updateShareButtonVisibility);
+                window.addEventListener('resize', updateShareButtonVisibility);
+
+                copyButton.addEventListener('click', function() {
+                    const url = new URL(window.location.href);
+                    url.hash = '';
+                    const urlWithoutHash = url.href;
+
+                    navigator.clipboard.writeText(urlWithoutHash).then(function() {
+                        shareModal.style.display = 'block';
+                        indicator.style.width = '100%';
+                        animateIndicator();
+                    }).catch(function(err) {
+                        console.error('Link Copy Failed:', err);
+                        alert('링크 복사에 실패했습니다.');
+                    });
+                });
+
+                if (closeModal) {
+                    closeModal.addEventListener('click', closeShareModal);
+                }
+
+                window.addEventListener('click', function(event) {
+                    if (event.target === shareModal) {
+                        closeShareModal();
+                    }
+                });
+
+                updateShareButtonVisibility();
+            }
+
+            // Series navigation
+            const postId = '260115_Varco3D';
+            const lang = 'eng';
+            renderSeriesNavigation(postId, lang);
+
+            // TOC scroll tracking
+            initializeTOC();
+
+            // Custom script for specific posts with 3D viewers
+            if (postId === '240917_3djs') {
+                import('/blogs/3DViewer/js/gaussian_viewer.js')
+                    .then(module => {
+                        module.initGaussianViewer();
+                    })
+                    .catch(err => {
+                        console.error("Failed to load the Gaussian viewer script:", err);
+                    });
+            }
+
+            if (postId === '250310_model_viewer') {
+                import('/js/simple-model-viewer.js')
+                    .then(module => {
+                        module.initGaussianViewer();
+                    })
+                    .catch(err => {
+                        console.error("Failed to load the Gaussian viewer script:", err);
+                    });
+            }
+        });
+
+        function initializeTOC() {
+            const toc = document.querySelector('.toc');
+            if (!toc) return;
+
+            let tocItems = [];
+
+            // Scroll에 따라 TOC 표시/숨김
+            function updateTocVisibility() {
+                const headerHeight = document.querySelector('.masthead')?.offsetHeight || 300;
+                if (window.scrollY > headerHeight) {
+                    toc.style.display = 'block';
+                } else {
+                    toc.style.display = 'none';
+                }
+            }
+
+            document.addEventListener('scroll', updateTocVisibility);
+
+            // 초기 상태 설정
+            const headerHeight = document.querySelector('.masthead')?.offsetHeight || 300;
+            toc.style.display = window.scrollY > headerHeight ? 'block' : 'none';
+
+            // 스크롤에 따라 현재 섹션 활성화
+            const TOP_MARGIN = 0.1;
+            const BOTTOM_MARGIN = 0.2;
+
+            function initTocItems() {
+                tocItems = Array.from(toc.querySelectorAll('li')).map(function(item) {
+                    const anchor = item.querySelector('a');
+                    if (!anchor) return null;
+                    const href = anchor.getAttribute('href');
+                    if (!href || href === '#') return null;
+                    const target = document.getElementById(href.slice(1));
+                    return { listItem: item, anchor: anchor, target: target };
+                }).filter(item => item && item.target);
+            }
+
+            function syncToc() {
+                const windowHeight = window.innerHeight;
+                let currentSection = null;
+
+                tocItems.forEach(function(item) {
+                    const targetBounds = item.target.getBoundingClientRect();
+                    if (targetBounds.top <= windowHeight * (1 - BOTTOM_MARGIN)) {
+                        currentSection = item;
+                    }
+                });
+
+                tocItems.forEach(function(item) {
+                    if (item === currentSection) {
+                        item.listItem.classList.add('active');
+                    } else {
+                        item.listItem.classList.remove('active');
+                    }
+                });
+            }
+
+            initTocItems();
+            syncToc();
+            window.addEventListener('scroll', syncToc, false);
+        }
+
+        function getPostTitle(post, lang) {
+            return post['title_' + lang] || post.title_eng;
+        }
+
+        function renderSeriesNavigation(postId, lang) {
+            const seriesContainer = document.getElementById('series-container');
+            const navContainer = document.getElementById('post-navigation');
+
+            if (!postsData || !seriesInfo || !seriesContainer) return;
+
+            const currentPost = postsData.find(p => p.id === postId);
+            if (!currentPost || !currentPost.series) return;
+
+            const seriesId = currentPost.series;
+            const postsInSeries = postsData
+                .filter(p => p.series === seriesId)
+                .sort((a, b) => new Date(b.date) - new Date(a.date)); // 최신순 정렬
+
+            if (postsInSeries.length <= 1) return;
+
+            const seriesTitle = seriesInfo[seriesId]?.[lang] || seriesInfo[seriesId]?.['eng'] || 'Series';
+
+            // Render series accordion
+            const listItems = postsInSeries.map(post => {
+                const title = getPostTitle(post, lang);
+                const slug = post.slug || post.id;
+                const postLang = lang === 'eng' ? slug : slug + '-kor';
+                if (post.id === postId) {
+                    return '<li><strong>' + title + '</strong></li>';
+                } else {
+                    return '<li><a href="/blogs/posts/' + postLang + '/">' + title + '</a></li>';
+                }
+            }).join('');
+
+            seriesContainer.innerHTML = `
+                <div class="accordion mb-4" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                <strong>${seriesTitle}</strong>
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <ol>${listItems}</ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Render post navigation (prev/next)
+            const currentIndex = postsInSeries.findIndex(p => p.id === postId);
+            const olderPost = postsInSeries[currentIndex + 1];
+            const nextPost = postsInSeries[currentIndex - 1];
+
+            if (olderPost || nextPost) {
+                let navHtml = '<div class="d-flex justify-content-between mb-4">';
+
+                if (olderPost) {
+                    const olderTitle = getPostTitle(olderPost, lang);
+                    const truncatedTitle = olderTitle.length > 25 ? olderTitle.substring(0, 25) + '...' : olderTitle;
+                    const olderSlug = olderPost.slug || olderPost.id;
+                    const olderLang = lang === 'eng' ? olderSlug : olderSlug + '-kor';
+                    navHtml += `<a class="btn btn-light text-uppercase" href="/blogs/posts/${olderLang}/" style="width: 40%; text-align: center;">← Older Post<br><small style="font-size: 0.7rem; text-transform: none;">${truncatedTitle}</small></a>`;
+                } else {
+                    if (nextPost) {
+                        navHtml += '<div></div>';
+                    }
+                }
+
+                if (nextPost) {
+                    const nextTitle = getPostTitle(nextPost, lang);
+                    const truncatedTitle = nextTitle.length > 25 ? nextTitle.substring(0, 25) + '...' : nextTitle;
+                    const nextSlug = nextPost.slug || nextPost.id;
+                    const nextLang = lang === 'eng' ? nextSlug : nextSlug + '-kor';
+                    navHtml += `<a class="btn btn-light text-uppercase" href="/blogs/posts/${nextLang}/" style="width: 40%; text-align: center;">Next Post →<br><small style="font-size: 0.7rem; text-transform: none;">${truncatedTitle}</small></a>`;
+                } else {
+                    const allSeriesIds = Object.keys(seriesInfo);
+                    const otherSeriesIds = allSeriesIds.filter(id => id !== currentPost.series);
+
+                    if (otherSeriesIds.length > 0) {
+                        const randomSeriesId = otherSeriesIds[Math.floor(Math.random() * otherSeriesIds.length)];
+                        const latestPostInRandomSeries = postsData
+                            .filter(p => p.series === randomSeriesId)
+                            .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+
+                        if (latestPostInRandomSeries) {
+                            const seriesTitle = seriesInfo[randomSeriesId][lang] || seriesInfo[randomSeriesId]['eng'];
+                            const recSlug = latestPostInRandomSeries.slug || latestPostInRandomSeries.id;
+                            const recLang = lang === 'eng' ? recSlug : recSlug + '-kor';
+                            navHtml += `<a class="btn btn-outline-secondary text-uppercase" href="/blogs/posts/${recLang}/" style="width: 40%; text-align: center;">Explore Series<br><small style="font-size: 0.7rem; text-transform: none;">${seriesTitle}</small></a>`;
+                        }
+                    } else {
+                        navHtml += '<div></div>';
+                    }
+                }
+
+                navHtml += '</div>';
+                navContainer.innerHTML = navHtml;
+            }
+        }
+    </script>
+</body>
+</html>
