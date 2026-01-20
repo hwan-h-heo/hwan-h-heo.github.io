@@ -206,7 +206,7 @@ $$
 
 <p>
 $$ 
-\frac{\partial C}{\partial \theta} = \underbrace{\frac{\partial C}{\partial c} \frac{\partial c}{\partial \theta}}_{\text{Color update}} + \underbrace{\frac{\partial C}{\partial \sigma} \frac{\partial \sigma}{\partial \theta}}_{\text{Geometry update}} \rightarrow \Delta \sigma \propto (\epsilon_{\phi} - \epsilon) \cdot \frac{\partial C}{\partial \sigma}
+\frac{\partial C}{\partial \theta} = \underbrace{\frac{\partial C}{\partial c} \frac{\partial c}{\partial \theta}}_{\text{Color update}} + \underbrace{\frac{\partial C}{\partial \sigma} \frac{\partial \sigma}{\partial \theta}}_{\text{Geometry update}} \\ {} \\ \rightarrow \Delta \sigma \propto (\epsilon_{\phi} - \epsilon) \cdot {\partial C}{\partial \sigma}
 $$
 </p>
 
@@ -220,7 +220,7 @@ $$
 <h3 id="toc-heading-3">1.2. <em>Texture</em> Generative AI</h3>
 <p>비슷한 시기, 사내의 다른 팀에서는 Polygonal Mesh의 texture를 2D 생성 AI로 생성하고 편집하는 Texture Copilot을 연구 중이었다.</p>
 <p><a href="https://ncsoft.github.io/ncresearch/3f0ba4889e331ddbed68c9dd48d845fa18d874de">NC Research Blog: Texture Copilot</a></p>
-<iframe width="640" height="360" src="https://www.youtube-nocookie.com/embed/HvyPxxDzrwo?si=1A8HVOcStAQE4rAS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/HvyPxxDzrwo?si=1A8HVOcStAQE4rAS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 
 <p>이는 주어진 메시를 다각도에서 Depth &amp; Normal map으로 렌더링한 후, ControlNet을 이용해 Multi-view 이미지를 생성하고 이를 다시 메시에 역투영(Back-projection)하는 방식이었다. 
@@ -247,13 +247,15 @@ $$
 <p>프로젝트를 진행하며 최적화 기반의 3D 생성 방법론은 결국 한계에 다다를 것이라 확신했다. ShapeVAE 기반의 DiT는 feed-forward 방식이기 때문에 SDS보다 asset 생성에 훨씬 빠르며, DiT 모델의 크기를 증대시키며 scaling law의 성공을 3D domain으로 확장할 수 있기 때문이다. </p>
 <hr>
 <h2 id="toc-heading-5">2. Pursue SOTA: 3D Sovereign AI</h2>
+<br/>
+
 <h3 id="toc-heading-6">2.1. Varco3D-alpha</h3>
 <p>새로운 팀으로 옮긴 후 내가 수행한 첫 번째 업무는 CaPa 파이프라인을 확장하여 사내 3D 생성 서비스인 Varco3D-$\alpha$를 출시하는 것이었다. 모델 구조는 CaPa 를 계승한 전형적인 3D 생성 파이프라인을 따랐다.</p>
 <ol>
 <li><strong>Geometry Generation</strong>: ShapeVAE + DiT</li>
 <li><strong>Texture Generation</strong>: 2D Generative Model 을 차용한 Multi-View Image Synthesis to Mesh Back-projection</li>
 </ol>
-<iframe width="640" height="360" src="https://www.youtube-nocookie.com/embed/AtQNAuQY4-A?si=pQWlS8qawVOyFSqK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/AtQNAuQY4-A?si=pQWlS8qawVOyFSqK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 
 
@@ -331,6 +333,8 @@ $$
 <p><img src="https://velog.velcdn.com/images/gjghks950/post/febf339b-fb85-4cd6-b3cc-2272b4f304b1/image.png" alt=""></p>
 <hr>
 <h2 id="toc-heading-9">3. Back to the VecSet</h2>
+<br/>
+
 <h3 id="toc-heading-10">3.1. Lattice</h3>
 <p>Sparse voxel 기반 방법론(Sparc3D 등)이 global shape과 local detail 생성을 분리하여 학습 효율과 품질을 비약적으로 높인 사실을 기억하는가? </p>
 <p><a href="https://lattice3d.github.io/"><strong>Lattice</strong></a>는 Tencent에서 공개한 Hunyuan3D 2.5/3.0 geometry 생성 모델의 핵심이 되는 구조다. Sparc3D 등과 마찬가지로 먼저 global shape을 생성한 후, 그 결과를 guidance 삼아 local detail을 생성 하는 two-stage 접근법을 VecSet 방법론에 적용하였다. 
@@ -376,31 +380,15 @@ $$
 <h4><em>vs.</em> Sparse-Voxel Method</h4>
 <p>모델 결과물은 Varco3D 1.0-preview (Sparse Voxel) 이상의 디테일을 보여주면서도, 생성된 Mesh의 Topology가 훨씬 robust하고 artifact 형상이 적다는 점이 고무적이었다. 이 모델은 inference 최적화 과정을 거쳐 곧 Varco3D 1.0 model 로 정식 업데이트 될 예정이다. </p>
 <p>같은 coarse-to-fine 방식인 Varco3D 1.0 preview 와의 비교를 몇 가지 첨부한다. </p>
-<table>
-<thead>
-<tr>
-<th>Input</th>
-<th><strong>Varco3D 1.0-preview (sparse voxel)</strong> <em>vs.</em> <strong>Varco3D 1.0 (VecSet-Lattice)</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><img src="https://velog.velcdn.com/images/gjghks950/post/19762800-5a01-429f-bc6c-32256235cd5c/image.png" alt=""></td>
-<td><img src="https://velog.velcdn.com/images/gjghks950/post/46cd00b9-dff6-4102-9c18-d333214b72e0/image.png" alt=""></td>
-</tr>
-</tbody></table>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/46cd00b9-dff6-4102-9c18-d333214b72e0/image.png" alt=""></p>
+<ul>
+<li><strong>Varco3D 1.0-preview (sparse voxel)</strong> <em>vs.</em> <strong>Varco3D 1.0 (VecSet-Lattice)</strong></li>
+</ul>
 <p>Sparse voxel 기반의 Varco3D 1.0 preview 모델이 과도한 detail, artifact 등도 생성하는데 반면, Varco3D 1.0 모델은 깔끔하고 robust 한 output 을 생성하였다. </p>
-<table>
-<thead>
-<tr>
-<th>Input</th>
-<th><strong>Varco3D 1.0-preview</strong> <em>vs.</em> **Varco3D 1.0 **</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><img src="https://velog.velcdn.com/images/gjghks950/post/a0b2e8af-7334-48a6-bf37-523e6a7d6c67/image.png" alt=""></td>
-<td><img src="https://velog.velcdn.com/images/gjghks950/post/60f06b88-8772-4c67-b53f-e883e191fb57/image.png" alt=""></td>
-</tr>
-</tbody></table>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/60f06b88-8772-4c67-b53f-e883e191fb57/image.png" alt=""></p>
+<ul>
+<li><strong>Varco3D 1.0-preview (sparse voxel)</strong> <em>vs.</em> <strong>Varco3D 1.0 (VecSet-Lattice)</strong></li>
+</ul>
 <hr>
 <h2 id="toc-heading-13">4. Next Step in 3D Generation</h2>
 <p>2026년을 맞이하며, Varco3D 1.0 개발 과정에서 느꼈던 &#39;Sparse Voxel&#39;과 &#39;VecSet&#39; 사이의 기술적 균형, 그리고 이를 넘어선 새로운 3D Representation의 가능성에 대해 정리하며 글을 맺으려 한다.</p>
@@ -446,7 +434,19 @@ $$
 </ul>
 <p>하지만 이 초조함은 역설적으로 &#39;순수 연구&#39;에 대한 강렬한 갈망으로 이어진다. 단순히 남들이 닦아놓은 길을 더 효율적으로 따라가는데 매몰되지 않고, 3D Representation의 본질이 무엇인지, 수학적 연속성을 어떻게 딥러닝의 언어로 치환할 것인지와 같은 근원적인 질문에 답하고 싶다. 현재의 3D AI 서비스들이 넘지 못한 &#39;실용성의 간극&#39;은 결국 파라미터의 크기가 아니라, 표현 방식과 같은 3D에 대한 본질을 혁신할 때만 메워질 수 있다고 믿는다.</p>
 <p>Sovereign AI 라는 거창한 구호 아래 자체 모델을 고집하는 이유는 단순히 라이선스 문제 때문만이 아니다. 빅테크의 자취만을 따라가는 추격자에 그치지 않고, 우리만의 관점으로 기술의 판도를 바꾸는 &#39;날카로운 균열&#39;을 만들어내겠다는 의지다. 자원의 한계가 상상력의 한계가 되지 않도록, 2026년에도 정체의 감각에 머무르지 않고 격랑을 거스르는 사람으로 남고 싶다.</p>
+<iframe src="https://3d.varco.ai/test-embed/02072a988541af639c393f1d4c45f2ef.glb" width="100%" height="500px" title="설명" style="border: none;"></iframe>
 
+<ul>
+<li>Varco3D 1.0</li>
+</ul>
+<hr>
+<p>You may also like</p>
+<ul>
+<li><a href="/blogs/posts/?id=250302_3d_latent_diffusion">An Era of 3D Generative Models</a></li>
+<li><a href="/blogs/posts/?id=250702_building_large_3d_1">Building Large 3D Generative Models (1) - 3D Data Pre-processing</a></li>
+<li><a href="/blogs/posts/?id=250710_building_large_3d_2">Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D</a></li>
+</ul>
+<br/>
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     <!-- Post Navigation -->

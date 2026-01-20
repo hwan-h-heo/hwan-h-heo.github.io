@@ -54,7 +54,7 @@ $$
 
 <p>
 $$ 
-\frac{\partial C}{\partial \theta} = \underbrace{\frac{\partial C}{\partial c} \frac{\partial c}{\partial \theta}}_{\text{Color update}} + \underbrace{\frac{\partial C}{\partial \sigma} \frac{\partial \sigma}{\partial \theta}}_{\text{Geometry update}} \rightarrow \Delta \sigma \propto (\epsilon_{\phi} - \epsilon) \cdot \frac{\partial C}{\partial \sigma}
+\frac{\partial C}{\partial \theta} = \underbrace{\frac{\partial C}{\partial c} \frac{\partial c}{\partial \theta}}_{\text{Color update}} + \underbrace{\frac{\partial C}{\partial \sigma} \frac{\partial \sigma}{\partial \theta}}_{\text{Geometry update}} \\ {} \\ \rightarrow \Delta \sigma \propto (\epsilon_{\phi} - \epsilon) \cdot {\partial C}{\partial \sigma}
 $$
 </p>
 
@@ -76,7 +76,7 @@ SDS loss로 3D 모델을 업데이트할 때, chain rule을 따라가 보면 tex
 [NC Research Blog: Texture Copilot](https://ncsoft.github.io/ncresearch/3f0ba4889e331ddbed68c9dd48d845fa18d874de)
 
 
-<iframe width="640" height="360" src="https://www.youtube-nocookie.com/embed/HvyPxxDzrwo?si=1A8HVOcStAQE4rAS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/HvyPxxDzrwo?si=1A8HVOcStAQE4rAS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 
 이는 주어진 메시를 다각도에서 Depth & Normal map으로 렌더링한 후, ControlNet을 이용해 Multi-view 이미지를 생성하고 이를 다시 메시에 역투영(Back-projection)하는 방식이었다. 
@@ -111,6 +111,7 @@ SDS loss로 3D 모델을 업데이트할 때, chain rule을 따라가 보면 tex
 
 ## 2. Pursue SOTA: 3D Sovereign AI 
 
+<br/>
 
 ### 2.1. Varco3D-alpha
 
@@ -120,7 +121,7 @@ SDS loss로 3D 모델을 업데이트할 때, chain rule을 따라가 보면 tex
 2. **Texture Generation**: 2D Generative Model 을 차용한 Multi-View Image Synthesis to Mesh Back-projection
 
 
-<iframe width="640" height="360" src="https://www.youtube-nocookie.com/embed/AtQNAuQY4-A?si=pQWlS8qawVOyFSqK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/AtQNAuQY4-A?si=pQWlS8qawVOyFSqK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 
 
@@ -202,6 +203,8 @@ Trellis model formulation 으로 이는 $32^3$ 의 dense voxel grid 에서 diffu
 
 ## 3. Back to the VecSet 
 
+<br/>
+
 ### 3.1. Lattice
 
 Sparse voxel 기반 방법론(Sparc3D 등)이 global shape과 local detail 생성을 분리하여 학습 효율과 품질을 비약적으로 높인 사실을 기억하는가? 
@@ -258,18 +261,15 @@ Lattice 구조를 바탕으로 Varco3D-$\alpha$ 모델 구조에 Voxel query RoP
 
 같은 coarse-to-fine 방식인 Varco3D 1.0 preview 와의 비교를 몇 가지 첨부한다. 
 
-| Input | **Varco3D 1.0-preview (sparse voxel)** *vs.* **Varco3D 1.0 (VecSet-Lattice)** |
-| --- | --- |
-| ![](https://velog.velcdn.com/images/gjghks950/post/19762800-5a01-429f-bc6c-32256235cd5c/image.png) | ![](https://velog.velcdn.com/images/gjghks950/post/46cd00b9-dff6-4102-9c18-d333214b72e0/image.png)|
-
+![](https://velog.velcdn.com/images/gjghks950/post/46cd00b9-dff6-4102-9c18-d333214b72e0/image.png)
+- **Varco3D 1.0-preview (sparse voxel)** *vs.* **Varco3D 1.0 (VecSet-Lattice)**
 
 
 Sparse voxel 기반의 Varco3D 1.0 preview 모델이 과도한 detail, artifact 등도 생성하는데 반면, Varco3D 1.0 모델은 깔끔하고 robust 한 output 을 생성하였다. 
 
-| Input | **Varco3D 1.0-preview** *vs.* **Varco3D 1.0 ** |
-| --- | --- |
-| ![](https://velog.velcdn.com/images/gjghks950/post/a0b2e8af-7334-48a6-bf37-523e6a7d6c67/image.png)| ![](https://velog.velcdn.com/images/gjghks950/post/60f06b88-8772-4c67-b53f-e883e191fb57/image.png) |
+![](https://velog.velcdn.com/images/gjghks950/post/60f06b88-8772-4c67-b53f-e883e191fb57/image.png)
 
+- **Varco3D 1.0-preview (sparse voxel)** *vs.* **Varco3D 1.0 (VecSet-Lattice)**
 
 ---
 
@@ -344,3 +344,19 @@ SDF는 수학적으로 '연속 함수' 공간에서 정의되기에, 해상도�
 하지만 이 초조함은 역설적으로 '순수 연구'에 대한 강렬한 갈망으로 이어진다. 단순히 남들이 닦아놓은 길을 더 효율적으로 따라가는데 매몰되지 않고, 3D Representation의 본질이 무엇인지, 수학적 연속성을 어떻게 딥러닝의 언어로 치환할 것인지와 같은 근원적인 질문에 답하고 싶다. 현재의 3D AI 서비스들이 넘지 못한 '실용성의 간극'은 결국 파라미터의 크기가 아니라, 표현 방식과 같은 3D에 대한 본질을 혁신할 때만 메워질 수 있다고 믿는다.
 
 Sovereign AI 라는 거창한 구호 아래 자체 모델을 고집하는 이유는 단순히 라이선스 문제 때문만이 아니다. 빅테크의 자취만을 따라가는 추격자에 그치지 않고, 우리만의 관점으로 기술의 판도를 바꾸는 '날카로운 균열'을 만들어내겠다는 의지다. 자원의 한계가 상상력의 한계가 되지 않도록, 2026년에도 정체의 감각에 머무르지 않고 격랑을 거스르는 사람으로 남고 싶다.
+
+
+<iframe src="https://3d.varco.ai/test-embed/02072a988541af639c393f1d4c45f2ef.glb" width="100%" height="500px" title="설명" style="border: none;"></iframe>
+
+- Varco3D 1.0
+
+---
+
+
+You may also like
+
+- [An Era of 3D Generative Models](/blogs/posts/?id=250302_3d_latent_diffusion)
+- [Building Large 3D Generative Models (1) - 3D Data Pre-processing](/blogs/posts/?id=250702_building_large_3d_1)
+- [Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D](/blogs/posts/?id=250710_building_large_3d_2)
+
+<br/>

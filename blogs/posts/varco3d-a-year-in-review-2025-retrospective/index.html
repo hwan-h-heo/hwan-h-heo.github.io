@@ -208,7 +208,7 @@ $$
 
 <p>
 $$ 
-\frac{\partial C}{\partial \theta} = \underbrace{\frac{\partial C}{\partial c} \frac{\partial c}{\partial \theta}}_{\text{Color update}} + \underbrace{\frac{\partial C}{\partial \sigma} \frac{\partial \sigma}{\partial \theta}}_{\text{Geometry update}} \rightarrow \Delta \sigma \propto (\epsilon_{\phi} - \epsilon) \cdot \frac{\partial C}{\partial \sigma}
+\frac{\partial C}{\partial \theta} = \underbrace{\frac{\partial C}{\partial c} \frac{\partial c}{\partial \theta}}_{\text{Color update}} + \underbrace{\frac{\partial C}{\partial \sigma} \frac{\partial \sigma}{\partial \theta}}_{\text{Geometry update}} \\ {} \\ \rightarrow \Delta \sigma \propto (\epsilon_{\phi} - \epsilon) \cdot \frac{\partial C}{\partial \sigma}
 $$
 </p>
 
@@ -222,7 +222,7 @@ $$
 <h3 id="toc-heading-3">1.2 <em>Texture</em> Generative AI</h3>
 <p>Around the same time, another team within the company was researching Texture Copilot, which generates and edits the texture of polygonal meshes using 2D generative AI.</p>
 <p><a href="https://ncsoft.github.io/ncresearch/3f0ba4889e331ddbed68c9dd48d845fa18d874de">NC Research Blog: Texture Copilot</a></p>
-<iframe width="640" height="360" src="https://www.youtube-nocookie.com/embed/HvyPxxDzrwo?si=1A8HVOcStAQE4rAS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/HvyPxxDzrwo?si=1A8HVOcStAQE4rAS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 <p>This approach involved rendering a given mesh as depth and normal maps from multiple angles, then using ControlNet to generate multi-view images and back-projecting them onto the mesh.</p>
 <img src='https://velog.velcdn.com/images/gjghks950/post/5791f4d3-96f1-430f-a768-f17078d27b8d/image.png' width=50%>
@@ -249,13 +249,15 @@ $$
 <p>Working on this project, I became convinced that optimization-based 3D generation methodologies would eventually reach their limits. DiT based on ShapeVAE is a feed-forward method, making it much faster for asset generation than SDS, and scaling up the DiT model size allows extending the success of scaling laws to the 3D domain.</p>
 <hr>
 <h2 id="toc-heading-5">2. Pursue SOTA: 3D Sovereign AI</h2>
+<br/>
+
 <h3 id="toc-heading-6">2.1 Varco3D-alpha</h3>
 <p>After moving to the new team, my first task was to expand the CaPa pipeline and launch Varco3D-α, our in-house 3D generation service. The model architecture followed a typical 3D generation pipeline inherited from CaPa.</p>
 <ol>
 <li><strong>Geometry Generation</strong>: ShapeVAE + DiT</li>
 <li><strong>Texture Generation</strong>: Multi-View Image Synthesis to Mesh Back-projection, leveraging 2D Generative Models</li>
 </ol>
-<iframe width="640" height="360" src="https://www.youtube-nocookie.com/embed/AtQNAuQY4-A?si=pQWlS8qawVOyFSqK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/AtQNAuQY4-A?si=pQWlS8qawVOyFSqK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 <p>One important intuition I gained while training this model was that training a &#39;Geometry VAE&#39; requires far less data and resources than 2D generative models. This is based on the assumption that the distribution of 3D geometry is simpler than that of RGB images. Indeed, artist-crafted polygonal meshes, unlike RGB images, do not have much variation in high-frequency details or complex backgrounds.</p>
 <p>Additionally, high-performance open-source models at the time were unavailable for commercial use due to licensing issues. This background became the catalyst for forming an internal consensus that &#39;we must continuously advance our own models.&#39;</p>
@@ -332,6 +334,8 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
 <p><img src="https://velog.velcdn.com/images/gjghks950/post/febf339b-fb85-4cd6-b3cc-2272b4f304b1/image.png" alt=""></p>
 <hr>
 <h2 id="toc-heading-9">3. Back to VecSet</h2>
+<br/>
+
 <h3 id="toc-heading-10">3.1 Lattice</h3>
 <p>Do you remember that sparse voxel-based methodologies (Sparc3D, etc.) dramatically improved training efficiency and quality by separating global shape and local detail generation?</p>
 <p><a href="https://lattice3d.github.io/"><strong>Lattice</strong></a> is the core structure behind Hunyuan3D 2.5/3.0&#39;s geometry generation model released by Tencent. Like Sparc3D and others, it applies a two-stage approach to the VecSet methodology—first generating a global shape, then using that result as guidance to generate local details.
@@ -380,31 +384,15 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
 <h4><em>vs.</em> Sparse-Voxel Method</h4>
 <p>It was encouraging that the model outputs showed detail equal to or better than Varco3D 1.0-preview (Sparse Voxel), while also demonstrating much more robust mesh topology and fewer artifacts. This model will be officially updated as the Varco3D 1.0 model after going through inference optimization.</p>
 <p>Below are some comparisons with Varco3D 1.0 preview, which uses the same coarse-to-fine approach.</p>
-<table>
-<thead>
-<tr>
-<th>Input</th>
-<th><strong>Varco3D 1.0-preview (sparse voxel)</strong> <em>vs.</em> <strong>Varco3D 1.0 (VecSet-Lattice)</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><img src="https://velog.velcdn.com/images/gjghks950/post/19762800-5a01-429f-bc6c-32256235cd5c/image.png" alt=""></td>
-<td><img src="https://velog.velcdn.com/images/gjghks950/post/46cd00b9-dff6-4102-9c18-d333214b72e0/image.png" alt=""></td>
-</tr>
-</tbody></table>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/46cd00b9-dff6-4102-9c18-d333214b72e0/image.png" alt=""></p>
+<ul>
+<li><strong>Varco3D 1.0-preview (sparse voxel)</strong> <em>vs.</em> <strong>Varco3D 1.0 (VecSet-Lattice)</strong></li>
+</ul>
 <p>While the sparse voxel-based Varco3D 1.0 preview model also generates excessive detail and artifacts, the Varco3D 1.0 model produces clean and robust outputs.</p>
-<table>
-<thead>
-<tr>
-<th>Input</th>
-<th><strong>Varco3D 1.0-preview</strong> <em>vs.</em> <strong>Varco3D 1.0</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><img src="https://velog.velcdn.com/images/gjghks950/post/a0b2e8af-7334-48a6-bf37-523e6a7d6c67/image.png" alt=""></td>
-<td><img src="https://velog.velcdn.com/images/gjghks950/post/60f06b88-8772-4c67-b53f-e883e191fb57/image.png" alt=""></td>
-</tr>
-</tbody></table>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/60f06b88-8772-4c67-b53f-e883e191fb57/image.png" alt=""></p>
+<ul>
+<li><strong>Varco3D 1.0-preview (sparse voxel)</strong> <em>vs.</em> <strong>Varco3D 1.0 (VecSet-Lattice)</strong></li>
+</ul>
 <hr>
 <h2 id="toc-heading-13">4. Next Step in 3D Generation</h2>
 <p>As we enter 2026, I would like to conclude this piece by organizing my thoughts on the technical balance between &#39;Sparse Voxel&#39; and &#39;VecSet&#39; that I perceived during the Varco3D 1.0 development process, as well as the possibilities of new 3D representations beyond these.</p>
@@ -450,7 +438,19 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
 </ul>
 <p>Yet this anxiety paradoxically leads to an intense yearning for &#39;pure research.&#39; I want to answer fundamental questions—not simply being consumed with more efficiently following paths that others have paved, but rather exploring what the essence of 3D representation is, how to translate mathematical continuity into the language of deep learning. I believe that the &#39;practicality gap&#39; that current 3D AI services cannot overcome can only be bridged by innovating the essence of 3D, such as representation methods, rather than by the size of parameters.</p>
 <p>The reason for insisting on our own models under the grand slogan of &#39;Sovereign AI&#39; is not simply due to licensing issues. It is the will to not merely be a follower tracing the footsteps of big tech, but to create a &#39;sharp crack&#39; that changes the technological landscape from our own perspective. So that the limits of resources do not become the limits of imagination—in 2026 as well, I wish to remain someone who does not linger in the sensation of stagnation, but who pushes against the turbulent current.</p>
+<iframe src="https://3d.varco.ai/test-embed/02072a988541af639c393f1d4c45f2ef.glb" width="100%" height="500px" title="설명" style="border: none;"></iframe>
 
+<ul>
+<li>Varco3D 1.0</li>
+</ul>
+<hr>
+<p>You may also like</p>
+<ul>
+<li><a href="/blogs/posts/?id=250302_3d_latent_diffusion">An Era of 3D Generative Models</a></li>
+<li><a href="/blogs/posts/?id=250702_building_large_3d_1">Building Large 3D Generative Models (1) - 3D Data Pre-processing</a></li>
+<li><a href="/blogs/posts/?id=250710_building_large_3d_2">Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D</a></li>
+</ul>
+<br/>
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     <!-- Post Navigation -->
