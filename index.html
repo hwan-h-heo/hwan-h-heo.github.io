@@ -580,7 +580,7 @@
       </div><!-- End Section Title -->
       <div class="container">
         <h5>Featured Recent Posts</h5>
-        <div class="swiper init-swiper">
+        <div class="swiper portfolio-blog-swiper">
           <script type="application/json" class="swiper-config">
             {
               "loop": true,
@@ -610,98 +610,7 @@
               }
             }
           </script>
-          <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <a href="blogs/posts/varco3d-a-year-in-review-2025-retrospective/" target="_blank" class="testimonial-link">
-                <div class="testimonial-item">
-                  <div class="testimonial-content">
-                    <h6>Varco3D: A Year in Review — 2025 Retrospective</h6>
-                  </div>
-                  <div class="testimonial-img">
-                    <img data-src="https://velog.velcdn.com/images/gjghks950/post/c6ffdcc4-0f99-4778-92a9-6ffaba60cf6f/image.gif" class="img-fluid lazy-image" alt="Flow Matching blog post teaser">
-                  </div>
-                </div>
-              </a>
-            </div><!-- End testimonial item -->
-            
-            <div class="swiper-slide">
-              <a href="blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/" target="_blank" class="testimonial-link">
-                <div class="testimonial-item">
-                  <div class="testimonial-content">
-                    <h6>From Flow Matching to Optimal Transport: A Physics-based View of Generative Models</h6>
-                  </div>
-                  <div class="testimonial-img">
-                    <img data-src="https://velog.velcdn.com/images/gjghks950/post/ca65945c-c165-4ce3-93a8-04431b02e37f/image.png" class="img-fluid lazy-image" alt="Flow Matching blog post teaser">
-                  </div>
-                </div>
-              </a>
-            </div><!-- End testimonial item -->
-            
-            <div class="swiper-slide">
-              <a href="blogs/posts/building-large-3d-generative-model-1-data-pre-processing/" target="_blank" class="testimonial-link">
-                <div class="testimonial-item">
-                  <div class="testimonial-content">
-                    <h6>Building Large 3D Generative Model (1) Data Processing</h6>
-                  </div>
-                  <div class="testimonial-img">
-                    <img data-src="blogs/posts/250702_building_large_3d_1/assets/image-10.png" class="img-fluid lazy-image" alt="build large 3d gen ai (1) teaser">
-                  </div>
-                </div>
-              </a>
-            </div><!-- End testimonial item -->
-            
-            <div class="swiper-slide">
-              <a href="blogs/posts/3d-model-viewer-in-web/" target="_blank" class="testimonial-link">
-                <div class="testimonial-item">
-                  <div class="testimonial-content">
-                    <h6>3D Model Viewer in Web: Three.js vs. Google Model Viewer</h6>
-                  </div>
-                  <div class="testimonial-img">
-                    <img data-src="blogs/posts/250310_model_viewer/assets/image.png" class="img-fluid lazy-image" alt="web 3d viewer post teaser">
-                  </div>
-                </div>
-              </a>
-            </div><!-- End testimonial item -->
-            
-            <div class="swiper-slide">
-              <a href="blogs/posts/an-era-of-3d-generation/" target="_blank" class="testimonial-link">
-                <div class="testimonial-item">
-                  <div class="testimonial-content">
-                    <h6>An Era of 3D Generation: Introduction to 3D Latent Diffusion</h6>
-                  </div>
-                  <div class="testimonial-img">
-                    <img data-src="blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif" class="img-fluid lazy-image" alt="3d latent diffusion blog post teaser">
-                  </div>
-                </div>
-              </a>
-            </div><!-- End testimonial item -->
-            
-            <div class="swiper-slide">
-              <a href="blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian/" target="_blank" class="testimonial-link">
-                <div class="testimonial-item">
-                  <div class="testimonial-content">
-                    <h6>Review &amp; Analysis: Fast Ray Tracing Design for 3D Gaussian Primitives</h6>
-                  </div>
-                  <div class="testimonial-img">
-                    <img data-src="blogs/posts/240823_grt/assets/teaser.gif" class="img-fluid lazy-image" alt="3d gaussian ray tracing blog post teaser">
-                  </div>
-                </div>
-              </a>
-            </div><!-- End testimonial item -->
-            
-            <div class="swiper-slide">
-              <a href="blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/" target="_blank" class="testimonial-link">
-                <div class="testimonial-item">
-                  <div class="testimonial-content">
-                    <h6>Detailed Analysis of Gaussian Splatting Rasterization Algorithm</h6>
-                  </div>
-                  <div class="testimonial-img">
-                    <img data-src="blogs/posts/240805_gs/assets/garden.gif" class="img-fluid lazy-image" alt="differentiable gaussian rasterization blog teaser">
-                  </div>
-                </div>
-              </a>
-            </div><!-- End testimonial item -->
-          </div>
+          <div class="swiper-wrapper" id="portfolio-blog-posts"></div>
           <p><br/></p>
           <div class="swiper-pagination"></div>
         </div>
@@ -740,6 +649,8 @@
   <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
   <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="blogs/js/site-data-client.js"></script>
+  <script src="js/portfolio-blog-preview.js"></script>
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>

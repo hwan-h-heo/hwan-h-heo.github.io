@@ -1,12 +1,14 @@
 # Blog Editor
 
-A simple, elegant Markdown editor for creating and managing blog posts.
+A markdown editor for creating blog posts, registering metadata, and publishing both together.
 
 ## Features
 
 - ✍️ **Live Preview**: See your content rendered as you type
-- 💾 **Draft Management**: Save and load drafts locally
-- 📝 **Post Publishing**: Directly save to posts directory
+- 💾 **Draft Management**: Save and load per-language markdown drafts locally
+- 📝 **Post Publishing**: Create or update `site-data.json` and `posts/{postId}/content-*.md` in one flow
+- 🗂️ **Metadata Editing**: Manage post id, date, category, series, languages, and portfolio featured settings
+- ✅ **Validation**: Duplicate id checks, allowed category/series validation, and language/file alignment
 - 🎨 **Blog-Matched Styling**: Preview looks exactly like published posts
 - 📐 **Math Support**: Write LaTeX equations with KaTeX
 - 🎯 **Code Highlighting**: Automatic syntax highlighting with Prism.js
@@ -20,12 +22,15 @@ A simple, elegant Markdown editor for creating and managing blog posts.
 npm run edit
 ```
 
-Then open http://localhost:3030/editor/edit.html
+Then open http://localhost:3030/editor/
 
 In edit mode, you can:
-- Create new drafts
-- Load/save/delete drafts
-- Save directly to `posts/{postId}/content-{lang}.md`
+- Create a new post workspace
+- Load an existing post into the editor
+- Load/save/delete drafts for the active language tab
+- Publish metadata to `data/site-data.json`
+- Create or update `posts/{postId}/content-eng.md` and optional `content-kor.md`
+- Configure `featuredPortfolioPosts` entry for the current post
 
 ### Dev Mode (Preview Only)
 
@@ -38,24 +43,24 @@ Then navigate to the editor - draft management features are hidden.
 ## Workflow
 
 1. **Start editor**: `npm run edit`
-2. **Write content**: Use Markdown syntax in the left pane
-3. **Preview**: See live preview in the right pane
-4. **Save draft**: Click "💾 Save Draft" to save work in progress
-5. **Publish**:
-   - Enter Post ID (e.g., `250101_my_post`)
-   - Select language (eng/kor)
-   - Click "✅ Save to Post"
+2. **Fill metadata**: Set post id, title, date, category, series, languages, and optional featured teaser info
+3. **Write content**: Use the English/Korean tabs to edit markdown
+4. **Save draft**: Save the active language tab if you want a local snapshot
+5. **Publish**: Click `Publish` to write metadata and markdown files together
 
 ## Keyboard Shortcuts
 
-- `Ctrl/Cmd + S`: Save draft (in edit mode) or download markdown (in dev mode)
+- `Ctrl/Cmd + S`: Save the active language as a draft in edit mode, or download it in preview mode
 
 ## File Structure
 
 ```
 editor/
-├── edit.html          # New improved editor
-├── drafts/            # Auto-saved and manual drafts (gitignored)
+├── index.html         # Editor UI
+├── editor.css         # Editor styles
+├── editor.js          # Editor app logic
+├── edit.html          # Redirect to index.html
+├── drafts/            # Local markdown drafts (gitignored)
 └── README.md          # This file
 
 posts/

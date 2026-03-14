@@ -1,31 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="Review of Fourier Features Let Networks Learn High-Frequency Functions" />
-    <meta name="keywords" content="post, nerf-and-gs, 3D graphics, computer vision, machine learning" />
+    <meta name="description" content="Three-js 이용한 custom GS scene 웹뷰어 tutorial" />
+    <meta name="keywords" content="post, web-3d, 3D graphics, computer vision, machine learning" />
     <meta name="author" content="Hwan Heo" />
-    <link rel="canonical" href="https://hwan-h-heo.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/" />
+    <link rel="canonical" href="https://hwan-h-heo.io/blogs/posts/add-gaussian-splatting-to-your-website-kor/" />
     <meta property="og:type" content="article" />
-    <meta property="og:url" content="https://hwan-h-heo.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/" />
-    <meta property="og:title" content="Why Positional Encoding Makes NeRF more Powerful" />
-    <meta property="og:description" content="Review of Fourier Features Let Networks Learn High-Frequency Functions" />
+    <meta property="og:url" content="https://hwan-h-heo.io/blogs/posts/add-gaussian-splatting-to-your-website-kor/" />
+    <meta property="og:title" content="웹사이트에 3D GS 삽입하기" />
+    <meta property="og:description" content="Three-js 이용한 custom GS scene 웹뷰어 tutorial" />
     <meta property="og:image" content="https://hwan-h-heo.io/assets/image_fx_.jpg" />
     <meta property="og:site_name" content="HwanHeo's Blog" />
-    <meta property="article:published_time" content="2021-11-28T00:00:00.000Z" />
+    <meta property="article:published_time" content="2024-09-17T00:00:00.000Z" />
     <meta property="article:author" content="Hwan Heo" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://hwan-h-heo.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/" />
-    <meta name="twitter:title" content="Why Positional Encoding Makes NeRF more Powerful" />
-    <meta name="twitter:description" content="Review of Fourier Features Let Networks Learn High-Frequency Functions" />
+    <meta name="twitter:url" content="https://hwan-h-heo.io/blogs/posts/add-gaussian-splatting-to-your-website-kor/" />
+    <meta name="twitter:title" content="웹사이트에 3D GS 삽입하기" />
+    <meta name="twitter:description" content="Three-js 이용한 custom GS scene 웹뷰어 tutorial" />
     <meta name="twitter:image" content="https://hwan-h-heo.io/assets/image_fx_.jpg" />
     <script type="application/ld+json">
     {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "Why Positional Encoding Makes NeRF more Powerful",
-  "description": "Review of Fourier Features Let Networks Learn High-Frequency Functions",
+  "headline": "웹사이트에 3D GS 삽입하기",
+  "description": "Three-js 이용한 custom GS scene 웹뷰어 tutorial",
   "image": "https://hwan-h-heo.io/assets/image_fx_.jpg",
   "author": {
     "@type": "Person",
@@ -40,17 +40,17 @@
       "url": "https://hwan-h-heo.io/assets/favicon.ico"
     }
   },
-  "datePublished": "2021-11-28T00:00:00.000Z",
-  "dateModified": "2021-11-28T00:00:00.000Z",
+  "datePublished": "2024-09-17T00:00:00.000Z",
+  "dateModified": "2024-09-17T00:00:00.000Z",
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://hwan-h-heo.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/"
+    "@id": "https://hwan-h-heo.io/blogs/posts/add-gaussian-splatting-to-your-website-kor/"
   },
-  "inLanguage": "en"
+  "inLanguage": "ko"
 }
     </script>
 
-    <title>Why Positional Encoding Makes NeRF more Powerful - HwanHeo's Blog</title>
+    <title>웹사이트에 3D GS 삽입하기 - HwanHeo's Blog</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
 
     <script type="importmap">
@@ -106,7 +106,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                    
+                    <li class="nav-item"><a href="../add-gaussian-splatting-to-your-website/" class="btn nav-link px-lg-3 py-3 py-lg-4" style="font-size:0.7rem">ENG</a></li>
                 </ul>
             </div>
         </div>
@@ -118,11 +118,11 @@
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     <div class="post-heading">
                         <br/>
-                        <h2>Why Positional Encoding Makes NeRF more Powerful</h2>
+                        <h2>웹사이트에 3D GS 삽입하기</h2>
                         <span class="meta">
-                            Posted on November 28, 2021
+                            Posted on September 17, 2024
                             <span style="margin: 0 8px;">•</span>
-                            <i class="bi bi-clock" style="margin-right: 4px;"></i>6 min read
+                            <i class="bi bi-clock" style="margin-right: 4px;"></i>3 min read
                         </span>
                         <hr/>
                     </div>
@@ -154,162 +154,196 @@
 
 <nav class="toc">
     <ul>
-        <li><a href="#intro"> Introduction </a></li>
-        <li><a href="#sec2"> Background </a></li>
-        <ul>
-            <li><a href="#sec2.1"> Kernel Trick </a></li>
-            <li><a href="#sec2.2"> Neural Tangent Kernel </a></li>
-            <li><a href="#sec2.3"> Spectral Bias of Neural Networks </a></li>
-        </ul>
         <li>
-            <a href="#sec3"> Fourier Featuring </a>
+            <a href="#tl-dr"> TL; DR</a>
         </li>
+        <li><a href="#step"> Step-by-Step</a></li>
         <ul>
-            <li><a href="#sec3.1"> Fourier Feature Mapping </a></li>
-            <li><a href="#sec3.2"> Fourier Featuring w/ NTK </a></li>
+            <li><a href="#step1"> Step1: CDN setting</a></li>
+            <li><a href="#step2"> Step2: HTML Structures</a></li>
+            <li><a href="#step3"> Example Result</a></li>
         </ul>
     </ul>
 </nav>
 
 <br/>
-<h3 id="tl-dr">TL;DR</h3>
-<p> In this article, we explore why positional encoding increases NeRF's high-fidelity reconstruction ability via exploring the paper: <em>Fourier Features Let Networks Learn High-Frequency Functions in Low-Dimensional Domains </em> </p>
-<p> By leveraging a Neural Tangent Kernel (NTK) theory, the authors demonstrate that Fourier features improve the convergence and performance of neural networks on these complex tasks.</p>
-<h2 id="intro">1. Introduction</h2>
-<p>Fourier-featuring is a function that embeds a coordinate space point into frequency space.</p>
-<p>A prominent example in deep learning is <strong>&#39;Positional Encoding&#39;</strong>, which uses sinusoidal functions to embed coordinate space into frequency space, thereby incorporating positional information that Networks cannot capture.</p>
-<figure class="justify-content-center">
-    <img src="/blogs/posts/211128_fourier/assets/main.png" alt="Gaussian RT" width="100%">
-    <figcaption style="text-align: center; font-size: 15px;"> <strong>Figure 1.</strong> Coordinate-Based MLPs </figcaption>
-</figure>
-<p>Building upon <strong>NTK theory</strong>, this article foucuses on the theoretical investigation of how neural networks process coordinate information through Fourier-featuring, 
-    especially for the coordinate-based MLPs, which map dense, continuous low-dimensional input to the high-dimensional output (<em>e.g.,</em> NeRF). 
+<h2 id="tl-dr">TL; DR</h2>
+<p class="lang kor" >
+    html 웹페이지에 학습시킨 3D Gaussian Splatting scene 을 띄우는 방법을 알아보자.
+    웹알못이어도 상관없이 따라 하기만 하면 된다!
 </p>
-<h3 id="sec2">2. Background </h3><br/>
-<h3 id="sec2.1">2.1. Kernel Trick</h3>
-<figure class="justify-content-center">
-    <img src="/blogs/posts/211128_fourier/assets/kernel_trick.png" alt="Gaussian RT" width="80%">
-    <figcaption style="text-align: center; font-size: 15px;"> <strong>Figure 2.</strong> illustration of Kernel-Trick </figcaption>
-</figure>
-<p>For a linearly inseparable data point $x$, let $\phi (x)$ be a non-linear mapping function that makes $\phi (x)$ linearly separable.</p>
-<p>The kernel trick performs kernel regression without explicitly finding the feature map by defining the kernel as follows:</p>
-<p>$$K(x, \ x&#39;) = \phi(x) ^T \phi(x&#39;)
-$$</p>
-<p>This approach is interpreted as using a feature map $\phi$ with desirable properties through the kernel, rather than mapping input $x$ and then taking the inner product.</p>
-<h3 id="sec2.2">2.2. Neural Tangent Kernel </h3>
-<p><strong><em>Neural Tangent Kernel (NTK)</em></strong> theory describes the gradient descent-based training of deep neural networks with infinite width through kernel regression, aiming to explain neural networks using the kernel trick.</p>
-<h3 id="2-2-1-linearization-of-nn-training-kernel-definition"> Linearization of NN Training &amp; Kernel</h3>
-<p>A neural network can be represented by the linearization:</p>
-<div class="math-container">$$f(w, \ x) \simeq f(w_0 , \ x) \ + \ \nabla _w f( w_0 , \ x) ^T (w - w_0 )
-$$</div>
-<p>This Taylor expansion has the following properties:</p>
-<ol>
-<li>It is <strong><em>linear</em></strong> with respect to the weights $w$.</li>
-<li>It is <strong><em>non-linear</em></strong> with respect to $x$.</li>
-</ol>
-<p>The gradient term $\nabla _w f( w_0 , \ x) ^T (w - w_0 )$ acts as a feature map that maps a non-linear data point $x$ to a useful space.</p>
-<p>The corresponding kernel $K$ is defined as follows:</p>
-<div class="math-container">
-    $$K(x, \ x') =  h_\text{NTK} = \{ \phi(x) , \ \phi (x') \} = \nabla _w f(w_0 , \ x) ^T \ \nabla _w f(w_0, \ x' )
-    $$
-</div><br/>
+<h3>
+    About the Project
+</h3>
+<p class="lang kor" >
+    Three-js 을 이용해 구현된 <span style="text-decoration: underline;"><a href="https://github.com/mkkellogg/GaussianSplats3D"> 3D Gaussian Splatting for Three.js </a></span> 을 이용할 것이다. 
+    웹잘알이면 패키지 document 만 참고하면 될 듯 하다.
+</p>
+<br/>
 
-<h3 id="2-2-2-gradient-based-training-kernel-regression"> Gradient-Based Training &amp; Kernel Regression</h3>
-<p>The NTK can be found through gradient descent in the neural network. For a timestep $t$, gradient descent is expressed as:</p>
-<div class="math-container">
-    $$w(t+1) \ = \ w(t) - \eta \nabla _w l. $$
+<h2 id="step">
+    Step-by-Step
+</h2>
+<hr/>
+<h3 id="step1">Step 1: Project Setup (CDN-based)</h3>
+<p class="lang kor" >
+    npm 등으로 threejs 와 GaussianSplats3D package 를 설치하는 것이 일반적이지만, (저자처럼) 웹에 친숙하지 않은 것을 가정하고 쓰는 글이기 때문에 
+    CDN 을 이용해서 package 를 로드하여 사용하는 방법을 기술한다. 
+    다음과 같이 필요한 패키지를 로드하여 사용하면 된다. 
+</p>
+                        <pre class="language-javascript" style="font-size: 16px;"><code>&lt;script type="importmap"&gt;
+{
+    "imports": {
+        "three": "https://unpkg.com/three@0.150.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.157.0/examples/jsm/",
+        "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
+    }
+}
+&lt;/script&gt; </code></pre><br/>
+
+<h3 id="step2">Step 2: HTML Structure</h3>
+<p class="lang kor" >
+필요 패키지를 로드하면 이제 description 에 맞게 3D GS scene 을 세팅하여 WebGL renderer 를 불러오면 된다. 
+3D GS ply scene 이면 모두 로드 가능하며, 본인의 3D GS scene 에 맡게 카메라나 GS 의 position, rotation 등을 수정하면 된다. 
+패키지 basic usgae 처럼 불러오면 화면 전체에 3D content 가 렌더링 되기 때문에 canvas div 를 선언하고 이 영역 내에서만 렌더링 되도록 작업하였다. 
+</p>
+<div class="accordion accordion-flush" id="accordionFlushExample">
+<div class="accordion-item">
+<h2 class="accordion-header">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+    <strong><em>Show Code!</em></strong>
+</button>
+</h2>
+<div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+<div class="accordion-body">
+
+<pre><code class="language-javascript">&lt;script type=&quot;module&quot;&gt;
+// Create a new THREE.js scene
+import * as GaussianSplats3D from &#39;GaussianSplats3D&#39;;
+import * as THREE from &#39;three&#39;;
+
+// Set the desired render width and height
+const renderWidth = 640;
+const renderHeight = 360;
+
+// Get the canvas container
+const rootElement = document.getElementById(&#39;canvasContainer&#39;);
+rootElement.style.width = renderWidth + &#39;px&#39;;
+rootElement.style.height = renderHeight + &#39;px&#39;;
+
+// Initialize WebGL renderer
+const renderer = new THREE.WebGLRenderer({
+    antialias: true
+});
+renderer.setSize(renderWidth, renderHeight);
+renderer.setClearColor(0xf8f9fa, 1);
+rootElement.appendChild(renderer.domElement);
+
+// Initialize camera
+const camera = new THREE.PerspectiveCamera(65, renderWidth / renderHeight, 0.1, 500);
+camera.position.copy(new THREE.Vector3().fromArray([-1.5, -2, 3]));
+camera.up = new THREE.Vector3().fromArray([0, -1, -0.6]).normalize();
+camera.lookAt(new THREE.Vector3().fromArray([0, 3, 0]));
+                
+// Initialize the GaussianSplats3D viewer
+const viewer = new GaussianSplats3D.Viewer({
+    &#39;selfDrivenMode&#39;: true,
+    &#39;renderer&#39;: renderer,
+    &#39;camera&#39;: camera,
+    &#39;useBuiltInControls&#39;: true,
+    &#39;ignoreDevicePixelRatio&#39;: false,
+    &#39;gpuAcceleratedSort&#39;: true,
+    &#39;enableSIMDInSort&#39;: true,
+    &#39;sharedMemoryForWorkers&#39;: false,
+    &#39;integerBasedSort&#39;: true,
+    &#39;halfPrecisionCovariancesOnGPU&#39;: true,
+    &#39;dynamicScene&#39;: false,
+    &#39;webXRMode&#39;: GaussianSplats3D.WebXRMode.None,
+    &#39;renderMode&#39;: GaussianSplats3D.RenderMode.OnChange,
+    &#39;sceneRevealMode&#39;: GaussianSplats3D.SceneRevealMode.Instant,
+    &#39;antialiased&#39;: false,
+    &#39;focalAdjustment&#39;: 1.0,
+    &#39;logLevel&#39;: GaussianSplats3D.LogLevel.None,
+    &#39;sphericalHarmonicsDegree&#39;: 0,
+    &#39;enableOptionalEffects&#39;: false,
+    &#39;plyInMemoryCompressionLevel&#39;: 2,
+    &#39;freeIntermediateSplatData&#39;: false
+});
+                
+// Load a 3D scene (replace with the actual path to your model)
+viewer.addSplatScene(&#39;&lt;path/to/your/gs path&gt;&#39;, {
+    &#39;position&#39;: [-0.7, -0.3, 0.9],
+    &#39;rotation&#39;: [0, 1, 0.2, 0.1],
+    &#39;scale&#39;: [3, 3, 3]
+})
+.then(() =&gt; {
+    requestAnimationFrame(update);
+});
+
+// Update function to render the scene
+
+function update() {
+    requestAnimationFrame(update);
+    viewer.update();
+    viewer.render();
+}
+&lt;/script&gt;;
+</code></pre>
 </div>
-<p>Subsequently, this can be derived as follows: </p>
-<div class="math-container">
-    $$ { w(t+1)  \ - \ w(t) \over \eta } = -\nabla _w l \simeq {dw \over dt}.$$
+</div>
 </div>
 <p>
-    With least squares (MSE) as the loss function,
+    Tip.
 </p>
-<div class="math-container">
-    $$l(w) = {1 \over 2}  \| f(w, x ) - y \|^2,$$
-</div>
-<p> the gradient term $\nabla l$ with respect to the $w$ can be derived as </p>
-<div class="math-container">
-    $$  \nabla _w l= \nabla _w  |f(w, x) - y |. $$
-</div>
-<p> Therefore, Neural network training via optimization can be represented by NTK kernel regression:</p>
-<div class="math-container">
-    $$\begin{aligned}
-    {d \over dt } y(w) &= \nabla _w f(w, x) ^T \cdot {d \over dt }w \\
-    &= - \nabla _w f(w, x) ^T \cdot \nabla _w f(w, x) (f(w, x) - y) \\ &= -h_{\text{NTK}} (f(w,x) -y )
-    \end{aligned}$$
-</div>
-<p>Let $u=y(w)-y$, then the output residual at training iteration $t$ can be written as:</p>
-<div class="math-container">$$ u(t) = u(0) \exp (-\eta h_{\text{NTK}} t )
-$$</div><br/>
-
-<h3 id="sec2.3">2.3. Spectral Bias of DNNs</h3>
-<p>Based on the NTK approximation, the network&#39;s prediction after $t$ iterations for test data $\mathbf X_\text{test}$ is:</p>
-<div class="math-container">
-    $$ \hat{\mathbf{y}}^{(t)} \simeq \mathbf{K}_{\text{test}} \mathbf{K}^{-1} ( \mathbf{I} - e^{-\eta \mathbf{K} t} ) \mathbf{y}$$
-</div>
-<p>For ideal training, $\mathbf K_\text{test} =  \mathbf K$. <em>i.e.,</em> equivalent to the last equation in 2.2.2.</p>
-<p>By eigendecomposing $\mathbf K = \mathbf Q \mathbf \Lambda \mathbf Q^{\rm T}$, we obtain:</p>
-<div class="math-container">
-    $$\begin{aligned}
-    \mathbf{Q}^{\rm T} (\hat{\mathbf{y}}^{(t)}
-    - \mathbf{y}) &\simeq \mathbf{Q}^{\rm T} ( \mathbf{K}_{\text{test}} \mathbf{K}^{-1} ( \mathbf{I} - e ^{-\eta \mathbf{K} t} ) \mathbf{y} - \mathbf{y} )) \\ 
-    & \simeq \mathbf{Q}^{\rm T} (  ( \mathbf{I} - e ^{-\eta \mathbf{K} t} ) \mathbf{y} - \mathbf{y} )) \\ 
-    & \simeq - e ^{-\eta \mathbf{\Lambda} t}   \mathbf{Q}^{\rm T} \mathbf y \quad (\because e ^{-\eta \mathbf{K} t} = \mathbf{Q} e ^{-\eta \mathbf{\Lambda} t} \mathbf{Q}^{\rm T} ) 
-    \end{aligned}$$
-</div>
-<p> In the above Equation, the exponential decay term decreases with the eigenvalue. It means <em>larger eigenvalues are learned first.</em> </p> 
-<p> For example, in case of the image, large eigenvalues (in spectral domain) correspond to contours, so convergence to high-frequency components is slow without embedding in NeRF.</p>
-<h2 id="sec3">3. Fourier Features for a Tunable Stationary Neural Tangent Kernel</h2>
-<p>This section explores how Fourier Features embedding in the kernel space can address convergence issues for high-frequency components.</p>
-<h3 id="sec3.1">3.1. Fourier-Featuring </h3>
-<p>The Fourier-Feature mapping function $\gamma$ is defined as:</p>
-<div class="math-container">$$\gamma (v) \  = \ \big [a_1 \cos (2 \pi b_1 ^T v), \dots , a_m \cos (2 \pi b_m ^T v), \ a_m \sin (2 \pi b_m ^T v ) \big ]^T
-$$</div>
-<ul>
-<li><strong>Positional Encoding in Transformers:</strong> Adds spatial information to features in attention-based architectures, defined as:
-$a_i =1, \ b_i = 10000^{i / d} , \ d : \text{dimension}$</li>
-<li><strong>Positional Encoding in NeRF:</strong> Provides even distribution of low & high-frequency information in the input, defined as:
-$a_i =1, \ b_i = 2^{i} {}$</li>
+<ul class="lang kor" >
+    <li>
+        CORS error 방지를 위해  <code>'sharedMemoryForWorkers': false</code> 로 설정하였다. 
+    </li>
 </ul>
+<br/>
+<h3 id="step3">
+    Example Result of Custom GS Scene
+</h3>
+<div style="margin-bottom: -20vh;">
+    <p class="lang kor" >
+        위 방법을 이용해 로드된 3D Gaussian Splatting scene 이다. 
+        Interactive 하게 canvas 안의 3d content 를 컨트롤 할 수 있다.
+        로드된 scene 은 직접 촬영 후 recon 한 미니어쳐 기타인데, artifacts 나 floaters 가 좀 있기는 하다 ㅠㅠ.  
+    </p>
+</div>
+<div id="canvasContainer" style="margin-bottom: 30vh;">
+    <canvas id="threeCanvas"></canvas>
+</div>
 
-<p>The kernel induced by this mapping function is:</p>
-<div class="math-container">
-    $$\begin{aligned}
-    K (\gamma (v_1 ) , \  \gamma (v_2) ) &= \gamma (v_1 ) ^T \gamma (v_2) \\ &= \sum _{j=1}^m a^2 _j \cos (2 \pi b_j ^T (v_1 -v_2) ) = h_\gamma (v_1 - v_2 )
-    \end{aligned}$$
-</div>
-<ul>
-<li>remember: $\cos (\alpha - \beta ) = \cos \alpha \cos \beta  \ + \ \sin \alpha \sin \beta$</li>
-</ul>
-<p>This Fourier-feature kernel is a stationary function, meaning it is translation-invariant:</p>
-<div class="math-container">$$h_\gamma( (v_1 +k )  -  (v_2 +k ) ) = h_\gamma (v_1  -  v_2 )
-    $$
-</div>
-<p>Coordinate-based MLPs use dense and uniform coordinate points as input. These must be <em>isotropic</em> to ensure global performance, meaning features should be extracted in all directions, not just specific ones.</p>
-<p>This is why stationary properties that are location-invariant can improve performance. Positional encoding treats all equally distant relations from the coordinate system uniformly, enabling effective high-dimensional space reconstruction.</p>
-<h3 id="sec3.2">3.2. NTK Kernel with Fourier-Featuring</h3>
-<p>The NTK Fourier-featured kernel is:</p>
-<p>$$K( \phi \circ \gamma (x) , \ \phi \circ \gamma (y) )
-$$</p>
-<p>Stationary kernel regression here equates to <strong><em>convolutional filtering with reconstruction</em></strong>, as the neural network approximates the convolution between synthetic kernels $K_\text{NTK}$ and $K_\gamma$ on data points $v_i$ and weights $w_i$.</p>
-<p>Thus, the Fourier feature represented by NTK theory is:</p>
-<div class="math-container">
-    $$f = ( h_\text{NTK} \circ h_\gamma ) * \sum_{i=1}^n w_i \delta _{v_i}$$
-</div>
-<p>where $\delta$ represents the direction delta.</p> 
-<p>This expression indicates:</p>
-<ol>
-<li>A stationary filter $h_\gamma$ extracts information in a <strong><em>location-invariant</em></strong> manner.</li>
-<li>Convolution, being the inverse Fourier transform of multiplication in frequency space, allows extraction of features across different frequencies in a multifaceted (yet location-invariant) way through components of specific frequencies directly embedded in $h_\gamma$.</li>
-<li>A Neural Network, receiving Fourier-featured input, is equivalent to performing kernel regression by combining NTK and a stationary kernel.</strong></li>
-</ol>
-<video controls style="width: 100%;"><source src="https://bmild.github.io/fourfeat/img/lion_none_gauss_v1.mp4" type="video/mp4"></video>
+<h2>Closing</h2>
+<p class="lang kor" >
+    연구자라면 이 article 이 관심 없는 주제일지도 모르지만, 
+    자기 pr 의 시대에 직접 학습시킨 gaussian splatting scene 을 개인 webpage 에 add 하는 방법 또한 누군가에게는 도움이 될 거라고 믿으며 글을 작성하였다.
+    :)
+</p>
+
 <hr/>
 <p>
     You may also like, 
 </p>
+<ul>
+    <li>
+        <a href="/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/">
+            <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
+        </a>
+    </li>
+    <li>
+        <a href="/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian/">
+            <span style="text-decoration: underline;">Don't Rasterize But Ray Trace Gaussian</span>
+        </a>
+    </li>
+    <li>
+        <a href="/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting/">
+            <span style="text-decoration: underline;">Under the 3D: Geometrically Accurate 2D Gaussian Splatting </span>
+        </a>
+    </li>
+</ul>
+<br/>
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     <div id="post-navigation" class="mt-4"></div>
@@ -724,8 +758,8 @@ $$</p>
   }
 };
         window.blogPostPageConfig = {
-  "postId": "211128_fourier",
-  "lang": "eng"
+  "postId": "240917_3djs",
+  "lang": "kor"
 };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>

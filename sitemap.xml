@@ -101,6 +101,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://hwan-h-heo.io/blogs/posts/an-era-of-3d-generation-kor/</loc>
+    <lastmod>2025-03-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://hwan-h-heo.io/blogs/posts/neural-rendering-beyond-photography/</loc>
     <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
@@ -114,6 +120,12 @@
   </url>
   <url>
     <loc>https://hwan-h-heo.io/blogs/posts/add-gaussian-splatting-to-your-website/</loc>
+    <lastmod>2024-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.io/blogs/posts/add-gaussian-splatting-to-your-website-kor/</loc>
     <lastmod>2024-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -227,19 +239,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://hwan-h-heo.io/blogs/posts/3d-stereo-vision-and-epipolar-geometry-kor/</loc>
-    <lastmod>2021-06-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://hwan-h-heo.io/blogs/posts/homography-and-image-alignment/</loc>
-    <lastmod>2021-05-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hwan-h-heo.io/blogs/posts/homography-and-image-alignment-kor/</loc>
     <lastmod>2021-05-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -251,19 +251,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://hwan-h-heo.io/blogs/posts/feature-extraction-and-detection-kor/</loc>
-    <lastmod>2021-04-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://hwan-h-heo.io/blogs/posts/image-filter-and-morphology/</loc>
-    <lastmod>2021-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hwan-h-heo.io/blogs/posts/image-filter-and-morphology-kor/</loc>
     <lastmod>2021-03-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

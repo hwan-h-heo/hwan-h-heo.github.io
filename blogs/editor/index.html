@@ -3,1339 +3,221 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Blog Post Editor</title>
+    <title>Blog Editor</title>
     <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
-
-    <!-- Bootstrap & Fonts -->
-    <script src="https://use.fontawesome.com/releases/v6.5.0/js/all.js" crossorigin="anonymous"></script>
-    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <!-- Blog Styles (matching production) -->
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link href="../css/used.css" rel="stylesheet" />
     <link href="../css/blog_post_specific.css" rel="stylesheet" />
-
-    <!-- KaTeX for Math -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-
-    <!-- Marked.js for Markdown Parsing -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
-    <!-- Prism.js for Code Highlighting -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
-
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Lora', serif;
-        }
-
-        #editor-controls {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: #fff;
-            border-bottom: 2px solid #0085A1;
-            padding: 8px 15px;
-            z-index: 1000;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .control-row {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 6px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .control-row:last-child {
-            margin-bottom: 0;
-        }
-
-        #editor-controls button, #editor-controls select, #editor-controls input {
-            padding: 5px 10px;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            background: #fff;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        #editor-controls button:hover {
-            background: #f8f9fa;
-        }
-
-        #editor-controls .btn-primary {
-            background: #0085A1;
-            color: white;
-            border-color: #0085A1;
-        }
-
-        #editor-controls .btn-primary:hover {
-            background: #006d84;
-        }
-
-        #editor-controls .btn-success {
-            background: #198754;
-            color: white;
-            border-color: #198754;
-        }
-
-        #editor-controls .btn-danger {
-            background: #dc3545;
-            color: white;
-            border-color: #dc3545;
-        }
-
-        .edit-mode-only {
-            display: none;
-        }
-
-        body.edit-mode .edit-mode-only {
-            display: inline-block;
-        }
-
-        .toolbar-separator {
-            width: 1px;
-            height: 24px;
-            background: #dee2e6;
-            margin: 0 4px;
-        }
-
-        #container {
-            display: flex;
-            height: 100vh;
-            padding-top: 120px;
-            position: relative;
-        }
-
-        #editor-pane {
-            width: 50%;
-            height: calc(100vh - 120px);
-            overflow-y: auto;
-            background: #1e1e1e;
-            position: relative;
-        }
-
-        #editor-textarea {
-            width: 100%;
-            height: 100%;
-            padding: 20px;
-            border: none;
-            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
-            font-size: 14px;
-            line-height: 1.6;
-            resize: none;
-            background: #1e1e1e;
-            color: #d4d4d4;
-            outline: none;
-        }
-
-        #editor-textarea::selection {
-            background: #264f78;
-        }
-
-        #preview-pane {
-            width: 50%;
-            height: calc(100vh - 120px);
-            overflow-y: auto;
-            padding: 20px;
-            background: #ffffff;
-        }
-
-        #resizer {
-            width: 5px;
-            height: calc(100vh - 120px);
-            background: #dee2e6;
-            cursor: col-resize;
-            position: relative;
-            transition: background 0.2s;
-        }
-
-        #resizer:hover {
-            background: #0085A1;
-        }
-
-        #resizer::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 3px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 2px;
-        }
-
-        #preview-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        /* Match blog post styles */
-        #preview-content h1, #preview-content h2, #preview-content h3 {
-            font-family: "Open Sans", sans-serif;
-            font-weight: 800;
-            margin-top: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        #preview-content h2 {
-            font-size: 2rem;
-            color: #212529;
-        }
-
-        #preview-content h3 {
-            font-size: 1.75rem;
-            color: #212529;
-        }
-
-        #preview-content p {
-            font-family: 'Lora', serif;
-            font-size: 1rem;
-            line-height: 1.8;
-            margin-bottom: 1rem;
-        }
-
-        #preview-content a {
-            color: #15B886;
-            text-decoration: none;
-        }
-
-        #preview-content a:hover {
-            color: #11926b;
-        }
-
-        #preview-content pre {
-            background-color: #f4f4f4;
-            padding: 15px;
-            border-radius: 5px;
-            overflow-x: auto;
-            font-size: 0.9rem;
-        }
-
-        #preview-content pre code {
-            font-size: 0.9rem;
-        }
-
-        #preview-content img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        #preview-content table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-        }
-
-        #preview-content th, #preview-content td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-        }
-
-        #preview-content th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-
-        #preview-content blockquote {
-            border-left: 4px solid #0085A1;
-            padding-left: 15px;
-            margin: 1rem 0;
-            color: #6c757d;
-            font-style: italic;
-        }
-
-        #preview-content figcaption {
-            text-align: center;
-            font-size: 0.9rem;
-            color: #6c757d;
-            margin-top: 8px;
-        }
-
-        #modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 2000;
-        }
-
-        #modal-content {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            z-index: 2001;
-        }
-
-        #modal-content h3 {
-            margin-top: 0;
-            font-family: "Open Sans", sans-serif;
-        }
-
-        #modal-content .modal-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            justify-content: flex-end;
-        }
-
-        #modal-content input, #modal-content select {
-            width: 100%;
-            padding: 8px;
-            margin: 8px 0;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-        }
-
-        #modal-content label {
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        .draft-list {
-            max-height: 300px;
-            overflow-y: auto;
-            margin: 10px 0;
-        }
-
-        .draft-item {
-            padding: 10px;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .draft-item:hover {
-            background: #f8f9fa;
-        }
-
-        .draft-item button {
-            padding: 4px 8px;
-            font-size: 12px;
-        }
-
-        .preview-box {
-            border: 1px solid #dee2e6;
-            padding: 10px;
-            margin-top: 8px;
-            border-radius: 4px;
-            background: #f8f9fa;
-            max-height: 200px;
-            overflow: auto;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
+    <link href="./editor.css" rel="stylesheet" />
 </head>
 <body>
-    <!-- Editor Controls -->
-    <div id="editor-controls">
-        <!-- Row 1: File Management -->
-        <div class="control-row">
-            <strong>Blog Editor</strong>
-            <span class="toolbar-separator"></span>
-            <button class="edit-mode-only" onclick="newDraft()">📝 New</button>
-            <button class="edit-mode-only" onclick="openLoadModal()">📂 Load Draft</button>
-            <button class="edit-mode-only" onclick="saveDraft()">💾 Save Draft</button>
-            <button class="edit-mode-only btn-success" onclick="saveToPost()">✅ Save to Post</button>
-            <span class="toolbar-separator"></span>
-            <input type="text" id="post-id-input" class="edit-mode-only" placeholder="Post ID (e.g., 250101_title)" style="width: 180px;">
-            <select id="language-select" class="edit-mode-only">
-                <option value="eng">English</option>
-                <option value="kor">Korean</option>
-            </select>
-            <span class="toolbar-separator"></span>
-            <button onclick="downloadMarkdown()">⬇️ Download</button>
-            <button onclick="uploadMarkdown()">⬆️ Upload</button>
-            <button onclick="backupToGoogleDrive()" id="drive-backup-btn">☁️ Backup to Drive</button>
-            <button onclick="signOutGoogleDrive()" id="drive-signout-btn" style="display: none;">🔓 Sign Out</button>
-            <span class="toolbar-separator"></span>
-            <button onclick="toggleFullscreen()">⛶ Fullscreen</button>
-            <label style="display: inline-flex; align-items: center; margin: 0; font-size: 13px;">
-                <input type="checkbox" id="auto-save-toggle" style="width: auto; margin: 0 5px 0 0;"> Auto-save
-            </label>
-        </div>
-
-        <!-- Row 2: Formatting Toolbar -->
-        <div class="control-row">
-            <button onclick="insertMarkdown('## ', '')"><strong>H2</strong></button>
-            <button onclick="insertMarkdown('### ', '')"><strong>H3</strong></button>
-            <button onclick="insertMarkdown('**', '**')"><strong>B</strong></button>
-            <button onclick="insertMarkdown('*', '*')"><em>I</em></button>
-            <button onclick="insertMarkdown('`', '`')"><code>&lt;/&gt;</code></button>
-            <span class="toolbar-separator"></span>
-            <button onclick="openInsertModal('link')"><i class="bi bi-link"></i> Link</button>
-            <button onclick="openInsertModal('image')"><i class="bi bi-card-image"></i> Image</button>
-            <button onclick="openInsertModal('video')"><i class="bi bi-play-btn-fill"></i> Video</button>
-            <span class="toolbar-separator"></span>
-            <button onclick="openInsertModal('math-block')">$$ Math</button>
-            <button onclick="openInsertModal('math-inline')">$ math</button>
-            <span class="toolbar-separator"></span>
-            <button onclick="insertMarkdown('- ', '')"><i class="bi bi-list-ul"></i> List</button>
-            <button onclick="insertMarkdown('> ', '')"><i class="bi bi-quote"></i> Quote</button>
-            <button onclick="openInsertModal('code')"><i class="bi bi-code-square"></i> Code</button>
-            <button onclick="openInsertModal('table')"><i class="bi bi-table"></i> Table</button>
-            <span class="toolbar-separator"></span>
-            <button onclick="insertMarkdown('---\n', '')">HR</button>
-        </div>
-    </div>
-
-    <!-- Main Container -->
-    <div id="container">
-        <!-- Editor Pane -->
-        <div id="editor-pane">
-            <div id="editor-stats" style="position: absolute; top: 10px; right: 20px; color: #858585; font-size: 12px; z-index: 10;">
-                <span id="word-count">0 words</span> | <span id="char-count">0 chars</span>
+    <div class="editor-shell">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">Blog Editor</p>
+                <h1>Create posts, metadata, and markdown together</h1>
             </div>
-            <textarea id="editor-textarea" placeholder="Write your markdown here...">## Introduction
-
-This is a sample blog post written in **Markdown**.
-
-### Features
-
-- Easy to write
-- Live preview
-- Math support: $E = mc^2$
-- Code highlighting
-
-```javascript
-function hello() {
-    console.log("Hello World!");
-}
-```
-
-![Sample Image](https://via.placeholder.com/800x400)
-
-### Conclusion
-
-Happy writing!
-</textarea>
-        </div>
-
-        <!-- Resizable Divider -->
-        <div id="resizer"></div>
-
-        <!-- Preview Pane -->
-        <div id="preview-pane">
-            <div id="preview-content"></div>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div id="modal-overlay" onclick="closeModal()">
-        <div id="modal-content" onclick="event.stopPropagation()">
-            <h3 id="modal-title">Modal</h3>
-            <div id="modal-body"></div>
-            <div class="modal-buttons">
-                <button onclick="closeModal()">Cancel</button>
+            <div class="topbar-actions">
+                <span id="mode-badge" class="mode-badge">Preview only</span>
+                <button id="new-post-button" class="button button-secondary">New post</button>
+                <button id="load-post-button" class="button button-secondary">Load post</button>
+                <button id="save-draft-button" class="button button-secondary">Save draft</button>
+                <button id="publish-button" class="button button-primary">Publish</button>
             </div>
+        </header>
+
+        <main id="workspace" class="workspace">
+            <aside id="control-sidebar" class="sidebar">
+                <div class="sidebar-topbar">
+                    <div class="sidebar-summary">
+                        <p class="eyebrow">Controls</p>
+                        <strong>Post setup</strong>
+                    </div>
+                    <button id="sidebar-toggle-button" class="button button-secondary sidebar-toggle-button" type="button" aria-expanded="true">
+                        <i id="sidebar-toggle-icon" class="bi bi-layout-sidebar"></i>
+                        <span id="sidebar-toggle-label">Hide controls</span>
+                    </button>
+                </div>
+
+                <div class="sidebar-panels">
+                    <section class="panel">
+                        <div class="panel-header">
+                            <h2>Workflow</h2>
+                            <span id="workspace-mode" class="pill">New post</span>
+                        </div>
+                        <p class="panel-copy">
+                            Draft saves the active language markdown only. Publish writes metadata to <code>blogs/data/site-data.json</code>
+                            and creates or updates <code>blogs/posts/&lt;id&gt;/content-*.md</code>.
+                        </p>
+                        <div id="feedback" class="feedback feedback-neutral">
+                            <strong>Ready.</strong>
+                            <p>Fill in metadata, write content, then publish.</p>
+                        </div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panel-header">
+                            <h2>Workspace</h2>
+                        </div>
+                        <label class="field">
+                            <span>Existing post</span>
+                            <div class="inline-field">
+                                <select id="existing-post-select"></select>
+                                <button id="load-selected-post-button" class="button button-secondary">Load</button>
+                            </div>
+                        </label>
+                        <label class="field">
+                            <span>Post ID</span>
+                            <input id="post-id" type="text" placeholder="250101_new_post" />
+                        </label>
+                        <div class="grid-two">
+                            <label class="field">
+                                <span>Date</span>
+                                <input id="post-date" type="date" />
+                            </label>
+                            <label class="field">
+                                <span>Category</span>
+                                <select id="post-category"></select>
+                            </label>
+                        </div>
+                        <label class="field">
+                            <span>Series</span>
+                            <select id="post-series"></select>
+                        </label>
+                        <div class="checkbox-row">
+                            <label class="checkbox-pill checkbox-pill-locked">
+                                <input id="language-eng" type="checkbox" checked disabled />
+                                <span>English</span>
+                            </label>
+                            <label class="checkbox-pill">
+                                <input id="language-kor" type="checkbox" />
+                                <span>Korean</span>
+                            </label>
+                        </div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panel-header">
+                            <h2>Titles</h2>
+                        </div>
+                        <label class="field">
+                            <span>English title</span>
+                            <input id="title-eng" type="text" placeholder="Main title in English" />
+                        </label>
+                        <label class="field">
+                            <span>English subtitle</span>
+                            <input id="subtitle-eng" type="text" placeholder="Optional subtitle" />
+                        </label>
+                        <div id="korean-meta-fields" class="language-block is-hidden">
+                            <label class="field">
+                                <span>Korean title</span>
+                                <input id="title-kor" type="text" placeholder="Korean title" />
+                            </label>
+                            <label class="field">
+                                <span>Korean subtitle</span>
+                                <input id="subtitle-kor" type="text" placeholder="Optional subtitle" />
+                            </label>
+                        </div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panel-header">
+                            <h2>Portfolio Feature</h2>
+                        </div>
+                        <label class="checkbox-row checkbox-row-stacked">
+                            <input id="featured-enabled" type="checkbox" />
+                            <span>Show this post on the portfolio home preview</span>
+                        </label>
+                        <div id="featured-fields" class="language-block is-hidden">
+                            <label class="field">
+                                <span>Teaser image</span>
+                                <input id="featured-image" type="text" placeholder="blogs/posts/250101_new_post/assets/teaser.png" />
+                            </label>
+                            <label class="field">
+                                <span>Teaser alt</span>
+                                <input id="featured-alt" type="text" placeholder="Accessible teaser description" />
+                            </label>
+                            <label class="field">
+                                <span>Featured order</span>
+                                <input id="featured-order" type="number" min="0" step="1" value="0" />
+                                <small id="featured-order-hint" class="hint"></small>
+                            </label>
+                        </div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panel-header">
+                            <h2>Draft Tools</h2>
+                        </div>
+                        <p class="panel-copy">
+                            Drafts are per-language markdown snapshots. Downloads and uploads also operate on the active language tab only.
+                        </p>
+                        <div class="action-grid">
+                            <button id="load-draft-button" class="button button-secondary">Load draft</button>
+                            <button id="download-button" class="button button-secondary">Download</button>
+                            <button id="upload-button" class="button button-secondary">Upload</button>
+                        </div>
+                    </section>
+                </div>
+            </aside>
+
+            <section class="editor-stage">
+                <div class="toolbar">
+                    <div id="language-tabs" class="language-tabs"></div>
+                    <div class="toolbar-actions">
+                        <button class="icon-button" data-insert="heading2">H2</button>
+                        <button class="icon-button" data-insert="heading3">H3</button>
+                        <button class="icon-button" data-insert="bold"><strong>B</strong></button>
+                        <button class="icon-button" data-insert="italic"><em>I</em></button>
+                        <button class="icon-button" data-insert="code"><code>{ }</code></button>
+                        <button class="icon-button" data-insert="quote"><i class="bi bi-quote"></i></button>
+                        <button class="icon-button" data-insert="list"><i class="bi bi-list-ul"></i></button>
+                        <button class="icon-button" data-insert="link"><i class="bi bi-link-45deg"></i></button>
+                        <button class="icon-button" data-insert="image"><i class="bi bi-card-image"></i></button>
+                    </div>
+                </div>
+
+                <div id="editor-grid" class="editor-grid">
+                    <div class="editor-panel">
+                        <div class="panel-header panel-header-inline">
+                            <h2>Markdown</h2>
+                            <div id="editor-stats" class="stats">0 words · 0 chars</div>
+                        </div>
+                        <textarea id="editor-textarea" spellcheck="false"></textarea>
+                    </div>
+                    <div id="pane-resizer" class="pane-resizer" role="separator" tabindex="0" aria-label="Resize editor and preview panels" aria-orientation="vertical" aria-valuemin="32" aria-valuemax="68"></div>
+                    <div class="preview-panel">
+                        <div class="panel-header panel-header-inline">
+                            <h2>Preview</h2>
+                            <div class="stats">Relative draft assets are previewed automatically.</div>
+                        </div>
+                        <article id="preview-content" class="preview-content"></article>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="modal-overlay" class="modal-overlay is-hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modal-title">Modal</h2>
+                <button id="modal-close-button" class="icon-button icon-button-small" aria-label="Close modal">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div id="modal-body" class="modal-body"></div>
         </div>
     </div>
 
-    <script>
-        const API_BASE = 'http://localhost:3030/api';
-        const editor = document.getElementById('editor-textarea');
-        const preview = document.getElementById('preview-content');
-        const modalOverlay = document.getElementById('modal-overlay');
-        const modalTitle = document.getElementById('modal-title');
-        const modalBody = document.getElementById('modal-body');
-
-        // Check if we're in edit mode
-        if (window.location.port === '3030') {
-            document.body.classList.add('edit-mode');
-        }
-
-        // Insert markdown helper
-        function insertMarkdown(before, after) {
-            const start = editor.selectionStart;
-            const end = editor.selectionEnd;
-            const selectedText = editor.value.substring(start, end);
-            const replacement = before + selectedText + after;
-
-            editor.value = editor.value.substring(0, start) + replacement + editor.value.substring(end);
-            editor.focus();
-            editor.selectionStart = start + before.length;
-            editor.selectionEnd = start + before.length + selectedText.length;
-
-            updatePreview();
-        }
-
-        // Update preview
-        function updatePreview() {
-            const markdown = editor.value;
-            let html = marked.parse(markdown);
-
-            // Convert relative draft-assets paths to server paths for preview
-            html = html.replace(/\.\/draft-assets\//g, '/editor/draft-assets/');
-
-            preview.innerHTML = html;
-
-            // Render math
-            if (typeof renderMathInElement !== 'undefined') {
-                renderMathInElement(preview, {
-                    delimiters: [
-                        {left: '$$', right: '$$', display: true},
-                        {left: '$', right: '$', display: false},
-                        {left: '\\(', right: '\\)', display: false},
-                        {left: '\\[', right: '\\]', display: true}
-                    ],
-                    throwOnError: false
-                });
-            }
-
-            // Highlight code
-            Prism.highlightAllUnder(preview);
-        }
-
-        // Debounce function
-        function debounce(func, delay) {
-            let timeout;
-            return function(...args) {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => func.apply(this, args), delay);
-            };
-        }
-
-        // Update word and character count
-        function updateStats() {
-            const text = editor.value;
-            const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
-            const chars = text.length;
-            document.getElementById('word-count').textContent = `${words} words`;
-            document.getElementById('char-count').textContent = `${chars} chars`;
-        }
-
-        // Clipboard image paste handler
-        editor.addEventListener('paste', async (e) => {
-            const items = e.clipboardData.items;
-
-            for (let item of items) {
-                if (item.type.indexOf('image') !== -1) {
-                    e.preventDefault();
-
-                    const file = item.getAsFile();
-                    const reader = new FileReader();
-
-                    reader.onload = async (event) => {
-                        try {
-                            // Show loading indicator
-                            const loadingText = '\n![Uploading image...]()\n';
-                            insertMarkdown(loadingText, '');
-
-                            // Convert to WebP
-                            const webpBlob = await convertToWebP(event.target.result);
-
-                            // Upload to server
-                            const filename = `image-${Date.now()}.webp`;
-                            const uploadResult = await uploadImage(webpBlob, filename);
-
-                            if (uploadResult.success) {
-                                // Replace loading text with actual image markdown
-                                // Use server path for preview, but keep relative path in markdown
-                                const imagePath = uploadResult.relativePath; // ./draft-assets/...
-                                const imageMarkdown = `![Image](${imagePath})`;
-                                editor.value = editor.value.replace(loadingText, `\n${imageMarkdown}\n`);
-                                updatePreview();
-
-                                console.log(`Image uploaded: ${uploadResult.filename} at ${uploadResult.serverPath}`);
-                            } else {
-                                alert(`Failed to upload image: ${uploadResult.error}`);
-                                editor.value = editor.value.replace(loadingText, '');
-                            }
-                        } catch (err) {
-                            console.error('Image paste error:', err);
-                            alert('Failed to process image');
-                        }
-                    };
-
-                    reader.readAsDataURL(file);
-                    break;
-                }
-            }
-        });
-
-        // Convert image to WebP format
-        async function convertToWebP(dataUrl) {
-            return new Promise((resolve, reject) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
-
-                    canvas.toBlob((blob) => {
-                        if (blob) {
-                            resolve(blob);
-                        } else {
-                            reject(new Error('Failed to convert to WebP'));
-                        }
-                    }, 'image/webp', 0.9);
-                };
-                img.onerror = () => reject(new Error('Failed to load image'));
-                img.src = dataUrl;
-            });
-        }
-
-        // Upload image to server
-        async function uploadImage(blob, filename) {
-            const formData = new FormData();
-            formData.append('image', blob, filename);
-
-            try {
-                const response = await fetch(`${API_BASE}/upload-image`, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                return await response.json();
-            } catch (err) {
-                return { success: false, error: err.message };
-            }
-        }
-
-        // Listen to editor changes
-        editor.addEventListener('input', debounce(() => {
-            updatePreview();
-            updateStats();
-            if (document.getElementById('auto-save-toggle').checked) {
-                autoSaveDraft();
-            }
-        }, 300));
-
-        // Initial preview
-        document.addEventListener('DOMContentLoaded', () => {
-            updatePreview();
-            updateStats();
-            setupResizer();
-        });
-
-        // Resizable pane functionality
-        function setupResizer() {
-            const resizer = document.getElementById('resizer');
-            const editorPane = document.getElementById('editor-pane');
-            const previewPane = document.getElementById('preview-pane');
-            let isResizing = false;
-
-            resizer.addEventListener('mousedown', (e) => {
-                isResizing = true;
-                document.body.style.cursor = 'col-resize';
-                document.body.style.userSelect = 'none';
-            });
-
-            document.addEventListener('mousemove', (e) => {
-                if (!isResizing) return;
-
-                const containerWidth = document.getElementById('container').offsetWidth;
-                const newEditorWidth = (e.clientX / containerWidth) * 100;
-
-                if (newEditorWidth > 20 && newEditorWidth < 80) {
-                    editorPane.style.width = `${newEditorWidth}%`;
-                    previewPane.style.width = `${100 - newEditorWidth}%`;
-                }
-            });
-
-            document.addEventListener('mouseup', () => {
-                if (isResizing) {
-                    isResizing = false;
-                    document.body.style.cursor = '';
-                    document.body.style.userSelect = '';
-                }
-            });
-        }
-
-        // Open insert modal
-        function openInsertModal(type) {
-            switch(type) {
-                case 'link':
-                    modalTitle.textContent = 'Insert Link';
-                    modalBody.innerHTML = `
-                        <label>URL:</label>
-                        <input type="text" id="link-url" placeholder="https://example.com">
-                        <label>Text:</label>
-                        <input type="text" id="link-text" placeholder="Link text">
-                        <div class="preview-box" id="link-preview"></div>
-                    `;
-                    document.querySelector('.modal-buttons').innerHTML = `
-                        <button onclick="closeModal()">Cancel</button>
-                        <button class="btn-primary" onclick="insertLink()">Insert</button>
-                    `;
-
-                    // Live preview
-                    const updateLinkPreview = () => {
-                        const url = document.getElementById('link-url').value;
-                        const text = document.getElementById('link-text').value || 'Link text';
-                        document.getElementById('link-preview').innerHTML = `Preview: <a href="${url}">${text}</a>`;
-                    };
-                    document.getElementById('link-url').addEventListener('input', updateLinkPreview);
-                    document.getElementById('link-text').addEventListener('input', updateLinkPreview);
-                    updateLinkPreview();
-                    break;
-
-                case 'image':
-                    modalTitle.textContent = 'Insert Image';
-                    modalBody.innerHTML = `
-                        <label>Image URL:</label>
-                        <input type="text" id="image-url" placeholder="./assets/image.png">
-                        <label>Alt Text:</label>
-                        <input type="text" id="image-alt" placeholder="Image description">
-                        <label>Caption (optional):</label>
-                        <input type="text" id="image-caption" placeholder="Figure caption">
-                        <div class="preview-box" id="image-preview"></div>
-                    `;
-                    document.querySelector('.modal-buttons').innerHTML = `
-                        <button onclick="closeModal()">Cancel</button>
-                        <button class="btn-primary" onclick="insertImage()">Insert</button>
-                    `;
-
-                    const updateImagePreview = () => {
-                        const url = document.getElementById('image-url').value;
-                        const alt = document.getElementById('image-alt').value || 'Image';
-                        const caption = document.getElementById('image-caption').value;
-                        let html = `<img src="${url}" alt="${alt}" style="max-width: 100%; height: auto;">`;
-                        if (caption) {
-                            html = `<figure>${html}<figcaption>${caption}</figcaption></figure>`;
-                        }
-                        document.getElementById('image-preview').innerHTML = html;
-                    };
-                    document.getElementById('image-url').addEventListener('input', updateImagePreview);
-                    document.getElementById('image-alt').addEventListener('input', updateImagePreview);
-                    document.getElementById('image-caption').addEventListener('input', updateImagePreview);
-                    updateImagePreview();
-                    break;
-
-                case 'video':
-                    modalTitle.textContent = 'Insert Video';
-                    modalBody.innerHTML = `
-                        <label>Video URL:</label>
-                        <input type="text" id="video-url" placeholder="./assets/video.mp4">
-                        <label>Options:</label>
-                        <div style="margin: 10px 0;">
-                            <input type="checkbox" id="video-controls" checked> <label style="display: inline; font-weight: normal;">Controls</label><br>
-                            <input type="checkbox" id="video-autoplay"> <label style="display: inline; font-weight: normal;">Autoplay</label><br>
-                            <input type="checkbox" id="video-loop"> <label style="display: inline; font-weight: normal;">Loop</label>
-                        </div>
-                    `;
-                    document.querySelector('.modal-buttons').innerHTML = `
-                        <button onclick="closeModal()">Cancel</button>
-                        <button class="btn-primary" onclick="insertVideo()">Insert</button>
-                    `;
-                    break;
-
-                case 'math-block':
-                    modalTitle.textContent = 'Insert Math Block';
-                    modalBody.innerHTML = `
-                        <label>Equation:</label>
-                        <input type="text" id="math-equation" placeholder="E = mc^2">
-                        <div class="preview-box" id="math-preview"></div>
-                    `;
-                    document.querySelector('.modal-buttons').innerHTML = `
-                        <button onclick="closeModal()">Cancel</button>
-                        <button class="btn-primary" onclick="insertMathBlock()">Insert</button>
-                    `;
-
-                    const updateMathPreview = () => {
-                        const eq = document.getElementById('math-equation').value;
-                        const previewDiv = document.getElementById('math-preview');
-                        previewDiv.innerHTML = `$$${eq}$$`;
-                        if (typeof renderMathInElement !== 'undefined') {
-                            renderMathInElement(previewDiv, {
-                                delimiters: [{left: '$$', right: '$$', display: true}],
-                                throwOnError: false
-                            });
-                        }
-                    };
-                    document.getElementById('math-equation').addEventListener('input', updateMathPreview);
-                    updateMathPreview();
-                    break;
-
-                case 'math-inline':
-                    modalTitle.textContent = 'Insert Inline Math';
-                    modalBody.innerHTML = `
-                        <label>Equation:</label>
-                        <input type="text" id="math-inline-equation" placeholder="x^2 + y^2 = r^2">
-                        <div class="preview-box" id="math-inline-preview"></div>
-                    `;
-                    document.querySelector('.modal-buttons').innerHTML = `
-                        <button onclick="closeModal()">Cancel</button>
-                        <button class="btn-primary" onclick="insertMathInline()">Insert</button>
-                    `;
-
-                    const updateMathInlinePreview = () => {
-                        const eq = document.getElementById('math-inline-equation').value;
-                        const previewDiv = document.getElementById('math-inline-preview');
-                        previewDiv.innerHTML = `Inline: $${eq}$`;
-                        if (typeof renderMathInElement !== 'undefined') {
-                            renderMathInElement(previewDiv, {
-                                delimiters: [{left: '$', right: '$', display: false}],
-                                throwOnError: false
-                            });
-                        }
-                    };
-                    document.getElementById('math-inline-equation').addEventListener('input', updateMathInlinePreview);
-                    updateMathInlinePreview();
-                    break;
-
-                case 'code':
-                    modalTitle.textContent = 'Insert Code Block';
-                    modalBody.innerHTML = `
-                        <label>Language:</label>
-                        <select id="code-language">
-                            <option value="javascript">JavaScript</option>
-                            <option value="python">Python</option>
-                            <option value="html">HTML</option>
-                            <option value="css">CSS</option>
-                            <option value="cpp">C++</option>
-                            <option value="java">Java</option>
-                            <option value="bash">Bash</option>
-                            <option value="text">Plain Text</option>
-                        </select>
-                    `;
-                    document.querySelector('.modal-buttons').innerHTML = `
-                        <button onclick="closeModal()">Cancel</button>
-                        <button class="btn-primary" onclick="insertCode()">Insert</button>
-                    `;
-                    break;
-
-                case 'table':
-                    modalTitle.textContent = 'Insert Table';
-                    modalBody.innerHTML = `
-                        <label>Rows:</label>
-                        <input type="number" id="table-rows" value="3" min="1">
-                        <label>Columns:</label>
-                        <input type="number" id="table-cols" value="3" min="1">
-                        <div style="margin: 10px 0;">
-                            <input type="checkbox" id="table-header" checked>
-                            <label style="display: inline; font-weight: normal;">Include header row</label>
-                        </div>
-                    `;
-                    document.querySelector('.modal-buttons').innerHTML = `
-                        <button onclick="closeModal()">Cancel</button>
-                        <button class="btn-primary" onclick="insertTable()">Insert</button>
-                    `;
-                    break;
-            }
-
-            modalOverlay.style.display = 'block';
-        }
-
-        // Insert functions
-        function insertLink() {
-            const url = document.getElementById('link-url').value;
-            const text = document.getElementById('link-text').value || url;
-            insertMarkdown(`[${text}](${url})`, '');
-            closeModal();
-        }
-
-        function insertImage() {
-            const url = document.getElementById('image-url').value;
-            const alt = document.getElementById('image-alt').value || 'Image';
-            const caption = document.getElementById('image-caption').value;
-
-            let markdown = `![${alt}](${url})`;
-            if (caption) {
-                markdown = `<figure>\n  <img src="${url}" alt="${alt}" width="100%">\n  <figcaption><strong>Figure:</strong> ${caption}</figcaption>\n</figure>`;
-            }
-
-            insertMarkdown(markdown, '');
-            closeModal();
-        }
-
-        function insertVideo() {
-            const url = document.getElementById('video-url').value;
-            const controls = document.getElementById('video-controls').checked;
-            const autoplay = document.getElementById('video-autoplay').checked;
-            const loop = document.getElementById('video-loop').checked;
-
-            let attrs = controls ? 'controls ' : '';
-            attrs += autoplay ? 'autoplay ' : '';
-            attrs += loop ? 'loop ' : '';
-
-            const markdown = `<video ${attrs}style="width: 100%">\n  <source src="${url}" type="video/mp4">\n</video>`;
-            insertMarkdown(markdown, '');
-            closeModal();
-        }
-
-        function insertMathBlock() {
-            const eq = document.getElementById('math-equation').value;
-            insertMarkdown(`$$\n${eq}\n$$\n`, '');
-            closeModal();
-        }
-
-        function insertMathInline() {
-            const eq = document.getElementById('math-inline-equation').value;
-            insertMarkdown(`$${eq}$`, '');
-            closeModal();
-        }
-
-        function insertCode() {
-            const lang = document.getElementById('code-language').value;
-            insertMarkdown(`\`\`\`${lang}\n`, '\n\`\`\`\n');
-            closeModal();
-        }
-
-        function insertTable() {
-            const rows = parseInt(document.getElementById('table-rows').value);
-            const cols = parseInt(document.getElementById('table-cols').value);
-            const hasHeader = document.getElementById('table-header').checked;
-
-            let table = '| ';
-            for (let i = 0; i < cols; i++) {
-                table += hasHeader ? `Header ${i+1} | ` : `Column ${i+1} | `;
-            }
-            table += '\n| ';
-            for (let i = 0; i < cols; i++) {
-                table += '--- | ';
-            }
-            table += '\n';
-
-            for (let r = 0; r < rows; r++) {
-                table += '| ';
-                for (let c = 0; c < cols; c++) {
-                    table += `Cell ${r+1},${c+1} | `;
-                }
-                table += '\n';
-            }
-
-            insertMarkdown(table, '');
-            closeModal();
-        }
-
-        // New draft
-        function newDraft() {
-            if (confirm('Create a new draft? Current content will be cleared.')) {
-                editor.value = '## New Post\n\nStart writing...';
-                updatePreview();
-            }
-        }
-
-        // Save draft
-        async function saveDraft() {
-            const filename = prompt('Enter draft filename:', `draft-${Date.now()}.md`);
-            if (!filename) return;
-
-            try {
-                const response = await fetch(`${API_BASE}/draft`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        filename: filename,
-                        content: editor.value
-                    })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    alert(`Draft saved: ${result.filename}`);
-                } else {
-                    alert(`Error: ${result.error}`);
-                }
-            } catch (err) {
-                alert(`Failed to save draft: ${err.message}`);
-            }
-        }
-
-        // Open load modal
-        async function openLoadModal() {
-            try {
-                const response = await fetch(`${API_BASE}/drafts`);
-                const result = await response.json();
-
-                if (!result.drafts || result.drafts.length === 0) {
-                    alert('No drafts found');
-                    return;
-                }
-
-                modalTitle.textContent = 'Load Draft';
-                modalBody.innerHTML = '<div class="draft-list"></div>';
-                const draftList = modalBody.querySelector('.draft-list');
-
-                result.drafts.forEach(draft => {
-                    const item = document.createElement('div');
-                    item.className = 'draft-item';
-                    item.innerHTML = `
-                        <span>${draft}</span>
-                        <div>
-                            <button class="btn-primary" onclick="loadDraft('${draft}')">Load</button>
-                            <button class="btn-danger" onclick="deleteDraft('${draft}')">Delete</button>
-                        </div>
-                    `;
-                    draftList.appendChild(item);
-                });
-
-                document.querySelector('.modal-buttons').innerHTML = `
-                    <button onclick="closeModal()">Close</button>
-                `;
-
-                modalOverlay.style.display = 'block';
-            } catch (err) {
-                alert(`Failed to load drafts: ${err.message}`);
-            }
-        }
-
-        // Load draft
-        async function loadDraft(filename) {
-            try {
-                const response = await fetch(`${API_BASE}/draft/${encodeURIComponent(filename)}`);
-                const result = await response.json();
-
-                if (result.content) {
-                    editor.value = result.content;
-                    updatePreview();
-                    closeModal();
-                } else {
-                    alert(`Error: ${result.error}`);
-                }
-            } catch (err) {
-                alert(`Failed to load draft: ${err.message}`);
-            }
-        }
-
-        // Delete draft
-        async function deleteDraft(filename) {
-            if (!confirm(`Delete draft "${filename}"?`)) return;
-
-            try {
-                const response = await fetch(`${API_BASE}/draft/${encodeURIComponent(filename)}`, {
-                    method: 'DELETE'
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    openLoadModal(); // Refresh list
-                } else {
-                    alert(`Error: ${result.error}`);
-                }
-            } catch (err) {
-                alert(`Failed to delete draft: ${err.message}`);
-            }
-        }
-
-        // Save to post
-        async function saveToPost() {
-            const postId = document.getElementById('post-id-input').value.trim();
-            const language = document.getElementById('language-select').value;
-
-            if (!postId) {
-                alert('Please enter a Post ID');
-                return;
-            }
-
-            // Count assets that will be migrated
-            const assetMatches = editor.value.match(/\.\/draft-assets\/[^\s\)]+/g);
-            const assetCount = assetMatches ? assetMatches.length : 0;
-
-            let confirmMsg = `Save to posts/${postId}/content-${language}.md?`;
-            if (assetCount > 0) {
-                confirmMsg += `\n\n${assetCount} image(s) will be migrated to posts/${postId}/assets/`;
-            }
-
-            if (!confirm(confirmMsg)) return;
-
-            try {
-                const response = await fetch(`${API_BASE}/post`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        postId: postId,
-                        language: language,
-                        content: editor.value
-                    })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    let successMsg = `✅ Saved to ${result.path}`;
-                    if (result.assetsMigrated > 0) {
-                        successMsg += `\n\n📦 ${result.assetsMigrated} asset(s) migrated to posts/${postId}/assets/`;
-                    }
-                    alert(successMsg);
-                } else {
-                    alert(`Error: ${result.error}`);
-                }
-            } catch (err) {
-                alert(`Failed to save post: ${err.message}`);
-            }
-        }
-
-        // Download markdown
-        function downloadMarkdown() {
-            const content = editor.value;
-            const filename = prompt('Enter filename:', 'post.md');
-            if (!filename) return;
-
-            const blob = new Blob([content], { type: 'text/markdown' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename.endsWith('.md') ? filename : `${filename}.md`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        // Upload markdown
-        function uploadMarkdown() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.md,.markdown,.txt';
-            input.onchange = (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        editor.value = e.target.result;
-                        updatePreview();
-                    };
-                    reader.readAsText(file);
-                }
-            };
-            input.click();
-        }
-
-        // Close modal
-        function closeModal() {
-            modalOverlay.style.display = 'none';
-        }
-
-        // Auto-save functionality
-        let autoSaveTimer;
-        function autoSaveDraft() {
-            clearTimeout(autoSaveTimer);
-            autoSaveTimer = setTimeout(async () => {
-                if (!document.body.classList.contains('edit-mode')) return;
-
-                const filename = `autosave-${Date.now()}.md`;
-                try {
-                    await fetch(`${API_BASE}/draft`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            filename: filename,
-                            content: editor.value
-                        })
-                    });
-                    console.log('Auto-saved:', filename);
-                } catch (err) {
-                    console.error('Auto-save failed:', err);
-                }
-            }, 5000); // Auto-save after 5 seconds of inactivity
-        }
-
-        // Google Drive OAuth state
-        let googleDriveAuth = {
-            isSignedIn: false,
-            userEmail: null
-        };
-
-        // Google Drive Client ID - replace with your own
-        const GOOGLE_CLIENT_ID = ''; // Leave empty - user will be prompted to authenticate
-
-        // Initialize Google Drive API
-        function initGoogleDrive() {
-            gapi.load('client:auth2', () => {
-                gapi.client.init({
-                    apiKey: '', // Not needed for OAuth flow
-                    clientId: GOOGLE_CLIENT_ID || prompt('Enter your Google Drive Client ID:'),
-                    discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
-                    scope: 'https://www.googleapis.com/auth/drive.file'
-                }).then(() => {
-                    const authInstance = gapi.auth2.getAuthInstance();
-
-                    // Listen for sign-in state changes
-                    authInstance.isSignedIn.listen(updateSignInStatus);
-
-                    // Handle initial sign-in state
-                    updateSignInStatus(authInstance.isSignedIn.get());
-                }).catch(err => {
-                    console.error('Google Drive API init failed:', err);
-                });
-            });
-        }
-
-        // Update sign-in status
-        function updateSignInStatus(isSignedIn) {
-            googleDriveAuth.isSignedIn = isSignedIn;
-
-            if (isSignedIn) {
-                const user = gapi.auth2.getAuthInstance().currentUser.get();
-                const profile = user.getBasicProfile();
-                googleDriveAuth.userEmail = profile.getEmail();
-                console.log('Google Drive connected:', googleDriveAuth.userEmail);
-            } else {
-                googleDriveAuth.userEmail = null;
-            }
-
-            updateDriveBackupButton();
-        }
-
-        // Update backup button text based on auth status
-        function updateDriveBackupButton() {
-            const backupBtn = document.getElementById('drive-backup-btn');
-            const signoutBtn = document.getElementById('drive-signout-btn');
-
-            if (backupBtn && signoutBtn) {
-                if (googleDriveAuth.isSignedIn) {
-                    const email = googleDriveAuth.userEmail;
-                    const shortEmail = email.length > 20 ? email.substring(0, 17) + '...' : email;
-                    backupBtn.innerHTML = `☁️ Backup (${shortEmail})`;
-                    backupBtn.title = `Connected to Google Drive: ${email}`;
-                    backupBtn.style.background = '#34a853';
-                    backupBtn.style.color = 'white';
-                    signoutBtn.style.display = 'inline-block';
-                } else {
-                    backupBtn.innerHTML = '☁️ Backup to Drive';
-                    backupBtn.title = 'Click to sign in to Google Drive';
-                    backupBtn.style.background = '';
-                    backupBtn.style.color = '';
-                    signoutBtn.style.display = 'none';
-                }
-            }
-        }
-
-        // Google Drive backup with OAuth
-        function backupToGoogleDrive() {
-            // Initialize if not already done
-            if (typeof gapi === 'undefined' || !gapi.auth2) {
-                initGoogleDrive();
-                setTimeout(() => backupToGoogleDrive(), 1000);
-                return;
-            }
-
-            const authInstance = gapi.auth2.getAuthInstance();
-
-            // Check if signed in
-            if (!authInstance.isSignedIn.get()) {
-                // Sign in first
-                authInstance.signIn().then(() => {
-                    // After sign-in, proceed with backup
-                    uploadToGoogleDrive();
-                }).catch(err => {
-                    console.error('Google Sign-In failed:', err);
-                    alert('Sign-in cancelled or failed. Using local download instead.');
-                    downloadMarkdown();
-                });
-            } else {
-                // Already signed in, proceed with backup
-                uploadToGoogleDrive();
-            }
-        }
-
-        // Upload file to Google Drive
-        function uploadToGoogleDrive() {
-            const content = editor.value;
-            const filename = `blog-backup-${Date.now()}.md`;
-            const metadata = {
-                name: filename,
-                mimeType: 'text/markdown'
-            };
-
-            const form = new FormData();
-            form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-            form.append('file', new Blob([content], { type: 'text/markdown' }));
-
-            const accessToken = gapi.auth.getToken().access_token;
-
-            fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-                method: 'POST',
-                headers: new Headers({ 'Authorization': 'Bearer ' + accessToken }),
-                body: form
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    throw new Error(data.error.message);
-                }
-                alert(`✅ Backed up to Google Drive: ${data.name}\n\nFile ID: ${data.id}`);
-            })
-            .catch(err => {
-                console.error('Google Drive backup failed:', err);
-                alert('Failed to backup to Google Drive.\n\nError: ' + err.message + '\n\nFalling back to local download.');
-                downloadMarkdown();
-            });
-        }
-
-        // Sign out from Google Drive
-        function signOutGoogleDrive() {
-            if (gapi.auth2) {
-                gapi.auth2.getAuthInstance().signOut().then(() => {
-                    console.log('Signed out from Google Drive');
-                });
-            }
-        }
-
-        // Fullscreen toggle
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else {
-                document.exitFullscreen();
-            }
-        }
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            // Ctrl/Cmd + S to save
-            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-                e.preventDefault();
-                if (document.body.classList.contains('edit-mode')) {
-                    saveDraft();
-                } else {
-                    downloadMarkdown();
-                }
-            }
-
-            // Ctrl/Cmd + B for bold
-            if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
-                e.preventDefault();
-                insertMarkdown('**', '**');
-            }
-
-            // Ctrl/Cmd + I for italic
-            if ((e.ctrlKey || e.metaKey) && e.key === 'i') {
-                e.preventDefault();
-                insertMarkdown('*', '*');
-            }
-
-            // F11 for fullscreen
-            if (e.key === 'F11') {
-                e.preventDefault();
-                toggleFullscreen();
-            }
-        });
-    </script>
-    <!-- Google Drive API (loaded on demand) -->
-    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="./editor.js"></script>
 </body>
 </html>

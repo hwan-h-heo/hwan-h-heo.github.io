@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것" />
+    <meta name="keywords" content="post, 3d-generation, 3D graphics, computer vision, machine learning" />
+    <meta name="author" content="Hwan Heo" />
+    <link rel="canonical" href="https://hwan-h-heo.io/blogs/posts/an-era-of-3d-generation-kor/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://hwan-h-heo.io/blogs/posts/an-era-of-3d-generation-kor/" />
+    <meta property="og:title" content="3D 생성 모델의 시대" />
+    <meta property="og:description" content="ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것" />
+    <meta property="og:image" content="https://hwan-h-heo.io/blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif" />
+    <meta property="og:site_name" content="HwanHeo's Blog" />
+    <meta property="article:published_time" content="2025-03-02T00:00:00.000Z" />
+    <meta property="article:author" content="Hwan Heo" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://hwan-h-heo.io/blogs/posts/an-era-of-3d-generation-kor/" />
+    <meta name="twitter:title" content="3D 생성 모델의 시대" />
+    <meta name="twitter:description" content="ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것" />
+    <meta name="twitter:image" content="https://hwan-h-heo.io/blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif" />
+    <script type="application/ld+json">
+    {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "3D 생성 모델의 시대",
+  "description": "ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것",
+  "image": "https://hwan-h-heo.io/blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif",
+  "author": {
+    "@type": "Person",
+    "name": "Hwan Heo",
+    "url": "https://hwan-h-heo.io"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Hwan Heo",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://hwan-h-heo.io/assets/favicon.ico"
+    }
+  },
+  "datePublished": "2025-03-02T00:00:00.000Z",
+  "dateModified": "2025-03-02T00:00:00.000Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://hwan-h-heo.io/blogs/posts/an-era-of-3d-generation-kor/"
+  },
+  "inLanguage": "ko"
+}
+    </script>
+
+    <title>3D 생성 모델의 시대 - HwanHeo's Blog</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.150.0/examples/jsm/",
+                "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
+            }
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/25.0.0/tween.umd.js"></script>
+    <script src="https://use.fontawesome.com/releases/v6.5.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+    <link href="/blogs/css/used.css" rel="stylesheet" />
+    <link href="/blogs/css/blog_post_specific.css" rel="stylesheet" />
+    <link href="/blogs/css/code-copy.css" rel="stylesheet" />
+    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1.9.1/css/academicons.min.css">
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
+    <style>
+        pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; font-size: 0.9rem !important; }
+        pre code { font-size: 0.9rem !important; }
+        .main-content a { color: #15B886; text-decoration: none; }
+        .main-content a:hover { color: #11926b; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; }
+        th { width: 15%; background-color: #f2f2f2; }
+    </style>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RF7ETSKPK9');
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="/blogs/">Blog Home</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+                Menu <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="../an-era-of-3d-generation/" class="btn nav-link px-lg-3 py-3 py-lg-4" style="font-size:0.7rem">ENG</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="masthead" style="background-image: url('/assets/image_fx_.jpg')">
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="post-heading">
+                        <br/>
+                        <h2>3D 생성 모델의 시대</h2>
+                        <span class="meta">
+                            Posted on March 2, 2025
+                            <span style="margin: 0 8px;">•</span>
+                            <i class="bi bi-clock" style="margin-right: 4px;"></i>20 min read
+                        </span>
+                        <hr/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <article class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div id="series-container"></div>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 main-content">
+                    <nav class="toc"><ul><li><a href="#toc-heading-0">들어가며</a><ul></ul></li><li><a href="#toc-heading-1">Preliminary: What is Latent?</a><ul></ul></li><li><a href="#toc-heading-2">1. ShapeVAE</a><ul><li><a href="#toc-heading-3">Challenges for ShapeVAE</a></li></ul></li><li><a href="#toc-heading-4">2. Trellis</a><ul><li><a href="#toc-heading-5">2.1. Structured Latent Representation</a></li><li><a href="#toc-heading-6">2.2. SLAT Generation</a></li></ul></li><li><a href="#toc-heading-7">3. Hunyuan3D-v2</a><ul><li><a href="#toc-heading-8">3.1. Hunyuan-ShapeVAE</a></li><li><a href="#toc-heading-9">3.2. Hunyuan3D-DiT</a></li><li><a href="#toc-heading-10">3.3. Hunyuan3D-paint</a></li></ul></li><li><a href="#toc-heading-11">4. Trellis vs Hunyuan3D</a><ul></ul></li><li><a href="#toc-heading-12">Closing</a><ul></ul></li></ul></nav><button id="copyButton">
+    <i class="bi bi-share-fill"></i>
+</button>
+
+<div id="myshare_modal" class="share_modal">
+    <div class="share_modal-content">
+        <span class="share_modal_close">×</span>
+        <p><strong>Link Copied!</strong></p>
+        <div class="copy_indicator-container">
+        <div class="copy_indicator" id="share_modalIndicator"></div>
+        </div>
+    </div>
+</div>
+
+<br/>
+
+<ul>
+<li>이 글은 ShapeVAE (3Dshape2vecset, michelangelo) 와 SOTA 3D Latent Diffusion 인 Trellis, Hunyuan3D 에 대한 상세한 Review 가 포함되어 있습니다.</li>
+</ul>
+<h2 id="toc-heading-0">들어가며</h2>
+<p><em><strong>Diffusion</strong></em>. Imagen과 DALL·E를 거쳐 Stable Diffusion 과 Midjourney 에 이르기까지, Diffusion 은 GAN 을 압도하며 현대적인 2D 생성 모델의 표준이 되었다. 특히, <em><strong>Latent Diffusion</strong></em> 의 등장은  </p>
+<ul>
+<li><em>&quot;Latent 공간에서 Diffusion을 적용 → 연산량 절감 + 고해상도 이미지 생성 가능&quot;</em></li>
+</ul>
+<p>이란 기치 아래, 성능과 효율성을 동시에 갖춘 2D 생성 모델을 제시하며 실제 서비스에 적용 가능한 속도와 품질을 구현하는 데 성공했다.</p>
+<p>생성 모델의 확장은 2D를 넘어 Video 와 3D 분야로 이어지고 있다. 2024년에는 Sora, DreamMachine (Ray), Veo 등의 비디오 생성 모델이 등장하며 모달리티 확장의 가능성을 보여주었고, 이제는 비디오를 넘어 3D domain 에서도 latent diffusion 기반 모델들이 그 가능성을 증명해 나가고 있다. </p>
+<p>이번 글에서는 <strong>3D Latent Diffusion</strong> 의 개념과 그 핵심이 되는 <strong>ShapeVAE</strong> 를 분석하고, 기존의 Score Distillation Sampling (SDS) 이나 NeRF 기반 Large Reconstruction Model (LRM) 의 한계를 어떻게 극복하는지를 살펴본다. 또한, SOTA 3D 생성 모델인 Trellis와 Hunyuan3D 를 비교 분석하며, 최신 3D 생성 모델들의 설계 차이와 특장점을 깊이 있게 탐구해보자.</p>
+<h2 id="toc-heading-1">Preliminary: What is Latent?</h2>
+<table id="table-1">
+<thead>
+<tr>
+<th>RBF Network</th>
+<th>Gaussian Mixture Model</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img id="img-1" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-8.png" /></td>
+<td><img id="img-2" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-2.png" /></td>
+</tr>
+</tbody></table>
+
+<p>고전 Machine Learning 에서의 RBF neural network, Gaussian Mixture Model (GMM) 을 떠올려보자. 둘 모두 핵심은 결국,  </p>
+<ul>
+<li><p>여러 개의 basis 와</p>
+</li>
+<li><p>각 basis 의 weight</p>
+</li>
+</ul>
+<p>를 결합하여 어떠한 데이터 (확률 분포) 를 근사하는 것이다. </p>
+<p>$$
+f(x) \approx \sum_{i=1}^{N} w_i \phi(||x - c_i||)
+$$</p>
+<pre><code>Equation: Radial Basis Function (RBF)
+</code></pre>
+<img id="img-3" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-4.png" />
+
+<p>비슷한 관점으로 3D Gaussian Splatting 도 해석해볼 수 있는데, </p>
+<ul>
+<li><p>여러 basis <em>(3D gaussian primitives)</em></p>
+</li>
+<li><p>각 basis 의 weight <em>(각 gaussian 의 opacity)</em></p>
+</li>
+</ul>
+<p>의 결합으로 어떠한 데이터 (3D scene 에 대한 multi view observations) 을 근사하는 것으로 볼 수 있다. </p>
+<p>$$
+\text{Scene}(x) \approx \sum_{i=1}^{N} \alpha_i  G_i(x; \mu_i, \Sigma_i)
+$$</p>
+<pre><code>Equation: 3D Gaussian Splatting
+</code></pre>
+<p>여기서 RBF, Gaussian primitives 는 각각 learnable paramter (<em>e.g.,</em> mean, variance) 를 가지며,  학습 과정에서 최적화하게 된다. </p>
+<p>관점을 조금 바꿔서 생각해보면, 이러한 basis (primitive) 들은 data distribution 의 의미를 축약하는 일종의 ‘<em><strong>latent vector</strong></em>&#39; 로, 전체는 ‘<em><strong>latent vector set</strong></em>’ 으로 해석할 수 있을 것이다.  </p>
+<p>RBF, 3D GS 등은 basis representation 을 human crafted 로 정의하고 있는 것인데, 알고 싶은 data distribution 에 대해서 learnable 하게 basis 를 학습하면 그것이 곧 Deeplearning 에서의 <em><strong>Representation Learning</strong></em> 을 대변한다. </p>
+<h2 id="toc-heading-2">1. ShapeVAE</h2>
+<blockquote>
+<p><strong>Goal: Representation Learning for 3D Shape</strong></p>
+</blockquote>
+<p>ShapeVAE 란 3D shapes data 에 대해 정의된 AutoEncoder (VAE) 이다. 여타 모든 ShapeVAE 들의 목적은 다른 domain 의 LDM 에서의 AutoEncoder (VAE) 와 그 역할이 같다. </p>
+<p><em><strong>&#39;Input Data 에 대해 semantically meaningful 한 learnable representation 을 확보&#39;</strong></em></p>
+<p>하는 것. </p>
+<p>대표적으로 다음과 같은 연구들이 있으며, </p>
+<ul>
+<li><a href="https://1zb.github.io/3DShape2VecSet/">Shape2vecset</a></li>
+<li><a href="https://neuralcarver.github.io/michelangelo/">Michelangelo (Neural Carver)</a></li>
+<li><a href="https://craftsman3d.github.io/">Craftsman</a></li>
+</ul>
+<p>모두 비슷한 형태의 pipeline design 을 갖는다. 사실 특별할 것도 없는 AutoEncoder 구조이며, 다음과 같은 특징이 있다. </p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/424d5577-3e67-48b3-8146-91b188b9d8cd/image.png" alt=""></p>
+<ul>
+<li>Figure: ShapeVAE pipeline (from CraftsMan)</li>
+</ul>
+<ol>
+<li><strong>Input</strong>: point clouds (보통 training set 의 GT mesh 에서 sampling)</li>
+<li><strong>What to Learn</strong>?
+ a. <strong>Learnable query</strong> (latent vector set)
+ b. <strong>AutoEncoder</strong> (각 self/cross attn. block 의 linear projection layer weight)</li>
+<li><strong>Output</strong>: 3D shape, typically occupancy fields (binary voxel grid)</li>
+</ol>
+<p>여기서 learnable query 는 data distribution (3D shape) 에 대해서 semantically meaningfull, compressed 된 공간에서의 (latent space) 일종의 basis 로써, 즉 preliminaries 에서 살펴본 kernel basis 과 같은 역할을 한다. 아래 그림에서 서로 다른 basis 가 data point $x$ 에 대해 embedding 을 어떻게 적용하는지 볼 수 있다. </p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/b94e3561-eb33-4e63-8362-4fc2b135b498/image.png" alt=""></p>
+<p>ShapeVAE 에서는 위 그림에서의 (e) 처럼, query point $(x)$ 에 대해 learnable query (latent space 의 basis) 의 similarity 를 반영한 후, </p>
+<p>$$ \sum_{i=1}^{M} \mathbf{v}(\mathbf{f}_i) \cdot \frac{1}{Z(\mathbf{x}, {\mathbf{f}<em>i}</em>{i=1}^{M})} e^{\mathbf{q}(\mathbf{x})^{\mathsf{T}} \mathbf{k}(\mathbf{f}_i) / \sqrt{d}}
+$$</p>
+<ul>
+<li>where Z: normalizing factor (즉 v 를 제외하고 보면 softmax)</li>
+</ul>
+<p>이 embedding 을 decoding 하여 GT shape 을 reconstruction 하는 구조로 latent space 를 학습한다. </p>
+<blockquote>
+<p>ShapeVAE 를 처음 제시한 <a href="https://1zb.github.io/3DShape2VecSet/">Shape2vecset</a> 저자들은, 이 설계 자체를 RBF 에서 착안하여 제시했다고 한다. $q(x)$ 는 input embedding 이기 때문에 여기서 learnable parameters 은 latent vectors $(f_i)$ 와 corresponding weight $(\mathbf{v}(f_i))$ 이며, 이는 곧 RBF 에서 query point 와 kernel basis 간의 weighted similarity 로 RBF 값을 근사하고, 이를 이용해 basis function 을 optimize 하는 것과 같은 형태임을 알 수 있다. </p>
+</blockquote>
+<p>또한 이 식을 Transformer 의 <em><strong>QKV cross-attention</strong></em> 의 형태로도 해석할 수 있다. 실제로 저자들은 DETR, Perceiver 에서 착안해 다음과 같은 형태로 learnable latent 를 정의한다. </p>
+<p>$$ \text{Enc}_{\text{learnable}}(\mathbf{X}) = \text{CrossAttn}(\mathbf{L}, \text{PosEmb}(\mathbf{X})) \in \mathbb{R}^{C \times M}
+$$</p>
+<p>정리하자면 ShapeVAE AutoEncoder 는 basis (latent query, <strong>L</strong>) 를 이용해서, 각 data instance (<strong>X</strong>) 에 대해 basis 와 data 간의 관계를 encoding ↔︎ decoding 하는 구조를 학습한다. Shape 에 대한 representation 을 가장 잘 표현하는 <em><strong>latent space</strong></em> 와, 그 latent space 에 대한 정보를 가장 잘 담고 있는 <em><strong>basis (learnable query)</strong></em> 를 배우게 되는 것. </p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/53278aeb-c8f8-4777-a958-9835885bfcce/image.png" alt=""></p>
+<ul>
+<li>Figure: ShapeVAE pipeline (from 3DShape2vecset)</li>
+</ul>
+<p>Pipeline 에서 각 요소는 다음과 같은 세부사항을 갖는다. </p>
+<ul>
+<li><p><strong>Positional Encoding</strong>: fourier featuring 으로 NeRF / Transformer 에서 쓰이는 sinusodal encoding 의 그것. PE 는 Cartessian Coordinates 를 high-dimensional, frequency domain 으로 mapping 시켜줄 뿐만 아니라 kernel regression 을 학습할 때 coordinates 간의 stationary 성질을 더해준다. </p>
+<img src='https://velog.velcdn.com/images/gjghks950/post/103375c9-8fb8-4d25-ab45-8888a0b22ae7/image.png' width=70% >
+</li>
+<li><p><strong>KL reg term</strong>: Encoder가 생성하는 latent distribution 이 prior distribution (일반적으로 standard Gaussian distribution, $N(0, 1)$) 에 가깝도록 유도한다. 이는 다음과 같은 장점들이 있다.</p>
+<ul>
+<li><strong>Continuous latent space</strong>: 정규 분포를 따르는 latent space는 연속적이고 부드러운 공간이 되며, latent space 상에서 interpolation 이나 sampling 이 쉬워진다.<ul>
+<li>latent space 상에서 벡터 연산 (interpolation, extrapolation 등) 을 통해 shape variation 을 자연스럽게 제어할 수 있다.</li>
+</ul>
+</li>
+<li><strong>Prevent Overfitting</strong>: latent space를 prior distribution에 가깝게 제약함으로써, encoder가 학습 데이터의 분포를 더 일반적인 형태로 학습하도록 유도한다. </li>
+<li><strong>Sampling Ease</strong>: 단순히 standard Gaussian distribution에서 랜덤 샘플링한 후 decoder에 입력하면 새로운 데이터를 생성할 수 있다.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>Q. Why learnable query?</strong>
+DETR / Perceiver 는 기본적으로 detection 이나 classification 등 generation 이 아닌 분야를 위해 설계된 모델이다. 생성이 아닌 분야에서는 learnable query 가 종종 쓰이지만, 2D LDM 에서는 잘 쓰이는 방법이 아니다. 하지만 ShapeVAE 에서 latent query 를 도입한 이유에 대해서 몇 가지 유추해보자면, </p>
+</blockquote>
+<ul>
+<li><strong>Hierarchy</strong>
+명확한 Part-based 구조: 3D shape 은 의미 있는 부분 (part) 들로 구성되는 경우가 많다. 이러한 부분들은 spatial relation 을 가지며 전체 shape 을 구성한다</li>
+<li><strong>Sparsity &amp; Geometry</strong>
+sparse 한 특징을 가지고, 3D shape 자체는 ‘2D image’ 의 texture, style, background 보다 훨씬 sparse 한 geometry 자체가 핵심 정보이기 때문에 latent query 방식으로 compress 하기 좋다</li>
+</ul>
+<p>Enc/Dec 에 어떤 구조를 사용하느냐 (Perceiver ↔︎ Diffusion Transformer)  / latent space 에 multi-modality 에 대한 alignment 를 위한 loss 등을 추가적으로 설계하느냐 (CraftsMan) 등의 차이는 있지만, 기본적으로 ShapeVAE 가 하는 역할은 위와 일맥상통하다.</p>
+<p>풍부한 데이터로부터 잘 학습된 latent space 가 있다면, 우리는 Latent Diffusion Model 의 힘을 빌려 3D shape 에 대해서도 생성 모델 (3D Latent Diffusion Model) 이 학습 가능할 것을 예상할 수 있다. </p>
+<hr>
+<h3 id="toc-heading-3">Challenges for ShapeVAE</h3>
+<p>하지만 최근까지도 3D 생성 분야는 2D / 비디오 생성만큼의 놀라운 결과를 보여주지는 못하고 있었다. 이러한 더딘 발전의 원인들은 다음과 같은데, </p>
+<ul>
+<li><p><strong>Versatility &amp; Diversity of Data</strong>: 데이터 양이 2D 에 비해 극심히 적다. 그나마 Objaverse 란 데이터셋이 8M 정도이며, 그 데이터셋의 확장인 XL 버젼도 100M 정도로 2D 데이터셋들에 비해 극도로 적다 (LAION 5B...). 특히 고퀄리티의 데이터셋은 더더욱. </p>
+</li>
+<li><p><strong>Curse of Dimensionality</strong>: 3차원인만큼 high-resolution 생성이 2D 에 비해 cost 가 높다.</p>
+</li>
+<li><p><strong>What is the ‘BEST’ representation?</strong>
+‘3D’ 에 대해 적절한 representation 이 무엇인지는, 답이 없는 open-problem 이다. neural fields 를 제외하고서라도, voxel, occupancy grid, SDF… 등 수많은 representation 이 있는데, 이는 각 장단이 있기 때문에 쉽사리 어느 하나를 고를 수 없다.</p>
+</li>
+</ul>
+<p>또한 NeRF 의 대유행으로 3D 생성에서도 2D Diffusion + NeRF 를 결합한 방법인 SDS 가 주류를 이루었으나, 태생적인 한계 (extremly slow generation time / Janus problem) 을 극복하기가 매우 힘들었다. <em>cf</em>: <a href="https://velog.io/@gjghks950/3d">3D 생성에서 NeRF 와 SDS 는 도태될 수밖에 없는가?</a></p>
+<p>ShapeVAE 의 성능은 이 중에서도 <em>1) 데이터의 양과 다양성 문제와</em> 그 성능이 직결되었다. 초기 ShapeVAE 는 3D 생성 보다는 surface recosntruction 분야를 generative 하게 접근하는 쪽에 더 가까웠기 때문에 ShapeNet 등 제한적인 데이터셋에서만 학습되었으며, 데이터의 양을 늘려 학습한 경우에도 input image 나 text 를 충실하게 재현하지 못하는 성능을 보였다. </p>
+<p>또 한가지 ShapeVAE 의 문제점은 feature aggregation 을 <em>‘spatial location 에만 dependent 하게 추출&#39;</em> 한다는 점이다. 기본적으로 ShapeVAE 에서 point feature 는 ‘Positional Encoding’ 으로 들어가는데, Positional Encoding 만으로는 공간 상의 local structure (curvature, surface normal) 나 global shape context (connection relation between vertices &amp; faces) 와 같은 중요한 3D 정보를 충분히 포착하기 어렵다. </p>
+<p>이러한 ShapeVAE 를 Geometry Generation 단계에서 적극 활용해 Model / Data capacity 를 크게 늘리고 shape generation 과 texture generation 을 분리한 2-stage pipeline 을 처음 제시한게 바로 <strong>CLAY-Rodin</strong> 이다. </p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/623219d2-633f-403d-a35a-a327bd2e96a5/image.png" alt=""></p>
+<ul>
+<li>Figure: Rodin (paper: <a href="https://sites.google.com/view/clay-3dlm">CLAY</a>)</li>
+</ul>
+<p>Rodin 은 large DiT model (1.5B) 를 이용해 ShapeVAE 와 그 latent space 에서의 shape generation 성능을 크게 올리고, 생성된 shape (mesh) 위에 <em>geometry-guided multi-view generation</em> 을 이용한 texture synthesis 의 2-stage 를 사용하여 그전까지의 3D 생성 퀄리티를 압도하는 결과를 보여주었다. </p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/dd00d010-c5c2-4d15-9b5d-33185c865b60/image.png" alt=""></p>
+<ul>
+<li>Clay 와 유사한 pipeline 을 가진 <a href="https://ncsoft.github.io/CaPa/">CaPa</a>. 3D LDM 으로 mesh 를 생성한 이후 high-quality texture 를 만들어 backprojecting 한다.</li>
+</ul>
+<p>이 연구를 필두로 2024년에 점차 3D Latent Diffusion 자체를 제시하는 연구들이 증대되었다. 하지만 상기했던 문제들, </p>
+<ol>
+<li>Low Quality</li>
+<li>Not faithfully follow the guidance (input image or text)</li>
+</ol>
+<p>를 해결하기 어려웠는데...</p>
+<h2 id="toc-heading-4">2. Trellis</h2>
+<p>Paper: <a href="https://trellis3d.github.io/">Trellis: Structured 3D Latents for Scalable and Versatile 3D Generation</a> </p>
+<p>Trellis 는 2024년 말 Microsoft 에서 발표한 SOTA 3D Latent Diffusion 모델이다. 안정성과 fidelity 측면에서 이전 ShapeVAE 기반 접근법들을 크게 상회하는 결과를 보여주었고, end2end 로 shape 뿐만 아니라 texture 를 같이 생성할 수 있다는 장점이 있다. 어떠한 설계를 통해 SOTA quality 를 달성했는지 분석해보자. </p>
+<h3 id="toc-heading-5">2.1. Structured Latent Representation</h3>
+<p>Trellis 는 ShapeVAE 의 단점 중 <em>‘PE only input feature encoding&#39;</em> 의 한계로부터 나오는 한계를 well-trained 2D feature extractor (<strong>DINOv2</strong>) 를 사용해 극복한 연구이다. </p>
+<p>저자들은 <em><strong>SLAT</strong></em> (Structured Latent Representation) 이라는 representation 을 제안하는데, </p>
+<p>$$ \mathbf{z} = {(\mathbf{z}_i, \mathbf{p}<em>i)}</em>{i=1}^{L}, \quad \mathbf{z}_i \in \mathbb{R}^{C}, \quad \mathbf{p}_i \in {0, 1, \dots, N-1}^3,
+$$</p>
+<p>여기서 $p_i$ 는 voxel index, $(z_i)$ 는 latent vector 이다. 즉 voxel grid 마다 latent vector 가 하나씩 할당되어 있는 구조이고, latent vector set 이 그 자체로 <em><strong>structured (voxelized)</strong></em> 되어 있기 때문에 <em><strong>SLAT</strong></em> 이라고 명명한 듯 하다. </p>
+<p>3D data의 sparsity 으로 인해, activated grid 의 개수는 3D grid 의 총 사이즈보다 매우 작고 $(L &lt;&lt; N^3)$, 이는 상대적으로 높은 해상도로 생성될 수 있음을 의미한다. Instant-NGP 등 voxel-grid NeRF 와도 비슷한 접근인데, ShapeVAE 를 이용해 featured grid 를 예측하는 설계인 셈. </p>
+<p>정의 자체는 ShapeVAE 에서 사용하는 learnable query 를 voxel grid 에 mapping 한 것에 불과할 수 있으나, SLAT 의 핵심은 이 SLAT encoding 을 배우는 과정에서 <strong>DINOv2</strong> feature extractor 를 적극 이용한다는 것이다. </p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/fc0b01c6-a074-42b0-b361-b0a3758f46ea/image.png" alt=""></p>
+<p>위 그림과 같이, SLAT 은 VAE 를 학습하는 과정에서 3D assets 에 대한 encoding 을 </p>
+<ol>
+<li><p>Multi-View Rendering </p>
+</li>
+<li><p>Featurizing: 각 view rendering 에 대해서 DINOv2 로 feature extracting </p>
+</li>
+<li><p>Averaging</p>
+</li>
+</ol>
+<p>하여 계산한다. </p>
+<p>이는 Trellis 가 <em><strong>end2end 3D generation</strong></em> 을 표방하기 때문에 채택한 방법으로 보이는데, 단순 PE 만으로는 표현하기 힘든 color, texture 등 3D Assets 에 대한 정보를 <em><strong>pre-trained DINOv2 를 이용해 versatile 한 feature 를 얻은 것</strong></em> 이라고 생각한다. </p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/8b5829e3-12be-4429-b93c-0b84dbfdc00c/image.png" alt=""></p>
+<ul>
+<li>figure: SLAT representation learning</li>
+</ul>
+<p>VAE 구조 자체는 original ShapeVAE 와 동일하며, latent space 가 잘 정의되어 있다면 Decoder 를 바꿔서 3D GS / Radiance Fields / Mesh 의 output 을 생성하도록 finetune 할 수 있기 때문에, Trellis 는 output 에 GSs, NeRF, Mesh 등 format-agnostic 하게 결과를 예측할 수 있다. (실제 inference branch 에서는 GS 와 Mesh branch 두 개를 사용함)</p>
+<h3 id="toc-heading-6">2.2. SLAT Generation</h3>
+<blockquote>
+<p>Q. 그럼 3D Generation 자체도, ShapeVAE 에서처럼 latent space 에서 Standard Gaussian Distribution 의 random sample 을 넣으면 새로운 asset 이 생성되는가? </p>
+</blockquote>
+<p>아쉽게도 그렇지 않은데, 우선 SLAT 은 <em><strong>‘structure’ (position index)</strong></em> 자체도 의미가 있기 때문에 structure, 즉 어떤 voxel 이 비었는지, 비지 않았는지부터 생성할 필요가 있다. </p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/3692236c-c552-417a-9cea-575860eded46/image.png" alt=""></p>
+<p>이를 위해 Trellis 는 3D Generation 에서 2-stage 의 접근을 사용한다.</p>
+<ol>
+<li><p>Conditional Flow Matching 을 통해 Sparse Structure 생성: rectified flow model 을 이용. (model 1)</p>
+<p>
+$$ \mathcal{L}_{CFM}(\theta) = \mathbb{E}_{t, \mathbf{x}_0, \epsilon} || \mathbf{v}_\theta(\mathbf{x}, t) - (\epsilon - \mathbf{x}_0) ||_2^2.
+$$
+</p>
+
+</li>
+<li><p>생성된 Sparse Structure 를 input 으로 하여 DiT 와 비슷한 구조의 Transformer 로 최종 SLAT 생성한다. (model 2)</p>
+</li>
+</ol>
+<p>첫 단계에서 structure 를 dense grid 로 바로 생성하는 것은 computation cost 가 크기 때문에, Trellis 는 Structure Gen Stage 에서도 <em>Decoder</em> 를 도입하여 low-resolution feature grid 를 생성 후 Decoder 로 scale up 하는 방식을 채택한다. </p>
+<p>구체적으로는 GT dense binary grid $\mathbf{O} \in {0, 1}^{N \times N \times N}$ 를 3D convolution 을 이용해 low-resolution feature grid $\mathbf{S} \in \mathbb{R}^{D \times D \times D \times C_s}$ 으로 압축하여, 이를 예측하는 Flow Transformer 를 먼저 학습한다. $\mathbf{O}$ 가 coarse 한 형상이기 때문에 3D conv 를 이용한 압축 과정에서 손실이 거의 없고, NN 학습의 효율성을 향상시키는 장점도 있다. 또한, $\mathbf{O}$ 의 binary grid 를 continuous value 로 변환하여 Rectified Flow 학습에 적합하게 만든다.</p>
+<blockquote>
+<p><em><strong>Rectified flow</strong></em> 모델은 diffusion process 에서 data → noise 로 경로를 linear interpolation (input → output) 의 직선 경로를 forward process 로 사용하는 모델이다. 일반적인 Neural ODE solver 의 step 이 비효율적인데 비해 Rectified Flow 는 data → noise 의 linear 한 vector field 를 modeling 하기 때문에 훨씬 빠르고 정확하게 생성이 가능하다. 
+<img src="https://velog.velcdn.com/images/gjghks950/post/365500ab-4bf9-4f77-b89e-474d14b76fd4/image.png" alt=""></p>
+</blockquote>
+<p>이 과정에서 condition modeling 은 다른 Diffusion model 과 비슷하게 cross-attention 의 KV 에 inject 한다. 즉 Sparse Strucrue Gen 은 일종의 <em><strong>Image/Text-to-3D Coarse Shape Generation</strong></em> 으로 작동한다.</p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/5d78a6f2-5203-402a-998e-cbdf037b11f3/image.png" alt=""></p>
+<p>이후 생성된 Sparse Structure 를 이용하여 SLAT 을 생성하는 model 2 를, 마찬가지로 Rectified Flow 를 이용하여 학습했다고 한다. 최종적으로 생성된 SLAT 에 ShapeVAE 의 decoder 를 사용하여 GSs / Mesh output 을 생성할 수 있다. </p>
+<p>Mesh Decoder 가 있기 때문에 Mesh Output 은 Mesh Decoder Branch 의 output 을 바로 사용하나 싶었지만, 실제로는 그렇지 않다는 것을 유의하자. 최종 3D asset output 은 GS 생성 결과물은 <em>RGB representation</em> 으로, Mesh 생성 결과물은 <em>geometry</em> 로 이용하여 mesh 의 texture 를 GS rendering 에 fitting 하도록 되어 있다. 이는 Mesh branch 의 생성 fidelity 가 상대적으로 떨어지고, mesh geometry 자체도 post-processing 이전엔 artifacts 가 은근히 보이는 편이기 때문에 채택한 듯 하다. </p>
+<p>구체적으로는,</p>
+<ol>
+<li><p><strong>Multi-view Rendering</strong>: GSs 생성 결과물을 정해진 num view 만큼 rendering </p>
+</li>
+<li><p><strong>Post-processing</strong>: Mesh 생성 결과를 mincut 알고리즘을 이용한 retopology, hole filling 등의 post-processing</p>
+</li>
+<li><p><strong>Texture Baking</strong> 1) 에서 rendering 된 multi-view GSs rendering 을 GT textures 로 하여, Mesh texture 와의 Total-Varation Loss (L1) 를 minimize 하도록 texture 를 배워서 Mesh 에 최종 baking</p>
+</li>
+</ol>
+<p>의 단계를 통해 최종 3D asset 을 생성하도록 되어 있다. 데모 페이지에서 다운 받을 수 있는 glb output 은 모두 이러한 pipeline 을 거쳐서 나온 결과이다. </p>
+<ul>
+<li>cf: <a href="https://github.com/microsoft/TRELLIS/blob/eeacb0bf6a7d25058232d746bef4e5e880b130ff/trellis/utils/postprocessing_utils.py#L399">to_glb</a>, <a href="https://github.com/microsoft/TRELLIS/blob/eeacb0bf6a7d25058232d746bef4e5e880b130ff/trellis/utils/postprocessing_utils.py#L22">fill_holes</a></li>
+</ul>
+<img src='https://arxiv.org/html/2412.01506v1/x4.png'>
+
+<p>굉장한 퀄리티의 output 을 보여주는데, <a href="https://huggingface.co/spaces/JeffreyXiang/TRELLIS">Demo</a> 에서 모델을 돌려볼 수 있다. </p>
+<p>단점이라면 아직은 instruction (input guidance) 를 완전히 잘 따라가지는 못하고, 상기한대로 Mesh branch 의 output quality 가 떨어지기 때문에 GSs rendering 을 post-processed Mesh 에 baking 하는 복잡한 작업이 필요하다. 또한 이 texture baking 자체는 multi-view rendering 을 기반으로 하기 때문에, occlusion 에서 완벽하게 자유롭지는 못하다. </p>
+<hr>
+<h2 id="toc-heading-7">3. Hunyuan3D-v2</h2>
+<p>Paper: <a href="https://3d-models.hunyuan.tencent.com/">Hunyuan3D 2.0: Scaling Diffusion Models for High Resolution Textured 3D Assets Generation
+</a></p>
+<p>Trellis 의 등장 이후 한 동안 3D Generation 의 SOTA 왕좌는 Trellis 가 굳건히 점유할 것으로 보였으나, Mesh Quality, Instruction Following 관점에서 Trellis 를 압도하는 중국의 Hyunyuan3D-v2 가 등장했다. </p>
+<p>Hunyuan3Dv2 는 Trellis 와 다르게 end2end 가 아니라, Rodin 이나 CaPa 와 같은 2-stage, 1) Mesh Generation 2) Texture Generation 을 따르고 있다. 그 중 <em>Mesh Generation</em> quality 가 그야말로 <em><strong>SUPERIOR</strong></em> 한데, 자세하게 분석해보도록 하겠다. </p>
+<h3 id="toc-heading-8">3.1. Hunyuan-ShapeVAE</h3>
+<p>Hunyuan 의 ShapeVAE 설계도 vanilla ShapeVAE 와 많이 다르진 않지만, 몇 가지 주효한 차이점이 있다. </p>
+<ol>
+<li><p><strong>Point Sampling</strong>: ShapeVAE 학습할 시 대게는 GT mesh 로부터 point cloud 는 uniform sampling 을 통해 얻는다. 하지만 이렇게 되면 fine detail 을 잃는 경우가 다수이기 때문에, Hunyuan 은 uniform sampling 에 더불어 Edge / Corner 쪽에 더 집중된 point sampling 전략을 사용한다. 이는 최근 제시된 <a href="https://aruichen.github.io/Dora/">Dora</a> 와도 비슷한 접근법이다.
+<img src="https://velog.velcdn.com/images/gjghks950/post/898c4525-2ee2-40c4-a287-f4a1a66d3dcc/image.png" alt=""></p>
+<p> Figure from Dora. Left: salient points ↔︎  Right: uniform</p>
+</li>
+<li><p><strong>SDF estimation</strong>: VAE output 이 binary voxel grid 가 아니라 SDF value 이다. Binary grid 를 예측해야하는 기존 occupancy 방식과 다르게 이렇게 되면 continuous real value 인 SDF 값을 estimation 하므로 Deeplearning 이 더 안정적인 결과물을 estimation 할 수 있다.</p>
+</li>
+<li><p><strong>Point Query</strong>: Latent space 의 basis 를 latent vector set 으로 learnable 하게 배우는 전략을 사용하지 않는다. 대신에 앞서 설명한 salient/uniform sampled point 를 subsampling 하여 query 로 활용하게 된다. </p>
+<img src='https://velog.velcdn.com/images/gjghks950/post/2e504ba0-bf9b-4523-838c-608bd00ae761/image.png' width=70%></li>
+</ol>
+<p>latent space 의 basis 는 배우지 않고 latent space 자체를 더 정밀하게 배우는 전략을 채택한 것인데, salinet sampling 이 각 3D shape 의 fine detail 을 충분히 반영하기 때문에 해당 접근법을 채택한 것 같다. </p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/ea2c4b30-0629-4b28-a5ec-fb4350d4fd8e/image.png" alt=""></p>
+<ul>
+<li>Figure: Hunyuan-ShapeVAE</li>
+</ul>
+<h3 id="toc-heading-9">3.2. Hunyuan3D-DiT</h3>
+<p>이전 연구들은 Trellis 를 포함하여 일반적인 DiT 구조와 크게 다르지 않은 Transformer 를 차용했었는데, Hunyuan 은 <em><strong>Flux</strong></em> 에서 기반한 참신한 DiT architecture: <em><strong>‘double- and single-stream’ design</strong></em> 을 사용한다. 이 구조로 인해 Hunyuan3D 가 기존 그 어떤 모델과 비교해도 input guidance 를 가장 잘 따르는 high quality Mesh 를 생성할 수 있게 되었다. </p>
+<p>Flux 는 (official technical report 가 없지만) 공개된 dev version 코드에 의하면 text ↔︎ image modality 의 정보 처리를  <strong>double-stream</strong> 으로 설계하는데 (text / image branch 가 병렬로 분리되어 있음), 이것이 SDXL 대비 Flux 가 better instruction following performance 를 갖게된 주효한 원인으로 분석되고 있다. </p>
+<table>
+<thead>
+<tr>
+<th>SDXL</th>
+<th>Flux</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/57d5982d-19ac-4d1b-9e8e-0cff68fe481a/image.png" alt=""></td>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/03dd8604-7c90-4a95-bbf6-4dd6624f2aae/image.png" alt=""></td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>cf. <a href="https://www.reddit.com/media?url=https%3A%2F%2Fpreview.redd.it%2Fa-detailled-flux-1-architecture-diagram-v0-ary85pw338od1.png%3Fwidth%3D7710%26format%3Dpng%26auto%3Dwebp%26s%3D9dd2a75cf75bc2dc1d0f1e7b27fb8a5f67253eb1">unofficial diagram of Flux Pipeline</a> </p>
+</li>
+<li><p><strong>my opinion)</strong> Double stream 의 구조를 보면 <em><strong>ControlNet</strong></em> 의 reference net 방식과 유사한데, 아마 ControlNet 방식이 original modal 의 generation capability 를 해치지 않으면서 condition 을 잘 반영하는데서 착안한 구조가 아닐까 싶다.</p>
+</li>
+</ul>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/119a2851-755c-4448-8f2d-c498b6bc23c5/image.png" alt=""></p>
+<ul>
+<li>Figure: Hunyuand3D-DiT</li>
+</ul>
+<p>Hunyuan 도 이러한 <em><strong>‘double-single’</strong></em> 구조를 채택하여 condition <em>(image, text)</em> instruction 에 대한 정보를 최대한 잃지 않으면서 동시에 3D Shape 도 high-quality 로 생성하는 것을 목표로 한다. </p>
+<p>Pipeline 의 핵심은 다음과 같은데, </p>
+<ul>
+<li><p><strong>Double Stream</strong>: </p>
+<ul>
+<li><strong>Shape Tokens</strong>: 생성할 3D shape 의 latent representation token (noisy) 를 DiT 의 diffusion reverse process 를 통해 정제 </li>
+<li><strong>Image Tokens</strong>: input image (image prompt) 에서 pre-trained DINOv2 를 이용해 추출한 2D image feature</li>
+<li><strong>Shared Interaction</strong>: Shape / Image Tokens 을 각각 독립적인 경로로 처리하되, Attention 연산 내에서 두 token 간의 interaction 을 반영한다. 이를 통해 image prompt 의 정보를 3D Shape 생성 과정에 효과적으로 반영된다.</li>
+</ul>
+</li>
+<li><p><strong>Single Stream</strong>:</p>
+<ul>
+<li><strong>Input</strong>: Double-stream 을 거쳐 이미지 정보가 반영된 Shape Tokens</li>
+<li><strong>Output</strong>: Token 을 독립적으로 처리하여 3D shape latent representation 을 더욱 refine 하고, 최종 3D shape (latent) 를 생성</li>
+</ul>
+</li>
+</ul>
+<p>학습은 Trellis 와 마찬가지로 <em><strong>Rectified Flow Matching</strong></em> 을 이용했다고 한다. </p>
+<p>$$ \mathcal{L} = \mathbb{E}<em>{t, x_0, x_1} \left[ || u</em>\theta(x_t, c, t) - u_t ||_2^2 \right]
+$$</p>
+<p>언급된 학습 detail 중에 주목할만한 점으로, ViT 계열에서 주로 patch 단위에 positional embedding (PE) 을 더하는 것과 다르게 Hunyuan 은 PE 를 제거했다고 한다. 이는 Shape 생성 시 ‘fixed location’ 에 특정 latent 가 할당되는 것을 막기 위함이라고 한다.</p>
+<h3 id="toc-heading-10">3.3. Hunyuan3D-paint</h3>
+<p>Hunyuan 은 CLAY / CaPa 와 같은 2-stage 방식이기 때문에 texture synthesis 에서 <em><strong>Geometry-guided Multi-View Generation</strong></em> 을 이용한다. 하지만 단순히 MVDream / ImageDream 계열 모델 + MV-Depth / Normal ControlNet 을 학습시킨 것이 아니라 quality 를 높이기 위한 참신한 전략들을 다수 도입하였다. </p>
+<p>우선 Hunyuan 은 기존 방식이 문제가 있다고 언급하고 시작하는데, MVDream, ImageDream 은 Stable Diffusion 모델을 Multi-View 로 tune 하면서 <em>‘noisy feature’ 를 generation branch 에서 Multi-View Synchronization</em> 하려고 한다. 이는 reference image 의 **<em>origianl detail 을 손상</em>**시키는 문제가 발생할 수 있고, 실제로 ImageDream 이나 Unique3D 의 MV output 을 보면 front-view 조차 input image 와 대비되는 퀄리티를 보여주는 것이 다반사다. </p>
+<table>
+<thead>
+<tr>
+<th><strong>input</strong></th>
+<th><strong>generated front view (MVDiffusion)</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/fc64bb2c-a81e-4ff8-94cb-3dbf699688be/image.png" width="300"></td>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/ebc31278-99f1-48c4-a0fb-ac70907cb4c1/image.png" width="300"></td>
+</tr>
+</tbody></table>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/8df3420e-eb71-475a-94ac-64bf556704a1/image.png" alt=""></p>
+<ul>
+<li>Architecture Design of Hunyuan3D-Paint</li>
+</ul>
+<p>언급한 기존 MVDiffusion 의 단점을 해결하기 위해, Hunyuan 은 다음과 같은 접근법을 사용하는데, </p>
+<ul>
+<li><p><strong>Clean Input Noise</strong></p>
+<ul>
+<li>Reference image 의 <strong>&quot;original VAE feature&quot;</strong> (noise 가 섞이지 않은 clean VAE feature) 를 reference branch 에 직접 주입하여 reference image 의 detail 을 최대한 보존한다.</li>
+<li>Reference branch 에 입력되는 feature 가 noiseless (clean, input of the forward procee) 이기 때문에, reference branch 의 timestep 은 0 으로 설정한다.</li>
+</ul>
+</li>
+<li><p><strong>Regularization &amp; Weight Freeze Approach</strong></p>
+<ul>
+<li><strong>Style Bias Regularization</strong>: 3D assets 을 rendering 한 데이터셋에서 발생할 수 있는 style bias 를 방지하기 위해, shared-weighted reference-net 구조를 포기했다고 한다.</li>
+<li><strong>Weight Freeze</strong>: 대신, <em><strong>original SD2.1 모델의 weights 를 freeze 하여 reference-net 으로 사용</strong></em> 한다. SD2.1 은 multi-view generation 의 base 모델 역할을 하며, <em>&#39;freeze 된 weights 는 regularization 역할&#39;</em> 을 하게 된다. 이는 MVDream 에서 생성 결과의 30% 정도는 단순 text-to-Image (not MV) loss (from LAION dataset) 으로 학습하여 MVDiffusion model 의 fidelity 를 잃지 않으려 했던 것과 유사한 전략이다.</li>
+</ul>
+<blockquote>
+<p>약간 이해가 안 될 수 있는데, 일반적인 ControlNet 과 반대 방향의 접근을 사용했다고 생각하면 된다. Control 역할을 하는 reference branch 는 학습하지 않고, generation branch (MV-Diffusion model) 를 학습하여 <em><strong>&#39;guide&#39; 는 original SD 모델이, &#39;gen&#39; 은 MV-Diffusion model 이 담당하는 구조</strong></em> 이다. </p>
+</blockquote>
+</li>
+<li><p><strong>Geometry Conditioning</strong> 으로는 generated mesh 를 다음 방식으로 렌더링 한 두가지를 사용한다. </p>
+<ul>
+<li><strong>CNM (Canonical Normal Maps)</strong>: 3D model surface normal vector 를 canonical coordinate system 에 projection 한 image  </li>
+<li><strong>CCM (Canonical Coordinate Maps)</strong>: 3D model surface coordinate vector 를 canonical coordinate system 에 mapping 한 image</li>
+</ul>
+<blockquote>
+<p>둘 모두 canonical system 에 projection 하여 geometry-invariant 하게 정보를 주입한다. coordinate 와 normal 정보를 모두 사용하여 공간 상의 위치와 위치간의 관계를 모두 mapping 해주는 것. <a href="https://ai.meta.com/research/publications/meta-3d-texturegen-fast-and-consistent-texture-generation-for-3d-objects/">MetaTextureGen</a> 도 동일한 guide 를 사용하는데, detail / global 측면에서 point + normal 조합이 depth map 에 비해 좋다고 report 하고 있다. 
+<img src='https://velog.velcdn.com/images/gjghks950/post/5eb78266-065a-4d52-b592-ff4b9aa2d516/image.png' width=70%></p>
+</blockquote>
+</li>
+</ul>
+<p>또한 이러한 구조를 효과적으로 학습하기 위해 <strong>Multi-Task Attention</strong> 을 제시하는데, 수식으로 표현하면 다음과 같다. </p>
+<p>$$ Z_{MVA} = Z_{SA} + \lambda_{ref} \cdot \text{Softmax}\left(\frac{Q_{ref} K_{ref}^T}{\sqrt{d}}\right) V_{ref} + \lambda_{mv} \cdot \text{Softmax}\left(\frac{Q_{mv} K_{mv}^T}{\sqrt{d}}\right) V_{mv}
+$$ </p>
+<p>Ref module 과 mv module 이 독립적으로 작동하는 일종의 ‘multi-task learning’ 을 위한 병렬로 설계된 attention 임을 알 수 있다. </p>
+<p>이는 현재 구조에서 reference branch (controlnet) 과 generation branch (MV generation) 이 각각 </p>
+<ul>
+<li><p><strong>referecne branch</strong>: origianl image 을 따라가려고 함 </p>
+</li>
+<li><p><strong>generation branch</strong>: generated view 간 consistency 를 유지하려고 함</p>
+</li>
+</ul>
+<p>의 다른 역할을 수행하고, 여기서 야기되는 multi-functionality 때문에 발생하는 conflict → 성능 저하를 막고자 함이다. </p>
+<p>동일한 구조의 설계를 <a href="https://huanngzh.github.io/MV-Adapter-Page/">MV-Adapter</a> 에서도 보여준 바 있다. 둘 모두 original branch 의 성능을 잃지 않으면서 Multi-View Generation Capability 를 얻으려고 동일한 구조를 설계했음을 알 수 있다. 어찌 보면 ShapeGen-stage 의 double stream 과도 일맥상통하는 설계이다. </p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/2065231f-0393-49b3-82e6-7afdd2042668/image.png" alt=""></p>
+<p>이를 이용해 reference image 를 guidance 로 활용하면서, 동시에 multi-view consistency 를 보장하는 diffusion model 설계. 즉, reference image 와 일관성을 유지하면서, 다양한 시점에서도 자연스러운 이미지를 생성할 수 있다. </p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/40aed3db-36bd-4d28-8b71-c5bd2eb6b799/image.png" alt=""></p>
+<ul>
+<li>Figure from MV-Adapter. Parallel 구조의 유용성을 보여주는 ablation study. 우측의 parallel attention 이 reference image 의 특징을 훨씬 잘 반영하는 것을 볼 수 있다.</li>
+</ul>
+<p>테스트 결과, 기존 MVDiffusion 의 fidelity 를 월등히 뛰어 넘는 quality 의 MVDiffusion output 을 보여주었으며, 단순히 normal / depth map 정도를 guide 로 사용하는 competitor 들보다도 multi-view consistency 가 높고 seam, artifacts 가 적은 모습을 보여주었다.</p>
+<table>
+<thead>
+<tr>
+<th>Multi-View Diffusion Results</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Hunyuan</strong>  <img src='https://velog.velcdn.com/images/gjghks950/post/36884ca2-9c9b-42bc-86fe-55d4ca4bee5f/image.png'></td>
+</tr>
+<tr>
+<td><strong>ImageDream</strong> <img src='https://velog.velcdn.com/images/gjghks950/post/44c9c9e7-6c26-4661-afbb-985d3ac58b4b/image.png'></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="toc-heading-11">4. Trellis vs Hunyuan3D</h2>
+<table>
+<thead>
+<tr>
+<th>Trellis</th>
+<th>Hunyuan3D</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/b36d1712-b257-4483-9e10-f210230a1c32/image.gif" alt=""></td>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/2a69cdfd-c024-4577-b444-58561018204b/image.gif" alt=""></td>
+</tr>
+<tr>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/075c60b5-375a-4631-8d62-bcdc08910c54/image.gif" alt=""></td>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/88e256b9-516b-4963-96b3-1933edaf70cb/image.gif" alt=""></td>
+</tr>
+</tbody></table>
+<p>Velog 엔 직접적으로 3D model viewer 를 포팅할 방법이 없어 부득이하게 rendering 결과로 대체한다. </p>
+<p>생성의 input image 로는 하기 이미지를 사용했다. 
+<img src='https://velog.velcdn.com/images/gjghks950/post/8dc98a59-18f9-492b-91d3-293ea07dae9b/image.png' width=50%> </p>
+<p>Mesh Quality 의 경우 Trellis 보다 Hunyuan3D 의 topology 가 훨씬 좋다. 또한 블로그에 싣진 않았지만 Trellis 의 경우 종종 input image guidance 와 상이한 결과를 예측하는 경우도 있는데 Hunyuan 은 충실히 instruction follow 하는 모습을 보여주었다. </p>
+<p>반면 Texture Quality 는 둘 모두 아직 그렇게 높지는 않다. Hunyuan 은 geometry-guided 로 6 view Multi View 를 생성하여 backprojecting 하는 식으로 texture 를 baking 하는데 이 때문에 occlusion 이 좀 있는 편이고, Trellis 는 상대적으로 Hunyuan 보단 occlusion 이 덜하지만 fidelity 가 더 안 좋은 모습이다. 또한 Hunyuan 의 경우 <em>완벽하게</em> geometry guide 와 align 되지는 않아서, 일부 seam 이나 artifacts 들이 trellis 보다 눈에 띄는 경우가 있었다. </p>
+<p>서로 end2end &lt;-&gt; 2-stage pipeline 이기 때문에 나타나는 장단점이 명확한 것 같다. 각자의 부분에서 quality 를 높여가면서 3D Latent Diffusion 후속 연구들이 등장할 것이라 예상되는 부분. </p>
+<p>마지막으로 CaPa Result 를 별첨한다 :)</p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/6ab368ce-9fea-4a45-a12a-cde766904698/image.gif" alt=""></p>
+<h2 id="toc-heading-12">Closing</h2>
+<p>지금까지 ShapeVAE 의 기본 개념부터 Trellis / Hunyuan3D 에 이르는 SOTA 3D Latent Diffusion 의 발자취를 상세하게 분석해보았다. </p>
+<p>CLAY 등장 이후에도 한동안 opensource 진영에서 3D 분야의 괄목할만한 성과를 이루지 못했는데, 최근 연구들이 참신한 설계를 보여주며 SOTA quality 를 달성하여 앞으로 3D domain 에서의 생성 모델들에 대해서도 더욱 기대감이 증폭된다. </p>
+<p>특히 개인적으로는 Hunyuan 이 Flux, MV-Adapter 등에서 검증된 설계를 3D Generation scheme 에 적용한 것이 인상깊었다. 좋은 연구를 하고 싶다면 틈틈히 다른 분야의 연구 트렌드에 대한 following 도 놓지 않아야 한다는 것을 다시 한 번 느낀다.</p>
+<p>마지막으로 최근에는 MeshAnything 을 필두로 mesh face 를 auto-regressive 하게 생성하여 일명 &#39;Artistic-Created Mesh&#39; 로 만드는 연구도 주목받고 있지만 (이 연구들도 ShapeVAE latent space 를 이용한다) auto-regressive 방식이라 시간이 오래 걸리고 아직은 퀄리티가 안 좋아서 당분간은 주시하기만 해야할 것 같다. </p>
+<hr>
+<p>You may also likes</p>
+<ul>
+<li><a href="https://velog.io/@gjghks950/3d">3D 생성에서 NeRF 와 SDS 는 도태될 수밖에 없는가? (velog)</a></li>
+<li><a href="/blogs/posts/?id=250702_build_large_3d_1">Building Large 3D Generative Models (1) - 3D Data Pre-processing</a></li>
+<li><a href="/blogs/posts/?id=250710_build_large_3d_2">Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D</a></li>
+</ul>
+
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div id="post-navigation" class="mt-4"></div>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <footer class="border-top">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="small text-center text-muted fst-italic">Copyright © Hwan Heo</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        window.siteData = {
+  "posts": [
+    {
+      "id": "260115_Varco3D",
+      "title_eng": "Varco3D: A Year in Review — 2025 Retrospective",
+      "title_kor": "3D 생성형 AI 서비스; Varco3D 개발기",
+      "subtitle_eng": "Delving into SOTA 3D Generative AIs",
+      "subtitle_kor": "Follower 의 눈으로 살펴보는 SOTA 3D Generative AI",
+      "date": "2026-01-15",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "varco3d-a-year-in-review-2025-retrospective"
+    },
+    {
+      "id": "250823_sdf",
+      "title_eng": "SDF and Eikonal Equation",
+      "title_kor": "SDF 와 Eikonal Equation 의 관계는?",
+      "subtitle_eng": "Why signed distance field induces eikonal equation",
+      "subtitle_kor": "Eikonal equation 의 해가 왜 signed distance field 인지 알아보자",
+      "date": "2025-08-23",
+      "category": "note",
+      "series": "graphics",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "sdf-and-eikonal-equation"
+    },
+    {
+      "id": "250810_flow",
+      "title_eng": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
+      "title_kor": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
+      "subtitle_eng": "Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow",
+      "subtitle_kor": "Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구",
+      "date": "2025-08-10",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models"
+    },
+    {
+      "id": "250809_gwn",
+      "title_eng": "Generalized Winding Number",
+      "title_kor": "Generalized Winding Number",
+      "subtitle_eng": "How to make a robust SDF using GWN from Mesh",
+      "subtitle_kor": "Mesh 에서 GWN 을 이용하여 견고한 SDF 를 계산하는 방법",
+      "date": "2025-08-09",
+      "category": "note",
+      "series": "graphics",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "generalized-winding-number"
+    },
+    {
+      "id": "250710_building_large_3d_2",
+      "title_eng": "Building Large 3D Generative Model (2) VAE and DiT Deep Dive",
+      "title_kor": "Large 3D Generative Model 구축하기 (2) VAE and DiT 분석",
+      "subtitle_eng": "VAE and DiT Architecture for Vecset vs. Sparse-Voxel",
+      "subtitle_kor": "VAE and DiT 구조 분석 for Vecset vs. Sparse-Voxel",
+      "date": "2025-07-10",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "building-large-3d-generative-model-2-vae-and-dit-deep-dive"
+    },
+    {
+      "id": "250702_building_large_3d_1",
+      "title_eng": "Building Large 3D Generative Model (1) Data pre-processing",
+      "title_kor": "Large 3D Generative Model 구축하기 (1) 데이터 전처리",
+      "subtitle_eng": "Watertight Mesh Conversion and Salient Edge Sampling",
+      "subtitle_kor": "Watertight Mesh 변환과 Salient Edge Sampling",
+      "date": "2025-07-02",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "building-large-3d-generative-model-1-data-pre-processing"
+    },
+    {
+      "id": "250310_model_viewer",
+      "title_eng": "3D Model Viewer in Web",
+      "title_kor": "커스텀 3D 웹뷰어 만들기",
+      "subtitle_eng": "Custom Threejs 3D Model Viewer",
+      "subtitle_kor": "커스텀 Three.js 3D 모델 뷰어",
+      "date": "2025-03-10",
+      "category": "post",
+      "series": "web-3d",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "3d-model-viewer-in-web"
+    },
+    {
+      "id": "250302_3d_latent_diffusion",
+      "title_eng": "An Era of 3D Generation",
+      "title_kor": "3D 생성 모델의 시대",
+      "subtitle_eng": "From ShapeVAE to Trellis and Hunyuan3D",
+      "subtitle_kor": "ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것",
+      "date": "2025-03-02",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "an-era-of-3d-generation"
+    },
+    {
+      "id": "250106_tomography",
+      "title_eng": "Neural Rendering Beyond Photography",
+      "title_kor": "X-Ray 와 NeRF",
+      "subtitle_eng": "NeRF for Tomography & Tip for NeRF Viewer",
+      "subtitle_kor": "의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁",
+      "date": "2025-01-06",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "neural-rendering-beyond-photography"
+    },
+    {
+      "id": "240917_3djs",
+      "title_eng": "Add Gaussian Splatting to Your Website",
+      "title_kor": "웹사이트에 3D GS 삽입하기",
+      "subtitle_eng": "Tutorial for GS Scene w/ Three-js",
+      "subtitle_kor": "Three-js 이용한 custom GS scene 웹뷰어 tutorial",
+      "date": "2024-09-17",
+      "category": "post",
+      "series": "web-3d",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "add-gaussian-splatting-to-your-website"
+    },
+    {
+      "id": "240823_grt",
+      "title_eng": "Don't Rasterize, But Ray Trace 3D Gaussian",
+      "title_kor": "3D Gaussian Ray Tracing 톺아보기",
+      "subtitle_eng": "In-Depth Review of 3D Gaussian Ray Tracing by NVIDIA",
+      "subtitle_kor": "3D Gaussian Ray Tracing 분석하기",
+      "date": "2024-08-23",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "dont-rasterize-but-ray-trace-3d-gaussian"
+    },
+    {
+      "id": "240805_gs",
+      "title_eng": "A Comprehensive Analysis of Gaussian Splatting Rasterization",
+      "title_kor": "Gaussian Splatting Rasterization 완벽 분석",
+      "subtitle_eng": "Understanding 3D GS's Rasterization Algorithm",
+      "subtitle_kor": "GS rasterization 알고리즘과 cuda 구현 톺아보기",
+      "date": "2024-08-05",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "a-comprehensive-analysis-of-gaussian-splatting-rasterization"
+    },
+    {
+      "id": "240721_sfm",
+      "title_eng": "Radiance Fields from Deep-based Structure-from-Motion",
+      "subtitle_eng": "Comparison of VGGSfM & MAsT3R",
+      "date": "2024-07-21",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng"
+      ],
+      "slug": "radiance-fields-from-deep-based-structure-from-motion"
+    },
+    {
+      "id": "240602_2dgs",
+      "title_eng": "Under the 3D: Geometrically Accurate 2D Gaussian Splatting",
+      "title_kor": "2D Gaussian Splatting 톺아보기",
+      "subtitle_eng": "Understanding 2D GS's Algorithm",
+      "subtitle_kor": "3D GS 의 mesh recon 어려움과 이를 해결한 2D GS",
+      "date": "2024-06-02",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "under-the-3d-geometrically-accurate-2d-gaussian-splatting"
+    },
+    {
+      "id": "240426_diffusion_depth",
+      "title_eng": "Is Diffusion's Estimated Depth Really Good?",
+      "title_kor": "Diffusion 으로 추정한 Depth 진짜 좋나요?",
+      "subtitle_eng": "Making Mesh from Estimated Depth Map by Diffusion",
+      "subtitle_kor": "Diffusion 으로 추정한 Depth Map 을 이용해 Textured Mesh 만들어보기 (feat. Marigold)",
+      "date": "2024-04-26",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "is-diffusions-estimated-depth-really-good"
+    },
+    {
+      "id": "240226_sora",
+      "title_eng": "Can Sora Understand 3D?",
+      "title_kor": "Sora 가 상상하는 3D World",
+      "subtitle_eng": "Radiance Fields Reconstruction from Video Generative AI",
+      "subtitle_kor": "Video Generative AI 로부터 NeRF reconstruction 해보기",
+      "date": "2024-02-26",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng"
+      ],
+      "slug": "can-sora-understand-3d"
+    },
+    {
+      "id": "231130_nerf_in_game",
+      "title_eng": "Can NeRF be used in Game?",
+      "title_kor": "NeRF 를 게임 제작에서 이용할 수 있을까?",
+      "subtitle_eng": "Explore Limitations of NeRF",
+      "subtitle_kor": "NeRF 의 단점을 살펴보자",
+      "date": "2023-11-30",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng"
+      ],
+      "slug": "can-nerf-be-used-in-game"
+    },
+    {
+      "id": "230202_ngp",
+      "title_eng": "Instant-NGP Review & Re-Implementation",
+      "title_kor": "Instant-NGP 리뷰 및 재구현",
+      "subtitle_eng": "Review of Instant-NGP and PyTorch Re-Implementation",
+      "subtitle_kor": "Review of Instant-NGP and PyTorch Re-Implementation",
+      "date": "2023-02-02",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng"
+      ],
+      "slug": "instant-ngp-review-re-implementation"
+    },
+    {
+      "id": "211128_fourier",
+      "title_eng": "Why Positional Encoding Makes NeRF more Powerful",
+      "title_kor": "Position Encoding 이 NeRF 에서 필수적인 이유",
+      "subtitle_eng": "Review of Fourier Features Let Networks Learn High-Frequency Functions",
+      "subtitle_kor": "Fourier Features Let Networks Learn High-Frequency Functions 리뷰",
+      "date": "2021-11-28",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng"
+      ],
+      "slug": "why-positional-encoding-makes-nerf-more-powerful"
+    },
+    {
+      "id": "210910_lin_alg_2",
+      "title_eng": "Change of Basis",
+      "title_kor": "Change of Basis",
+      "subtitle_eng": "Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)",
+      "subtitle_kor": "대각화와 고윳값, 특이값 분해, Principal Component Analysis (PCA)",
+      "date": "2021-09-10",
+      "category": "note",
+      "series": "linear-algebra",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "change-of-basis"
+    },
+    {
+      "id": "210909_lin_alg_1",
+      "title_eng": "Linear System",
+      "title_kor": "Linear System",
+      "subtitle_eng": "Linear System, Linear Transformation, and its Intuitions",
+      "subtitle_kor": "선형시스템과 선형변환, 이에 대한 직관들",
+      "date": "2021-09-09",
+      "category": "note",
+      "series": "linear-algebra",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "linear-system"
+    },
+    {
+      "id": "210602_cv4",
+      "title_eng": "3D Stereo Vision and Epipolar Geometry",
+      "title_kor": "3D Stereo Vision and Epipolar Geometry",
+      "subtitle_eng": "Camera Projection, Stereo, and Epipolar Geometry",
+      "subtitle_kor": "Camera Projection, Stereo, and Epipolar Geometry",
+      "date": "2021-06-02",
+      "category": "note",
+      "series": "computer-vision",
+      "languages": [
+        "eng"
+      ],
+      "slug": "3d-stereo-vision-and-epipolar-geometry"
+    },
+    {
+      "id": "210502_cv3",
+      "title_eng": "Homography and Image Alignment",
+      "title_kor": "Homography and Image Alignment",
+      "subtitle_eng": "Image Transformation, Homography, and Correspondence Matching",
+      "subtitle_kor": "Image Transformation, Homography, and Correspondence Matching",
+      "date": "2021-05-02",
+      "category": "note",
+      "series": "computer-vision",
+      "languages": [
+        "eng"
+      ],
+      "slug": "homography-and-image-alignment"
+    },
+    {
+      "id": "210402_cv2",
+      "title_eng": "Feature Extraction and Detection",
+      "title_kor": "Feature Extraction and Detection",
+      "subtitle_eng": "Image Gradient, Sobel Filter, LoG, and Detection",
+      "subtitle_kor": "Image Gradient, Sobel Filter, LoG, and Detection",
+      "date": "2021-04-02",
+      "category": "note",
+      "series": "computer-vision",
+      "languages": [
+        "eng"
+      ],
+      "slug": "feature-extraction-and-detection"
+    },
+    {
+      "id": "210302_cv1",
+      "title_eng": "Image Filter and Morphology",
+      "title_kor": "Image Filter and Morphology",
+      "subtitle_eng": "Various Image Filters and Morphology (Erosion & Dilation)",
+      "subtitle_kor": "다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여",
+      "date": "2021-03-02",
+      "category": "note",
+      "series": "computer-vision",
+      "languages": [
+        "eng"
+      ],
+      "slug": "image-filter-and-morphology"
+    }
+  ],
+  "series": {
+    "nerf-and-gs": {
+      "eng": "Radiance Fields & Gaussian Splatting",
+      "kor": "Radiance Fields & Gaussian Splatting"
+    },
+    "3d-generation": {
+      "eng": "3D Generative AI",
+      "kor": "3D 생성 AI"
+    },
+    "web-3d": {
+      "eng": "3D in Web",
+      "kor": "웹에서 3D 구현하기"
+    },
+    "linear-algebra": {
+      "eng": "Linear Algebra for Deep Learning",
+      "kor": "딥러닝을 위한 선형대수"
+    },
+    "computer-vision": {
+      "eng": "Classical Computer Vision",
+      "kor": "고전 Computer Vision"
+    },
+    "graphics": {
+      "eng": "Computer Graphics",
+      "kor": "Computer Graphics"
+    }
+  }
+};
+        window.blogPostPageConfig = {
+  "postId": "250302_3d_latent_diffusion",
+  "lang": "kor"
+};
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="/blogs/js/code-copy.js"></script>
+    <script src="/blogs/js/scroll-progress.js"></script>
+    <script src="/blogs/js/post-page.js"></script>
+</body>
+</html>
