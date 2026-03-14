@@ -8,6 +8,38 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
 
+const ENVIRONMENT_URLS = {
+    env1: 'https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/spruit_sunrise_1k_HDR.hdr',
+    env2: 'https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/aircraft_workshop_01_1k.hdr',
+    env3: 'https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/lebombo_1k.hdr',
+};
+
+const TEXTURE_INPUT_IDS = {
+    map: 'diffuseMapInput',
+    roughnessMap: 'roughnessMapInput',
+    metalnessMap: 'metalnessMapInput',
+    normalMap: 'normalMapInput',
+    aoMap: 'aoMapInput',
+    emissiveMap: 'emissiveMapInput',
+};
+
+const PREVIEW_TEXT_STYLE = {
+    lineHeight: '150px',
+    textAlign: 'center',
+};
+
+function getEditableMaterial(mesh) {
+    if (!mesh || !mesh.material) {
+        return null;
+    }
+
+    return Array.isArray(mesh.material) ? mesh.material[0] : mesh.material;
+}
+
+function cloneTexture(texture) {
+    return texture && texture.clone ? texture.clone() : texture || null;
+}
+
 class SimpleModelViewer extends HTMLElement {
     constructor() {
         super();
@@ -15,12 +47,22 @@ class SimpleModelViewer extends HTMLElement {
         this.shadowRoot.innerHTML = /*html*/`
             <style>
                 :host {
+                    --viewer-bg: linear-gradient(145deg, rgba(247, 248, 251, 0.95), rgba(222, 228, 236, 0.82));
+                    --panel-bg: rgba(255, 255, 255, 0.72);
+                    --panel-border: rgba(58, 72, 89, 0.12);
+                    --panel-shadow: 0 20px 45px rgba(43, 58, 79, 0.16);
+                    --button-bg: rgba(46, 57, 72, 0.88);
+                    --button-hover: rgba(31, 112, 93, 0.92);
+                    --button-active: rgba(18, 145, 116, 0.95);
+                    --text-main: #1f2937;
+                    --text-muted: #5f6b7a;
                     display: block;
-                    border-radius: 1px;
+                    border-radius: 18px;
                     min-height: 300px;
-                    background-color:rgba(200, 200, 200, 0.5);
-                    font-family: Verdana, Geneva, Arial, sans-serif;
+                    background: var(--viewer-bg);
+                    font-family: "Avenir Next", "Segoe UI", Verdana, Geneva, Arial, sans-serif;
                     position: relative; /* Required for absolute positioning of panels */
+                    overflow: hidden;
                 }
 
                 #loadingProgressBar {
@@ -54,38 +96,44 @@ class SimpleModelViewer extends HTMLElement {
                 }
 
                 .controls {
-                    margin: 5px;
+                    margin: 0;
                     position: absolute; /* Make controls container positioned relative to :host */
-                    top: 0.5rem;
-                    right: 0;
+                    top: 1rem;
+                    right: 1rem;
                     z-index: 1000; /* Ensure it's above canvas */
                 }
 
                 button {
-                    background-color: #444444;
-                    border: none;
+                    background: linear-gradient(180deg, rgba(60, 72, 88, 0.96), rgba(36, 45, 57, 0.94));
+                    border: 1px solid rgba(255, 255, 255, 0.14);
                     color: white;
-                    padding: 5px 10px;
-                    border-radius: 2px;
+                    padding: 6px 10px;
+                    border-radius: 10px;
                     cursor: pointer;
                     text-align: center;
                     text-decoration: none;
                     display: inline-block;
                     font-size: 0.8rem;
+                    font-weight: 600;
+                    letter-spacing: 0.01em;
                     z-index: 1001;
                     margin-right: 0px;
                     margin-top: 0.1rem;
                     margin-bottom: 0.1rem;
                     min-width: 4rem;
                     width: 32.5%;
+                    box-shadow: 0 10px 24px rgba(31, 41, 55, 0.18);
+                    transition: transform 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease;
                 }
 
                 button:hover {
-                    background-color: #3e8e41
+                    background: linear-gradient(180deg, rgba(34, 126, 104, 0.96), rgba(24, 103, 84, 0.94));
+                    transform: translateY(-1px);
                 }
 
                 button.toggled-off {
-                    background-color: #3e8e41;
+                    background: linear-gradient(180deg, rgba(20, 157, 125, 0.98), rgba(15, 121, 97, 0.96));
+                    box-shadow: 0 12px 28px rgba(16, 124, 98, 0.28);
                 }
 
                 #fileInputContainer {
@@ -108,11 +156,11 @@ class SimpleModelViewer extends HTMLElement {
                 }
 
                 .transform-button {
-                    background-color: #444444;
-                    border: none;
+                    background: linear-gradient(180deg, rgba(60, 72, 88, 0.96), rgba(36, 45, 57, 0.94));
+                    border: 1px solid rgba(255, 255, 255, 0.14);
                     color: white;
                     padding: 5px 10px;
-                    border-radius: 2px;
+                    border-radius: 10px;
                     cursor: pointer;
                     text-align: center;
                     text-decoration: none;
@@ -124,37 +172,53 @@ class SimpleModelViewer extends HTMLElement {
                 }
 
                 .transform-button.active {
-                    background-color: #3e8e41;
+                    background: linear-gradient(180deg, rgba(20, 157, 125, 0.98), rgba(15, 121, 97, 0.96));
                 }
 
                 .transform-button:hover {
-                    background-color: #3e8e41
+                    background: linear-gradient(180deg, rgba(34, 126, 104, 0.96), rgba(24, 103, 84, 0.94));
                 }
 
                 .right-ui-panel { /* Renamed and unified panel */
                     position: absolute;
-                    top: 0.5rem;
-                    right: 1rem; /* Positioned to the right */
+                    top: 0;
+                    right: 0; /* Positioned to the right */
                     font-size: 0.7rem;
-                    background-color: rgba(200, 200, 200, 0.5);
-                    padding: 0.5rem;
-                    border-radius: 5px;
+                    color: var(--text-main);
+                    background: var(--panel-bg);
+                    backdrop-filter: blur(16px);
+                    -webkit-backdrop-filter: blur(16px);
+                    border: 1px solid var(--panel-border);
+                    padding: 0.6rem;
+                    border-radius: 18px;
                     display: flex;
                     flex-direction: column;
-                    gap: 3px;
+                    gap: 0.35rem;
                     z-index: 1000;
                     max-width: 25rem;
+                    box-shadow: var(--panel-shadow);
                 }
 
                 .right-ui-panel label {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-
+                    color: var(--text-muted);
                 }
 
                 .right-ui-panel input {
                     width: 3rem;
+                }
+
+                select,
+                input[type="number"],
+                input[type="text"],
+                input[type="color"] {
+                    border-radius: 8px;
+                    border: 1px solid rgba(95, 107, 122, 0.25);
+                    background: rgba(255, 255, 255, 0.9);
+                    color: var(--text-main);
+                    padding: 0.2rem 0.4rem;
                 }
 
                 .material-toggle {
@@ -177,13 +241,13 @@ class SimpleModelViewer extends HTMLElement {
                 }
 
                 input[type="range"]::-webkit-slider-runnable-track {
-                    background-color: #444444;
+                    background-color: rgba(63, 78, 94, 0.82);
                     height: 5px;
                     border-radius: 4px;
                 }
 
                 input[type="range"]::-moz-range-track {
-                    background-color: #444444;
+                    background-color: rgba(63, 78, 94, 0.82);
                     height: 5px;
                     border-radius: 4px;
                 }
@@ -191,7 +255,7 @@ class SimpleModelViewer extends HTMLElement {
                 input[type="range"]::-webkit-slider-thumb {
                     -webkit-appearance: none;
                     appearance: none;
-                    background-color: #444444;
+                    background-color: rgba(20, 157, 125, 0.95);
                     border: none;
                     height: 16px;
                     width: 16px;
@@ -202,7 +266,7 @@ class SimpleModelViewer extends HTMLElement {
                 input[type="range"]::-moz-range-thumb {
                     -moz-appearance: none;
                     appearance: none;
-                    background-color: #444444;
+                    background-color: rgba(20, 157, 125, 0.95);
                     border: none;
                     height: 16px;
                     width: 16px;
@@ -416,26 +480,30 @@ class SimpleModelViewer extends HTMLElement {
                 .tab-buttons {
                     display: flex;
                     margin-bottom: 0.5rem;
+                    gap: 0.35rem;
                 }
 
                 .tab-button {
-                    background-color: #aaaaaa;
-                    border: none;
+                    background: rgba(214, 220, 228, 0.86);
+                    border: 1px solid rgba(95, 107, 122, 0.14);
                     padding: 8px 16px;
                     cursor: pointer;
-                    border-radius: 3px 3px 0 0;
+                    border-radius: 12px;
                     font-size: 0.8rem;
-                    margin-right: 2px;
-                    color: black;
+                    margin-right: 0;
+                    color: var(--text-main);
                     width: 8.3rem;
+                    box-shadow: none;
                 }
 
                 .tab-button.active {
-                    background-color: rgba(200, 200, 200, 0); /* Active tab background */
+                    background: rgba(255, 255, 255, 0.96);
+                    border-color: rgba(20, 157, 125, 0.2);
+                    color: #0f5c4c;
                 }
 
                 .tab-button:hover {
-                    background-color: #ccc;
+                    background: rgba(255, 255, 255, 0.94);
                 }
 
                 .tab-content {
@@ -446,6 +514,10 @@ class SimpleModelViewer extends HTMLElement {
 
                 fieldset {
                     max-width: 23rem;
+                    border: 1px solid rgba(95, 107, 122, 0.16);
+                    border-radius: 14px;
+                    background: rgba(255, 255, 255, 0.48);
+                    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
                 }
             </style>
             <div class="controls">
@@ -585,7 +657,7 @@ class SimpleModelViewer extends HTMLElement {
                                     <label style="display:none;">Rotation X (deg): <input type="number" id="rotX" step="1" value="0"></label>
                                     <label style="display:none;">Rotation Y (deg): <input type="number" id="rotY" step="1" value="0"></label>
                                     <label style="display:none;">Rotation Z (deg): <input type="number" id="rotZ" step="1" value="0"></label>
-                                    <div style="display: none;">Scale: <input type="range" id="scale" style="width: 17rem; background-color: #d3d9de; color: #d3d9de;" min="1" max="20" step="0.1" value="8"></div>
+                                    <div style="display: none;">Scale: <input type="range" id="scale" style="width: 17rem; background-color: #d3d9de; color: #d3d9de;" min="0.1" max="20" step="0.1" value="1"></div>
                                 </fieldset>
                             </div>
                         </div>
@@ -647,7 +719,7 @@ class SimpleModelViewer extends HTMLElement {
                     <p style="font-size: 0.8rem; margin-top: 5px;"><em> https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/fox_quad.glb </em></p>
                 </div>
             </div>
-            <div id="videoModal" style="display: none; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+            <div id="videoModal" style="display: none; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center;">
                 <div style="background-color: white; padding: 20px; border-radius: 5px; text-align: center;">
                     <h4>Video Preview</h4>
                     <video id="videoPreview" controls style="max-width: 80vw; max-height: 60vh; display: block; margin: 10px auto;"></video>
@@ -697,8 +769,6 @@ class SimpleModelViewer extends HTMLElement {
             isWireframeOn: false,
             environment: null, // null, 'env1', 'env2', 'env3'
             isAnimationPlaying: false,
-            wireframeInitialized: false,
-            isWireframeOn: false,
             transformMode: 'none',
         };
 
@@ -782,11 +852,14 @@ class SimpleModelViewer extends HTMLElement {
         // --- State Variables for Explode Effect ---
         this.modelCenter = null;
         this.modelMaxDim = 0;
+        this.resizeObserver = null;
+        this.isConnectedToDom = false;
 
         this.startRecording = this.startRecording.bind(this);
         this.stopRecording = this.stopRecording.bind(this);
         this.downloadVideo = this.downloadVideo.bind(this);
         this.closeModal = this.closeModal.bind(this);
+        this.handleResize = this.resizeRenderer.bind(this);
 
         // TransformControls instance generation
         this.transformControls = new TransformControls(this.camera, this.renderer.domElement);
@@ -805,11 +878,14 @@ class SimpleModelViewer extends HTMLElement {
         this.initDiscardButton();
         this.initTextureMapUI();
         this.initTabSwitching(); // Initialize tab switching functionality
-
-        this.renderer.setAnimationLoop((time) => this.animate(time));
     }
 
     initIdleAnimation() {
+        if (typeof TWEEN === 'undefined') {
+            console.error('TWEEN is not defined. Ensure Tween.js is loaded before simple-model-viewer.js.');
+            return;
+        }
+
         const vertexCount = 20; // max vertices num
         this.animationGeometry = new THREE.BufferGeometry();
         const material = new THREE.PointsMaterial({ color: 0x777777, size: 0.8 });
@@ -825,14 +901,9 @@ class SimpleModelViewer extends HTMLElement {
 
         this.animationMesh = new THREE.Points(this.animationGeometry, material);
         this.scene.add(this.animationMesh);
-    
+
         this.tweenGroup = new TWEEN.Group();
-    
-        if (typeof TWEEN === 'undefined') {
-            console.error('TWEEN is not defined. Ensure Tween.js is loaded before simple-model-viewer.js.');
-            return;
-        }
-    
+
         const initialPositions = new Float32Array(vertexCount * 3).fill(0);
         this.animationGeometry.setAttribute('position', new THREE.BufferAttribute(initialPositions, 3));
     
@@ -993,12 +1064,26 @@ class SimpleModelViewer extends HTMLElement {
 
 
     connectedCallback() {
+        this.isConnectedToDom = true;
         this.resizeRenderer();
+        if (!this.resizeObserver) {
+            this.resizeObserver = new ResizeObserver(() => this.resizeRenderer());
+        }
+        this.resizeObserver.observe(this);
+        this.renderer.setAnimationLoop((time) => this.animate(time));
         if (!this.getAttribute('src')) {
             const fileInputContainer = this.shadowRoot.querySelector('#fileInputContainer');
             fileInputContainer.style.display = 'block';
         }
-        this.animate(0);
+    }
+
+    disconnectedCallback() {
+        this.isConnectedToDom = false;
+        if (this.resizeObserver) {
+            this.resizeObserver.disconnect();
+        }
+        this.renderer.setAnimationLoop(null);
+        this.stopRecording();
     }
 
     updateLightsButtonUI() {
@@ -1114,6 +1199,9 @@ class SimpleModelViewer extends HTMLElement {
         const colorValue = parseInt(color, 16);
         const intensityValue = parseFloat(intensity);
         if (!isNaN(colorValue) && !isNaN(intensityValue)) {
+            if (this.ambientLight) {
+                this.scene.remove(this.ambientLight);
+            }
             this.ambientLight = new THREE.AmbientLight(colorValue, intensityValue);
             this.scene.add(this.ambientLight);
         }
@@ -1450,22 +1538,13 @@ class SimpleModelViewer extends HTMLElement {
         if (this.downloadBtn) this.downloadBtn.addEventListener('click', this.downloadVideo); // No ()
         if (this.closeModalBtn) this.closeModalBtn.addEventListener('click', this.closeModal);   // No ()
 
-        // Optional: Close modal if clicking outside the content area
         if (this.videoModal) {
             this.videoModal.addEventListener('click', (event) => {
-                // Check if the click target is the modal background itself, not its children
                 if (event.target === this.videoModal) {
                     this.closeModal();
                 }
             });
         }
-
-        // Optional: Close modal if clicking outside the content area
-        this.videoModal.addEventListener('click', (event) => {
-            if (event.target === this.videoModal) {
-                this.closeModal();
-            }
-        });
     }
 
     // --- Video Recording Functions ---
@@ -1587,13 +1666,15 @@ class SimpleModelViewer extends HTMLElement {
                 this.stream.getTracks().forEach(track => track.stop());
                 this.stream = null; // Release the stream
             }
-        } else {
-            console.warn("Recorder not active or already stopped.");
         }
 
         // Update UI immediately
-        this.stopBtn.style.display = 'none';
-        this.recordBtn.style.display = 'inline-block'; // Or 'block'
+        if (this.stopBtn) {
+            this.stopBtn.style.display = 'none';
+        }
+        if (this.recordBtn) {
+            this.recordBtn.style.display = 'inline-block'; // Or 'block'
+        }
     }
 
     downloadVideo() {
@@ -1746,10 +1827,9 @@ class SimpleModelViewer extends HTMLElement {
     }
 
     removeDirectionalLight() {
-        // if (this.directionalLights.length <= 1) {
-        //     alert('At least one directional light is needed.');
-        //     return;
-        // }
+        if (this.directionalLights.length === 0) {
+            return;
+        }
 
         const lightToRemove = this.directionalLights[this.selectedDirectionalLightIndex];
         const helperToRemove = this.directionalLightHelpers[this.selectedDirectionalLightIndex];
@@ -1763,11 +1843,16 @@ class SimpleModelViewer extends HTMLElement {
         this.selectedDirectionalLightIndex = Math.max(0, this.selectedDirectionalLightIndex - 1);
         this.updateDirectionalLightUIValues();
         this.populateDirectionalLightList(); // Update the list after removal
+        this.updateDirectionalLightHelpersVisibility();
     }
 
     populateDirectionalLightList() {
         const lightList = this.shadowRoot.querySelector('#directionalLightList');
         lightList.innerHTML = '';
+
+        if (this.directionalLights.length === 0) {
+            return;
+        }
 
         this.directionalLights.forEach((light, index) => {
             const option = document.createElement('option');
@@ -1937,7 +2022,33 @@ class SimpleModelViewer extends HTMLElement {
         }
     }
 
+    syncWireframeButton() {
+        const wireframeBtn = this.shadowRoot.querySelector('#wireframeBtn');
+        wireframeBtn.classList.toggle('toggled-off', this.state.isWireframeOn);
+    }
+
+    disableWireframe() {
+        this.state.isWireframeOn = false;
+
+        if (this.model) {
+            this.model.traverse((child) => {
+                if (child.isMesh && child.material?.userData?.shader?.uniforms?.uWireframe) {
+                    child.material.userData.shader.uniforms.uWireframe.value = false;
+                    child.material.needsUpdate = true;
+                }
+            });
+        }
+
+        this.syncWireframeButton();
+    }
+
+    resetWireframeState() {
+        this.state.wireframeInitialized = false;
+        this.disableWireframe();
+    }
+
     showTexture() {
+        this.disableWireframe();
         if (this.model) {
             this.model.traverse((child) => {
                 if (child.isMesh) {
@@ -1951,6 +2062,7 @@ class SimpleModelViewer extends HTMLElement {
     }
 
     showMesh() {
+        this.disableWireframe();
         if (this.model) {
             this.model.traverse((child) => {
                 if (child.isMesh) {
@@ -2015,8 +2127,12 @@ class SimpleModelViewer extends HTMLElement {
      * @param {THREE.Material} material - The material to modify.
      */
     modifyMaterialForWireframe(material) {
+        if (!material || material.userData.hasWireframeShader) {
+            return;
+        }
+
         material.onBeforeCompile = (shader) => {
-            shader.uniforms.uWireframe = { value: false };
+            shader.uniforms.uWireframe = { value: this.state.isWireframeOn };
 
             shader.vertexShader = `
                 attribute vec3 barycentric;
@@ -2030,30 +2146,62 @@ class SimpleModelViewer extends HTMLElement {
                 `
             );
 
-            shader.fragmentShader = `
+            let fragmentShader = `
                 uniform bool uWireframe;
                 varying vec3 vBarycentric;
                 ${shader.fragmentShader}
-            `.replace(
-                '#include <output_fragment>',
-                `
-                #include <output_fragment>
+            `;
+
+            const wireframeInjection = `
                 if (uWireframe) {
                     vec3 bary = vBarycentric;
                     vec3 d = fwidth(bary);
                     vec3 a3 = smoothstep(vec3(0.0), d * 0.5, bary);
                     float edgeFactor = min(min(a3.x, a3.y), a3.z);
                     float wireframeAlpha = 1.0 - edgeFactor;
-                    vec4 wireframeColor = vec4(0.6, 0.6, 0.6, 0.7); // #transparent grey
+                    vec4 wireframeColor = vec4(0.08, 0.1, 0.14, 0.85);
                     gl_FragColor.rgb = mix(gl_FragColor.rgb, wireframeColor.rgb, wireframeAlpha);
-                gl_FragColor.a = mix(gl_FragColor.a, wireframeColor.a, wireframeAlpha);
+                    gl_FragColor.a = mix(gl_FragColor.a, wireframeColor.a, wireframeAlpha);
                 }
-                `
-            );
+            `;
+
+            const fragmentAnchors = [
+                '#include <dithering_fragment>',
+                '#include <opaque_fragment>',
+                '#include <output_fragment>',
+            ];
+
+            let injected = false;
+            for (const anchor of fragmentAnchors) {
+                if (fragmentShader.includes(anchor)) {
+                    fragmentShader = fragmentShader.replace(
+                        anchor,
+                        `
+                        ${anchor}
+                        ${wireframeInjection}
+                        `
+                    );
+                    injected = true;
+                    break;
+                }
+            }
+
+            if (!injected) {
+                fragmentShader = fragmentShader.replace(
+                    /}\s*$/,
+                    `
+                    ${wireframeInjection}
+                    }
+                    `
+                );
+            }
+
+            shader.fragmentShader = fragmentShader;
 
             material.userData.shader = shader;
-            material.needsUpdate = true;
         };
+        material.userData.hasWireframeShader = true;
+        material.needsUpdate = true;
     }
 
     showWireframe() {
@@ -2068,29 +2216,31 @@ class SimpleModelViewer extends HTMLElement {
                 if (!this.state.wireframeInitialized) {
                     this.addBarycentricCoordinates(child.geometry);
                 }
-                // this.modifyMaterialForWireframe(child.material);
+                this.modifyMaterialForWireframe(child.material);
+                child.material.needsUpdate = true;
             }
         });
 
+        this.state.wireframeInitialized = true;
         this.state.isWireframeOn = !this.state.isWireframeOn;
 
         this.model.traverse((child) => {
-            if (child.isMesh && child.material.userData.shader) {
+            if (child.isMesh && child.material?.userData?.shader?.uniforms?.uWireframe) {
                 child.material.userData.shader.uniforms.uWireframe.value = this.state.isWireframeOn;
                 child.material.needsUpdate = true;
             }
         });
 
-        const wireframeBtn = this.shadowRoot.querySelector('#wireframeBtn');
-        // wireframeBtn.textContent = this.state.isWireframeOn ? 'Wireframe Off' : 'Wireframe';
-        wireframeBtn.classList.toggle('toggled-off', this.state.isWireframeOn);
+        this.syncWireframeButton();
     }
 
     showNormal() {
+        this.disableWireframe();
         if (this.model) {
             this.model.traverse((child) => {
                 if (child.isMesh) {
                     child.material = new THREE.MeshNormalMaterial();
+                    this.modifyMaterialForWireframe(child.material);
                     child.material.needsUpdate = true;
                 }
             });
@@ -2099,6 +2249,7 @@ class SimpleModelViewer extends HTMLElement {
     }
 
     set_bg(url, rgbeLoader) {
+        this.disableWireframe();
         rgbeLoader.load(url, (texture) => {
             texture.minFilter = THREE.LinearFilter;
             texture.magFilter = THREE.LinearFilter;
@@ -2169,21 +2320,18 @@ class SimpleModelViewer extends HTMLElement {
     }
 
     setBackground1() {
-        const url = 'https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/spruit_sunrise_1k_HDR.hdr';
         const rgbeLoader = new RGBELoader();
-        this.set_bg(url, rgbeLoader);
+        this.set_bg(ENVIRONMENT_URLS.env1, rgbeLoader);
     }
 
     setBackground2() {
-        const url = 'https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/aircraft_workshop_01_1k.hdr';
         const rgbeLoader = new RGBELoader();
-        this.set_bg(url, rgbeLoader);
+        this.set_bg(ENVIRONMENT_URLS.env2, rgbeLoader);
     }
 
     setBackground3() {
-        const url = 'https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/lebombo_1k.hdr';
         const rgbeLoader = new RGBELoader();
-        this.set_bg(url, rgbeLoader);
+        this.set_bg(ENVIRONMENT_URLS.env3, rgbeLoader);
     }
 
     setDefaultEnv() {
@@ -2192,6 +2340,7 @@ class SimpleModelViewer extends HTMLElement {
     }
 
     setDefaultMat() {
+        this.disableWireframe();
         if (this.model) {
             this.model.traverse((child) => {
                 if (child.isMesh) {
@@ -2224,79 +2373,201 @@ class SimpleModelViewer extends HTMLElement {
         }
     }
 
+    getTextureSelection() {
+        const partSelector = this.shadowRoot.querySelector('#texturePartSelector');
+        const typeSelector = this.shadowRoot.querySelector('#textureTypeSelector');
+        const selectedPartIndex = parseInt(partSelector.value, 10);
+
+        if (isNaN(selectedPartIndex) || selectedPartIndex < 0 || selectedPartIndex >= this.meshParts.length) {
+            return null;
+        }
+
+        const mesh = this.meshParts[selectedPartIndex];
+        const material = getEditableMaterial(mesh);
+        if (!mesh || !material) {
+            return null;
+        }
+
+        return {
+            mesh,
+            material,
+            mapType: typeSelector.value,
+            selectedPartIndex,
+        };
+    }
+
+    applyTextureEncoding(texture, mapType) {
+        if (!texture) {
+            return;
+        }
+
+        texture.flipY = false;
+        texture.encoding = mapType === 'map' || mapType === 'emissiveMap'
+            ? THREE.sRGBEncoding
+            : THREE.LinearEncoding;
+    }
+
+    normalizeMeshMaterial(mesh) {
+        const material = getEditableMaterial(mesh);
+        if (!material) {
+            return null;
+        }
+
+        let normalizedMaterial = material;
+        if (!(normalizedMaterial instanceof THREE.MeshStandardMaterial)) {
+            normalizedMaterial = new THREE.MeshStandardMaterial({
+                map: normalizedMaterial.map || null,
+                roughness: normalizedMaterial.roughness !== undefined ? normalizedMaterial.roughness : 0.5,
+                metalness: normalizedMaterial.metalness !== undefined ? normalizedMaterial.metalness : 0.5,
+            });
+            mesh.material = normalizedMaterial;
+        }
+
+        if (normalizedMaterial.map) {
+            normalizedMaterial.map.encoding = THREE.sRGBEncoding;
+        }
+        if (normalizedMaterial.emissiveMap) {
+            normalizedMaterial.emissiveMap.encoding = THREE.sRGBEncoding;
+        }
+        if (normalizedMaterial.normalMap) {
+            normalizedMaterial.normalMap.encoding = THREE.LinearEncoding;
+        }
+        if (normalizedMaterial.aoMap) {
+            normalizedMaterial.aoMap.encoding = THREE.LinearEncoding;
+            if (mesh.geometry.attributes.uv && !mesh.geometry.attributes.uv2) {
+                mesh.geometry.setAttribute('uv2', mesh.geometry.attributes.uv);
+            }
+        }
+        normalizedMaterial.needsUpdate = true;
+
+        return normalizedMaterial;
+    }
+
+    resetAnimationState() {
+        if (this.mixer) {
+            this.mixer.stopAllAction();
+            this.mixer = null;
+        }
+
+        if (this.animationActions) {
+            this.animationActions.forEach(action => action.stop());
+        }
+
+        if (this.currentAction) {
+            this.currentAction.stop();
+        }
+
+        this.animationActions = [];
+        this.currentAction = null;
+        this.state.isAnimationPlaying = false;
+
+        const animationSelector = this.shadowRoot.querySelector('#animationSelector');
+        if (animationSelector) {
+            animationSelector.remove();
+        }
+
+        this.updateAnimationButtons();
+        this.shadowRoot.querySelector('#anim_description').style.display = 'none';
+    }
+
+    clearSelectionState() {
+        if (this.glowTimeoutId) {
+            clearTimeout(this.glowTimeoutId);
+            this.glowTimeoutId = null;
+        }
+
+        if (this.previousSelectedMeshPart && this.previousMeshPartOriginalMaterial) {
+            this.previousSelectedMeshPart.material = this.previousMeshPartOriginalMaterial;
+            this.previousSelectedMeshPart.material.needsUpdate = true;
+        }
+
+        if (this.selectedSceneGraphLabel) {
+            this.selectedSceneGraphLabel.classList.remove('selected');
+        }
+
+        this.selectedSceneGraphLabel = null;
+        this.selectedMeshPart = null;
+        this.selectedMeshPartIndex = -1;
+        this.previousSelectedMeshPart = null;
+        this.previousMeshPartOriginalMaterial = null;
+    }
+
+    disposeCurrentModel() {
+        if (!this.model) {
+            return;
+        }
+
+        this.scene.remove(this.model);
+        this.model.traverse((child) => {
+            if (!child.isMesh) {
+                return;
+            }
+
+            if (child.geometry) {
+                child.geometry.dispose();
+            }
+
+            if (child.material) {
+                if (Array.isArray(child.material)) {
+                    child.material.forEach(mat => mat && mat.dispose && mat.dispose());
+                } else if (child.material.dispose) {
+                    child.material.dispose();
+                }
+            }
+        });
+
+        this.transformControls.detach();
+        this.model = null;
+    }
+
+    resetModelUiState() {
+        this.shadowRoot.querySelector('#modelInfo').innerHTML = '<strong>[Model Info]</strong> loading...';
+        this.shadowRoot.querySelector('#posX').value = 0;
+        this.shadowRoot.querySelector('#posY').value = 0;
+        this.shadowRoot.querySelector('#posZ').value = 0;
+        this.shadowRoot.querySelector('#rotX').value = 0;
+        this.shadowRoot.querySelector('#rotY').value = 0;
+        this.shadowRoot.querySelector('#rotZ').value = 0;
+        this.shadowRoot.querySelector('#scale').value = 1;
+        this.shadowRoot.querySelector('#roughness').value = 0.5;
+        this.shadowRoot.querySelector('#metalness').value = 0.5;
+        this.shadowRoot.querySelector('#sceneGraphTree').innerHTML = '';
+        this.shadowRoot.querySelector('#texturePartSelector').innerHTML = '';
+        this.shadowRoot.querySelector('#texturePreview').innerHTML = '';
+        this.shadowRoot.querySelector('#texturePreview').textContent = 'None';
+        this.shadowRoot.querySelector('#texturePreview').style.backgroundImage = '';
+
+        const historySelector = this.shadowRoot.querySelector('#textureHistorySelector');
+        if (historySelector) {
+            historySelector.innerHTML = '<option value="-1">Current</option>';
+        }
+
+        const explodeFieldset = this.shadowRoot.querySelector('#explode-fieldset');
+        if (explodeFieldset) {
+            explodeFieldset.remove();
+        }
+    }
+
     discardModel() {
         if (this.model) {
-            this.scene.remove(this.model);
-
-            // dispose
-            this.model.traverse((child) => {
-                if (child.isMesh) {
-                    child.geometry.dispose();
-                    if (child.material) {
-                        if (Array.isArray(child.material)) {
-                            child.material.forEach(mat => {
-                                mat.dispose();
-                            });
-                        } else {
-                            child.material.dispose();
-                        }
-                    }
-                }
-            });
-
-            this.transformControls.detach();
-
-            this.model = null;
-            this.shadowRoot.querySelector('#modelInfo').innerHTML = `<strong>[Model Info]</strong> loading...`;
+            this.resetWireframeState();
+            this.disposeCurrentModel();
+            this.resetAnimationState();
+            this.clearSelectionState();
+            this.resetModelUiState();
+            this.originalMaterials = {};
+            this.standardMaterials = [];
+            this.meshParts = [];
+            this.meshPartTextureInfo = [];
+            this.textureHistory = new Map();
+            this.modelCenter = null;
+            this.modelMaxDim = 0;
 
             const fileInputContainer = this.shadowRoot.querySelector('#fileInputContainer');
             fileInputContainer.style.display = 'block';
 
             const discardButton = this.shadowRoot.querySelector('#discardModelBtn');
             discardButton.style.display = 'none';
-
-            this.shadowRoot.querySelector('#posX').value = 0;
-            this.shadowRoot.querySelector('#posY').value = 0;
-            this.shadowRoot.querySelector('#posZ').value = 0;
-            this.shadowRoot.querySelector('#rotX').value = 0;
-            this.shadowRoot.querySelector('#rotY').value = 0;
-            this.shadowRoot.querySelector('#rotZ').value = 0;
-            this.shadowRoot.querySelector('#scale').value = 8;
-            this.shadowRoot.querySelector('#roughness').value = 0.5;
-            this.shadowRoot.querySelector('#metalness').value = 0.5;
-
-            const sceneGraphTreeUI = this.shadowRoot.querySelector('#sceneGraphTree');
-            sceneGraphTreeUI.innerHTML = ''; // scene graph ui init
-
-            const partSelector = this.shadowRoot.querySelector('#texturePartSelector');
-            partSelector.innerHTML = ''; // part selector init
-            const previewElement = this.shadowRoot.querySelector('#texturePreview');
-            previewElement.textContent = ''; // preview init
-            previewElement.style.backgroundImage = '';
-
-            this.selectedSceneGraphLabel = null;
-            this.selectedMeshPart = null;
-            this.selectedMeshPartIndex = -1;
-
-            if (this.mixer) {
-                this.mixer.stopAllAction();
-                this.mixer = null;
-                const animationSelector = this.shadowRoot.querySelector('#animationSelector');
-                if (animationSelector) {
-                    animationSelector.remove();
-                }
-            }
-            if (this.animationActions) {
-                this.animationActions.forEach(action => action.stop());
-                this.animationActions = [];
-            }
-            if (this.currentAction) {
-                this.currentAction.stop();
-                this.currentAction = null;
-            }
-
-            this.updateAnimationButtons();
-            this.shadowRoot.querySelector('#anim_description').style.display = 'none';
 
             this.renderer.render(this.scene, this.camera);
         }
@@ -2306,17 +2577,9 @@ class SimpleModelViewer extends HTMLElement {
         const progressBar = this.shadowRoot.querySelector('#loadingProgressBar');
         progressBar.style.display = 'block';
         progressBar.style.width = '0%';
+        const shouldRevokeObjectUrl = typeof url === 'string' && url.startsWith('blob:');
 
-        if (this.mixer) {
-            this.mixer.stopAllAction();
-            this.mixer = null;
-        }
-        this.animationActions = [];
-        this.currentAction = null;
-        const existingSelector = this.shadowRoot.querySelector('#animationSelector');
-        if (existingSelector) {
-            existingSelector.remove();
-        }
+        this.resetAnimationState();
 
         const fileExtension = fileName.split('.').pop().toLowerCase();
         switch (fileExtension) {
@@ -2340,9 +2603,10 @@ class SimpleModelViewer extends HTMLElement {
         }
 
         this.loader.load(url, (object) => {
-            if (this.model) {
-                this.scene.remove(this.model);
-            }
+            this.resetWireframeState();
+            this.disposeCurrentModel();
+            this.clearSelectionState();
+
             switch (fileExtension) {
                 case 'gltf':
                 case 'glb':
@@ -2365,6 +2629,9 @@ class SimpleModelViewer extends HTMLElement {
                     break;
             }
 
+            this.originalMaterials = {};
+            this.textureHistory = new Map();
+
             const box = new THREE.Box3().setFromObject(this.model);
             const size = box.getSize(new THREE.Vector3());
             const maxDim = Math.max(size.x, size.y, size.z);
@@ -2378,7 +2645,7 @@ class SimpleModelViewer extends HTMLElement {
             }
 
             this.model.scale.set(scaleFactor, scaleFactor, scaleFactor);
-            this.modelSize = scaleFactor * this.modelSize;
+            this.modelSize = scaleFactor;
             this.shadowRoot.querySelector('#scale').value = this.modelSize;
 
             const updatedBox  = new THREE.Box3().setFromObject(this.model);
@@ -2476,47 +2743,15 @@ class SimpleModelViewer extends HTMLElement {
                     faceCount += child.geometry.index ? child.geometry.index.count / 3 : child.geometry.attributes.position.count / 3;
 
                     child.userData.originalPosition = child.position.clone();
-
-                    this.modifyMaterialForWireframe(child.material); // Wireframe overlay
-                    this.originalMaterials[child.uuid] = child.material.clone();
                     this.meshParts.push(child);
-
-                    if (child.material instanceof THREE.MeshStandardMaterial) {
-                        this.standardMaterials.push(child.material);
-                        const material = child.material;
-
-                        if (material.map) {
-                            material.map.encoding = THREE.sRGBEncoding;
-                        }
-                        if (material.emissiveMap) {
-                            material.emissiveMap.encoding = THREE.sRGBEncoding;
-                        }
-                        if (material.metallicRoughnessMap) {
-                            material.metallicRoughnessMap.encoding = THREE.LinearEncoding;
-                        }
-                        if (material.normalMap) {
-                            material.normalMap.encoding = THREE.LinearEncoding;
-                        }
-                        if (material.aoMap) {
-                            material.aoMap.encoding = THREE.LinearEncoding;
-                            if (child.geometry.attributes.uv && !child.geometry.attributes.uv2) {
-                                child.geometry.setAttribute('uv2', child.geometry.attributes.uv);
-                            }
-                        }
-                        material.needsUpdate = true;
-                    } else {
-                        child.material = new THREE.MeshStandardMaterial({
-                            map: child.material.map,
-                            roughness: child.material.roughness !== undefined ? child.material.roughness : 0.5,
-                            metalness: child.material.metalness !== undefined ? child.material.metalness : 0.5
-                        });
-                        if (child.material.map) {
-                            child.material.map.encoding = THREE.sRGBEncoding;
-                            child.material.map.flipY = true;
-                        }
-                        child.material.needsUpdate = true;
-                        this.standardMaterials.push(child.material);
+                    const material = this.normalizeMeshMaterial(child);
+                    if (!material) {
+                        return;
                     }
+
+                    this.modifyMaterialForWireframe(material); // Wireframe overlay
+                    this.originalMaterials[child.uuid] = material.clone();
+                    this.standardMaterials.push(material);
 
                 }
             });
@@ -2571,6 +2806,9 @@ class SimpleModelViewer extends HTMLElement {
             progressBar.style.display = 'none';
             const discardButton = this.shadowRoot.querySelector('#discardModelBtn');
             discardButton.style.display = 'inline-block';
+            if (shouldRevokeObjectUrl) {
+                URL.revokeObjectURL(url);
+            }
         }, (xhr) => {
             if (xhr.lengthComputable) {
                 const percentComplete = xhr.loaded / xhr.total * 100;
@@ -2578,6 +2816,10 @@ class SimpleModelViewer extends HTMLElement {
             }
         }, (error) => {
             console.error('Loading Error:', error);
+            progressBar.style.display = 'none';
+            if (shouldRevokeObjectUrl) {
+                URL.revokeObjectURL(url);
+            }
         });
     }
 
@@ -2614,28 +2856,56 @@ class SimpleModelViewer extends HTMLElement {
     }
 
     initTextureMapUI() {
-        const diffuseMapInput = this.shadowRoot.querySelector('#diffuseMapInput');
-        const roughnessMapInput = this.shadowRoot.querySelector('#roughnessMapInput');
-        const metalnessMapInput = this.shadowRoot.querySelector('#metalnessMapInput');
-        const normalMapInput = this.shadowRoot.querySelector('#normalMapInput');
-        const AOMapInput = this.shadowRoot.querySelector('#aoMapInput');
-        const emissiveMapInput = this.shadowRoot.querySelector('#emissiveMapInput');
         const partSelector = this.shadowRoot.querySelector('#texturePartSelector');
+        const typeSelector = this.shadowRoot.querySelector('#textureTypeSelector');
+        const replaceTextureButton = this.shadowRoot.querySelector('#replaceTextureBtn');
+        let historySelector = this.shadowRoot.querySelector('#textureHistorySelector');
 
-        diffuseMapInput.addEventListener('change', (e) => this.handleTextureFileChange(e, 'map'));
-        roughnessMapInput.addEventListener('change', (e) => this.handleTextureFileChange(e, 'roughnessMap'));
-        metalnessMapInput.addEventListener('change', (e) => this.handleTextureFileChange(e, 'metalnessMap'));
-        normalMapInput.addEventListener('change', (e) => this.handleTextureFileChange(e, 'normalMap'));
-        AOMapInput.addEventListener('change', (e) => this.handleTextureFileChange(e, 'aoMap'));
-        emissiveMapInput.addEventListener('change', (e) => this.handleTextureFileChange(e, 'emissiveMap'));
+        if (!historySelector) {
+            historySelector = document.createElement('select');
+            historySelector.id = 'textureHistorySelector';
+            typeSelector.parentNode.insertBefore(historySelector, typeSelector.nextSibling);
+        }
+
+        Object.entries(TEXTURE_INPUT_IDS).forEach(([mapType, inputId]) => {
+            this.shadowRoot.querySelector(`#${inputId}`).addEventListener('change', (event) => {
+                this.handleTextureFileChange(event, mapType);
+            });
+        });
 
         partSelector.addEventListener('change', () => {
-            const selectedPartIndex = parseInt(partSelector.value);
-            if (!isNaN(selectedPartIndex) && selectedPartIndex >= 0 && selectedPartIndex < this.meshParts.length) {
-                const selectedMeshPart = this.meshParts[selectedPartIndex];
-                this.selectMeshPartInSceneGraph(selectedMeshPart, null);
-                this.updateHistorySelector();
+            const selection = this.getTextureSelection();
+            if (selection) {
+                this.selectMeshPartInSceneGraph(selection.mesh, null);
             }
+            this.updateTextureMapDisplay();
+            this.updateHistorySelector();
+        });
+
+        typeSelector.addEventListener('change', () => {
+            this.updateTextureMapDisplay();
+            this.updateHistorySelector();
+        });
+
+        replaceTextureButton.addEventListener('click', () => {
+            const selection = this.getTextureSelection();
+            if (!selection) {
+                return;
+            }
+
+            const fileInputId = TEXTURE_INPUT_IDS[selection.mapType];
+            if (!fileInputId) {
+                return;
+            }
+
+            const fileInput = this.shadowRoot.querySelector(`#${fileInputId}`);
+            fileInput.dataset.meshPartIndex = selection.selectedPartIndex;
+            fileInput.value = '';
+            fileInput.click();
+        });
+
+        historySelector.addEventListener('change', () => {
+            this.applyHistoryTexture();
         });
     }
 
@@ -2651,38 +2921,39 @@ class SimpleModelViewer extends HTMLElement {
 
         const textureURL = URL.createObjectURL(file);
         const texture = this.textureLoader.load(textureURL, () => {
-            texture.encoding = THREE.sRGBEncoding;
-            texture.flipY = false;
-
             const selectedMeshPartIndex = parseInt(fileInput.dataset.meshPartIndex);
             if (isNaN(selectedMeshPartIndex)) {
                 console.error("Mesh part index is not set on the file input.");
+                URL.revokeObjectURL(textureURL);
                 return;
             }
 
             const mesh = this.meshParts[selectedMeshPartIndex];
-            if (!mesh || !mesh.material) {
+            const material = getEditableMaterial(mesh);
+            if (!mesh || !material) {
                 console.error("Mesh or material not found for index:", selectedMeshPartIndex);
+                URL.revokeObjectURL(textureURL);
                 return;
             }
 
-            // 기존 텍스처를 history에 저장
-            this.saveTextureToHistory(mesh, mapType, mesh.material[mapType]);
+            this.applyTextureEncoding(texture, mapType);
+            this.saveTextureToHistory(mesh, mapType, material[mapType]);
 
-            if (mesh.material.isShared) {
-                mesh.material = mesh.material.clone();
+            material[mapType] = texture;
+            material.needsUpdate = true;
+
+            if (this.originalMaterials[mesh.uuid]) {
+                this.originalMaterials[mesh.uuid][mapType] = cloneTexture(texture);
             }
-
-            mesh.material[mapType] = texture;
-            this.originalMaterials[mesh.uuid][mapType] = texture.clone();
-            mesh.material.needsUpdate = true;
 
             this.updateTextureMapDisplay();
             this.updateHistorySelector();
             this.renderer.render(this.scene, this.camera);
+            URL.revokeObjectURL(textureURL);
         }, undefined, (error) => {
             console.error('Texture loading error:', error);
             alert('Failed to load texture.');
+            URL.revokeObjectURL(textureURL);
         });
     }
 
@@ -2697,18 +2968,15 @@ class SimpleModelViewer extends HTMLElement {
         }
         const historyArray = typeHistory.get(mapType);
         if (texture) {
-            historyArray.push(texture.clone()); // 텍스처 복사본 저장
+            historyArray.push(cloneTexture(texture));
         }
     }
 
     populateTextureMapSelector() {
         const partSelector = this.shadowRoot.querySelector('#texturePartSelector');
-        const typeSelector = this.shadowRoot.querySelector('#textureTypeSelector');
-        const replaceTextureButton = this.shadowRoot.querySelector('#replaceTextureBtn');
-        
-        // History selector 추가
         let historySelector = this.shadowRoot.querySelector('#textureHistorySelector');
         if (!historySelector) {
+            const typeSelector = this.shadowRoot.querySelector('#textureTypeSelector');
             historySelector = document.createElement('select');
             historySelector.id = 'textureHistorySelector';
             typeSelector.parentNode.insertBefore(historySelector, typeSelector.nextSibling);
@@ -2722,61 +2990,25 @@ class SimpleModelViewer extends HTMLElement {
             partSelector.appendChild(option);
         });
 
-        partSelector.selectedIndex = 0;
-
-        partSelector.addEventListener('change', () => {
-            // this.updateTextureMapDisplay();
-            this.updateHistorySelector();
-        });
-
-        typeSelector.addEventListener('change', () => {
-            this.updateTextureMapDisplay();
-            this.updateHistorySelector();
-        });
-
-        replaceTextureButton.addEventListener('click', () => {
-            const selectedType = typeSelector.value;
-            let fileInputId = '';
-            if (selectedType === 'map') fileInputId = 'diffuseMapInput';
-            else if (selectedType === 'roughnessMap') fileInputId = 'roughnessMapInput';
-            else if (selectedType === 'metalnessMap') fileInputId = 'metalnessMapInput';
-            else if (selectedType === 'normalMap') fileInputId = 'normalMapInput';
-            else if (selectedType === 'aoMap') fileInputId = 'aoMapInput';
-            else if (selectedType === 'emissiveMap') fileInputId = 'emissiveMapInput';
-
-            if (fileInputId) {
-                const fileInput = this.shadowRoot.querySelector(`#${fileInputId}`);
-                const selectedPartIndex = parseInt(partSelector.value);
-                fileInput.dataset.meshPartIndex = selectedPartIndex;
-                fileInput.click();
-            }
-        });
-
-        historySelector.addEventListener('change', () => {
-            this.updateTextureMapDisplay();
-            this.applyHistoryTexture();
-        });
+        partSelector.selectedIndex = this.meshParts.length > 0 ? 0 : -1;
+        historySelector.value = '-1';
 
         this.updateTextureMapDisplay();
         this.updateHistorySelector();
     }
 
     updateHistorySelector() {
-        const partSelector = this.shadowRoot.querySelector('#texturePartSelector');
-        const typeSelector = this.shadowRoot.querySelector('#textureTypeSelector');
         const historySelector = this.shadowRoot.querySelector('#textureHistorySelector');
-        const selectedPartIndex = parseInt(partSelector.value);
-        const selectedType = typeSelector.value;
-
         historySelector.innerHTML = '<option value="-1">Current</option>';
+        const selection = this.getTextureSelection();
 
-        if (isNaN(selectedPartIndex) || selectedPartIndex < 0 || selectedPartIndex >= this.meshParts.length) return;
+        if (!selection) {
+            return;
+        }
 
-        const mesh = this.meshParts[selectedPartIndex];
-        const meshUUID = mesh.uuid;
-        
-        if (this.textureHistory.has(meshUUID) && this.textureHistory.get(meshUUID).has(selectedType)) {
-            const historyArray = this.textureHistory.get(meshUUID).get(selectedType);
+        const meshUUID = selection.mesh.uuid;
+        if (this.textureHistory.has(meshUUID) && this.textureHistory.get(meshUUID).has(selection.mapType)) {
+            const historyArray = this.textureHistory.get(meshUUID).get(selection.mapType);
             historyArray.forEach((texture, index) => {
                 const option = document.createElement('option');
                 option.value = index;
@@ -2787,68 +3019,62 @@ class SimpleModelViewer extends HTMLElement {
     }
 
     applyHistoryTexture() {
-        const partSelector = this.shadowRoot.querySelector('#texturePartSelector');
-        const typeSelector = this.shadowRoot.querySelector('#textureTypeSelector');
         const historySelector = this.shadowRoot.querySelector('#textureHistorySelector');
-        const selectedPartIndex = parseInt(partSelector.value);
-        const selectedType = typeSelector.value;
-        const historyIndex = parseInt(historySelector.value);
-    
-        if (isNaN(selectedPartIndex) || selectedPartIndex < 0 || selectedPartIndex >= this.meshParts.length) return;
-    
-        const mesh = this.meshParts[selectedPartIndex];
+        const selection = this.getTextureSelection();
+        const historyIndex = parseInt(historySelector.value, 10);
+
+        if (!selection) {
+            return;
+        }
+
+        const { mesh, material, mapType } = selection;
         const meshUUID = mesh.uuid;
         let selectedTexture = null;
-    
+
         if (historyIndex === -1) {
-            // "Current" 선택 시 원본 텍스처 사용
-            selectedTexture = this.originalMaterials[meshUUID][selectedType];
-        } else if (this.textureHistory.has(meshUUID) && this.textureHistory.get(meshUUID).has(selectedType)) {
-            const historyArray = this.textureHistory.get(meshUUID).get(selectedType);
+            selectedTexture = material[mapType] || this.originalMaterials[meshUUID]?.[mapType] || null;
+        } else if (this.textureHistory.has(meshUUID) && this.textureHistory.get(meshUUID).has(mapType)) {
+            const historyArray = this.textureHistory.get(meshUUID).get(mapType);
             if (historyIndex >= 0 && historyIndex < historyArray.length) {
                 selectedTexture = historyArray[historyIndex];
             }
         }
-    
-        if (selectedTexture) {
-            if (mesh.material.isShared) {
-                mesh.material = mesh.material.clone();
-            }
-            mesh.material[selectedType] = selectedTexture;
-            // this.originalMaterials[meshUUID][selectedType] = selectedTexture.clone();
-    
-            mesh.material.needsUpdate = true;
-    
-            // this.updateTextureMapDisplay();
-            const previewElement = this.shadowRoot.querySelector('#texturePreview');
-            this.drawPreview(selectedTexture, previewElement);
-            this.renderer.render(this.scene, this.camera);
+
+        if (!selectedTexture) {
+            this.updateTextureMapDisplay();
+            return;
         }
+
+        material[mapType] = selectedTexture;
+        material.needsUpdate = true;
+        if (this.originalMaterials[meshUUID]) {
+            this.originalMaterials[meshUUID][mapType] = cloneTexture(selectedTexture);
+        }
+
+        this.updateTextureMapDisplay();
+        this.renderer.render(this.scene, this.camera);
     }
 
     updateTextureMapDisplay() {
-        const partSelector = this.shadowRoot.querySelector('#texturePartSelector');
-        const typeSelector = this.shadowRoot.querySelector('#textureTypeSelector');
         const previewElement = this.shadowRoot.querySelector('#texturePreview');
-        const selectedPartIndex = parseInt(partSelector.value);
-        const selectedType = typeSelector.value;
-    
-        if (isNaN(selectedPartIndex) || selectedPartIndex < 0 || selectedPartIndex >= this.meshParts.length) {
-            console.error('Invalid selected part index:', selectedPartIndex);
-            previewElement.textContent = 'Error';
+        const selection = this.getTextureSelection();
+
+        if (!selection) {
+            previewElement.textContent = this.meshParts.length === 0 ? 'None' : 'Error';
             previewElement.style.backgroundImage = '';
+            Object.assign(previewElement.style, PREVIEW_TEXT_STYLE);
             return;
         }
-    
-        const selectedMesh = this.meshParts[selectedPartIndex];
-        // const selectedMaterial = selectedMesh.material; // 변경: selectedMesh.material 사용
-        const selectedMaterial = this.originalMaterials[selectedMesh.uuid]; // 이전 코드 (originalMaterials 사용)
-        let selectedTexture = selectedMaterial[selectedType];
-    
+
+        const selectedTexture = selection.material[selection.mapType]
+            || this.originalMaterials[selection.mesh.uuid]?.[selection.mapType]
+            || null;
+
         this.drawPreview(selectedTexture, previewElement);
     }
 
     drawPreview(selectedTexture, previewElement){
+        previewElement.innerHTML = '';
         if (selectedTexture) {
             if (selectedTexture.image instanceof ImageBitmap) {
                 this.setImageBitmapPreview(selectedTexture.image, previewElement);
@@ -2860,14 +3086,12 @@ class SimpleModelViewer extends HTMLElement {
             } else {
                 previewElement.textContent = 'Preview Unavailable';
                 previewElement.style.backgroundImage = '';
-                previewElement.style.lineHeight = '150px';
-                previewElement.style.textAlign = 'center';
+                Object.assign(previewElement.style, PREVIEW_TEXT_STYLE);
             }
         } else {
             previewElement.textContent = 'None';
             previewElement.style.backgroundImage = '';
-            previewElement.style.lineHeight = '150px';
-            previewElement.style.textAlign = 'center';
+            Object.assign(previewElement.style, PREVIEW_TEXT_STYLE);
         }
     }
 
@@ -2911,6 +3135,9 @@ class SimpleModelViewer extends HTMLElement {
                         child.material = originalMaterial.clone();
                         child.material.roughness = roughnessValue;
                         child.material.metalness = metalnessValue;
+                        this.originalMaterials[child.uuid].roughness = roughnessValue;
+                        this.originalMaterials[child.uuid].metalness = metalnessValue;
+                        this.modifyMaterialForWireframe(child.material);
                         child.material.needsUpdate = true;
                     }
                 });
@@ -2960,6 +3187,10 @@ class SimpleModelViewer extends HTMLElement {
     }
 
     animate(time) {
+        if (!this.isConnectedToDom) {
+            return;
+        }
+
         if (!this.lastTime) this.lastTime = 0;
         const deltaTime = (time - this.lastTime) / 1000;
         this.lastTime = time;
@@ -2977,9 +3208,13 @@ class SimpleModelViewer extends HTMLElement {
         if (!this.model) {
             if (!this.isIdleAnimationRunning) {
                 this.initIdleAnimation();
-                TWEEN.update();
+                if (typeof TWEEN !== 'undefined') {
+                    TWEEN.update();
+                }
             }
-            this.tweenGroup.update(time); // Use tweenGroup.update(time)
+            if (this.tweenGroup) {
+                this.tweenGroup.update(time);
+            }
             if (this.animationMesh && this.isIdleAnimationRunning) {
                 const rotationSpeedy = Math.PI / 6; // 30 deg
                 const rotationSpeedz = Math.PI / 3; // 60 deg
@@ -2991,7 +3226,9 @@ class SimpleModelViewer extends HTMLElement {
 
         } else if (this.isIdleAnimationRunning) {
             this.scene.remove(this.animationMesh);
-            this.animationGeometry.dispose();
+            if (this.animationGeometry) {
+                this.animationGeometry.dispose();
+            }
             this.animationMesh = null;
             this.tweenGroup = null;
             this.isIdleAnimationRunning = false;
@@ -3003,10 +3240,12 @@ class SimpleModelViewer extends HTMLElement {
 
     resizeRenderer() {
         const host = this.shadowRoot.host;
-        const metaDiv = this.shadowRoot.querySelector('#meta');
-        const metaHeight = this.shadowRoot.querySelector('.tab-buttons').offsetHeight + this.shadowRoot.querySelector('#meta').offsetHeight; // consider tab height
         const width = host.clientWidth;
-        const height = host.clientHeight;
+        const height = host.clientHeight || Math.max(320, Math.round(width * 0.6));
+
+        if (!width || !height) {
+            return;
+        }
 
         this.renderer.setSize(width, height);
         this.camera.aspect = width / height;
@@ -3149,6 +3388,10 @@ class SimpleModelViewer extends HTMLElement {
 
 
     selectMeshPartInSceneGraph(mesh, labelElement) {
+        if (!mesh || !mesh.isMesh || !getEditableMaterial(mesh)) {
+            return;
+        }
+
         if (this.selectedMeshPart === mesh) {
             return;
         }
@@ -3164,6 +3407,10 @@ class SimpleModelViewer extends HTMLElement {
 
         this.selectedMeshPart = mesh;
         this.selectedMeshPartIndex = this.meshParts.indexOf(mesh);
+        const partSelector = this.shadowRoot.querySelector('#texturePartSelector');
+        if (this.selectedMeshPartIndex >= 0 && partSelector.value !== `${this.selectedMeshPartIndex}`) {
+            partSelector.value = `${this.selectedMeshPartIndex}`;
+        }
 
         if (labelElement) {
             if (this.selectedSceneGraphLabel) {
