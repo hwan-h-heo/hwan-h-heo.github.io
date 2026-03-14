@@ -157,77 +157,11 @@
         </footer>
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="./js/posts-data.js"></script>
+        <script src="./js/site-data-client.js"></script>
+        <script src="./js/blog-shell.js"></script>
         <script src="./js/main-list.js"></script>
-        <!-- Core theme JS-->
-        <!-- <script src="js/scripts.js"></script> -->
         <script>
-            const headerToggleBtn = document.querySelector('.header-toggle');
-
-            function headerToggle() {
-            document.querySelector('#header').classList.toggle('header-show');
-            headerToggleBtn.classList.toggle('bi-list');
-            headerToggleBtn.classList.toggle('bi-x');
-            }
-            headerToggleBtn.addEventListener('click', headerToggle);
-
-            /**
-             * Hide mobile nav on same-page/hash links
-             */
-            document.querySelectorAll('#navmenu a').forEach(navmenu => {
-            navmenu.addEventListener('click', () => {
-                if (document.querySelector('.header-show')) {
-                headerToggle();
-                }
-            });
-
-            });
-        </script>
-        <script>
-            let scrollTop = document.querySelector('.scroll-top');
-
-            function toggleScrollTop() {
-                if (scrollTop) {
-                    window.scrollY > 100 ? scrollTop.classList.add('active') : scrollTop.classList.remove('active');
-                }
-            }
-            scrollTop.addEventListener('click', (e) => {
-                e.preventDefault();
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            });
-
-            window.addEventListener('load', toggleScrollTop);
-            document.addEventListener('scroll', toggleScrollTop);
-        </script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const searchForm = document.getElementById('search-form');
-                const searchInput = document.getElementById('searchInput');
-
-                if (searchInput) {
-                    searchInput.addEventListener('keyup', function(e) {
-                        if (e.key === 'Enter') {
-                            const searchTerm = searchInput.value.trim();
-
-                            if (searchTerm) {
-                                window.location.href = `/blogs/search/?q=${encodeURIComponent(searchTerm)}`;
-                            }
-                        }
-                    });
-                }
-                if (searchForm) {
-                    searchForm.addEventListener('submit', function(e) {
-                        e.preventDefault(); 
-                        const newSearchTerm = searchInput.value.trim();
-                        if (newSearchTerm) {
-                            window.location.href = `/blogs/search/?q=${encodeURIComponent(newSearchTerm)}`;
-                        }
-                    });
-                }
-            });
+            initBlogShell({ formSelector: '#search-form', inputSelector: '#searchInput' });
         </script>
     </main>
     </body>

@@ -3,21 +3,22 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 
+const {
+    POST_CATEGORIES,
+    POST_LANGUAGES,
+    loadRawSiteData,
+    validateSiteData,
+    writeSiteData
+} = require('./lib/site-data');
+
 const PORT = 3030;
-const POSTS_DIR = path.join(__dirname, 'posts');
-const DRAFTS_DIR = path.join(__dirname, 'editor', 'drafts');
-const DRAFT_ASSETS_DIR = path.join(__dirname, 'editor', 'draft-assets');
+const ROOT_DIR = __dirname;
+const POSTS_DIR = path.join(ROOT_DIR, 'posts');
+const DRAFTS_DIR = path.join(ROOT_DIR, 'editor', 'drafts');
+const DRAFT_ASSETS_DIR = path.join(ROOT_DIR, 'editor', 'draft-assets');
+const POST_ID_PATTERN = /^\d{6}_[A-Za-z0-9_]+$/;
+const CONTENT_DELIMITER = '--- 여기부터 실제 콘텐츠 ---';
 
-// Ensure directories exist
-if (!fs.existsSync(DRAFTS_DIR)) {
-    fs.mkdirSync(DRAFTS_DIR, { recursive: true });
-}
-
-if (!fs.existsSync(DRAFT_ASSETS_DIR)) {
-    fs.mkdirSync(DRAFT_ASSETS_DIR, { recursive: true });
-}
-
-// MIME types
 const mimeTypes = {
     '.html': 'text/html',
     '.js': 'text/javascript',
@@ -33,30 +34,87 @@ const mimeTypes = {
     '.md': 'text/markdown'
 };
 
+ensureDirSync(DRAFTS_DIR);
+ensureDirSync(DRAFT_ASSETS_DIR);
+
+function ensureDirSync(dirPath) {
+    if (!fs.existsSync(dirPath)) {
+        fs.mkdirSync(dirPath, { recursive: true });
+    }
+}
+
+function sendJson(res, statusCode, payload) {
+    res.writeHead(statusCode, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(payload));
+}
+
 function serveStaticFile(filePath, res) {
     fs.readFile(filePath, (err, data) => {
         if (err) {
-            res.writeHead(404);
-            res.end('File not found');
+            sendJson(res, 404, { error: 'File not found' });
             return;
         }
+
         const ext = path.extname(filePath);
-        const contentType = mimeTypes[ext] || 'application/octet-stream';
-        res.writeHead(200, { 'Content-Type': contentType });
+        res.writeHead(200, { 'Content-Type': mimeTypes[ext] || 'application/octet-stream' });
         res.end(data);
     });
 }
 
-// Parse multipart form data (for image uploads)
+function resolveInside(baseDir, targetPath) {
+    const resolvedPath = path.resolve(baseDir, targetPath);
+    const resolvedBase = path.resolve(baseDir);
+    if (resolvedPath !== resolvedBase && !resolvedPath.startsWith(`${resolvedBase}${path.sep}`)) {
+        throw new Error('Invalid path');
+    }
+    return resolvedPath;
+}
+
+function sanitizeFileName(fileName, defaultExtension = '') {
+    const normalized = path.basename(String(fileName || '').trim());
+    if (!normalized || normalized === '.' || normalized === '..') {
+        throw new Error('Invalid file name');
+    }
+    return defaultExtension && !normalized.endsWith(defaultExtension)
+        ? `${normalized}${defaultExtension}`
+        : normalized;
+}
+
+function parseJsonBody(req) {
+    return new Promise((resolve, reject) => {
+        let body = '';
+
+        req.on('data', (chunk) => {
+            body += chunk.toString();
+        });
+
+        req.on('end', () => {
+            if (!body) {
+                resolve({});
+                return;
+            }
+
+            try {
+                resolve(JSON.parse(body));
+            } catch (error) {
+                reject(new Error('Invalid JSON'));
+            }
+        });
+
+        req.on('error', reject);
+    });
+}
+
 function parseMultipart(req, callback) {
-    const boundary = req.headers['content-type'].split('boundary=')[1];
+    const contentType = req.headers['content-type'] || '';
+    const boundary = contentType.split('boundary=')[1];
     if (!boundary) {
         callback(new Error('No boundary found'));
         return;
     }
 
     let data = Buffer.alloc(0);
-    req.on('data', chunk => {
+    req.on('data', (chunk) => {
         data = Buffer.concat([data, chunk]);
     });
 
@@ -67,26 +125,27 @@ function parseMultipart(req, callback) {
 
         while (true) {
             const boundaryIndex = data.indexOf(boundaryBuffer, start);
-            if (boundaryIndex === -1) break;
+            if (boundaryIndex === -1) {
+                break;
+            }
 
             const nextBoundaryIndex = data.indexOf(boundaryBuffer, boundaryIndex + boundaryBuffer.length);
-            if (nextBoundaryIndex === -1) break;
+            if (nextBoundaryIndex === -1) {
+                break;
+            }
 
             const partData = data.slice(boundaryIndex + boundaryBuffer.length, nextBoundaryIndex);
-
-            // Parse headers and content
             const headerEnd = partData.indexOf(Buffer.from('\r\n\r\n'));
             if (headerEnd !== -1) {
                 const headers = partData.slice(0, headerEnd).toString();
-                const content = partData.slice(headerEnd + 4, partData.length - 2); // Remove trailing \r\n
-
+                const content = partData.slice(headerEnd + 4, partData.length - 2);
                 const nameMatch = headers.match(/name="([^"]+)"/);
                 const filenameMatch = headers.match(/filename="([^"]+)"/);
 
                 if (nameMatch) {
                     parts.push({
                         name: nameMatch[1],
-                        filename: filenameMatch ? filenameMatch[1] : null,
+                        filename: filenameMatch ? path.basename(filenameMatch[1]) : null,
                         data: content
                     });
                 }
@@ -99,11 +158,498 @@ function parseMultipart(req, callback) {
     });
 }
 
-const server = http.createServer((req, res) => {
+function isValidIsoDate(value) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+        return false;
+    }
+
+    const date = new Date(`${value}T00:00:00Z`);
+    return !Number.isNaN(date.getTime()) && date.toISOString().startsWith(value);
+}
+
+function sortPostsByDate(posts) {
+    return [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
+}
+
+function stripLegacyContentPreamble(content) {
+    const text = typeof content === 'string' ? content : '';
+    const parts = text.split(CONTENT_DELIMITER);
+    return parts.length > 1 ? parts.slice(1).join(CONTENT_DELIMITER).trim() : text;
+}
+
+function buildBootstrapPayload() {
+    const rawSiteData = loadRawSiteData();
+    validateSiteData(rawSiteData);
+
+    const featuredMap = new Map(
+        (rawSiteData.featuredPortfolioPosts || []).map((item, index) => [item.id, { ...item, order: index }])
+    );
+
+    return {
+        categories: POST_CATEGORIES,
+        languages: POST_LANGUAGES,
+        series: rawSiteData.series,
+        featuredPortfolioPosts: rawSiteData.featuredPortfolioPosts || [],
+        posts: sortPostsByDate(rawSiteData.posts).map((post) => ({
+            id: post.id,
+            title_eng: post.title_eng,
+            title_kor: post.title_kor || '',
+            date: post.date,
+            category: post.category,
+            series: post.series,
+            languages: post.languages,
+            featured: featuredMap.has(post.id)
+        }))
+    };
+}
+
+function readPostBundle(postId) {
+    const rawSiteData = loadRawSiteData();
+    validateSiteData(rawSiteData);
+
+    const post = rawSiteData.posts.find((item) => item.id === postId);
+    if (!post) {
+        return null;
+    }
+
+    const contents = {};
+    POST_LANGUAGES.forEach((language) => {
+        const filePath = path.join(POSTS_DIR, postId, `content-${language}.md`);
+        if (fs.existsSync(filePath)) {
+            contents[language] = stripLegacyContentPreamble(fs.readFileSync(filePath, 'utf8'));
+        }
+    });
+
+    const featured = (rawSiteData.featuredPortfolioPosts || []).find((item) => item.id === postId) || null;
+    const featuredOrder = featured
+        ? (rawSiteData.featuredPortfolioPosts || []).findIndex((item) => item.id === postId)
+        : null;
+
+    return {
+        post,
+        featured: featured ? { ...featured, order: featuredOrder } : null,
+        contents
+    };
+}
+
+function sanitizePostInput(rawSiteData, payload) {
+    const mode = payload.mode === 'update' ? 'update' : 'create';
+    const errors = [];
+
+    const originalId = String(payload.originalId || '').trim();
+    const post = payload.post && typeof payload.post === 'object' ? payload.post : {};
+    const contentsInput = payload.contents && typeof payload.contents === 'object' ? payload.contents : {};
+    const featuredInput = payload.featured && typeof payload.featured === 'object' ? payload.featured : {};
+
+    const sanitizedPost = {
+        id: String(post.id || '').trim(),
+        title_eng: String(post.title_eng || '').trim(),
+        date: String(post.date || '').trim(),
+        category: String(post.category || '').trim(),
+        series: String(post.series || '').trim(),
+        languages: Array.isArray(post.languages)
+            ? [...new Set(post.languages.map((lang) => String(lang || '').trim()).filter(Boolean))]
+            : []
+    };
+
+    const titleKor = String(post.title_kor || '').trim();
+    const subtitleEng = String(post.subtitle_eng || '').trim();
+    const subtitleKor = String(post.subtitle_kor || '').trim();
+    if (titleKor) {
+        sanitizedPost.title_kor = titleKor;
+    }
+    if (subtitleEng) {
+        sanitizedPost.subtitle_eng = subtitleEng;
+    }
+    if (subtitleKor) {
+        sanitizedPost.subtitle_kor = subtitleKor;
+    }
+
+    const existingPost = rawSiteData.posts.find((item) => item.id === sanitizedPost.id) || null;
+    const originalPost = rawSiteData.posts.find((item) => item.id === originalId) || null;
+
+    if (!sanitizedPost.id) {
+        errors.push('Post ID is required.');
+    } else if (!POST_ID_PATTERN.test(sanitizedPost.id)) {
+        errors.push('Post ID must match YYMMDD_slug and use only letters, numbers, and underscores.');
+    }
+
+    if (!sanitizedPost.title_eng) {
+        errors.push('English title is required.');
+    }
+
+    if (!isValidIsoDate(sanitizedPost.date)) {
+        errors.push('Date must be a valid YYYY-MM-DD string.');
+    }
+
+    if (!POST_CATEGORIES.includes(sanitizedPost.category)) {
+        errors.push(`Category must be one of: ${POST_CATEGORIES.join(', ')}.`);
+    }
+
+    if (!rawSiteData.series[sanitizedPost.series]) {
+        errors.push('Series must be one of the configured site-data series.');
+    }
+
+    if (sanitizedPost.languages.length === 0) {
+        errors.push('At least one language must be selected.');
+    }
+
+    sanitizedPost.languages.forEach((language) => {
+        if (!POST_LANGUAGES.includes(language)) {
+            errors.push(`Unsupported language "${language}".`);
+        }
+    });
+
+    if (!sanitizedPost.languages.includes('eng')) {
+        errors.push('English content is required for every post.');
+    }
+
+    if (sanitizedPost.languages.includes('kor') && !sanitizedPost.title_kor) {
+        errors.push('Korean title is required when Korean content is enabled.');
+    }
+
+    const contentKeys = Object.keys(contentsInput);
+    contentKeys.forEach((language) => {
+        if (!sanitizedPost.languages.includes(language)) {
+            errors.push(`Content for "${language}" was provided but that language is not selected.`);
+        }
+    });
+
+    const sanitizedContents = {};
+    sanitizedPost.languages.forEach((language) => {
+        if (typeof contentsInput[language] !== 'string') {
+            errors.push(`Content for "${language}" is required.`);
+            return;
+        }
+        sanitizedContents[language] = contentsInput[language];
+        sanitizedContents[language] = stripLegacyContentPreamble(sanitizedContents[language]);
+    });
+
+    const featured = {
+        enabled: Boolean(featuredInput.enabled),
+        teaserImage: String(featuredInput.teaserImage || '').trim(),
+        teaserAlt: String(featuredInput.teaserAlt || '').trim()
+    };
+
+    if (featured.enabled) {
+        if (!featured.teaserImage) {
+            errors.push('Teaser image is required when the post is featured on the portfolio.');
+        }
+
+        const requestedOrder = Number.parseInt(featuredInput.order, 10);
+        featured.order = Number.isInteger(requestedOrder) ? requestedOrder : rawSiteData.featuredPortfolioPosts.length;
+    }
+
+    if (mode === 'create') {
+        if (existingPost) {
+            errors.push(`Post ID "${sanitizedPost.id}" already exists.`);
+        }
+
+        const postDir = path.join(POSTS_DIR, sanitizedPost.id);
+        if (fs.existsSync(postDir)) {
+            errors.push(`Post directory "${sanitizedPost.id}" already exists on disk.`);
+        }
+    }
+
+    if (mode === 'update') {
+        if (!originalId) {
+            errors.push('originalId is required for updates.');
+        } else if (!originalPost) {
+            errors.push(`Existing post "${originalId}" was not found.`);
+        } else if (originalId !== sanitizedPost.id) {
+            errors.push('Renaming an existing post ID is not supported.');
+        }
+
+        if (originalPost) {
+            originalPost.languages.forEach((language) => {
+                if (!sanitizedPost.languages.includes(language)) {
+                    errors.push(`Removing existing language "${language}" is not supported in the editor yet.`);
+                }
+            });
+        }
+    }
+
+    if (errors.length > 0) {
+        const validationError = new Error(errors.join('\n'));
+        validationError.validationErrors = errors;
+        throw validationError;
+    }
+
+    return {
+        mode,
+        originalId,
+        existingPost,
+        originalPost,
+        post: sanitizedPost,
+        contents: sanitizedContents,
+        featured
+    };
+}
+
+function buildNextSiteData(rawSiteData, sanitizedPayload) {
+    const nextSiteData = {
+        ...rawSiteData,
+        posts: [...rawSiteData.posts],
+        featuredPortfolioPosts: [...(rawSiteData.featuredPortfolioPosts || [])]
+    };
+
+    const nextPost = { ...sanitizedPayload.post };
+    const existingIndex = nextSiteData.posts.findIndex((item) => item.id === nextPost.id);
+    if (existingIndex >= 0) {
+        nextSiteData.posts[existingIndex] = nextPost;
+    } else {
+        nextSiteData.posts.push(nextPost);
+    }
+
+    nextSiteData.posts = sortPostsByDate(nextSiteData.posts);
+
+    nextSiteData.featuredPortfolioPosts = nextSiteData.featuredPortfolioPosts.filter((item) => item.id !== nextPost.id);
+    if (sanitizedPayload.featured.enabled) {
+        const nextFeaturedItem = {
+            id: nextPost.id,
+            teaserImage: sanitizedPayload.featured.teaserImage,
+            teaserAlt: sanitizedPayload.featured.teaserAlt
+        };
+
+        const insertIndex = Math.max(
+            0,
+            Math.min(sanitizedPayload.featured.order, nextSiteData.featuredPortfolioPosts.length)
+        );
+        nextSiteData.featuredPortfolioPosts.splice(insertIndex, 0, nextFeaturedItem);
+    }
+
+    validateSiteData(nextSiteData);
+    return nextSiteData;
+}
+
+function migrateDraftAssets(content, postId, migrationState) {
+    const assetPattern = /\.\/draft-assets\/([^\s)]+)/g;
+    const assetNames = [...content.matchAll(assetPattern)].map((match) => match[1]);
+    if (assetNames.length === 0) {
+        return { content, migrated: [] };
+    }
+
+    const postDir = resolveInside(POSTS_DIR, postId);
+    const postAssetsDir = path.join(postDir, 'assets');
+    ensureDirSync(postAssetsDir);
+
+    const migrated = [];
+    let updatedContent = content;
+
+    [...new Set(assetNames)].forEach((assetName) => {
+        const sourcePath = resolveInside(DRAFT_ASSETS_DIR, assetName);
+        if (!fs.existsSync(sourcePath)) {
+            throw new Error(`Draft asset "${assetName}" was not found. Re-upload the image and try again.`);
+        }
+
+        const destinationPath = resolveInside(postAssetsDir, assetName);
+        if (!migrationState.copiedAssets.has(assetName)) {
+            fs.copyFileSync(sourcePath, destinationPath);
+            migrationState.copiedAssets.add(assetName);
+            migrationState.createdAssets.push(destinationPath);
+        }
+
+        const sourceReference = `./draft-assets/${assetName}`;
+        const targetReference = `./assets/${assetName}`;
+        updatedContent = updatedContent.split(sourceReference).join(targetReference);
+        migrated.push(assetName);
+    });
+
+    return { content: updatedContent, migrated };
+}
+
+function savePostBundle(payload) {
+    const rawSiteData = loadRawSiteData();
+    validateSiteData(rawSiteData);
+
+    const sanitizedPayload = sanitizePostInput(rawSiteData, payload);
+    const nextSiteData = buildNextSiteData(rawSiteData, sanitizedPayload);
+    const postDir = resolveInside(POSTS_DIR, sanitizedPayload.post.id);
+
+    ensureDirSync(postDir);
+
+    const migrationState = {
+        copiedAssets: new Set(),
+        createdAssets: [],
+        fileBackups: []
+    };
+
+    try {
+        const savedFiles = [];
+        sanitizedPayload.post.languages.forEach((language) => {
+            const filePath = resolveInside(postDir, `content-${language}.md`);
+            const previousContent = fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf8') : null;
+            migrationState.fileBackups.push({ filePath, previousContent });
+
+            const { content, migrated } = migrateDraftAssets(
+                sanitizedPayload.contents[language],
+                sanitizedPayload.post.id,
+                migrationState
+            );
+
+            fs.writeFileSync(filePath, content, 'utf8');
+            savedFiles.push({
+                language,
+                path: filePath,
+                assetsMigrated: migrated.length
+            });
+        });
+
+        writeSiteData(nextSiteData);
+
+        return {
+            mode: sanitizedPayload.mode,
+            postId: sanitizedPayload.post.id,
+            savedFiles,
+            featured: sanitizedPayload.featured.enabled,
+            featuredOrder: sanitizedPayload.featured.enabled ? sanitizedPayload.featured.order : null
+        };
+    } catch (error) {
+        migrationState.fileBackups.reverse().forEach(({ filePath, previousContent }) => {
+            if (previousContent === null) {
+                if (fs.existsSync(filePath)) {
+                    fs.unlinkSync(filePath);
+                }
+                return;
+            }
+
+            fs.writeFileSync(filePath, previousContent, 'utf8');
+        });
+
+        migrationState.createdAssets.reverse().forEach((assetPath) => {
+            if (fs.existsSync(assetPath)) {
+                fs.unlinkSync(assetPath);
+            }
+        });
+
+        throw error;
+    }
+}
+
+function handleDraftList(req, res) {
+    fs.readdir(DRAFTS_DIR, (err, files) => {
+        if (err) {
+            sendJson(res, 500, { error: 'Failed to read drafts' });
+            return;
+        }
+
+        const drafts = files.filter((fileName) => fileName.endsWith('.md')).sort();
+        sendJson(res, 200, { drafts });
+    });
+}
+
+function handleDraftRead(pathname, res) {
+    try {
+        const draftName = sanitizeFileName(decodeURIComponent(pathname.substring('/api/draft/'.length)), '.md');
+        const draftPath = resolveInside(DRAFTS_DIR, draftName);
+        const content = fs.readFileSync(draftPath, 'utf8');
+        sendJson(res, 200, { content });
+    } catch (error) {
+        sendJson(res, 404, { error: 'Draft not found' });
+    }
+}
+
+async function handleDraftSave(req, res) {
+    try {
+        const body = await parseJsonBody(req);
+        const fileName = sanitizeFileName(body.filename, '.md');
+        const content = typeof body.content === 'string' ? body.content : '';
+        const draftPath = resolveInside(DRAFTS_DIR, fileName);
+
+        fs.writeFileSync(draftPath, content, 'utf8');
+        sendJson(res, 200, { success: true, filename: fileName });
+    } catch (error) {
+        sendJson(res, 400, { error: error.message || 'Failed to save draft' });
+    }
+}
+
+function handleDraftDelete(pathname, res) {
+    try {
+        const draftName = sanitizeFileName(decodeURIComponent(pathname.substring('/api/draft/'.length)), '.md');
+        const draftPath = resolveInside(DRAFTS_DIR, draftName);
+        fs.unlinkSync(draftPath);
+        sendJson(res, 200, { success: true });
+    } catch (error) {
+        sendJson(res, 404, { error: 'Draft not found' });
+    }
+}
+
+function handleUploadImage(req, res) {
+    parseMultipart(req, (err, parts) => {
+        if (err) {
+            sendJson(res, 400, { error: 'Invalid multipart data' });
+            return;
+        }
+
+        const imagePart = parts.find((part) => part.name === 'image');
+        if (!imagePart || !imagePart.filename) {
+            sendJson(res, 400, { error: 'No image file found' });
+            return;
+        }
+
+        try {
+            const safeName = sanitizeFileName(imagePart.filename);
+            const targetPath = resolveInside(DRAFT_ASSETS_DIR, safeName);
+            fs.writeFileSync(targetPath, imagePart.data);
+
+            sendJson(res, 200, {
+                success: true,
+                filename: safeName,
+                serverPath: `/editor/draft-assets/${safeName}`,
+                relativePath: `./draft-assets/${safeName}`
+            });
+        } catch (error) {
+            sendJson(res, 500, { error: 'Failed to save image' });
+        }
+    });
+}
+
+function handleLegacySinglePostSave(body, res) {
+    try {
+        const payload = {
+            mode: 'create',
+            post: {
+                id: body.postId,
+                title_eng: body.postId,
+                date: new Date().toISOString().slice(0, 10),
+                category: 'post',
+                series: Object.keys(loadRawSiteData().series)[0],
+                languages: [body.language]
+            },
+            contents: {
+                [body.language]: body.content
+            },
+            featured: {
+                enabled: false
+            }
+        };
+
+        savePostBundle(payload);
+        sendJson(res, 200, { success: true });
+    } catch (error) {
+        sendJson(res, 400, {
+            error: error.validationErrors ? error.validationErrors.join(' ') : error.message
+        });
+    }
+}
+
+function resolveStaticPath(pathname) {
+    const normalizedPath = pathname === '/' ? '/editor/' : pathname;
+    const cleanPath = path.posix.normalize(normalizedPath);
+    const relativePath = cleanPath.startsWith('/') ? cleanPath.slice(1) : cleanPath;
+    let resolvedPath = resolveInside(ROOT_DIR, relativePath);
+
+    if (fs.existsSync(resolvedPath) && fs.statSync(resolvedPath).isDirectory()) {
+        resolvedPath = path.join(resolvedPath, 'index.html');
+    }
+
+    return resolvedPath;
+}
+
+const server = http.createServer(async (req, res) => {
     const parsedUrl = url.parse(req.url, true);
     const pathname = parsedUrl.pathname;
 
-    // Enable CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -114,259 +660,106 @@ const server = http.createServer((req, res) => {
         return;
     }
 
-    // API Routes
     if (pathname.startsWith('/api/')) {
-        // List all drafts
-        if (pathname === '/api/drafts' && req.method === 'GET') {
-            fs.readdir(DRAFTS_DIR, (err, files) => {
-                if (err) {
-                    res.writeHead(500, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Failed to read drafts' }));
-                    return;
-                }
-                const mdFiles = files.filter(f => f.endsWith('.md'));
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ drafts: mdFiles }));
-            });
-            return;
-        }
-
-        // Get draft content
-        if (pathname.startsWith('/api/draft/') && req.method === 'GET') {
-            const draftName = decodeURIComponent(pathname.substring('/api/draft/'.length));
-            const draftPath = path.join(DRAFTS_DIR, draftName);
-
-            fs.readFile(draftPath, 'utf8', (err, data) => {
-                if (err) {
-                    res.writeHead(404, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Draft not found' }));
-                    return;
-                }
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ content: data }));
-            });
-            return;
-        }
-
-        // Save draft
-        if (pathname === '/api/draft' && req.method === 'POST') {
-            let body = '';
-            req.on('data', chunk => {
-                body += chunk.toString();
-            });
-            req.on('end', () => {
-                try {
-                    const { filename, content } = JSON.parse(body);
-                    if (!filename || !content) {
-                        res.writeHead(400, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ error: 'Filename and content required' }));
-                        return;
-                    }
-
-                    const safeName = filename.endsWith('.md') ? filename : `${filename}.md`;
-                    const draftPath = path.join(DRAFTS_DIR, safeName);
-
-                    fs.writeFile(draftPath, content, 'utf8', (err) => {
-                        if (err) {
-                            res.writeHead(500, { 'Content-Type': 'application/json' });
-                            res.end(JSON.stringify({ error: 'Failed to save draft' }));
-                            return;
-                        }
-                        res.writeHead(200, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ success: true, filename: safeName }));
-                    });
-                } catch (err) {
-                    res.writeHead(400, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Invalid JSON' }));
-                }
-            });
-            return;
-        }
-
-        // Save to posts directory (with asset migration)
-        if (pathname === '/api/post' && req.method === 'POST') {
-            let body = '';
-            req.on('data', chunk => {
-                body += chunk.toString();
-            });
-            req.on('end', () => {
-                try {
-                    const { postId, language, content } = JSON.parse(body);
-                    if (!postId || !language || !content) {
-                        res.writeHead(400, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ error: 'postId, language, and content required' }));
-                        return;
-                    }
-
-                    const postDir = path.join(POSTS_DIR, postId);
-                    const postAssetsDir = path.join(postDir, 'assets');
-
-                    // Create directories
-                    if (!fs.existsSync(postDir)) {
-                        fs.mkdirSync(postDir, { recursive: true });
-                    }
-                    if (!fs.existsSync(postAssetsDir)) {
-                        fs.mkdirSync(postAssetsDir, { recursive: true });
-                    }
-
-                    // Find all draft-assets references in content
-                    const assetRegex = /\.\/draft-assets\/([^\s\)]+)/g;
-                    let updatedContent = content;
-                    const matches = [...content.matchAll(assetRegex)];
-
-                    // Migrate assets
-                    const migrationPromises = matches.map(match => {
-                        return new Promise((resolve, reject) => {
-                            const filename = match[1];
-                            const sourcePath = path.join(DRAFT_ASSETS_DIR, filename);
-                            const destPath = path.join(postAssetsDir, filename);
-
-                            // Copy file
-                            fs.copyFile(sourcePath, destPath, (err) => {
-                                if (err) {
-                                    console.warn(`Failed to copy ${filename}:`, err);
-                                    resolve(); // Don't fail the whole operation
-                                } else {
-                                    // Update path in content
-                                    updatedContent = updatedContent.replace(
-                                        `./draft-assets/${filename}`,
-                                        `./assets/${filename}`
-                                    );
-                                    resolve();
-                                }
-                            });
-                        });
-                    });
-
-                    // Wait for all migrations to complete
-                    Promise.all(migrationPromises).then(() => {
-                        const filename = `content-${language}.md`;
-                        const filePath = path.join(postDir, filename);
-
-                        fs.writeFile(filePath, updatedContent, 'utf8', (err) => {
-                            if (err) {
-                                res.writeHead(500, { 'Content-Type': 'application/json' });
-                                res.end(JSON.stringify({ error: 'Failed to save post' }));
-                                return;
-                            }
-                            res.writeHead(200, { 'Content-Type': 'application/json' });
-                            res.end(JSON.stringify({
-                                success: true,
-                                path: filePath,
-                                assetsMigrated: matches.length
-                            }));
-                        });
-                    });
-                } catch (err) {
-                    res.writeHead(400, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Invalid JSON' }));
-                }
-            });
-            return;
-        }
-
-        // Get post content
-        if (pathname.startsWith('/api/post/') && req.method === 'GET') {
-            const parts = pathname.substring('/api/post/'.length).split('/');
-            if (parts.length !== 2) {
-                res.writeHead(400, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ error: 'Invalid path format. Use /api/post/{postId}/{language}' }));
+        try {
+            if (pathname === '/api/editor-bootstrap' && req.method === 'GET') {
+                sendJson(res, 200, buildBootstrapPayload());
                 return;
             }
 
-            const [postId, language] = parts.map(decodeURIComponent);
-            const filename = `content-${language}.md`;
-            const filePath = path.join(POSTS_DIR, postId, filename);
+            if (pathname === '/api/drafts' && req.method === 'GET') {
+                handleDraftList(req, res);
+                return;
+            }
 
-            fs.readFile(filePath, 'utf8', (err, data) => {
-                if (err) {
-                    res.writeHead(404, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Post not found' }));
+            if (pathname.startsWith('/api/draft/') && req.method === 'GET') {
+                handleDraftRead(pathname, res);
+                return;
+            }
+
+            if (pathname === '/api/draft' && req.method === 'POST') {
+                await handleDraftSave(req, res);
+                return;
+            }
+
+            if (pathname.startsWith('/api/draft/') && req.method === 'DELETE') {
+                handleDraftDelete(pathname, res);
+                return;
+            }
+
+            if (pathname === '/api/upload-image' && req.method === 'POST') {
+                handleUploadImage(req, res);
+                return;
+            }
+
+            if (pathname.startsWith('/api/post-bundle/') && req.method === 'GET') {
+                const postId = decodeURIComponent(pathname.substring('/api/post-bundle/'.length));
+                const bundle = readPostBundle(postId);
+                if (!bundle) {
+                    sendJson(res, 404, { error: 'Post not found' });
                     return;
                 }
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ content: data }));
+                sendJson(res, 200, bundle);
+                return;
+            }
+
+            if (pathname === '/api/post-bundle' && req.method === 'POST') {
+                const body = await parseJsonBody(req);
+                const result = savePostBundle(body);
+                sendJson(res, 200, { success: true, ...result });
+                return;
+            }
+
+            if (pathname.startsWith('/api/post/') && req.method === 'GET') {
+                const parts = pathname.substring('/api/post/'.length).split('/');
+                if (parts.length !== 2) {
+                    sendJson(res, 400, { error: 'Invalid path format. Use /api/post/{postId}/{language}' });
+                    return;
+                }
+
+                const [postId, language] = parts.map(decodeURIComponent);
+                const filePath = resolveInside(path.join(POSTS_DIR, postId), `content-${language}.md`);
+                if (!fs.existsSync(filePath)) {
+                    sendJson(res, 404, { error: 'Post content not found' });
+                    return;
+                }
+                const content = fs.readFileSync(filePath, 'utf8');
+                sendJson(res, 200, { content });
+                return;
+            }
+
+            if (pathname === '/api/post' && req.method === 'POST') {
+                const body = await parseJsonBody(req);
+                handleLegacySinglePostSave(body, res);
+                return;
+            }
+
+            sendJson(res, 404, { error: 'API endpoint not found' });
+        } catch (error) {
+            const statusCode = error.validationErrors ? 400 : 500;
+            sendJson(res, statusCode, {
+                error: error.message || 'Internal server error',
+                details: error.validationErrors || undefined
             });
-            return;
         }
-
-        // Delete draft
-        if (pathname.startsWith('/api/draft/') && req.method === 'DELETE') {
-            const draftName = decodeURIComponent(pathname.substring('/api/draft/'.length));
-            const draftPath = path.join(DRAFTS_DIR, draftName);
-
-            fs.unlink(draftPath, (err) => {
-                if (err) {
-                    res.writeHead(404, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Draft not found' }));
-                    return;
-                }
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ success: true }));
-            });
-            return;
-        }
-
-        // Upload image
-        if (pathname === '/api/upload-image' && req.method === 'POST') {
-            parseMultipart(req, (err, parts) => {
-                if (err) {
-                    res.writeHead(400, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Invalid multipart data' }));
-                    return;
-                }
-
-                const imagePart = parts.find(p => p.name === 'image');
-                if (!imagePart || !imagePart.filename) {
-                    res.writeHead(400, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'No image file found' }));
-                    return;
-                }
-
-                const filename = imagePart.filename;
-                const filepath = path.join(DRAFT_ASSETS_DIR, filename);
-
-                fs.writeFile(filepath, imagePart.data, (err) => {
-                    if (err) {
-                        res.writeHead(500, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ error: 'Failed to save image' }));
-                        return;
-                    }
-
-                    // Return both server path (for preview) and relative path (for markdown)
-                    const serverPath = `/editor/draft-assets/${filename}`;
-                    const relativePath = `./draft-assets/${filename}`;
-
-                    res.writeHead(200, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({
-                        success: true,
-                        serverPath: serverPath,      // For immediate preview
-                        relativePath: relativePath,  // For markdown content
-                        filename: filename
-                    }));
-                });
-            });
-            return;
-        }
-
-        // API endpoint not found
-        res.writeHead(404, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'API endpoint not found' }));
         return;
     }
 
-    // Serve static files
-    let filePath = '.' + pathname;
-    if (filePath === './') {
-        filePath = './editor/index.html';
+    try {
+        const filePath = resolveStaticPath(pathname);
+        if (!fs.existsSync(filePath)) {
+            sendJson(res, 404, { error: 'File not found' });
+            return;
+        }
+        serveStaticFile(filePath, res);
+    } catch (error) {
+        sendJson(res, 404, { error: 'File not found' });
     }
-
-    serveStaticFile(filePath, res);
 });
 
 server.listen(PORT, () => {
-    console.log(`\n🚀 Editor server running at http://localhost:${PORT}/`);
-    console.log(`📝 Edit mode: http://localhost:${PORT}/editor/edit.html`);
-    console.log(`💾 Drafts directory: ${DRAFTS_DIR}`);
-    console.log(`📂 Posts directory: ${POSTS_DIR}\n`);
+    console.log(`Editor server running at http://localhost:${PORT}/`);
+    console.log(`Editor UI: http://localhost:${PORT}/editor/`);
+    console.log(`Drafts directory: ${DRAFTS_DIR}`);
+    console.log(`Posts directory: ${POSTS_DIR}`);
 });

@@ -25,20 +25,20 @@
         <p>Redirecting to the new blog location...</p>
     </div>
 
-    <script src="/blogs/js/slug-mapping.js"></script>
+    <script src="/blogs/js/site-data-client.js"></script>
     <script>
-        // Get the post ID from URL parameter
-        const urlParams = new URLSearchParams(window.location.search);
-        const postId = urlParams.get('id');
+        (async function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('id');
+            const siteData = await window.siteDataClient.loadSiteData();
+            const post = siteData.postById[postId];
 
-        if (postId && typeof slugMapping !== 'undefined' && slugMapping[postId]) {
-            // Redirect to new slug-based URL
-            const slug = slugMapping[postId];
-            window.location.href = `/blogs/posts/${slug}/`;
-        } else {
-            // Fallback: redirect to blog home if post ID not found
-            window.location.href = '/blogs/';
-        }
+            if (post) {
+                window.location.href = `/blogs/posts/${post.slug}/`;
+            } else {
+                window.location.href = '/blogs/';
+            }
+        })();
     </script>
 </body>
 </html>
