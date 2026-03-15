@@ -122,7 +122,7 @@
                         <span class="meta">
                             Posted on March 10, 2025
                             <span style="margin: 0 8px;">•</span>
-                            <i class="bi bi-clock" style="margin-right: 4px;"></i>15 min read
+                            <i class="bi bi-clock" style="margin-right: 4px;"></i>16 min read
                         </span>
                         <hr/>
                     </div>
@@ -350,12 +350,12 @@ loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined
     view-mode="diffuse"
     style="width: 100%; height: 600px;">
 </simple-model-viewer>
-<p class="lang eng"> Check out the source code for the viewer below: </p>
+<p class="lang eng"> The current implementation is maintained in <code>js/simple-model-viewer.js</code>. The snippet below is an early prototype excerpt kept for historical context, and the updated usage example right after it reflects the current API surface. </p>
 <div id="div-1"  class="accordion accordion-flush">
     <div class="accordion-item">
       <h2 class="accordion-header">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-          <strong><em>simple-model-viewer.js</em></strong>
+          <strong><em>Historical prototype excerpt</em></strong>
         </button>
       </h2>
       <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
@@ -942,30 +942,50 @@ export { SimpleModelViewer };
       </div>
     </div>
   </div></p>
-<p id="p-27" class='lang eng'> By loading this JS file into an HTML file that imports Three.js, you can configure <code>simple-model-viewer</code> as follows. It works independently across multiple 3D models, much like Google Model Viewer: </p>
+<p id="p-27" class='lang eng'> For the current component, use the declarative API below. It works independently across multiple 3D models, much like Google Model Viewer, while exposing newer camera, environment, selection, and state APIs: </p>
 <pre id="pre-12" ><code id="code-NaN" style="font-size:1rem"  class="language-javascript">&lt;simple-model-viewer 
     src=&quot;model.glb&quot; 
     camera-orbit=&quot;0 0 20&quot;
+    camera-target=&quot;0 0 0&quot;
+    environment=&quot;env1&quot;
+    environment-intensity=&quot;1.2&quot;
+    environment-background=&quot;false&quot;
+    selection-mode=&quot;all&quot;
+    performance-mode=&quot;default&quot;
+    animation-loop=&quot;repeat&quot;
     angle-per-second=&quot;45&quot;
+    ui
     style=&quot;width: 100%; height: 800px;&quot;>
 &lt;/simple-model-viewer&gt;
     
 <p>&lt;script type=&quot;module&quot;&gt;
     import { SimpleModelViewer } from &#39;simple-model-viewer.js&#39;;</p>
-<pre><code>    // Resizing
-    window.addEventListener(&amp;#39;resize&amp;#39;, () =&gt; {
-        const viewers = document.querySelectorAll(&amp;#39;simple-model-viewer&amp;#39;);
-        viewers.forEach(viewer =&gt; viewer.resizeRenderer());
-    }); 
+<pre><code>    const viewer = document.querySelector(&amp;#39;simple-model-viewer&amp;#39;);
+
+    viewer.addEventListener(&amp;#39;viewer-load&amp;#39;, (event) =&amp;gt; {
+        console.log(&amp;#39;Loaded&amp;#39;, event.detail.source, event.detail.meshCount);
+    });
+
+    viewer.fitCameraToModel();
 </code></pre>
 <p>&lt;/script&gt; </code></pre></p>
+<p class="lang eng"> The current viewer also exposes a broader API surface for reuse. Beyond the original embedding options, you can now drive custom HDR backgrounds with <code>environment-url</code>, camera defaults with <code>camera-target</code> and <code>camera-up</code>, playback with <code>animation</code>, <code>animation-speed</code>, <code>animation-loop</code>, and interaction/performance behavior with <code>selection-mode</code> and <code>performance-mode</code>.</p>
+<ul class='lang eng'>
+    <li><strong>Useful methods</strong>: <code>loadModelFromUrl()</code>, <code>discardModel()</code>, <code>resetView()</code>, <code>fitCameraToModel()</code>, <code>selectMeshByName()</code>, <code>selectMeshByIndex()</code>, <code>clearSelection()</code>, <code>setEnvironment()</code>, <code>captureScreenshot()</code>, <code>exportState()</code>, and <code>importState()</code>.</li>
+    <li><strong>Observable events</strong>: <code>viewer-load</code>, <code>viewer-error</code>, <code>viewer-selection-change</code>, <code>viewer-camera-change</code>, <code>viewer-animation-change</code>, <code>viewer-material-change</code>, <code>viewer-environment-change</code>, and <code>viewer-state-export</code>.</li>
+    <li><strong>Built-in UI</strong>: drag-and-drop loading, direct mesh picking, material edits, screenshot export, recording, and JSON state copy/import for reproducing the same view later.</li>
+</ul>
 <p class="lang eng"> As another example, here’s a monster asset generated with <a href='https://ncsoft.github.io/CaPa/'>CaPa</a>, previously shared in <a href="../250302_3d_latent_diffusion/">Deep Dive into 3D Latent Diffusion</a>: </p>
 <simple-model-viewer 
     src="https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/monster_ours.glb" 
     view-mode="diffuse"
+    environment="env1"
+    environment-intensity="1.1"
+    environment-background="false"
+    selection-mode="all"
     style="width: 100%; height: 600px;">
 </simple-model-viewer>
-<p id="p-28" class='lang eng'> With <code>auto-animate</code>, a basic animation to automatically change the mesh's rotation Y-angle can be added. Just like Model Viewer, this value is adjustable via <code>angle-per-second</code>, and the initial camera position is also configurable using <code>camera-orbit</code> option.</p> 
+<p id="p-28" class='lang eng'> With <code>auto-rotate</code>, a basic motion that continuously updates the mesh's Y-axis rotation can be added. This speed is adjustable via <code>angle-per-second</code>, and the initial camera position is also configurable using the <code>camera-orbit</code> attribute.</p> 
 <p id="p-29" class='lang eng'> By incorporating toggleable settings for features like the <code>Control Panel</code>, I’ve developed a 3D Model Viewer that, while similar to Model Viewer, offers a broader range of functionalities. </p>
 <br/>
 <h3 id="h3-5">Key Takeaways</h3>

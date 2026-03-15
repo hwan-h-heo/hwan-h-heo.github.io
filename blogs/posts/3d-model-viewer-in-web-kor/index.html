@@ -390,13 +390,13 @@ loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined
     style="width: 100%; height: 600px;">
 </simple-model-viewer>
 <p class="lang kor" >
-    model viewer 의 소스코드는 아래를 참조:
+    현재 구현의 source of truth 는 <code>js/simple-model-viewer.js</code> 이다. 아래 코드는 맥락을 위해 남겨둔 초기 prototype 발췌본이고, 바로 뒤의 사용 예시는 현재 API surface 를 기준으로 갱신했다.
 </p>
 <div id="div-1"  class="accordion accordion-flush">
     <div class="accordion-item">
       <h2 class="accordion-header">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-          <strong><em>simple-model-viewer.js</em></strong>
+          <strong><em>초기 prototype 발췌본</em></strong>
         </button>
       </h2>
       <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
@@ -983,33 +983,53 @@ export { SimpleModelViewer };
       </div>
     </div>
   </div></p>
-<p id="p-23" class="lang kor" > 위의 js 파일을 load 해서 threejs import 한 html 파일에 아래와 같이 simple-model-viewer 에 대한 설정만 해준다면, google model viewer class 처럼 독립적으로 여러 3D model 에 대해 web 에서 불러올 수 있다.</p> 
+<p id="p-23" class="lang kor" > 현재 component 는 아래와 같은 선언형 API 로 사용하는 편이 맞다. google model viewer class 처럼 여러 3D model 에 독립적으로 붙일 수 있으면서, 카메라, environment, selection, state 관련 옵션도 더 넓게 제어할 수 있다.</p> 
 <pre id="pre-12" ><code id="code-NaN" style="font-size:1rem"  class="language-javascript">&lt;simple-model-viewer 
     src=&quot;model.glb&quot; 
     camera-orbit=&quot;0 0 20&quot;
+    camera-target=&quot;0 0 0&quot;
+    environment=&quot;env1&quot;
+    environment-intensity=&quot;1.2&quot;
+    environment-background=&quot;false&quot;
+    selection-mode=&quot;all&quot;
+    performance-mode=&quot;default&quot;
+    animation-loop=&quot;repeat&quot;
     angle-per-second=&quot;45&quot;
+    ui
     style=&quot;width: 100%; height: 800px;&quot;>
 &lt;/simple-model-viewer&gt;
     
 <p>&lt;script type=&quot;module&quot;&gt;
     import { SimpleModelViewer } from &#39;simple-model-viewer.js&#39;;</p>
-<pre><code>    // Resizing
-    window.addEventListener(&amp;#39;resize&amp;#39;, () =&gt; {
-        const viewers = document.querySelectorAll(&amp;#39;simple-model-viewer&amp;#39;);
-        viewers.forEach(viewer =&gt; viewer.resizeRenderer());
-    }); 
+<pre><code>    const viewer = document.querySelector(&amp;#39;simple-model-viewer&amp;#39;);
+
+    viewer.addEventListener(&amp;#39;viewer-load&amp;#39;, (event) =&amp;gt; {
+        console.log(&amp;#39;Loaded&amp;#39;, event.detail.source, event.detail.meshCount);
+    });
+
+    viewer.fitCameraToModel();
 </code></pre>
 <p>&lt;/script&gt; </code></pre></p>
+<p class="lang kor" > 현재 viewer 는 재사용을 위한 public API 도 더 넓게 제공한다. 기존 embed 옵션 외에도 <code>environment-url</code> 로 custom HDR 을 불러오고, <code>camera-target</code>, <code>camera-up</code> 으로 카메라 기본값을 제어하며, <code>animation</code>, <code>animation-speed</code>, <code>animation-loop</code>, <code>selection-mode</code>, <code>performance-mode</code> 로 재생 및 상호작용 동작을 외부 코드에서 선언적으로 바꿀 수 있다.</p>
+<ul class="lang kor" >
+    <li><strong>유용한 method</strong>: <code>loadModelFromUrl()</code>, <code>discardModel()</code>, <code>resetView()</code>, <code>fitCameraToModel()</code>, <code>selectMeshByName()</code>, <code>selectMeshByIndex()</code>, <code>clearSelection()</code>, <code>setEnvironment()</code>, <code>captureScreenshot()</code>, <code>exportState()</code>, <code>importState()</code>.</li>
+    <li><strong>관찰 가능한 event</strong>: <code>viewer-load</code>, <code>viewer-error</code>, <code>viewer-selection-change</code>, <code>viewer-camera-change</code>, <code>viewer-animation-change</code>, <code>viewer-material-change</code>, <code>viewer-environment-change</code>, <code>viewer-state-export</code>.</li>
+    <li><strong>기본 UI 기능</strong>: drag-and-drop load, 직접 mesh picking, material edit, screenshot export, recording, JSON state copy/import.</li>
+</ul>
 <p class="lang kor" >
     다른 mesh file 불러온 예시로, 이전 <a href="../250302_3d_latent_diffusion/">Deep Dive into 3D Latent Diffusion</a> 에서 공유한 <a href='https://ncsoft.github.io/CaPa/'>CaPa</a> 로 만든 monster asset Result 를 첨부한다. 
 </p>
 <simple-model-viewer 
     src="https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/monster_ours.glb" 
     view-mode="diffuse"
+    environment="env1"
+    environment-intensity="1.1"
+    environment-background="false"
+    selection-mode="all"
     style="width: 100%; height: 600px;">
 </simple-model-viewer>
-<p id="p-28"  class="lang kor" > <code>auto-animate</code> 로 mesh 의 rotation y angle 을 자동으로 바꾸는 기본 animation 을 추가할 수 있고, model viewer 와 마찬가지로 <code>angle-per-second</code> 로 이 값을 조정하고, <code>camera-orbit</code> 으로 초기 카메라 위치 또한 설정 가능하다. </p>
-<p id="p-29"  class="lang kor" > <code>Control Pannel</code> 등도 toggle 가능하게 setting 하여 model viewer 와 흡사하지만 좀 더 많은 기능을 제공하는 3D Model Viewer 로 만들어 보았다.  </p>
+<p id="p-28"  class="lang kor" > <code>auto-rotate</code> 로 mesh 의 Y축 회전을 계속 진행하는 기본 동작을 추가할 수 있고, <code>angle-per-second</code> 로 속도를 조정할 수 있다. 초기 카메라 위치는 <code>camera-orbit</code> attribute 로 설정 가능하다. </p>
+<p id="p-29"  class="lang kor" > <code>Control Panel</code> 같은 기본 UI 도 toggle 가능하게 구성하여, model viewer 와 비슷한 사용성에 더 넓은 기능 범위를 더한 3D Model Viewer 로 만들었다.  </p>
 <br/>
 <h3 id="h3-5">Key Takeaways</h3>
 <br/>
