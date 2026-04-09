@@ -478,6 +478,12 @@ textarea {
     color: var(--danger);
 }
 
+.feedback-warning {
+    background: rgba(245, 158, 11, 0.12);
+    border-color: rgba(245, 158, 11, 0.24);
+    color: #9a6700;
+}
+
 .editor-stage {
     display: flex;
     flex-direction: column;
@@ -495,6 +501,21 @@ textarea {
     background: rgba(255, 255, 255, 0.72);
     backdrop-filter: blur(16px);
     box-shadow: var(--shadow-soft);
+}
+
+.toolbar-actions {
+    align-items: center;
+}
+
+.toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.toolbar-group + .toolbar-group {
+    padding-left: 12px;
+    border-left: 1px solid var(--border);
 }
 
 .language-tab {
@@ -515,11 +536,25 @@ textarea {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 7px;
     min-width: 36px;
     min-height: 36px;
     padding: 0 10px;
     border-radius: 12px;
     font-size: 12px;
+    font-weight: 700;
+}
+
+.toolbar-actions .icon-button i {
+    font-size: 14px;
+}
+
+.icon-button-snippet {
+    padding: 0 12px;
+}
+
+.icon-button-snippet span {
+    font-size: 11.5px;
     font-weight: 700;
 }
 
@@ -533,13 +568,15 @@ textarea {
     display: flex;
     align-items: stretch;
     gap: 12px;
-    min-height: calc(100vh - 204px);
+    height: calc(100vh - 204px);
+    min-height: 640px;
 }
 
 .editor-panel,
 .preview-panel {
     display: flex;
     flex-direction: column;
+    height: 100%;
     min-width: 0;
     min-height: 0;
     overflow: hidden;
@@ -586,8 +623,9 @@ textarea {
 }
 
 #editor-textarea {
-    flex: 1;
-    min-height: 560px;
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
     padding: 16px 18px;
     border: none;
     background:
@@ -597,12 +635,14 @@ textarea {
     font-size: 13px;
     line-height: 1.7;
     letter-spacing: -0.01em;
+    overflow: auto;
     resize: none;
     tab-size: 2;
 }
 
 .preview-content {
     flex: 1;
+    min-height: 0;
     overflow: auto;
     padding: 16px 18px 22px;
     background: var(--panel-strong);
@@ -727,6 +767,131 @@ textarea {
     letter-spacing: -0.01em;
 }
 
+.helper-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.diagnostics-summary {
+    margin-top: 14px;
+}
+
+.diagnostic-list,
+.outline-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.diagnostic-item,
+.outline-button,
+.snippet-button {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.88);
+}
+
+.diagnostic-item {
+    padding: 11px 12px;
+}
+
+.diagnostic-item strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 12px;
+}
+
+.diagnostic-item p {
+    margin: 0;
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: var(--muted);
+}
+
+.diagnostic-item-error {
+    border-color: rgba(180, 35, 24, 0.22);
+    background: rgba(254, 242, 242, 0.72);
+}
+
+.diagnostic-item-warning {
+    border-color: rgba(245, 158, 11, 0.24);
+    background: rgba(255, 251, 235, 0.9);
+}
+
+.helper-section {
+    margin-top: 12px;
+}
+
+.helper-title {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+}
+
+.helper-copy {
+    margin: 0 0 10px;
+    color: var(--muted);
+    font-size: 11.5px;
+    line-height: 1.5;
+}
+
+.outline-button,
+.snippet-button {
+    width: 100%;
+    padding: 10px 12px;
+    color: var(--text);
+    text-align: left;
+    cursor: pointer;
+    transition:
+        transform 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.outline-button:hover,
+.snippet-button:hover {
+    transform: translateY(-1px);
+    border-color: rgba(15, 118, 110, 0.28);
+    box-shadow: var(--shadow-soft);
+}
+
+.outline-button strong,
+.snippet-button strong {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 12px;
+}
+
+.outline-button span,
+.snippet-button span {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.45;
+}
+
+.outline-button-level-3 {
+    margin-left: 18px;
+    width: calc(100% - 18px);
+}
+
+.outline-empty,
+.helper-empty {
+    margin: 0;
+    color: var(--muted);
+    font-size: 11.5px;
+    line-height: 1.5;
+}
+
+.snippet-grid {
+    display: grid;
+    gap: 8px;
+}
+
 @media (max-width: 1320px) {
     .topbar {
         flex-direction: column;
@@ -757,6 +922,7 @@ textarea {
 
     .editor-grid {
         flex-direction: column;
+        height: auto;
         min-height: auto;
     }
 
@@ -807,6 +973,7 @@ textarea {
     }
 
     #editor-textarea {
+        height: auto;
         min-height: 420px;
     }
 }

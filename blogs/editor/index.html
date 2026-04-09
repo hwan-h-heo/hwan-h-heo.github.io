@@ -161,6 +161,37 @@
                             <button id="upload-button" class="button button-secondary">Upload</button>
                         </div>
                     </section>
+
+                    <section class="panel">
+                        <div class="panel-header">
+                            <h2>Session</h2>
+                            <span id="autosave-status" class="pill">Autosave idle</span>
+                        </div>
+                        <p id="autosave-meta" class="panel-copy">
+                            Local autosave stores the current workspace for crash recovery.
+                        </p>
+                        <div class="helper-actions">
+                            <button id="restore-session-button" class="button button-secondary" disabled>Restore</button>
+                            <button id="discard-session-button" class="button button-secondary" disabled>Discard</button>
+                        </div>
+                        <div id="diagnostics-summary" class="feedback feedback-neutral diagnostics-summary">
+                            <strong>Preview diagnostics</strong>
+                            <p>No checks have run yet.</p>
+                        </div>
+                        <div id="diagnostics-list" class="diagnostic-list"></div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panel-header">
+                            <h2>Writing Helpers</h2>
+                            <span id="outline-count" class="pill">0 headings</span>
+                        </div>
+                        <div class="helper-section">
+                            <strong class="helper-title">Heading outline</strong>
+                            <p class="helper-copy">Click a heading to jump both the preview and the markdown editor.</p>
+                            <div id="outline-list" class="outline-list"></div>
+                        </div>
+                    </section>
                 </div>
             </aside>
 
@@ -168,15 +199,43 @@
                 <div class="toolbar">
                     <div id="language-tabs" class="language-tabs"></div>
                     <div class="toolbar-actions">
-                        <button class="icon-button" data-insert="heading2">H2</button>
-                        <button class="icon-button" data-insert="heading3">H3</button>
-                        <button class="icon-button" data-insert="bold"><strong>B</strong></button>
-                        <button class="icon-button" data-insert="italic"><em>I</em></button>
-                        <button class="icon-button" data-insert="code"><code>{ }</code></button>
-                        <button class="icon-button" data-insert="quote"><i class="bi bi-quote"></i></button>
-                        <button class="icon-button" data-insert="list"><i class="bi bi-list-ul"></i></button>
-                        <button class="icon-button" data-insert="link"><i class="bi bi-link-45deg"></i></button>
-                        <button class="icon-button" data-insert="image"><i class="bi bi-card-image"></i></button>
+                        <div class="toolbar-group" aria-label="Markdown formatting">
+                            <button class="icon-button" type="button" data-insert="heading2" title="Insert H2 heading">H2</button>
+                            <button class="icon-button" type="button" data-insert="heading3" title="Insert H3 heading">H3</button>
+                            <button class="icon-button" type="button" data-insert="bold" title="Bold"><strong>B</strong></button>
+                            <button class="icon-button" type="button" data-insert="italic" title="Italic"><em>I</em></button>
+                            <button class="icon-button" type="button" data-insert="code" title="Code block"><code>{ }</code></button>
+                            <button class="icon-button" type="button" data-insert="quote" title="Blockquote"><i class="bi bi-quote"></i></button>
+                            <button class="icon-button" type="button" data-insert="list" title="List"><i class="bi bi-list-ul"></i></button>
+                            <button class="icon-button" type="button" data-insert="link" title="Link"><i class="bi bi-link-45deg"></i></button>
+                            <button class="icon-button" type="button" data-insert="image" title="Image"><i class="bi bi-card-image"></i></button>
+                        </div>
+                        <div class="toolbar-group toolbar-group-snippets" aria-label="Content snippets">
+                            <button class="icon-button icon-button-snippet" type="button" data-snippet="display-math" title="Insert display math">
+                                <i class="bi bi-superscript"></i>
+                                <span>Math</span>
+                            </button>
+                            <button class="icon-button icon-button-snippet" type="button" data-snippet="math-container" title="Insert scrollable math container">
+                                <i class="bi bi-bounding-box-circles"></i>
+                                <span>Math box</span>
+                            </button>
+                            <button class="icon-button icon-button-snippet" type="button" data-snippet="figure" title="Insert figure with caption">
+                                <i class="bi bi-image"></i>
+                                <span>Figure</span>
+                            </button>
+                            <button class="icon-button icon-button-snippet" type="button" data-snippet="video" title="Insert YouTube embed">
+                                <i class="bi bi-youtube"></i>
+                                <span>Video</span>
+                            </button>
+                            <button class="icon-button icon-button-snippet" type="button" data-snippet="table" title="Insert markdown table">
+                                <i class="bi bi-table"></i>
+                                <span>Table</span>
+                            </button>
+                            <button class="icon-button icon-button-snippet" type="button" data-snippet="details" title="Insert details block">
+                                <i class="bi bi-caret-down-square"></i>
+                                <span>Details</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -218,6 +277,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="../js/markdown-with-math.js"></script>
     <script src="./editor.js"></script>
 </body>
 </html>

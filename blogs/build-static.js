@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
+const { parseMarkdownWithMath } = require('./js/markdown-with-math');
 
 const { copyRecursiveSync, ensureDirSync } = require('./lib/fs-utils');
 const { loadSiteData } = require('./lib/site-data');
@@ -181,7 +182,7 @@ function generatePostPages() {
             const parts = mdContent.split('--- 여기부터 실제 콘텐츠 ---');
             const content = parts.length > 1 ? parts[1].trim() : mdContent;
 
-            const parsedHtml = marked.parse(content);
+            const parsedHtml = parseMarkdownWithMath(content, (source) => marked.parse(source));
             const normalizedHtml = normalizePostContent(post, content, parsedHtml);
             const metaDescription = (post[`subtitle_${lang}`] || post.subtitle_eng || '').substring(0, 160);
             const readingTime = calculateReadingTime(normalizedHtml);
