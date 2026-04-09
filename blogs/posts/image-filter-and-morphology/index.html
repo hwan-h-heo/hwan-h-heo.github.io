@@ -202,10 +202,10 @@ $$</p>
 <li>Let $F$ be the original image and $F_{low}$ be the low-pass filtered (blurred) version.</li>
 <li>The high-pass component is 
   $$ F_{high} = F - F_{low}. 
-  $$</li>
+    $$</li>
 <li>The sharpened image is 
   $$ F_{sharp} = F + \alpha \cdot F_{high} = F + \alpha(F - F_{low}). 
-  $$</li>
+    $$</li>
 <li>This can be rewritten as $(1+\alpha)F - \alpha F_{low}$. The operation can be implemented with a single kernel that combines an identity filter (a pulse at the center) and a scaled negative blurring filter.</li>
 </ul>
 </li>
@@ -289,12 +289,12 @@ plt.savefig(&#39;image-1.jpg&#39;, dpi=200)
 <ol>
 <li><strong>Dilation</strong>: This operation expands or thickens the bright regions of an image. The value of the output pixel is the <em>maximum</em> value of all pixels in the input neighborhood defined by the structuring element. Dilation is used to fill small gaps and connect disjoint objects.</li>
 </ol>
-<p>$$ (I \oplus S)(x,y) = \max_{(i,j) \in S} {I(x-i, y-j)}
+<p>$$ (I \oplus S)(x,y) = \max_{(i,j) \in S} \{I(x-i, y-j)\}
 $$</p>
 <ol start="2">
 <li><strong>Erosion</strong>: This operation shrinks or thins the bright regions. The value of the output pixel is the <em>minimum</em> value of all pixels in the input neighborhood. Erosion is used to remove small-scale noise, break thin connections, and separate touching objects.</li>
 </ol>
-<p>$$ (I \ominus S)(x,y) = \min_{(i,j) \in S} {I(x+i, y+j)}
+<p>$$ (I \ominus S)(x,y) = \min_{(i,j) \in S} \{I(x+i, y+j)\}
 $$</p>
 <h4>Compound Operations</h4>
 <p>By combining dilation and erosion, more complex and useful operations can be created.</p>

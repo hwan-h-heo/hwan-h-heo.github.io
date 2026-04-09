@@ -169,8 +169,8 @@ Through this, we will understand that the essence of linear transformation lies 
 <li><p>Through the lens of linear systems, a geometric interpretation of the quadratic form, expressed as $A^{-1}MA$, becomes possible. Consider the following:</p>
 <p>
 $$
-\begin{bmatrix} a & c \\ b & d \\ \end{bmatrix} \begin{bmatrix} x \\ y \\ \end{bmatrix} = \begin{bmatrix} x' \\ y' \\ \end{bmatrix}
-$$
+    \begin{bmatrix} a &amp; c \\ b &amp; d \\ \end{bmatrix} \begin{bmatrix} x \\ y \\ \end{bmatrix} = \begin{bmatrix} x&#39; \\ y&#39; \\ \end{bmatrix}
+    $$
 </p>
 
 <p>If we interpret the above linear system from the perspective of a changing basis, it means that a point $(x,y)$ in a span with basis vectors $(a,b)$ and $(c,d)$ is represented as $(x&#39;, y&#39;)$ in a span with standard basis vectors $(1,0)$ and $(0,1)$. In other words, the point $(x&#39;, y&#39;)$ is the interpretation of the point $(x,y)$ from the A-basis in the standard coordinate system.</p>
@@ -181,7 +181,7 @@ Therefore, the quadratic form $A^{-1}MA$ can be interpreted as the transformatio
 <h3 id="toc-heading-2">3.2. Eigen-Decomposition</h3>
 <p>Let&#39;s examine eigen-decomposition from the perspective of a change of basis.</p>
 <p>$$
-A \vec v = \lambda \vec v \ (= \lambda {\rm I} \vec v ) \ \rightarrow (A- \lambda \rm I) {\it \vec v} = 0
+A \vec v = \lambda \vec v \ (= \lambda {\rm I} \vec v ) \\ \rightarrow (A- \lambda \rm I) {\it \vec v} = 0
 $$</p>
 <ul>
 <li>The constant $\lambda$ that satisfies the above equation is called the <strong>eigenvalue</strong>, and the vector $\vec v$ is the <strong>eigenvector</strong>. In other words, an eigenvector is a vector that, when transformed by its own matrix, only changes in scale, and the eigenvalue is the factor by which it scales.</li>
@@ -195,16 +195,16 @@ $$</p>
 <li><p>Now, let&#39;s consider a matrix $V$ whose columns are all eigenvectors of matrix A (a situation where the basis of the span is the eigenvectors, usually called an <strong>eigenbasis</strong>). We can construct a quadratic form $V^{-1}AV$ using this matrix $V$, which results in a diagonal matrix with the eigenvalues as its diagonal components. To write it again:</p>
 <p>
 $$
-V^{-1}AV = \begin{bmatrix} \lambda_1 & &... & & 0\\ . & \lambda_2 & & &. \\ . & & \lambda_3 & &. \\ . & & & \lambda_4 &. \\ 0 & & ... & &\lambda_5 \\ \end{bmatrix}
-$$
+    V^{-1}AV = \begin{bmatrix} \lambda_1 &amp; &amp;... &amp; &amp; 0\\ . &amp; \lambda_2 &amp; &amp; &amp;. \\ . &amp; &amp; \lambda_3 &amp; &amp;. \\ . &amp; &amp; &amp; \lambda_4 &amp;. \\ 0 &amp; &amp; ... &amp; &amp;\lambda_5 \\ \end{bmatrix}
+    $$
 </p>
 
 <p>From a change of basis perspective, this is the transformation $A$ in the span of $V$. But since $V$ is a transformation whose basis vectors are eigenvectors, it has been transformed into a coordinate system where $A$ only performs scaling. Thus, it must be a diagonal matrix, and because the scaling factors are represented by the eigenvalues, the quadratic form results in this diagonal matrix of eigenvalues.</p>
 </li>
 <li><p>By reconfiguring $A$ from this, we can derive the eigen-decomposition we are familiar with:</p>
 <p>$$
-A = V \text{diag}(\lambda) V^{-1}
-$$</p>
+    A = V \text{diag}(\lambda) V^{-1}
+    $$</p>
 <p>In essence, eigen-decomposition is a tool that finds the axes of rotation that are independent of the span $A$ through linear transformation, allowing us to expand the space in the desired directions. A simple example of its use is in the iterative application of a linear transformation. Besides the numerical analysis approach—that the forms at the front and back of the quadratic form are inverses of each other—the same interpretation is possible because the very meaning of eigen-decomposition is scaling independent of the span.</p>
 <p>This is also consistent with how in PCA, feature extraction that maximizes the covariance matrix involves selecting the eigenvectors with large eigenvalues from the covariance matrix. Since the way a point is described does not change after a linear transformation through the eigenbasis, PCA can also be interpreted as selecting the basis vectors in order of their contribution.</p>
 </li>
@@ -219,16 +219,16 @@ $$</p>
 <li><p>For a non-singular matrix P, when A and B can be represented as above, A and B are defined as being <strong>similar</strong>. From a change of basis perspective, this means they are the same transformation but expressed in different spans. Also, from the properties of the determinant, we can see that $det(B) = det(A)$. Furthermore, we can deduce that similar matrices have the same eigenvalues through the following:</p>
 <p>
 $$
-B−λI=P^{−1}AP−λP^{−1}P=P^{−1}(A−λI)P \\ \therefore det(B−λI)=det(P^{−1}(A−λI)P)=det(A−λI)
-$$
+    B−λI=P^{−1}AP−λP^{−1}P=P^{−1}(A−λI)P \\ \therefore det(B−λI)=det(P^{−1}(A−λI)P)=det(A−λI)
+    $$
 </p>
 
 <p>Using this, we can derive a quite useful property. Let&#39;s look at the following:</p>
 <p><em>&quot;If there exists an orthogonal matrix P such that $B=P^TAP$ and A is symmetric, then the eigenvectors of A are mutually orthogonal.&quot;</em></p>
 <p>
 $$
-Av_j = \lambda_j v_j \\ \rightarrow v_i^T (Av_j) = (v_i^TA^T) v_j = (Av_i)^T v_j \\ = \lambda_i v_i^T v_j \\ = \lambda_j v_i^T v_j
-$$
+    Av_j = \lambda_j v_j \\ \rightarrow v_i^T (Av_j) = (v_i^TA^T) v_j = (Av_i)^T v_j \\ = \lambda_i v_i^T v_j \\ = \lambda_j v_i^T v_j
+    $$
 </p>
 
 <p>Since $\lambda_i \neq \lambda_j$ (for distinct eigenvalues), we can see that the dot product of any two distinct eigenvectors is 0. If we perform matrix factorization with an orthogonal matrix, we can discover a peculiar property in addition to eigen-decomposition: since the basis vectors are mutually orthogonal, they can be interpreted as a set of perpendicular axes, and thus this orthogonal column matrix itself can be interpreted as a rotation transformation (since the original basis vectors also form an orthogonal relationship).</p>
@@ -309,7 +309,7 @@ $$
 $$
 </p>
 
-<p>There is a geometric approach to explain why the described least squares solution has the minimum $|x|_2$ norm, but it is difficult to illustrate with diagrams, so I will omit it. The concept is not too difficult, on the level of high school geometry and vectors (though it&#39;s no longer high school level...).</p>
+<p>There is a geometric approach to explain why the described least squares solution has the minimum $\|x\|_2$ norm, but it is difficult to illustrate with diagrams, so I will omit it. The concept is not too difficult, on the level of high school geometry and vectors (though it&#39;s no longer high school level...).</p>
 <h2 id="toc-heading-6">4. Trace Operator &amp; Norm</h2>
 <h3 id="toc-heading-7">4.1. Norm</h3>
 <p>
@@ -337,29 +337,29 @@ $$</p>
 <li><p><strong>Cyclic Property</strong>: $\text{tr}(AB) = \text{tr}(BA)$</p>
 <p>
 $$
-\sum_i (AB)_{i,i} = \sum_i \sum_j a_{i,j} b_{j,i} = \sum_j \sum_i b_{j,i}a_{i,j} = \sum_j (BA)_{j,j}
-$$
+    \sum_i (AB)_{i,i} = \sum_i \sum_j a_{i,j} b_{j,i} = \sum_j \sum_i b_{j,i}a_{i,j} = \sum_j (BA)_{j,j}
+    $$
 </p>
 </li>
 <li><p>$\text{tr}(A) = \sum \lambda$ (sum of eigenvalues)</p>
 <p>
 $$
-\text{tr}(A) = \text{tr}(V \text{diag}(\lambda)V^{-1} ) \\ = \text{tr}(V^{-1} V \text{diag}(\lambda)) \\ = \text{tr}(\text{diag}(\lambda)) \\ = \sum \lambda
-$$
+    \text{tr}(A) = \text{tr}(V \text{diag}(\lambda)V^{-1} ) \\ = \text{tr}(V^{-1} V \text{diag}(\lambda)) \\ = \text{tr}(\text{diag}(\lambda)) \\ = \sum \lambda
+    $$
 </p>
 </li>
-<li><p><strong>Frobenius Norm</strong>: $|A|_F^2 = \text{tr}(AA^T) = \text{tr}(A^TA)$
+<li><p><strong>Frobenius Norm</strong>: $\|A\|_F^2 = \text{tr}(AA^T) = \text{tr}(A^TA)$
 Let&#39;s use SVD, $A = U\Sigma V^T$.</p>
 <p>
 $$
-\|A\|_F^2 = \text{tr}(A^TA) = \text{tr}((U\Sigma V^T)^T (U\Sigma V^T)) \\ = \text{tr}(V\Sigma^T U^T U\Sigma V^T) = \text{tr}(V\Sigma^T \Sigma V^T) \\ = \text{tr}(\Sigma^T \Sigma V^T V) = \text{tr}(\Sigma^T \Sigma) = \sum \sigma_i^2
-$$
+    \|A\|_F^2 = \text{tr}(A^TA) = \text{tr}((U\Sigma V^T)^T (U\Sigma V^T)) \\ = \text{tr}(V\Sigma^T U^T U\Sigma V^T) = \text{tr}(V\Sigma^T \Sigma V^T) \\ = \text{tr}(\Sigma^T \Sigma V^T V) = \text{tr}(\Sigma^T \Sigma) = \sum \sigma_i^2
+    $$
 </p>
 Therefore,
 <p>
 $$
-\|A\|_F = \sqrt{\text{tr}(A^TA)}
-$$
+    \|A\|_F = \sqrt{\text{tr}(A^TA)}
+    $$
 </p></li>
 </ol>
 <h2 id="toc-heading-9">5. Principal Component Analysis</h2>
@@ -389,18 +389,18 @@ $$
 </p>
 
 <p>It can be easily seen that $d^TX^TXd$ defines a quadratic form.
-To add a brief comment on the formula, the constraint $|d|=1$ is imposed because when solving the maximization problem, the objective function value would simply increase by increasing the magnitude of the vector d.</p>
+To add a brief comment on the formula, the constraint $\|d\|=1$ is imposed because when solving the maximization problem, the objective function value would simply increase by increasing the magnitude of the vector d.</p>
 <p>Since $X^TX$ is a symmetric matrix, we can find an eigen-decomposition $X^TX = V\Lambda V^T$. Let $d = Vd&#39;$, then:</p>
 <p>
 $$
-d^TX^TXd = (Vd')^T (V \Lambda V^T) (Vd') \\ = d'^T (V^T V \Lambda V^T V) d' \\ = d'^T \Lambda d'
+d^TX^TXd = (Vd&#39;)^T (V \Lambda V^T) (Vd&#39;) \\ = d&#39;^T (V^T V \Lambda V^T V) d&#39; \\ = d&#39;^T \Lambda d&#39;
 $$
 </p>
 
 <p>This equation represents an ellipsoid in the span formed by the eigenbasis, and it means we are choosing the largest axis among those that form this ellipse. To be more specific, let&#39;s derive the ellipse equation:</p>
 <p>
 $$
-\begin{bmatrix} a_1 & ... & a_n \end{bmatrix} \begin{bmatrix} \lambda_1 & & 0\\ \vdots & \ddots & \vdots \\ 0 & & \lambda_n \\ \end{bmatrix} \begin{bmatrix} a_1 \\ \vdots \\ a_n \\ \end{bmatrix} \\ = \lambda_1 (a_1)^2 + \lambda_2 (a_2)^2 + ... + \lambda_n (a_n)^2 \\ \text{where } d'^T = \begin{bmatrix} a_1 & ... & a_n \end{bmatrix}
+\begin{bmatrix} a_1 &amp; ... &amp; a_n \end{bmatrix} \begin{bmatrix} \lambda_1 &amp; &amp; 0\\ \vdots &amp; \ddots &amp; \vdots \\ 0 &amp; &amp; \lambda_n \\ \end{bmatrix} \begin{bmatrix} a_1 \\ \vdots \\ a_n \\ \end{bmatrix} \\ = \lambda_1 (a_1)^2 + \lambda_2 (a_2)^2 + ... + \lambda_n (a_n)^2 \\ \text{where } d&#39;^T = \begin{bmatrix} a_1 &amp; ... &amp; a_n \end{bmatrix}
 $$
 </p>
 

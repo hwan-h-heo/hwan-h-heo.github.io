@@ -222,11 +222,11 @@
 
 <div class="math-container">
     $$ \begin{aligned}
-    d(p) &= \sum_{g}
+    d(p) &amp;= \sum_{g}
     \alpha_{g} \exp \left ( - \frac{1}{2} (p-\mu_{g})^{\rm T} \Sigma^{-1}_{g}  (p-\mu_{g})  \right )
-    \\ \text{where } \mu &: \text{ center of gaussian, }
-    \\ \Sigma&: \text{ cov mat, }   \textit{i.e., } RSS^{\rm T}R^{\rm T},
-    \\ \alpha &: \text{ alpha-blending weight, } \textit{i.e.,} \text{ opacity value}
+    \\ \text{where } \mu &amp;: \text{ center of gaussian, }
+    \\ \Sigma&amp;: \text{ cov mat, }   \textit{i.e., } RSS^{\rm T}R^{\rm T},
+    \\ \alpha &amp;: \text{ alpha-blending weight, } \textit{i.e.,} \text{ opacity value}
     \end{aligned}
     $$
 </div>
@@ -302,7 +302,7 @@
             <p>
                 <strong>Affine Projection 이 정확하지 않다</strong><br/>
                 3D GS 를 radiance fiels 로 변환하는 데 사용되는 affine matrix 는 
-                ($\Sigma&#39; = JW\Sigma W^{\rm T}J^{\rm T}$) Gaussian center 에서 벗어나면 원근 정확도가 떨어진다. 
+                ($\Sigma&amp;#39; = JW\Sigma W^{\rm T}J^{\rm T}$) Gaussian center 에서 벗어나면 원근 정확도가 떨어진다. 
                 이로 인해 종종 noise 가 많은 reconstruction 결과가 나타난다. 
         </p>
         </li>
@@ -342,9 +342,9 @@
 
 <div class="math-container">
     $$ \begin{aligned}
-    (p-\mu_{g^{\star}})^{\rm T} \Sigma^{-1}_{g^{\star}}  (p-\mu_{g^{\star}}) & \simeq \frac{1}{s_{g^{\star}}^{2}} \langle p-\mu_{g^{\star}}, n_{g^{\star}} \rangle ^{2}
-    \\ \text{where } s_g &: \text{ smallest scaling factor},
-    \\ n_g &: \text{ corresponding axis}
+    (p-\mu_{g^{\star}})^{\rm T} \Sigma^{-1}_{g^{\star}}  (p-\mu_{g^{\star}}) &amp; \simeq \frac{1}{s_{g^{\star}}^{2}} \langle p-\mu_{g^{\star}}, n_{g^{\star}} \rangle ^{2}
+    \\ \text{where } s_g &amp;: \text{ smallest scaling factor},
+    \\ n_g &amp;: \text{ corresponding axis}
     \end{aligned} $$
 </div>
 <div class="lang kor" >
@@ -374,7 +374,7 @@
 </div>
 <div class="math-container">
     $$  \begin{aligned} 
-    R &= [t_u, \ t_v, \ t_u \times t_v] \\ S &= [s_u, \ s_v, \ 0] 
+    R &amp;= [t_u, \ t_v, \ t_u \times t_v] \\ S &amp;= [s_u, \ s_v, \ 0] 
     \end{aligned}
     $$
 </div>
@@ -385,15 +385,15 @@
 
 <div class="math-container">
     $$ \begin{aligned} 
-    P(u,v) &= p_k + s_ut_u u + s_v t_v v = \mathbf{H}(u,v,1,1)^{\rm T} \\ 
-    \text{where } \mathbf{H} &= 
+    P(u,v) &amp;= p_k + s_ut_u u + s_v t_v v = \mathbf{H}(u,v,1,1)^{\rm T} \\ 
+    \text{where } \mathbf{H} &amp;= 
     \begin{bmatrix} 
-    s_u t_u & s_v t_v & 0 & p_k \\ 
-    0 & 0 & 0& 1 \\
+    s_u t_u &amp; s_v t_v &amp; 0 &amp; p_k \\ 
+    0 &amp; 0 &amp; 0&amp; 1 \\
     \end{bmatrix} =
     \begin{bmatrix} 
-    RS &  p_k \\ 
-    0 & 1
+    RS &amp;  p_k \\ 
+    0 &amp; 1
     \end{bmatrix}
     \end{aligned}
     $$
@@ -418,7 +418,7 @@
 <div class="lang kor" >
     <p>
         2D Gaussian 은 원론적으로는 zero scale 만 추가하여 3D GS projection 을 그대로 사용할 수 있다. 하지만 앞서 언급한것처럼, 
-        3D GS 의 affine projection $\Sigma&#39; = JW\Sigma W^{\rm T}J^{\rm T}$ 은 1st Taylor Expansion 만을 사용하기 때문에 
+        3D GS 의 affine projection $\Sigma&amp;#39; = JW\Sigma W^{\rm T}J^{\rm T}$ 은 1st Taylor Expansion 만을 사용하기 때문에 
         center point 에서 멀어질수록 approximation error 가 커지게 된다.
     </p>
 
@@ -569,9 +569,9 @@
     $$
     \begin{aligned}
     \mathcal{L} 
-    &= \sum_{i=0}^{N-1} \sum_{j=0}^{i-1} \omega_i \omega_j (m_i - m_j)^2 \\
-    &= \sum_{i=0}^{N-1} \omega_i \left( m_i^2 \sum_{j=0}^{i-1} \omega_j + \sum_{j=0}^{i-1} \omega_j m_j^2 - 2m_i \sum_{j=0}^{i-1} \omega_j m_j \right) \\
-    &= \sum_{i=0}^{N-1} \omega_i \left( m_i^2 A_{i-1} + D_{i-1}^2 - 2m_i D_{i-1} \right),
+    &amp;= \sum_{i=0}^{N-1} \sum_{j=0}^{i-1} \omega_i \omega_j (m_i - m_j)^2 \\
+    &amp;= \sum_{i=0}^{N-1} \omega_i \left( m_i^2 \sum_{j=0}^{i-1} \omega_j + \sum_{j=0}^{i-1} \omega_j m_j^2 - 2m_i \sum_{j=0}^{i-1} \omega_j m_j \right) \\
+    &amp;= \sum_{i=0}^{N-1} \omega_i \left( m_i^2 A_{i-1} + D_{i-1}^2 - 2m_i D_{i-1} \right),
     \end{aligned}
     $$
 </div>
@@ -586,8 +586,8 @@
 <div class="math-container">
     $$ 
     \begin{aligned}
-    \mathcal{L}_i &= \sum_{j=0}^{i} \omega_j e_j \\
-    \text{where } e_i &= m_i^2 A_{i-1} + D_{i-1}^2 - 2m_i D_{i-1}
+    \mathcal{L}_i &amp;= \sum_{j=0}^{i} \omega_j e_j \\
+    \text{where } e_i &amp;= m_i^2 A_{i-1} + D_{i-1}^2 - 2m_i D_{i-1}
     \end{aligned}
     $$
 </div>

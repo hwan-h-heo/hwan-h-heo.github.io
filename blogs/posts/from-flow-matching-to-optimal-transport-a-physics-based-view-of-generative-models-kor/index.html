@@ -237,7 +237,7 @@ $$
 \phi =  \phi_{(T-1)\cdot \triangle t}     \ \circ \dots \circ  \phi_{1 \cdot \triangle t}  \circ \phi_{0 \cdot \triangle t} 
 $$
 각 function 에는 다음과 같은 관계가 성립합다.
-$$ \phi_t(x_t) = x_t + \triangle t \cdot u_t(x_t), \ \triangle t = \frac{1}{T}
+$$ \phi_t(x_t) = x_t + \triangle t \cdot u_t(x_t), \\ \triangle t = \frac{1}{T}
 $$ </p>
 <p>이제 
 $$ T \rightarrow \infin 
@@ -347,8 +347,8 @@ $$</p>
 <p>
 $$
 \begin{aligned}
-\frac{d \log p_t(x_t)}{dt} &= \underbrace{\left[-(\nabla \log p_t) \cdot u_t - (\nabla \cdot u_t)\right]}_{\text{from (eqn. 2)}} + u_t \cdot \nabla \log p_t
-\\ &= - \nabla \cdot u_t(x_t)
+\frac{d \log p_t(x_t)}{dt} &amp;= \underbrace{\left[-(\nabla \log p_t) \cdot u_t - (\nabla \cdot u_t)\right]}_{\text{from (eqn. 2)}} + u_t \cdot \nabla \log p_t
+\\ &amp;= - \nabla \cdot u_t(x_t)
 \end{aligned}
 $$
 </p>
@@ -375,10 +375,10 @@ $$</p>
 $$
 J_u = \frac{\partial u}{\partial x} = 
 \begin{pmatrix}
-\frac{\partial u_1}{\partial x_1} & \frac{\partial u_1}{\partial x_2} & \cdots & \frac{\partial u_1}{\partial x_D} \\
-\frac{\partial u_2}{\partial x_1} & \frac{\partial u_2}{\partial x_2} & \cdots & \frac{\partial u_2}{\partial x_D} \\
-\vdots & \vdots & \ddots & \vdots \\
-\frac{\partial u_D}{\partial x_1} & \frac{\partial u_D}{\partial x_2} & \cdots & \frac{\partial u_D}{\partial x_D}
+\frac{\partial u_1}{\partial x_1} &amp; \frac{\partial u_1}{\partial x_2} &amp; \cdots &amp; \frac{\partial u_1}{\partial x_D} \\
+\frac{\partial u_2}{\partial x_1} &amp; \frac{\partial u_2}{\partial x_2} &amp; \cdots &amp; \frac{\partial u_2}{\partial x_D} \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+\frac{\partial u_D}{\partial x_1} &amp; \frac{\partial u_D}{\partial x_2} &amp; \cdots &amp; \frac{\partial u_D}{\partial x_D}
 \end{pmatrix}
 $$
 </p></li>
@@ -468,9 +468,9 @@ $$
 <p>
 $$
 \begin{aligned}
-\frac{\partial p_t(x_t)}{\partial t} &= \boxed{\frac{\partial}{\partial t} \int p_{t|1}(x_t | x_1)} \  p_1 (x_1) dx_1 \\
-&= \boxed{ - \int \nabla \cdot (p_{t|1}(x_t | x_1) u_t(x_t | x_1)) }\  p_1 (x_1) dx_1 \\ 
-&= - \nabla \cdot \left ( \boxed{  \int u_t(x_t | x_1)) \frac{p_{t|1}(x_t | x_1) p_1 (x_1)}{p_t(x_t)} dx_1 } \ p_t(x_t) \right ) \\ &= - \nabla \cdot \bigg [ \boxed{u_t(x_t)} \  p_{t}(x_t ) \bigg ]
+\frac{\partial p_t(x_t)}{\partial t} &amp;= \boxed{\frac{\partial}{\partial t} \int p_{t|1}(x_t | x_1)} \  p_1 (x_1) dx_1 \\
+&amp;= \boxed{ - \int \nabla \cdot (p_{t|1}(x_t | x_1) u_t(x_t | x_1)) }\  p_1 (x_1) dx_1 \\ 
+&amp;= - \nabla \cdot \left ( \boxed{  \int u_t(x_t | x_1)) \frac{p_{t|1}(x_t | x_1) p_1 (x_1)}{p_t(x_t)} dx_1 } \ p_t(x_t) \right ) \\ &amp;= - \nabla \cdot \bigg [ \boxed{u_t(x_t)} \  p_{t}(x_t ) \bigg ]
 \end{aligned}
 $$
 </p>
@@ -494,11 +494,11 @@ $$
 <p>
 $$
 \begin{aligned}
-\mathbb{E}_{x_t \sim p_t} [\langle v_\theta(x_t), u_t(x_t) \rangle] &= \int \left[ v_\theta(x_t) \cdot  \boxed{u_t(x_t)} \ \right ]p_t(x_t) dx_t \\
-&= \int \left[ v_\theta(x_t) \cdot \boxed{\int u_t(x_t|x_1) p_t(x_1|x_t) dx_1 } \right ]p_t(x_t) dx_t \\
-&= \iint v_\theta(x_t) \cdot u_t(x_t|x_1) \boxed{ p_t(x_1|x_t) p_t(x_t)} dx_1 dx_t \\
-&= \iint v_\theta(x_t) \cdot u_t(x_t|x_1) \boxed{p(x_1, x_t)} dx_1 dx_t \\
-&= \mathbb{E}_{(x_1, x_t) \sim p(x_1, x_t)} [\langle v_\theta(x_t), u_t(x_t|x_1) \rangle]
+\mathbb{E}_{x_t \sim p_t} [\langle v_\theta(x_t), u_t(x_t) \rangle] &amp;= \int \left[ v_\theta(x_t) \cdot  \boxed{u_t(x_t)} \ \right ]p_t(x_t) dx_t \\
+&amp;= \int \left[ v_\theta(x_t) \cdot \boxed{\int u_t(x_t|x_1) p_t(x_1|x_t) dx_1 } \right ]p_t(x_t) dx_t \\
+&amp;= \iint v_\theta(x_t) \cdot u_t(x_t|x_1) \boxed{ p_t(x_1|x_t) p_t(x_t)} dx_1 dx_t \\
+&amp;= \iint v_\theta(x_t) \cdot u_t(x_t|x_1) \boxed{p(x_1, x_t)} dx_1 dx_t \\
+&amp;= \mathbb{E}_{(x_1, x_t) \sim p(x_1, x_t)} [\langle v_\theta(x_t), u_t(x_t|x_1) \rangle]
 \end{aligned}
 $$
 </p>
@@ -594,7 +594,7 @@ $$
 <p>고전 역학에서, 어떤 물체가 한 지점에서 다른 지점으로 이동할 때, 가능한 수많은 경로 중에서 <strong>Action, $S$ 이라는 물리량을 최소화하는 경로를 선택</strong>하며, 이것이 바로 <strong><a href="https://en.wikipedia.org/wiki/Action_principles">Principle of Least Action</a></strong> 이다. </p>
 <p>이 액션은 <strong>Lagrangian, $L$ 이라는 양을 시간에 따라 적분</strong>한 값으로 정의되며,</p>
 <p>$$
-S = \int_{t_0}^{t_1} L(x, \dot{x}, t) , dt
+S = \int_{t_0}^{t_1} L(x, \dot{x}, t) \, dt
 $$</p>
 <p>라그랑지언 $L$은 그 시스템의 <strong>운동 에너지($T$)에서 위치 에너지($V$)를 뺀 값</strong>이다.</p>
 <p>$$
@@ -613,7 +613,7 @@ $$</p>
 <p>우리는 한 분포에서 다른 분포로의 매핑 자체에만 관심이 있고, 그 과정에서 특정 경로에 패널티를 주는 외부 요인 (Potential) 을 가정하지 않으므로, 시스템의 비용은 순수하게 입자들의 이동 거리와 속도 (Kinetic Energy) 에만 의존한다고 볼 수 있다.</p>
 <p>이 때, 이 입자의 액션은 다음과 같으며</p>
 <p>$$
-S = \int_{t_0}^{t_1} \frac{1}{2}m ||\dot{x}(t)||^2 , dt
+S = \int_{t_0}^{t_1} \frac{1}{2}m ||\dot{x}(t)||^2 \, dt
 $$</p>
 <p>최소 작용 원리에 따르면, 입자는 이 action $S$를 최소화하는 경로를 따라 움직인다. 적분 안의 값이 항상 양수이므로, 이 값을 최소화하는 가장 직관적인 방법은 속도($||\dot{x}||$)를 일정하게 유지하며 최단 거리, 즉 <strong>직선으로 움직이는 것</strong>일 것이다.</p>
 <p>실제로 위 액션을 최소화하는 경로를 찾기 위한 미분방정식을 풀어보면, 가속도($\ddot{x}$)가 0이라는 결과가 나온다 ($m\ddot{x} = 0$). 이는 곧 <strong>등속 직선 운동</strong>을 의미한다.</p>
@@ -671,11 +671,11 @@ $$</p>
 </ul>
 <p>시간 $t$에서의 분포를 $p_t(x)$로, 각 지점 $x$에서의 입자들의 속도를 속도장 $v_t(x)$로 표현한다. 특정 시간 $t$에서의 <strong>총 운동 에너지</strong>는 각 지점의 운동 에너지($\frac{1}{2}||v_t(x)||^2$)를 그 지점의 밀도($p_t(x)$)로 가중 평균하여 계산할 수 있다.</p>
 <p>$$
-\text{Total Kinetic Energy at } t =  \mathbb{E}_{x \sim p_t}\left[\frac{1}{2}||v_t(x)||^2\right] = \int \frac{1}{2}||v_t(x)||^2 p_t(x) ,dx
+\text{Total Kinetic Energy at } t =  \mathbb{E}_{x \sim p_t}\left[\frac{1}{2}||v_t(x)||^2\right] = \int \frac{1}{2}||v_t(x)||^2 p_t(x) \,dx
 $$</p>
 <p>자유 입자와 마찬가지로, 외부 힘이 없는 분포의 변환 (위치 에너지가 없는 경우) 을 가정하면 이 시스템의 라그랑지언은 총 운동 에너지가 된다. 따라서 전체 변환 과정의 액션은 이 총 운동 에너지를 시간에 대해 적분한 값이 된다.</p>
 <p>$$
-\mathcal{A}(p_t, v_t) = \int_0^1 \left( \int \frac{1}{2}||v_t(x)||^2 p_t(x) ,dx \right) dt
+\mathcal{A}(p_t, v_t) = \int_0^1 \left( \int \frac{1}{2}||v_t(x)||^2 p_t(x) \,dx \right) dt
 $$</p>
 <p>최소 작용의 원리와 같이, 우리는 이 액션을 최소화하는 경로 ($p_t, v_t$) 를 찾고자 한다.</p>
 <p>이렇게 확률 분포의 변환을 총 운동 에너지 (Action) 를 최소화하는 경로를 찾는 문제로 재정의하는 것은 optimal transport 에서 <strong>&#39;Benamou-Brenier formula&#39;</strong> 로 알려진 dynamic OT 공식의 핵심 아이디어와 정확히 일치한다. 우리는 지금 생성 모델의 문제를 유체 역학의 언어로 풀어내고 있는 셈이다.</p>
@@ -688,12 +688,12 @@ $$</p>
 $$</p>
 <p>이러한 제약이 있는 최적화 문제를 풀기 위해, Lagrange Multiplier 함수 $\phi(x, t)$ 를 도입한다. 이 함수는 액션에 제약 조건을 결합하여 새로운 functional $\mathcal{L}$을 만든다.</p>
 <p>$$
-\mathcal{L}[p, v, \phi] = \mathcal{A}[p, v] - \int_0^1 \int_{\mathbb{R}^d} \phi(x, t) \left( \frac{\partial p_t}{\partial t} + \nabla \cdot (p_t v_t) \right) ,dx ,dt
+\mathcal{L}[p, v, \phi] = \mathcal{A}[p, v] - \int_0^1 \int_{\mathbb{R}^d} \phi(x, t) \left( \frac{\partial p_t}{\partial t} + \nabla \cdot (p_t v_t) \right) \,dx \,dt
 $$</p>
 <p>이제 제약 조건 없는 $\mathcal{L}$ 을 최적화하는 문제로 바꿀 수 있다. 최적의 경로에서 $\mathcal{L}$ 은 $p$, $v$, $\phi$ 의 미소 변화 (variation) 에 대해 안정적이어야 한다. <strong>즉, 각 변수에 대한 functional derivative 이 0이 되어야 한다.</strong></p>
 <p>계산을 용이하게 하기 위해, 제약 조건 항에 부분적분 (integration by parts)을 적용하여 미분을 $p$ 와 $v$ 에서 $\phi$ 로 옮겨보자.</p>
 <p>$$
-\mathcal{L} = \int_0^1 \int_{\mathbb{R}^d} \left( \frac{1}{2} |v|^2 p + p \frac{\partial \phi}{\partial t} + p v \cdot \nabla \phi \right) dx dt - \int_{\mathbb{R}^d} [\phi p]_0^1 dx
+\mathcal{L} = \int_0^1 \int_{\mathbb{R}^d} \left( \frac{1}{2} \|v\|^2 p + p \frac{\partial \phi}{\partial t} + p v \cdot \nabla \phi \right) dx dt - \int_{\mathbb{R}^d} [\phi p]_0^1 dx
 $$</p>
 <p>이제 이 식을 이용하여 각 변수에 대한 variation 을 계산한다.</p>
 <p><strong>Velocity $v$ 에 대한 functional derivative</strong>
@@ -712,19 +712,19 @@ $$</p>
 <p><strong>Density $p$ 에 대한 functional derivative</strong></p>
 <p>이제 $\mathcal{L}$ 을 density $p$에 대해 functional derivative ($\delta_p \mathcal{L}$) 하고 그 결과를 0으로 둔다.피적분 함수는 $p$ 에 대해 선형이므로, 이 변분이 0이 되려면 괄호 안의 항이 0이 되어야 한다.
 $$
-\frac{1}{2} |v|^2 + \frac{\partial \phi}{\partial t} + v \cdot \nabla \phi = 0
+\frac{1}{2} \|v\|^2 + \frac{\partial \phi}{\partial t} + v \cdot \nabla \phi = 0
 $$</p>
 <p><strong>Hamilton-Jacobi Equation</strong>
 이제 첫 번째 결과 ($v = -\nabla \phi$) 를 두 번째 결과에 대입해보자.
 $$
-\frac{1}{2} |-\nabla \phi|^2 + \frac{\partial \phi}{\partial t} + (-\nabla \phi) \cdot (\nabla \phi) = 0
+\frac{1}{2} \|-\nabla \phi\|^2 + \frac{\partial \phi}{\partial t} + (-\nabla \phi) \cdot (\nabla \phi) = 0
 $$</p>
 <p>$$
-\frac{1}{2} |\nabla \phi|^2 + \frac{\partial \phi}{\partial t} - |\nabla \phi|^2 = 0
+\frac{1}{2} \|\nabla \phi\|^2 + \frac{\partial \phi}{\partial t} - \|\nabla \phi\|^2 = 0
 $$</p>
 <p>이를 정리하면, 포텐셜 함수 $\phi$가 만족해야 하는 편미분방정식, 즉 <strong>Hamilton-Jacobi Equation</strong> 을 얻는다.
 $$
-{\frac{\partial \phi}{\partial t} - \frac{1}{2} |\nabla \phi(x, t)|^2 = 0}
+{\frac{\partial \phi}{\partial t} - \frac{1}{2} \|\nabla \phi(x, t)\|^2 = 0}
 $$</p>
 <p>이 방정식은 자유 입자의 운동을 설명하는 고전 역학의 근본적인 방정식이다.</p>
 <p><strong>가속도가 0 임을 증명하기</strong>
@@ -735,17 +735,17 @@ $$
 $$
 각 항을 포텐셜 $\phi$로 표현해 보자.</p>
 <ol>
-<li><strong>첫 번째 항</strong>: 위에서 유도한 Hamilton-Jacobi Equation ($\frac{\partial \phi}{\partial t} = \frac{1}{2}|v|^2$) 과 $v = -\nabla\phi$ 관계를 이용하면,
+<li><strong>첫 번째 항</strong>: 위에서 유도한 Hamilton-Jacobi Equation ($\frac{\partial \phi}{\partial t} = \frac{1}{2}\|v\|^2$) 과 $v = -\nabla\phi$ 관계를 이용하면,
 $$
-\frac{\partial v}{\partial t} = \frac{\partial}{\partial t}(-\nabla \phi) = -\nabla\left(\frac{\partial \phi}{\partial t}\right) = -\frac{1}{2}\nabla(|v|^2)
-$$</li>
+    \frac{\partial v}{\partial t} = \frac{\partial}{\partial t}(-\nabla \phi) = -\nabla\left(\frac{\partial \phi}{\partial t}\right) = -\frac{1}{2}\nabla(\|v\|^2)
+    $$</li>
 <li><strong>두 번째 항</strong>: vector field $v$는 scalar potential $\phi$ 의 gradient ($v = -\nabla\phi$) 이므로, 회전 (curl)이 0이다 ($\nabla \times v = \nabla \times (-\nabla\phi) = 0$). 따라서,
 $$
-(v \cdot \nabla)v = \frac{1}{2}\nabla(|v|^2)
+(v \cdot \nabla)v = \frac{1}{2}\nabla(\|v\|^2)
 $$
 이제 두 항을 조합하여 가속도를 계산하면,
 $$
-\ddot{x} = \frac{\partial v}{\partial t} + (v \cdot \nabla)v = -\frac{1}{2}\nabla(|v|^2) + \frac{1}{2}\nabla(|v|^2) = 0
+\ddot{x} = \frac{\partial v}{\partial t} + (v \cdot \nabla)v = -\frac{1}{2}\nabla(\|v\|^2) + \frac{1}{2}\nabla(\|v\|^2) = 0
 $$</li>
 </ol>
 <p><em>cf:</em>

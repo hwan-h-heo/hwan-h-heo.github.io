@@ -188,13 +188,13 @@ $$</p>
 <ul>
 <li><p><strong>Horizontal Gradient ($G_x$)</strong>: Detects <em>vertical</em> edges.</p>
 <p>
-$$ G_x = \begin{bmatrix} -1 & 0 & +1 \\ -2 & 0 & +2 \\ -1 & 0 & +1 \end{bmatrix} * I
+$$ G_x = \begin{bmatrix} -1 &amp; 0 &amp; +1 \\ -2 &amp; 0 &amp; +2 \\ -1 &amp; 0 &amp; +1 \end{bmatrix} * I
 $$
 </p>
 </li>
 <li><p><strong>Vertical Gradient ($G_y$)</strong>: Detects <em>horizontal</em> edges.</p>
 <p>
-$$ G_y = \begin{bmatrix} -1 & -2 & -1 \\ 0 & 0 & 0 \\ +1 & +2 & +1 \end{bmatrix} * I
+$$ G_y = \begin{bmatrix} -1 &amp; -2 &amp; -1 \\ 0 &amp; 0 &amp; 0 \\ +1 &amp; +2 &amp; +1 \end{bmatrix} * I
 $$
 </p></li>
 </ul>
@@ -398,12 +398,12 @@ $$
 where <code>W</code> is the sliding window. </p>
 <p>Using a first-order Taylor expansion, this can be approximated as:</p>
 <p>
-$$ E(u,v) \approx \sum_{W} [I_x u + I_y v]^2 = [u, v] \left( \sum_{W} \begin{bmatrix} I_x^2 & I_x I_y \\ I_x I_y & I_y^2 \end{bmatrix} \right) \begin{bmatrix} u \\ v \end{bmatrix}
+$$ E(u,v) \approx \sum_{W} [I_x u + I_y v]^2 = [u, v] \left( \sum_{W} \begin{bmatrix} I_x^2 &amp; I_x I_y \\ I_x I_y &amp; I_y^2 \end{bmatrix} \right) \begin{bmatrix} u \\ v \end{bmatrix}
 $$
 </p>
 
 <p>This can be written compactly as:
-$$ E(u,v) \approx [u, v] H \begin{bmatrix} u \ v \end{bmatrix}
+$$ E(u,v) \approx [u, v] H \begin{bmatrix} u \\ v \end{bmatrix}
 $$
 where $H$ is the <strong>structure tensor</strong> or Harris matrix, which sums the gradient information over the window $W$.</p>
 <p>The behavior of $E(u,v)$ is determined by the eigenvalues, $\lambda_1$ and $\lambda_2$, of $H$.</p>

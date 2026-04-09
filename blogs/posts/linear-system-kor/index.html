@@ -161,7 +161,7 @@ https://www.deeplearningbook.org/contents/linear_algebra.html -->
 <h2 id="toc-heading-0">1. Linear System</h2>
 <h3 id="toc-heading-1">1.1.1. Linear Combination</h3>
 <p>$$
-\sum_i c_i v_i \ c_i : \text{scalar}, \ v_i : \text{vector}
+\sum_i c_i v_i \\ c_i : \text{scalar}, \ v_i : \text{vector}
 $$</p>
 <ul>
 <li>basis : span 을 이루는 기본 단위. 어떠한 좌표계를 정의하는 기본 단위이다.</li>
@@ -176,7 +176,7 @@ $(5,2) = 5i + 2j$</li>
 </ul>
 <h3 id="toc-heading-2">1.1.2. Linear Independent</h3>
 <p>$$
-\sum_i c_i v_i \ c_i : \text{scalar}, \ v_i : \text{vector}
+\sum_i c_i v_i \\ c_i : \text{scalar}, \ v_i : \text{vector}
 $$</p>
 <ul>
 <li>위의 linear combination 값이 $\forall _i \ c_i$ 가 0 일때만 0의 값을 가진다면 이를 linear independent 라고 하고, 아닐 경우엔 linear dependent 라고 한다.</li>
@@ -202,15 +202,15 @@ $$</p>
 <ul>
 <li><p>간단한 아래 예제를 보자.</p>
   <p>
-  $$     \begin{bmatrix}      3 & -2 \\     1 & 2 \\     \end{bmatrix}      =     \begin{bmatrix}      3 & -2 \\     1 & 2 \\     \end{bmatrix}      \begin{bmatrix}      1 & 0 \\     0 & 1 \\     \end{bmatrix}      $$
+  $$     \begin{bmatrix}      3 &amp; -2 \\     1 &amp; 2 \\     \end{bmatrix}      =     \begin{bmatrix}      3 &amp; -2 \\     1 &amp; 2 \\     \end{bmatrix}      \begin{bmatrix}      1 &amp; 0 \\     0 &amp; 1 \\     \end{bmatrix}      $$
   </p>
 
   
 <p>  i, j 의 basis 가 $(3,1) : i&#39;, (-2,2) :j&#39;$ 의 새로운 basis 로 변화되었다고도 볼 수 있다. 바뀐 basis 로 span을 구성했을 때도 여전히 2차원 직교 좌표계인데, 이는 (3,1), (-2,2) 가 서로 independent 하기 때문이다. (같은 line 위에 있지 않다)</p>
 <p>  이때 $(5,2)$ 라는 점을 생각해보면, $(5,2)$ 는 위 변환을 통해 $(11,9)$ 라는 점으로 이동한다. </p>
 <p>  $$
-  (11,9) = 5 i&#39; + 2j&#39; 
-  $$</p>
+    (11,9) = 5 i&#39; + 2j&#39; 
+    $$</p>
 <p>  즉 basis 만 이동하면, 원래 점을 기술하던 방식은 바뀌지 않는다. basis 를 어떻게 scaling 하여 점을 이루는지에 대한 정보를 보존하면서, 그 basis 만 바꾸는 변환을 linear transformation 이라고 할 수 있을 것이다. </p>
 <p>  Determinant 가 0인 경우에는, 어떤 matrix 로 정의되는 linear transformation 이후의 바뀐 두 basis 가 서로 dependent 한 관계를 가지게 된다. 
   즉 determinant 가 0인 변환은 span 의 dimension 을 축소한다. 이에 따라서 역행렬이 가지는 의미도 생각해볼 수 있다. </p>
@@ -218,11 +218,11 @@ $$</p>
 <li><p>다음 예제를 보자.</p>
   <p>
   $$
-  \begin{bmatrix} 
-  2 & 4 \\
-  3 & 6 \\
-  \end{bmatrix} 
-  $$
+    \begin{bmatrix} 
+    2 &amp; 4 \\
+    3 &amp; 6 \\
+    \end{bmatrix} 
+    $$
   </p>
   
 <p>  위 변환은 $(1,0), (0,1)$ 의 두 basis 를 $(4,3), (6,2)$ 인 두 점으로 basis transformation 하는 변환이다.  위 두 점은 같은 line 위에 있는 점이고 $(y = {3 \over 2} x )$, span 전체의 transformation 은 위 line 하나로 국한된다. </p>
@@ -235,9 +235,9 @@ $$</p>
 <p>
 $$
 \begin{bmatrix} 
-a & b \\
-c & d   \\
-e & f   \\
+a &amp; b \\
+c &amp; d   \\
+e &amp; f   \\
 \end{bmatrix} 
 $$
 </p>
@@ -252,8 +252,8 @@ $$
 <p>
 $$
 \begin{bmatrix}
-a & b & c\\
-d & e & f   \\
+a &amp; b &amp; c\\
+d &amp; e &amp; f   \\
 \end{bmatrix} 
 $$
 </p>
@@ -271,16 +271,16 @@ $$
 <li><p>Matrix multiplication을 sequence of transformation 으로 생각하는 것 또한 가능해진다. 
 직관적으로 행렬곱에 대해 commutative가 성립하지 않고 associative, distributive 는 성립하는 이유를 생각해볼 수 있다.</p>
 <p>  $$
-  A(B+C) = AB + AC
-  $$</p>
+    A(B+C) = AB + AC
+    $$</p>
 <p>  Distributive 에 대해서는, A 또한 linear transformation 이기 때문에 linear transformation 의 성질에 따라 위 성질을 만족한다. </p>
 <p>  $$
-  A(BC) = (AB)C
-  $$</p>
+    A(BC) = (AB)C
+    $$</p>
 <p>  Associative 는 결국 계산의 문제일 뿐, 세 변환을 순서대로 같은 순서로 적용하는 것과 같아진다. </p>
 <p>  $$
-  AB \neq BA
-  $$</p>
+    AB \neq BA
+    $$</p>
 <p>  commutative 는 변환을 적용하는 순서가 달라지면 그 결과가 달라진다는 의미가 된다. 또한 transpose 에 대한 직관도 얻을 수 있는데, <strong>어떤 선형 변환의 transpose 는 i 와 j 에 대해 작용하던 변환이 서로 반대로 적용된다</strong>는 의미이다.</p>
 </li>
 </ul>
@@ -290,11 +290,11 @@ $$
 <p>  2차원 좌표평면에 $(0,0), (0,1), (1,0), (1,1)$ 로 이루어진 크기 1 짜리 사각형이 있다. 위 사각형을 아래 변환을 통해서 linear transformation 하게 된다면,</p>
   <p>
   $$
-  \begin{bmatrix} 
-  a & c \\
-  b & d \\
-  \end{bmatrix} 
-  $$
+    \begin{bmatrix} 
+    a &amp; c \\
+    b &amp; d \\
+    \end{bmatrix} 
+    $$
   </p>
   
 <p>  원래 정의된 영역은 아래 그림에서 빨간 마름모꼴의 영역이 되는데, 그림을 바탕으로 해당 영역의 넓이를 구해보면, $$(a+c)(b+d) - ab - cd - 2 bc = ad - bc$$ 이 된다.</p>
@@ -336,8 +336,8 @@ Determinant를 통해 square matrix 인 경우 선형방정식계의 해를 구�
 <p>
 $$
 \begin{bmatrix} 
-a & c \\
-b & d \\
+a &amp; c \\
+b &amp; d \\
 \end{bmatrix} 
 \begin{bmatrix} 
 x  \\
@@ -355,18 +355,18 @@ $$
 <p>
 $$
 y = { det{\begin{bmatrix} 
-a & \alpha \\
-b & \beta \\
+a &amp; \alpha \\
+b &amp; \beta \\
 \end{bmatrix} } \over det{\begin{bmatrix} 
-a & c \\
-b & d \\
+a &amp; c \\
+b &amp; d \\
 \end{bmatrix} }}, 
 \ x = { det{\begin{bmatrix} 
-\alpha & c \\
-\beta & d \\
+\alpha &amp; c \\
+\beta &amp; d \\
 \end{bmatrix} } \over det{\begin{bmatrix} 
-a & c \\
-b & d \\
+a &amp; c \\
+b &amp; d \\
 \end{bmatrix} }}, 
 $$
 </p>

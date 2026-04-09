@@ -193,7 +193,7 @@
 </figure>
 <p>For a linearly inseparable data point $x$, let $\phi (x)$ be a non-linear mapping function that makes $\phi (x)$ linearly separable.</p>
 <p>The kernel trick performs kernel regression without explicitly finding the feature map by defining the kernel as follows:</p>
-<p>$$K(x, \ x&#39;) = \phi(x) ^T \phi(x&#39;)
+<p>$$K(x, \ x&amp;#39;) = \phi(x) ^T \phi(x&amp;#39;)
 $$</p>
 <p>This approach is interpreted as using a feature map $\phi$ with desirable properties through the kernel, rather than mapping input $x$ and then taking the inner product.</p>
 <h3 id="sec2.2">2.2. Neural Tangent Kernel </h3>
@@ -210,7 +210,7 @@ $$</div>
 <p>The gradient term $\nabla _w f( w_0 , \ x) ^T (w - w_0 )$ acts as a feature map that maps a non-linear data point $x$ to a useful space.</p>
 <p>The corresponding kernel $K$ is defined as follows:</p>
 <div class="math-container">
-    $$K(x, \ x') =  h_\text{NTK} = \{ \phi(x) , \ \phi (x') \} = \nabla _w f(w_0 , \ x) ^T \ \nabla _w f(w_0, \ x' )
+    $$K(x, \ x&#39;) =  h_\text{NTK} = \{ \phi(x) , \ \phi (x&#39;) \} = \nabla _w f(w_0 , \ x) ^T \ \nabla _w f(w_0, \ x&#39; )
     $$
 </div><br/>
 
@@ -236,8 +236,8 @@ $$</div>
 <p> Therefore, Neural network training via optimization can be represented by NTK kernel regression:</p>
 <div class="math-container">
     $$\begin{aligned}
-    {d \over dt } y(w) &= \nabla _w f(w, x) ^T \cdot {d \over dt }w \\
-    &= - \nabla _w f(w, x) ^T \cdot \nabla _w f(w, x) (f(w, x) - y) \\ &= -h_{\text{NTK}} (f(w,x) -y )
+    {d \over dt } y(w) &amp;= \nabla _w f(w, x) ^T \cdot {d \over dt }w \\
+    &amp;= - \nabla _w f(w, x) ^T \cdot \nabla _w f(w, x) (f(w, x) - y) \\ &amp;= -h_{\text{NTK}} (f(w,x) -y )
     \end{aligned}$$
 </div>
 <p>Let $u=y(w)-y$, then the output residual at training iteration $t$ can be written as:</p>
@@ -254,9 +254,9 @@ $$</div><br/>
 <div class="math-container">
     $$\begin{aligned}
     \mathbf{Q}^{\rm T} (\hat{\mathbf{y}}^{(t)}
-    - \mathbf{y}) &\simeq \mathbf{Q}^{\rm T} ( \mathbf{K}_{\text{test}} \mathbf{K}^{-1} ( \mathbf{I} - e ^{-\eta \mathbf{K} t} ) \mathbf{y} - \mathbf{y} )) \\ 
-    & \simeq \mathbf{Q}^{\rm T} (  ( \mathbf{I} - e ^{-\eta \mathbf{K} t} ) \mathbf{y} - \mathbf{y} )) \\ 
-    & \simeq - e ^{-\eta \mathbf{\Lambda} t}   \mathbf{Q}^{\rm T} \mathbf y \quad (\because e ^{-\eta \mathbf{K} t} = \mathbf{Q} e ^{-\eta \mathbf{\Lambda} t} \mathbf{Q}^{\rm T} ) 
+    - \mathbf{y}) &amp;\simeq \mathbf{Q}^{\rm T} ( \mathbf{K}_{\text{test}} \mathbf{K}^{-1} ( \mathbf{I} - e ^{-\eta \mathbf{K} t} ) \mathbf{y} - \mathbf{y} )) \\ 
+    &amp; \simeq \mathbf{Q}^{\rm T} (  ( \mathbf{I} - e ^{-\eta \mathbf{K} t} ) \mathbf{y} - \mathbf{y} )) \\ 
+    &amp; \simeq - e ^{-\eta \mathbf{\Lambda} t}   \mathbf{Q}^{\rm T} \mathbf y \quad (\because e ^{-\eta \mathbf{K} t} = \mathbf{Q} e ^{-\eta \mathbf{\Lambda} t} \mathbf{Q}^{\rm T} ) 
     \end{aligned}$$
 </div>
 <p> In the above Equation, the exponential decay term decreases with the eigenvalue. It means <em>larger eigenvalues are learned first.</em> </p> 
@@ -277,7 +277,7 @@ $a_i =1, \ b_i = 2^{i} {}$</li>
 <p>The kernel induced by this mapping function is:</p>
 <div class="math-container">
     $$\begin{aligned}
-    K (\gamma (v_1 ) , \  \gamma (v_2) ) &= \gamma (v_1 ) ^T \gamma (v_2) \\ &= \sum _{j=1}^m a^2 _j \cos (2 \pi b_j ^T (v_1 -v_2) ) = h_\gamma (v_1 - v_2 )
+    K (\gamma (v_1 ) , \  \gamma (v_2) ) &amp;= \gamma (v_1 ) ^T \gamma (v_2) \\ &amp;= \sum _{j=1}^m a^2 _j \cos (2 \pi b_j ^T (v_1 -v_2) ) = h_\gamma (v_1 - v_2 )
     \end{aligned}$$
 </div>
 <ul>

@@ -173,13 +173,13 @@ where <code>f</code> is the <strong>focal length</strong>, the distance from the
 <ul>
 <li><p><strong>Perspective Projection</strong>: This is the standard model described above. A 3D point $[X, Y, Z, 1]$ is mapped to a 2D image point $[x, y, 1]$.</p>
   <p>
-  $$ \begin{bmatrix} fX \\ fY \\ Z \end{bmatrix} = \begin{bmatrix} f & 0 & 0 & 0 \\ 0 & f & 0 & 0 \\ 0 & 0 & 1 & 0 \end{bmatrix} \begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix}
-  $$
+  $$ \begin{bmatrix} fX \\ fY \\ Z \end{bmatrix} = \begin{bmatrix} f &amp; 0 &amp; 0 &amp; 0 \\ 0 &amp; f &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 1 &amp; 0 \end{bmatrix} \begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix}
+    $$
   </p> After dividing by the third coordinate (Z), we get the image coordinates $(fX/Z, fY/Z)$.
 </li>
 <li><p><strong>Orthographic Projection</strong>: A simplified model that approximates perspective projection when the camera is far from the object (like a telephoto lens). It assumes all rays are parallel and simply drops the Z coordinate. It does not model perspective effects like objects appearing smaller with distance.</p>
 <p>
-$$ \begin{bmatrix} x \\ y \\ 1 \end{bmatrix} = \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix}
+$$ \begin{bmatrix} x \\ y \\ 1 \end{bmatrix} = \begin{bmatrix} 1 &amp; 0 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix} \begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix}
 $$
 </p></li>
 </ul>
@@ -194,7 +194,7 @@ $$
 </ul>
 <p><strong>2. Intrinsic Matrix <code>K</code></strong>: These parameters are internal to the camera and define how it projects 3D camera coordinates onto the 2D image plane in pixel units.</p>
 <p>
-$$ K = \begin{bmatrix} \alpha_x & s & c_x \\ 0 & \alpha_y & c_y \\ 0 & 0 & 1 \end{bmatrix}
+$$ K = \begin{bmatrix} \alpha_x &amp; s &amp; c_x \\ 0 &amp; \alpha_y &amp; c_y \\ 0 &amp; 0 &amp; 1 \end{bmatrix}
 $$
 </p>
 
@@ -301,7 +301,7 @@ plt.show()
 <li>Normalize to unit sphere: $$(\hat{x}, \hat{y}, \hat{z}) = (x, y, z) / \sqrt{x^2+y^2+z^2}.$$</li>
 <li>Convert to spherical angles: 
  $$\theta = \text{atan2}(\hat{y}, \hat{x}), \phi = \text{acos}(\hat{z}).
- $$</li>
+    $$</li>
 </ul>
 </li>
 <li><p><strong>Align on Sphere</strong>: The images are aligned on the spherical surface.</p>

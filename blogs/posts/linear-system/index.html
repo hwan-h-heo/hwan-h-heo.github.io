@@ -161,7 +161,7 @@ https://www.deeplearningbook.org/contents/linear_algebra.html -->
 <h2 id="toc-heading-0">1. Linear System</h2>
 <h3 id="toc-heading-1">1.1.1. Linear Combination</h3>
 <p>$$
-\sum_i c_i v_i \ c_i : \text{scalar}, \ v_i : \text{vector}
+\sum_i c_i v_i \\ c_i : \text{scalar}, \ v_i : \text{vector}
 $$</p>
 <ul>
 <li><strong>Basis</strong>: The fundamental unit vectors that form a span. They are the basic units that define a coordinate system.</li>
@@ -177,7 +177,7 @@ The vector $(2,0)$ can be created from $(1,0)$. In this case, their span is the 
 </ul>
 <h3 id="toc-heading-2">1.1.2. Linear Independence</h3>
 <p>$$
-\sum_i c_i v_i \ c_i : \text{scalar}, \ v_i : \text{vector}
+\sum_i c_i v_i \\ c_i : \text{scalar}, \ v_i : \text{vector}
 $$</p>
 <ul>
 <li>If the linear combination above is zero only when all scalars $c_i$ are zero, the vectors are <strong>linearly independent</strong>. Otherwise, they are <strong>linearly dependent</strong>.</li>
@@ -206,15 +206,15 @@ $$</p>
 <li><p>Let&#39;s look at a simple example below.</p>
 <p>
 $$
-\begin{bmatrix} 3 & -2 \\ 1 & 2 \\ \end{bmatrix} = \begin{bmatrix} 3 & -2 \\ 1 & 2 \\ \end{bmatrix} \begin{bmatrix} 1 & 0 \\ 0 & 1 \\ \end{bmatrix}
-$$
+    \begin{bmatrix} 3 &amp; -2 \\ 1 &amp; 2 \\ \end{bmatrix} = \begin{bmatrix} 3 &amp; -2 \\ 1 &amp; 2 \\ \end{bmatrix} \begin{bmatrix} 1 &amp; 0 \\ 0 &amp; 1 \\ \end{bmatrix}
+    $$
 </p>
 
 <p>This can be viewed as the basis vectors <strong>i</strong> and <strong>j</strong> being transformed into new basis vectors: $(3,1)$, which we can call <strong>i&#39;</strong>, and $(-2,2)$, which we can call <strong>j&#39;</strong>. The span formed by these new basis vectors is still a 2D Cartesian coordinate system because $(3,1)$ and $(-2,2)$ are linearly independent (they do not lie on the same line).</p>
 <p>Now, consider the point $(5,2)$. After this transformation, it moves to the point $(11,9)$.</p>
 <p>$$
-(11,9) = 5\mathbf{i}&#39; + 2\mathbf{j}&#39;
-$$</p>
+    (11,9) = 5\mathbf{i}&#39; + 2\mathbf{j}&#39;
+    $$</p>
 <p>This means that if only the basis transforms, the way we describe a point relative to that basis remains the same. A linear transformation can be described as a transformation that changes the basis while preserving the information about how to scale those basis vectors to constitute a point.</p>
 <p>When the <strong>determinant is 0</strong>, the two new basis vectors resulting from the linear transformation defined by the matrix are linearly dependent.
 Therefore, a transformation with a determinant of 0 reduces the dimension of the span. This also gives us insight into the meaning of an inverse matrix.</p>
@@ -222,8 +222,8 @@ Therefore, a transformation with a determinant of 0 reduces the dimension of the
 <li><p>Let&#39;s consider another example.</p>
 <p>
 $$
-\begin{bmatrix} 2 & 4 \\ 3 & 6 \\ \end{bmatrix}
-$$
+    \begin{bmatrix} 2 &amp; 4 \\ 3 &amp; 6 \\ \end{bmatrix}
+    $$
 </p>
 
 <p>This transformation maps the basis vectors $(1,0)$ and $(0,1)$ to two new points, $(2,3)$ and $(4,6)$. <em>Correction: The columns of the matrix are the new basis vectors, so i-hat becomes (2,3) and j-hat becomes (4,6).</em> These two points lie on the same line ($y = \frac{3}{2}x$), so the entire transformation of the span is confined to this single line.</p>
@@ -235,7 +235,7 @@ $$
 <p><strong>2.2.1.</strong></p>
 <p>
 $$
-\begin{bmatrix} a & b \\ c & d \\ e & f \\ \end{bmatrix}
+\begin{bmatrix} a &amp; b \\ c &amp; d \\ e &amp; f \\ \end{bmatrix}
 $$
 </p>
 
@@ -248,7 +248,7 @@ $$
 <p><strong>2.2.2.</strong></p>
 <p>
 $$
-\begin{bmatrix} a & b & c \\ d & e & f \\ \end{bmatrix}
+\begin{bmatrix} a &amp; b &amp; c \\ d &amp; e &amp; f \\ \end{bmatrix}
 $$
 </p>
 
@@ -265,16 +265,16 @@ $$
 <li><p>It becomes possible to think of matrix multiplication as a sequence of transformations.
 This provides an intuitive understanding of why matrix multiplication is associative and distributive but not commutative.</p>
 <p>$$
-A(B+C) = AB + AC
-$$</p>
+    A(B+C) = AB + AC
+    $$</p>
 <p>Regarding distributivity, since A is also a linear transformation, it satisfies this property based on the definition of linearity.</p>
 <p>$$
-A(BC) = (AB)C
-$$</p>
+    A(BC) = (AB)C
+    $$</p>
 <p>Associativity is merely a matter of calculation; it&#39;s equivalent to applying three transformations sequentially in the same order.</p>
 <p>$$
-AB \neq BA
-$$</p>
+    AB \neq BA
+    $$</p>
 <p>Non-commutativity means that changing the order in which transformations are applied changes the result. We can also gain an intuition for the transpose: <strong>the transpose of a linear transformation means that the transformations that were applied to i and j are swapped</strong>.</p>
 </li>
 </ul>
@@ -284,8 +284,8 @@ $$</p>
 <p>Consider a square of area 1 in a 2D plane, formed by the points $(0,0), (0,1), (1,0),$ and $(1,1)$. If we apply the following linear transformation to this square:</p>
 <p>
 $$
-\begin{bmatrix} a & c \\ b & d \\ \end{bmatrix}
-$$
+    \begin{bmatrix} a &amp; c \\ b &amp; d \\ \end{bmatrix}
+    $$
 </p>
 
 <p>The original unit square transforms into the red parallelogram shown in the image below. Based on the diagram, the area of this new region can be calculated as $(a+c)(b+d) - ab - cd - 2bc = ad - bc$.</p>
@@ -319,15 +319,15 @@ Through the determinant, it&#39;s possible to geometrically interpret Cramer&#39
 <p>For example, given the following system of linear equations for a 2x2 square matrix:</p>
 <p>
 $$
-\begin{bmatrix} a & c \\ b & d \\ \end{bmatrix} \begin{bmatrix} x \\ y \\ \end{bmatrix} = \begin{bmatrix} \alpha \\ \beta \\ \end{bmatrix}
-$$
+    \begin{bmatrix} a &amp; c \\ b &amp; d \\ \end{bmatrix} \begin{bmatrix} x \\ y \\ \end{bmatrix} = \begin{bmatrix} \alpha \\ \beta \\ \end{bmatrix}
+    $$
 </p>
 
 <p>We can conveniently find the solution to this linear system by using the determinant values obtained by sequentially replacing each column with the solution vector $(\alpha, \beta)$. The method below is used computationally to find solutions to linear equations.</p>
 <p>
 $$
-y = \frac{ \det{\begin{bmatrix} a & \alpha \\ b & \beta \\ \end{bmatrix}} }{ \det{\begin{bmatrix} a & c \\ b & d \\ \end{bmatrix}} }, \quad x = \frac{ \det{\begin{bmatrix} \alpha & c \\ \beta & d \\ \end{bmatrix}} }{ \det{\begin{bmatrix} a & c \\ b & d \\ \end{bmatrix}} }
-$$
+    y = \frac{ \det{\begin{bmatrix} a &amp; \alpha \\ b &amp; \beta \\ \end{bmatrix}} }{ \det{\begin{bmatrix} a &amp; c \\ b &amp; d \\ \end{bmatrix}} }, \quad x = \frac{ \det{\begin{bmatrix} \alpha &amp; c \\ \beta &amp; d \\ \end{bmatrix}} }{ \det{\begin{bmatrix} a &amp; c \\ b &amp; d \\ \end{bmatrix}} }
+    $$
 </p>
 
 <p>Even when the dimension is extended, the determinant is still defined as the amount by which volume is scaled, so solutions to linear equations in higher dimensions can be found in the same way. Also, when an inverse matrix does not exist, the determinant value is 0, making the denominator in the fraction 0, which similarly shows that no solution exists.</p>

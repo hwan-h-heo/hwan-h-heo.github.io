@@ -253,37 +253,37 @@ $$
 <ul>
 <li><p>이 수식에서 $p$ 는 winding number 를 계산하고자 하는 3차원 공간상의 한 점, $S$ : closed surface (mesh), $x$ : surface $S$ 위의 한 점, $\mathbf{n}_x$ : 점 $x$ 에서의 normal vector 를 나타낸다. </p>
 </li>
-<li><p>${(x-p) \cdot \mathbf{n}_x} / {|x-p|^3} dA$ : 이 항은 점 $p$ 에서 바라본 미소 면적 $dA$의 differential solid angle 을 나타낸다. </p>
+<li><p>${(x-p) \cdot \mathbf{n}_x} / {\|x-p\|^3} dA$ : 이 항은 점 $p$ 에서 바라본 미소 면적 $dA$의 differential solid angle 을 나타낸다. </p>
 <p>  Surface 위의 어떤 면적 $dA$ 에 대해, 관측점 $p$ 에서 실제로 &#39;보이는&#39; 면적은 $dA$ 의 실제 크기가 아니라, 방향에 수직인 tangent space 에 projected 된 면적 $dA_{\perp}$ 이다. </p>
   <p>
   $$
-  dA_{\perp} = dA \cdot \cos(\theta)
-  $$
+    dA_{\perp} = dA \cdot \cos(\theta)
+    $$
   </p>
   
-<p>  이제 이를 $p$ 를 중심으로 하는 반지름이 1인 sphere 에 투영한다고 생각하면, solid angle 은 다음과 같이 나타낼 수 있을 것이다 $(r = ||x-p||)$. </p>
+<p>  이제 이를 $p$ 를 중심으로 하는 반지름이 1인 sphere 에 투영한다고 생각하면, solid angle 은 다음과 같이 나타낼 수 있을 것이다 $(r = \||x-p\||)$. </p>
   <p>
   $$
-  d\Omega = \frac{dA_{\perp}}{r^2} = \frac{dA \cdot \cos(\theta)}{r^2}
-  $$
+    d\Omega = \frac{dA_{\perp}}{r^2} = \frac{dA \cdot \cos(\theta)}{r^2}
+    $$
   </p>
   
 <p>  이 때, $\cos(\theta)$ 는 dot product 에 의해 다음과 같으므로,</p>
   <p>
   $$
-  \cos(\theta) = \frac{(x-p) \cdot \mathbf{n}_x}{\|x-p\|} \\ \because \|\mathbf{n}_x\| = 1
-  $$
+    \cos(\theta) = \frac{(x-p) \cdot \mathbf{n}_x}{\|x-p\|} \\ \because \|\mathbf{n}_x\| = 1
+    $$
   
   </p>
   
 <p>  이를 이용해 solid angle 에 대한 수식을 다음과 같이 정리할 수 있다. </p>
   <p>
   $$
-  \begin{aligned}
-  d\Omega &= \frac{dA}{r^2} \cdot \left( \frac{(x-p) \cdot \mathbf{n}_x}{\|x-p\|} \right) \\
-  &= \frac{(x-p) \cdot \mathbf{n}_x}{\|x-p\|^3} dA
-  \end{aligned}
-  $$
+    \begin{aligned}
+    d\Omega &amp;= \frac{dA}{r^2} \cdot \left( \frac{(x-p) \cdot \mathbf{n}_x}{\|x-p\|} \right) \\
+    &amp;= \frac{(x-p) \cdot \mathbf{n}_x}{\|x-p\|^3} dA
+    \end{aligned}
+    $$
   </p>
 </li>
 <li><p>${1}/{4\pi}$ : normalization term 으로, 구 전체의 입체각인 $4\pi$ 와 같다.</p>

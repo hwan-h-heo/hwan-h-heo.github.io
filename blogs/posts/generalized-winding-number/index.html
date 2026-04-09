@@ -253,37 +253,37 @@ $$
 <ul>
 <li><p>In this formula, $p$ is a point in 3D space for which the winding number is being calculated, $S$: closed surface (mesh), $x$: a point on the surface $S$, $\mathbf{n}_x$: the normal vector at point $x$. </p>
 </li>
-<li><p>${(x-p) \cdot \mathbf{n}_x} / {|x-p|^3} dA$: This term represents the differential solid angle of the infinitesimal area $dA$ viewed from point $p$. </p>
+<li><p>${(x-p) \cdot \mathbf{n}_x} / {\|x-p\|^3} dA$: This term represents the differential solid angle of the infinitesimal area $dA$ viewed from point $p$. </p>
 <p>  For any area $dA$ on the surface, the area actually &#39;seen&#39; from the observation point $p$ is not the actual size of $dA$, but the area $dA_{\perp}$ projected onto the tangent space perpendicular to the direction. </p>
   <p>
   $$
-  dA_{\perp} = dA \cdot \cos(\theta)
-  $$
+    dA_{\perp} = dA \cdot \cos(\theta)
+    $$
   </p>
   
-<p>  Now, if we consider projecting this onto a sphere of radius 1 centered at $p$, the solid angle can be expressed as $(r = ||x-p||)$: </p>
+<p>  Now, if we consider projecting this onto a sphere of radius 1 centered at $p$, the solid angle can be expressed as $(r = \||x-p\||)$: </p>
   <p>
   $$
-  d\Omega = \frac{dA_{\perp}}{r^2} = \frac{dA \cdot \cos(\theta)}{r^2}
-  $$
+    d\Omega = \frac{dA_{\perp}}{r^2} = \frac{dA \cdot \cos(\theta)}{r^2}
+    $$
   </p>
   
 <p>  At this point, since $\cos(\theta)$ is given by the dot product:</p>
   <p>
   $$
-  \cos(\theta) = \frac{(x-p) \cdot \mathbf{n}_x}{\|x-p\|} \\ \because \|\mathbf{n}_x\| = 1
-  $$
+    \cos(\theta) = \frac{(x-p) \cdot \mathbf{n}_x}{\|x-p\|} \\ \because \|\mathbf{n}_x\| = 1
+    $$
   
   </p>
   
 <p>  Using this, the formula for the solid angle can be organized as follows: </p>
   <p>
   $$
-  \begin{aligned}
-  d\Omega &= \frac{dA}{r^2} \cdot \left( \frac{(x-p) \cdot \mathbf{n}_x}{\|x-p\|} \right) \\
-  &= \frac{(x-p) \cdot \mathbf{n}_x}{\|x-p\|^3} dA
-  \end{aligned}
-  $$
+    \begin{aligned}
+    d\Omega &amp;= \frac{dA}{r^2} \cdot \left( \frac{(x-p) \cdot \mathbf{n}_x}{\|x-p\|} \right) \\
+    &amp;= \frac{(x-p) \cdot \mathbf{n}_x}{\|x-p\|^3} dA
+    \end{aligned}
+    $$
   </p>
 </li>
 <li><p>${1}/{4\pi}$: This is the normalization term, equal to the solid angle of the entire sphere, $4\pi$.</p>

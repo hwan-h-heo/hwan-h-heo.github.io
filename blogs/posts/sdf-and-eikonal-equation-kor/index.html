@@ -161,46 +161,46 @@ velog 에서 비슷한 글을 작성한 적 있지만, 엄밀성을 더하여 �
 <p><img src="https://ar5iv.labs.arxiv.org/html/1901.05103/assets/x2.png" alt=""></p>
 <p>이는 Surface reconstruction, 3D generation 등 최신 3D AI 분야뿐만 아니라, watertight mesh repair, 충돌 처리, 애니메이션 등 물리학적 시뮬레이션에서도 중요한 역할을 한다.</p>
 <p>SDF 과 관련된 논문을 읽다 보면 필연적으로 마주하게 되는 공식이 바로 <a href="https://en.wikipedia.org/wiki/Eikonal_equation">eikonal equation</a>:
-$$ | \nabla f_\text{SDF} | = 1 \
+$$ \| \nabla f_\text{SDF} \| = 1 \\
 $$
 와 이를 통해서 유도된 eikonal regularization term (or eikonal loss)</p>
-<p>$$ \arg \min_\theta \mathbb E_x \left ( | \nabla f_{\text{SDF}}(x) | -1   \right )^2
+<p>$$ \arg \min_\theta \mathbb E_x \left ( \| \nabla f_{\text{SDF}}(x) \| -1   \right )^2
 $$</p>
 <p>인데, ($\theta$: MLP&#39;s parameter) 이 글을 통해 SDF 가 왜 이러한 eikonal equation 을 통해 정의될 수 있는지 알아보자.</p>
 <hr>
 <h2 id="toc-heading-1">SDF to Eikonal Equation</h2>
 <p>우선 SDF 에 대한 정의부터 엄밀하게 짚고 넘어가도록 하겠다. </p>
 <p>어떤 집합 $\Omega \subset \mathbb{R}^n$ 와 그 경계 $\partial\Omega$ 에 대해, Signed Distance Function (SDF) $f: \mathbb{R}^n \to \mathbb{R}$ 는 다음과 같이 정의된다.</p>
-<p id="p-2">$$ f(x) = \begin{cases} d(x, \partial\Omega) & \text{if } x \in \Omega^c \\ 0 & \text{if } x \in \partial\Omega \\ -d(x, \partial\Omega) & \text{if } x \in \Omega \end{cases}
+<p id="p-2">$$ f(x) = \begin{cases} d(x, \partial\Omega) &amp; \text{if } x \in \Omega^c \\ 0 &amp; \text{if } x \in \partial\Omega \\ -d(x, \partial\Omega) &amp; \text{if } x \in \Omega \end{cases}
 $$</p>
 
 
-<p>여기서 $$d(x, \partial\Omega) = \inf_{y \in \partial\Omega} |x - y|$$ 는 점 $x$ 와 집합 $\partial\Omega$ 사이의 Euclidean Distance 이다.</p>
+<p>여기서 $$d(x, \partial\Omega) = \inf_{y \in \partial\Omega} \|x - y\|$$ 는 점 $x$ 와 집합 $\partial\Omega$ 사이의 Euclidean Distance 이다.</p>
 <p>우리가 증명하고자 하는 <strong>Eikonal Equation</strong> 은 $f$가 미분 가능한 모든 점 $x$에서 다음을 만족한다는 것이다.</p>
-<p>$$ |\nabla f(x)| = 1
+<p>$$ \|\nabla f(x)\| = 1
 $$</p>
 <hr>
 <h2 id="toc-heading-2">Proof 1</h2>
 <blockquote>
 <p><em>Proof using Lipschitz Continuity</em></p>
 </blockquote>
-<p>이 증명은 원래의 아이디어인 삼각부등식을 더 엄밀하게 사용하여 $f$가 Lipschitz constant 1 을 갖는 함수임을 보이고, 이를 통해 gradient 의 supremum ($|\nabla f| \le 1$) 을 유도하도록 하겠다. infimum ($|\nabla f| \ge 1$) 은 SDF 의 값이 가장 빠르게 변하는 방향을 고려하여 증명한다.</p>
+<p>이 증명은 원래의 아이디어인 삼각부등식을 더 엄밀하게 사용하여 $f$가 Lipschitz constant 1 을 갖는 함수임을 보이고, 이를 통해 gradient 의 supremum ($\|\nabla f\| \le 1$) 을 유도하도록 하겠다. infimum ($\|\nabla f\| \ge 1$) 은 SDF 의 값이 가장 빠르게 변하는 방향을 고려하여 증명한다.</p>
 <h3 id="toc-heading-3">1.1. Supremum of SDF Gradient</h3>
-<!--$$\|\nabla f(x)\| \le 1-->
-<!--$$-->
+<!--$$\|\nabla f(x)\| \le 1--&gt;
+&lt;!--$$-->
 
 <p>임의의 두 점 $x_1, x_2 \in \mathbb{R}^n$ 에 대하여, boundary 위의 최근접점을 $p_1 \in \partial\Omega$ 이라 하면, 
-$$ d(x_1, \partial\Omega) = |x_1-p_1|
+$$ d(x_1, \partial\Omega) = \|x_1-p_1\|
 $$
 SDF 의 정의에 따라 위의 관계로 나타낼 수 있다. </p>
 <p>또한 $f(x_1)$ 의 정의에 따라, 다음이 성립하므로,
-$$ f(x_1) \le d(x_1, \partial\Omega) \le |x_1-p_2|
+$$ f(x_1) \le d(x_1, \partial\Omega) \le \|x_1-p_2\|
 $$ 
 $f(x_1)$ 과 $f(x_2)$ 에 대해 다음의 관계가 성립한다. </p>
 <p>
 $$
 \begin{aligned}
-f(x_2) - f(x_1) & \ge d(x_2, \partial\Omega) - \|x_1-p_2\| \\ &= \|x_2-p_2\| - \|x_1-p_2\| .
+f(x_2) - f(x_1) &amp; \ge d(x_2, \partial\Omega) - \|x_1-p_2\| \\ &amp;= \|x_2-p_2\| - \|x_1-p_2\| .
 \end{aligned}
 $$
 </p>
@@ -208,37 +208,37 @@ $$
 <p>
 $$
 \begin{aligned}
-f(x_2) - f(x_1) &\ge -\|(x_2-p_2) - (x_1-p_2)\| \\ & = -\|x_2-x_1\| \\  \therefore |f(x_1) - f(x_2)| & \le \|x_1-x_2\|
+f(x_2) - f(x_1) &amp;\ge -\|(x_2-p_2) - (x_1-p_2)\| \\ &amp; = -\|x_2-x_1\| \\  \therefore |f(x_1) - f(x_2)| &amp; \le \|x_1-x_2\|
 \end{aligned}
 $$
 </p>
 
-<p><em>cf.</em> $ |a|-|b| \ge -|a-b| $ </p>
+<p><em>cf.</em> $ \|a\|-\|b\| \ge -\|a-b\| $ </p>
 <p>이는 함수 $f$가 Lipschitz constant 1을 갖는 <strong><a href="https://en.wikipedia.org/wiki/Lipschitz_continuity">1-Lipschitz Continuous Function</a></strong> 임을 의미한다. (즉, 두 점 사이의 거리가 1 이상으로 증가하지 않는 함수이다)</p>
 <p>만약 $f$가 점 $x$에서 미분 가능하다면, gradient 의 정의에 의해 다음이 성립한다.</p>
 <p>
 $$
 \begin{aligned}
-|\nabla f(x) \cdot v| & = \lim_{t \to 0} \frac{|f(x+tv) - f(x)|}{t} \\ & \le \lim_{t \to 0} \frac{\|tv\|}{t} = \|v\|
+|\nabla f(x) \cdot v| &amp; = \lim_{t \to 0} \frac{|f(x+tv) - f(x)|}{t} \\ &amp; \le \lim_{t \to 0} \frac{\|tv\|}{t} = \|v\|
 \end{aligned}
 $$
 </p>
 
-<p>이제 unit vector $v = \frac{\nabla f(x)}{|\nabla f(x)|}$ 에 대해 ($\nabla f(x) \neq 0$ 라면),
-$$\left | \nabla f(x) \cdot \frac{\nabla f(x)}{|\nabla f(x)|} \right | = \frac{|\nabla f(x)|^2}{|\nabla f(x)|} = |\nabla f(x)|$$
+<p>이제 unit vector $v = \frac{\nabla f(x)}{\|\nabla f(x)\|}$ 에 대해 ($\nabla f(x) \neq 0$ 라면),
+$$\left | \nabla f(x) \cdot \frac{\nabla f(x)}{\|\nabla f(x)\|} \right | = \frac{\|\nabla f(x)\|^2}{\|\nabla f(x)\|} = \|\nabla f(x)\|$$
 따라서 
-$$|\nabla f(x)| \le \left |\frac{\nabla f(x)}{|\nabla f(x)|} \right | = 1$$ 
-이므로, $|\nabla f(x)| \le 1$ 이다.</p>
+$$\|\nabla f(x)\| \le \left \|\frac{\nabla f(x)}{\|\nabla f(x)\|} \right \| = 1$$ 
+이므로, $\|\nabla f(x)\| \le 1$ 이다.</p>
 <hr>
 <h3 id="toc-heading-4">1.2. Infimum of SDF Gradient</h3>
-<p>이번에는 $|\nabla f(x)| \ge 1$ 임을 증명하여 gradient 크기의 하한 (infimum) 을 보이도록 하겠다.</p>
+<p>이번에는 $\|\nabla f(x)\| \ge 1$ 임을 증명하여 gradient 크기의 하한 (infimum) 을 보이도록 하겠다.</p>
 <p>우선, $f$ 가 미분 가능한 점 $$x \in \mathbb{R}^n \setminus \partial\Omega$$ 를 생각하자. 또한 $x$에서 경계 $\partial\Omega$ 까지의 거리를 최소화하는 <strong>유일한</strong> 최근접점 $p \in \partial\Omega$ 가 존재한다고 가정한다. (이러한 점들은 &#39;medial axis&#39;를 제외한 대부분의 공간에 해당한다.)</p>
-<p>이제 $p$ 에서 $x$ 를 향하는, 즉 경계로부터 가장 빠르게 멀어지는 방향을 나타내는 단위 벡터 $$ n = \frac{x-p}{|x-p|} $$ 을 생각할 수 있다.</p>
+<p>이제 $p$ 에서 $x$ 를 향하는, 즉 경계로부터 가장 빠르게 멀어지는 방향을 나타내는 단위 벡터 $$ n = \frac{x-p}{\|x-p\|} $$ 을 생각할 수 있다.</p>
 <p>이 방향으로의 directional derivative 를 고려하기 위해, 충분히 작은 양수 $t &gt; 0$ 에 대한 점 $x+tn$ 을 생각할 수 있다. $x$ 의 최근접점 $p$ 가 유일하다는 가정 하에, 충분히 작은 $t$ 에 대해서 $x+tn$의 최근접점 역시 $p$가 된다. 따라서 거리 함수 값은 다음과 같이 계산된다.</p>
 <p>
 $$
 \begin{aligned}
-d(x+tn, \partial\Omega) &= \|(x+tn) - p\| \\ &= \|(x-p) + tn\| \\ & = \|\|x-p\|n + tn\| \\ & = (\|x-p\|+t) = d(x, \partial\Omega)+t
+d(x+tn, \partial\Omega) &amp;= \|(x+tn) - p\| \\ &amp;= \|(x-p) + tn\| \\ &amp; = \|\|x-p\|n + tn\| \\ &amp; = (\|x-p\|+t) = d(x, \partial\Omega)+t
 \end{aligned}
 $$
 </p>
@@ -253,22 +253,22 @@ $$
 <ul>
 <li>$x \in \Omega^c$ 의 경우:
   $$
-  \nabla f(x) \cdot n = \lim_{t\to 0^+} \frac{f(x+tn)-f(x)}{t} = \lim_{t\to 0^+} \frac{t}{t} = 1
-  $$</li>
+    \nabla f(x) \cdot n = \lim_{t\to 0^+} \frac{f(x+tn)-f(x)}{t} = \lim_{t\to 0^+} \frac{t}{t} = 1
+    $$</li>
 <li>$x \in \Omega$ 의 경우 (값이 가장 빠르게 증가하는 방향은 $-n$ 이다):
   $$
-  \nabla f(x) \cdot (-n) = \lim_{t\to 0^+} \frac{f(x-tn)-f(x)}{t} = \lim_{t\to 0^+} \frac{t}{t} = 1
-  $$
+    \nabla f(x) \cdot (-n) = \lim_{t\to 0^+} \frac{f(x-tn)-f(x)}{t} = \lim_{t\to 0^+} \frac{t}{t} = 1
+    $$
   따라서 $\nabla f(x) \cdot n = -1$ 이다.</li>
 </ul>
 <p>두 경우 모두 $|\nabla f(x) \cdot n| = 1$ 이 성립한다.
-Cauchy-Schwarz 부등식 $|\nabla f(x) \cdot n| \le |\nabla f(x)| |n|$ 과 $|n|=1$ 이라는 사실로부터,</p>
-<p>$$ 1 \le |\nabla f(x)| $$</p>
+Cauchy-Schwarz 부등식 $|\nabla f(x) \cdot n| \le \|\nabla f(x)\| \|n\|$ 과 $\|n\|=1$ 이라는 사실로부터,</p>
+<p>$$ 1 \le \|\nabla f(x)\| $$</p>
 <p>이 성립함을 알 수 있다.</p>
 <h3 id="toc-heading-5">1.3. Conclusion</h3>
-<p>1.1절에서 증명한 $|\nabla f(x)| \le 1$ 과 1.2절에서 증명한 $|\nabla f(x)| \ge 1$ 로부터, $f$ 가 미분 가능한 모든 점 $x$ 에 대하여 Eikonal equation 이 성립함을 알 수 있다.</p>
+<p>1.1절에서 증명한 $\|\nabla f(x)\| \le 1$ 과 1.2절에서 증명한 $\|\nabla f(x)\| \ge 1$ 로부터, $f$ 가 미분 가능한 모든 점 $x$ 에 대하여 Eikonal equation 이 성립함을 알 수 있다.</p>
 <p>$$
-|\nabla f(x)| = 1
+\|\nabla f(x)\| = 1
 $$</p>
 <hr>
 <h2 id="toc-heading-6">Proof 2</h2>
@@ -278,23 +278,23 @@ $$</p>
 <p>두 번째 증명은 거리 함수의 기하학적 성질을 이용하는 보다 직관적인 접근법이다. 증명의 엄밀성을 위해, 거리 함수의 gradient 에 대한 잘 알려진 다음 정리를 먼저 명시한다.</p>
 <blockquote>
 <p><strong>Theorem.</strong> 거리 함수 $d(x, S)$가 점 $x$에서 미분 가능하고, $p$가 $S$ 상의 $x$에 대한 유일한 최근접점이라면, $d$의 gradient 는 다음과 같다.
-$$ \nabla d(x, S) = \frac{x-p}{|x-p|} $$</p>
+$$ \nabla d(x, S) = \frac{x-p}{\|x-p\|} $$</p>
 <p>이 정리는 거리 함수의 level set 이 $S$ 로부터 같은 거리에 있는 점들의 집합이며, gradient 는 level set 에 수직이고 값이 가장 빠르게 증가하는 방향을 가리킨다는 기하학적 사실로부터 유도된다. 이 방향은 바로 $p$ 에서 $x$ 로 향하는 단위 벡터이다.</p>
 </blockquote>
 <h3 id="toc-heading-7">2.1. Gradient Calculation</h3>
 <p>앞선 증명과 마찬가지로 $f$ 가 미분 가능한 점 $x \in \mathbb{R}^n \setminus \partial\Omega$ 와, $\partial\Omega$ 상의 유일한 최근접점 $p$ 를 가정하자. 두 가지 경우로 나누어 $\nabla f(x)$ 를 계산할 수 있다.</p>
 <p><strong>Case 1: $x \in \Omega^c$</strong></p>
 <p>이 경우 SDF 의 정의에 의해 $f(x) = d(x, \partial\Omega)$ 이다. 따라서 위 정리를 직접 적용하면 다음과 같다.
-$$ \nabla f(x) = \nabla d(x, \partial\Omega) = \frac{x-p}{|x-p|} $$</p>
+$$ \nabla f(x) = \nabla d(x, \partial\Omega) = \frac{x-p}{\|x-p\|} $$</p>
 <p><strong>Case 2: $x \in \Omega$</strong></p>
 <p>이 경우 $f(x) = -d(x, \partial\Omega)$ 이므로, gradient 는 다음과 같다.
-$$ \nabla f(x) = -\nabla d(x, \partial\Omega) = -\frac{x-p}{|x-p|} $$</p>
+$$ \nabla f(x) = -\nabla d(x, \partial\Omega) = -\frac{x-p}{\|x-p\|} $$</p>
 <h3 id="toc-heading-8">2.2. Gradient&#39;s Norm</h3>
 <p>두 경우 모두, gradient $\nabla f(x)$ 는 단위 벡터이거나 단위 벡터에 -1을 곱한 형태이다. 따라서 gradient 의 Euclidean norm 을 계산하면 다음과 같다.</p>
 <p>
 $$ 
 \begin{aligned}
-\|\nabla f(x)\| &= \left\| \pm \frac{x-p}{\|x-p\|} \right\| \\ & = \frac{\|x-p\|}{\|x-p\|} = 1 
+\|\nabla f(x)\| &amp;= \left\| \pm \frac{x-p}{\|x-p\|} \right\| \\ &amp; = \frac{\|x-p\|}{\|x-p\|} = 1 
 \end{aligned}
 $$
 </p>

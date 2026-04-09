@@ -238,7 +238,7 @@ $$</p>
 <p>여기서 learnable query 는 data distribution (3D shape) 에 대해서 semantically meaningfull, compressed 된 공간에서의 (latent space) 일종의 basis 로써, 즉 preliminaries 에서 살펴본 kernel basis 과 같은 역할을 한다. 아래 그림에서 서로 다른 basis 가 data point $x$ 에 대해 embedding 을 어떻게 적용하는지 볼 수 있다. </p>
 <p><img src="https://velog.velcdn.com/images/gjghks950/post/b94e3561-eb33-4e63-8362-4fc2b135b498/image.png" alt=""></p>
 <p>ShapeVAE 에서는 위 그림에서의 (e) 처럼, query point $(x)$ 에 대해 learnable query (latent space 의 basis) 의 similarity 를 반영한 후, </p>
-<p>$$ \sum_{i=1}^{M} \mathbf{v}(\mathbf{f}_i) \cdot \frac{1}{Z(\mathbf{x}, {\mathbf{f}<em>i}</em>{i=1}^{M})} e^{\mathbf{q}(\mathbf{x})^{\mathsf{T}} \mathbf{k}(\mathbf{f}_i) / \sqrt{d}}
+<p>$$ \sum_{i=1}^{M} \mathbf{v}(\mathbf{f}_i) \cdot \frac{1}{Z(\mathbf{x}, \{\mathbf{f}_i\}_{i=1}^{M})} e^{\mathbf{q}(\mathbf{x})^{\mathsf{T}} \mathbf{k}(\mathbf{f}_i) / \sqrt{d}}
 $$</p>
 <ul>
 <li>where Z: normalizing factor (즉 v 를 제외하고 보면 softmax)</li>
@@ -320,7 +320,7 @@ sparse 한 특징을 가지고, 3D shape 자체는 ‘2D image’ 의 texture, s
 <h3 id="toc-heading-5">2.1. Structured Latent Representation</h3>
 <p>Trellis 는 ShapeVAE 의 단점 중 <em>‘PE only input feature encoding&#39;</em> 의 한계로부터 나오는 한계를 well-trained 2D feature extractor (<strong>DINOv2</strong>) 를 사용해 극복한 연구이다. </p>
 <p>저자들은 <em><strong>SLAT</strong></em> (Structured Latent Representation) 이라는 representation 을 제안하는데, </p>
-<p>$$ \mathbf{z} = {(\mathbf{z}_i, \mathbf{p}<em>i)}</em>{i=1}^{L}, \quad \mathbf{z}_i \in \mathbb{R}^{C}, \quad \mathbf{p}_i \in {0, 1, \dots, N-1}^3,
+<p>$$ \mathbf{z} = \{(\mathbf{z}_i, \mathbf{p}_i)\}_{i=1}^{L}, \quad \mathbf{z}_i \in \mathbb{R}^{C}, \quad \mathbf{p}_i \in \{0, 1, \dots, N-1\}^3,
 $$</p>
 <p>여기서 $p_i$ 는 voxel index, $(z_i)$ 는 latent vector 이다. 즉 voxel grid 마다 latent vector 가 하나씩 할당되어 있는 구조이고, latent vector set 이 그 자체로 <em><strong>structured (voxelized)</strong></em> 되어 있기 때문에 <em><strong>SLAT</strong></em> 이라고 명명한 듯 하다. </p>
 <p>3D data의 sparsity 으로 인해, activated grid 의 개수는 3D grid 의 총 사이즈보다 매우 작고 $(L &lt;&lt; N^3)$, 이는 상대적으로 높은 해상도로 생성될 수 있음을 의미한다. Instant-NGP 등 voxel-grid NeRF 와도 비슷한 접근인데, ShapeVAE 를 이용해 featured grid 를 예측하는 설계인 셈. </p>
@@ -361,7 +361,7 @@ $$
 </li>
 </ol>
 <p>첫 단계에서 structure 를 dense grid 로 바로 생성하는 것은 computation cost 가 크기 때문에, Trellis 는 Structure Gen Stage 에서도 <em>Decoder</em> 를 도입하여 low-resolution feature grid 를 생성 후 Decoder 로 scale up 하는 방식을 채택한다. </p>
-<p>구체적으로는 GT dense binary grid $\mathbf{O} \in {0, 1}^{N \times N \times N}$ 를 3D convolution 을 이용해 low-resolution feature grid $\mathbf{S} \in \mathbb{R}^{D \times D \times D \times C_s}$ 으로 압축하여, 이를 예측하는 Flow Transformer 를 먼저 학습한다. $\mathbf{O}$ 가 coarse 한 형상이기 때문에 3D conv 를 이용한 압축 과정에서 손실이 거의 없고, NN 학습의 효율성을 향상시키는 장점도 있다. 또한, $\mathbf{O}$ 의 binary grid 를 continuous value 로 변환하여 Rectified Flow 학습에 적합하게 만든다.</p>
+<p>구체적으로는 GT dense binary grid $\mathbf{O} \in \{0, 1\}^{N \times N \times N}$ 를 3D convolution 을 이용해 low-resolution feature grid $\mathbf{S} \in \mathbb{R}^{D \times D \times D \times C_s}$ 으로 압축하여, 이를 예측하는 Flow Transformer 를 먼저 학습한다. $\mathbf{O}$ 가 coarse 한 형상이기 때문에 3D conv 를 이용한 압축 과정에서 손실이 거의 없고, NN 학습의 효율성을 향상시키는 장점도 있다. 또한, $\mathbf{O}$ 의 binary grid 를 continuous value 로 변환하여 Rectified Flow 학습에 적합하게 만든다.</p>
 <blockquote>
 <p><em><strong>Rectified flow</strong></em> 모델은 diffusion process 에서 data → noise 로 경로를 linear interpolation (input → output) 의 직선 경로를 forward process 로 사용하는 모델이다. 일반적인 Neural ODE solver 의 step 이 비효율적인데 비해 Rectified Flow 는 data → noise 의 linear 한 vector field 를 modeling 하기 때문에 훨씬 빠르고 정확하게 생성이 가능하다. 
 <img src="https://velog.velcdn.com/images/gjghks950/post/365500ab-4bf9-4f77-b89e-474d14b76fd4/image.png" alt=""></p>
@@ -453,7 +453,7 @@ $$
 </li>
 </ul>
 <p>학습은 Trellis 와 마찬가지로 <em><strong>Rectified Flow Matching</strong></em> 을 이용했다고 한다. </p>
-<p>$$ \mathcal{L} = \mathbb{E}<em>{t, x_0, x_1} \left[ || u</em>\theta(x_t, c, t) - u_t ||_2^2 \right]
+<p>$$ \mathcal{L} = \mathbb{E}_{t, x_0, x_1} \left[ || u_\theta(x_t, c, t) - u_t ||_2^2 \right]
 $$</p>
 <p>언급된 학습 detail 중에 주목할만한 점으로, ViT 계열에서 주로 patch 단위에 positional embedding (PE) 을 더하는 것과 다르게 Hunyuan 은 PE 를 제거했다고 한다. 이는 Shape 생성 시 ‘fixed location’ 에 특정 latent 가 할당되는 것을 막기 위함이라고 한다.</p>
 <h3 id="toc-heading-10">3.3. Hunyuan3D-paint</h3>

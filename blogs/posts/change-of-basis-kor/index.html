@@ -171,20 +171,20 @@ https://www.deeplearningbook.org/contents/linear_algebra.html -->
 <li><p>선형방정식계를 통해서, $A^{-1}MA$  꼴로 나타내지는 quadratic form 의 기하학적인 해석이 가능하다. 다음을 보자</p>
   <p>
   $$
-  \begin{bmatrix} 
-  a & c \\
-  b & d \\
-  \end{bmatrix} 
-  \begin{bmatrix} 
-  x  \\
-  y  \\
-  \end{bmatrix} 
-   = 
-  \begin{bmatrix} 
-  x'  \\
-  y'  \\
-  \end{bmatrix} 
-  $$
+    \begin{bmatrix} 
+    a &amp; c \\
+    b &amp; d \\
+    \end{bmatrix} 
+    \begin{bmatrix} 
+    x  \\
+    y  \\
+    \end{bmatrix} 
+     = 
+    \begin{bmatrix} 
+    x&#39;  \\
+    y&#39;  \\
+    \end{bmatrix} 
+    $$
   </p>
   
 <p>  위 선형방정식 계를, basis 가 변하는 관점에서 해석한다면 basis 가 $(a,b), \ (c,d)$인 span 에서 $(x,y)$인 점이, basis 가 $(0,1),\ (1,0)$인 span 에서 $(x&#39;, y&#39;)$ 으로 나타난다는 의미이다. 즉 점$(x&#39;, y&#39;)$은, $A$에서의 $(x,y)$점을 일반적인 좌표계에서 해석한 것이다. </p>
@@ -214,23 +214,23 @@ $$</p>
 <li><p>이제 행렬의 모든 column이 모든 eigenvector로 이루어져있는 행렬 $V$를 생각하자 (span의 basis가 eigenvector 인 상황, 보통 eigenbasis 라고 부른다). 위 행렬 $V$를 통해서 $V^{-1}AV$ 라는 quadratic form을 구성할 수 있는데, 이는 고윳값을 대각선 성분으로 갖는 diagonal matrix 가 된다. 다시 써보면,</p>
   <p>
   $$
-  V^{-1}AV = \\ 
-  \begin{bmatrix} 
-  \lambda_1 &  &... &  & 0\\
-  . & \lambda_2 & &  &. \\
-  . & & \lambda_3 &   &. \\
-  . &  &  & \lambda_4 &. \\
-  0 &  & ... &  &\lambda_5 \\
-  \end{bmatrix} 
-  $$
+    V^{-1}AV = \\ 
+    \begin{bmatrix} 
+    \lambda_1 &amp;  &amp;... &amp;  &amp; 0\\
+    . &amp; \lambda_2 &amp; &amp;  &amp;. \\
+    . &amp; &amp; \lambda_3 &amp;   &amp;. \\
+    . &amp;  &amp;  &amp; \lambda_4 &amp;. \\
+    0 &amp;  &amp; ... &amp;  &amp;\lambda_5 \\
+    \end{bmatrix} 
+    $$
   </p>
   
 <p>  이다. change of basis 의 관점에서 살펴보면, 이는 $V$ span 에서의 $A$ 변환이다. 그런데 $V$는 basis가 eigenvector 인 변환이므로, $A$에서 오직 scaling 하기만 하는 coordinate system 으로 변환된 것이다. 즉 diagonal matrix 일 수밖에 없고, 이 scale 하는 정도가 eigenvalue 로 나타내어지기 때문에 위 quadratic form 은 이렇게 eigenvalue 로 이루어진 diagonal matrix를 갖게 된다. </p>
 </li>
 <li><p>이를 통해 역으로 $A$ 를 구성해보면,</p>
 <p>  $$
-  A = V diag(\lambda ) V^{-1}
-  $$</p>
+    A = V diag(\lambda ) V^{-1}
+    $$</p>
 <p>  라는 우리가 알고 있는 eigend-decomposition 을 이끌어낼 수 있다. 즉 eigen-decomposition은 선형변환을 통해서 $A$라는 span에 구애받지 않는 회전축을 구하고, 이를 통해 공간을 원하는 방향으로 확장할 수 있게 해주는 도구이다. 간단한 예제로써 선형 변환의 반복적인 적용 작업에 이를 많이 이용하는데, quadratic form 의 앞뒤 형태가 서로 역행렬이기 때문이라는 수치해석적인 접근 말고도, 애초에 eigen-decomposition이 의미하는 바가 span에 구애받지 않고 scaling 이기 때문에 같은 해석이 가능하다. </p>
 <p>  또한 이는 PCA 등에서 covariance matrix를 maximize 하는 feature extraction 이 covariance matrix 의 eigenvalue 가 큰 eigenvector 를 선택하는 것과 일맥상통한다. eigenbasis를 통해서는 선형 변환 이후에도 점을 기술하는 방식이 바뀌지 않으므로 큰 기여도를 갖는 방향의 순서대로 basis를 선택하는 것을 PCA라고도 해석할 수 있다. </p>
 </li>
@@ -245,16 +245,16 @@ $$</p>
 <li><p>nonsingular matrix P에 대해, A와 B를 위와같이 나타낼 수 있을 때 A와 B 를 서로 similar 하다고 정의한다. change of basis 관점에서 이는 같은 변환이지만 서로 다른 span에서의 표현이라고 알 수 있다. 또한 determinant 의 성질에 의해서 $det(B) = det(A)$ 임을 알 수 있다. 또한 다음을 통해 similar matrix 의 eigenvalue 값이 동일함을 유도할 수 있다.</p>
   <p>
   $$
-  B−λI=P^{−1}AP−λP^{−1}P=P^{−1}(A−λI)P \\ \therefore det(B−λI)=det(P^{−1}(A−λI)P)=det(A−λI)
-  $$
+    B−λI=P^{−1}AP−λP^{−1}P=P^{−1}(A−λI)P \\ \therefore det(B−λI)=det(P^{−1}(A−λI)P)=det(A−λI)
+    $$
   </p>
   
 <p>  이를 이용해 꽤 유용한 성질 하나를 유도할 수 있다. 다음을 보자 </p>
 <p>  <em>&quot;$C=P^TAP$ 를 만족하는 orthogonal matrix P가 존재할 때, A는 symmetric 이면 eigenvector 는 서로 orthogonal이다. &quot;</em></p>
   <p>
   $$
-  Av_j = \lambda _j v_j \\ \rightarrow v_i^T (Av_j) = (v_i^TA^T) v_j  = (Av_i)^T v_j \\ = \lambda _i \cdot v_i^T \cdot v_j \\ = \lambda _j \cdot v_i^T \cdot v_j
-  $$
+    Av_j = \lambda _j v_j \\ \rightarrow v_i^T (Av_j) = (v_i^TA^T) v_j  = (Av_i)^T v_j \\ = \lambda _i \cdot v_i^T \cdot v_j \\ = \lambda _j \cdot v_i^T \cdot v_j
+    $$
   </p>
   
 <p>  $\lambda_i \neq \lambda _j$  이기 때문에 어떤 eigenvector 도 서로의 내적값이 0 이 됨을 알 수 있다. orthogonal matrix 로 matrix factorization 을 하면 eigen-decomposition 에 더해서 특이한 성질을 하나 발견할 수 있는데, basis 들끼리 서로 orthogonal 하므로 직교하는 축들의 모임이라고 해석할 수 있고, 즉 이 orthogonal column matrix 자체를 회전변환이라고 해석할 수 있다. (원래의 basis 들도 서로 orthogoanal 한 관계를 이루므로)</p>
@@ -331,12 +331,12 @@ $$
 $$
 </p>
 
-<p>기술되어 있는 least square solution 이 $\min |x |_2$ 인 해를 갖는 이유를 기하학적으로 접근하는 방식도 있으나 그림을 그리기 어려운 관계로 이는 생략하겠다. 
+<p>기술되어 있는 least square solution 이 $\min \|x \|_2$ 인 해를 갖는 이유를 기하학적으로 접근하는 방식도 있으나 그림을 그리기 어려운 관계로 이는 생략하겠다. 
 고등 기하와벡터 정도의 내용으로 그리 어렵진 않다. (이젠 고등이 아닌...)</p>
 <h2 id="toc-heading-6">4. Trace Operator &amp; Norm</h2>
 <h3 id="toc-heading-7">4.1. Norm</h3>
 <p>$$
-|x |_p = (\sum _i x_i ^p ) ^{1 \over p }
+\|x \|_p = (\sum _i x_i ^p ) ^{1 \over p }
 $$</p>
 <p>
 $$
@@ -373,7 +373,7 @@ $$
 </p>
 
 <ol start="5">
-<li>Frobenious Norm : $|A|_F ^2 = tr(AA^T) = tr(A^TA)$</li>
+<li>Frobenious Norm : $\|A\|_F ^2 = tr(AA^T) = tr(A^TA)$</li>
 </ol>
 <p>
 $$
@@ -412,11 +412,11 @@ $$
 </p>
 
 <p>이라는 형태가 나오는데,  $d^TX^TXd$ 는 $X^TX$ induced ellipsoid 임을 간단하게 알 수 있다.
-수식에서 간단한 첨언을 하면, 제약조건으로써 제시하고 있는 $|D |_F = I$ 이라는 수식은 maximization 문제를 풀 때, 단순히 D 행렬의 크기만을 키우면 objective function 값이 커지기 때문에 이 값에 제약을 둔 것이다.  </p>
+수식에서 간단한 첨언을 하면, 제약조건으로써 제시하고 있는 $\|D \|_F = I$ 이라는 수식은 maximization 문제를 풀 때, 단순히 D 행렬의 크기만을 키우면 objective function 값이 커지기 때문에 이 값에 제약을 둔 것이다.  </p>
 <p>$X^TX$ 는 symmetric matrix 이므로,  $X ^TX = P^T AP$ 를 만족하는 eigendecomposition diagonal matrix $A$ 를 만들 수 있다. 따라서, $Pd&#39; = d$  인 $d&#39;$  에 대하여,  </p>
 <p>
 $$
-d^TX^TXd = (Pd')^T X^TX (Pd') \quad  \quad \quad  \\  = d'^T (P^TX^TXP)d' 
+d^TX^TXd = (Pd&#39;)^T X^TX (Pd&#39;) \quad  \quad \quad  \\  = d&#39;^T (P^TX^TXP)d&#39; 
 $$
 </p>
 
@@ -424,14 +424,14 @@ $$
 <p>
 $$
 \begin{bmatrix} 
-a_1 &  &... &  & a_n \\
+a_1 &amp;  &amp;... &amp;  &amp; a_n \\
 \end{bmatrix} 
 \begin{bmatrix} 
-\lambda_1 &  &... &  & 0\\
-. &  .& &  &. \\
-. & &  .&   &. \\
-. &  &  & . &. \\
-0 &  & ... &  & \lambda _n\\
+\lambda_1 &amp;  &amp;... &amp;  &amp; 0\\
+. &amp;  .&amp; &amp;  &amp;. \\
+. &amp; &amp;  .&amp;   &amp;. \\
+. &amp;  &amp;  &amp; . &amp;. \\
+0 &amp;  &amp; ... &amp;  &amp; \lambda _n\\
 \end{bmatrix} 
 \begin{bmatrix} 
 a_1 \\
@@ -439,8 +439,8 @@ a_1 \\
 . \\
 . \\
 a_n \\
-\end{bmatrix}  \\ = \lambda_1 (a_1)^2 + \lambda _2 (a_2)^2 + ... + \lambda_n (a_n)^2 \\ \text{where } d'^T = \begin{bmatrix} 
-a_1 &  &... &  & a_n \\
+\end{bmatrix}  \\ = \lambda_1 (a_1)^2 + \lambda _2 (a_2)^2 + ... + \lambda_n (a_n)^2 \\ \text{where } d&#39;^T = \begin{bmatrix} 
+a_1 &amp;  &amp;... &amp;  &amp; a_n \\
 \end{bmatrix} 
 $$
 </p>

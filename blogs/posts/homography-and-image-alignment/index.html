@@ -171,13 +171,13 @@
 </li>
 <li><p><strong>Affine</strong>: A similarity transformation plus shear and non-uniform scaling. Preserves parallelism of lines and ratios of lengths on parallel lines. (6 DoF)</p>
 <p>
-$$ \begin{bmatrix} x' \\ y' \\ 1 \end{bmatrix} = \begin{bmatrix} a & b & t_x \\ c & d & t_y \\ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} x \\ y \\ 1 \end{bmatrix}
+$$ \begin{bmatrix} x&#39; \\ y&#39; \\ 1 \end{bmatrix} = \begin{bmatrix} a &amp; b &amp; t_x \\ c &amp; d &amp; t_y \\ 0 &amp; 0 &amp; 1 \end{bmatrix} \begin{bmatrix} x \\ y \\ 1 \end{bmatrix}
 $$
 </p>
 </li>
 <li><p><strong>Projective (Homography)</strong>: The most general linear transformation. Preserves straight lines. Parallel lines may converge at a vanishing point. (8 DoF)</p>
 <p>
-$$ \begin{bmatrix} x' \\ y' \\ w' \end{bmatrix} = \begin{bmatrix} h_{11} & h_{12} & h_{13} \\ h_{21} & h_{22} & h_{23} \\ h_{31} & h_{32} & h_{33} \end{bmatrix} \begin{bmatrix} x \\ y \\ 1 \end{bmatrix}
+$$ \begin{bmatrix} x&#39; \\ y&#39; \\ w&#39; \end{bmatrix} = \begin{bmatrix} h_{11} &amp; h_{12} &amp; h_{13} \\ h_{21} &amp; h_{22} &amp; h_{23} \\ h_{31} &amp; h_{32} &amp; h_{33} \end{bmatrix} \begin{bmatrix} x \\ y \\ 1 \end{bmatrix}
 $$
 </p></li>
 </ol>
@@ -289,7 +289,7 @@ $$x&#39; = ax + by + c$$
 $$y&#39; = dx + ey + f$$</p>
 <p>Each pair of corresponding points $(x, y)$ and $(x&#39;, y&#39;)$ provides two linear equations. With at least 3 point pairs, we can solve for the 6 parameters. This can be written in matrix form as $$At = b$$, where $t$ is the vector of transformation parameters.</p>
 <p>
-$$ \begin{bmatrix} x_1 & y_1 & 1 & 0 & 0 & 0 \\ 0 & 0 & 0 & x_1 & y_1 & 1 \\ x_2 & y_2 & 1 & 0 & 0 & 0 \\ 0 & 0 & 0 & x_2 & y_2 & 1 \\ \vdots & & & & & \vdots \end{bmatrix} \begin{bmatrix} a \\ b \\ c \\ d \\ e \\ f \end{bmatrix} = \begin{bmatrix} x'_1 \\ y'_1 \\ x'_2 \\ y'_2 \\ \vdots \end{bmatrix}
+$$ \begin{bmatrix} x_1 &amp; y_1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; x_1 &amp; y_1 &amp; 1 \\ x_2 &amp; y_2 &amp; 1 &amp; 0 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; x_2 &amp; y_2 &amp; 1 \\ \vdots &amp; &amp; &amp; &amp; &amp; \vdots \end{bmatrix} \begin{bmatrix} a \\ b \\ c \\ d \\ e \\ f \end{bmatrix} = \begin{bmatrix} x&#39;_1 \\ y&#39;_1 \\ x&#39;_2 \\ y&#39;_2 \\ \vdots \end{bmatrix}
 $$
 <p>
 

@@ -235,7 +235,7 @@ $$
 \phi =  \phi_{(T-1)\cdot \triangle t}     \ \circ \dots \circ  \phi_{1 \cdot \triangle t}  \circ \phi_{0 \cdot \triangle t} 
 $$
 and the following relationship holds for each function:
-$$ \phi_t(x_t) = x_t + \triangle t \cdot u_t(x_t), \ \triangle t = \frac{1}{T}
+$$ \phi_t(x_t) = x_t + \triangle t \cdot u_t(x_t), \\ \triangle t = \frac{1}{T}
 $$ </p>
 <p>Now, if we consider the limit as
 $$ T \rightarrow \infin 
@@ -341,8 +341,8 @@ $$</p>
 <p>
 $$
 \begin{aligned}
-\frac{d \log p_t(x_t)}{dt} &= \underbrace{\left[-(\nabla \log p_t) \cdot u_t - (\nabla \cdot u_t)\right]}_{\text{from (eqn. 2)}} + u_t \cdot \nabla \log p_t
-\\ &= - \nabla \cdot u_t(x_t)
+\frac{d \log p_t(x_t)}{dt} &amp;= \underbrace{\left[-(\nabla \log p_t) \cdot u_t - (\nabla \cdot u_t)\right]}_{\text{from (eqn. 2)}} + u_t \cdot \nabla \log p_t
+\\ &amp;= - \nabla \cdot u_t(x_t)
 \end{aligned}
 $$
 </p>
@@ -369,10 +369,10 @@ $$</p>
 $$
 J_u = \frac{\partial u}{\partial x} = 
 \begin{pmatrix}
-\frac{\partial u_1}{\partial x_1} & \frac{\partial u_1}{\partial x_2} & \cdots & \frac{\partial u_1}{\partial x_D} \\
-\frac{\partial u_2}{\partial x_1} & \frac{\partial u_2}{\partial x_2} & \cdots & \frac{\partial u_2}{\partial x_D} \\
-\vdots & \vdots & \ddots & \vdots \\
-\frac{\partial u_D}{\partial x_1} & \frac{\partial u_D}{\partial x_2} & \cdots & \frac{\partial u_D}{\partial x_D}
+\frac{\partial u_1}{\partial x_1} &amp; \frac{\partial u_1}{\partial x_2} &amp; \cdots &amp; \frac{\partial u_1}{\partial x_D} \\
+\frac{\partial u_2}{\partial x_1} &amp; \frac{\partial u_2}{\partial x_2} &amp; \cdots &amp; \frac{\partial u_2}{\partial x_D} \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+\frac{\partial u_D}{\partial x_1} &amp; \frac{\partial u_D}{\partial x_2} &amp; \cdots &amp; \frac{\partial u_D}{\partial x_D}
 \end{pmatrix}
 $$
 </p></li>
@@ -462,9 +462,9 @@ using Bayes&#39; rule, we can see that the following holds.</p>
 <p>
 $$
 \begin{aligned}
-\frac{\partial p_t(x_t)}{\partial t} &= \boxed{\frac{\partial}{\partial t} \int p_{t|1}(x_t | x_1)} \  p_1 (x_1) dx_1 \\
-&= \boxed{ - \int \nabla \cdot (p_{t|1}(x_t | x_1) u_t(x_t | x_1)) }\  p_1 (x_1) dx_1 \\ 
-&= - \nabla \cdot \left ( \boxed{  \int u_t(x_t | x_1)) \frac{p_{t|1}(x_t | x_1) p_1 (x_1)}{p_t(x_t)} dx_1 } \ p_t(x_t) \right ) \\ &= - \nabla \cdot \bigg [ \boxed{u_t(x_t)} \  p_{t}(x_t ) \bigg ]
+\frac{\partial p_t(x_t)}{\partial t} &amp;= \boxed{\frac{\partial}{\partial t} \int p_{t|1}(x_t | x_1)} \  p_1 (x_1) dx_1 \\
+&amp;= \boxed{ - \int \nabla \cdot (p_{t|1}(x_t | x_1) u_t(x_t | x_1)) }\  p_1 (x_1) dx_1 \\ 
+&amp;= - \nabla \cdot \left ( \boxed{  \int u_t(x_t | x_1)) \frac{p_{t|1}(x_t | x_1) p_1 (x_1)}{p_t(x_t)} dx_1 } \ p_t(x_t) \right ) \\ &amp;= - \nabla \cdot \bigg [ \boxed{u_t(x_t)} \  p_{t}(x_t ) \bigg ]
 \end{aligned}
 $$
 </p>
@@ -487,11 +487,11 @@ $$
 <p>
 $$
 \begin{aligned}
-\mathbb{E}_{x_t \sim p_t} [\langle v_\theta(x_t), u_t(x_t) \rangle] &= \int \left[ v_\theta(x_t) \cdot  \boxed{u_t(x_t)} \ \right ]p_t(x_t) dx_t \\
-&= \int \left[ v_\theta(x_t) \cdot \boxed{\int u_t(x_t|x_1) p_t(x_1|x_t) dx_1 } \right ]p_t(x_t) dx_t \\
-&= \iint v_\theta(x_t) \cdot u_t(x_t|x_1) \boxed{ p_t(x_1|x_t) p_t(x_t)} dx_1 dx_t \\
-&= \iint v_\theta(x_t) \cdot u_t(x_t|x_1) \boxed{p(x_1, x_t)} dx_1 dx_t \\
-&= \mathbb{E}_{(x_1, x_t) \sim p(x_1, x_t)} [\langle v_\theta(x_t), u_t(x_t|x_1) \rangle]
+\mathbb{E}_{x_t \sim p_t} [\langle v_\theta(x_t), u_t(x_t) \rangle] &amp;= \int \left[ v_\theta(x_t) \cdot  \boxed{u_t(x_t)} \ \right ]p_t(x_t) dx_t \\
+&amp;= \int \left[ v_\theta(x_t) \cdot \boxed{\int u_t(x_t|x_1) p_t(x_1|x_t) dx_1 } \right ]p_t(x_t) dx_t \\
+&amp;= \iint v_\theta(x_t) \cdot u_t(x_t|x_1) \boxed{ p_t(x_1|x_t) p_t(x_t)} dx_1 dx_t \\
+&amp;= \iint v_\theta(x_t) \cdot u_t(x_t|x_1) \boxed{p(x_1, x_t)} dx_1 dx_t \\
+&amp;= \mathbb{E}_{(x_1, x_t) \sim p(x_1, x_t)} [\langle v_\theta(x_t), u_t(x_t|x_1) \rangle]
 \end{aligned}
 $$
 </p>
@@ -583,7 +583,7 @@ $$
 <p>In classical mechanics, when an object moves from one point to another, it chooses from among numerous possible paths the one that minimizes a physical quantity called <strong>Action, $S$</strong>. This is the <strong><a href="https://en.wikipedia.org/wiki/Action_principles">Principle of Least Action</a></strong>.</p>
 <p>This action is defined as the value of a quantity called the <strong>Lagrangian, $L$, integrated over time</strong>:</p>
 <p>$$
-S = \int_{t_0}^{t_1} L(x, \dot{x}, t) , dt
+S = \int_{t_0}^{t_1} L(x, \dot{x}, t) \, dt
 $$</p>
 <p>The Lagrangian $L$ is the <strong>kinetic energy ($T$) of the system minus its potential energy ($V$)</strong>.</p>
 <p>$$
@@ -602,7 +602,7 @@ $$</p>
 <p>Since we are only interested in the mapping from one distribution to another and do not assume any external factors (Potential) that penalize specific paths, we can say that the cost of the system depends solely on the distance and velocity (Kinetic Energy) of the particles.</p>
 <p>In this case, the action of this particle is:</p>
 <p>$$
-S = \int_{t_0}^{t_1} \frac{1}{2}m ||\dot{x}(t)||^2 , dt
+S = \int_{t_0}^{t_1} \frac{1}{2}m ||\dot{x}(t)||^2 \, dt
 $$</p>
 <p>According to the principle of least action, the particle moves along the path that minimizes this action $S$. Since the value inside the integral is always positive, the most intuitive way to minimize it would be to maintain a constant velocity ($||\dot{x}||$) and move along the shortest distance, i.e., a <strong>straight line</strong>.</p>
 <p>Indeed, if we solve the differential equation to find the path that minimizes the above action, we find that the acceleration ($\ddot{x}$) is zero ($m\ddot{x} = 0$). This signifies <strong>uniform linear motion</strong>.</p>
@@ -661,11 +661,11 @@ $$</p>
 </ul>
 <p>Let the distribution at time $t$ be $p_t(x)$, and the velocity of particles at each point $x$ be represented by the velocity field $v_t(x)$. The <strong>total kinetic energy</strong> at a specific time $t$ can be calculated by taking a weighted average of the kinetic energy at each point ($\frac{1}{2}||v_t(x)||^2$) by the density at that point ($p_t(x)$).</p>
 <p>$$
-\text{Total Kinetic Energy at } t =  \mathbb{E}_{x \sim p_t}\left[\frac{1}{2}||v_t(x)||^2\right] = \int \frac{1}{2}||v_t(x)||^2 p_t(x) ,dx
+\text{Total Kinetic Energy at } t =  \mathbb{E}_{x \sim p_t}\left[\frac{1}{2}||v_t(x)||^2\right] = \int \frac{1}{2}||v_t(x)||^2 p_t(x) \,dx
 $$</p>
 <p>Just like a free particle, if we assume a transformation of a distribution with no external forces (i.e., no potential energy), the Lagrangian of this system becomes its total kinetic energy. Therefore, the action of the entire transformation process is the integral of this total kinetic energy over time.</p>
 <p>$$
-\mathcal{A}(p_t, v_t) = \int_0^1 \left( \int \frac{1}{2}||v_t(x)||^2 p_t(x) ,dx \right) dt
+\mathcal{A}(p_t, v_t) = \int_0^1 \left( \int \frac{1}{2}||v_t(x)||^2 p_t(x) \,dx \right) dt
 $$</p>
 <p>As with the principle of least action, we seek to find the path ($p_t, v_t$) that minimizes this action.</p>
 <p>This redefinition of the transformation of a probability distribution as a problem of finding a path that minimizes total kinetic energy (Action) corresponds exactly to the core idea of the <strong>&#39;Benamou-Brenier formula&#39;</strong> in optimal transport, a formulation of dynamic OT. We are, in essence, solving a problem of generative models in the language of fluid dynamics.</p>
@@ -678,12 +678,12 @@ $$</p>
 $$</p>
 <p>To solve such a constrained optimization problem, we introduce a Lagrange Multiplier function $\phi(x, t)$. This function combines the constraint with the action to create a new functional $\mathcal{L}$.</p>
 <p>$$
-\mathcal{L}[p, v, \phi] = \mathcal{A}[p, v] - \int_0^1 \int_{\mathbb{R}^d} \phi(x, t) \left( \frac{\partial p_t}{\partial t} + \nabla \cdot (p_t v_t) \right) ,dx ,dt
+\mathcal{L}[p, v, \phi] = \mathcal{A}[p, v] - \int_0^1 \int_{\mathbb{R}^d} \phi(x, t) \left( \frac{\partial p_t}{\partial t} + \nabla \cdot (p_t v_t) \right) \,dx \,dt
 $$</p>
 <p>Now we can transform the problem into optimizing the unconstrained functional $\mathcal{L}$. On the optimal path, $\mathcal{L}$ must be stable with respect to infinitesimal variations in $p$, $v$, and $\phi$. <strong>That is, the functional derivative with respect to each variable must be zero.</strong></p>
 <p>To facilitate calculation, let&#39;s apply integration by parts to the constraint term to move the derivatives from $p$ and $v$ to $\phi$.</p>
 <p>$$
-\mathcal{L} = \int_0^1 \int_{\mathbb{R}^d} \left( \frac{1}{2} |v|^2 p + p \frac{\partial \phi}{\partial t} + p v \cdot \nabla \phi \right) dx dt - \int_{\mathbb{R}^d} [\phi p]_0^1 dx
+\mathcal{L} = \int_0^1 \int_{\mathbb{R}^d} \left( \frac{1}{2} \|v\|^2 p + p \frac{\partial \phi}{\partial t} + p v \cdot \nabla \phi \right) dx dt - \int_{\mathbb{R}^d} [\phi p]_0^1 dx
 $$</p>
 <p>Now, we use this expression to calculate the variation for each variable.</p>
 <p><strong>Functional derivative with respect to Velocity $v$</strong>
@@ -702,19 +702,19 @@ $$</p>
 <p><strong>Functional derivative with respect to Density $p$</strong></p>
 <p>Now, we take the functional derivative of $\mathcal{L}$ with respect to density $p$ ($\delta_p \mathcal{L}$) and set the result to 0. The integrand is linear in $p$, so for this variation to be 0, the term in the parentheses must be 0.
 $$
-\frac{1}{2} |v|^2 + \frac{\partial \phi}{\partial t} + v \cdot \nabla \phi = 0
+\frac{1}{2} \|v\|^2 + \frac{\partial \phi}{\partial t} + v \cdot \nabla \phi = 0
 $$</p>
 <p><strong>Hamilton-Jacobi Equation</strong>
 Now, let&#39;s substitute the first result ($v = -\nabla \phi$) into the second result.
 $$
-\frac{1}{2} |-\nabla \phi|^2 + \frac{\partial \phi}{\partial t} + (-\nabla \phi) \cdot (\nabla \phi) = 0
+\frac{1}{2} \|-\nabla \phi\|^2 + \frac{\partial \phi}{\partial t} + (-\nabla \phi) \cdot (\nabla \phi) = 0
 $$</p>
 <p>$$
-\frac{1}{2} |\nabla \phi|^2 + \frac{\partial \phi}{\partial t} - |\nabla \phi|^2 = 0
+\frac{1}{2} \|\nabla \phi\|^2 + \frac{\partial \phi}{\partial t} - \|\nabla \phi\|^2 = 0
 $$</p>
 <p>Simplifying this, we obtain the partial differential equation that the potential function $\phi$ must satisfy, which is the <strong>Hamilton-Jacobi Equation</strong>.
 $$
-{\frac{\partial \phi}{\partial t} - \frac{1}{2} |\nabla \phi(x, t)|^2 = 0}
+{\frac{\partial \phi}{\partial t} - \frac{1}{2} \|\nabla \phi(x, t)\|^2 = 0}
 $$</p>
 <p>This equation is a fundamental equation in classical mechanics that describes the motion of a free particle.</p>
 <p><strong>Proving that acceleration is 0</strong>
@@ -725,17 +725,17 @@ $$
 $$
 Let&#39;s express each term using the potential $\phi$.</p>
 <ol>
-<li><strong>First term</strong>: Using the derived Hamilton-Jacobi Equation ($\frac{\partial \phi}{\partial t} = \frac{1}{2}|v|^2$) and the relation $v = -\nabla\phi$,
+<li><strong>First term</strong>: Using the derived Hamilton-Jacobi Equation ($\frac{\partial \phi}{\partial t} = \frac{1}{2}\|v\|^2$) and the relation $v = -\nabla\phi$,
 $$
-\frac{\partial v}{\partial t} = \frac{\partial}{\partial t}(-\nabla \phi) = -\nabla\left(\frac{\partial \phi}{\partial t}\right) = -\frac{1}{2}\nabla(|v|^2)
-$$</li>
+    \frac{\partial v}{\partial t} = \frac{\partial}{\partial t}(-\nabla \phi) = -\nabla\left(\frac{\partial \phi}{\partial t}\right) = -\frac{1}{2}\nabla(\|v\|^2)
+    $$</li>
 <li><strong>Second term</strong>: Since the vector field $v$ is the gradient of a scalar potential $\phi$ ($v = -\nabla\phi$), its curl is zero ($\nabla \times v = \nabla \times (-\nabla\phi) = 0$). Therefore,
 $$
-(v \cdot \nabla)v = \frac{1}{2}\nabla(|v|^2)
+(v \cdot \nabla)v = \frac{1}{2}\nabla(\|v\|^2)
 $$
 Now, combining the two terms to calculate the acceleration,
 $$
-\ddot{x} = \frac{\partial v}{\partial t} + (v \cdot \nabla)v = -\frac{1}{2}\nabla(|v|^2) + \frac{1}{2}\nabla(|v|^2) = 0
+\ddot{x} = \frac{\partial v}{\partial t} + (v \cdot \nabla)v = -\frac{1}{2}\nabla(\|v\|^2) + \frac{1}{2}\nabla(\|v\|^2) = 0
 $$</li>
 </ol>
 <p><em>cf:</em>

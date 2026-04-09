@@ -251,12 +251,12 @@
 <div class="math-container">
     $$ \begin{aligned}
     \Sigma 
-    & = R (SS^{\rm T}) R^{\rm T} \\ \\
-    & = R 
+    &amp; = R (SS^{\rm T}) R^{\rm T} \\ \\
+    &amp; = R 
     \begin{bmatrix} 
-    s_1^2 & 0 & 0 \\
-    0 & s_2^2 & 0 \\
-    0 & 0 & s_3^2 \\
+    s_1^2 &amp; 0 &amp; 0 \\
+    0 &amp; s_2^2 &amp; 0 \\
+    0 &amp; 0 &amp; s_3^2 \\
     \end{bmatrix}
     R^{\rm T}
     \end{aligned} $$
@@ -320,9 +320,9 @@ cov3D[5] = Sigma[2][2];
     <li> $R$: <span style="text-decoration: underline;"><a href="https://en.m.wikipedia.org/wiki/Quaternions_and_spatial_rotation">quaternion to rotation matrix</a></span> 공식을 통해서 계산되었다.
     <div class="math-container">
         $$ R = \begin{bmatrix}
-        1 - 2y^2 - 2z^2 & 2xy - 2zw & 2xz + 2yw \\
-        2xy + 2zw & 1 - 2x^2 - 2z^2 & 2yz - 2xw \\
-        2xz - 2yw & 2yz + 2xw & 1 - 2x^2 - 2y^2
+        1 - 2y^2 - 2z^2 &amp; 2xy - 2zw &amp; 2xz + 2yw \\
+        2xy + 2zw &amp; 1 - 2x^2 - 2z^2 &amp; 2yz - 2xw \\
+        2xz - 2yw &amp; 2yz + 2xw &amp; 1 - 2x^2 - 2y^2
         \end{bmatrix} $$
     </div>
     </li>
@@ -376,9 +376,9 @@ cov3D[5] = Sigma[2][2];
 <div class="math-container">
     $$
     \begin{bmatrix} 
-    1 / t_2 & 0 & -t_0 / t_2^2 \\
-    0 & 1 / t_2 &  -t_1 / t_2^2 \\
-    t_0 / \| t\| & t_1 / \| t\|   & t_2 / \| t \|  \\
+    1 / t_2 &amp; 0 &amp; -t_0 / t_2^2 \\
+    0 &amp; 1 / t_2 &amp;  -t_1 / t_2^2 \\
+    t_0 / \| t\| &amp; t_1 / \| t\|   &amp; t_2 / \| t \|  \\
     \end{bmatrix}
     $$
 </div>
@@ -406,9 +406,9 @@ cov3D[5] = Sigma[2][2];
 <div class="math-container">
     $$
     \begin{bmatrix} 
-    f_x / t_2 & 0 & -f_x \cdot t_0 / t_2^2 \\
-    0 & f_y / t_2 &  - f_y \cdot t_1 / t_2^2 \\
-    0 & 0 & 0 \\
+    f_x / t_2 &amp; 0 &amp; -f_x \cdot t_0 / t_2^2 \\
+    0 &amp; f_y / t_2 &amp;  - f_y \cdot t_1 / t_2^2 \\
+    0 &amp; 0 &amp; 0 \\
     \end{bmatrix}
     $$
 </div>
@@ -489,7 +489,7 @@ return { float(cov[0][0]), float(cov[0][1]), float(cov[1][1]) };
 </p>
 <div class="math-container">
     $$
-    x^T A^T Ax + \lambda x^T x > 0  
+    x^T A^T Ax + \lambda x^T x &gt; 0  
     $$
 </div>
 
@@ -510,14 +510,14 @@ float3 conic = { cov.z * det_inv, -cov.y * det_inv, cov.x * det_inv };
         <div class="math-container">
             $$
             A=\begin{bmatrix}
-            a & b \\ 
-            b & c 
+            a &amp; b \\ 
+            b &amp; c 
             \end{bmatrix},
                 \quad 
             A^{-1} = \frac{1}{\det(A)} 
             \begin{bmatrix}
-            c & -b \\ 
-            -b & a 
+            c &amp; -b \\ 
+            -b &amp; a 
             \end{bmatrix} 
             $$
         </div>

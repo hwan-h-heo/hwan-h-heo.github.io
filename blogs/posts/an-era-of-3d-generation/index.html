@@ -323,7 +323,7 @@ DETR and Perceiver are fundamentally designed for tasks like detection and class
 $$ \mathbf{z} = \{(\mathbf{z}_i, \mathbf{p}_i)\}_{i=1}^{L}, \quad \mathbf{z}_i \in \mathbb{R}^{C}, \quad \mathbf{p}_i \in \{0, 1, \dots, N-1\}^3,
 $$</p>
 <p id="p-54">where $p_i$ is the voxel index and $(z_i)$ is the latent vector.  That is, each voxel grid has a latent vector assigned to it, and the latent vector set itself is <em id="em-15"><strong id="strong-28">structured (voxelized)</strong></em>, hence the name <em id="em-16"><strong id="strong-29">SLAT</strong></em>.</p>
-<p id="p-55">Due to the sparsity of 3D data, the number of activated grids is much smaller than the total size of the 3D grid $(L &lt;&lt; N^3)$, which means that relatively high-resolution outputs can be generated.  This approach is similar to voxel-grid NeRFs like Instant-NGP, but uses ShapeVAE to predict the featured voxel-grid.</p>
+<p id="p-55">Due to the sparsity of 3D data, the number of activated grids is much smaller than the total size of the 3D grid $(L &amp;lt;&amp;lt; N^3)$, which means that relatively high-resolution outputs can be generated.  This approach is similar to voxel-grid NeRFs like Instant-NGP, but uses ShapeVAE to predict the featured voxel-grid.</p>
 <p id="p-56">While the definition itself might seem like simply mapping the learnable query used in ShapeVAE to a voxel grid, the core of SLAT is that it actively utilizes the <strong id="strong-30">DINOv2</strong> feature extractor during the learning process of this SLAT encoding.</p>
 <p id="p-57"><img id="img-10" style="width: 100%" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-9.png" alt="" /></p>
 <p id="p-58">As shown in the figure above, SLAT calculates the encoding for 3D assets during the VAE training process by:</p>
@@ -516,7 +516,7 @@ $$</p>
 <p id="p-109">Finally, <strong id="strong-68">Multi-Task Attention</strong> is proposed to train this structure effectively.</p>
 <p id="p-110">Mathematically, this can be expressed as:</p>
 <p id="p-111">
-$$\begin{aligned}Z_{MVA} = Z_{SA} &+ \lambda_{ref} \cdot \text{Softmax}\left(\frac{Q_{ref} K_{ref}^T}{\sqrt{d}}\right) V_{ref} \\ &+ \lambda_{mv} \cdot \text{Softmax}\left(\frac{Q_{mv} K_{mv}^T}{\sqrt{d}}\right) V_{mv} \end{aligned}
+$$\begin{aligned}Z_{MVA} = Z_{SA} &amp;+ \lambda_{ref} \cdot \text{Softmax}\left(\frac{Q_{ref} K_{ref}^T}{\sqrt{d}}\right) V_{ref} \\ &amp;+ \lambda_{mv} \cdot \text{Softmax}\left(\frac{Q_{mv} K_{mv}^T}{\sqrt{d}}\right) V_{mv} \end{aligned}
 $$</p>
 <p id="p-112">As the equation indicates, this is a parallel attention mechanism designed for a form of "multi-task learning," where the reference (Ref) module and the multi-view (mv) module operate independently.</p>
 <p id="p-113">This design is motivated by the distinct roles of the reference branch (ControlNet) and the generation branch (MV generation) in the current architecture:</p>

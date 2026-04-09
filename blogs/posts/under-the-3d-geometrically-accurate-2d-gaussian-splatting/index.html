@@ -236,11 +236,11 @@
 
 <div class="math-container">
     $$ \begin{aligned}
-    d(p) &= \sum_{g}
+    d(p) &amp;= \sum_{g}
     \alpha_{g} \exp \left ( - \frac{1}{2} (p-\mu_{g})^{\rm T} \Sigma^{-1}_{g}  (p-\mu_{g})  \right )
-    \\ \text{where } \mu &: \text{ center of gaussian, }
-    \\ \Sigma&: \text{ cov mat, }   \textit{i.e., } RSS^{\rm T}R^{\rm T},
-    \\ \alpha &: \text{ alpha-blending weight, } \textit{i.e.,} \text{ opacity value}
+    \\ \text{where } \mu &amp;: \text{ center of gaussian, }
+    \\ \Sigma&amp;: \text{ cov mat, }   \textit{i.e., } RSS^{\rm T}R^{\rm T},
+    \\ \alpha &amp;: \text{ alpha-blending weight, } \textit{i.e.,} \text{ opacity value}
     \end{aligned}
     $$
 </div>
@@ -324,9 +324,9 @@
 </div>
 <div class="math-container">
     $$ \begin{aligned}
-    (p-\mu_{g^{\star}})^{\rm T} \Sigma^{-1}_{g^{\star}}  (p-\mu_{g^{\star}}) & \simeq \frac{1}{s_{g^{\star}}^{2}} \langle p-\mu_{g^{\star}}, n_{g^{\star}} \rangle ^{2}
-    \\ \text{where } s_g &: \text{ smallest scaling factor},
-    \\ n_g &: \text{ corresponding axis}
+    (p-\mu_{g^{\star}})^{\rm T} \Sigma^{-1}_{g^{\star}}  (p-\mu_{g^{\star}}) &amp; \simeq \frac{1}{s_{g^{\star}}^{2}} \langle p-\mu_{g^{\star}}, n_{g^{\star}} \rangle ^{2}
+    \\ \text{where } s_g &amp;: \text{ smallest scaling factor},
+    \\ n_g &amp;: \text{ corresponding axis}
     \end{aligned} $$
 </div>
 
@@ -352,7 +352,7 @@
 
 <div class="math-container">
     $$  \begin{aligned} 
-    R &= [t_u, \ t_v, \ t_u \times t_v] \\ S &= [s_u, \ s_v, \ 0] 
+    R &amp;= [t_u, \ t_v, \ t_u \times t_v] \\ S &amp;= [s_u, \ s_v, \ 0] 
     \end{aligned}
     $$
 </div>
@@ -363,15 +363,15 @@
 </p>
 <div class="math-container">
     $$ \begin{aligned} 
-    P(u,v) &= p_k + s_ut_u u + s_v t_v v = \mathbf{H}(u,v,1,1)^{\rm T} \\ 
-    \text{where } \mathbf{H} &= 
+    P(u,v) &amp;= p_k + s_ut_u u + s_v t_v v = \mathbf{H}(u,v,1,1)^{\rm T} \\ 
+    \text{where } \mathbf{H} &amp;= 
     \begin{bmatrix} 
-    s_u t_u & s_v t_v & 0 & p_k \\ 
-    0 & 0 & 0& 1 \\
+    s_u t_u &amp; s_v t_v &amp; 0 &amp; p_k \\ 
+    0 &amp; 0 &amp; 0&amp; 1 \\
     \end{bmatrix} =
     \begin{bmatrix} 
-    RS &  p_k \\ 
-    0 & 1
+    RS &amp;  p_k \\ 
+    0 &amp; 1
     \end{bmatrix}
     \end{aligned}
     $$
@@ -397,7 +397,7 @@
 <div class="lang eng">
     <p>
         In principle, a 2D Gaussian can be used as a 3D GS projection by simply setting the third scale dimension to zero. 
-        However, the affine projection method used in 3D GS, based on the first-order Taylor expansion $\Sigma&#39; = JW\Sigma W^{\rm T}J^{\rm T}$, 
+        However, the affine projection method used in 3D GS, based on the first-order Taylor expansion $\Sigma&amp;#39; = JW\Sigma W^{\rm T}J^{\rm T}$, 
         induces approximation errors as the distance from the Gaussian center increases.
     </p>
     <blockquote>
@@ -526,9 +526,9 @@
     $$
     \begin{aligned}
     \mathcal{L} 
-    &= \sum_{i=0}^{N-1} \sum_{j=0}^{i-1} \omega_i \omega_j (m_i - m_j)^2 \\
-    &= \sum_{i=0}^{N-1} \omega_i \left( m_i^2 \sum_{j=0}^{i-1} \omega_j + \sum_{j=0}^{i-1} \omega_j m_j^2 - 2m_i \sum_{j=0}^{i-1} \omega_j m_j \right) \\
-    &= \sum_{i=0}^{N-1} \omega_i \left( m_i^2 A_{i-1} + D_{i-1}^2 - 2m_i D_{i-1} \right),
+    &amp;= \sum_{i=0}^{N-1} \sum_{j=0}^{i-1} \omega_i \omega_j (m_i - m_j)^2 \\
+    &amp;= \sum_{i=0}^{N-1} \omega_i \left( m_i^2 \sum_{j=0}^{i-1} \omega_j + \sum_{j=0}^{i-1} \omega_j m_j^2 - 2m_i \sum_{j=0}^{i-1} \omega_j m_j \right) \\
+    &amp;= \sum_{i=0}^{N-1} \omega_i \left( m_i^2 A_{i-1} + D_{i-1}^2 - 2m_i D_{i-1} \right),
     \end{aligned}
     $$
 </div>
@@ -543,8 +543,8 @@
 <div class="math-container">
     $$ 
     \begin{aligned}
-    \mathcal{L}_i &= \sum_{j=0}^{i} \omega_j e_j \\
-    \text{where } e_i &= m_i^2 A_{i-1} + D_{i-1}^2 - 2m_i D_{i-1}
+    \mathcal{L}_i &amp;= \sum_{j=0}^{i} \omega_j e_j \\
+    \text{where } e_i &amp;= m_i^2 A_{i-1} + D_{i-1}^2 - 2m_i D_{i-1}
     \end{aligned}
     $$
 </div>

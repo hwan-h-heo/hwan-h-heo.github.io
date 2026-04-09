@@ -4,10 +4,52 @@
     const CONTENT_DELIMITER = '--- 여기부터 실제 콘텐츠 ---';
     const SIDEBAR_COLLAPSED_KEY = 'blog-editor-sidebar-collapsed';
     const PANE_RATIO_KEY = 'blog-editor-pane-ratio';
+    const AUTOSAVE_KEY = 'blog-editor-autosave-v2';
+    const AUTOSAVE_DELAY_MS = 1500;
+    const DIAGNOSTICS_DELAY_MS = 350;
+    const AUTOSAVE_VERSION = 2;
     const DEFAULT_CONTENT = {
         eng: '## Introduction\n\nStart writing your post here.\n',
         kor: '## 소개\n\n여기에서 글을 작성하세요.\n'
     };
+    const SNIPPETS = [
+        {
+            id: 'display-math',
+            label: 'Display math',
+            description: 'Insert a KaTeX block equation.',
+            template: '$$\n__CURSOR__\n$$'
+        },
+        {
+            id: 'math-container',
+            label: 'Math container',
+            description: 'Scrollable display-math wrapper for long equations.',
+            template: '<div class="math-container">\n    $$\n    __CURSOR__\n    $$\n</div>'
+        },
+        {
+            id: 'figure',
+            label: 'Figure + caption',
+            description: 'Image figure with centered caption.',
+            template: '<figure>\n    <img class="img-fluid" src="./assets/image.png" alt="Describe the image" width="80%">\n    <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 1.</strong> __CURSOR__</figcaption>\n</figure>'
+        },
+        {
+            id: 'video',
+            label: 'YouTube embed',
+            description: 'Responsive iframe wrapper for videos.',
+            template: '<div class="video-container">\n    <iframe src="https://www.youtube.com/embed/VIDEO_ID" title="YouTube video player" frameborder="0" allowfullscreen></iframe>\n</div>\n\n__CURSOR__'
+        },
+        {
+            id: 'table',
+            label: 'Markdown table',
+            description: 'Simple two-column comparison table.',
+            template: '| Column A | Column B |\n| --- | --- |\n| __CURSOR__ | Value |\n| Value | Value |'
+        },
+        {
+            id: 'details',
+            label: 'Details block',
+            description: 'Collapsible note or appendix.',
+            template: '<details>\n    <summary>Summary</summary>\n\n    __CURSOR__\n</details>'
+        }
+    ];
 
     const state = {
         editMode: window.location.port === '3030',
@@ -30,6 +72,18 @@
         ui: {
             sidebarCollapsed: false,
             editorPaneRatio: 0.52
+        },
+        autosave: {
+            timerId: null,
+            status: 'idle',
+            lastSavedAt: null,
+            snapshotAvailable: null
+        },
+        preview: {
+            diagnostics: [],
+            diagnosticsTimerId: null,
+            diagnosticsRevision: 0,
+            outline: []
         }
     };
 
@@ -63,6 +117,9 @@
                 'Open this page through `npm run edit` to save drafts, register metadata, and publish posts.'
             ]);
         }
+
+        hydrateRecoverySnapshot();
+        renderAutosaveState();
     }
 
     function cacheElements() {
@@ -98,6 +155,14 @@
             'editor-textarea',
             'preview-content',
             'editor-stats',
+            'autosave-status',
+            'autosave-meta',
+            'restore-session-button',
+            'discard-session-button',
+            'diagnostics-summary',
+            'diagnostics-list',
+            'outline-count',
+            'outline-list',
             'pane-resizer',
             'modal-overlay',
             'modal-title',
@@ -130,6 +195,8 @@
         el.loadDraftButton.addEventListener('click', openDraftModal);
         el.downloadButton.addEventListener('click', downloadActiveMarkdown);
         el.uploadButton.addEventListener('click', uploadMarkdown);
+        el.restoreSessionButton.addEventListener('click', restoreRecoverySnapshot);
+        el.discardSessionButton.addEventListener('click', () => discardAutosaveSnapshot(true));
         el.languageKor.addEventListener('change', handleLanguageToggle);
         el.featuredEnabled.addEventListener('change', syncFormToState);
         el.modalOverlay.addEventListener('click', (event) => {
@@ -160,6 +227,7 @@
             state.contents[state.activeLanguage] = el.editorTextarea.value;
             updatePreview();
             updateStats();
+            queueAutosave();
         });
 
         el.editorTextarea.addEventListener('paste', handleImagePaste);
@@ -168,10 +236,17 @@
             button.addEventListener('click', () => insertMarkdown(button.dataset.insert));
         });
 
+        document.querySelectorAll('[data-snippet]').forEach((button) => {
+            button.addEventListener('click', () => insertSnippet(button.dataset.snippet));
+        });
+
         if (el.paneResizer) {
             el.paneResizer.addEventListener('pointerdown', beginPaneResize);
             el.paneResizer.addEventListener('keydown', handlePaneResizerKeydown);
         }
+
+        window.addEventListener('beforeunload', flushAutosave);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
         document.addEventListener('keydown', handleKeyboardShortcuts);
     }
 
@@ -238,6 +313,10 @@
         renderModeBadge();
         renderFeatureFields();
         renderKoreanFields();
+
+        if (!initialLoad) {
+            discardAutosaveSnapshot(false);
+        }
 
         if (!initialLoad) {
             showFeedback('neutral', 'New post workspace', [
@@ -427,7 +506,7 @@
         el.featuredOrder.value = state.metadata.featuredOrder;
     }
 
-    function syncFormToState() {
+    function syncFormToState(options = {}) {
         state.metadata.id = el.postId.value.trim();
         state.metadata.date = el.postDate.value;
         state.metadata.category = el.postCategory.value;
@@ -446,6 +525,10 @@
         renderFeatureFields();
         renderKoreanFields();
         renderFeaturedOrderHint();
+
+        if (!options.skipAutosave) {
+            queueAutosave();
+        }
     }
 
     function handleLanguageToggle() {
@@ -480,6 +563,7 @@
         updatePreview();
         updateStats();
         renderLanguageTabs();
+        queueAutosave();
     }
 
     function updateEditor() {
@@ -521,7 +605,10 @@
     function updatePreview() {
         const postId = state.metadata.id.trim();
         const content = stripLegacyContentPreamble(el.editorTextarea.value || '');
-        let html = marked.parse(content);
+        const parseMarkdown = window.blogMarkdown && typeof window.blogMarkdown.parseMarkdownWithMath === 'function'
+            ? window.blogMarkdown.parseMarkdownWithMath
+            : (source, parser) => parser(source);
+        let html = parseMarkdown(content, (source) => marked.parse(source));
 
         html = html.replace(/\.\/draft-assets\//g, '/editor/draft-assets/');
         html = html.replace(/(src|href)=(["'])\.\/assets\//g, (match, attr, quote) => {
@@ -550,6 +637,9 @@
         if (window.Prism && Prism.highlightAllUnder) {
             Prism.highlightAllUnder(el.previewContent);
         }
+
+        renderHeadingOutline();
+        queuePreviewDiagnostics(postId, content);
     }
 
     function updateStats() {
@@ -597,6 +687,40 @@
         wrapSelection(pair[0], pair[1]);
     }
 
+    function insertSnippet(snippetId) {
+        const snippet = SNIPPETS.find((item) => item.id === snippetId);
+        if (!snippet) {
+            return;
+        }
+
+        const start = el.editorTextarea.selectionStart;
+        const end = el.editorTextarea.selectionEnd;
+        const selected = el.editorTextarea.value.slice(start, end);
+        const selectionText = selected || '';
+        const withSelection = snippet.template.replace(/{{selection}}/g, selectionText);
+        const cursorMarker = '__CURSOR__';
+        const cursorIndex = withSelection.indexOf(cursorMarker);
+        const replacement = withSelection.replace(cursorMarker, '');
+
+        el.editorTextarea.value = `${el.editorTextarea.value.slice(0, start)}${replacement}${el.editorTextarea.value.slice(end)}`;
+        el.editorTextarea.focus();
+
+        if (cursorIndex >= 0) {
+            const caret = start + cursorIndex;
+            el.editorTextarea.selectionStart = caret;
+            el.editorTextarea.selectionEnd = caret;
+        } else {
+            const caret = start + replacement.length;
+            el.editorTextarea.selectionStart = caret;
+            el.editorTextarea.selectionEnd = caret;
+        }
+
+        state.contents[state.activeLanguage] = el.editorTextarea.value;
+        updatePreview();
+        updateStats();
+        queueAutosave();
+    }
+
     function wrapSelection(before, after) {
         const start = el.editorTextarea.selectionStart;
         const end = el.editorTextarea.selectionEnd;
@@ -611,6 +735,7 @@
         state.contents[state.activeLanguage] = el.editorTextarea.value;
         updatePreview();
         updateStats();
+        queueAutosave();
     }
 
     async function handleImagePaste(event) {
@@ -690,8 +815,543 @@
         return response.json();
     }
 
+    function handleVisibilityChange() {
+        if (document.visibilityState === 'hidden') {
+            flushAutosave();
+        }
+    }
+
+    function queueAutosave() {
+        state.autosave.status = 'pending';
+        renderAutosaveState();
+
+        if (state.autosave.timerId) {
+            window.clearTimeout(state.autosave.timerId);
+        }
+
+        state.autosave.timerId = window.setTimeout(() => {
+            saveAutosaveSnapshot();
+        }, AUTOSAVE_DELAY_MS);
+    }
+
+    function flushAutosave() {
+        if (!state.autosave.timerId) {
+            return;
+        }
+
+        window.clearTimeout(state.autosave.timerId);
+        state.autosave.timerId = null;
+        saveAutosaveSnapshot();
+    }
+
+    function readAutosaveSnapshot() {
+        try {
+            const raw = window.localStorage.getItem(AUTOSAVE_KEY);
+            if (!raw) {
+                return null;
+            }
+
+            const snapshot = JSON.parse(raw);
+            if (!snapshot || snapshot.version !== AUTOSAVE_VERSION) {
+                return null;
+            }
+
+            return snapshot;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    function buildAutosaveSnapshot() {
+        state.contents[state.activeLanguage] = el.editorTextarea.value;
+
+        return {
+            version: AUTOSAVE_VERSION,
+            savedAt: new Date().toISOString(),
+            mode: state.mode,
+            originalId: state.originalId,
+            activeLanguage: state.activeLanguage,
+            lockedLanguages: [...state.lockedLanguages],
+            metadata: { ...state.metadata, languages: [...state.metadata.languages] },
+            contents: {
+                eng: state.contents.eng || '',
+                kor: state.contents.kor || ''
+            }
+        };
+    }
+
+    function snapshotHasRecoverableChanges(snapshot) {
+        if (!snapshot) {
+            return false;
+        }
+
+        const metadata = snapshot.metadata || {};
+        const contents = snapshot.contents || {};
+        const englishChanged = (contents.eng || '').trim() && (contents.eng || '').trim() !== DEFAULT_CONTENT.eng.trim();
+        const koreanChanged = (contents.kor || '').trim() && (contents.kor || '').trim() !== DEFAULT_CONTENT.kor.trim();
+
+        return Boolean(
+            metadata.id
+            || metadata.title_eng
+            || metadata.title_kor
+            || metadata.subtitle_eng
+            || metadata.subtitle_kor
+            || metadata.featured
+            || metadata.teaserImage
+            || englishChanged
+            || koreanChanged
+        );
+    }
+
+    function saveAutosaveSnapshot() {
+        state.autosave.timerId = null;
+        const snapshot = buildAutosaveSnapshot();
+
+        if (!snapshotHasRecoverableChanges(snapshot)) {
+            discardAutosaveSnapshot(false);
+            return;
+        }
+
+        try {
+            window.localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(snapshot));
+            state.autosave.snapshotAvailable = snapshot;
+            state.autosave.lastSavedAt = snapshot.savedAt;
+            state.autosave.status = 'saved';
+            renderAutosaveState();
+        } catch (error) {
+            state.autosave.status = 'unavailable';
+            renderAutosaveState();
+        }
+    }
+
+    function discardAutosaveSnapshot(notifyUser) {
+        if (state.autosave.timerId) {
+            window.clearTimeout(state.autosave.timerId);
+            state.autosave.timerId = null;
+        }
+
+        try {
+            window.localStorage.removeItem(AUTOSAVE_KEY);
+        } catch (error) {
+            // Ignore storage failures and keep the session usable.
+        }
+
+        state.autosave.snapshotAvailable = null;
+        state.autosave.lastSavedAt = null;
+        state.autosave.status = 'idle';
+        renderAutosaveState();
+
+        if (notifyUser) {
+            showFeedback('neutral', 'Recovery snapshot removed', [
+                'The local autosave snapshot was discarded.'
+            ]);
+        }
+    }
+
+    function hydrateRecoverySnapshot() {
+        const snapshot = readAutosaveSnapshot();
+        state.autosave.snapshotAvailable = snapshot;
+        state.autosave.lastSavedAt = snapshot ? snapshot.savedAt : null;
+        state.autosave.status = snapshot ? 'recoverable' : 'idle';
+        renderAutosaveState();
+    }
+
+    function sanitizeRecoveredMetadata(metadata) {
+        const categories = state.bootstrap.categories || [];
+        const seriesIds = Object.keys(state.bootstrap.series || {});
+        const languages = Array.isArray(metadata.languages) && metadata.languages.includes('kor')
+            ? ['eng', 'kor']
+            : ['eng'];
+
+        return {
+            id: metadata.id || '',
+            date: metadata.date || new Date().toISOString().slice(0, 10),
+            category: categories.includes(metadata.category) ? metadata.category : (categories[0] || 'post'),
+            series: seriesIds.includes(metadata.series) ? metadata.series : (seriesIds[0] || ''),
+            languages,
+            title_eng: metadata.title_eng || '',
+            subtitle_eng: metadata.subtitle_eng || '',
+            title_kor: metadata.title_kor || '',
+            subtitle_kor: metadata.subtitle_kor || '',
+            featured: Boolean(metadata.featured),
+            teaserImage: metadata.teaserImage || '',
+            teaserAlt: metadata.teaserAlt || '',
+            featuredOrder: metadata.featuredOrder || state.bootstrap.featuredPortfolioPosts.length || 0
+        };
+    }
+
+    function restoreRecoverySnapshot() {
+        const snapshot = state.autosave.snapshotAvailable || readAutosaveSnapshot();
+        if (!snapshot) {
+            return;
+        }
+
+        state.mode = snapshot.mode === 'update' ? 'update' : 'create';
+        state.originalId = snapshot.originalId || '';
+        state.lockedLanguages = Array.isArray(snapshot.lockedLanguages) && snapshot.lockedLanguages.length > 0
+            ? snapshot.lockedLanguages.filter((language) => language === 'eng' || language === 'kor')
+            : ['eng'];
+        state.metadata = sanitizeRecoveredMetadata(snapshot.metadata || {});
+        state.contents = {
+            eng: snapshot.contents && typeof snapshot.contents.eng === 'string' ? snapshot.contents.eng : DEFAULT_CONTENT.eng,
+            kor: snapshot.contents && typeof snapshot.contents.kor === 'string' ? snapshot.contents.kor : DEFAULT_CONTENT.kor
+        };
+        state.activeLanguage = state.metadata.languages.includes(snapshot.activeLanguage) ? snapshot.activeLanguage : 'eng';
+
+        renderFormFromState();
+        renderLanguageTabs();
+        updateEditor();
+        updatePreview();
+        updateStats();
+        renderKoreanFields();
+        renderFeatureFields();
+        renderModeBadge();
+        updateControls();
+
+        if (el.existingPostSelect) {
+            el.existingPostSelect.value = state.mode === 'update' ? state.originalId : '';
+        }
+
+        state.autosave.status = 'restored';
+        renderAutosaveState();
+        queueAutosave();
+        showFeedback('neutral', 'Recovered local session', [
+            'The latest autosave snapshot was restored into the workspace.'
+        ]);
+    }
+
+    function formatAutosaveTimestamp(timestamp) {
+        if (!timestamp) {
+            return 'No local recovery snapshot yet.';
+        }
+
+        const date = new Date(timestamp);
+        if (Number.isNaN(date.getTime())) {
+            return 'A local recovery snapshot is available.';
+        }
+
+        return `Last local snapshot: ${date.toLocaleString()}`;
+    }
+
+    function renderAutosaveState() {
+        if (!el.autosaveStatus || !el.autosaveMeta) {
+            return;
+        }
+
+        const hasSnapshot = Boolean(state.autosave.snapshotAvailable);
+        const statusLabels = {
+            idle: 'Autosave idle',
+            pending: 'Saving…',
+            saved: 'Autosaved',
+            recoverable: 'Recovery ready',
+            restored: 'Recovered',
+            unavailable: 'Autosave off'
+        };
+
+        el.autosaveStatus.textContent = statusLabels[state.autosave.status] || 'Autosave';
+        el.autosaveMeta.textContent = state.autosave.status === 'pending'
+            ? 'Saving the current workspace to local storage…'
+            : formatAutosaveTimestamp(state.autosave.lastSavedAt);
+        el.restoreSessionButton.disabled = !hasSnapshot;
+        el.discardSessionButton.disabled = !hasSnapshot;
+    }
+
+    function renderHeadingOutline() {
+        if (!el.outlineList || !el.outlineCount) {
+            return;
+        }
+
+        const markdownHeadings = extractMarkdownHeadings(el.editorTextarea.value || '');
+        const previewHeadings = Array.from(el.previewContent.querySelectorAll('h2, h3'));
+        const headings = markdownHeadings.map((heading, index) => {
+            const previewHeading = previewHeadings[index] || null;
+            if (previewHeading && !previewHeading.id) {
+                previewHeading.id = `preview-heading-${index}`;
+            }
+
+            return {
+                ...heading,
+                outlineIndex: index,
+                previewId: previewHeading ? previewHeading.id : '',
+                text: previewHeading && previewHeading.textContent.trim()
+                    ? previewHeading.textContent.trim()
+                    : heading.text || `Heading ${index + 1}`
+            };
+        });
+
+        state.preview.outline = headings;
+        el.outlineCount.textContent = `${headings.length} heading${headings.length === 1 ? '' : 's'}`;
+
+        if (headings.length === 0) {
+            el.outlineList.innerHTML = '<p class="outline-empty">Add `##` or `###` headings to build a clickable outline.</p>';
+            return;
+        }
+
+        el.outlineList.innerHTML = headings.map((heading) => `
+            <button class="outline-button outline-button-level-${heading.level}" type="button" data-outline-index="${heading.outlineIndex}">
+                <strong>${escapeHtml(heading.text)}</strong>
+                <span>${heading.level === 2 ? 'Section' : 'Subsection'}</span>
+            </button>
+        `).join('');
+
+        el.outlineList.querySelectorAll('[data-outline-index]').forEach((button) => {
+            button.addEventListener('click', () => {
+                const headingIndex = Number.parseInt(button.dataset.outlineIndex, 10);
+                const targetHeading = state.preview.outline[headingIndex];
+                if (!targetHeading) {
+                    return;
+                }
+
+                focusEditorHeading(targetHeading);
+
+                if (targetHeading.previewId) {
+                    const previewTarget = document.getElementById(targetHeading.previewId);
+                    if (previewTarget) {
+                        el.previewContent.scrollTo({
+                            top: Math.max(0, previewTarget.offsetTop - 18),
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+    }
+
+    function extractMarkdownHeadings(content) {
+        const headings = [];
+        const lines = content.split('\n');
+        let lineOffset = 0;
+        let fenceMarker = null;
+
+        lines.forEach((line, index) => {
+            const fenceMatch = line.match(/^(```+|~~~+)/);
+            if (fenceMatch) {
+                const nextFenceMarker = fenceMatch[1][0];
+                if (!fenceMarker) {
+                    fenceMarker = nextFenceMarker;
+                } else if (fenceMarker === nextFenceMarker) {
+                    fenceMarker = null;
+                }
+                lineOffset += line.length + 1;
+                return;
+            }
+
+            if (!fenceMarker) {
+                const headingMatch = line.match(/^(#{2,3})[ \t]+(.+?)(?:[ \t]+#+)?[ \t]*$/);
+                if (headingMatch) {
+                    headings.push({
+                        level: headingMatch[1].length,
+                        text: normalizeHeadingText(headingMatch[2]),
+                        lineNumber: index + 1,
+                        startIndex: lineOffset,
+                        endIndex: lineOffset + line.length
+                    });
+                }
+            }
+
+            lineOffset += line.length + 1;
+        });
+
+        return headings;
+    }
+
+    function normalizeHeadingText(value) {
+        return value
+            .replace(/!\[([^\]]*)\]\([^)]+\)/g, '$1')
+            .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+            .replace(/<[^>]+>/g, '')
+            .replace(/[*_`~]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+    function focusEditorHeading(heading) {
+        if (!el.editorTextarea) {
+            return;
+        }
+
+        el.editorTextarea.focus();
+        el.editorTextarea.setSelectionRange(heading.startIndex, heading.endIndex);
+
+        const textBeforeHeading = el.editorTextarea.value.slice(0, heading.startIndex);
+        const lineIndex = textBeforeHeading.split('\n').length - 1;
+        const computedStyle = window.getComputedStyle(el.editorTextarea);
+        const lineHeight = Number.parseFloat(computedStyle.lineHeight) || 22;
+        const paddingTop = Number.parseFloat(computedStyle.paddingTop) || 0;
+        const targetScrollTop = Math.max(
+            0,
+            (lineIndex * lineHeight) - (el.editorTextarea.clientHeight * 0.35) + paddingTop
+        );
+
+        if (typeof el.editorTextarea.scrollTo === 'function') {
+            el.editorTextarea.scrollTo({
+                top: targetScrollTop,
+                behavior: 'smooth'
+            });
+            return;
+        }
+
+        el.editorTextarea.scrollTop = targetScrollTop;
+    }
+
+    function queuePreviewDiagnostics(postId, content) {
+        if (state.preview.diagnosticsTimerId) {
+            window.clearTimeout(state.preview.diagnosticsTimerId);
+        }
+
+        const revision = ++state.preview.diagnosticsRevision;
+        state.preview.diagnosticsTimerId = window.setTimeout(() => {
+            runPreviewDiagnostics(revision, postId, content).catch(() => {
+                if (revision === state.preview.diagnosticsRevision) {
+                    renderDiagnostics([
+                        {
+                            severity: 'warning',
+                            title: 'Diagnostics interrupted',
+                            detail: 'Preview checks could not finish for the latest edit.'
+                        }
+                    ]);
+                }
+            });
+        }, DIAGNOSTICS_DELAY_MS);
+    }
+
+    async function runPreviewDiagnostics(revision, postId, content) {
+        const diagnostics = [];
+        const resourceChecks = [];
+        const seenResources = new Set();
+
+        if (/\.\/assets\//.test(content) && !postId) {
+            diagnostics.push({
+                severity: 'warning',
+                title: 'Post ID missing for local assets',
+                detail: 'Set the post ID first so `./assets/...` links can be resolved in preview.'
+            });
+        }
+
+        const mathErrors = Array.from(el.previewContent.querySelectorAll('.katex-error'));
+        const seenMath = new Set();
+        mathErrors.forEach((node) => {
+            const source = (node.textContent || '').trim();
+            const reason = (node.getAttribute('title') || '').trim();
+            const key = `${source}::${reason}`;
+            if (seenMath.has(key)) {
+                return;
+            }
+            seenMath.add(key);
+            diagnostics.push({
+                severity: 'error',
+                title: 'LaTeX render failed',
+                detail: reason ? `${source} — ${reason}` : source
+            });
+        });
+
+        Array.from(el.previewContent.querySelectorAll('img')).forEach((image) => {
+            if (!image.getAttribute('alt') || !image.getAttribute('alt').trim()) {
+                diagnostics.push({
+                    severity: 'warning',
+                    title: 'Image alt text missing',
+                    detail: image.getAttribute('src') || 'An image in the preview has no alt text.'
+                });
+            }
+        });
+
+        Array.from(el.previewContent.querySelectorAll('img[src], video[src], source[src], a[href]')).forEach((node) => {
+            const attribute = node.hasAttribute('href') ? 'href' : 'src';
+            const rawValue = node.getAttribute(attribute);
+            if (!rawValue || rawValue.startsWith('#') || rawValue.startsWith('mailto:') || rawValue.startsWith('tel:')) {
+                return;
+            }
+
+            let url;
+            try {
+                url = new URL(rawValue, window.location.origin);
+            } catch (error) {
+                return;
+            }
+
+            if (url.origin !== window.location.origin) {
+                return;
+            }
+
+            if (
+                !url.pathname.startsWith('/posts/')
+                && !url.pathname.startsWith('/blogs/posts/')
+                && !url.pathname.startsWith('/editor/draft-assets/')
+                && !url.pathname.startsWith('/blogs/editor/draft-assets/')
+            ) {
+                return;
+            }
+
+            const resourceKey = `${attribute}:${url.pathname}`;
+            if (seenResources.has(resourceKey)) {
+                return;
+            }
+
+            seenResources.add(resourceKey);
+            resourceChecks.push({
+                kind: node.tagName.toLowerCase(),
+                url
+            });
+        });
+
+        const availabilityResults = await Promise.all(resourceChecks.map(async (resource) => {
+            const exists = await checkLocalResource(resource.url.href);
+            return exists ? null : {
+                severity: 'warning',
+                title: `${resource.kind} resource not found`,
+                detail: resource.url.pathname
+            };
+        }));
+
+        if (revision !== state.preview.diagnosticsRevision) {
+            return;
+        }
+
+        renderDiagnostics(diagnostics.concat(availabilityResults.filter(Boolean)));
+    }
+
+    async function checkLocalResource(url) {
+        try {
+            let response = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+            if (response.status === 405 || response.status === 501) {
+                response = await fetch(url, { method: 'GET', cache: 'no-store' });
+            }
+            return response.ok;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    function renderDiagnostics(diagnostics) {
+        if (!el.diagnosticsSummary || !el.diagnosticsList) {
+            return;
+        }
+
+        state.preview.diagnostics = diagnostics;
+
+        const errorCount = diagnostics.filter((item) => item.severity === 'error').length;
+        const warningCount = diagnostics.filter((item) => item.severity === 'warning').length;
+
+        if (diagnostics.length === 0) {
+            el.diagnosticsSummary.className = 'feedback feedback-success diagnostics-summary';
+            el.diagnosticsSummary.innerHTML = '<strong>Preview diagnostics</strong><p>No math, asset, or accessibility issues detected in the current preview.</p>';
+            el.diagnosticsList.innerHTML = '';
+            return;
+        }
+
+        const summaryType = errorCount > 0 ? 'error' : 'warning';
+        el.diagnosticsSummary.className = `feedback feedback-${summaryType} diagnostics-summary`;
+        el.diagnosticsSummary.innerHTML = `<strong>Preview diagnostics</strong><p>${errorCount} error(s), ${warningCount} warning(s) found in the current preview.</p>`;
+        el.diagnosticsList.innerHTML = diagnostics.map((item) => `
+            <div class="diagnostic-item diagnostic-item-${escapeHtml(item.severity)}">
+                <strong>${escapeHtml(item.title)}</strong>
+                <p>${escapeHtml(item.detail)}</p>
+            </div>
+        `).join('');
+    }
+
     function buildPayload() {
-        syncFormToState();
+        syncFormToState({ skipAutosave: true });
         state.contents[state.activeLanguage] = el.editorTextarea.value;
 
         const payload = {
@@ -803,7 +1463,9 @@
 
             state.mode = 'update';
             state.originalId = payload.post.id;
+            state.lockedLanguages = [...payload.post.languages];
             await loadBootstrap();
+            discardAutosaveSnapshot(false);
             showFeedback('success', 'Publish complete', [
                 `Updated site metadata for ${payload.post.id}.`,
                 ...result.savedFiles.map((file) => `${file.language}: ${file.path}`)
@@ -867,6 +1529,7 @@
             renderModeBadge();
             el.existingPostSelect.value = result.post.id;
             closeModal();
+            queueAutosave();
             showFeedback('success', 'Post loaded', [
                 `Editing ${result.post.id}. Post ID is fixed for updates.`
             ]);
@@ -965,6 +1628,7 @@
                 updateEditor();
                 updatePreview();
                 updateStats();
+                queueAutosave();
             closeModal();
             showFeedback('success', 'Draft loaded', [
                 `${filename} replaced the ${state.activeLanguage} content in this workspace.`
@@ -1022,6 +1686,7 @@
                 updateEditor();
                 updatePreview();
                 updateStats();
+                queueAutosave();
                 showFeedback('success', 'Markdown uploaded', [
                     `${file.name} replaced the ${state.activeLanguage} content in this workspace.`
                 ]);
