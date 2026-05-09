@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>2D Gaussian Splatting Viewer - Portfolio</title>
+  <title>2D GS Viewer</title>
   <meta content="Portfolio showcase of the 2D Gaussian Splatting Viewer project, highlighting development and contributions." name="description">
   <meta content="2D Gaussian Splatting, Viewer, Visualization, Editing, Rendering, Viser, Portfolio" name="keywords">
 
@@ -67,6 +67,198 @@
         gtag('js', new Date());
         gtag('config', 'G-RF7ETSKPK9');
     </script>
+  <style id="project-detail-common-style">
+    .portfolio-details .portfolio-description h2 {
+      margin-top: 1.25rem;
+      margin-bottom: 0.85rem;
+      letter-spacing: -0.02em;
+    }
+    .portfolio-details .portfolio-description h3,
+    .portfolio-details .portfolio-description h4,
+    .portfolio-details .portfolio-description h5 {
+      margin-top: 1.15rem;
+      margin-bottom: 0.65rem;
+    }
+    .portfolio-details .portfolio-description p,
+    .portfolio-details .portfolio-description li {
+      line-height: 1.72;
+    }
+    .portfolio-details img,
+    .portfolio-details video,
+    .portfolio-details iframe {
+      border-radius: 14px;
+      height: auto;
+      max-width: 100%;
+    }
+    .portfolio-details .project-video,
+    .portfolio-details video {
+      background: #000;
+      box-shadow: 0 16px 34px rgba(15, 23, 42, 0.12);
+      display: block;
+      margin: 1rem auto;
+      width: 100%;
+    }
+    .portfolio-details .text-center .project-video,
+    .portfolio-details .text-center video {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .portfolio-details .video-container {
+      margin: 1.25rem auto;
+      max-width: 100%;
+    }
+    .portfolio-details .video-container:has(video) {
+      background: transparent;
+      height: auto;
+      overflow: visible;
+      padding-bottom: 0;
+      position: relative;
+    }
+    .portfolio-details .video-container:has(video) video {
+      height: auto;
+      left: auto;
+      position: static;
+      top: auto;
+      width: 100%;
+    }
+    .portfolio-details .video-container:has(iframe) {
+      aspect-ratio: 16 / 9;
+      background: #000;
+      height: auto;
+      overflow: hidden;
+      padding-bottom: 0;
+      position: relative;
+    }
+    .portfolio-details .video-container:has(iframe) iframe {
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+    .portfolio-details .varco-object-embed {
+      background: #f8fafc;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 16px;
+      box-shadow: 0 16px 34px rgba(15, 23, 42, 0.1);
+      margin: 1.5rem auto 0.65rem;
+      overflow: hidden;
+      width: 100%;
+    }
+    .portfolio-details .varco-object-embed iframe {
+      border: 0;
+      display: block;
+      height: min(500px, 70vh);
+      width: 100%;
+    }
+    .portfolio-details p > img:only-child {
+      display: block;
+      margin: 1rem auto;
+    }
+    .portfolio-details img[width] {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .portfolio-details .text-center img,
+    .portfolio-details .gif-container img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .portfolio-details table img {
+      border-radius: 10px;
+      width: 100%;
+    }
+    .portfolio-details table .varco-lattice-img {
+      aspect-ratio: 1 / 1;
+      display: block;
+      height: clamp(140px, 18vw, 230px);
+      margin: 0 auto;
+      object-fit: contain;
+      padding: 0.35rem;
+      width: 100%;
+    }
+    .portfolio-details table:has(.varco-lattice-img) th,
+    .portfolio-details table:has(.varco-lattice-img) td {
+      text-align: center;
+      vertical-align: middle;
+      width: 33.333%;
+    }
+    .portfolio-details .viewer-feature-group {
+      margin: 1.4rem 0 1.8rem;
+    }
+    .portfolio-details .viewer-feature-group > h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.95rem;
+    }
+    .portfolio-details .viewer-feature-grid {
+      display: grid;
+      gap: 1rem;
+      width: 100%;
+    }
+    .portfolio-details .viewer-feature-grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .portfolio-details .viewer-feature-grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .portfolio-details .viewer-feature-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 18px;
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      padding: 1rem;
+    }
+    .portfolio-details .viewer-feature-card .feature-img {
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+      object-fit: cover;
+      width: 100%;
+    }
+    .portfolio-details .viewer-feature-card h5 {
+      font-size: 1.02rem;
+      font-weight: 700;
+      margin: 0.35rem 0 0.45rem;
+    }
+    .portfolio-details .viewer-feature-card p,
+    .portfolio-details .viewer-feature-card li {
+      font-size: 0.94rem;
+      line-height: 1.62;
+    }
+    .portfolio-details .portfolio-info {
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 18px;
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+    }
+    .portfolio-details table {
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    @media (max-width: 768px) {
+      .portfolio-details.section {
+        padding-top: 56px;
+      }
+      .portfolio-details .portfolio-details-container,
+      .portfolio-details .container.col-11 {
+        width: 100%;
+      }
+      .portfolio-details .portfolio-description,
+      .portfolio-details .portfolio-info {
+        margin-bottom: 1.25rem;
+      }
+      .portfolio-details .viewer-feature-grid-2,
+      .portfolio-details .viewer-feature-grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <div class="progress-container">
@@ -119,117 +311,118 @@
 
     <!-- Portfolio Details Section -->
     <section id="portfolio-details" class="portfolio-details section">
-        <div class="row gx-5 justify-content-center">
-            <div class="text-center mb-5 col-9 col-lg-8 col-xl-7 col-xxl-6">
-                <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline"> 2D Gaussian Splatting Viewer </span></h1>
-                <div class="fs-3 fw-light text-muted"> Personal Project </div>
-            </div>
+      <div class="row gx-5 justify-content-center">
+        <div class="text-center mb-5 col-11 col-lg-10 col-xl-8 col-xxl-7">
+          <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline">2D Gaussian Splatting Viewer</span></h1>
+          <div class="fs-3 fw-light text-muted">Personal Project</div>
         </div>
+      </div>
 
-        <div class="container portfolio-details-container col-11">
+<div class="container portfolio-details-container col-11">
+<div class="row gy-4">
+<div class="col-lg-8">
+<div class="portfolio-description">
+<h2>Project Overview</h2>
+<p>As a personal project, I developed the <strong>2D Gaussian Splatting Viewer</strong>, a first publicly available tool designed to enhance the accessibility and usability of the &quot;<a href="https://surfsplatting.github.io/">2D Gaussian Splatting for Geometrically Accurate Radiance Fields</a>&quot; research. Recognizing the need for a user-friendly interface to explore and manipulate 2D Gaussian Splatting data, I built this viewer leveraging existing libraries and adding significant features to improve visualization, editing, and overall workflow.</p>
+<p>This project addresses the gap in readily available tools for interacting with 2D Gaussian Splatting, making it easier for researchers and enthusiasts to delve into this exciting field. By providing intuitive controls and a range of functionalities, the viewer empowers users to gain deeper insights and experiment with 2D GS scenes effectively.</p>
 
-          <div class="row gy-4">
+<div class="mt-4">
+<p><strong>Key Contributions:</strong></p>
+<ul>
+<li>Developed an intuitive and feature-rich viewer from the ground up, based on the 2D Gaussian Splatting.</li>
+<li>Integrated various rendering modes for comprehensive data visualization.</li>
+<li>Implemented editing and transformation tools to enable scene manipulation.</li>
+<li>Added training capabilities directly within the viewer for streamlined experimentation.</li>
+<li>Continuously improved performance and added new features based on user needs and research advancements.</li>
+</ul>
 
-            <div class="col-lg-8">
-              <div class="portfolio-description">
-                <h2>Project Overview</h2>
-                <p>
-                    As a personal project, I developed the <strong>2D Gaussian Splatting Viewer</strong>, a first publicly available tool designed to enhance the accessibility and usability of the "<a href="https://surfsplatting.github.io/">2D Gaussian Splatting for Geometrically Accurate Radiance Fields</a>" research. Recognizing the need for a user-friendly interface to explore and manipulate 2D Gaussian Splatting data, I built this viewer leveraging existing libraries and adding significant features to improve visualization, editing, and overall workflow.
-                </p>
-                <p>
-                    This project addresses the gap in readily available tools for interacting with 2D Gaussian Splatting, making it easier for researchers and enthusiasts to delve into this exciting field. By providing intuitive controls and a range of functionalities, the viewer empowers users to gain deeper insights and experiment with 2D GS scenes effectively.
-                </p>
+</div>
+</div>
+</div>
+<div class="col-lg-4">
+<div class="portfolio-info">
+<h3>Project Details</h3>
+<ul>
+<li><strong>Category</strong>: Web Application, 3D Visualization Tool</li>
+<li><strong>Project URL</strong>: <a href="https://github.com/hwanhuh/2D-GS-Viser-Viewer">Viewer Github</a></li>
+<li><strong>Skills Demonstrated</strong>: Python, Viser, CUDA, Gaussian Splatting, Rasterization</li>
+</ul>
 
-                <div class="mt-4">
-                    <p><strong>Key Contributions:</strong></p>
-                    <ul>
-                        <li>Developed an intuitive and feature-rich viewer from the ground up, based on the 2D Gaussian Splatting.</li>
-                        <li>Integrated various rendering modes for comprehensive data visualization.</li>
-                        <li>Implemented editing and transformation tools to enable scene manipulation.</li>
-                        <li>Added training capabilities directly within the viewer for streamlined experimentation.</li>
-                        <li>Continuously improved performance and added new features based on user needs and research advancements.</li>
-                    </ul>
-                </div>
-              </div>
-            </div>
+</div>
+</div>
+</div>
+</div>
+<div class="container col-11">
+<section id="features" class="features section">
 
-            <div class="col-lg-4">
-              <div class="portfolio-info">
-                <h3>Project Details</h3>
-                <ul>
-                  <li><strong>Category</strong>: Web Application, 3D Visualization Tool</li>
-                  <li><strong>Project URL</strong>: <a href="https://github.com/hwanhuh/2D-GS-Viser-Viewer" target="_blank" class="portfolio-link"><i class="bi bi-github"></i> Viewer Github</a></li>
-                  <li><strong>Skills Demonstrated</strong>: Python, Viser, CUDA, Gaussian Splatting, Rasterization </li>
-                </ul>
-              </div>
-            </div>
+<h2>Key Features</h2>
+<hr>
 
-          </div>
-        </div>
+<div class="viewer-feature-group">
+<h4>Rendering &amp; Training Enhancements</h4>
 
-        <div class="container col-11">
-            <section id="features" class="features section">
-                <h2>Key Features </h2>
-                <hr/>
-                <div class="row feature-icons">
-                    <h4> Rendering & Training Enhancements </h4>
-                    <div class="row">
-                        <div class="col-6 icon-box" data-aos="fade-up">
-                            <img data-src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_train.gif" alt="Rendering Features" class="feature-img lazy-image" style="margin-bottom: 0.7rem;">
-                            <h5>Advanced Rendering Suite</h5>
-                            <p> To enable comprehensive analysis, the viewer supports a diverse set of rendering types, including RGB, Edge, Normal, Depth, and more. This allows users to visualize 2D GS data from multiple perspectives. </p>
-                        </div>
-                        <div class="col-6 icon-box" data-aos="fade-up" data-aos-delay="100">
-                            <img data-src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_train2.gif" alt="Training Features" class="feature-img lazy-image" style="margin-bottom: 0.7rem;">
-                            <h5>Integrated Training Capability</h5>
-                            <p>  For a more seamless workflow, the viewer supports training functionality directly. Users can train 2D GS models and monitor the learning process in real-time within the same application. </p>
-                        </div>
-                    </div>
-                </div>
-                <br/>
+<div class="viewer-feature-grid viewer-feature-grid-2">
+<div class="viewer-feature-card" data-aos="fade-up">
+<img src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_train.gif" alt="Rendering Features" class="feature-img lazy-image img-fluid" style="margin-bottom:0.7rem" data-src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_train.gif">
 
-                <div class="row feature-icons">
-                    <h4> Editing & Transform Tools for Scene Manipulation </h4>
-                    <div class="row">
-                        <div class="col-4 icon-box" data-aos="fade-up">
-                            <img data-src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_general_opt.gif" alt="General Features" class="feature-img lazy-image" style="margin-bottom: 0.7rem;">
-                            <h5>Intuitive General Controls</h5>
-                            <p> 
-                                The viewer features user-friendly general controls, including Render Type selection, Cropbox for region of interest, and Pointcloud visualization mode. 
-                            </p>
-                        </div>
-                        <div class="col-4 icon-box" data-aos="fade-up" data-aos-delay="100">
-                            <img data-src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_edit_opt.gif" alt="Edit Features" class="feature-img lazy-image" style="margin-bottom: 0.7rem;">
-                            <h5>Interactive Editing and Mesh Export</h5>
-                            <p> Users can directly modify and save splats within the viewer.  Also, the implementation of mesh export functionality enables seamless integration of 2D GS scenes into other 3D applications and workflows. </p>
-                        </div>
-                        <div class="col-4 icon-box" data-aos="fade-up" data-aos-delay="200">
-                            <img data-src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_transform_opt.gif" alt="Transform Features" class="feature-img lazy-image" style="margin-bottom: 0.7rem;">
-                            <h5>Rigid Transformation Capabilities</h5>
-                            <p> To provide spatial control, the viewer supports Rigid Transform functionality, enabling users to freely adjust the position, rotation, and scale of 2D GS Scenes.  </p>
-                        </div>
-                    </div>
-                </div>
-                <br/>
+<h5>Advanced Rendering Suite</h5>
+<p>To enable comprehensive analysis, the viewer supports a diverse set of rendering types, including RGB, Edge, Normal, Depth, and more. This allows users to visualize 2D GS data from multiple perspectives.</p>
 
-                <div class="row">
-                    <div class="col-lg-12" data-aos="fade-up">
-                        <h4> Detailed Feature List </h4>
-                        <hr/>
-                        <p>Beyond the highlighted features, the viewer includes:</p>
-                        <ul>
-                            <li><strong>Comprehensive Render Types</strong>: RGB, Edge, Normal, View-Normal, Depth, Depth-to-Normal, Depth-Distortion, Curvature</li>
-                            <li><strong>Disk Visualization</strong>: Option to visualize splats as disks for clarity.</li>
-                            <li><strong>Edit & Save Splats</strong>: Interactive modification and saving of splat data.</li>
-                            <li><strong>Mesh Export (Edit Tab)</strong>: Export edited scenes as standard mesh formats.</li>
-                            <li><strong>Render Path and Preview</strong>: Tools for generating and previewing camera paths for video rendering.</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
+</div>
+<div class="viewer-feature-card" data-aos="fade-up" data-aos-delay="100">
+<img src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_train2.gif" alt="Training Features" class="feature-img lazy-image img-fluid" style="margin-bottom:0.7rem" data-src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_train2.gif">
 
-        </div>
+<h5>Integrated Training Capability</h5>
+<p>For a more seamless workflow, the viewer supports training functionality directly. Users can train 2D GS models and monitor the learning process in real-time within the same application.</p>
 
+</div>
+</div>
+</div>
+<div class="viewer-feature-group">
+<h4>Editing &amp; Transform Tools for Scene Manipulation</h4>
+
+<div class="viewer-feature-grid viewer-feature-grid-3">
+<div class="viewer-feature-card" data-aos="fade-up">
+<img src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_general_opt.gif" alt="General Features" class="feature-img lazy-image img-fluid" style="margin-bottom:0.7rem" data-src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_general_opt.gif">
+
+<h5>Intuitive General Controls</h5>
+<p>The viewer features user-friendly general controls, including Render Type selection, Cropbox for region of interest, and Pointcloud visualization mode.</p>
+
+</div>
+<div class="viewer-feature-card" data-aos="fade-up" data-aos-delay="100">
+<img src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_edit_opt.gif" alt="Edit Features" class="feature-img lazy-image img-fluid" style="margin-bottom:0.7rem" data-src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_edit_opt.gif">
+
+<h5>Interactive Editing and Mesh Export</h5>
+<p>Users can directly modify and save splats within the viewer.  Also, the implementation of mesh export functionality enables seamless integration of 2D GS scenes into other 3D applications and workflows.</p>
+
+</div>
+<div class="viewer-feature-card" data-aos="fade-up" data-aos-delay="200">
+<img src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_transform_opt.gif" alt="Transform Features" class="feature-img lazy-image img-fluid" style="margin-bottom:0.7rem" data-src="https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_transform_opt.gif">
+
+<h5>Rigid Transformation Capabilities</h5>
+<p>To provide spatial control, the viewer supports Rigid Transform functionality, enabling users to freely adjust the position, rotation, and scale of 2D GS Scenes.</p>
+
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-lg-12" data-aos="fade-up">
+<h4>Detailed Feature List</h4>
+<hr>
+<p>Beyond the highlighted features, the viewer includes:</p>
+<ul>
+<li><strong>Comprehensive Render Types</strong>: RGB, Edge, Normal, View-Normal, Depth, Depth-to-Normal, Depth-Distortion, Curvature</li>
+<li><strong>Disk Visualization</strong>: Option to visualize splats as disks for clarity.</li>
+<li><strong>Edit &amp; Save Splats</strong>: Interactive modification and saving of splat data.</li>
+<li><strong>Mesh Export (Edit Tab)</strong>: Export edited scenes as standard mesh formats.</li>
+<li><strong>Render Path and Preview</strong>: Tools for generating and previewing camera paths for video rendering.</li>
+</ul>
+
+</div>
+</div>
+</section>
+
+</div>
     </section><!-- /Portfolio Details Section -->
 
   </main>
@@ -292,7 +485,9 @@
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const lazyImage = entry.target;
-          lazyImage.src = lazyImage.dataset.src; // data-src -> src 
+          if (lazyImage.dataset.src) {
+            lazyImage.src = lazyImage.dataset.src;
+          } // data-src -> src 
           lazyImage.classList.remove('lazy-image'); // 
           observer.unobserve(lazyImage); // 
         }

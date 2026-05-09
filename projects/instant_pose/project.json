@@ -1,0 +1,11 @@
+{
+  "title": "Robust Camera Pose Refinement for Multi-Resolution Hash Encoding",
+  "heroTitle": "Robust Camera Pose Refinement <br/> for Multi-Resolution Hash Encoding",
+  "subtitles": [
+    "ICML 2023 <a href=\"https://dl.acm.org/doi/10.5555/3618408.3618936\" class=\"bi bi-link-45deg\"></a>",
+    "Naver AI Lab, Korea University"
+  ],
+  "description": "Joint optimization of hash-grid NeRF and SE(3) camera poses",
+  "keywords": "",
+  "sourceBackup": "backups/project-pages-html/html-20260508-142446/instant_pose/index.html"
+}

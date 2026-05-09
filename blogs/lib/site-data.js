@@ -4,6 +4,7 @@ const path = require('path');
 const SITE_DATA_PATH = path.join(__dirname, '..', 'data', 'site-data.json');
 const POST_CATEGORIES = ['post', 'note'];
 const POST_LANGUAGES = ['eng', 'kor'];
+const PORTFOLIO_CATEGORIES = ['research', 'app', 'per'];
 
 const POST_ALLOWED_KEYS = new Set([
     'id',
@@ -74,6 +75,65 @@ function validatePostShape(post, seriesMap, errors) {
     }
 }
 
+function validateStringField(item, key, errors, label, required = true) {
+    const value = item[key];
+    if (required && !value) {
+        errors.push(`Missing required "${key}" in ${label}.`);
+        return;
+    }
+
+    if (value !== undefined && typeof value !== 'string') {
+        errors.push(`"${key}" must be a string in ${label}.`);
+    }
+}
+
+function validatePortfolioProjectShape(project, index, errors) {
+    const label = `portfolio project ${project.id || index}`;
+
+    ['id', 'title', 'summary', 'url'].forEach((key) => validateStringField(project, key, errors, label));
+    ['badge', 'image', 'gif', 'video', 'poster', 'alt'].forEach((key) => validateStringField(project, key, errors, label, false));
+
+    if (!Array.isArray(project.categories) || project.categories.length === 0) {
+        errors.push(`"${label}" must define a non-empty categories array.`);
+    } else {
+        project.categories.forEach((category) => {
+            if (!PORTFOLIO_CATEGORIES.includes(category)) {
+                errors.push(`Invalid portfolio category "${category}" in ${label}.`);
+            }
+        });
+    }
+
+    if (!project.image && !project.video) {
+        errors.push(`"${label}" must define either image or video.`);
+    }
+
+    if (project.external !== undefined && typeof project.external !== 'boolean') {
+        errors.push(`"external" must be a boolean in ${label}.`);
+    }
+}
+
+function validatePublicationShape(publication, index, errors) {
+    const label = `publication ${publication.title || index}`;
+
+    ['title', 'authorsHtml', 'venueHtml'].forEach((key) => validateStringField(publication, key, errors, label));
+
+    if (!Array.isArray(publication.links)) {
+        errors.push(`"${label}" must define links as an array.`);
+        return;
+    }
+
+    publication.links.forEach((link, linkIndex) => {
+        const linkLabel = `${label} link ${linkIndex}`;
+        ['label', 'url'].forEach((key) => validateStringField(link, key, errors, linkLabel));
+        validateStringField(link, 'icon', errors, linkLabel, false);
+    });
+}
+
+function validateTalkShape(talk, index, errors) {
+    const label = `talk ${talk.title || index}`;
+    ['title', 'venueHtml', 'date'].forEach((key) => validateStringField(talk, key, errors, label));
+}
+
 function normalizeSiteData(rawSiteData) {
     const posts = rawSiteData.posts.map((post) => ({
         ...post,
@@ -93,6 +153,9 @@ function normalizeSiteData(rawSiteData) {
     return {
         posts,
         series: rawSiteData.series,
+        portfolioProjects: rawSiteData.portfolioProjects || [],
+        publications: rawSiteData.publications || [],
+        talks: rawSiteData.talks || [],
         featuredPortfolioPosts,
         slugMapping,
         slugToId,
@@ -120,6 +183,23 @@ function validateSiteData(rawSiteData) {
     }
 
     rawSiteData.posts.forEach((post) => validatePostShape(post, rawSiteData.series, errors));
+
+    const portfolioProjectIds = new Set();
+    (rawSiteData.portfolioProjects || []).forEach((project, index) => {
+        validatePortfolioProjectShape(project, index, errors);
+        if (project.id) {
+            if (portfolioProjectIds.has(project.id)) {
+                errors.push(`Duplicate portfolio project id "${project.id}".`);
+            }
+            portfolioProjectIds.add(project.id);
+        }
+    });
+    (rawSiteData.publications || []).forEach((publication, index) => {
+        validatePublicationShape(publication, index, errors);
+    });
+    (rawSiteData.talks || []).forEach((talk, index) => {
+        validateTalkShape(talk, index, errors);
+    });
 
     const ids = new Set();
     const slugs = new Set();
@@ -182,6 +262,7 @@ module.exports = {
     SITE_DATA_PATH,
     POST_CATEGORIES,
     POST_LANGUAGES,
+    PORTFOLIO_CATEGORIES,
     createSlug,
     loadRawSiteData,
     loadSiteData,

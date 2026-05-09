@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</title>
-  <meta content="" name="description">
+  <meta content="Joint optimization of hash-grid NeRF and SE(3) camera poses" name="description">
   <meta content="" name="keywords">
 
   <!-- Favicons -->
@@ -68,6 +68,198 @@
     gtag('js', new Date());
     gtag('config', 'G-RF7ETSKPK9');
   </script>
+  <style id="project-detail-common-style">
+    .portfolio-details .portfolio-description h2 {
+      margin-top: 1.25rem;
+      margin-bottom: 0.85rem;
+      letter-spacing: -0.02em;
+    }
+    .portfolio-details .portfolio-description h3,
+    .portfolio-details .portfolio-description h4,
+    .portfolio-details .portfolio-description h5 {
+      margin-top: 1.15rem;
+      margin-bottom: 0.65rem;
+    }
+    .portfolio-details .portfolio-description p,
+    .portfolio-details .portfolio-description li {
+      line-height: 1.72;
+    }
+    .portfolio-details img,
+    .portfolio-details video,
+    .portfolio-details iframe {
+      border-radius: 14px;
+      height: auto;
+      max-width: 100%;
+    }
+    .portfolio-details .project-video,
+    .portfolio-details video {
+      background: #000;
+      box-shadow: 0 16px 34px rgba(15, 23, 42, 0.12);
+      display: block;
+      margin: 1rem auto;
+      width: 100%;
+    }
+    .portfolio-details .text-center .project-video,
+    .portfolio-details .text-center video {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .portfolio-details .video-container {
+      margin: 1.25rem auto;
+      max-width: 100%;
+    }
+    .portfolio-details .video-container:has(video) {
+      background: transparent;
+      height: auto;
+      overflow: visible;
+      padding-bottom: 0;
+      position: relative;
+    }
+    .portfolio-details .video-container:has(video) video {
+      height: auto;
+      left: auto;
+      position: static;
+      top: auto;
+      width: 100%;
+    }
+    .portfolio-details .video-container:has(iframe) {
+      aspect-ratio: 16 / 9;
+      background: #000;
+      height: auto;
+      overflow: hidden;
+      padding-bottom: 0;
+      position: relative;
+    }
+    .portfolio-details .video-container:has(iframe) iframe {
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+    .portfolio-details .varco-object-embed {
+      background: #f8fafc;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 16px;
+      box-shadow: 0 16px 34px rgba(15, 23, 42, 0.1);
+      margin: 1.5rem auto 0.65rem;
+      overflow: hidden;
+      width: 100%;
+    }
+    .portfolio-details .varco-object-embed iframe {
+      border: 0;
+      display: block;
+      height: min(500px, 70vh);
+      width: 100%;
+    }
+    .portfolio-details p > img:only-child {
+      display: block;
+      margin: 1rem auto;
+    }
+    .portfolio-details img[width] {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .portfolio-details .text-center img,
+    .portfolio-details .gif-container img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .portfolio-details table img {
+      border-radius: 10px;
+      width: 100%;
+    }
+    .portfolio-details table .varco-lattice-img {
+      aspect-ratio: 1 / 1;
+      display: block;
+      height: clamp(140px, 18vw, 230px);
+      margin: 0 auto;
+      object-fit: contain;
+      padding: 0.35rem;
+      width: 100%;
+    }
+    .portfolio-details table:has(.varco-lattice-img) th,
+    .portfolio-details table:has(.varco-lattice-img) td {
+      text-align: center;
+      vertical-align: middle;
+      width: 33.333%;
+    }
+    .portfolio-details .viewer-feature-group {
+      margin: 1.4rem 0 1.8rem;
+    }
+    .portfolio-details .viewer-feature-group > h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.95rem;
+    }
+    .portfolio-details .viewer-feature-grid {
+      display: grid;
+      gap: 1rem;
+      width: 100%;
+    }
+    .portfolio-details .viewer-feature-grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .portfolio-details .viewer-feature-grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .portfolio-details .viewer-feature-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 18px;
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      padding: 1rem;
+    }
+    .portfolio-details .viewer-feature-card .feature-img {
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+      object-fit: cover;
+      width: 100%;
+    }
+    .portfolio-details .viewer-feature-card h5 {
+      font-size: 1.02rem;
+      font-weight: 700;
+      margin: 0.35rem 0 0.45rem;
+    }
+    .portfolio-details .viewer-feature-card p,
+    .portfolio-details .viewer-feature-card li {
+      font-size: 0.94rem;
+      line-height: 1.62;
+    }
+    .portfolio-details .portfolio-info {
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 18px;
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+    }
+    .portfolio-details table {
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    @media (max-width: 768px) {
+      .portfolio-details.section {
+        padding-top: 56px;
+      }
+      .portfolio-details .portfolio-details-container,
+      .portfolio-details .container.col-11 {
+        width: 100%;
+      }
+      .portfolio-details .portfolio-description,
+      .portfolio-details .portfolio-info {
+        margin-bottom: 1.25rem;
+      }
+      .portfolio-details .viewer-feature-grid-2,
+      .portfolio-details .viewer-feature-grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <div class="progress-container">
@@ -121,7 +313,7 @@
         <nav class="breadcrumbs">
           <ol>
             <li><a href="../../">Home</a></li>
-            <li class="current"> Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</li>
+            <li class="current">Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</li>
           </ol>
         </nav>
       </div>
@@ -129,163 +321,156 @@
 
     <!-- Portfolio Details Section -->
     <section id="portfolio-details" class="portfolio-details section">
-        <div class="row gx-5 justify-content-center text-center mb-5">
-          <div class="col-9 col-lg-8 col-xl-7 col-xxl-6">
-            <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline">Robust Camera Pose Refinement <br/> for Multi-Resolution Hash Encoding</span></h1>
-            <div class="fs-3 fw-light text-muted"> ICML 2023 <a href="https://dl.acm.org/doi/10.5555/3618408.3618936" class="bi bi-link-45deg"></a> </div> 
-            <div class="fs-3 fw-light text-muted"> Naver AI Lab, Korea University </div>
-          </div>
+      <div class="row gx-5 justify-content-center">
+        <div class="text-center mb-5 col-11 col-lg-10 col-xl-8 col-xxl-7">
+          <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline">Robust Camera Pose Refinement <br/> for Multi-Resolution Hash Encoding</span></h1>
+          <div class="fs-3 fw-light text-muted">ICML 2023 <a href="https://dl.acm.org/doi/10.5555/3618408.3618936" class="bi bi-link-45deg"></a></div>
+          <div class="fs-3 fw-light text-muted">Naver AI Lab, Korea University</div>
         </div>
-        <div class="row gx-5 justify-content-center">
-            <div class="col-9 col-lg-8 col-xl-7 col-xxl-6">
-                <div class="fs-6"> <strong>TL; DR:</strong> We propose the joint optimization scheme of camera poses and 3D scene reconstruction using multi-resolution hash encoding (Instant-NGP). </div>
-                <div class="fs-6"> <strong>Keywords:</strong> Neural Rendering, Radiance Fields, NeRF, Camera Pose Estimation </div>
-                <p> <br/> </p>
-                <!--img class="img-fluid" src="./assets/poster.png" /-->
-                <h2> Overview </h2>
-                <hr/>
-                <p> 
-                    Multi-Resolution hash encoding (Instant-NGP) has been proposed to reduce the computational cost of NeRFs. 
-                    However, when jointly optimizing camera poses and 3D scene reconstruction, naive gradient-based methods often lead to performance degradation. 
-                    We observed that the oscillating gradient flows inherent to hash encoding interfere with accurate camera pose registration.
-                    <br/><br/>
-                    To address this, we propose a method that uses smooth interpolation weighting to stabilize gradient oscillations during ray sampling across hash grids. 
-                    Additionally, our curriculum training procedure facilitates level-wise learning of hash encodings, further enhancing both camera pose refinement and novel view synthesis quality.
-                </p>
-                <p> <br/> </p>
+      </div>
 
-                <h2> Method </h2>
-                <hr/>
-                <h3> Multi-Resolution Hash Encoding </h3>
-                <img class="img-fluid" src="assets/hash_grid.png" width="90%" />
-                <ol>
-                    <li> A positional encoding uses the hash tables for multi-resolution features. </li>
-                    <li> Each feature is the tri-linear interpolation of the eight-corner entries in a grid cube using proportional weights depending on the location of a given point. </li>
-                    <li> Cannot back-propagate through the hash entries due to random hashing, but through the weights, where the gradients are discontinuous across the grids. </li>
-                </ol>
+<div class="row gx-5 justify-content-center">
+<div class="col-9 col-lg-8 col-xl-7 col-xxl-6">
+<div class="fs-6">
+<p><strong>TL; DR:</strong> We propose the joint optimization scheme of camera poses and 3D scene reconstruction using multi-resolution hash encoding (Instant-NGP).</p>
 
-                <p> <strong> <span style="color:blue">Pros.</span> </strong> faster convergence with better accuracy </p>
-                <p> <strong> <span style="color:red">Cons.</span> </strong> back-propagation through ray-sampled positions is unstable! </p>
-                <p> <br/> </p>
+</div>
+<div class="fs-6">
+<p><strong>Keywords:</strong> Neural Rendering, Radiance Fields, NeRF, Camera Pose Estimation</p>
 
-                <p> <br/> </p>
-                <h3> Smooth gradients for unstable back-propagation </h3>
-                <img class="img-fluid" src="assets/pose_fig2.png" />
-                <br/> <br/>
-                <p> <strong> The Derivative of Multi-Resolution Hash Encoding </strong> </p>
-                <p> Using this relation and the appropriate choice of the indices, the $k^{\text{th}}$ element of Jacobian $\nabla_{\mathbf{x}}\mathbf{h}_{l}(\mathbf{x})$ can be rewritten as follows: </p>
-                <div class="math-container">
-                    $$\begin{aligned} \nabla_{\mathbf{x}}\mathbf{h}_{l}(\mathbf{x})  &= 
-                    \left[  
-                        \frac{\partial {\mathbf{h}_{l}}(\mathbf{x})}{\partial {x}_1}, 
-                        \dots,
-                        \frac{\partial {\mathbf{h}_{l}}(\mathbf{x})}{\partial {x}_d}
-                    \right]
-                    \\
-                    &= 
-                    \sum_{i=1}^{2^{d}} 
-                    \mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{i,l} (\mathbf{x}) \big) \big)
-                    \cdot
-                    \left[  
-                        \frac{\partial {{w}_{i,l}}(\mathbf{x})}{\partial {x}_1}, 
-                        \dots,
-                        \frac{\partial {{w}_{i,l}}(\mathbf{x})}{\partial {x}_d}
-                    \right]. \end{aligned}$$
-                </div>
+</div>
+<h2>Overview</h2>
+<hr>
+<p>Multi-Resolution hash encoding (Instant-NGP) has been proposed to reduce the computational cost of NeRFs.
+However, when jointly optimizing camera poses and 3D scene reconstruction, naive gradient-based methods often lead to performance degradation.
+We observed that the oscillating gradient flows inherent to hash encoding interfere with accurate camera pose registration.
+To address this, we propose a method that uses smooth interpolation weighting to stabilize gradient oscillations during ray sampling across hash grids.
+Additionally, our curriculum training procedure facilitates level-wise learning of hash encodings, further enhancing both camera pose refinement and novel view synthesis quality.</p>
+<h2>Method</h2>
+<hr>
+<h3>Multi-Resolution Hash Encoding</h3>
+<img src="assets/hash_grid.png" alt="Image" width="90%" class="img-fluid">
 
-                <p> Let $\bar{i}$ be one of the nearest corner indices from $\mathbf{c}_{i,l}$ in a unit hypercube, where $\mathbf{c}_{i,l}$ and $\mathbf{c}_{\bar{i},l}$ make an edge of the unit hypercube.
-                    Among the $2^d$ corners, we have $2^{d-1}$ pairs like that. 
-                    Then, we have the relation for $w_{\bar{i}_k,l}$ as follows: 
-                </p>
-                <div class="math-container">
-                    $$ \begin{aligned} \frac{\partial {{w}_{\bar{i}_k,l}}(\mathbf{x})}{\partial {x}_k} 
-                    = 
-                    - \frac{\partial {{w}_{i,l}}(\mathbf{x})}{\partial {x}_k}, \end{aligned}$$ 
-                </div>
-                <P> which can be inferred from weight definition, since the relative positions of $\mathbf{x}$ are different for the two cases. </P>
+<ol>
+<li>A positional encoding uses the hash tables for multi-resolution features.</li>
+<li>Each feature is the tri-linear interpolation of the eight-corner entries in a grid cube using proportional weights depending on the location of a given point.</li>
+<li>Cannot back-propagate through the hash entries due to random hashing, but through the weights, where the gradients are discontinuous across the grids.</li>
+</ol>
+<p><strong>Pros.</strong> faster convergence with better accuracy</p>
+<p><strong>Cons.</strong> back-propagation through ray-sampled positions is unstable!</p>
+<h3>Smooth gradients for unstable back-propagation</h3>
+<p><img src="assets/pose_fig2.png" alt="Image" class="img-fluid"></p>
+<p><strong>The Derivative of Multi-Resolution Hash Encoding</strong></p>
+<p>Using this relation and the appropriate choice of the indices, the $k^{\text{th}}$ element of Jacobian $\nabla_{\mathbf{x}}\mathbf{h}_{l}(\mathbf{x})$ can be rewritten as follows:</p>
 
-                <p> Using this relation and the appropriate choice of the indices, the $k^{\text{th}}$ element of Jacobian $\nabla_{\mathbf{x}}\mathbf{h}_{l}(\mathbf{x})$ can be rewritten as follows: </p>
-                <div class="math-container">
-                    $$ \begin{aligned} \frac{\partial {\mathbf{h}_{l}}(\mathbf{x})}{\partial {x}_k}
-                    &= 
-                    \sum_{i=1}^{2^{d}} 
-                    \mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{i,l} (\mathbf{x}) \big) \big)
-                    \cdot
-                    \frac{\partial {{w}_{i,l}}(\mathbf{x})}{\partial {x}_k}
-                    \\
-                    &=
-                    \sum_{i=1}^{2^{d-1}} 
-                    \left(
-                    \mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{i,l} (\mathbf{x}) \big) \big)
-                    -
-                    \mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{\bar{i}_k,l} (\mathbf{x}) \big) \big)
-                    \right)
-                    \cdot
-                    \frac{\partial {{w}_{i,l}}(\mathbf{x})}{\partial {x}_k} 
-                    \\ 
-                    &=
-                    \sum_{i=1}^{2^{d-1}} 
-                    \left(
-                    \mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{i,l} (\mathbf{x}) \big) \big)
-                    -
-                    \mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{\bar{i}_k,l} (\mathbf{x}) \big) \big)
-                    \right)
-                    \cdot
-                    \prod_{j \neq k} 
-                    \left(
-                        1 - | \mathbf{x}_{l} - \mathbf{c}_{i,l}(\mathbf{x}) |_j 
-                    \right ), \end{aligned}$$ 
-                </div>
-                <p> where $\prod_{j \neq k} \left( 1 - | \mathbf{x}_{l} - \mathbf{c}_{i,l}(\mathbf{x}) |_j \right )$ and the differences between the hash table entries are constant to the $x_k$, which make ${\partial {\mathbf{h}_{l}}(\mathbf{x})} / {\partial {x}_k}$ is constant along with the $k^{\text{th}}$ axis of the unit hypercube. 
-                    Notice that the last term can be seen as the weights defined as: 
-                </p>
-                <div class="math-container">
-                    $$ \begin{aligned} \sum_{i=1}^{2^{d-1}} \prod_{j \neq k} \left( 1 - | \mathbf{x}_{l} - \mathbf{c}_{i,l}(\mathbf{x}) |_j \right ) = 1,\end{aligned}$$ 
-                </div>
-                <p> where ${\partial {\mathbf{h}_{l}}(\mathbf{x})} / {\partial {x}_k}$ is the convex combination of the differences between two hash table entries. </p>
-                
-                Therefore, we change the original interpolation to have infintie-differentiable smooth gradient using cosine function, 
-                <div class="math-container">
-                    $$\delta(w_{i,j}) = \frac{1-\cos(\pi w_{i,j})}{2} \quad \nabla_{x} \delta(w_{i,j}) = \frac{\pi}{2} \sin (\pi w_{i,j}) \cdot \nabla_{x} w_{i,j} $$
-                </div>
-                <p> where $w_{i, j}$ is the weight for the $i$-th corner and the $l$-th level resolution.</p>
+<div class="math-container">
+<p>$$\begin{aligned} \nabla_{\mathbf{x}}\mathbf{h}_{l}(\mathbf{x})  &amp;=
+\left[
+\frac{\partial {\mathbf{h}_{l}}(\mathbf{x})}{\partial {x}_1},
+\dots,
+\frac{\partial {\mathbf{h}_{l}}(\mathbf{x})}{\partial {x}_d}
+\right]
+\\
+&amp;=
+\sum_{i=1}^{2^{d}}
+\mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{i,l} (\mathbf{x}) \big) \big)
+\cdot
+\left[
+\frac{\partial {{w}_{i,l}}(\mathbf{x})}{\partial {x}_1},
+\dots,
+\frac{\partial {{w}_{i,l}}(\mathbf{x})}{\partial {x}_d}
+\right]. \end{aligned}$$</p>
 
-                <p> <br/> </p>
+</div>
+<p>Let $\bar{i}$ be one of the nearest corner indices from $\mathbf{c}_{i,l}$ in a unit hypercube, where $\mathbf{c}_{i,l}$ and $\mathbf{c}_{\bar{i},l}$ make an edge of the unit hypercube.
+Among the $2^d$ corners, we have $2^{d-1}$ pairs like that.
+Then, we have the relation for $w_{\bar{i}_k,l}$ as follows:</p>
 
+<div class="math-container">
+<p>$$ \begin{aligned} \frac{\partial {{w}_{\bar{i}_k,l}}(\mathbf{x})}{\partial {x}_k}
+=
+- \frac{\partial {{w}_{i,l}}(\mathbf{x})}{\partial {x}_k}, \end{aligned}$$</p>
 
-                <h3> Straight-through forward function  </h3>
-                <p> Furthermore, since the non-linear interpolation can hinder the original performance of the NGP, 
-                    we propose to use the mix-up of tri-linear interpolation and smooth gradients: </p>
-                <div class="math-container">
-                    $$\hat{w}_{i, j} = w_{i,j} + \lambda \delta(w_{i,j}) - \lambda \tilde{\delta}(w_{i,j})$$
-                </div>
-                <p> where $\lambda$ is a hyper-parameter, denotes the detached variable from the computational graph.  </p>
-                <p> <br/> </p>
+</div>
+<p>which can be inferred from weight definition, since the relative positions of $\mathbf{x}$ are different for the two cases.</p>
+<p>Using this relation and the appropriate choice of the indices, the $k^{\text{th}}$ element of Jacobian $\nabla_{\mathbf{x}}\mathbf{h}_{l}(\mathbf{x})$ can be rewritten as follows:</p>
 
-                <h2> Experiments </h2>
-                <hr/>
-                <h4> Visualization of the progress of pose refienments </h4>
-                <p> <span style="color:red">Red</span> lines denote pose error vectors between GT camera poses and optimized poses. </p>
-                <img class="img-fluid" src="assets/vis_pose.png" />
-                <p> <br/> </p>
+<div class="math-container">
+<p>$$ \begin{aligned} \frac{\partial {\mathbf{h}_{l}}(\mathbf{x})}{\partial {x}_k}
+&amp;=
+\sum_{i=1}^{2^{d}}
+\mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{i,l} (\mathbf{x}) \big) \big)
+\cdot
+\frac{\partial {{w}_{i,l}}(\mathbf{x})}{\partial {x}_k}
+\\
+&amp;=
+\sum_{i=1}^{2^{d-1}}
+\left(
+\mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{i,l} (\mathbf{x}) \big) \big)
+-
+\mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{\bar{i}_k,l} (\mathbf{x}) \big) \big)
+\right)
+\cdot
+\frac{\partial {{w}_{i,l}}(\mathbf{x})}{\partial {x}_k}
+\\
+&amp;=
+\sum_{i=1}^{2^{d-1}}
+\left(
+\mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{i,l} (\mathbf{x}) \big) \big)
+-
+\mathcal{H}_{l}\big( h_{l} \big( \mathbf{c}_{\bar{i}_k,l} (\mathbf{x}) \big) \big)
+\right)
+\cdot
+\prod_{j \neq k}
+\left(
+1 - | \mathbf{x}_{l} - \mathbf{c}_{i,l}(\mathbf{x}) |_j
+\right ), \end{aligned}$$</p>
 
-                <h4> Training time per iteration </h4>
-                <DIV style ="text-align:center";>
-                    <img class="img-fluid" src="assets/training_time.png" width="50%" />
-                </DIV>
-                <ul>
-                    <li> Inherit Instant-NGP's faster convergence </li>
-                    <li> Inherit Instant-NGP's better accuracy </li>
-                    <li> Improve stability of pose refinement </li>
-                </ul>
-                <br/>
-                <h4> Quantitative Results </h4>
-                <DIV style ="text-align:center";>
-                    <img class="img-fluid" src="assets/table.png" width="70%" />
-                </DIV>
-                <p> For the Synthetic (Blender) dataset, our reimplementation utilizing the below tiny-cuda-nn and ngp_pl frameworks demonstrates remarkable superiority, achieving a score of 31.54, surpassing the paper's reported score of 29.86, as well as the scores of 28.96 achieved by GARF and 28.84 achieved by BARF. </p>
-            </div>
-        </div>
+</div>
+<p>where $\prod_{j \neq k} \left( 1 - | \mathbf{x}_{l} - \mathbf{c}_{i,l}(\mathbf{x}) |_j \right )$ and the differences between the hash table entries are constant to the $x_k$, which make ${\partial {\mathbf{h}_{l}}(\mathbf{x})} / {\partial {x}_k}$ is constant along with the $k^{\text{th}}$ axis of the unit hypercube.
+Notice that the last term can be seen as the weights defined as:</p>
+
+<div class="math-container">
+<p>$$ \begin{aligned} \sum_{i=1}^{2^{d-1}} \prod_{j \neq k} \left( 1 - | \mathbf{x}_{l} - \mathbf{c}_{i,l}(\mathbf{x}) |_j \right ) = 1,\end{aligned}$$</p>
+
+</div>
+<p>where ${\partial {\mathbf{h}_{l}}(\mathbf{x})} / {\partial {x}_k}$ is the convex combination of the differences between two hash table entries.</p>
+<p>Therefore, we change the original interpolation to have infintie-differentiable smooth gradient using cosine function,</p>
+
+<div class="math-container">
+<p>$$\delta(w_{i,j}) = \frac{1-\cos(\pi w_{i,j})}{2} \quad \nabla_{x} \delta(w_{i,j}) = \frac{\pi}{2} \sin (\pi w_{i,j}) \cdot \nabla_{x} w_{i,j} $$</p>
+
+</div>
+<p>where $w_{i, j}$ is the weight for the $i$-th corner and the $l$-th level resolution.</p>
+<h3>Straight-through forward function</h3>
+<p>Furthermore, since the non-linear interpolation can hinder the original performance of the NGP,
+we propose to use the mix-up of tri-linear interpolation and smooth gradients:</p>
+
+<div class="math-container">
+<p>$$\hat{w}_{i, j} = w_{i,j} + \lambda \delta(w_{i,j}) - \lambda \tilde{\delta}(w_{i,j})$$</p>
+
+</div>
+<p>where $\lambda$ is a hyper-parameter, denotes the detached variable from the computational graph.</p>
+<h2>Experiments</h2>
+<hr>
+<h4>Visualization of the progress of pose refienments</h4>
+<p>Red lines denote pose error vectors between GT camera poses and optimized poses.</p>
+<p><img src="assets/vis_pose.png" alt="Image" class="img-fluid"></p>
+<h4>Training time per iteration</h4>
+<img src="assets/training_time.png" alt="Image" width="50%" class="img-fluid">
+
+<ul>
+<li>Inherit Instant-NGP&#39;s faster convergence</li>
+<li>Inherit Instant-NGP&#39;s better accuracy</li>
+<li>Improve stability of pose refinement</li>
+</ul>
+<h4>Quantitative Results</h4>
+<img src="assets/table.png" alt="Image" width="70%" class="img-fluid">
+
+<p>For the Synthetic (Blender) dataset, our reimplementation utilizing the below tiny-cuda-nn and ngp_pl frameworks demonstrates remarkable superiority, achieving a score of 31.54, surpassing the paper&#39;s reported score of 29.86, as well as the scores of 28.96 achieved by GARF and 28.84 achieved by BARF.</p>
+
+</div>
+</div>
     </section><!-- /Portfolio Details Section -->
 
   </main>

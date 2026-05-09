@@ -2,10 +2,15 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
+const { marked } = require('marked');
+const { parseMarkdownWithMath } = require('./js/markdown-with-math');
+const { parseProjectMarkdown } = require('./lib/project-markdown');
+const { renderProjectPage } = require('./lib/render-project-page');
 
 const {
     POST_CATEGORIES,
     POST_LANGUAGES,
+    PORTFOLIO_CATEGORIES,
     loadRawSiteData,
     validateSiteData,
     writeSiteData
@@ -13,9 +18,11 @@ const {
 
 const PORT = 3030;
 const ROOT_DIR = __dirname;
+const SITE_ROOT_DIR = path.join(ROOT_DIR, '..');
 const POSTS_DIR = path.join(ROOT_DIR, 'posts');
 const DRAFTS_DIR = path.join(ROOT_DIR, 'editor', 'drafts');
 const DRAFT_ASSETS_DIR = path.join(ROOT_DIR, 'editor', 'draft-assets');
+const PROJECT_SNAPSHOTS_DIR = path.join(ROOT_DIR, 'editor', 'project-snapshots');
 const POST_ID_PATTERN = /^\d{6}_[A-Za-z0-9_]+$/;
 const CONTENT_DELIMITER = '--- 여기부터 실제 콘텐츠 ---';
 
@@ -36,6 +43,7 @@ const mimeTypes = {
 
 ensureDirSync(DRAFTS_DIR);
 ensureDirSync(DRAFT_ASSETS_DIR);
+ensureDirSync(PROJECT_SNAPSHOTS_DIR);
 
 function ensureDirSync(dirPath) {
     if (!fs.existsSync(dirPath)) {
@@ -141,11 +149,13 @@ function parseMultipart(req, callback) {
                 const content = partData.slice(headerEnd + 4, partData.length - 2);
                 const nameMatch = headers.match(/name="([^"]+)"/);
                 const filenameMatch = headers.match(/filename="([^"]+)"/);
+                const contentTypeMatch = headers.match(/content-type:\s*([^\r\n]+)/i);
 
                 if (nameMatch) {
                     parts.push({
                         name: nameMatch[1],
                         filename: filenameMatch ? path.basename(filenameMatch[1]) : null,
+                        contentType: contentTypeMatch ? contentTypeMatch[1].trim() : '',
                         data: content
                     });
                 }
@@ -188,6 +198,7 @@ function buildBootstrapPayload() {
     return {
         categories: POST_CATEGORIES,
         languages: POST_LANGUAGES,
+        portfolioCategories: PORTFOLIO_CATEGORIES,
         series: rawSiteData.series,
         featuredPortfolioPosts: rawSiteData.featuredPortfolioPosts || [],
         posts: sortPostsByDate(rawSiteData.posts).map((post) => ({
@@ -200,6 +211,473 @@ function buildBootstrapPayload() {
             languages: post.languages,
             featured: featuredMap.has(post.id)
         }))
+    };
+}
+
+function buildPortfolioBundle() {
+    const rawSiteData = loadRawSiteData();
+    validateSiteData(rawSiteData);
+
+    return {
+        portfolioCategories: PORTFOLIO_CATEGORIES,
+        portfolioProjects: rawSiteData.portfolioProjects || [],
+        publications: rawSiteData.publications || [],
+        talks: rawSiteData.talks || []
+    };
+}
+
+function normalizeProjectPagePath(rawPath) {
+    const cleanPath = path.posix.normalize(`/${String(rawPath || '').trim()}`).slice(1);
+    if (!cleanPath.startsWith('projects/') || !cleanPath.endsWith('/index.html')) {
+        throw new Error('Project page path must match projects/<name>/index.html.');
+    }
+    return cleanPath;
+}
+
+function resolveProjectPagePath(rawPath) {
+    return resolveInside(SITE_ROOT_DIR, normalizeProjectPagePath(rawPath));
+}
+
+function getProjectPagePathFromUrl(rawUrl) {
+    const cleanUrl = String(rawUrl || '').split('#')[0].split('?')[0];
+    if (!cleanUrl.startsWith('projects/')) {
+        return null;
+    }
+    return cleanUrl.endsWith('/index.html') ? cleanUrl : `${cleanUrl.replace(/\/?$/, '/')}index.html`;
+}
+
+function getTimestampSlug() {
+    return new Date().toISOString().replace(/[-:]/g, '').replace(/\..+/, '').replace('T', '-');
+}
+
+function getProjectSlugFromPagePath(pagePath) {
+    return pagePath.split('/')[1];
+}
+
+function backupProjectPageSource(projectDir, pagePath, reason) {
+    const slug = getProjectSlugFromPagePath(pagePath);
+    const backupDir = path.join(PROJECT_SNAPSHOTS_DIR, `${getTimestampSlug()}-${reason}-${slug}`);
+    ensureDirSync(backupDir);
+
+    ['project.json', 'content.md', 'index.html'].forEach((fileName) => {
+        const sourcePath = path.join(projectDir, fileName);
+        if (fs.existsSync(sourcePath)) {
+            fs.copyFileSync(sourcePath, path.join(backupDir, fileName));
+        }
+    });
+
+    const assetsDir = path.join(projectDir, 'assets');
+    if (fs.existsSync(assetsDir)) {
+        fs.cpSync(assetsDir, path.join(backupDir, 'assets'), { recursive: true });
+    }
+
+    return backupDir;
+}
+
+function getAvailableAssetPath(projectDir, fileName) {
+    const assetsDir = path.join(projectDir, 'assets');
+    ensureDirSync(assetsDir);
+
+    const extension = path.extname(fileName);
+    const baseName = path.basename(fileName, extension);
+    let candidateName = fileName;
+    let index = 1;
+
+    while (fs.existsSync(path.join(assetsDir, candidateName))) {
+        candidateName = `${baseName}-${index}${extension}`;
+        index += 1;
+    }
+
+    return {
+        assetsDir,
+        fileName: candidateName,
+        targetPath: path.join(assetsDir, candidateName)
+    };
+}
+
+function findPortfolioProjectByPagePath(rawSiteData, pagePath) {
+    return (rawSiteData.portfolioProjects || []).find((project) => getProjectPagePathFromUrl(project.url) === pagePath) || null;
+}
+
+function buildProjectPagesPayload() {
+    const rawSiteData = loadRawSiteData();
+    validateSiteData(rawSiteData);
+
+    const pagesByPath = new Map();
+    (rawSiteData.portfolioProjects || []).forEach((project) => {
+        const pagePath = getProjectPagePathFromUrl(project.url);
+        if (!pagePath) {
+            return;
+        }
+
+        const projectDir = path.dirname(resolveProjectPagePath(pagePath));
+        const metadataPath = path.join(projectDir, 'project.json');
+        const contentPath = path.join(projectDir, 'content.md');
+        if (!fs.existsSync(metadataPath) || !fs.existsSync(contentPath)) {
+            return;
+        }
+
+        const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
+        pagesByPath.set(pagePath, {
+            path: pagePath,
+            title: metadata.title || project.title,
+            projectId: project.id,
+            source: 'portfolio'
+        });
+    });
+
+    const projectsDir = path.join(SITE_ROOT_DIR, 'projects');
+    if (fs.existsSync(projectsDir)) {
+        fs.readdirSync(projectsDir, { withFileTypes: true })
+            .filter((entry) => entry.isDirectory())
+            .forEach((entry) => {
+                const pagePath = `projects/${entry.name}/index.html`;
+                const projectDir = path.dirname(resolveProjectPagePath(pagePath));
+                const metadataPath = path.join(projectDir, 'project.json');
+                const contentPath = path.join(projectDir, 'content.md');
+                if (!fs.existsSync(metadataPath) || !fs.existsSync(contentPath) || pagesByPath.has(pagePath)) {
+                    return;
+                }
+                const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
+                pagesByPath.set(pagePath, {
+                    path: pagePath,
+                    title: metadata.title || entry.name,
+                    projectId: '',
+                    source: 'projects'
+                });
+            });
+    }
+
+    return {
+        pages: [...pagesByPath.values()].sort((a, b) => a.path.localeCompare(b.path))
+    };
+}
+
+function readProjectPage(rawPath) {
+    const pagePath = normalizeProjectPagePath(rawPath);
+    const projectDir = path.dirname(resolveProjectPagePath(pagePath));
+    const metadataPath = path.join(projectDir, 'project.json');
+    const contentPath = path.join(projectDir, 'content.md');
+    if (!fs.existsSync(metadataPath) || !fs.existsSync(contentPath)) {
+        throw new Error('Project page source files were not found.');
+    }
+
+    const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
+    const backupPath = metadata.sourceBackup
+        ? path.join(SITE_ROOT_DIR, metadata.sourceBackup)
+        : '';
+
+    return {
+        path: pagePath,
+        metadata,
+        content: fs.readFileSync(contentPath, 'utf8'),
+        legacyHtml: backupPath && fs.existsSync(backupPath)
+            ? fs.readFileSync(backupPath, 'utf8')
+            : ''
+    };
+}
+
+function saveProjectPage(payload) {
+    const pagePath = normalizeProjectPagePath(payload.path);
+    const indexPath = resolveProjectPagePath(pagePath);
+    const projectDir = path.dirname(indexPath);
+    const metadataPath = path.join(projectDir, 'project.json');
+    const contentPath = path.join(projectDir, 'content.md');
+    if (!fs.existsSync(metadataPath) || !fs.existsSync(contentPath)) {
+        throw new Error('Project page source files were not found.');
+    }
+
+    const content = typeof payload.content === 'string' ? payload.content : '';
+    if (!content.trim()) {
+        throw new Error('Project page content cannot be empty.');
+    }
+
+    const metadataInput = payload.metadata && typeof payload.metadata === 'object' ? payload.metadata : {};
+    const metadata = {
+        title: String(metadataInput.title || '').trim(),
+        heroTitle: String(metadataInput.heroTitle || '').trim(),
+        subtitles: Array.isArray(metadataInput.subtitles)
+            ? metadataInput.subtitles.map((subtitle) => String(subtitle || '').trim()).filter(Boolean)
+            : [],
+        description: String(metadataInput.description || '').trim(),
+        keywords: String(metadataInput.keywords || '').trim(),
+        sourceBackup: String(metadataInput.sourceBackup || '').trim()
+    };
+
+    if (!metadata.title || !metadata.heroTitle) {
+        throw new Error('Project title and hero title are required.');
+    }
+
+    const backupDir = backupProjectPageSource(projectDir, pagePath, 'save');
+    const metadataTempPath = `${metadataPath}.tmp`;
+    const contentTempPath = `${contentPath}.tmp`;
+    fs.writeFileSync(metadataTempPath, `${JSON.stringify(metadata, null, 2)}\n`, 'utf8');
+    fs.writeFileSync(contentTempPath, content, 'utf8');
+    fs.renameSync(metadataTempPath, metadataPath);
+    fs.renameSync(contentTempPath, contentPath);
+
+    const contentHtml = content.trimStart().startsWith('<')
+        ? content
+        : parseProjectMarkdown(content, (source) => marked.parse(source));
+    const backupPath = metadata.sourceBackup
+        ? path.join(SITE_ROOT_DIR, metadata.sourceBackup)
+        : '';
+    const legacyHtml = backupPath && fs.existsSync(backupPath)
+        ? fs.readFileSync(backupPath, 'utf8')
+        : '';
+    fs.writeFileSync(indexPath, renderProjectPage({ project: metadata, contentHtml, legacyHtml }), 'utf8');
+
+    return {
+        success: true,
+        path: pagePath,
+        bytes: Buffer.byteLength(content, 'utf8'),
+        backup: path.relative(SITE_ROOT_DIR, backupDir)
+    };
+}
+
+function createProjectPage(payload) {
+    const requestedSlug = String(payload.slug || '').trim();
+    const title = String(payload.title || '').trim() || 'New Project Page';
+    const subtitle = String(payload.subtitle || '').trim() || 'Project';
+    const createPortfolioCard = Boolean(payload.createPortfolioCard);
+    const cardImage = String(payload.cardImage || '').trim();
+    const projectsDir = path.join(SITE_ROOT_DIR, 'projects');
+    ensureDirSync(projectsDir);
+
+    if (createPortfolioCard && !cardImage) {
+        throw new Error('Card image is required when creating a portfolio card.');
+    }
+
+    let slug = requestedSlug
+        .toLowerCase()
+        .replace(/[^a-z0-9_-]+/g, '_')
+        .replace(/_+/g, '_')
+        .replace(/^_+|_+$/g, '');
+
+    if (!slug) {
+        slug = 'new_project';
+    }
+
+    let candidateSlug = slug;
+    let suffix = 1;
+    while (fs.existsSync(path.join(projectsDir, candidateSlug))) {
+        suffix += 1;
+        candidateSlug = `${slug}_${suffix}`;
+    }
+
+    const projectDir = path.join(projectsDir, candidateSlug);
+    ensureDirSync(projectDir);
+
+    const metadata = {
+        title,
+        heroTitle: title,
+        subtitles: [
+            subtitle
+        ],
+        description: '',
+        keywords: '',
+        sourceBackup: ''
+    };
+    const content = `:::{.container .portfolio-details-container .col-11}
+:::{.row .gy-4}
+:::{.col-lg-8}
+:::{.portfolio-description}
+## Project Overview
+
+Start writing this project page here.
+:::
+:::
+
+:::{.col-lg-4}
+:::{.portfolio-info}
+### Project Details
+
+- **Category**: Project
+- **Skills Demonstrated**: Add skills here
+:::
+:::
+:::
+:::
+`;
+
+    fs.writeFileSync(path.join(projectDir, 'project.json'), `${JSON.stringify(metadata, null, 2)}\n`, 'utf8');
+    fs.writeFileSync(path.join(projectDir, 'content.md'), content, 'utf8');
+
+    const contentHtml = parseProjectMarkdown(content, (source) => marked.parse(source));
+    const indexPath = path.join(projectDir, 'index.html');
+    fs.writeFileSync(indexPath, renderProjectPage({ project: metadata, contentHtml }), 'utf8');
+
+    if (createPortfolioCard) {
+        const rawSiteData = loadRawSiteData();
+        validateSiteData(rawSiteData);
+        rawSiteData.portfolioProjects = rawSiteData.portfolioProjects || [];
+        rawSiteData.portfolioProjects.push({
+            id: candidateSlug.replace(/_/g, '-'),
+            title,
+            summary: '',
+            url: `projects/${candidateSlug}/`,
+            categories: ['app'],
+            image: cardImage,
+            alt: `${title} teaser`
+        });
+        writeSiteData(rawSiteData);
+    }
+
+    return {
+        success: true,
+        page: {
+            path: `projects/${candidateSlug}/index.html`,
+            title,
+            projectId: createPortfolioCard ? candidateSlug.replace(/_/g, '-') : '',
+            source: createPortfolioCard ? 'portfolio' : 'projects'
+        },
+        portfolioCardCreated: createPortfolioCard
+    };
+}
+
+function deleteProjectPage(payload) {
+    const pagePath = normalizeProjectPagePath(payload.path);
+    const rawSiteData = loadRawSiteData();
+    validateSiteData(rawSiteData);
+
+    const linkedProject = findPortfolioProjectByPagePath(rawSiteData, pagePath);
+    if (linkedProject) {
+        throw new Error(`Project page is linked to portfolio card "${linkedProject.id}". Remove the card first.`);
+    }
+
+    const indexPath = resolveProjectPagePath(pagePath);
+    const projectDir = path.dirname(indexPath);
+    const metadataPath = path.join(projectDir, 'project.json');
+    const contentPath = path.join(projectDir, 'content.md');
+    if (!fs.existsSync(metadataPath) || !fs.existsSync(contentPath)) {
+        throw new Error('Project page source files were not found.');
+    }
+
+    const backupDir = backupProjectPageSource(projectDir, pagePath, 'delete');
+    fs.rmSync(projectDir, { recursive: true, force: true });
+
+    return {
+        success: true,
+        path: pagePath,
+        backup: path.relative(SITE_ROOT_DIR, backupDir)
+    };
+}
+
+function handleProjectAssetUpload(req, res) {
+    parseMultipart(req, (err, parts) => {
+        if (err) {
+            sendJson(res, 400, { error: 'Invalid multipart data' });
+            return;
+        }
+
+        const pathPart = parts.find((part) => part.name === 'path');
+        const assetPart = parts.find((part) => part.name === 'asset');
+        if (!pathPart || !assetPart || !assetPart.filename) {
+            sendJson(res, 400, { error: 'Project path and asset file are required.' });
+            return;
+        }
+
+        try {
+            const pagePath = normalizeProjectPagePath(pathPart.data.toString().trim());
+            const projectDir = path.dirname(resolveProjectPagePath(pagePath));
+            const metadataPath = path.join(projectDir, 'project.json');
+            const contentPath = path.join(projectDir, 'content.md');
+            if (!fs.existsSync(metadataPath) || !fs.existsSync(contentPath)) {
+                throw new Error('Project page source files were not found.');
+            }
+
+            const safeName = sanitizeFileName(assetPart.filename);
+            const assetPath = getAvailableAssetPath(projectDir, safeName);
+            fs.writeFileSync(assetPath.targetPath, assetPart.data);
+
+            sendJson(res, 200, {
+                success: true,
+                filename: assetPath.fileName,
+                relativePath: `assets/${assetPath.fileName}`,
+                serverPath: `/${pagePath.replace(/index\.html$/, '')}assets/${assetPath.fileName}`,
+                mimeType: assetPart.contentType || 'application/octet-stream'
+            });
+        } catch (error) {
+            sendJson(res, 400, { error: error.message || 'Failed to save project asset.' });
+        }
+    });
+}
+
+function sanitizePortfolioBundle(payload) {
+    const portfolioProjects = Array.isArray(payload.portfolioProjects) ? payload.portfolioProjects : [];
+    const publications = Array.isArray(payload.publications) ? payload.publications : [];
+    const talks = Array.isArray(payload.talks) ? payload.talks : [];
+
+    return {
+        portfolioProjects: portfolioProjects.map((project) => {
+            const nextProject = {
+                id: String(project.id || '').trim(),
+                title: String(project.title || '').trim(),
+                summary: String(project.summary || '').trim(),
+                url: String(project.url || '').trim(),
+                categories: Array.isArray(project.categories)
+                    ? [...new Set(project.categories.map((category) => String(category || '').trim()).filter(Boolean))]
+                    : [],
+                external: Boolean(project.external)
+            };
+
+            ['badge', 'image', 'gif', 'video', 'poster', 'alt'].forEach((key) => {
+                const value = String(project[key] || '').trim();
+                if (value) {
+                    nextProject[key] = value;
+                }
+            });
+
+            if (!nextProject.external) {
+                delete nextProject.external;
+            }
+
+            return nextProject;
+        }),
+        publications: publications.map((publication) => ({
+            title: String(publication.title || '').trim(),
+            authorsHtml: String(publication.authorsHtml || '').trim(),
+            venueHtml: String(publication.venueHtml || '').trim(),
+            links: Array.isArray(publication.links)
+                ? publication.links.map((link) => {
+                    const nextLink = {
+                        label: String(link.label || '').trim(),
+                        url: String(link.url || '').trim()
+                    };
+                    const icon = String(link.icon || '').trim();
+                    if (icon) {
+                        nextLink.icon = icon;
+                    }
+                    return nextLink;
+                })
+                : []
+        })),
+        talks: talks.map((talk) => ({
+            title: String(talk.title || '').trim(),
+            venueHtml: String(talk.venueHtml || '').trim(),
+            date: String(talk.date || '').trim()
+        }))
+    };
+}
+
+function savePortfolioBundle(payload) {
+    const rawSiteData = loadRawSiteData();
+    validateSiteData(rawSiteData);
+
+    const sanitizedBundle = sanitizePortfolioBundle(payload);
+    const nextSiteData = {
+        ...rawSiteData,
+        ...sanitizedBundle
+    };
+
+    validateSiteData(nextSiteData);
+    writeSiteData(nextSiteData);
+
+    return {
+        success: true,
+        projectCount: sanitizedBundle.portfolioProjects.length,
+        publicationCount: sanitizedBundle.publications.length,
+        talkCount: sanitizedBundle.talks.length
     };
 }
 
@@ -637,6 +1115,11 @@ function resolveStaticPath(pathname) {
     const normalizedPath = pathname === '/' ? '/editor/' : pathname;
     const cleanPath = path.posix.normalize(normalizedPath);
     const relativePath = cleanPath.startsWith('/') ? cleanPath.slice(1) : cleanPath;
+
+    if (relativePath.startsWith('assets/') || relativePath.startsWith('projects/')) {
+        return resolveInside(SITE_ROOT_DIR, relativePath);
+    }
+
     let resolvedPath = resolveInside(ROOT_DIR, relativePath);
 
     if (fs.existsSync(resolvedPath) && fs.statSync(resolvedPath).isDirectory()) {
@@ -664,6 +1147,50 @@ const server = http.createServer(async (req, res) => {
         try {
             if (pathname === '/api/editor-bootstrap' && req.method === 'GET') {
                 sendJson(res, 200, buildBootstrapPayload());
+                return;
+            }
+
+            if (pathname === '/api/portfolio-bundle' && req.method === 'GET') {
+                sendJson(res, 200, buildPortfolioBundle());
+                return;
+            }
+
+            if (pathname === '/api/portfolio-bundle' && req.method === 'POST') {
+                const body = await parseJsonBody(req);
+                sendJson(res, 200, savePortfolioBundle(body));
+                return;
+            }
+
+            if (pathname === '/api/project-pages' && req.method === 'GET') {
+                sendJson(res, 200, buildProjectPagesPayload());
+                return;
+            }
+
+            if (pathname === '/api/project-page' && req.method === 'GET') {
+                sendJson(res, 200, readProjectPage(parsedUrl.query.path));
+                return;
+            }
+
+            if (pathname === '/api/project-page' && req.method === 'POST') {
+                const body = await parseJsonBody(req);
+                sendJson(res, 200, saveProjectPage(body));
+                return;
+            }
+
+            if (pathname === '/api/project-page-create' && req.method === 'POST') {
+                const body = await parseJsonBody(req);
+                sendJson(res, 200, createProjectPage(body));
+                return;
+            }
+
+            if (pathname === '/api/project-page-delete' && req.method === 'POST') {
+                const body = await parseJsonBody(req);
+                sendJson(res, 200, deleteProjectPage(body));
+                return;
+            }
+
+            if (pathname === '/api/project-asset-upload' && req.method === 'POST') {
+                handleProjectAssetUpload(req, res);
                 return;
             }
 
@@ -760,6 +1287,7 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, () => {
     console.log(`Editor server running at http://localhost:${PORT}/`);
     console.log(`Editor UI: http://localhost:${PORT}/editor/`);
+    console.log(`Portfolio editor UI: http://localhost:${PORT}/editor/portfolio.html`);
     console.log(`Drafts directory: ${DRAFTS_DIR}`);
     console.log(`Posts directory: ${POSTS_DIR}`);
 });

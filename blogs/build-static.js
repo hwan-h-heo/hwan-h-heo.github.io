@@ -6,6 +6,8 @@ const { parseMarkdownWithMath } = require('./js/markdown-with-math');
 const { copyRecursiveSync, ensureDirSync } = require('./lib/fs-utils');
 const { loadSiteData } = require('./lib/site-data');
 const { renderPostPage } = require('./lib/render-post-page');
+const { parseProjectMarkdown } = require('./lib/project-markdown');
+const { renderProjectPage } = require('./lib/render-project-page');
 
 const siteData = loadSiteData();
 const distDir = path.join(__dirname, 'dist');
@@ -221,6 +223,41 @@ function validateContentFiles() {
     }
 }
 
+function generateProjectPages() {
+    const projectsDir = path.join(__dirname, '..', 'projects');
+    if (!fs.existsSync(projectsDir)) {
+        return;
+    }
+
+    fs.readdirSync(projectsDir, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory())
+        .forEach((entry) => {
+            const projectDir = path.join(projectsDir, entry.name);
+            const metadataPath = path.join(projectDir, 'project.json');
+            const contentPath = path.join(projectDir, 'content.md');
+
+            if (!fs.existsSync(metadataPath) || !fs.existsSync(contentPath)) {
+                return;
+            }
+
+            const project = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
+            const markdown = fs.readFileSync(contentPath, 'utf8');
+            const contentHtml = markdown.trimStart().startsWith('<')
+                ? markdown
+                : parseProjectMarkdown(markdown, (source) => marked.parse(source));
+            const backupPath = project.sourceBackup
+                ? path.join(__dirname, '..', project.sourceBackup)
+                : '';
+            const legacyHtml = backupPath && fs.existsSync(backupPath)
+                ? fs.readFileSync(backupPath, 'utf8')
+                : '';
+            const html = renderProjectPage({ project, contentHtml, legacyHtml });
+
+            fs.writeFileSync(path.join(projectDir, 'index.html'), html);
+            console.log(`Generated project: /projects/${entry.name}/index.html`);
+        });
+}
+
 function generateSitemap() {
     const baseUrl = 'https://hwan-h-heo.io';
     const urls = [
@@ -286,6 +323,7 @@ function generateSupportFiles() {
 
 function buildSite() {
     resetDistDir();
+    generateProjectPages();
     copyStaticAssets();
     validateContentFiles();
     generatePostPages();

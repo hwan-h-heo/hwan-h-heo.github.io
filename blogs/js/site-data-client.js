@@ -25,6 +25,9 @@
         return {
             posts,
             series: rawSiteData.series || {},
+            portfolioProjects: rawSiteData.portfolioProjects || [],
+            publications: rawSiteData.publications || [],
+            talks: rawSiteData.talks || [],
             featuredPortfolioPosts: (rawSiteData.featuredPortfolioPosts || []).map((item) => ({
                 ...item,
                 post: postById[item.id]
@@ -63,4 +66,3 @@
         getPostUrl
     };
 })();
-
