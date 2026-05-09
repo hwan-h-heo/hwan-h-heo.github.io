@@ -1,6 +1,10 @@
 :::{.row .gx-5 .justify-content-center}
 :::{.col-11 .col-lg-10 .col-xl-8 .col-xxl-7}
 
+:::{.fs-6}
+**Role:** Research Lead
+:::
+
 ## Overview
 
 ---

@@ -1,9 +1,8 @@
 {
-  "title": "VARCO 3D: Commercial 3D Generative AI Service",
-  "heroTitle": "VARCO 3D: Commercial 3D Generative AI Service",
+  "title": "VARCO 3D: 3D Generative AI Service",
+  "heroTitle": "VARCO 3D: 3D Generative AI Service",
   "subtitles": [
-    "NC AI, 2025-Present",
-    "Core 3D Generation Model R&D"
+    "NC AI"
   ],
   "description": "Portfolio draft for VARCO 3D, NC AI's commercial 3D generation service, summarizing model development from CaPa-inspired pipelines to sparse voxel and VecSet-Lattice generation.",
   "keywords": "VARCO 3D, NC AI, 3D Generation, 3D Generative AI, ShapeVAE, DiT, Sparse Voxel, VecSet, Lattice, Texture Generation",

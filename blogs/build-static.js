@@ -43,7 +43,7 @@ function copyStaticAssets() {
         copyRecursiveSync(postsPath, path.join(distDir, 'blogs', 'posts'));
     }
 
-    const sharedDirs = ['assets', 'css', 'js', 'projects'];
+    const sharedDirs = ['assets', 'css', 'js'];
     sharedDirs.forEach((dir) => {
         const srcPath = path.join(__dirname, '..', dir);
         const destPath = path.join(distDir, dir);
@@ -52,7 +52,39 @@ function copyStaticAssets() {
         }
     });
 
+    copyProjectAssets();
     copyRecursiveSync(path.join(__dirname, '..', 'index.html'), path.join(distDir, 'index.html'));
+}
+
+function copyProjectAssets() {
+    const srcPath = path.join(__dirname, '..', 'projects');
+    const destPath = path.join(distDir, 'projects');
+
+    if (!fs.existsSync(srcPath)) {
+        return;
+    }
+
+    copyProjectAssetRecursive(srcPath, destPath);
+}
+
+function copyProjectAssetRecursive(src, dest) {
+    const stat = fs.statSync(src);
+    const baseName = path.basename(src);
+
+    if (stat.isDirectory()) {
+        ensureDirSync(dest);
+        fs.readdirSync(src).forEach((child) => {
+            copyProjectAssetRecursive(path.join(src, child), path.join(dest, child));
+        });
+        return;
+    }
+
+    if (baseName === 'content.md' || baseName === 'project.json') {
+        return;
+    }
+
+    ensureDirSync(path.dirname(dest));
+    fs.copyFileSync(src, dest);
 }
 
 function calculateReadingTime(content) {
@@ -223,39 +255,107 @@ function validateContentFiles() {
     }
 }
 
+function getProjectSlugFromUrl(url) {
+    const match = String(url || '').match(/^projects\/([^/]+)\/?$/);
+    return match ? match[1] : '';
+}
+
+function getProjectTitleLabel(project) {
+    return String(project.title || project.heroTitle || 'Project')
+        .replace(/<br\s*\/?>/gi, ' ')
+        .replace(/<[^>]*>/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function buildProjectNavItems(projectEntries) {
+    const bySlug = new Map(projectEntries.map((entry) => [entry.slug, entry]));
+    const ordered = [];
+    const seen = new Set();
+
+    (siteData.portfolioProjects || []).forEach((portfolioProject) => {
+        const slug = getProjectSlugFromUrl(portfolioProject.url);
+        if (!slug || !bySlug.has(slug) || seen.has(slug)) {
+            return;
+        }
+
+        const entry = bySlug.get(slug);
+        ordered.push({
+            slug,
+            label: getProjectTitleLabel(entry.project)
+        });
+        seen.add(slug);
+    });
+
+    return ordered;
+}
+
+function getProjectNav(projectNavItems, currentSlug) {
+    const currentIndex = projectNavItems.findIndex((item) => item.slug === currentSlug);
+    if (currentIndex === -1 || projectNavItems.length < 2) {
+        return null;
+    }
+
+    return {
+        currentSlug,
+        items: projectNavItems,
+        previous: projectNavItems[(currentIndex - 1 + projectNavItems.length) % projectNavItems.length],
+        next: projectNavItems[(currentIndex + 1) % projectNavItems.length]
+    };
+}
+
 function generateProjectPages() {
     const projectsDir = path.join(__dirname, '..', 'projects');
     if (!fs.existsSync(projectsDir)) {
         return;
     }
 
-    fs.readdirSync(projectsDir, { withFileTypes: true })
+    const projectEntries = fs.readdirSync(projectsDir, { withFileTypes: true })
         .filter((entry) => entry.isDirectory())
-        .forEach((entry) => {
+        .map((entry) => {
             const projectDir = path.join(projectsDir, entry.name);
             const metadataPath = path.join(projectDir, 'project.json');
             const contentPath = path.join(projectDir, 'content.md');
 
             if (!fs.existsSync(metadataPath) || !fs.existsSync(contentPath)) {
-                return;
+                return null;
             }
 
             const project = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
-            const markdown = fs.readFileSync(contentPath, 'utf8');
-            const contentHtml = markdown.trimStart().startsWith('<')
-                ? markdown
-                : parseProjectMarkdown(markdown, (source) => marked.parse(source));
-            const backupPath = project.sourceBackup
-                ? path.join(__dirname, '..', project.sourceBackup)
-                : '';
-            const legacyHtml = backupPath && fs.existsSync(backupPath)
-                ? fs.readFileSync(backupPath, 'utf8')
-                : '';
-            const html = renderProjectPage({ project, contentHtml, legacyHtml });
+            return {
+                slug: entry.name,
+                projectDir,
+                metadataPath,
+                contentPath,
+                project
+            };
+        })
+        .filter(Boolean);
 
-            fs.writeFileSync(path.join(projectDir, 'index.html'), html);
-            console.log(`Generated project: /projects/${entry.name}/index.html`);
+    const projectNavItems = buildProjectNavItems(projectEntries);
+
+    projectEntries.forEach((entry) => {
+        const { slug, projectDir, contentPath, project } = entry;
+        const markdown = fs.readFileSync(contentPath, 'utf8');
+        const contentHtml = markdown.trimStart().startsWith('<')
+            ? markdown
+            : parseProjectMarkdown(markdown, (source) => marked.parse(source));
+        const backupPath = project.sourceBackup
+            ? path.join(__dirname, '..', project.sourceBackup)
+            : '';
+        const legacyHtml = backupPath && fs.existsSync(backupPath)
+            ? fs.readFileSync(backupPath, 'utf8')
+            : '';
+        const html = renderProjectPage({
+            project,
+            contentHtml,
+            legacyHtml,
+            projectNav: getProjectNav(projectNavItems, slug)
         });
+
+        fs.writeFileSync(path.join(projectDir, 'index.html'), html);
+        console.log(`Generated project: /projects/${slug}/index.html`);
+    });
 }
 
 function generateSitemap() {

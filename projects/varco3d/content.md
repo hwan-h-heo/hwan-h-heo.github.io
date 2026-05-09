@@ -29,9 +29,9 @@ Rather than relying on slow optimization-based SDS pipelines, the development di
 
 ### Project Details
 
+- **Role**: Core 3D Generation Model R&D
 - **Category**: Commercial AI Service, 3D Generation
 - **Organization**: NC AI
-- **Role**: Core algorithm R&D, 3D generation model training, technical direction
 - **Technology**: ShapeVAE, DiT, Rectified Flow, Sparse Voxel VAE, VecSet, Lattice, CUDA
 - **Service URL**: [VARCO 3D](https://www.varco.ai/3d)
 - **Related Blog**: [Varco3D: A Year in Review](/blogs/posts/varco3d-a-year-in-review-2025-retrospective/)
@@ -43,7 +43,7 @@ Rather than relying on slow optimization-based SDS pipelines, the development di
 :::
 
 :::{.row .gx-5 .justify-content-center}
-:::{.col-9 .col-lg-8 .col-xl-7 .col-xxl-6 .portfolio-description}
+:::{.project-readable .portfolio-description}
 
 ## Technical Direction
 

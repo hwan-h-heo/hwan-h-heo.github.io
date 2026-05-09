@@ -1,7 +1,10 @@
 :::{.row .gx-5 .justify-content-center}
-:::{.col-9 .col-lg-8 .col-xl-7 .col-xxl-6}
+:::{.project-readable .portfolio-description}
 :::{.fs-6}
 **TL; DR:** We propose the joint optimization scheme of camera poses and 3D scene reconstruction using multi-resolution hash encoding (Instant-NGP).
+:::
+:::{.fs-6}
+**Role:** Research Lead, Camera Pose Optimization
 :::
 :::{.fs-6}
 **Keywords:** Neural Rendering, Radiance Fields, NeRF, Camera Pose Estimation

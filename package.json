@@ -3,11 +3,8 @@
   "version": "1.0.0",
   "description": "Hwan Heo's portfolio site with integrated blog",
   "scripts": {
-    "build": "cd blogs && npm run build",
-    "dev": "cd blogs && npm run dev",
-    "deploy": "cd blogs && npm run build && cd .. && gh-pages -d blogs/dist --dotfiles"
-  },
-  "devDependencies": {
-    "gh-pages": "^6.1.1"
+    "build": "npm --prefix blogs run build",
+    "dev": "npm --prefix blogs run dev",
+    "deploy": "npm --prefix blogs run deploy"
   }
 }

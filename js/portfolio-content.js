@@ -83,9 +83,11 @@
     }
 
     function renderTalk(talk) {
+        const titleHtml = talk.titleHtml || escapeHtml(talk.title);
+
         return `
             <li class="mb-4">
-                <p class="mb-1"><strong>${escapeHtml(talk.title)}</strong></p>
+                <p class="mb-1"><strong>${titleHtml}</strong></p>
                 <p class="mb-0"><em>${talk.venueHtml}</em>, <em>${escapeHtml(talk.date)}</em></p>
             </li>
         `;

@@ -32,6 +32,7 @@ This synergistic process allows for the creation of visually stunning and highly
 
 ### Project Details
 
+- **Role**: Research Lead, Geometry & Texture Generation
 - **Category**: Research, 3D Generation, Texture Synthesis, Deep Learning
 - **Technology**: 3D Asset Generation, Neural Rendering, Texture Synthesis
 - **Project URL**: [Project Page](https://ncsoft.github.io/CaPa)

@@ -1,7 +1,10 @@
 :::{.row .gx-5 .justify-content-center}
-:::{.col-9 .col-lg-8 .col-xl-7 .col-xxl-6}
+:::{.project-readable .portfolio-description}
 :::{.fs-6}
 **TL; DR:** This project proposes a unified pipeline that spans 360-camera captures to Gaussian Splatting-based scene reconstruction, enabling seamless integration into game and graphics engines such as Unity and Unreal.
+:::
+:::{.fs-6}
+**Role:** Research Lead, Real-time Neural Rendering
 :::
 :::{.fs-6}
 **Keywords:** Neural Rendering, Gaussian Splatting, 360 Camera, Camera Modeling

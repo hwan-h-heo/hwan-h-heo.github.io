@@ -7,23 +7,145 @@ function escapeHtml(value) {
         .replace(/'/g, '&#39;');
 }
 
-function renderProjectDetailsInner(project, contentHtml) {
+function renderProjectSidebarNav(projectNav) {
+    if (!projectNav || !Array.isArray(projectNav.items) || projectNav.items.length < 2) {
+        return '';
+    }
+
+    const currentItem = projectNav.items.find((item) => item.slug === projectNav.currentSlug);
+    if (!currentItem) {
+        return '';
+    }
+
+    const items = projectNav.items.filter((item) => item.slug !== projectNav.currentSlug).map((item) => {
+        return `          <a href="../${escapeHtml(item.slug)}/"><i class="bi bi-arrow-return-right navicon"></i><span>${escapeHtml(item.label)}</span></a>`;
+    }).join('\n');
+
+    return `        <li class="project-nav-selector">
+          <details>
+            <summary aria-current="page"><i class="bi bi-dot navicon"></i><span>${escapeHtml(currentItem.label)}</span><i class="bi bi-chevron-down project-selector-toggle"></i></summary>
+            <div class="project-selector-options">
+${items}
+            </div>
+          </details>
+        </li>`;
+}
+
+function renderProjectPager(projectNav) {
+    if (!projectNav || !projectNav.previous || !projectNav.next) {
+        return '';
+    }
+
+    return `<div class="container project-page-nav">
+        <a class="project-page-nav-link project-page-nav-prev" href="../${escapeHtml(projectNav.previous.slug)}/">
+          <span class="project-page-nav-kicker"><i class="bi bi-arrow-left"></i> Previous Project</span>
+          <strong>${escapeHtml(projectNav.previous.label)}</strong>
+        </a>
+        <a class="project-page-nav-link project-page-nav-next" href="../${escapeHtml(projectNav.next.slug)}/">
+          <span class="project-page-nav-kicker">Next Project <i class="bi bi-arrow-right"></i></span>
+          <strong>${escapeHtml(projectNav.next.label)}</strong>
+        </a>
+      </div>`;
+}
+
+function renderProjectDetailsInner(project, contentHtml, projectNav = null) {
     const title = project.title || 'Project';
     const heroTitle = project.heroTitle || title;
     const subtitles = Array.isArray(project.subtitles) ? project.subtitles : [];
+    const pagerHtml = renderProjectPager(projectNav);
 
     return `      <div class="row gx-5 justify-content-center">
-        <div class="text-center mb-5 col-11 col-lg-10 col-xl-8 col-xxl-7">
+        <div class="project-hero-header text-center mb-5 col-11 col-lg-10 col-xl-8 col-xxl-7">
           <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline">${heroTitle}</span></h1>
           ${subtitles.map((subtitle) => `<div class="fs-3 fw-light text-muted">${subtitle}</div>`).join('\n          ')}
         </div>
       </div>
 
-${contentHtml}`;
+${contentHtml}
+${pagerHtml}`;
 }
 
 function getCommonProjectStyle() {
     return `<style id="project-detail-common-style">
+    .portfolio-details-page .header {
+      scrollbar-width: none;
+    }
+    .portfolio-details-page .header::-webkit-scrollbar {
+      display: none;
+    }
+    .navmenu .project-nav-selector {
+      margin: -0.35rem 0 0.4rem;
+    }
+    .navmenu .project-nav-selector details {
+      color: var(--nav-color);
+    }
+    .navmenu .project-nav-selector summary {
+      align-items: center;
+      background: rgba(255, 255, 255, 0.06);
+      border-left: 2px solid var(--accent-color);
+      border-radius: 0 10px 10px 0;
+      color: var(--nav-hover-color);
+      cursor: pointer;
+      display: flex;
+      font-family: var(--nav-font);
+      font-size: 0.86rem;
+      gap: 0.35rem;
+      line-height: 1.28;
+      list-style: none;
+      margin: 0 0.35rem 0 1.25rem;
+      padding: 0.5rem 0.55rem 0.5rem 0.75rem;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+    .navmenu .project-nav-selector summary::-webkit-details-marker {
+      display: none;
+    }
+    .navmenu .project-nav-selector summary .navicon,
+    .navmenu .project-nav-selector .project-selector-options .navicon {
+      color: var(--accent-color);
+      flex: 0 0 auto;
+      font-size: 0.95rem;
+      margin-right: 0.05rem;
+    }
+    .navmenu .project-nav-selector summary span,
+    .navmenu .project-selector-options a span {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+    .navmenu .project-nav-selector .project-selector-toggle {
+      color: color-mix(in srgb, var(--nav-color), transparent 20%);
+      flex: 0 0 auto;
+      font-size: 0.75rem;
+      margin-left: auto;
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+    .navmenu .project-nav-selector details[open] .project-selector-toggle {
+      color: var(--accent-color);
+      transform: rotate(180deg);
+    }
+    .navmenu .project-selector-options {
+      border-left: 1px solid color-mix(in srgb, var(--nav-color), transparent 82%);
+      margin: 0.35rem 0.35rem 0.1rem 2.15rem;
+      padding: 0.05rem 0 0.1rem 0.35rem;
+    }
+    .navmenu .project-selector-options a,
+    .navmenu .project-selector-options a:focus {
+      align-items: flex-start;
+      border-radius: 8px;
+      color: color-mix(in srgb, var(--nav-color), transparent 8%);
+      display: flex;
+      font-family: var(--nav-font);
+      font-size: 0.8rem;
+      gap: 0.25rem;
+      line-height: 1.25;
+      padding: 0.38rem 0.45rem;
+      transition: color 0.2s ease, background-color 0.2s ease;
+    }
+    .navmenu .project-selector-options a:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--nav-hover-color);
+    }
     .portfolio-details .portfolio-description h2 {
       margin-top: 1.25rem;
       margin-bottom: 0.85rem;
@@ -38,6 +160,21 @@ function getCommonProjectStyle() {
     .portfolio-details .portfolio-description p,
     .portfolio-details .portfolio-description li {
       line-height: 1.72;
+    }
+    .portfolio-details .project-hero-header {
+      max-width: 880px;
+    }
+    .portfolio-details .portfolio-details-container {
+      max-width: 1040px;
+    }
+    .portfolio-details .container.col-11:not(.portfolio-details-container) {
+      max-width: 960px;
+    }
+    .portfolio-details .project-readable {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 760px;
+      width: min(100%, 760px);
     }
     .portfolio-details img,
     .portfolio-details video,
@@ -197,6 +334,47 @@ function getCommonProjectStyle() {
       border-radius: 14px;
       overflow: hidden;
     }
+    .portfolio-details .project-page-nav {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 3rem;
+      max-width: 960px;
+    }
+    .portfolio-details .project-page-nav-link {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid rgba(15, 23, 42, 0.09);
+      border-radius: 18px;
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+      color: #1f2937;
+      display: flex;
+      flex-direction: column;
+      min-height: 118px;
+      padding: 1.05rem 1.15rem;
+      text-decoration: none;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+    .portfolio-details .project-page-nav-link:hover {
+      border-color: rgba(20, 157, 221, 0.45);
+      box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
+      transform: translateY(-2px);
+    }
+    .portfolio-details .project-page-nav-next {
+      align-items: flex-end;
+      text-align: right;
+    }
+    .portfolio-details .project-page-nav-kicker {
+      color: #64748b;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.45rem;
+      text-transform: uppercase;
+    }
+    .portfolio-details .project-page-nav-link strong {
+      font-size: 1.02rem;
+      line-height: 1.35;
+    }
     @media (max-width: 768px) {
       .portfolio-details.section {
         padding-top: 56px;
@@ -212,6 +390,13 @@ function getCommonProjectStyle() {
       .portfolio-details .viewer-feature-grid-2,
       .portfolio-details .viewer-feature-grid-3 {
         grid-template-columns: 1fr;
+      }
+      .portfolio-details .project-page-nav {
+        grid-template-columns: 1fr;
+      }
+      .portfolio-details .project-page-nav-next {
+        align-items: flex-start;
+        text-align: left;
       }
     }
   </style>`;
@@ -244,15 +429,31 @@ function patchLegacyLazyLoadingScript(html) {
     );
 }
 
-function renderProjectPageFromLegacyTemplate({ project, contentHtml, legacyHtml }) {
+function injectProjectSidebarNav(html, projectNav) {
+    const sidebarHtml = renderProjectSidebarNav(projectNav);
+    if (!sidebarHtml || html.includes('class="project-nav-selector"')) {
+        return html;
+    }
+
+    const portfolioItemPattern = /(<li><a\s+href=["']\.\.\/\.\.\/#portfolio["'][^>]*>[\s\S]*?<\/a><\/li>)/i;
+    if (portfolioItemPattern.test(html)) {
+        return html.replace(portfolioItemPattern, `$1\n${sidebarHtml}`);
+    }
+
+    const navPattern = /(<nav\s+id=["']navmenu["'][^>]*>\s*<ul>)([\s\S]*?)(<\/ul>\s*<\/nav>)/i;
+    return html.replace(navPattern, (match, openTag, items, closeTag) => `${openTag}${items}\n${sidebarHtml}\n      ${closeTag}`);
+}
+
+function renderProjectPageFromLegacyTemplate({ project, contentHtml, legacyHtml, projectNav }) {
     const title = project.title || 'Project';
-    const detailsInner = renderProjectDetailsInner(project, contentHtml);
+    const detailsInner = renderProjectDetailsInner(project, contentHtml, projectNav);
     let html = legacyHtml;
 
     html = html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(title)}</title>`);
     html = replaceOrInsertMeta(html, 'description', project.description || '');
     html = replaceOrInsertMeta(html, 'keywords', project.keywords || '');
     html = injectCommonProjectStyle(html);
+    html = injectProjectSidebarNav(html, projectNav);
     html = patchLegacyLazyLoadingScript(html);
     html = html.replace(/<li class=["']current["']>[\s\S]*?<\/li>/i, `<li class="current">${escapeHtml(title)}</li>`);
 
@@ -264,15 +465,16 @@ function renderProjectPageFromLegacyTemplate({ project, contentHtml, legacyHtml 
     return html;
 }
 
-function renderProjectPage({ project, contentHtml, legacyHtml }) {
+function renderProjectPage({ project, contentHtml, legacyHtml, projectNav = null }) {
     if (legacyHtml) {
-        return renderProjectPageFromLegacyTemplate({ project, contentHtml, legacyHtml });
+        return renderProjectPageFromLegacyTemplate({ project, contentHtml, legacyHtml, projectNav });
     }
 
     const title = project.title || 'Project';
     const description = project.description || '';
     const keywords = project.keywords || '';
-    const detailsInner = renderProjectDetailsInner(project, contentHtml);
+    const detailsInner = renderProjectDetailsInner(project, contentHtml, projectNav);
+    const projectSidebarNav = renderProjectSidebarNav(projectNav);
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -350,6 +552,7 @@ function renderProjectPage({ project, contentHtml, legacyHtml }) {
         <li><a href="../../#about"><i class="bi bi-person navicon"></i> About</a></li>
         <li><a href="../../#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
         <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Portfolio</a></li>
+${projectSidebarNav}
         <li><a href="../../blogs/"><i class="bi bi-keyboard navicon"></i> Blog <i class="bi bi-link-45deg"></i></a></li>
       </ul>
     </nav>

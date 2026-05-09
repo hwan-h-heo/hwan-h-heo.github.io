@@ -1,7 +1,10 @@
 :::{.row .gx-5 .justify-content-center}
-:::{.col-9 .col-lg-8 .col-xl-7 .col-xxl-6}
+:::{.project-readable .portfolio-description}
 :::{.fs-6}
 **TL; DR:** This project presents an accelerated facial NeRF pipeline utilizing multi-camera setups to capture multi-view data for novel view synthesis.
+:::
+:::{.fs-6}
+**Role:** Research Lead, Neural Avatar Reconstruction
 :::
 :::{.fs-6}
 **Keywords:** Facial NeRF, Multi-Camera Setup, 3D Morphable Model (3DMM)

@@ -1,7 +1,10 @@
 :::{.row .gx-5 .justify-content-center}
-:::{.col-9 .col-lg-8 .col-xl-7 .col-xxl-6}
+:::{.project-readable .portfolio-description}
 :::{.fs-6}
 **TL; DR:** This project aims to accelerate the separation of diffuse and specular color components in neural rendering, building on Ref-NeRF's directional embedding and Instant-NGP-based NeRFacto for faster performance.
+:::
+:::{.fs-6}
+**Role:** Research Lead, Reflectance-aware Neural Rendering
 :::
 :::{.fs-6}
 **Keywords:** Neural Rendering, Illumination Control, Physically-Based Rendering (PBR)

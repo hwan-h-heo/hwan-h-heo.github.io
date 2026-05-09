@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const SITE_DATA_PATH = path.join(__dirname, '..', 'data', 'site-data.json');
+const REPO_ROOT = path.join(__dirname, '..', '..');
 const POST_CATEGORIES = ['post', 'note'];
 const POST_LANGUAGES = ['eng', 'kor'];
 const PORTFOLIO_CATEGORIES = ['research', 'app', 'per'];
@@ -87,6 +88,53 @@ function validateStringField(item, key, errors, label, required = true) {
     }
 }
 
+function isExternalUrl(value) {
+    return /^(https?:)?\/\//i.test(value) || /^(mailto|tel):/i.test(value);
+}
+
+function normalizeLocalUrlPath(value) {
+    const cleaned = String(value || '').split('#')[0].split('?')[0].replace(/^\/+/, '');
+
+    if (!cleaned || cleaned.startsWith('#')) {
+        return '';
+    }
+
+    return cleaned.endsWith('/') ? `${cleaned}index.html` : cleaned;
+}
+
+function projectSourceExistsForRoute(localPath) {
+    const match = localPath.match(/^projects\/([^/]+)\/index\.html$/);
+    if (!match) {
+        return false;
+    }
+
+    const projectDir = path.join(REPO_ROOT, 'projects', match[1]);
+    return fs.existsSync(path.join(projectDir, 'project.json'))
+        && fs.existsSync(path.join(projectDir, 'content.md'));
+}
+
+function validateLocalFileReference(value, errors, label, key, { allowGeneratedProjectRoute = false } = {}) {
+    if (!value || isExternalUrl(value)) {
+        return;
+    }
+
+    const localPath = normalizeLocalUrlPath(value);
+    if (!localPath) {
+        return;
+    }
+
+    const absolutePath = path.join(REPO_ROOT, localPath);
+    if (fs.existsSync(absolutePath)) {
+        return;
+    }
+
+    if (allowGeneratedProjectRoute && projectSourceExistsForRoute(localPath)) {
+        return;
+    }
+
+    errors.push(`Missing local file for "${key}" in ${label}: ${value}`);
+}
+
 function validatePortfolioProjectShape(project, index, errors) {
     const label = `portfolio project ${project.id || index}`;
 
@@ -110,6 +158,11 @@ function validatePortfolioProjectShape(project, index, errors) {
     if (project.external !== undefined && typeof project.external !== 'boolean') {
         errors.push(`"external" must be a boolean in ${label}.`);
     }
+
+    validateLocalFileReference(project.url, errors, label, 'url', { allowGeneratedProjectRoute: true });
+    ['image', 'gif', 'video', 'poster'].forEach((key) => {
+        validateLocalFileReference(project[key], errors, label, key);
+    });
 }
 
 function validatePublicationShape(publication, index, errors) {
@@ -132,6 +185,7 @@ function validatePublicationShape(publication, index, errors) {
 function validateTalkShape(talk, index, errors) {
     const label = `talk ${talk.title || index}`;
     ['title', 'venueHtml', 'date'].forEach((key) => validateStringField(talk, key, errors, label));
+    validateStringField(talk, 'titleHtml', errors, label, false);
 }
 
 function normalizeSiteData(rawSiteData) {
@@ -225,6 +279,8 @@ function validateSiteData(rawSiteData) {
         }
         if (!item.teaserImage) {
             errors.push(`Featured portfolio post "${item.id}" is missing teaserImage.`);
+        } else {
+            validateLocalFileReference(item.teaserImage, errors, `featured portfolio post ${item.id}`, 'teaserImage');
         }
         if (featuredIds.has(item.id)) {
             errors.push(`Featured portfolio post "${item.id}" is duplicated.`);

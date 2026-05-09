@@ -875,9 +875,11 @@
     }
 
     function renderTalkPreview(item) {
+        const titleHtml = item.titleHtml || escapeHtml(item.title || 'Untitled talk');
+
         return `
             <div class="preview-list-card">
-                <h3>${escapeHtml(item.title || 'Untitled talk')}</h3>
+                <h3>${titleHtml}</h3>
                 <p><em>${item.venueHtml || ''}</em>, <em>${escapeHtml(item.date || '')}</em></p>
             </div>
         `;

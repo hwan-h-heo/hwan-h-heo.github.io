@@ -1,7 +1,10 @@
 :::{.row .gx-5 .justify-content-center}
-:::{.col-9 .col-lg-8 .col-xl-7 .col-xxl-6}
+:::{.project-readable .portfolio-description}
 :::{.fs-6}
 **TL; DR:** We introduce **SF-NeRF**, an advanced framework for reconstructing neural scene representations from a small number of unconstrained in-the-wild photos.
+:::
+:::{.fs-6}
+**Role:** Baseline Experiments & Research Discussion
 :::
 :::{.fs-6}
 **Keywords:** Neural Rendering, Radiance Fields, NeRF in-the-wild
