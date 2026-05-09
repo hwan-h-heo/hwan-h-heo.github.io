@@ -435,16 +435,13 @@
         <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Portfolio</a></li>
         <li class="project-nav-selector">
           <details>
-            <summary aria-current="page"><i class="bi bi-dot navicon"></i><span>Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</span><i class="bi bi-chevron-down project-selector-toggle"></i></summary>
+            <summary aria-current="page"><i class="bi bi-dot navicon"></i><span>Instant Pose</span><i class="bi bi-chevron-down project-selector-toggle"></i></summary>
             <div class="project-selector-options">
-          <a href="../varco3d/"><i class="bi bi-arrow-return-right navicon"></i><span>VARCO 3D: 3D Generative AI Service</span></a>
-          <a href="../capa/"><i class="bi bi-arrow-return-right navicon"></i><span>CaPa: Efficient 4K Textured Mesh Generation</span></a>
-          <a href="../few_nerf/"><i class="bi bi-arrow-return-right navicon"></i><span>Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild</span></a>
+          <a href="../varco3d/"><i class="bi bi-arrow-return-right navicon"></i><span>VARCO 3D</span></a>
           <a href="../nerf_in_game/"><i class="bi bi-arrow-return-right navicon"></i><span>Neural Rendering in Game Engine</span></a>
-          <a href="../deepsfm/"><i class="bi bi-arrow-return-right navicon"></i><span>VGGSfM vs Mast3r Radiance Fields</span></a>
+          <a href="../capa/"><i class="bi bi-arrow-return-right navicon"></i><span>CaPa</span></a>
           <a href="../2dgs_viewer/"><i class="bi bi-arrow-return-right navicon"></i><span>2D GS Viewer</span></a>
-          <a href="../ref_nerf/"><i class="bi bi-arrow-return-right navicon"></i><span>Specular-Diffuse Disentanglement in Neural Rendering</span></a>
-          <a href="../face_nerf/"><i class="bi bi-arrow-return-right navicon"></i><span>Accelerated Face NeRF with Multi-Camera Captures</span></a>
+          <a href="../deepsfm/"><i class="bi bi-arrow-return-right navicon"></i><span>Deep SfM for Radiance Fields</span></a>
             </div>
           </details>
         </li>
@@ -486,27 +483,47 @@
         </div>
       </div>
 
+<div class="container portfolio-details-container col-11">
+<div class="row gy-4">
+<div class="col-lg-8">
+<div class="portfolio-description">
+<h2>Project Overview</h2>
+<p>This project proposes a joint optimization scheme for <strong>camera poses</strong> and <strong>3D scene reconstruction</strong> using multi-resolution hash encoding.
+The core problem is that Instant-NGP-style hash grids accelerate NeRF training, but their grid-wise interpolation can create unstable gradients when camera poses are optimized together with the scene representation.</p>
+<p>We observed that the oscillating gradient flows inherent to hash encoding interfere with accurate camera pose registration.
+To address this, we introduced smooth interpolation weighting to stabilize ray-sampled gradient propagation across hash grids.
+The method also uses curriculum-style level-wise learning, improving both camera pose refinement and novel-view synthesis quality.</p>
+
+<div class="mt-4">
+<p><strong>Key Contributions:</strong></p>
+<ul>
+<li>Proposed camera pose refinement for hash-grid NeRF training.</li>
+<li>Analyzed gradient instability caused by multi-resolution hash encoding during pose optimization.</li>
+<li>Introduced smooth-gradient interpolation and straight-through weighting for stable SE(3) updates.</li>
+<li>Improved pose refinement while retaining Instant-NGP&#39;s fast convergence profile.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="col-lg-4">
+<div class="portfolio-info">
+<h3>Project Details</h3>
+<ul>
+<li><strong>Role</strong>: Research Lead, Camera Pose Optimization</li>
+<li><strong>Category</strong>: Research, Neural Rendering, Camera Pose Estimation</li>
+<li><strong>Publication</strong>: ICML 2023</li>
+<li><strong>Organization</strong>: NAVER AI Lab, Korea University</li>
+<li><strong>Technology</strong>: NeRF, Instant-NGP, Hash Encoding, SE(3) Optimization</li>
+<li><strong>Paper URL</strong>: <a href="https://dl.acm.org/doi/10.5555/3618408.3618936">ACM DL</a></li>
+</ul>
+
+</div>
+</div>
+</div>
+</div>
 <div class="row gx-5 justify-content-center">
 <div class="project-readable portfolio-description">
-<div class="fs-6">
-<p><strong>TL; DR:</strong> We propose the joint optimization scheme of camera poses and 3D scene reconstruction using multi-resolution hash encoding (Instant-NGP).</p>
-
-</div>
-<div class="fs-6">
-<p><strong>Role:</strong> Research Lead, Camera Pose Optimization</p>
-
-</div>
-<div class="fs-6">
-<p><strong>Keywords:</strong> Neural Rendering, Radiance Fields, NeRF, Camera Pose Estimation</p>
-
-</div>
-<h2>Overview</h2>
-<hr>
-<p>Multi-Resolution hash encoding (Instant-NGP) has been proposed to reduce the computational cost of NeRFs.
-However, when jointly optimizing camera poses and 3D scene reconstruction, naive gradient-based methods often lead to performance degradation.
-We observed that the oscillating gradient flows inherent to hash encoding interfere with accurate camera pose registration.
-To address this, we propose a method that uses smooth interpolation weighting to stabilize gradient oscillations during ray sampling across hash grids.
-Additionally, our curriculum training procedure facilitates level-wise learning of hash encodings, further enhancing both camera pose refinement and novel view synthesis quality.</p>
 <h2>Method</h2>
 <hr>
 <h3>Multi-Resolution Hash Encoding</h3>
@@ -635,11 +652,11 @@ we propose to use the mix-up of tri-linear interpolation and smooth gradients:</
 <div class="container project-page-nav">
         <a class="project-page-nav-link project-page-nav-prev" href="../capa/">
           <span class="project-page-nav-kicker"><i class="bi bi-arrow-left"></i> Previous Project</span>
-          <strong>CaPa: Efficient 4K Textured Mesh Generation</strong>
+          <strong>CaPa</strong>
         </a>
-        <a class="project-page-nav-link project-page-nav-next" href="../few_nerf/">
+        <a class="project-page-nav-link project-page-nav-next" href="../2dgs_viewer/">
           <span class="project-page-nav-kicker">Next Project <i class="bi bi-arrow-right"></i></span>
-          <strong>Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild</strong>
+          <strong>2D GS Viewer</strong>
         </a>
       </div>
     </section><!-- /Portfolio Details Section -->

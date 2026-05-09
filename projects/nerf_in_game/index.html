@@ -437,14 +437,11 @@
           <details>
             <summary aria-current="page"><i class="bi bi-dot navicon"></i><span>Neural Rendering in Game Engine</span><i class="bi bi-chevron-down project-selector-toggle"></i></summary>
             <div class="project-selector-options">
-          <a href="../varco3d/"><i class="bi bi-arrow-return-right navicon"></i><span>VARCO 3D: 3D Generative AI Service</span></a>
-          <a href="../capa/"><i class="bi bi-arrow-return-right navicon"></i><span>CaPa: Efficient 4K Textured Mesh Generation</span></a>
-          <a href="../instant_pose/"><i class="bi bi-arrow-return-right navicon"></i><span>Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</span></a>
-          <a href="../few_nerf/"><i class="bi bi-arrow-return-right navicon"></i><span>Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild</span></a>
-          <a href="../deepsfm/"><i class="bi bi-arrow-return-right navicon"></i><span>VGGSfM vs Mast3r Radiance Fields</span></a>
+          <a href="../varco3d/"><i class="bi bi-arrow-return-right navicon"></i><span>VARCO 3D</span></a>
+          <a href="../capa/"><i class="bi bi-arrow-return-right navicon"></i><span>CaPa</span></a>
+          <a href="../instant_pose/"><i class="bi bi-arrow-return-right navicon"></i><span>Instant Pose</span></a>
           <a href="../2dgs_viewer/"><i class="bi bi-arrow-return-right navicon"></i><span>2D GS Viewer</span></a>
-          <a href="../ref_nerf/"><i class="bi bi-arrow-return-right navicon"></i><span>Specular-Diffuse Disentanglement in Neural Rendering</span></a>
-          <a href="../face_nerf/"><i class="bi bi-arrow-return-right navicon"></i><span>Accelerated Face NeRF with Multi-Camera Captures</span></a>
+          <a href="../deepsfm/"><i class="bi bi-arrow-return-right navicon"></i><span>Deep SfM for Radiance Fields</span></a>
             </div>
           </details>
         </li>
@@ -477,29 +474,50 @@
         </div>
       </div>
 
-<div class="row gx-5 justify-content-center">
-<div class="project-readable portfolio-description">
-<div class="fs-6">
-<p><strong>TL; DR:</strong> This project proposes a unified pipeline that spans 360-camera captures to Gaussian Splatting-based scene reconstruction, enabling seamless integration into game and graphics engines such as Unity and Unreal.</p>
-
-</div>
-<div class="fs-6">
-<p><strong>Role:</strong> Research Lead, Real-time Neural Rendering</p>
-
-</div>
-<div class="fs-6">
-<p><strong>Keywords:</strong> Neural Rendering, Gaussian Splatting, 360 Camera, Camera Modeling</p>
-
-</div>
-<h2>Overview</h2>
-<hr>
-<p>This project explores the integration of neural rendering techniques into game engines, bridging the gap between advanced 3D scene reconstruction and interactive applications. We develop a pipeline that efficiently processes 360-camera captures, reconstructs scenes using Gaussian Splatting, and optimizes the resulting assets for seamless deployment in game engines like Unity and Unreal.
-The pipeline not only ensures high-fidelity scene modeling but also addresses practical challenges such as camera modeling and compatibility with existing game engine workflows, paving the way for more realistic and dynamic gaming environments.</p>
+<div class="container portfolio-details-container col-11">
+<div class="row gy-4">
+<div class="col-lg-8">
+<div class="portfolio-description">
+<h2>Project Overview</h2>
+<p>This project explores how <strong>neural rendering assets</strong> can move from offline reconstruction into interactive game-engine environments.
+The pipeline spans 360-camera capture, Gaussian Splatting-based scene reconstruction, custom camera modeling, asset optimization, and integration into Unity and Unreal Engine.</p>
+<p>The key practical constraint is that high-fidelity neural scenes are not automatically game-engine ready.
+They require camera-model-aware reconstruction, splat pruning, runtime-compatible rendering strategies, and careful conversion into engine-side representations.
+This project focuses on that deployment gap: making reconstructed neural scenes usable inside real-time graphics environments.</p>
 
 <div class="video-container">
 <iframe width="720" height="405" src="https://www.youtube.com/embed/3OqbvUaoNFw?si=GxEnL9nG7fuVT0x0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 </div>
+<div class="mt-4">
+<p><strong>Key Contributions:</strong></p>
+<ul>
+<li>Built a 360-camera-to-Gaussian-Splatting pipeline for large-scene neural reconstruction.</li>
+<li>Developed fisheye/spherical camera handling for robust Gaussian Splatting reconstruction.</li>
+<li>Optimized Gaussian Splatting scenes for Unity and Unreal Engine deployment.</li>
+<li>Explored pruning and refinement strategies for particle-count constraints in Unreal Engine.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="col-lg-4">
+<div class="portfolio-info">
+<h3>Project Details</h3>
+<ul>
+<li><strong>Role</strong>: Research Lead, Real-time Neural Rendering</li>
+<li><strong>Category</strong>: Application, Neural Rendering, Game Engine Integration</li>
+<li><strong>Organization</strong>: NCSOFT Research</li>
+<li><strong>Technology</strong>: Gaussian Splatting, CUDA Rasterization, Unity, Unreal Engine, 360 Camera</li>
+<li><strong>Related Blog</strong>: <a href="/blogs/posts/can-nerf-be-used-in-game/">Can NeRF be Used in Game?</a></li>
+</ul>
+
+</div>
+</div>
+</div>
+</div>
+<div class="row gx-5 justify-content-center">
+<div class="project-readable portfolio-description">
 <h2>Neural Rendering w/ 360 Videos</h2>
 <hr>
 <h3>Using 360 Camera for Effective Large Scene Capturing</h3>
@@ -599,18 +617,18 @@ Below is a comparison between the original GS scene and the pruned GS scene in U
 </div>
 <p>This pipeline demonstrates the potential of integrating advanced neural rendering techniques into interactive applications. Future work will explore further optimizations for real-time rendering and expanding the pipeline&#39;s scalability to larger scenes.</p>
 <hr>
-<p>For more insights, see my blog post discussing the practical challenges and solutions for using NeRF in game engines: <a href="../../../blogs/posts/?id=231130_nerf_in_game">Can NeRF be Used in Game?</a></p>
+<p>For more insights, see my blog post discussing the practical challenges and solutions for using NeRF in game engines: <a href="/blogs/posts/can-nerf-be-used-in-game/">Can NeRF be Used in Game?</a></p>
 
 </div>
 </div>
 <div class="container project-page-nav">
-        <a class="project-page-nav-link project-page-nav-prev" href="../few_nerf/">
+        <a class="project-page-nav-link project-page-nav-prev" href="../varco3d/">
           <span class="project-page-nav-kicker"><i class="bi bi-arrow-left"></i> Previous Project</span>
-          <strong>Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild</strong>
+          <strong>VARCO 3D</strong>
         </a>
-        <a class="project-page-nav-link project-page-nav-next" href="../deepsfm/">
+        <a class="project-page-nav-link project-page-nav-next" href="../capa/">
           <span class="project-page-nav-kicker">Next Project <i class="bi bi-arrow-right"></i></span>
-          <strong>VGGSfM vs Mast3r Radiance Fields</strong>
+          <strong>CaPa</strong>
         </a>
       </div>
     </section><!-- /Portfolio Details Section -->
