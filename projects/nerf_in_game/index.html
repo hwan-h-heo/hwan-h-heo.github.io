@@ -481,7 +481,7 @@
 <h2>Project Overview</h2>
 <p>This project explores how <strong>neural rendering assets</strong> can move from offline reconstruction into interactive game-engine environments.
 The pipeline spans 360-camera capture, Gaussian Splatting-based scene reconstruction, custom camera modeling, asset optimization, and integration into Unity and Unreal Engine.</p>
-<p>The key practical constraint is that high-fidelity neural scenes are not automatically game-engine ready.
+<p>The key practical constraint is that detailed neural scenes are not automatically game-engine ready.
 They require camera-model-aware reconstruction, splat pruning, runtime-compatible rendering strategies, and careful conversion into engine-side representations.
 This project focuses on that deployment gap: making reconstructed neural scenes usable inside real-time graphics environments.</p>
 
@@ -522,7 +522,7 @@ This project focuses on that deployment gap: making reconstructed neural scenes 
 <hr>
 <h3>Using 360 Camera for Effective Large Scene Capturing</h3>
 <p>To efficiently capture large scenes for 3D scene reconstruction, we utilize 360-degree videos as ground truth (GT) sources for novel view synthesis (NVS). Unlike standard cameras, 360 cameras are equipped with dual fisheye lenses positioned back-to-back, enabling them to capture a full spherical view of the environment in a single frame.
-This configuration provides a significantly wider field of view compared to conventional cameras, allowing us to record extensive areas with fewer capture points. By leveraging this capability, we can efficiently gather high-quality data for large-scale scenes.</p>
+This configuration provides a wider field of view than conventional cameras, allowing us to record large areas with fewer capture points.</p>
 <figure>
 <img class="img-fluid" src="assets/1_360_park_sample.jpg">
 <figcaption> a sample of captured 360 scene </figcaption>
@@ -567,7 +567,7 @@ This module extended the capabilities of the original rasterization module, whic
 <h2>Gaussian Splatting w/ Game Engine</h2>
 <hr>
 <p>With the reconstructed 3D neural rendering scene, we further integrate it into game engines
-such as Unity or Unreal, which offer powerful synthetic world generation capabilities.</p>
+such as Unity or Unreal, which provide mature tooling for interactive 3D environments.</p>
 <p>The integration of the Gaussian Splatting and Game Engine can be easily implemented using
 GS rasterization rule.
 We further optimize it using vector-quantization so that the Unity-GS can be rendered within its
