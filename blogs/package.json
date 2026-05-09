@@ -5,7 +5,7 @@
   "scripts": {
     "build": "node build-static.js",
     "dev": "npm run build && npx http-server dist -p 8080 -o",
-    "deploy": "npm run build && gh-pages -d dist",
+    "deploy": "npm run build && gh-pages -d dist --dotfiles",
     "edit": "node editor-server.js"
   },
   "dependencies": {

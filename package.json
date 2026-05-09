@@ -5,7 +5,7 @@
   "scripts": {
     "build": "cd blogs && npm run build",
     "dev": "cd blogs && npm run dev",
-    "deploy": "cd blogs && npm run build && cd .. && gh-pages -d blogs/dist"
+    "deploy": "cd blogs && npm run build && cd .. && gh-pages -d blogs/dist --dotfiles"
   },
   "devDependencies": {
     "gh-pages": "^6.1.1"
