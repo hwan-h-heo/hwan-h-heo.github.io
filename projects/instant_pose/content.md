@@ -1,24 +1,48 @@
+:::{.container .portfolio-details-container .col-11}
+:::{.row .gy-4}
+:::{.col-lg-8}
+:::{.portfolio-description}
+
+## Project Overview
+
+This project proposes a joint optimization scheme for **camera poses** and **3D scene reconstruction** using multi-resolution hash encoding.
+The core problem is that Instant-NGP-style hash grids accelerate NeRF training, but their grid-wise interpolation can create unstable gradients when camera poses are optimized together with the scene representation.
+
+We observed that the oscillating gradient flows inherent to hash encoding interfere with accurate camera pose registration.
+To address this, we introduced smooth interpolation weighting to stabilize ray-sampled gradient propagation across hash grids.
+The method also uses curriculum-style level-wise learning, improving both camera pose refinement and novel-view synthesis quality.
+
+:::{.mt-4}
+**Key Contributions:**
+
+- Proposed camera pose refinement for hash-grid NeRF training.
+- Analyzed gradient instability caused by multi-resolution hash encoding during pose optimization.
+- Introduced smooth-gradient interpolation and straight-through weighting for stable SE(3) updates.
+- Improved pose refinement while retaining Instant-NGP's fast convergence profile.
+
+:::
+:::
+:::
+
+:::{.col-lg-4}
+:::{.portfolio-info}
+
+### Project Details
+
+- **Role**: Research Lead, Camera Pose Optimization
+- **Category**: Research, Neural Rendering, Camera Pose Estimation
+- **Publication**: ICML 2023
+- **Organization**: NAVER AI Lab, Korea University
+- **Technology**: NeRF, Instant-NGP, Hash Encoding, SE(3) Optimization
+- **Paper URL**: [ACM DL](https://dl.acm.org/doi/10.5555/3618408.3618936)
+
+:::
+:::
+:::
+:::
+
 :::{.row .gx-5 .justify-content-center}
 :::{.project-readable .portfolio-description}
-:::{.fs-6}
-**TL; DR:** We propose the joint optimization scheme of camera poses and 3D scene reconstruction using multi-resolution hash encoding (Instant-NGP).
-:::
-:::{.fs-6}
-**Role:** Research Lead, Camera Pose Optimization
-:::
-:::{.fs-6}
-**Keywords:** Neural Rendering, Radiance Fields, NeRF, Camera Pose Estimation
-:::
-
-## Overview
-
----
-
-Multi-Resolution hash encoding (Instant-NGP) has been proposed to reduce the computational cost of NeRFs.
-However, when jointly optimizing camera poses and 3D scene reconstruction, naive gradient-based methods often lead to performance degradation.
-We observed that the oscillating gradient flows inherent to hash encoding interfere with accurate camera pose registration.
-To address this, we propose a method that uses smooth interpolation weighting to stabilize gradient oscillations during ray sampling across hash grids.
-Additionally, our curriculum training procedure facilitates level-wise learning of hash encodings, further enhancing both camera pose refinement and novel view synthesis quality.
 
 ## Method
 

@@ -282,7 +282,7 @@ function buildProjectNavItems(projectEntries) {
         const entry = bySlug.get(slug);
         ordered.push({
             slug,
-            label: getProjectTitleLabel(entry.project)
+            label: getProjectTitleLabel(portfolioProject) || getProjectTitleLabel(entry.project)
         });
         seen.add(slug);
     });

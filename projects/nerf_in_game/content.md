@@ -1,25 +1,51 @@
-:::{.row .gx-5 .justify-content-center}
-:::{.project-readable .portfolio-description}
-:::{.fs-6}
-**TL; DR:** This project proposes a unified pipeline that spans 360-camera captures to Gaussian Splatting-based scene reconstruction, enabling seamless integration into game and graphics engines such as Unity and Unreal.
-:::
-:::{.fs-6}
-**Role:** Research Lead, Real-time Neural Rendering
-:::
-:::{.fs-6}
-**Keywords:** Neural Rendering, Gaussian Splatting, 360 Camera, Camera Modeling
-:::
+:::{.container .portfolio-details-container .col-11}
+:::{.row .gy-4}
+:::{.col-lg-8}
+:::{.portfolio-description}
 
-## Overview
+## Project Overview
 
----
+This project explores how **neural rendering assets** can move from offline reconstruction into interactive game-engine environments.
+The pipeline spans 360-camera capture, Gaussian Splatting-based scene reconstruction, custom camera modeling, asset optimization, and integration into Unity and Unreal Engine.
 
-This project explores the integration of neural rendering techniques into game engines, bridging the gap between advanced 3D scene reconstruction and interactive applications. We develop a pipeline that efficiently processes 360-camera captures, reconstructs scenes using Gaussian Splatting, and optimizes the resulting assets for seamless deployment in game engines like Unity and Unreal.
-The pipeline not only ensures high-fidelity scene modeling but also addresses practical challenges such as camera modeling and compatibility with existing game engine workflows, paving the way for more realistic and dynamic gaming environments.
+The key practical constraint is that high-fidelity neural scenes are not automatically game-engine ready.
+They require camera-model-aware reconstruction, splat pruning, runtime-compatible rendering strategies, and careful conversion into engine-side representations.
+This project focuses on that deployment gap: making reconstructed neural scenes usable inside real-time graphics environments.
 
 :::{.video-container}
 <iframe width="720" height="405" src="https://www.youtube.com/embed/3OqbvUaoNFw?si=GxEnL9nG7fuVT0x0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 :::
+
+:::{.mt-4}
+**Key Contributions:**
+
+- Built a 360-camera-to-Gaussian-Splatting pipeline for large-scene neural reconstruction.
+- Developed fisheye/spherical camera handling for robust Gaussian Splatting reconstruction.
+- Optimized Gaussian Splatting scenes for Unity and Unreal Engine deployment.
+- Explored pruning and refinement strategies for particle-count constraints in Unreal Engine.
+
+:::
+:::
+:::
+
+:::{.col-lg-4}
+:::{.portfolio-info}
+
+### Project Details
+
+- **Role**: Research Lead, Real-time Neural Rendering
+- **Category**: Application, Neural Rendering, Game Engine Integration
+- **Organization**: NCSOFT Research
+- **Technology**: Gaussian Splatting, CUDA Rasterization, Unity, Unreal Engine, 360 Camera
+- **Related Blog**: [Can NeRF be Used in Game?](/blogs/posts/can-nerf-be-used-in-game/)
+
+:::
+:::
+:::
+:::
+
+:::{.row .gx-5 .justify-content-center}
+:::{.project-readable .portfolio-description}
 
 ## Neural Rendering w/ 360 Videos
 
@@ -135,7 +161,7 @@ This pipeline demonstrates the potential of integrating advanced neural renderin
 
 ---
 
-For more insights, see my blog post discussing the practical challenges and solutions for using NeRF in game engines: [Can NeRF be Used in Game?](../../../blogs/posts/?id=231130_nerf_in_game)
+For more insights, see my blog post discussing the practical challenges and solutions for using NeRF in game engines: [Can NeRF be Used in Game?](/blogs/posts/can-nerf-be-used-in-game/)
 
 :::
 :::

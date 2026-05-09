@@ -369,8 +369,8 @@
   "portfolioProjects": [
     {
       "id": "varco3d",
-      "title": "VARCO 3D: A Cutting-edge Commercial AI Service for 3D Generation",
-      "summary": "Commercial 3D generative AI service; native 3D generation, sparse voxels, and texture synthesis",
+      "title": "VARCO 3D",
+      "summary": "Commercial 3D generative AI service; native 3D generation, sparse voxels, and texture synthesis.",
       "url": "projects/varco3d/",
       "categories": [
         "app"
@@ -381,9 +381,20 @@
       "alt": "VARCO 3D service teaser"
     },
     {
+      "id": "nerf-in-game",
+      "title": "Neural Rendering in Game Engine",
+      "summary": "360-camera capture, Gaussian Splatting optimization, and deployment into Unity and Unreal.",
+      "url": "projects/nerf_in_game/",
+      "categories": [
+        "app"
+      ],
+      "image": "projects/nerf_in_game/teaser.jpg",
+      "alt": "NeRF game teaser"
+    },
+    {
       "id": "capa",
-      "title": "CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation",
-      "summary": "2-stage textured mesh generation; 3D latent diffusion and texture synthesis",
+      "title": "CaPa",
+      "summary": "Two-stage 4K textured mesh generation through geometry carving and texture painting.",
       "url": "projects/capa/",
       "categories": [
         "research"
@@ -395,8 +406,8 @@
     },
     {
       "id": "instant-pose",
-      "title": "Robust Camera Pose Refinement for Multi-Resolution Hash Encoding",
-      "summary": "Joint optimization of hash-grid NeRF and SE(3) camera poses",
+      "title": "Instant Pose",
+      "summary": "ICML 2023 camera pose refinement for hash-grid NeRF and neural scene reconstruction.",
       "url": "projects/instant_pose/",
       "categories": [
         "research"
@@ -406,46 +417,9 @@
       "alt": "Instant Pose teaser"
     },
     {
-      "id": "few-nerf",
-      "title": "Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild",
-      "summary": "Robust radiance fields for online image collections",
-      "url": "projects/few_nerf/",
-      "categories": [
-        "research"
-      ],
-      "badge": "arXiv 2023",
-      "image": "projects/few_nerf/assets/main.jpg",
-      "alt": "Occ-NeRF teaser"
-    },
-    {
-      "id": "nerf-in-game",
-      "title": "Custom Spherical 3D Gaussian Splatting in Unity & Unreal Engine",
-      "summary": "Robust 360 videos to gaussian splatting and GS optimization for game engines",
-      "url": "projects/nerf_in_game/",
-      "categories": [
-        "app"
-      ],
-      "image": "projects/nerf_in_game/teaser.jpg",
-      "alt": "NeRF game teaser"
-    },
-    {
-      "id": "deepsfm",
-      "title": "Radiance Fields from Deep-based Structure-from-Motion: MaST3R & VGGSfM",
-      "summary": "Comparative study of recent deep-based SfM and image matching",
-      "url": "projects/deepsfm/",
-      "categories": [
-        "per",
-        "app"
-      ],
-      "badge": "Featured on Github (200+ stars)",
-      "image": "assets/thumbnails/deepsfm_thumbnail.png",
-      "gif": "assets/sfm_teaser.webp",
-      "alt": "DeepSFM and NeRF face teaser"
-    },
-    {
       "id": "2dgs-viewer",
-      "title": "Custom Web Viewer Implementation for 2D Gaussian Splatting",
-      "summary": "Remote viewer for 2D Gaussian Splatting",
+      "title": "2D GS Viewer",
+      "summary": "Open-source web viewer for inspecting, editing, training, and exporting 2D Gaussian Splatting scenes.",
       "url": "projects/2dgs_viewer/",
       "categories": [
         "per",
@@ -457,27 +431,18 @@
       "alt": "2D GS viewer teaser"
     },
     {
-      "id": "ref-nerf",
-      "title": "Specular-Diffuse Disentanglement w/ Nerfstudio's NeRFacto",
-      "summary": "Expand hash-grid NeRF to light-disentangleable reconstruction",
-      "url": "projects/ref_nerf/",
+      "id": "deepsfm",
+      "title": "Deep SfM for Radiance Fields",
+      "summary": "Comparative VGGSfM and MASt3R study for Gaussian Splatting and radiance field reconstruction.",
+      "url": "projects/deepsfm/",
       "categories": [
+        "per",
         "app"
       ],
-      "image": "projects/ref_nerf/assets/image.jpg",
-      "alt": "NeRF light teaser"
-    },
-    {
-      "id": "face-nerf",
-      "title": "Fast Neural Facial Avatar Reconstruction with Multi-Cameras System",
-      "summary": "Robust NeRF avatar from multi-camera systems",
-      "url": "projects/face_nerf/",
-      "categories": [
-        "app"
-      ],
-      "video": "projects/face_nerf/assets/hwan_nerf.mp4",
-      "poster": "projects/face_nerf/assets/image.jpg",
-      "alt": "NeRF face avatar teaser"
+      "badge": "Featured on Github (200+ stars)",
+      "image": "assets/thumbnails/deepsfm_thumbnail.png",
+      "gif": "assets/sfm_teaser.webp",
+      "alt": "DeepSFM and NeRF face teaser"
     }
   ],
   "publications": [
@@ -545,47 +510,6 @@
           "label": "github",
           "url": "https://github.com/2j1ejyu/SF-NeRF",
           "icon": "bi-github"
-        }
-      ]
-    },
-    {
-      "title": "Consistency Learning via Decoding Path Augmentation for Transformers in Human Object Interaction Detection",
-      "authorsHtml": "Jihwan Park, Seunjun Lee, <strong>Hwan Heo</strong>, Hyunggyu Choi, Hyunwoo J. Kim",
-      "venueHtml": "IEEE/CVF Conference on Computer Vision and Pattern Recognition (<strong>CVPR</strong>), Jun 2022",
-      "links": [
-        {
-          "label": "paper",
-          "url": "https://arxiv.org/abs/2204.04836",
-          "icon": "bi-file-earmark-text"
-        },
-        {
-          "label": "github",
-          "url": "https://github.com/mlvlab/CPC_HOI",
-          "icon": "bi-github"
-        }
-      ]
-    },
-    {
-      "title": "Domain Generalization Emerges from Dreaming",
-      "authorsHtml": "<strong>Hwan Heo</strong>, Younjin Oh, Jaewon Lee, Hyunwoo J. Kim",
-      "venueHtml": "preprint, arXiv 2023",
-      "links": [
-        {
-          "label": "paper",
-          "url": "https://arxiv.org/abs/2302.00980",
-          "icon": "bi-file-earmark-text"
-        }
-      ]
-    },
-    {
-      "title": "Temporally Sparse Adversarial Perturbations on Videos",
-      "authorsHtml": "<strong>Hwan Heo</strong>, Dohwan Ko, Jaewon Lee, Youngjoon Hong, Hyunwoo J. Kim",
-      "venueHtml": "<strong>IEEE Access</strong>, Oct 2021 vol. 9, pp. 146938<br/>International journal publication",
-      "links": [
-        {
-          "label": "paper",
-          "url": "https://ieeexplore.ieee.org/document/9592758",
-          "icon": "bi-file-earmark-text"
         }
       ]
     }
