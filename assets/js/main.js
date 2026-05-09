@@ -122,6 +122,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const isotopeInstances = [];
 
   document.querySelectorAll('.isotope-layout').forEach(function(isotopeItem) {
+    if (isotopeItem.dataset.dynamicSource) {
+      return;
+    }
+
     let layout = isotopeItem.getAttribute('data-layout') ?? 'masonry';
     let filter = isotopeItem.getAttribute('data-default-filter') ?? '*';
     let sort = isotopeItem.getAttribute('data-sort') ?? 'original-order';
@@ -161,6 +165,13 @@ document.addEventListener('DOMContentLoaded', () => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const lazyImage = entry.target;
+        const lazySource = lazyImage.dataset.src;
+
+        if (!lazySource) {
+          lazyImage.classList.remove('lazy-image');
+          observer.unobserve(lazyImage);
+          return;
+        }
 
         lazyImage.addEventListener('load', () => {
           isotopeInstances.forEach(instance => {
@@ -168,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         }, { once: true });
 
-        lazyImage.src = lazyImage.dataset.src;
+        lazyImage.src = lazySource;
         lazyImage.classList.remove('lazy-image');
         observer.unobserve(lazyImage);
       }
@@ -278,13 +289,13 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ===================================================================
  * Portfolio Hover Media Play (with Loading Spinner)
  * ------------------------------------------------------------------- */
-document.addEventListener('DOMContentLoaded', () => {
-  "use strict";
-
-  const portfolioBoxes = document.querySelectorAll('.portfolio-box');
+function initPortfolioBoxes(root = document) {
+  const portfolioBoxes = root.querySelectorAll('.portfolio-box:not([data-portfolio-bound])');
   const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
   portfolioBoxes.forEach(box => {
+    box.dataset.portfolioBound = 'true';
+
     const video = box.querySelector('video');
     const image = box.querySelector('img[data-gif]');
     const spinner = box.querySelector('.loading-spinner');
@@ -299,31 +310,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let typeInterval;
     let isActive = false; // 터치 디바이스에서 활성 상태 추적
 
-    // --- 타이핑 효과 함수 ---
-    const startTyping = () => {
-      let i = 0;
-      titleElement.innerHTML = "";
-      titleElement.classList.remove('typing-done');
-      clearInterval(typeInterval);
-
-      const textSpan = document.createElement('span');
-      titleElement.appendChild(textSpan);
-
-      typeInterval = setInterval(() => {
-        if (hoverTypingText && i < hoverTypingText.length) {
-          textSpan.innerHTML += hoverTypingText.charAt(i);
-          i++;
-        } else {
-          clearInterval(typeInterval);
-          titleElement.classList.add('typing-done');
-        }
-      }, 30);
-    };
+    if (hoverTypingText && !box.querySelector('.portfolio-card-summary')) {
+      const summaryElement = document.createElement('p');
+      summaryElement.className = 'portfolio-card-summary';
+      summaryElement.textContent = hoverTypingText;
+      titleElement.insertAdjacentElement('afterend', summaryElement);
+    }
 
     const activateMedia = () => {
-      if (hoverTypingText) {
-        startTyping();
-      }
+      box.classList.add('is-active');
 
       if (video) {
         if (spinner) {
@@ -368,6 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const deactivateMedia = () => {
       clearInterval(typeInterval);
+      box.classList.remove('is-active');
 
       titleElement.innerHTML = originalTitleHtml;
       titleElement.classList.remove('typing-done');
@@ -413,4 +409,7 @@ document.addEventListener('DOMContentLoaded', () => {
       box.addEventListener('mouseleave', deactivateMedia);
     }
   });
-});
+}
+
+window.initPortfolioBoxes = initPortfolioBoxes;
+document.addEventListener('DOMContentLoaded', () => initPortfolioBoxes());

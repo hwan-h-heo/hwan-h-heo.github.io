@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>VARCO 3D: Commercial 3D Generative AI Service</title>
+  <meta content="Portfolio draft for VARCO 3D, NC AI&#39;s commercial 3D generation service, summarizing model development from CaPa-inspired pipelines to sparse voxel and VecSet-Lattice generation." name="description">
+  <meta content="VARCO 3D, NC AI, 3D Generation, 3D Generative AI, ShapeVAE, DiT, Sparse Voxel, VecSet, Lattice, Texture Generation" name="keywords">
+
+  <link href="../../assets/favicon.ico" rel="icon">
+  <link href="../../assets/favicon.ico" rel="apple-touch-icon">
+
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../../assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="../../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <link href="../../assets/css/used.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1.9.1/css/academicons.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <style>
+    table { width: 100%; border-collapse: collapse; }
+    th, td { width: 50%; border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; }
+    th { width: 15%; background-color: #f2f2f2; }
+    .progress-bar { height: 0.4rem; background: #6EA8FE; width: 0%; z-index: 9999; position: fixed; }
+    .feature-img { max-width: 100%; height: auto; }
+    .gif-container { display: flex; justify-content: center; align-items: center; }
+    .gif-container img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+  </style>
+  <style id="project-detail-common-style">
+    .portfolio-details .portfolio-description h2 {
+      margin-top: 1.25rem;
+      margin-bottom: 0.85rem;
+      letter-spacing: -0.02em;
+    }
+    .portfolio-details .portfolio-description h3,
+    .portfolio-details .portfolio-description h4,
+    .portfolio-details .portfolio-description h5 {
+      margin-top: 1.15rem;
+      margin-bottom: 0.65rem;
+    }
+    .portfolio-details .portfolio-description p,
+    .portfolio-details .portfolio-description li {
+      line-height: 1.72;
+    }
+    .portfolio-details img,
+    .portfolio-details video,
+    .portfolio-details iframe {
+      border-radius: 14px;
+      height: auto;
+      max-width: 100%;
+    }
+    .portfolio-details .project-video,
+    .portfolio-details video {
+      background: #000;
+      box-shadow: 0 16px 34px rgba(15, 23, 42, 0.12);
+      display: block;
+      margin: 1rem auto;
+      width: 100%;
+    }
+    .portfolio-details .text-center .project-video,
+    .portfolio-details .text-center video {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .portfolio-details .video-container {
+      margin: 1.25rem auto;
+      max-width: 100%;
+    }
+    .portfolio-details .video-container:has(video) {
+      background: transparent;
+      height: auto;
+      overflow: visible;
+      padding-bottom: 0;
+      position: relative;
+    }
+    .portfolio-details .video-container:has(video) video {
+      height: auto;
+      left: auto;
+      position: static;
+      top: auto;
+      width: 100%;
+    }
+    .portfolio-details .video-container:has(iframe) {
+      aspect-ratio: 16 / 9;
+      background: #000;
+      height: auto;
+      overflow: hidden;
+      padding-bottom: 0;
+      position: relative;
+    }
+    .portfolio-details .video-container:has(iframe) iframe {
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+    .portfolio-details .varco-object-embed {
+      background: #f8fafc;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 16px;
+      box-shadow: 0 16px 34px rgba(15, 23, 42, 0.1);
+      margin: 1.5rem auto 0.65rem;
+      overflow: hidden;
+      width: 100%;
+    }
+    .portfolio-details .varco-object-embed iframe {
+      border: 0;
+      display: block;
+      height: min(500px, 70vh);
+      width: 100%;
+    }
+    .portfolio-details p > img:only-child {
+      display: block;
+      margin: 1rem auto;
+    }
+    .portfolio-details img[width] {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .portfolio-details .text-center img,
+    .portfolio-details .gif-container img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .portfolio-details table img {
+      border-radius: 10px;
+      width: 100%;
+    }
+    .portfolio-details table .varco-lattice-img {
+      aspect-ratio: 1 / 1;
+      display: block;
+      height: clamp(140px, 18vw, 230px);
+      margin: 0 auto;
+      object-fit: contain;
+      padding: 0.35rem;
+      width: 100%;
+    }
+    .portfolio-details table:has(.varco-lattice-img) th,
+    .portfolio-details table:has(.varco-lattice-img) td {
+      text-align: center;
+      vertical-align: middle;
+      width: 33.333%;
+    }
+    .portfolio-details .viewer-feature-group {
+      margin: 1.4rem 0 1.8rem;
+    }
+    .portfolio-details .viewer-feature-group > h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.95rem;
+    }
+    .portfolio-details .viewer-feature-grid {
+      display: grid;
+      gap: 1rem;
+      width: 100%;
+    }
+    .portfolio-details .viewer-feature-grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .portfolio-details .viewer-feature-grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .portfolio-details .viewer-feature-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 18px;
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      padding: 1rem;
+    }
+    .portfolio-details .viewer-feature-card .feature-img {
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+      object-fit: cover;
+      width: 100%;
+    }
+    .portfolio-details .viewer-feature-card h5 {
+      font-size: 1.02rem;
+      font-weight: 700;
+      margin: 0.35rem 0 0.45rem;
+    }
+    .portfolio-details .viewer-feature-card p,
+    .portfolio-details .viewer-feature-card li {
+      font-size: 0.94rem;
+      line-height: 1.62;
+    }
+    .portfolio-details .portfolio-info {
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 18px;
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+    }
+    .portfolio-details table {
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    @media (max-width: 768px) {
+      .portfolio-details.section {
+        padding-top: 56px;
+      }
+      .portfolio-details .portfolio-details-container,
+      .portfolio-details .container.col-11 {
+        width: 100%;
+      }
+      .portfolio-details .portfolio-description,
+      .portfolio-details .portfolio-info {
+        margin-bottom: 1.25rem;
+      }
+      .portfolio-details .viewer-feature-grid-2,
+      .portfolio-details .viewer-feature-grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RF7ETSKPK9');
+  </script>
+</head>
+
+<body class="portfolio-details-page">
+  <div class="progress-container">
+    <div class="progress-bar" id="myBar"></div>
+  </div>
+
+  <header id="header" class="header dark-background d-flex flex-column">
+    <i class="header-toggle d-xl-none bi bi-list"></i>
+
+    <div class="profile-img">
+      <img src="../../assets/icon.webp" alt="Hwan Heo icon" class="img-fluid rounded-circle">
+    </div>
+
+    <a href="../../" class="logo d-flex align-items-center justify-content-center">
+      <h1 class="sitename">Hwan Heo</h1>
+    </a>
+
+    <div class="social-links text-center">
+      <a href="https://github.com/hwanhuh" class="github"><i class="bi bi-github"></i></a>
+      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin"><i class="bi bi-linkedin"></i></a>
+      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram"><i class="ai ai-google-scholar"></i></a>
+      <a href="mailto:gjghks950@naver.com" class="google-plus"><i class="bi bi-envelope-fill"></i></a>
+    </div>
+
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="../../#home"><i class="bi bi-house navicon"></i>Home</a></li>
+        <li><a href="../../#about"><i class="bi bi-person navicon"></i> About</a></li>
+        <li><a href="../../#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
+        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Portfolio</a></li>
+        <li><a href="../../blogs/"><i class="bi bi-keyboard navicon"></i> Blog <i class="bi bi-link-45deg"></i></a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="main">
+    <div class="page-title dark-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="../../">Home</a></li>
+            <li class="current">VARCO 3D: Commercial 3D Generative AI Service</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
+    <section id="portfolio-details" class="portfolio-details section">
+      <div class="row gx-5 justify-content-center">
+        <div class="text-center mb-5 col-11 col-lg-10 col-xl-8 col-xxl-7">
+          <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline">VARCO 3D: Commercial 3D Generative AI Service</span></h1>
+          <div class="fs-3 fw-light text-muted">NC AI, 2025-Present</div>
+          <div class="fs-3 fw-light text-muted">Core 3D Generation Model R&D</div>
+        </div>
+      </div>
+
+<div class="container portfolio-details-container col-11">
+<div class="row gy-4">
+<div class="col-lg-8">
+<div class="portfolio-description">
+<h2>Project Overview</h2>
+<p><strong>VARCO 3D</strong> is NC AI&#39;s commercial 3D generative AI service for producing textured 3D assets from generative model pipelines.
+My role has been focused on <strong>core algorithm research and development</strong> for the VARCO 3D team: training 3D generative models, setting technical directions, and connecting research prototypes to service-oriented generation pipelines.</p>
+<p>The project sits at the intersection of <strong>native 3D generation</strong>, <strong>mesh-oriented geometry synthesis</strong>, and <strong>texture generation</strong>.
+Rather than relying on slow optimization-based SDS pipelines, the development direction moved toward feed-forward 3D generation systems that can better satisfy production constraints: generation speed, mesh usability, topology quality, texture fidelity, and commercial deployability.</p>
+
+<div class="mt-4">
+<p><strong>Core contributions represented in this draft:</strong></p>
+<ul>
+<li><strong>Service-oriented 3D generation R&amp;D</strong>: contributed to the algorithmic development of NC AI&#39;s flagship 3D generation service.</li>
+<li><strong>CaPa-to-VARCO pipeline expansion</strong>: evolved the CaPa direction into a broader service pipeline combining geometry generation and texture generation.</li>
+<li><strong>Sparse voxel model development</strong>: explored high-detail sparse voxel generation for the VARCO 3D 1.0-preview direction.</li>
+<li><strong>Fast active voxel preparation</strong>: implemented CUDA-based mesh-to-voxel distance computation, reducing the coarse-mesh-to-active-voxel preparation process to under 5 seconds.</li>
+<li><strong>VecSet-Lattice refinement</strong>: trained a structure-aware DiT model with voxel-query positional conditioning, improving convergence speed and mesh robustness.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="col-lg-4">
+<div class="portfolio-info">
+<h3>Project Details</h3>
+<ul>
+<li><strong>Category</strong>: Commercial AI Service, 3D Generation</li>
+<li><strong>Organization</strong>: NC AI</li>
+<li><strong>Role</strong>: Core algorithm R&amp;D, 3D generation model training, technical direction</li>
+<li><strong>Technology</strong>: ShapeVAE, DiT, Rectified Flow, Sparse Voxel VAE, VecSet, Lattice, CUDA</li>
+<li><strong>Service URL</strong>: <a href="https://www.varco.ai/3d">VARCO 3D</a></li>
+<li><strong>Related Blog</strong>: <a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/">Varco3D: A Year in Review</a></li>
+<li><strong>Related Project</strong>: <a href="/projects/capa/">CaPa</a></li>
+</ul>
+
+</div>
+</div>
+</div>
+</div>
+<div class="row gx-5 justify-content-center">
+<div class="col-9 col-lg-8 col-xl-7 col-xxl-6 portfolio-description">
+<h2>Technical Direction</h2>
+<p>VARCO 3D&#39;s development can be understood as a transition from <strong>optimization-driven 3D generation</strong> to <strong>feed-forward native 3D generation</strong>.
+Earlier SDS-style methods were compelling because they could reuse strong 2D diffusion models, but they suffered from practical limitations for game-ready or production-oriented assets: saturated color, Janus artifacts, slow per-asset optimization, and noisy geometry.</p>
+<p>The direction that became more practical was to split the problem into two major stages:</p>
+<ol>
+<li><strong>Geometry generation</strong>: generate a mesh-oriented 3D structure using native 3D latent representations.</li>
+<li><strong>Texture generation</strong>: synthesize multi-view texture observations and back-project them to the generated mesh.</li>
+</ol>
+<p>This direction built on lessons from CaPa and extended them toward a service setting where speed, quality, and controllability matter simultaneously.</p>
+<h2>VARCO 3D Alpha</h2>
+<p>The initial VARCO 3D alpha pipeline followed a CaPa-inherited architecture:</p>
+<ul>
+<li><strong>Geometry</strong>: ShapeVAE + DiT / flow-based generative modeling.</li>
+<li><strong>Texture</strong>: multi-view image synthesis and mesh texture back-projection.</li>
+</ul>
+
+<div class="video-container">
+<iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/AtQNAuQY4-A?si=pQWlS8qawVOyFSqK" title="VARCO 3D alpha demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+</div>
+<p>One of the key observations from this phase was that geometry generation has a different scaling profile from 2D image generation.
+Compared with RGB images, artist-authored mesh geometry has less background variation and less high-frequency visual complexity, making native 3D geometry training a tractable direction under realistic compute constraints.</p>
+<h2>Sparse Voxel Preview</h2>
+<p>After the alpha release, sparse voxel-based methods became an important technical inflection point.
+Sparse voxel representations changed the problem structure: instead of forcing one model to generate every detail globally, the system can separate <strong>global shape</strong> from <strong>local detail refinement</strong>.</p>
+<p>The core engineering challenge was how to provide active voxel information efficiently.
+To avoid the cost of generating high-resolution active voxels from scratch, I proposed using a coarse mesh generated by the existing VecSet-based model, then voxelizing that mesh as the input structure for the sparse voxel DiT.</p>
+<table>
+<thead>
+<tr>
+<th>Coarse Mesh</th>
+<th>Voxelized Active Structure</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/cce0d145-7f64-4b44-b7b5-df55bd03dccf/image.png" alt="Coarse mesh" class="img-fluid"></td>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/045698e6-b168-49e1-a163-e273b44ad68f/image.png" alt="Voxelized structure" class="img-fluid"></td>
+</tr>
+</tbody></table>
+<p>For this stage, I implemented a CUDA kernel for parallel mesh-to-voxel distance computation.
+This reduced the pipeline from coarse mesh generation to active voxel generation to <strong>under 5 seconds</strong>, making the sparse voxel refinement direction more practical for service-oriented inference.</p>
+<p>The resulting sparse voxel-based model was presented internally as the VARCO 3D 1.0-preview direction.</p>
+<p><img src="https://velog.velcdn.com/images/gjghks950/post/febf339b-fb85-4cd6-b3cc-2272b4f304b1/image.png" alt="VARCO 3D 1.0-preview result" class="img-fluid"></p>
+<h2>VecSet-Lattice Refinement</h2>
+<p>The later direction revisited VecSet-based generation through a Lattice-style coarse-to-fine formulation.
+The key idea was to preserve the global shape capability of VecSet models while injecting stronger spatial structure into the generative model.</p>
+<p>In this setup:</p>
+<ul>
+<li>A coarse mesh is first generated.</li>
+<li>The coarse mesh is voxelized.</li>
+<li>Representative voxel queries are sampled.</li>
+<li>A structure-aware DiT uses the voxel query coordinates through positional conditioning to generate refined geometry.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Coarse Mesh</th>
+<th>Voxel Query</th>
+<th>Fine Mesh</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/b583be7b-4b38-4247-8d14-e7a9f2d04b8e/image.png" alt="Coarse mesh" class="varco-lattice-img img-fluid"></td>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/6d8d2b6b-6c51-425c-b313-f931136437b2/image.png" alt="Voxel query" class="varco-lattice-img img-fluid"></td>
+<td><img src="https://velog.velcdn.com/images/gjghks950/post/e0b5cbcf-b3b5-4cf7-a21c-cc1d6b273b11/image.png" alt="Fine mesh" class="varco-lattice-img img-fluid"></td>
+</tr>
+</tbody></table>
+<p>This refinement direction showed a major training-efficiency improvement.
+Where the earlier VecSet DiT setup took much longer to converge, the structure-aware DiT with voxel-query conditioning converged in roughly one day in the reported development setting.</p>
+<h3>Sparse Voxel vs. VecSet-Lattice</h3>
+<p>The VecSet-Lattice direction showed detail comparable to or better than the sparse voxel preview while producing more robust mesh topology and fewer artifacts.</p>
+<img src="https://velog.velcdn.com/images/gjghks950/post/46cd00b9-dff6-4102-9c18-d333214b72e0/image.png" alt="VARCO 3D sparse voxel vs VecSet-Lattice comparison" width="88%" class="img-fluid">
+
+<h2>Result</h2>
+
+<div class="varco-object-embed">
+<iframe src="https://3d.varco.ai/test-embed/02072a988541af639c393f1d4c45f2ef.glb" width="100%" height="500px" title="VARCO 3D 1.0 generated object" style="border: none;"></iframe>
+
+</div>
+<p><em>Varco3D 1.0</em></p>
+<p>VARCO 3D became a clear turning point in my work: from isolated 3D generation research toward building a commercial 3D AI service.
+The project required connecting model architecture decisions, training strategy, GPU-scale experiments, CUDA-side preprocessing, texture synthesis, and product constraints into one practical generation pipeline.</p>
+<p>For the full technical retrospective and development narrative, see the related blog post:</p>
+<p><a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/">Read the VARCO 3D development retrospective</a></p>
+
+</div>
+</div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer position-relative light-background">
+    <div class="container">
+      <div class="copyright text-center ">
+        <p>© <span>Copyright</span> <strong class="px-1 sitename">Hwan Heo</strong> <span>All Rights Reserved</span></p>
+      </div>
+    </div>
+  </footer>
+
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <div id="preloader"></div>
+
+  <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../../assets/vendor/php-email-form/validate.js"></script>
+  <script src="../../assets/vendor/aos/aos.js"></script>
+  <script src="../../assets/vendor/typed.js/typed.umd.js"></script>
+  <script src="../../assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="../../assets/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="../../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../../assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="../../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="../../assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="../../assets/js/main.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        window.onscroll = updateScrollIndicator;
+        window.onresize = updateScrollIndicator;
+
+        function updateScrollIndicator() {
+            const bar = document.getElementById("myBar");
+            if (!bar) return;
+            var winScroll = document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            if (height > 0) {
+                var scrolled = (winScroll / height) * 100;
+                bar.style.width = scrolled + "%";
+            }
+        }
+    });
+  </script>
+</body>
+
+</html>

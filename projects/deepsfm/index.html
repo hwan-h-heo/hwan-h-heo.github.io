@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>VGGSfM vs Mast3r Radiance Fields - Portfolio</title>
+  <title>VGGSfM vs Mast3r Radiance Fields</title>
   <meta content="Portfolio showcase comparing Radiance Fields from VGGSfM and Mast3r, highlighting methodologies and findings." name="description">
   <meta content="Radiance Fields, Gaussian Splatting, VGGSfM, Mast3r, Structure from Motion, SfM, Comparison, Portfolio" name="keywords">
 
@@ -67,6 +67,198 @@
         gtag('js', new Date());
         gtag('config', 'G-RF7ETSKPK9');
     </script>
+  <style id="project-detail-common-style">
+    .portfolio-details .portfolio-description h2 {
+      margin-top: 1.25rem;
+      margin-bottom: 0.85rem;
+      letter-spacing: -0.02em;
+    }
+    .portfolio-details .portfolio-description h3,
+    .portfolio-details .portfolio-description h4,
+    .portfolio-details .portfolio-description h5 {
+      margin-top: 1.15rem;
+      margin-bottom: 0.65rem;
+    }
+    .portfolio-details .portfolio-description p,
+    .portfolio-details .portfolio-description li {
+      line-height: 1.72;
+    }
+    .portfolio-details img,
+    .portfolio-details video,
+    .portfolio-details iframe {
+      border-radius: 14px;
+      height: auto;
+      max-width: 100%;
+    }
+    .portfolio-details .project-video,
+    .portfolio-details video {
+      background: #000;
+      box-shadow: 0 16px 34px rgba(15, 23, 42, 0.12);
+      display: block;
+      margin: 1rem auto;
+      width: 100%;
+    }
+    .portfolio-details .text-center .project-video,
+    .portfolio-details .text-center video {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .portfolio-details .video-container {
+      margin: 1.25rem auto;
+      max-width: 100%;
+    }
+    .portfolio-details .video-container:has(video) {
+      background: transparent;
+      height: auto;
+      overflow: visible;
+      padding-bottom: 0;
+      position: relative;
+    }
+    .portfolio-details .video-container:has(video) video {
+      height: auto;
+      left: auto;
+      position: static;
+      top: auto;
+      width: 100%;
+    }
+    .portfolio-details .video-container:has(iframe) {
+      aspect-ratio: 16 / 9;
+      background: #000;
+      height: auto;
+      overflow: hidden;
+      padding-bottom: 0;
+      position: relative;
+    }
+    .portfolio-details .video-container:has(iframe) iframe {
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+    .portfolio-details .varco-object-embed {
+      background: #f8fafc;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 16px;
+      box-shadow: 0 16px 34px rgba(15, 23, 42, 0.1);
+      margin: 1.5rem auto 0.65rem;
+      overflow: hidden;
+      width: 100%;
+    }
+    .portfolio-details .varco-object-embed iframe {
+      border: 0;
+      display: block;
+      height: min(500px, 70vh);
+      width: 100%;
+    }
+    .portfolio-details p > img:only-child {
+      display: block;
+      margin: 1rem auto;
+    }
+    .portfolio-details img[width] {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .portfolio-details .text-center img,
+    .portfolio-details .gif-container img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .portfolio-details table img {
+      border-radius: 10px;
+      width: 100%;
+    }
+    .portfolio-details table .varco-lattice-img {
+      aspect-ratio: 1 / 1;
+      display: block;
+      height: clamp(140px, 18vw, 230px);
+      margin: 0 auto;
+      object-fit: contain;
+      padding: 0.35rem;
+      width: 100%;
+    }
+    .portfolio-details table:has(.varco-lattice-img) th,
+    .portfolio-details table:has(.varco-lattice-img) td {
+      text-align: center;
+      vertical-align: middle;
+      width: 33.333%;
+    }
+    .portfolio-details .viewer-feature-group {
+      margin: 1.4rem 0 1.8rem;
+    }
+    .portfolio-details .viewer-feature-group > h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.95rem;
+    }
+    .portfolio-details .viewer-feature-grid {
+      display: grid;
+      gap: 1rem;
+      width: 100%;
+    }
+    .portfolio-details .viewer-feature-grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .portfolio-details .viewer-feature-grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .portfolio-details .viewer-feature-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 18px;
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      padding: 1rem;
+    }
+    .portfolio-details .viewer-feature-card .feature-img {
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+      object-fit: cover;
+      width: 100%;
+    }
+    .portfolio-details .viewer-feature-card h5 {
+      font-size: 1.02rem;
+      font-weight: 700;
+      margin: 0.35rem 0 0.45rem;
+    }
+    .portfolio-details .viewer-feature-card p,
+    .portfolio-details .viewer-feature-card li {
+      font-size: 0.94rem;
+      line-height: 1.62;
+    }
+    .portfolio-details .portfolio-info {
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 18px;
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+    }
+    .portfolio-details table {
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    @media (max-width: 768px) {
+      .portfolio-details.section {
+        padding-top: 56px;
+      }
+      .portfolio-details .portfolio-details-container,
+      .portfolio-details .container.col-11 {
+        width: 100%;
+      }
+      .portfolio-details .portfolio-description,
+      .portfolio-details .portfolio-info {
+        margin-bottom: 1.25rem;
+      }
+      .portfolio-details .viewer-feature-grid-2,
+      .portfolio-details .viewer-feature-grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <div class="progress-container">
@@ -119,127 +311,120 @@
 
     <!-- Portfolio Details Section -->
     <section id="portfolio-details" class="portfolio-details section">
-        <div class="row gx-5 justify-content-center">
-            <div class="text-center mb-5 col-9 col-lg-8 col-xl-7 col-xxl-6">
-                <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline"> Radiance Fields from VGGSfM and Mast3r, and Their Comparison </span></h1>
-                <div class="fs-3 fw-light text-muted"> Personal Project </div>
-            </div>
+      <div class="row gx-5 justify-content-center">
+        <div class="text-center mb-5 col-11 col-lg-10 col-xl-8 col-xxl-7">
+          <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline">Radiance Fields from VGGSfM and Mast3r, and Their Comparison</span></h1>
+          <div class="fs-3 fw-light text-muted">Personal Project</div>
         </div>
+      </div>
 
-        <div class="container portfolio-details-container col-11">
+<div class="container portfolio-details-container col-11">
+<div class="row gy-4">
+<div class="col-lg-8">
+<div class="portfolio-description">
+<h2>Project Overview</h2>
+<p>This project is a comparative study focused on evaluating the performance of two different deep learning-based Structure-from-Motion (SfM) methodologies, <strong>VGGSfM</strong> and <strong>Mast3r</strong>, in the context of Radiance Fields reconstruction using Gaussian Splatting.  The primary objective was to understand the strengths and weaknesses of each approach when applied to wild, internet-sourced image datasets.</p>
+<p>By implementing and testing both VGGSfM and Mast3r pipelines for generating 3D point clouds and camera poses, and subsequently using these outputs for 2D Gaussian Splatting, this project provides insights into the suitability of each SfM method for inverse rendering tasks. The comparison includes qualitative visual assessments of the reconstructed point clouds and Radiance Fields, as well as a quantitative analysis of their characteristics.</p>
 
-          <div class="row gy-4">
+<div class="mt-4">
+<p><strong>Key Contributions:</strong></p>
+<ul>
+<li>Implemented Gaussian Splatting pipelines using both VGGSfM and Mast3r for 3D reconstruction.</li>
+<li>Developed a script to convert MASt3R&#39;s output to a COLMAP-compatible format for easier integration with existing visualization and rendering tools.</li>
+<li>Conducted experiments on diverse scenes to compare the performance of VGGSfM and Mast3r.</li>
+<li>Analyzed and summarized the results, highlighting the advantages and limitations of each method for Radiance Fields reconstruction.</li>
+</ul>
 
-            <div class="col-lg-8">
-              <div class="portfolio-description">
-                <h2>Project Overview</h2>
-                <p>
-                    This project is a comparative study focused on evaluating the performance of two different deep learning-based Structure-from-Motion (SfM) methodologies, <strong>VGGSfM</strong> and <strong>Mast3r</strong>, in the context of Radiance Fields reconstruction using Gaussian Splatting.  The primary objective was to understand the strengths and weaknesses of each approach when applied to wild, internet-sourced image datasets.
-                </p>
-                <p>
-                    By implementing and testing both VGGSfM and Mast3r pipelines for generating 3D point clouds and camera poses, and subsequently using these outputs for 2D Gaussian Splatting, this project provides insights into the suitability of each SfM method for inverse rendering tasks. The comparison includes qualitative visual assessments of the reconstructed point clouds and Radiance Fields, as well as a quantitative analysis of their characteristics.
-                </p>
+</div>
+</div>
+</div>
+<div class="col-lg-4">
+<div class="portfolio-info">
+<h3>Project Details</h3>
+<ul>
+<li><strong>Category</strong>: Research, Comparative Study, 3D Reconstruction</li>
+<li><strong>Project URL</strong>: <a href="https://github.com/hwanhuh/Radiance-Fields-from-VGGSfM-Mast3r">Project Github</a></li>
+<li><strong>Skills Demonstrated</strong>: Structure from Motion (SfM), Gaussian Splatting, 3D Visualization, Comparative Analysis</li>
+</ul>
 
-                <div class="mt-4">
-                    <p><strong>Key Contributions:</strong></p>
-                    <ul>
-                        <li>Implemented Gaussian Splatting pipelines using both VGGSfM and Mast3r for 3D reconstruction.</li>
-                        <li>Developed a script to convert MASt3R's output to a COLMAP-compatible format for easier integration with existing visualization and rendering tools.</li>
-                        <li>Conducted experiments on diverse scenes to compare the performance of VGGSfM and Mast3r.</li>
-                        <li>Analyzed and summarized the results, highlighting the advantages and limitations of each method for Radiance Fields reconstruction.</li>
-                    </ul>
-                </div>
-              </div>
-            </div>
+</div>
+</div>
+</div>
+</div>
+<div class="container col-11">
+<div class="section-title">
+<div id="features" class="portfolio-description">
+<h2>Key Features &amp; Findings</h2>
 
-            <div class="col-lg-4">
-              <div class="portfolio-info">
-                <h3>Project Details</h3>
-                <ul>
-                  <li><strong>Category</strong>: Research, Comparative Study, 3D Reconstruction</li>
-                  <li><strong>Project URL</strong>: <a href="https://github.com/hwanhuh/Radiance-Fields-from-VGGSfM-Mast3r" target="_blank" class="portfolio-link"><i class="bi bi-github"></i> Project Github </a></li>
-                  <li><strong>Skills Demonstrated</strong>: Structure from Motion (SfM), Gaussian Splatting, 3D Visualization, Comparative Analysis</li>
-                </ul>
-              </div>
-            </div>
+<div class="row feature-icons">
+<div class="row">
+<div class="col-md-6 icon-box" data-aos="fade-up">
+<h5>MASt3R/VGGSfM to COLMAP Conversion</h5>
+<p>To facilitate the use of MASt3R&#39;s output within standard 3D visualization and rendering pipelines, I developed a Python script to convert MASt3R&#39;s results into a COLMAP-compatible format. This enables seamless integration with tools that are designed to work with COLMAP&#39;s output structure.</p>
 
-          </div>
-        </div>
+</div>
+<div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="100">
+<h5>Online COLMAP Results Viewer</h5>
+<p>For easy visualization of the reconstructed point clouds and camera poses from both VGGSfM and Mast3R (after conversion), I created an online viewer based on Viser. This viewer allows for interactive exploration of the 3D scenes directly in a web.</p>
 
-        <div class="container col-11">
-            <div class="section-title">
-            <div id="features" class="portfolio-description">
-                <h2>Key Features & Findings</h2>
-                <div class="row feature-icons">
-                    <!-- <h4> COLMAP Compatibility & Online Viewer </h4> -->
-                    <div class="row">
-                        <div class="col-md-6 icon-box" data-aos="fade-up">
-                            <h5>MASt3R/VGGSfM to COLMAP Conversion</h5>
-                            <p> To facilitate the use of MASt3R's output within standard 3D visualization and rendering pipelines, I developed a Python script to convert MASt3R's results into a COLMAP-compatible format. This enables seamless integration with tools that are designed to work with COLMAP's output structure. </p>
-                        </div>
-                        <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="100">
-                            <h5>Online COLMAP Results Viewer</h5>
-                            <p>  For easy visualization of the reconstructed point clouds and camera poses from both VGGSfM and Mast3R (after conversion), I created an online viewer based on Viser. This viewer allows for interactive exploration of the 3D scenes directly in a web. </p>
-                        </div>
-                    </div>
-                </div>
-                <br/>
-                <div class="row">
-                    <div class="col-lg-12" data-aos="fade-up">
-                        <h5> Findings </h5>
-                        <p>Key observations from the comparative study:</p>
-                        <ul>
-                            <li><strong>MASt3R:</strong> Provides denser and more diverse point cloud reconstructions, but camera pose accuracy is less suitable for inverse rendering.</li>
-                            <li><strong>VGGSfM:</strong> Offers more accurate camera pose reconstruction due to Bundle Adjustment, making it better suited for inverse rendering tasks, despite sparser point clouds. Camera poses are significantly more accurate compared to MASt3R.</li>
-                            <li><strong>Robustness:</strong> For sparse views, both VGGSfM and MASt3R are more robust than traditional COLMAP, successfully reconstructing datasets where COLMAP fails.</li>
-                            <li><strong>VRAM Efficiency:</strong> VGGSfM demonstrates better VRAM efficiency, capable of handling larger datasets compared to MASt3R.</li>
-                            <li><strong>Pose Refinement Potential:</strong> MASt3R and VGGSfM poses can serve as effective initializations for camera pose optimization during Radiance Field training.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-lg-12" data-aos="fade-up">
+<h5>Findings</h5>
+<p>Key observations from the comparative study:</p>
+<ul>
+<li><strong>MASt3R:</strong> Provides denser and more diverse point cloud reconstructions, but camera pose accuracy is less suitable for inverse rendering.</li>
+<li><strong>VGGSfM:</strong> Offers more accurate camera pose reconstruction due to Bundle Adjustment, making it better suited for inverse rendering tasks, despite sparser point clouds. Camera poses are significantly more accurate compared to MASt3R.</li>
+<li><strong>Robustness:</strong> For sparse views, both VGGSfM and MASt3R are more robust than traditional COLMAP, successfully reconstructing datasets where COLMAP fails.</li>
+<li><strong>VRAM Efficiency:</strong> VGGSfM demonstrates better VRAM efficiency, capable of handling larger datasets compared to MASt3R.</li>
+<li><strong>Pose Refinement Potential:</strong> MASt3R and VGGSfM poses can serve as effective initializations for camera pose optimization during Radiance Field training.</li>
+</ul>
 
-            <div class="section-title">
-            <div class="portfolio-description">
-                <h2>Results Visualization</h2>
-                <p><strong>1) COLMAP PointCloud Comparison</strong></p>
-                <table>
-                    <tr>
-                        <th>MASt3R</th>
-                        <th>VGGSfM</th>
-                    </tr>
-                    <tr>
-                        <td><img src="https://github.com/hwanhuh/Radiance-Fields-from-VGGSfM-Mast3r/raw/main/assets/pen_sparse_mast3r.PNG" alt="Pen Sparse MASt3R" style="max-width: 100%; height: auto;"/></td>
-                        <td><img src="https://github.com/hwanhuh/Radiance-Fields-from-VGGSfM-Mast3r/raw/main/assets/pen_sparse_vggsfm.PNG" alt="Pen Sparse VGGSfM" style="max-width: 100%; height: auto;"/></td>
-                    </tr>
-                </table>
-                <br/>
+</div>
+</div>
+</div>
+</div>
+<div class="section-title">
+<div class="portfolio-description">
+<h2>Results Visualization</h2>
+<p><strong>1) COLMAP PointCloud Comparison</strong></p>
+<table>
+<tr>
+<th>MASt3R</th>
+<th>VGGSfM</th>
+</tr>
+<tr>
+<td><img src="https://github.com/hwanhuh/Radiance-Fields-from-VGGSfM-Mast3r/raw/main/assets/pen_sparse_mast3r.PNG" alt="Pen Sparse MASt3R" style="max-width: 100%; height: auto;"/ class="img-fluid"></td>
+<td><img src="https://github.com/hwanhuh/Radiance-Fields-from-VGGSfM-Mast3r/raw/main/assets/pen_sparse_vggsfm.PNG" alt="Pen Sparse VGGSfM" style="max-width: 100%; height: auto;"/ class="img-fluid"></td>
+</tr>
+</table>
 
-                <p><strong>2) Radiance Fields Reconstruction Comparison</strong></p>
-                <table>
-                    <tr>
-                        <th>MASt3R</th>
-                        <th>VGGSfM</th>
-                    </tr>
-                    <tr>
-                        <td><img src="https://github.com/hwanhuh/Radiance-Fields-from-VGGSfM-Mast3r/raw/main/assets/pen_sparse_mast3r_2dgs.gif" alt="Pen Sparse MASt3R 2DGS" style="max-width: 100%; height: auto;"/></td>
-                        <td><img src="https://github.com/hwanhuh/Radiance-Fields-from-VGGSfM-Mast3r/raw/main/assets/pen_sparse_vggsfm_2dgs.gif" alt="Pen Sparse VGGSfM 2DGS" style="max-width: 100%; height: auto;"/></td>
-                    </tr>
-                </table>
-                <br/>
+<p><strong>2) Radiance Fields Reconstruction Comparison</strong></p>
+<table>
+<tr>
+<th>MASt3R</th>
+<th>VGGSfM</th>
+</tr>
+<tr>
+<td><img src="https://github.com/hwanhuh/Radiance-Fields-from-VGGSfM-Mast3r/raw/main/assets/pen_sparse_mast3r_2dgs.gif" alt="Pen Sparse MASt3R 2DGS" style="max-width: 100%; height: auto;"/ class="img-fluid"></td>
+<td><img src="https://github.com/hwanhuh/Radiance-Fields-from-VGGSfM-Mast3r/raw/main/assets/pen_sparse_vggsfm_2dgs.gif" alt="Pen Sparse VGGSfM 2DGS" style="max-width: 100%; height: auto;"/ class="img-fluid"></td>
+</tr>
+</table>
 
-                <p><strong>3) MASt3R + Camera Pose Optimization </strong></p>
-                <div align="center">
-                    <video controls muted loop style="max-width: 70%;">
-                        <source src="vid_poseopt.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-            </div>
+<p><strong>3) MASt3R + Camera Pose Optimization</strong></p>
 
+<div class="text-center">
+<video controls muted loop class="img-fluid project-video" playsinline>
+<source src="vid_poseopt.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
 
-        </div>
-
+</div>
+</div>
+</div>
+</div>
     </section><!-- /Portfolio Details Section -->
 
   </main>

@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Specular-Diffuse Disentanglement in Neural Rendering</title>
-  <meta content="" name="description">
+  <meta content="Expand hash-grid NeRF to light-disentangleable reconstruction" name="description">
   <meta content="" name="keywords">
 
   <!-- Favicons -->
@@ -70,6 +70,198 @@
         gtag('js', new Date());
         gtag('config', 'G-RF7ETSKPK9');
     </script>
+  <style id="project-detail-common-style">
+    .portfolio-details .portfolio-description h2 {
+      margin-top: 1.25rem;
+      margin-bottom: 0.85rem;
+      letter-spacing: -0.02em;
+    }
+    .portfolio-details .portfolio-description h3,
+    .portfolio-details .portfolio-description h4,
+    .portfolio-details .portfolio-description h5 {
+      margin-top: 1.15rem;
+      margin-bottom: 0.65rem;
+    }
+    .portfolio-details .portfolio-description p,
+    .portfolio-details .portfolio-description li {
+      line-height: 1.72;
+    }
+    .portfolio-details img,
+    .portfolio-details video,
+    .portfolio-details iframe {
+      border-radius: 14px;
+      height: auto;
+      max-width: 100%;
+    }
+    .portfolio-details .project-video,
+    .portfolio-details video {
+      background: #000;
+      box-shadow: 0 16px 34px rgba(15, 23, 42, 0.12);
+      display: block;
+      margin: 1rem auto;
+      width: 100%;
+    }
+    .portfolio-details .text-center .project-video,
+    .portfolio-details .text-center video {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .portfolio-details .video-container {
+      margin: 1.25rem auto;
+      max-width: 100%;
+    }
+    .portfolio-details .video-container:has(video) {
+      background: transparent;
+      height: auto;
+      overflow: visible;
+      padding-bottom: 0;
+      position: relative;
+    }
+    .portfolio-details .video-container:has(video) video {
+      height: auto;
+      left: auto;
+      position: static;
+      top: auto;
+      width: 100%;
+    }
+    .portfolio-details .video-container:has(iframe) {
+      aspect-ratio: 16 / 9;
+      background: #000;
+      height: auto;
+      overflow: hidden;
+      padding-bottom: 0;
+      position: relative;
+    }
+    .portfolio-details .video-container:has(iframe) iframe {
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+    .portfolio-details .varco-object-embed {
+      background: #f8fafc;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 16px;
+      box-shadow: 0 16px 34px rgba(15, 23, 42, 0.1);
+      margin: 1.5rem auto 0.65rem;
+      overflow: hidden;
+      width: 100%;
+    }
+    .portfolio-details .varco-object-embed iframe {
+      border: 0;
+      display: block;
+      height: min(500px, 70vh);
+      width: 100%;
+    }
+    .portfolio-details p > img:only-child {
+      display: block;
+      margin: 1rem auto;
+    }
+    .portfolio-details img[width] {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .portfolio-details .text-center img,
+    .portfolio-details .gif-container img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .portfolio-details table img {
+      border-radius: 10px;
+      width: 100%;
+    }
+    .portfolio-details table .varco-lattice-img {
+      aspect-ratio: 1 / 1;
+      display: block;
+      height: clamp(140px, 18vw, 230px);
+      margin: 0 auto;
+      object-fit: contain;
+      padding: 0.35rem;
+      width: 100%;
+    }
+    .portfolio-details table:has(.varco-lattice-img) th,
+    .portfolio-details table:has(.varco-lattice-img) td {
+      text-align: center;
+      vertical-align: middle;
+      width: 33.333%;
+    }
+    .portfolio-details .viewer-feature-group {
+      margin: 1.4rem 0 1.8rem;
+    }
+    .portfolio-details .viewer-feature-group > h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.95rem;
+    }
+    .portfolio-details .viewer-feature-grid {
+      display: grid;
+      gap: 1rem;
+      width: 100%;
+    }
+    .portfolio-details .viewer-feature-grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .portfolio-details .viewer-feature-grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .portfolio-details .viewer-feature-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 18px;
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      padding: 1rem;
+    }
+    .portfolio-details .viewer-feature-card .feature-img {
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+      object-fit: cover;
+      width: 100%;
+    }
+    .portfolio-details .viewer-feature-card h5 {
+      font-size: 1.02rem;
+      font-weight: 700;
+      margin: 0.35rem 0 0.45rem;
+    }
+    .portfolio-details .viewer-feature-card p,
+    .portfolio-details .viewer-feature-card li {
+      font-size: 0.94rem;
+      line-height: 1.62;
+    }
+    .portfolio-details .portfolio-info {
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 18px;
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+    }
+    .portfolio-details table {
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    @media (max-width: 768px) {
+      .portfolio-details.section {
+        padding-top: 56px;
+      }
+      .portfolio-details .portfolio-details-container,
+      .portfolio-details .container.col-11 {
+        width: 100%;
+      }
+      .portfolio-details .portfolio-description,
+      .portfolio-details .portfolio-info {
+        margin-bottom: 1.25rem;
+      }
+      .portfolio-details .viewer-feature-grid-2,
+      .portfolio-details .viewer-feature-grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <div class="progress-container">
@@ -123,125 +315,122 @@
 
     <!-- Portfolio Details Section -->
     <section id="portfolio-details" class="portfolio-details section">
-        <div class="row gx-5 justify-content-center text-center mb-5">
-          <div class="col-9 col-lg-8 col-xl-7 col-xxl-6">
-            <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline"> Specular-Diffuse Disentanglement <br/> in Neural Rendering </span></h1>
-            <div class="fs-3 fw-light text-muted"> NC Research </div>
-          </div>
+      <div class="row gx-5 justify-content-center">
+        <div class="text-center mb-5 col-11 col-lg-10 col-xl-8 col-xxl-7">
+          <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline">Specular-Diffuse Disentanglement <br/> in Neural Rendering</span></h1>
+          <div class="fs-3 fw-light text-muted">NC Research</div>
         </div>
-        <div class="row gx-5 justify-content-center">
-            <div class="col-9 col-lg-8 col-xl-7 col-xxl-6">
-                <div class="fs-6"> <strong>TL; DR:</strong> This project aims to accelerate the separation of diffuse and specular color components in neural rendering, building on Ref-NeRF's directional embedding and Instant-NGP-based NeRFacto for faster performance. </div>
-                <div class="fs-6"> <strong>Keywords:</strong> Neural Rendering, Illumination Control, Physically-Based Rendering (PBR) </div>
-                <p> <br/> </p>
-                <h2> Overview </h2>
-                <hr/>
-                <p>
-                    The core objective of my project is to achieve separation of diffuse and specular color components in neural rendering.  
-                    While models like <a href="https://dorverbin.github.io/refnerf/">Ref-NeRF</a> have demonstrated success in this area through the use of directional embedding and structured model separation, their reliance on <a href="https://jonbarron.info/mipnerf/">Mip-NeRF</a> results in slow performance. 
-                    To address this, I implemented key elements of Ref-NeRF using the <a href="https://nvlabs.github.io/instant-ngp/">Insatnt-NGP</a>-based NeRFacto model as a foundation (presented by <a href="https://docs.nerf.studio/">NeRFStudio</a>), enabling faster diffuse-specular disentanglement in an accelerated NeRF system.
-                </p>
-                <p> <br/> </p>
+      </div>
 
-                <h2> Key Structures </h2>
-                <hr/>
-                <h3> Reflection Direction Parameterization </h3>
-                <DIV style ="text-align:center";>
-                    <img class="img-fluid" src="../../blogs/posts/231130_nerf_in_game/assets/IMG_4_reflection_reparameterization.png" width="70%" />
-                </DIV>
-                <p>Ref-NeRF reparameterizes outgoing radiance in terms of the reflection direction </p>
-                <div class="math-container">
-                    $$
-                    \hat{\omega}_r = 2(\hat{\omega}_o \cdot \hat{n}) \hat{n} - \hat{\omega}_o, 
-                    $$
-                </div>
-                <p>where $\hat{\omega}_o$ is the viewing direction and $\hat{n}$ is the surface normal. </p>
-                <p>This approach enhances the interpolation of specular reflections by focusing on the reflected view direction rather than the direct one.</p>
-                <p> <br/> </p>
+<div class="row gx-5 justify-content-center">
+<div class="col-9 col-lg-8 col-xl-7 col-xxl-6">
+<div class="fs-6">
+<p><strong>TL; DR:</strong> This project aims to accelerate the separation of diffuse and specular color components in neural rendering, building on Ref-NeRF&#39;s directional embedding and Instant-NGP-based NeRFacto for faster performance.</p>
 
-                <h3> Integrated Directional Encoding (IDE) </h3>
-                <div style="text-align: center;">
-                    <video style="width: 70%" muted autoplay playsinline loop>
-                        <source src="assets/ide_animation.mp4" type="video/mp4">
-                    </video>
-                </div>
-                <p>
-                    Drawing inspiration from Mip-NeRF, IDE employs spherical harmonics and a von Mises-Fisher (vMF) distribution to encode reflectance vectors. This method allows the model to efficiently handle varying material roughness. The expected spherical harmonics for the vMF distribution are approximated by:
-                </p>
-                <div class="math-container">
-                    $$
-                    E_{\hat{\omega} \sim \text{vMF}(\hat{\omega}r, \kappa)}[Y^m_{\ell}(\hat{\omega})] \approx A_{\ell}(\kappa) Y^m_{\ell}(\hat{\omega}r)
-                    $$
-                </div>
-                <p>where $ A_{\ell}(\kappa) $ is the attenuation function based on roughness $\rho$.</p>
+</div>
+<div class="fs-6">
+<p><strong>Keywords:</strong> Neural Rendering, Illumination Control, Physically-Based Rendering (PBR)</p>
 
-                <p> <br/> </p>
+</div>
+<h2>Overview</h2>
+<hr>
+<p>The core objective of my project is to achieve separation of diffuse and specular color components in neural rendering.
+While models like <a href="https://dorverbin.github.io/refnerf/">Ref-NeRF</a> have demonstrated success in this area through the use of directional embedding and structured model separation, their reliance on <a href="https://jonbarron.info/mipnerf/">Mip-NeRF</a> results in slow performance.
+To address this, I implemented key elements of Ref-NeRF using the <a href="https://nvlabs.github.io/instant-ngp/">Insatnt-NGP</a>-based NeRFacto model as a foundation (presented by <a href="https://docs.nerf.studio/">NeRFStudio</a>), enabling faster diffuse-specular disentanglement in an accelerated NeRF system.</p>
+<h2>Key Structures</h2>
+<hr>
+<h3>Reflection Direction Parameterization</h3>
+<img src="../../blogs/posts/231130_nerf_in_game/assets/IMG_4_reflection_reparameterization.png" alt="Image" width="70%" class="img-fluid">
 
+<p>Ref-NeRF reparameterizes outgoing radiance in terms of the reflection direction</p>
 
-                <h3> Diffuse and Specular Color Decomposition  </h3>
-                <p> Radiance is divided into diffuse ($c_d$) and specular ($c_s$) components, combined as: </p>
-                <div class="math-container">
-                    $$
-                    c = \gamma(c_d + \gamma_s \odot c_s)
-                    $$
-                </div>
-                <p> where $\gamma$ is a color transformation to sRGB, ensuring the final output falls within the $[0, 1]$ range. </p>
-                <p> <br/> </p>
+<div class="math-container">
+<p>$$
+\hat{\omega}_r = 2(\hat{\omega}_o \cdot \hat{n}) \hat{n} - \hat{\omega}_o,
+$$</p>
 
-                <h2> Implementation </h2>
-                <hr/>
-                <p>
-                    Building on NeRFStudio's Nerfacto model, I integrated Ref-NeRF's directional embedding and model structure to enable diffuse-specular disentanglement. By leveraging Instant-NGP, I achieved significantly faster performance, addressing the speed limitations of Mip-NeRF-based approaches while maintaining a high-quality rendering of specular highlights and reflections.
-                </p>
-                <p>
-                    Furthermore, implementing this project within NeRFStudio allowed for efficient rendering of scenes with dynamic camera paths, enhancing both the visual output and interaction with 3D scenes.
-                </p>
-                <p>
-                    Below are my results for the Mip360 garden and two scenes I personally captured.
-                </p>
-                <h6>1. Mip-NeRF 360 Garden</h6>
-                <table>
-                    <tr>
-                        <th>Full</th>
-                        <th>Diffuse</th>
-                        <th>Specular</th>
-                    </tr>
-                </table>
-                <div class="video-container" style="padding-bottom:18%">
-                    <video style="width: 100%" muted controls>
-                        <source src="assets/gar.mp4" type="video/mp4">
-                    </video>
-                </div>
+</div>
+<p>where $\hat{\omega}_o$ is the viewing direction and $\hat{n}$ is the surface normal.</p>
+<p>This approach enhances the interpolation of specular reflections by focusing on the reflected view direction rather than the direct one.</p>
+<h3>Integrated Directional Encoding (IDE)</h3>
 
-                <h6>2. Personal Capture #1</h6>
-                <table>
-                    <tr>
-                        <th>Full</th>
-                        <th>Diffuse</th>
-                        <th>Specular</th>
-                    </tr>
-                </table>
-                <div class="video-container" style="padding-bottom:32%">
-                    <video muted controls style="width: 100%">
-                        <source src="assets/watch.mp4" type="video/mp4">
-                    </video>
-                </div>
+<div class="text-center">
+<video muted autoplay playsinline loop class="img-fluid project-video">
+<source src="assets/ide_animation.mp4" type="video/mp4">
+</video>
 
-                <h6>3. Personal Capture #2</h6>
-                <table>
-                    <tr>
-                        <th>Full</th>
-                        <th>Diffuse</th>
-                        <th>Specular</th>
-                    </tr>
-                </table>
-                <div class="video-container" style="padding-bottom:18%">
-                    <video muted controls style="width: 100%">
-                        <source src="assets/benc.mp4" type="video/mp4">
-                    </video>
-                </div>
-            </div>
-        </div>
+</div>
+<p>Drawing inspiration from Mip-NeRF, IDE employs spherical harmonics and a von Mises-Fisher (vMF) distribution to encode reflectance vectors. This method allows the model to efficiently handle varying material roughness. The expected spherical harmonics for the vMF distribution are approximated by:</p>
+
+<div class="math-container">
+<p>$$
+E_{\hat{\omega} \sim \text{vMF}(\hat{\omega}r, \kappa)}[Y^m_{\ell}(\hat{\omega})] \approx A_{\ell}(\kappa) Y^m_{\ell}(\hat{\omega}r)
+$$</p>
+
+</div>
+<p>where $ A_{\ell}(\kappa) $ is the attenuation function based on roughness $\rho$.</p>
+<h3>Diffuse and Specular Color Decomposition</h3>
+<p>Radiance is divided into diffuse ($c_d$) and specular ($c_s$) components, combined as:</p>
+
+<div class="math-container">
+<p>$$
+c = \gamma(c_d + \gamma_s \odot c_s)
+$$</p>
+
+</div>
+<p>where $\gamma$ is a color transformation to sRGB, ensuring the final output falls within the $[0, 1]$ range.</p>
+<h2>Implementation</h2>
+<hr>
+<p>Building on NeRFStudio&#39;s Nerfacto model, I integrated Ref-NeRF&#39;s directional embedding and model structure to enable diffuse-specular disentanglement. By leveraging Instant-NGP, I achieved significantly faster performance, addressing the speed limitations of Mip-NeRF-based approaches while maintaining a high-quality rendering of specular highlights and reflections.</p>
+<p>Furthermore, implementing this project within NeRFStudio allowed for efficient rendering of scenes with dynamic camera paths, enhancing both the visual output and interaction with 3D scenes.</p>
+<p>Below are my results for the Mip360 garden and two scenes I personally captured.</p>
+<h6>1. Mip-NeRF 360 Garden</h6>
+<table>
+<tr>
+<th>Full</th>
+<th>Diffuse</th>
+<th>Specular</th>
+</tr>
+</table>
+
+<div class="video-container">
+<video muted controls class="img-fluid project-video" playsinline>
+<source src="assets/gar.mp4" type="video/mp4">
+</video>
+
+</div>
+<h6>2. Personal Capture #1</h6>
+<table>
+<tr>
+<th>Full</th>
+<th>Diffuse</th>
+<th>Specular</th>
+</tr>
+</table>
+
+<div class="video-container">
+<video muted controls class="img-fluid project-video" playsinline>
+<source src="assets/watch.mp4" type="video/mp4">
+</video>
+
+</div>
+<h6>3. Personal Capture #2</h6>
+<table>
+<tr>
+<th>Full</th>
+<th>Diffuse</th>
+<th>Specular</th>
+</tr>
+</table>
+
+<div class="video-container">
+<video muted controls class="img-fluid project-video" playsinline>
+<source src="assets/benc.mp4" type="video/mp4">
+</video>
+
+</div>
+</div>
+</div>
     </section><!-- /Portfolio Details Section -->
 
   </main>

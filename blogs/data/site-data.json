@@ -366,6 +366,262 @@
       "kor": "Computer Graphics"
     }
   },
+  "portfolioProjects": [
+    {
+      "id": "varco3d",
+      "title": "VARCO 3D: A Cutting-edge Commercial AI Service for 3D Generation",
+      "summary": "Commercial 3D generative AI service; native 3D generation, sparse voxels, and texture synthesis",
+      "url": "projects/varco3d/",
+      "categories": [
+        "app"
+      ],
+      "badge": "Commercial AI Service",
+      "image": "assets/thumbnails/varco3d_thumbnail.png",
+      "gif": "assets/varco3d_hero.webp",
+      "alt": "VARCO 3D service teaser"
+    },
+    {
+      "id": "capa",
+      "title": "CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation",
+      "summary": "2-stage textured mesh generation; 3D latent diffusion and texture synthesis",
+      "url": "projects/capa/",
+      "categories": [
+        "research"
+      ],
+      "badge": "Featured on HuggingFace",
+      "image": "assets/thumbnails/capa_thumbnail.png",
+      "gif": "assets/capa_teaser.webp",
+      "alt": "CaPa teaser"
+    },
+    {
+      "id": "instant-pose",
+      "title": "Robust Camera Pose Refinement for Multi-Resolution Hash Encoding",
+      "summary": "Joint optimization of hash-grid NeRF and SE(3) camera poses",
+      "url": "projects/instant_pose/",
+      "categories": [
+        "research"
+      ],
+      "badge": "ICML 2023",
+      "image": "projects/instant_pose/assets/pose_fig2.jpg",
+      "alt": "Instant Pose teaser"
+    },
+    {
+      "id": "few-nerf",
+      "title": "Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild",
+      "summary": "Robust radiance fields for online image collections",
+      "url": "projects/few_nerf/",
+      "categories": [
+        "research"
+      ],
+      "badge": "arXiv 2023",
+      "image": "projects/few_nerf/assets/main.jpg",
+      "alt": "Occ-NeRF teaser"
+    },
+    {
+      "id": "nerf-in-game",
+      "title": "Custom Spherical 3D Gaussian Splatting in Unity & Unreal Engine",
+      "summary": "Robust 360 videos to gaussian splatting and GS optimization for game engines",
+      "url": "projects/nerf_in_game/",
+      "categories": [
+        "app"
+      ],
+      "image": "projects/nerf_in_game/teaser.jpg",
+      "alt": "NeRF game teaser"
+    },
+    {
+      "id": "deepsfm",
+      "title": "Radiance Fields from Deep-based Structure-from-Motion: MaST3R & VGGSfM",
+      "summary": "Comparative study of recent deep-based SfM and image matching",
+      "url": "projects/deepsfm/",
+      "categories": [
+        "per",
+        "app"
+      ],
+      "badge": "Featured on Github (200+ stars)",
+      "image": "assets/thumbnails/deepsfm_thumbnail.png",
+      "gif": "assets/sfm_teaser.webp",
+      "alt": "DeepSFM and NeRF face teaser"
+    },
+    {
+      "id": "2dgs-viewer",
+      "title": "Custom Web Viewer Implementation for 2D Gaussian Splatting",
+      "summary": "Remote viewer for 2D Gaussian Splatting",
+      "url": "projects/2dgs_viewer/",
+      "categories": [
+        "per",
+        "app"
+      ],
+      "badge": "Featured on Github (150+ stars)",
+      "image": "assets/thumbnails/2dgs_viewer_thumbnail.png",
+      "gif": "assets/2dgs_viewer_teaser.webp",
+      "alt": "2D GS viewer teaser"
+    },
+    {
+      "id": "ref-nerf",
+      "title": "Specular-Diffuse Disentanglement w/ Nerfstudio's NeRFacto",
+      "summary": "Expand hash-grid NeRF to light-disentangleable reconstruction",
+      "url": "projects/ref_nerf/",
+      "categories": [
+        "app"
+      ],
+      "image": "projects/ref_nerf/assets/image.jpg",
+      "alt": "NeRF light teaser"
+    },
+    {
+      "id": "face-nerf",
+      "title": "Fast Neural Facial Avatar Reconstruction with Multi-Cameras System",
+      "summary": "Robust NeRF avatar from multi-camera systems",
+      "url": "projects/face_nerf/",
+      "categories": [
+        "app"
+      ],
+      "video": "projects/face_nerf/assets/hwan_nerf.mp4",
+      "poster": "projects/face_nerf/assets/image.jpg",
+      "alt": "NeRF face avatar teaser"
+    }
+  ],
+  "publications": [
+    {
+      "title": "CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation",
+      "authorsHtml": "<strong>Hwan Heo</strong>, Jangyeong Kim, Seongyeong Lee, Jeong-A Wi, Junyoung Choi, Sangjun Ahn",
+      "venueHtml": "<em>Technical Report</em>, Featured on <strong>HuggingFace's Daily Papers</strong>, <strong>TLDR AI</strong>",
+      "links": [
+        {
+          "label": "paper",
+          "url": "https://arxiv.org/abs/2501.09433",
+          "icon": "bi-file-earmark-text"
+        },
+        {
+          "label": "project",
+          "url": "https://ncsoft.github.io/CaPa/",
+          "icon": "bi-link"
+        },
+        {
+          "label": "github",
+          "url": "https://github.com/ncsoft/CaPa",
+          "icon": "bi-github"
+        }
+      ]
+    },
+    {
+      "title": "DreamSurfels: Generative Gaussian Surfels for Geometrically Accurate 3D Content Creation",
+      "authorsHtml": "<strong>Hwan Heo</strong>, Sangjun Ahn",
+      "venueHtml": "The 15th International Conference on ICT Convergence (<strong>ICTC</strong>), Oct 2024<br/>Oral presentation, domestic conference",
+      "links": []
+    },
+    {
+      "title": "Robust Camera Pose Refinement for Multi-Resolution Hash Encoding",
+      "authorsHtml": "<strong>Hwan Heo</strong>, Taekyung Kim, J. Lee, Jiyoung Lee, Soohyun Kim, Hyunwoo J. Kim, Jin-Hwa Kim",
+      "venueHtml": "The 40th International Conference on Machine Learning (<strong>ICML</strong>), Jul 2023",
+      "links": [
+        {
+          "label": "paper",
+          "url": "https://dl.acm.org/doi/10.5555/3618408.3618936",
+          "icon": "bi-file-earmark-text"
+        },
+        {
+          "label": "project",
+          "url": "projects/instant_pose/",
+          "icon": "bi-link"
+        }
+      ]
+    },
+    {
+      "title": "Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild",
+      "authorsHtml": "Jaewon Lee, Injae Kim, <strong>Hwan Heo</strong>, Hyunwoo J. Kim",
+      "venueHtml": "preprint, arXiv 2023",
+      "links": [
+        {
+          "label": "paper",
+          "url": "https://arxiv.org/abs/2303.03966",
+          "icon": "bi-file-earmark-text"
+        },
+        {
+          "label": "project",
+          "url": "projects/few_nerf/",
+          "icon": "bi-link"
+        },
+        {
+          "label": "github",
+          "url": "https://github.com/2j1ejyu/SF-NeRF",
+          "icon": "bi-github"
+        }
+      ]
+    },
+    {
+      "title": "Consistency Learning via Decoding Path Augmentation for Transformers in Human Object Interaction Detection",
+      "authorsHtml": "Jihwan Park, Seunjun Lee, <strong>Hwan Heo</strong>, Hyunggyu Choi, Hyunwoo J. Kim",
+      "venueHtml": "IEEE/CVF Conference on Computer Vision and Pattern Recognition (<strong>CVPR</strong>), Jun 2022",
+      "links": [
+        {
+          "label": "paper",
+          "url": "https://arxiv.org/abs/2204.04836",
+          "icon": "bi-file-earmark-text"
+        },
+        {
+          "label": "github",
+          "url": "https://github.com/mlvlab/CPC_HOI",
+          "icon": "bi-github"
+        }
+      ]
+    },
+    {
+      "title": "Domain Generalization Emerges from Dreaming",
+      "authorsHtml": "<strong>Hwan Heo</strong>, Younjin Oh, Jaewon Lee, Hyunwoo J. Kim",
+      "venueHtml": "preprint, arXiv 2023",
+      "links": [
+        {
+          "label": "paper",
+          "url": "https://arxiv.org/abs/2302.00980",
+          "icon": "bi-file-earmark-text"
+        }
+      ]
+    },
+    {
+      "title": "Temporally Sparse Adversarial Perturbations on Videos",
+      "authorsHtml": "<strong>Hwan Heo</strong>, Dohwan Ko, Jaewon Lee, Youngjoon Hong, Hyunwoo J. Kim",
+      "venueHtml": "<strong>IEEE Access</strong>, Oct 2021 vol. 9, pp. 146938<br/>International journal publication",
+      "links": [
+        {
+          "label": "paper",
+          "url": "https://ieeexplore.ieee.org/document/9592758",
+          "icon": "bi-file-earmark-text"
+        }
+      ]
+    }
+  ],
+  "talks": [
+    {
+      "title": "Introduction to 3D Generative AI",
+      "venueHtml": "Generative AI Seminar (CS.93000B) - KAIST",
+      "date": "Mar 2026"
+    },
+    {
+      "title": "Introduction to 3D Generative AI",
+      "venueHtml": "Machine Learning for Computer Vision - KAIST",
+      "date": "Dec 2025"
+    },
+    {
+      "title": "Spatial 3D AI Technology and its Applications",
+      "venueHtml": "<a href=\"https://www.kgeofesta.kr/fairDash.do\">K-GEO Festa</a> - Ministry of Land, Infrastructure and Transport in Korea (국토교통부)",
+      "date": "Sep 2025"
+    },
+    {
+      "title": "Radiance Fields and Spatial 3D AI for Digital Twin",
+      "venueHtml": "National Geographic Information Institute in Korea (국토지리정보원)",
+      "date": "Aug 2025"
+    },
+    {
+      "title": "Rasterization vs. Ray Tracing with 3D Gaussian Primitives",
+      "venueHtml": "NCSOFT",
+      "date": "Sep 2024"
+    },
+    {
+      "title": "Joint Optimization of Camera Pose and Accelerated Radiance Fields",
+      "venueHtml": "NAVER Cloud",
+      "date": "Mar 2023"
+    }
+  ],
   "featuredPortfolioPosts": [
     {
       "id": "260115_Varco3D",

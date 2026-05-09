@@ -64,6 +64,198 @@
         gtag('js', new Date());
         gtag('config', 'G-RF7ETSKPK9');
     </script>
+  <style id="project-detail-common-style">
+    .portfolio-details .portfolio-description h2 {
+      margin-top: 1.25rem;
+      margin-bottom: 0.85rem;
+      letter-spacing: -0.02em;
+    }
+    .portfolio-details .portfolio-description h3,
+    .portfolio-details .portfolio-description h4,
+    .portfolio-details .portfolio-description h5 {
+      margin-top: 1.15rem;
+      margin-bottom: 0.65rem;
+    }
+    .portfolio-details .portfolio-description p,
+    .portfolio-details .portfolio-description li {
+      line-height: 1.72;
+    }
+    .portfolio-details img,
+    .portfolio-details video,
+    .portfolio-details iframe {
+      border-radius: 14px;
+      height: auto;
+      max-width: 100%;
+    }
+    .portfolio-details .project-video,
+    .portfolio-details video {
+      background: #000;
+      box-shadow: 0 16px 34px rgba(15, 23, 42, 0.12);
+      display: block;
+      margin: 1rem auto;
+      width: 100%;
+    }
+    .portfolio-details .text-center .project-video,
+    .portfolio-details .text-center video {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .portfolio-details .video-container {
+      margin: 1.25rem auto;
+      max-width: 100%;
+    }
+    .portfolio-details .video-container:has(video) {
+      background: transparent;
+      height: auto;
+      overflow: visible;
+      padding-bottom: 0;
+      position: relative;
+    }
+    .portfolio-details .video-container:has(video) video {
+      height: auto;
+      left: auto;
+      position: static;
+      top: auto;
+      width: 100%;
+    }
+    .portfolio-details .video-container:has(iframe) {
+      aspect-ratio: 16 / 9;
+      background: #000;
+      height: auto;
+      overflow: hidden;
+      padding-bottom: 0;
+      position: relative;
+    }
+    .portfolio-details .video-container:has(iframe) iframe {
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+    .portfolio-details .varco-object-embed {
+      background: #f8fafc;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 16px;
+      box-shadow: 0 16px 34px rgba(15, 23, 42, 0.1);
+      margin: 1.5rem auto 0.65rem;
+      overflow: hidden;
+      width: 100%;
+    }
+    .portfolio-details .varco-object-embed iframe {
+      border: 0;
+      display: block;
+      height: min(500px, 70vh);
+      width: 100%;
+    }
+    .portfolio-details p > img:only-child {
+      display: block;
+      margin: 1rem auto;
+    }
+    .portfolio-details img[width] {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .portfolio-details .text-center img,
+    .portfolio-details .gif-container img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .portfolio-details table img {
+      border-radius: 10px;
+      width: 100%;
+    }
+    .portfolio-details table .varco-lattice-img {
+      aspect-ratio: 1 / 1;
+      display: block;
+      height: clamp(140px, 18vw, 230px);
+      margin: 0 auto;
+      object-fit: contain;
+      padding: 0.35rem;
+      width: 100%;
+    }
+    .portfolio-details table:has(.varco-lattice-img) th,
+    .portfolio-details table:has(.varco-lattice-img) td {
+      text-align: center;
+      vertical-align: middle;
+      width: 33.333%;
+    }
+    .portfolio-details .viewer-feature-group {
+      margin: 1.4rem 0 1.8rem;
+    }
+    .portfolio-details .viewer-feature-group > h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.95rem;
+    }
+    .portfolio-details .viewer-feature-grid {
+      display: grid;
+      gap: 1rem;
+      width: 100%;
+    }
+    .portfolio-details .viewer-feature-grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .portfolio-details .viewer-feature-grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .portfolio-details .viewer-feature-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 18px;
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      padding: 1rem;
+    }
+    .portfolio-details .viewer-feature-card .feature-img {
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+      object-fit: cover;
+      width: 100%;
+    }
+    .portfolio-details .viewer-feature-card h5 {
+      font-size: 1.02rem;
+      font-weight: 700;
+      margin: 0.35rem 0 0.45rem;
+    }
+    .portfolio-details .viewer-feature-card p,
+    .portfolio-details .viewer-feature-card li {
+      font-size: 0.94rem;
+      line-height: 1.62;
+    }
+    .portfolio-details .portfolio-info {
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 18px;
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+    }
+    .portfolio-details table {
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    @media (max-width: 768px) {
+      .portfolio-details.section {
+        padding-top: 56px;
+      }
+      .portfolio-details .portfolio-details-container,
+      .portfolio-details .container.col-11 {
+        width: 100%;
+      }
+      .portfolio-details .portfolio-description,
+      .portfolio-details .portfolio-info {
+        margin-bottom: 1.25rem;
+      }
+      .portfolio-details .viewer-feature-grid-2,
+      .portfolio-details .viewer-feature-grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <div class="progress-container">
   <div class="progress-bar" id="myBar"></div>
@@ -116,121 +308,90 @@
 
     <!-- Portfolio Details Section -->
     <section id="portfolio-details" class="portfolio-details section">
-        <div class="row gx-5 justify-content-center text-center mb-5">
-          <div class="col-11 col-lg-10 col-xl-8 col-xxl-7">
-            <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline">Search-and-Attack: Temporally Sparse Adversarial Attack on Videos</span></h1>
-            <div class="fs-3 fw-light text-muted"> IEEE Access 2021 </div>
-            <div class="fs-3 fw-light text-muted"> Korea University </div>
-          </div>
+      <div class="row gx-5 justify-content-center">
+        <div class="text-center mb-5 col-11 col-lg-10 col-xl-8 col-xxl-7">
+          <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline">Search-and-Attack: Temporally Sparse Adversarial Attack on Videos</span></h1>
+          <div class="fs-3 fw-light text-muted">IEEE Access 2021</div>
+          <div class="fs-3 fw-light text-muted">Korea University</div>
         </div>
-        <div class="row gx-5 justify-content-center">
-            <div class="col-11 col-lg-10 col-xl-8 col-xxl-7">
-                <!--img class="img-fluid" src="./assets/poster.png" /-->
-                <h2> Overview </h2>
-                <hr/>
-                <img class="img-fluid" src="main_figure.png" width="100%" />
-                <ul>
-                    <li> present a framework to generate a temporally sparse adversarial attack, called Search-and-Attack scheme, which first retrieves the most vulnerable frames and then attacks only those frames on Videos. </li>
-                    <li> Since the most vulnerable set of frames involves an expensive combinatorial optimization problem, we introduce alternative surrogate objective functions : Magnitude of the Gradients <strong>(MoG)</strong> and Frame-wise Robustness Intensity <strong>(FRI)</strong>. </li>
-                </ul>
-                <p> <br/> </p>
+      </div>
 
-                <h2> Method </h2>
-                <hr/>
-                <h3> Problem Definition </h3>
-                <p>
-                    Deep neural networks (DNNs) are highly effective in tasks like image and video classification, 
-                    but they are vulnerable to adversarial attacks, where small, deliberate perturbations to the input can cause the network to misclassify the data. 
-                </p>
-                <p>
-                    While adversarial attacks have been extensively studied in the image domain, their impact on video data has received less attention. 
-                    Existing video attacks either modify all frames or sample frames uniformly, failing to account for temporal dependencies between frames. 
-                    This approach is suboptimal, especially for video classification models that leverage temporal information. 
-                </p>
-                <p>
-                    The challenge addressed in this paper is to develop a method that efficiently identifies and perturbs only the most vulnerable frames in a video, resulting in a temporally sparse adversarial attack that is both effective and less perceptible.
-                </p>
-                
-                <p>
-                The problem is formally defined as a mixed-integer non-linear program (MINLP):
-                </p>
-                <div class="math-container">
-                    $$ \max_{\delta, I} \ L(x + \delta_I, y; \theta) \quad \text{subject to} \quad |I| = N, \quad \| \delta(i) \|_\infty \leq \epsilon, \quad \delta_I = \sum_{i \in I} \delta(i)
-                    $$
-                </div>
-                
-                <p>
-                    Here, $L(x + \delta_I, y; \theta)$ represents the loss function of the neural network with perturbed input, 
-                    $x$ is the input video, $y$ is the ground truth label, $\delta_I$ is the perturbation 
-                    applied only to the selected frames $I$, $\epsilon$ is the maximum allowable perturbation, 
-                    and $|I| = N$ ensures that only $N$ frames are attacked.
-                </p><br/>
+<div class="row gx-5 justify-content-center">
+<div class="col-11 col-lg-10 col-xl-8 col-xxl-7">
+<h2>Overview</h2>
+<hr>
+<p><img src="main_figure.png" alt="Image" class="img-fluid"></p>
+<ul>
+<li>present a framework to generate a temporally sparse adversarial attack, called Search-and-Attack scheme, which first retrieves the most vulnerable frames and then attacks only those frames on Videos.</li>
+<li>Since the most vulnerable set of frames involves an expensive combinatorial optimization problem, we introduce alternative surrogate objective functions : Magnitude of the Gradients <strong>(MoG)</strong> and Frame-wise Robustness Intensity <strong>(FRI)</strong>.</li>
+</ul>
+<h2>Method</h2>
+<hr>
+<h3>Problem Definition</h3>
+<p>Deep neural networks (DNNs) are highly effective in tasks like image and video classification,
+but they are vulnerable to adversarial attacks, where small, deliberate perturbations to the input can cause the network to misclassify the data.</p>
+<p>While adversarial attacks have been extensively studied in the image domain, their impact on video data has received less attention.
+Existing video attacks either modify all frames or sample frames uniformly, failing to account for temporal dependencies between frames.
+This approach is suboptimal, especially for video classification models that leverage temporal information.</p>
+<p>The challenge addressed in this paper is to develop a method that efficiently identifies and perturbs only the most vulnerable frames in a video, resulting in a temporally sparse adversarial attack that is both effective and less perceptible.</p>
+<p>The problem is formally defined as a mixed-integer non-linear program (MINLP):</p>
 
-                <h3> Sparse Adversarial Attack for Video </h3>
-                <p>
-                    The paper introduces a novel "Search-and-Attack" framework that consists of two stages: <strong>Search</strong> and <strong>Attack</strong>.
-                </p>
+<div class="math-container">
+<p>$$ \max_{\delta, I} \ L(x + \delta_I, y; \theta) \quad \text{subject to} \quad |I| = N, \quad \| \delta(i) \|_\infty \leq \epsilon, \quad \delta_I = \sum_{i \in I} \delta(i)
+$$</p>
 
-                <h4>Search Stage</h4>
-                <p>
-                    The goal of this stage is to identify the most vulnerable frames in a video that should be targeted by the adversarial attack. 
-                    This is achieved using surrogate objective functions:
-                </p>
-                <ul>
-                    <li>
-                        <p> 
-                            <strong> Magnitude of Gradient</strong> <br/>
-                            This function estimates the vulnerability of each frame by calculating the L1-norm of the gradient of the loss function 
-                            with respect to the frame:
+</div>
+<p>Here, $L(x + \delta_I, y; \theta)$ represents the loss function of the neural network with perturbed input,
+$x$ is the input video, $y$ is the ground truth label, $\delta_I$ is the perturbation
+applied only to the selected frames $I$, $\epsilon$ is the maximum allowable perturbation,
+and $|I| = N$ ensures that only $N$ frames are attacked.</p>
+<h3>Sparse Adversarial Attack for Video</h3>
+<p>The paper introduces a novel &quot;Search-and-Attack&quot; framework that consists of two stages: <strong>Search</strong> and <strong>Attack</strong>.</p>
+<h4>Search Stage</h4>
+<p>The goal of this stage is to identify the most vulnerable frames in a video that should be targeted by the adversarial attack.
+This is achieved using surrogate objective functions:</p>
+<p><strong>Magnitude of Gradient.</strong> This function estimates the vulnerability of each frame by calculating the L1-norm of the gradient of the loss function
+with respect to the frame:</p>
 
-                            <div class="math-container">
-                                $$ \mathcal{L}(x + \delta^{\mathbf{I}}, y; \theta) \approx \mathcal{L}(x, y; \theta) + \langle  \nabla_{{x}}\mathcal{L}(x, y; \theta), \delta^{\mathbf{I}} \rangle $$
-                            </div>
-                            <p> we can approximate the object with 1st Taylor approximation as follows: </p>
-                            <div class="math-container">
-                                $$ \mathcal{L}(x, y; \theta) + \langle  \nabla_{{x}}\mathcal{L}(x, y; \theta), \delta^{\mathbf{I}} \rangle \\  \le \mathcal{L}(x, y; \theta) + \varepsilon \cdot \sum\limits_{i \in \mathbf{I}}\; \|\nabla_{{x}_{i}}\mathcal{L}(x, y; \theta)\|_1. $$
-                            </div>
-                        </p>
-                    </li>
-                    <li>
-                        <p> 
-                            <strong> Frame-wise Vulnerability</strong><br/> 
-                            This function assumes local linearity of the loss function around each frame and sums up the loss increases when perturbing each frame individually
+<div class="math-container">
+<p>$$ \mathcal{L}(x + \delta^{\mathbf{I}}, y; \theta) \approx \mathcal{L}(x, y; \theta) + \langle  \nabla_{{x}}\mathcal{L}(x, y; \theta), \delta^{\mathbf{I}} \rangle $$</p>
 
-                            <div class="math-container">
-                                $$ \mathcal{L}(x + \delta)  - \mathcal{L}(x)= \mathcal{L} (x + \sum_{i \in \mathbf{I}} \delta^{(i)}) - \mathcal{L}(x)\\   \approx  \sum_{{i \in \mathbf{I}}} \left ( \mathcal{L}(x + \delta^{(i)}) - \mathcal{L}(x) \right ) $$
-                            </div>
-                            <p> Similar to MoG, the surrogate loss function can be further simplified by removing the constant L(x). The second surrogate objective function is given as : </p>
-                            <div class="math-container">
-                                $$ J_{\text{FRI}}(x, \mathbf{I}, y; \theta) = \sum_{{i \in \mathbf{I}}} \mathcal{L}(x + \delta^{(i)}, y; \theta) $$
-                            </div>
-                        </p>
-                    </li>
-                </ul>
-                <p> 
-                    Based on these surrogate losses, frames are selected using either a single-step method or more complex iterative search methods.
-                </p><br/>
-                
-                <h4>Atack Stage</h4>
-                <p>
-                    Once the vulnerable frames are identified, adversarial perturbations are generated using methods such as FGSM (Fast Gradient Sign Method) or PGD (Projected Gradient Descent), 
-                    but only applied to the selected frames. For example, in the FGSM attack, the perturbation is calculated as
-                </p>
-                <div class="math-container">
-                    $$\delta_{\text{FGSM}}(x, y, \theta, I) = \epsilon \cdot \text{sign}(\nabla_x L(x, y; \theta)) \odot M_I$$
-                </div>
-                <p>
-                    where $M_I$ is a mask that applies the perturbation only to the selected frames $I$.
-                </p><br/>
+</div>
+<p>we can approximate the object with 1st Taylor approximation as follows:</p>
 
-                <h2>Experiments</h2>
-                <hr/>
-                <p>
-                    Extensive experiments were conducted on three public benchmark datasets—UCF101, HMDB51, and Kinetics400—using widely adopted action recognition models like I3D, R3D, and SlowFast. The experiments reveal that the proposed Search-and-Attack method, particularly the combination of Greedy Search with FRI and PGD (FRI-G + PGD), significantly reduces the classification accuracy of the models by attacking only a small subset of frames, achieving comparable or superior performance to state-of-the-art dense attacks. The Section Search method, combined with FGSM, also demonstrated strong performance with reduced computational cost, highlighting the effectiveness of the framework in generating temporally sparse but powerful adversarial perturbations.
-                </p>
-                <img class="img-thumbnail" src="assets/image.png" width="100%" />
-            </div>
-        </div>
+<div class="math-container">
+<p>$$ \mathcal{L}(x, y; \theta) + \langle  \nabla_{{x}}\mathcal{L}(x, y; \theta), \delta^{\mathbf{I}} \rangle \\  \le \mathcal{L}(x, y; \theta) + \varepsilon \cdot \sum\limits_{i \in \mathbf{I}}\; \|\nabla_{{x}_{i}}\mathcal{L}(x, y; \theta)\|_1. $$</p>
+
+</div>
+<p><strong>Frame-wise Vulnerability.</strong> This function assumes local linearity of the loss function around each frame and sums up the loss increases when perturbing each frame individually</p>
+
+<div class="math-container">
+<p>$$ \mathcal{L}(x + \delta)  - \mathcal{L}(x)= \mathcal{L} (x + \sum_{i \in \mathbf{I}} \delta^{(i)}) - \mathcal{L}(x)\\   \approx  \sum_{{i \in \mathbf{I}}} \left ( \mathcal{L}(x + \delta^{(i)}) - \mathcal{L}(x) \right ) $$</p>
+
+</div>
+<p>Similar to MoG, the surrogate loss function can be further simplified by removing the constant L(x). The second surrogate objective function is given as :</p>
+
+<div class="math-container">
+<p>$$ J_{\text{FRI}}(x, \mathbf{I}, y; \theta) = \sum_{{i \in \mathbf{I}}} \mathcal{L}(x + \delta^{(i)}, y; \theta) $$</p>
+
+</div>
+<p>Based on these surrogate losses, frames are selected using either a single-step method or more complex iterative search methods.</p>
+<h4>Atack Stage</h4>
+<p>Once the vulnerable frames are identified, adversarial perturbations are generated using methods such as FGSM (Fast Gradient Sign Method) or PGD (Projected Gradient Descent),
+but only applied to the selected frames. For example, in the FGSM attack, the perturbation is calculated as</p>
+
+<div class="math-container">
+<p>$$\delta_{\text{FGSM}}(x, y, \theta, I) = \epsilon \cdot \text{sign}(\nabla_x L(x, y; \theta)) \odot M_I$$</p>
+
+</div>
+<p>where $M_I$ is a mask that applies the perturbation only to the selected frames $I$.</p>
+<h2>Experiments</h2>
+<hr>
+<p>Extensive experiments were conducted on three public benchmark datasets—UCF101, HMDB51, and Kinetics400—using widely adopted action recognition models like I3D, R3D, and SlowFast. The experiments reveal that the proposed Search-and-Attack method, particularly the combination of Greedy Search with FRI and PGD (FRI-G + PGD), significantly reduces the classification accuracy of the models by attacking only a small subset of frames, achieving comparable or superior performance to state-of-the-art dense attacks. The Section Search method, combined with FGSM, also demonstrated strong performance with reduced computational cost, highlighting the effectiveness of the framework in generating temporally sparse but powerful adversarial perturbations.</p>
+<img src="assets/image.png" alt="Image" class="img-thumbnail img-fluid">
+
+</div>
+</div>
     </section><!-- /Portfolio Details Section -->
 
   </main>
