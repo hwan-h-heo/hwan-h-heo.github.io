@@ -593,6 +593,7 @@
   "talks": [
     {
       "title": "Introduction to 3D Generative AI",
+      "titleHtml": "Introduction to 3D Generative AI <a href=\"https://drive.google.com/file/d/1dvAoIkgMRq4Ks1K7zFhLgAf88B2ArJ4r/view?usp=sharing\">(PDF)</a>",
       "venueHtml": "Generative AI Seminar (CS.93000B) - KAIST",
       "date": "Mar 2026"
     },

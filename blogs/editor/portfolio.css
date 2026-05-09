@@ -373,6 +373,25 @@
     padding-top: 1rem;
 }
 
+.project-page-preview .project-hero-header {
+    max-width: 880px;
+}
+
+.project-page-preview .portfolio-details-container {
+    max-width: 1040px;
+}
+
+.project-page-preview .container.col-11:not(.portfolio-details-container) {
+    max-width: 960px;
+}
+
+.project-page-preview .project-readable {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 760px;
+    width: min(100%, 760px);
+}
+
 .project-page-preview img,
 .project-page-preview video,
 .project-page-preview iframe {
