@@ -71,7 +71,7 @@ For easy visualization of the reconstructed point clouds and camera poses from b
 Key observations from the comparative study:
 
 - **MASt3R:** Provides denser and more diverse point cloud reconstructions, but camera pose accuracy is less suitable for inverse rendering.
-- **VGGSfM:** Offers more accurate camera pose reconstruction due to Bundle Adjustment, making it better suited for inverse rendering tasks, despite sparser point clouds. Camera poses are significantly more accurate compared to MASt3R.
+- **VGGSfM:** Offers more accurate camera pose reconstruction due to Bundle Adjustment, making it better suited for inverse rendering tasks despite sparser point clouds.
 - **Robustness:** For sparse views, both VGGSfM and MASt3R are more robust than traditional COLMAP, successfully reconstructing datasets where COLMAP fails.
 - **VRAM Efficiency:** VGGSfM demonstrates better VRAM efficiency, capable of handling larger datasets compared to MASt3R.
 - **Pose Refinement Potential:** MASt3R and VGGSfM poses can serve as effective initializations for camera pose optimization during Radiance Field training.

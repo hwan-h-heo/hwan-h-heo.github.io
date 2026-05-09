@@ -8,7 +8,7 @@
 This project explores how **neural rendering assets** can move from offline reconstruction into interactive game-engine environments.
 The pipeline spans 360-camera capture, Gaussian Splatting-based scene reconstruction, custom camera modeling, asset optimization, and integration into Unity and Unreal Engine.
 
-The key practical constraint is that high-fidelity neural scenes are not automatically game-engine ready.
+The key practical constraint is that detailed neural scenes are not automatically game-engine ready.
 They require camera-model-aware reconstruction, splat pruning, runtime-compatible rendering strategies, and careful conversion into engine-side representations.
 This project focuses on that deployment gap: making reconstructed neural scenes usable inside real-time graphics environments.
 
@@ -54,7 +54,7 @@ This project focuses on that deployment gap: making reconstructed neural scenes 
 ### Using 360 Camera for Effective Large Scene Capturing
 
 To efficiently capture large scenes for 3D scene reconstruction, we utilize 360-degree videos as ground truth (GT) sources for novel view synthesis (NVS). Unlike standard cameras, 360 cameras are equipped with dual fisheye lenses positioned back-to-back, enabling them to capture a full spherical view of the environment in a single frame.
-This configuration provides a significantly wider field of view compared to conventional cameras, allowing us to record extensive areas with fewer capture points. By leveraging this capability, we can efficiently gather high-quality data for large-scale scenes.
+This configuration provides a wider field of view than conventional cameras, allowing us to record large areas with fewer capture points.
 
 <figure>
 <img class="img-fluid" src="assets/1_360_park_sample.jpg">
@@ -105,7 +105,7 @@ Here is the final reconstructed scene from 360 camera capture.
 ---
 
 With the reconstructed 3D neural rendering scene, we further integrate it into game engines
-such as Unity or Unreal, which offer powerful synthetic world generation capabilities.
+such as Unity or Unreal, which provide mature tooling for interactive 3D environments.
 
 The integration of the Gaussian Splatting and Game Engine can be easily implemented using
 GS rasterization rule.

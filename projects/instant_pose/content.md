@@ -176,7 +176,7 @@ Red lines denote pose error vectors between GT camera poses and optimized poses.
 
 ![Image](assets/table.png){width=70%}
 
-For the Synthetic (Blender) dataset, our reimplementation utilizing the below tiny-cuda-nn and ngp_pl frameworks demonstrates remarkable superiority, achieving a score of 31.54, surpassing the paper's reported score of 29.86, as well as the scores of 28.96 achieved by GARF and 28.84 achieved by BARF.
+For the Synthetic (Blender) dataset, our reimplementation using tiny-cuda-nn and ngp_pl achieved a score of 31.54, compared with the paper's reported score of 29.86 and the GARF/BARF baselines at 28.96 and 28.84.
 
 :::
 :::
