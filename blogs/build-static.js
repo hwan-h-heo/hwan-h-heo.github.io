@@ -8,6 +8,8 @@ const { loadSiteData } = require('./lib/site-data');
 const { renderPostPage } = require('./lib/render-post-page');
 const { parseProjectMarkdown } = require('./lib/project-markdown');
 const { renderProjectPage } = require('./lib/render-project-page');
+const { buildSitemapEntries, listProjectEntries } = require('./lib/site-routes');
+const { renderBlock: renderPortfolioBlock } = require('../js/portfolio-blocks');
 
 const siteData = loadSiteData();
 const distDir = path.join(__dirname, 'dist');
@@ -20,7 +22,7 @@ function resetDistDir() {
 }
 
 function copyStaticAssets() {
-    const blogDirs = ['css', 'js', '3DViewer', 'editor', 'search', 'data'];
+    const blogDirs = ['css', 'js', '3DViewer', 'search', 'data'];
     blogDirs.forEach((dir) => {
         const srcPath = path.join(__dirname, dir);
         const destPath = path.join(distDir, 'blogs', dir);
@@ -28,6 +30,18 @@ function copyStaticAssets() {
             copyRecursiveSync(srcPath, destPath);
         }
     });
+
+    const editorPath = path.join(__dirname, 'editor');
+    const privateEditorDirs = new Set(['drafts', 'draft-assets', 'project-snapshots']);
+    if (fs.existsSync(editorPath)) {
+        copyRecursiveSync(editorPath, path.join(distDir, 'blogs', 'editor'), {
+            shouldCopy: (sourcePath) => {
+                const relativePath = path.relative(editorPath, sourcePath);
+                const topLevelName = relativePath.split(path.sep)[0];
+                return !privateEditorDirs.has(topLevelName);
+            }
+        });
+    }
 
     const blogFiles = ['index.html', 'redirect-old-site.html', 'redirect-legacy-posts.html'];
     blogFiles.forEach((fileName) => {
@@ -43,7 +57,7 @@ function copyStaticAssets() {
         copyRecursiveSync(postsPath, path.join(distDir, 'blogs', 'posts'));
     }
 
-    const sharedDirs = ['assets', 'css', 'js'];
+    const sharedDirs = ['assets', 'css', 'js', 'content'];
     sharedDirs.forEach((dir) => {
         const srcPath = path.join(__dirname, '..', dir);
         const destPath = path.join(distDir, dir);
@@ -53,7 +67,46 @@ function copyStaticAssets() {
     });
 
     copyProjectAssets();
-    copyRecursiveSync(path.join(__dirname, '..', 'index.html'), path.join(distDir, 'index.html'));
+    copyRuntimeDependencies();
+    generatePortfolioIndex();
+}
+
+function generatePortfolioIndex() {
+    const indexPath = path.join(__dirname, '..', 'index.html');
+    const contentPath = path.join(__dirname, '..', 'content', 'portfolio', 'home.json');
+    const portfolioContent = JSON.parse(fs.readFileSync(contentPath, 'utf8'));
+    let html = fs.readFileSync(indexPath, 'utf8');
+
+    (portfolioContent.blocks || []).forEach((block) => {
+        const pattern = new RegExp(`(<section\\b[^>]*data-portfolio-block=["']${escapeRegExp(block.id)}["'][^>]*>)[\\s\\S]*?(</section>)`);
+        html = html.replace(pattern, (match, openingTag, closingTag) => {
+            return `${openingTag}${renderPortfolioBlock(block)}${closingTag}`;
+        });
+    });
+
+    fs.writeFileSync(path.join(distDir, 'index.html'), html);
+}
+
+function copyRuntimeDependencies() {
+    const threeRoot = path.join(__dirname, 'node_modules', 'three');
+    const runtimePaths = [
+        ['build/three.module.js', 'vendor/three/build/three.module.js'],
+        ['examples/jsm', 'vendor/three/examples/jsm']
+    ];
+
+    runtimePaths.forEach(([source, destination]) => {
+        const sourcePath = path.join(threeRoot, source);
+        if (!fs.existsSync(sourcePath)) {
+            throw new Error(`Missing runtime dependency: ${sourcePath}. Run npm install first.`);
+        }
+        copyRecursiveSync(sourcePath, path.join(distDir, destination));
+    });
+
+    const tweenPath = path.join(__dirname, 'node_modules', '@tweenjs', 'tween.js', 'dist', 'tween.umd.js');
+    if (!fs.existsSync(tweenPath)) {
+        throw new Error(`Missing runtime dependency: ${tweenPath}. Run npm install first.`);
+    }
+    copyRecursiveSync(tweenPath, path.join(distDir, 'vendor', 'tween', 'tween.umd.js'));
 }
 
 function copyProjectAssets() {
@@ -196,8 +249,13 @@ function normalizePostContent(post, content, htmlContent) {
     );
 
     updatedHtmlContent = updatedHtmlContent.replace(
-        /src="\.\/assets\//g,
-        `src="/blogs/posts/${post.id}/assets/`
+        /src=(["'])\.\/assets\//g,
+        `src=$1/blogs/posts/${post.id}/assets/`
+    );
+
+    updatedHtmlContent = updatedHtmlContent.replace(
+        /src=(["'])\.\/([0-9]{6}_[A-Za-z0-9_]+)\/assets\//g,
+        'src=$1/blogs/posts/$2/assets/'
     );
 
     updatedHtmlContent = replaceLegacyPostLinks(updatedHtmlContent);
@@ -218,7 +276,7 @@ function generatePostPages() {
 
             const parsedHtml = parseMarkdownWithMath(content, (source) => marked.parse(source));
             const normalizedHtml = normalizePostContent(post, content, parsedHtml);
-            const metaDescription = (post[`subtitle_${lang}`] || post.subtitle_eng || '').substring(0, 160);
+            const metaDescription = (post[`description_${lang}`] || post[`subtitle_${lang}`] || post.description_eng || post.subtitle_eng || '').substring(0, 160);
             const readingTime = calculateReadingTime(normalizedHtml);
             const html = renderPostPage({
                 post,
@@ -305,32 +363,7 @@ function getProjectNav(projectNavItems, currentSlug) {
 }
 
 function generateProjectPages() {
-    const projectsDir = path.join(__dirname, '..', 'projects');
-    if (!fs.existsSync(projectsDir)) {
-        return;
-    }
-
-    const projectEntries = fs.readdirSync(projectsDir, { withFileTypes: true })
-        .filter((entry) => entry.isDirectory())
-        .map((entry) => {
-            const projectDir = path.join(projectsDir, entry.name);
-            const metadataPath = path.join(projectDir, 'project.json');
-            const contentPath = path.join(projectDir, 'content.md');
-
-            if (!fs.existsSync(metadataPath) || !fs.existsSync(contentPath)) {
-                return null;
-            }
-
-            const project = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
-            return {
-                slug: entry.name,
-                projectDir,
-                metadataPath,
-                contentPath,
-                project
-            };
-        })
-        .filter(Boolean);
+    const projectEntries = listProjectEntries();
 
     const projectNavItems = buildProjectNavItems(projectEntries);
 
@@ -360,30 +393,10 @@ function generateProjectPages() {
 
 function generateSitemap() {
     const baseUrl = 'https://hwan-h-heo.io';
-    const urls = [
-        {
-            loc: `${baseUrl}/`,
-            changefreq: 'weekly',
-            priority: '1.0'
-        },
-        {
-            loc: `${baseUrl}/blogs/`,
-            changefreq: 'weekly',
-            priority: '0.9'
-        }
-    ];
-
-    siteData.posts.forEach((post) => {
-        post.languages.forEach((lang) => {
-            const slug = lang === 'eng' ? post.slug : `${post.slug}-kor`;
-            urls.push({
-                loc: `${baseUrl}/blogs/posts/${slug}/`,
-                lastmod: new Date(post.date).toISOString().split('T')[0],
-                changefreq: 'monthly',
-                priority: '0.8'
-            });
-        });
-    });
+    const urls = buildSitemapEntries(siteData).map((entry) => ({
+        ...entry,
+        loc: `${baseUrl}${entry.path}`
+    }));
 
     const lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'];
     urls.forEach((url) => {

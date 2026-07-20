@@ -500,8 +500,6 @@ function renderProjectPage({ project, contentHtml, legacyHtml, projectNav = null
   <link href="../../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
   <link href="../../assets/css/used.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1.9.1/css/academicons.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
   <style>
     table { width: 100%; border-collapse: collapse; }
@@ -542,7 +540,7 @@ function renderProjectPage({ project, contentHtml, legacyHtml, projectNav = null
     <div class="social-links text-center">
       <a href="https://github.com/hwanhuh" class="github"><i class="bi bi-github"></i></a>
       <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin"><i class="bi bi-linkedin"></i></a>
-      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram"><i class="ai ai-google-scholar"></i></a>
+      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram"><i class="bi bi-mortarboard-fill"></i></a>
       <a href="mailto:gjghks950@naver.com" class="google-plus"><i class="bi bi-envelope-fill"></i></a>
     </div>
 

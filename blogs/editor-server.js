@@ -205,6 +205,15 @@ function buildBootstrapPayload() {
             id: post.id,
             title_eng: post.title_eng,
             title_kor: post.title_kor || '',
+            subtitle_eng: post.subtitle_eng || '',
+            subtitle_kor: post.subtitle_kor || '',
+            description_eng: post.description_eng || '',
+            description_kor: post.description_kor || '',
+            tags: Array.isArray(post.tags) ? post.tags : [],
+            cover: post.cover || '',
+            status: post.status || 'published',
+            updated: post.updated || post.date,
+            slug: post.slug || '',
             date: post.date,
             category: post.category,
             series: post.series,
@@ -733,6 +742,12 @@ function sanitizePostInput(rawSiteData, payload) {
     const titleKor = String(post.title_kor || '').trim();
     const subtitleEng = String(post.subtitle_eng || '').trim();
     const subtitleKor = String(post.subtitle_kor || '').trim();
+    const descriptionEng = String(post.description_eng || '').trim();
+    const descriptionKor = String(post.description_kor || '').trim();
+    const cover = String(post.cover || '').trim();
+    const status = String(post.status || '').trim();
+    const updated = String(post.updated || '').trim();
+    const slug = String(post.slug || '').trim();
     if (titleKor) {
         sanitizedPost.title_kor = titleKor;
     }
@@ -741,6 +756,27 @@ function sanitizePostInput(rawSiteData, payload) {
     }
     if (subtitleKor) {
         sanitizedPost.subtitle_kor = subtitleKor;
+    }
+    if (descriptionEng) {
+        sanitizedPost.description_eng = descriptionEng;
+    }
+    if (descriptionKor) {
+        sanitizedPost.description_kor = descriptionKor;
+    }
+    if (cover) {
+        sanitizedPost.cover = cover;
+    }
+    if (status) {
+        sanitizedPost.status = status;
+    }
+    if (updated) {
+        sanitizedPost.updated = updated;
+    }
+    if (slug) {
+        sanitizedPost.slug = slug;
+    }
+    if (Array.isArray(post.tags)) {
+        sanitizedPost.tags = [...new Set(post.tags.map((tag) => String(tag || '').trim()).filter(Boolean))];
     }
 
     const existingPost = rawSiteData.posts.find((item) => item.id === sanitizedPost.id) || null;
@@ -758,6 +794,37 @@ function sanitizePostInput(rawSiteData, payload) {
 
     if (!isValidIsoDate(sanitizedPost.date)) {
         errors.push('Date must be a valid YYYY-MM-DD string.');
+    }
+
+    if (sanitizedPost.updated && !isValidIsoDate(sanitizedPost.updated)) {
+        errors.push('Updated date must be a valid YYYY-MM-DD string.');
+    }
+
+    if (sanitizedPost.updated && sanitizedPost.date && sanitizedPost.updated < sanitizedPost.date) {
+        errors.push('Updated date cannot precede the published date.');
+    }
+
+    if (sanitizedPost.slug && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(sanitizedPost.slug)) {
+        errors.push('Slug must use lowercase words separated by hyphens.');
+    }
+
+    if (sanitizedPost.status && !['published', 'draft'].includes(sanitizedPost.status)) {
+        errors.push('Status must be published or draft.');
+    }
+
+    if ((sanitizedPost.status || originalPost?.status || 'published') === 'published') {
+        if (!(sanitizedPost.slug || originalPost?.slug)) {
+            errors.push('Published posts require a stable slug.');
+        }
+        if (!(sanitizedPost.description_eng || originalPost?.description_eng)) {
+            errors.push('Published posts require an English description.');
+        }
+        if (!(sanitizedPost.cover || originalPost?.cover) || (sanitizedPost.cover || originalPost?.cover) === '/assets/blog_bg.jpeg') {
+            errors.push('Published posts require a post-specific cover image.');
+        }
+        if ((sanitizedPost.tags || originalPost?.tags || []).length === 0) {
+            errors.push('Published posts require at least one tag.');
+        }
     }
 
     if (!POST_CATEGORIES.includes(sanitizedPost.category)) {
@@ -871,7 +938,9 @@ function buildNextSiteData(rawSiteData, sanitizedPayload) {
         featuredPortfolioPosts: [...(rawSiteData.featuredPortfolioPosts || [])]
     };
 
-    const nextPost = { ...sanitizedPayload.post };
+    const nextPost = sanitizedPayload.originalPost
+        ? { ...sanitizedPayload.originalPost, ...sanitizedPayload.post }
+        : { ...sanitizedPayload.post };
     const existingIndex = nextSiteData.posts.findIndex((item) => item.id === nextPost.id);
     if (existingIndex >= 0) {
         nextSiteData.posts[existingIndex] = nextPost;

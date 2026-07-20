@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Blog Editor</title>
     <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link href="../css/used.css" rel="stylesheet" />
     <link href="../css/blog_post_specific.css" rel="stylesheet" />
@@ -120,6 +120,47 @@
                             <label class="field">
                                 <span>Korean subtitle</span>
                                 <input id="subtitle-kor" type="text" placeholder="Optional subtitle" />
+                            </label>
+                        </div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panel-header">
+                            <h2>Publishing</h2>
+                        </div>
+                        <label class="field">
+                            <span>URL slug</span>
+                            <input id="post-slug" type="text" placeholder="stable-post-url" />
+                        </label>
+                        <div class="grid-two">
+                            <label class="field">
+                                <span>Updated</span>
+                                <input id="post-updated" type="date" />
+                            </label>
+                            <label class="field">
+                                <span>Status</span>
+                                <select id="post-status">
+                                    <option value="draft">Draft</option>
+                                    <option value="published">Published</option>
+                                </select>
+                            </label>
+                        </div>
+                        <label class="field">
+                            <span>Tags</span>
+                            <input id="post-tags" type="text" placeholder="3D Generation, Generative AI" />
+                        </label>
+                        <label class="field">
+                            <span>Cover image</span>
+                            <input id="post-cover" type="text" placeholder="/blogs/posts/250101_new_post/assets/cover.png" />
+                        </label>
+                        <label class="field">
+                            <span>English description</span>
+                            <textarea id="description-eng" rows="3" placeholder="Short search and social preview description"></textarea>
+                        </label>
+                        <div id="korean-publishing-fields" class="language-block is-hidden">
+                            <label class="field">
+                                <span>Korean description</span>
+                                <textarea id="description-kor" rows="3" placeholder="검색 및 공유용 짧은 설명"></textarea>
                             </label>
                         </div>
                     </section>

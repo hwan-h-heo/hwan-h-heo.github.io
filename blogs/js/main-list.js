@@ -4,14 +4,15 @@ document.addEventListener('DOMContentLoaded', async function() {
     const notesContainer = document.querySelector('#notes-tab');
     const langToggleButton = document.getElementById('lang-toggle-main');
 
-    const { loadSiteData, getPostTitle, getPostUrl } = window.siteDataClient;
+    const { loadSiteData, getPostTitle, getPostDescription, getPostUrl } = window.siteDataClient;
     const siteData = await loadSiteData();
     const sortedPosts = [...siteData.posts].sort((a, b) => new Date(b.date) - new Date(a.date));
 
     function createPostPreviewHTML(post, lang) {
         const title = getPostTitle(post, lang);
-        const subtitle = post[`subtitle_${lang}`] || post.subtitle_eng || '';
+        const subtitle = getPostDescription(post, lang);
         const seriesTitle = siteData.series[post.series]?.[lang] || siteData.series[post.series]?.eng || 'Series';
+        const tagsHtml = (post.tags || []).map((tag) => `<span class="post-tag">${tag}</span>`).join('');
 
         if (!title) {
             return '';
@@ -19,9 +20,13 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         return `
         <div class="post-preview">
-            <a href="${getPostUrl(post, lang)}">
-                <h3 class="post-title">${title}</h3>
-                ${subtitle ? `<h5 class="post-subtitle">${subtitle}</h5>` : ''}
+            <a href="${getPostUrl(post, lang)}" class="post-card-link">
+                <div class="post-card-cover" style="background-image: url('${post.cover || '/assets/blog_bg.jpeg'}')"></div>
+                <div class="post-card-body">
+                    <h3 class="post-title">${title}</h3>
+                    ${subtitle ? `<h5 class="post-subtitle">${subtitle}</h5>` : ''}
+                    ${tagsHtml ? `<div class="post-tag-row">${tagsHtml}</div>` : ''}
+                </div>
             </a>
             <p class="post-meta">
                 ${seriesTitle} | ${new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}

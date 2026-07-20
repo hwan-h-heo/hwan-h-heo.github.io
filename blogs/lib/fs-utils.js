@@ -5,13 +5,18 @@ function ensureDirSync(dirPath) {
     fs.mkdirSync(dirPath, { recursive: true });
 }
 
-function copyRecursiveSync(src, dest) {
+function copyRecursiveSync(src, dest, options = {}) {
+    const shouldCopy = options.shouldCopy || (() => true);
+    if (!shouldCopy(src)) {
+        return;
+    }
+
     const stats = fs.statSync(src);
 
     if (stats.isDirectory()) {
         ensureDirSync(dest);
         fs.readdirSync(src).forEach((child) => {
-            copyRecursiveSync(path.join(src, child), path.join(dest, child));
+            copyRecursiveSync(path.join(src, child), path.join(dest, child), options);
         });
         return;
     }
@@ -24,4 +29,3 @@ module.exports = {
     copyRecursiveSync,
     ensureDirSync
 };
-

@@ -137,6 +137,11 @@
             'post-date',
             'post-category',
             'post-series',
+            'post-slug',
+            'post-updated',
+            'post-status',
+            'post-tags',
+            'post-cover',
             'language-eng',
             'language-kor',
             'title-eng',
@@ -144,6 +149,9 @@
             'title-kor',
             'subtitle-kor',
             'korean-meta-fields',
+            'description-eng',
+            'description-kor',
+            'korean-publishing-fields',
             'featured-enabled',
             'featured-fields',
             'featured-image',
@@ -211,10 +219,17 @@
             el.postDate,
             el.postCategory,
             el.postSeries,
+            el.postSlug,
+            el.postUpdated,
+            el.postStatus,
+            el.postTags,
+            el.postCover,
             el.titleEng,
             el.subtitleEng,
             el.titleKor,
             el.subtitleKor,
+            el.descriptionEng,
+            el.descriptionKor,
             el.featuredImage,
             el.featuredAlt,
             el.featuredOrder
@@ -292,6 +307,13 @@
             subtitle_eng: '',
             title_kor: '',
             subtitle_kor: '',
+            description_eng: '',
+            description_kor: '',
+            tags: [],
+            cover: '',
+            status: 'draft',
+            updated: new Date().toISOString().slice(0, 10),
+            slug: '',
             featured: false,
             teaserImage: '',
             teaserAlt: '',
@@ -495,11 +517,18 @@
         el.postDate.value = state.metadata.date;
         el.postCategory.value = state.metadata.category;
         el.postSeries.value = state.metadata.series;
+        el.postSlug.value = state.metadata.slug;
+        el.postUpdated.value = state.metadata.updated;
+        el.postStatus.value = state.metadata.status;
+        el.postTags.value = state.metadata.tags.join(', ');
+        el.postCover.value = state.metadata.cover;
         el.languageKor.checked = state.metadata.languages.includes('kor');
         el.titleEng.value = state.metadata.title_eng;
         el.subtitleEng.value = state.metadata.subtitle_eng;
         el.titleKor.value = state.metadata.title_kor;
         el.subtitleKor.value = state.metadata.subtitle_kor;
+        el.descriptionEng.value = state.metadata.description_eng;
+        el.descriptionKor.value = state.metadata.description_kor;
         el.featuredEnabled.checked = Boolean(state.metadata.featured);
         el.featuredImage.value = state.metadata.teaserImage;
         el.featuredAlt.value = state.metadata.teaserAlt;
@@ -511,11 +540,18 @@
         state.metadata.date = el.postDate.value;
         state.metadata.category = el.postCategory.value;
         state.metadata.series = el.postSeries.value;
+        state.metadata.slug = el.postSlug.value.trim();
+        state.metadata.updated = el.postUpdated.value;
+        state.metadata.status = el.postStatus.value;
+        state.metadata.tags = [...new Set(el.postTags.value.split(',').map((tag) => tag.trim()).filter(Boolean))];
+        state.metadata.cover = el.postCover.value.trim();
         state.metadata.languages = el.languageKor.checked ? ['eng', 'kor'] : ['eng'];
         state.metadata.title_eng = el.titleEng.value.trim();
         state.metadata.subtitle_eng = el.subtitleEng.value.trim();
         state.metadata.title_kor = el.titleKor.value.trim();
         state.metadata.subtitle_kor = el.subtitleKor.value.trim();
+        state.metadata.description_eng = el.descriptionEng.value.trim();
+        state.metadata.description_kor = el.descriptionKor.value.trim();
         state.metadata.featured = el.featuredEnabled.checked;
         state.metadata.teaserImage = el.featuredImage.value.trim();
         state.metadata.teaserAlt = el.featuredAlt.value.trim();
@@ -573,6 +609,7 @@
     function renderKoreanFields() {
         const hasKorean = state.metadata.languages.includes('kor');
         el.koreanMetaFields.classList.toggle('is-hidden', !hasKorean);
+        el.koreanPublishingFields.classList.toggle('is-hidden', !hasKorean);
     }
 
     function renderFeatureFields() {
@@ -973,6 +1010,13 @@
             subtitle_eng: metadata.subtitle_eng || '',
             title_kor: metadata.title_kor || '',
             subtitle_kor: metadata.subtitle_kor || '',
+            description_eng: metadata.description_eng || '',
+            description_kor: metadata.description_kor || '',
+            tags: Array.isArray(metadata.tags) ? metadata.tags : [],
+            cover: metadata.cover || '',
+            status: metadata.status === 'published' ? 'published' : 'draft',
+            updated: metadata.updated || metadata.date || new Date().toISOString().slice(0, 10),
+            slug: metadata.slug || '',
             featured: Boolean(metadata.featured),
             teaserImage: metadata.teaserImage || '',
             teaserAlt: metadata.teaserAlt || '',
@@ -1363,6 +1407,13 @@
                 subtitle_eng: state.metadata.subtitle_eng,
                 title_kor: state.metadata.title_kor,
                 subtitle_kor: state.metadata.subtitle_kor,
+                description_eng: state.metadata.description_eng,
+                description_kor: state.metadata.description_kor,
+                tags: [...state.metadata.tags],
+                cover: state.metadata.cover,
+                status: state.metadata.status,
+                updated: state.metadata.updated,
+                slug: state.metadata.slug,
                 date: state.metadata.date,
                 category: state.metadata.category,
                 series: state.metadata.series,
@@ -1397,8 +1448,28 @@
             errors.push('English title is required.');
         }
 
+        if (!payload.post.slug || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(payload.post.slug)) {
+            errors.push('URL slug is required and must use lowercase words separated by hyphens.');
+        }
+
         if (!payload.post.date || !/^\d{4}-\d{2}-\d{2}$/.test(payload.post.date)) {
             errors.push('Date must use YYYY-MM-DD.');
+        }
+
+        if (!payload.post.updated || !/^\d{4}-\d{2}-\d{2}$/.test(payload.post.updated)) {
+            errors.push('Updated date must use YYYY-MM-DD.');
+        }
+
+        if (payload.post.status === 'published') {
+            if (!payload.post.description_eng) {
+                errors.push('Published posts need an English description.');
+            }
+            if (!payload.post.cover || payload.post.cover === '/assets/blog_bg.jpeg') {
+                errors.push('Published posts need a post-specific cover image.');
+            }
+            if (payload.post.tags.length === 0) {
+                errors.push('Published posts need at least one tag.');
+            }
         }
 
         if (!state.bootstrap.categories.includes(payload.post.category)) {
@@ -1509,6 +1580,13 @@
                 subtitle_eng: result.post.subtitle_eng || '',
                 title_kor: result.post.title_kor || '',
                 subtitle_kor: result.post.subtitle_kor || '',
+                description_eng: result.post.description_eng || '',
+                description_kor: result.post.description_kor || '',
+                tags: Array.isArray(result.post.tags) ? result.post.tags : [],
+                cover: result.post.cover || '',
+                status: result.post.status || 'published',
+                updated: result.post.updated || result.post.date,
+                slug: result.post.slug || '',
                 featured: Boolean(result.featured),
                 teaserImage: result.featured ? result.featured.teaserImage : '',
                 teaserAlt: result.featured ? (result.featured.teaserAlt || '') : '',

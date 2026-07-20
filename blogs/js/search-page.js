@@ -17,24 +17,22 @@ document.addEventListener('DOMContentLoaded', async function() {
         return;
     }
 
-    const { loadSiteData, getPostTitle, getPostUrl } = window.siteDataClient;
+    const { loadSiteData, getPostTitle, getPostDescription, getPostUrl } = window.siteDataClient;
     const siteData = await loadSiteData();
     const postContentCache = {};
 
     async function fetchAllPostContents() {
         await Promise.all(siteData.posts.map(async (post) => {
             try {
-                const [korResponse, engResponse] = await Promise.all([
-                    fetch(`../posts/${post.id}/content-kor.md`),
-                    fetch(`../posts/${post.id}/content-eng.md`)
-                ]);
+                const contents = await Promise.all(post.languages.map(async (language) => {
+                    const response = await fetch(`../posts/${post.id}/content-${language}.md`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status} for ${language}`);
+                    }
+                    return response.text();
+                }));
 
-                const [korText, engText] = await Promise.all([
-                    korResponse.ok ? korResponse.text() : '',
-                    engResponse.ok ? engResponse.text() : ''
-                ]);
-
-                postContentCache[post.id] = `${korText}\n${engText}`.toLowerCase();
+                postContentCache[post.id] = contents.join('\n').toLowerCase();
             } catch (error) {
                 console.warn(`Failed to fetch markdown for ${post.id}:`, error);
                 postContentCache[post.id] = '';
@@ -51,14 +49,19 @@ document.addEventListener('DOMContentLoaded', async function() {
         const currentLang = localStorage.getItem('language') || 'eng';
         const resultsHtml = filteredPosts.map((post) => {
             const title = getPostTitle(post, currentLang);
-            const subtitle = post[`subtitle_${currentLang}`] || post.subtitle_eng || '';
+            const subtitle = getPostDescription(post, currentLang);
             const seriesTitle = siteData.series[post.series]?.eng || 'Series';
+            const tagsHtml = (post.tags || []).map((tag) => `<span class="post-tag">${tag}</span>`).join('');
 
             return `
                 <div class="post-preview">
-                    <a href="${getPostUrl(post, currentLang)}">
-                        <h3 class="post-title">${title}</h3>
-                        ${subtitle ? `<h5 class="post-subtitle">${subtitle}</h5>` : ''}
+                    <a href="${getPostUrl(post, currentLang)}" class="post-card-link">
+                        <div class="post-card-cover" style="background-image: url('${post.cover || '/assets/blog_bg.jpeg'}')"></div>
+                        <div class="post-card-body">
+                            <h3 class="post-title">${title}</h3>
+                            ${subtitle ? `<h5 class="post-subtitle">${subtitle}</h5>` : ''}
+                            ${tagsHtml ? `<div class="post-tag-row">${tagsHtml}</div>` : ''}
+                        </div>
                     </a>
                     <p class="post-meta">
                         ${seriesTitle} | ${new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -78,10 +81,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         .filter((post) => {
             const titleMatch = Object.keys(post).some((key) => key.startsWith('title_') && String(post[key]).toLowerCase().includes(searchTerm));
             const subtitleMatch = Object.keys(post).some((key) => key.startsWith('subtitle_') && String(post[key]).toLowerCase().includes(searchTerm));
+            const descriptionMatch = Object.keys(post).some((key) => key.startsWith('description_') && String(post[key]).toLowerCase().includes(searchTerm));
+            const tagMatch = (post.tags || []).some((tag) => tag.toLowerCase().includes(searchTerm));
             const contentMatch = postContentCache[post.id]?.includes(searchTerm);
-            return titleMatch || subtitleMatch || contentMatch;
+            return titleMatch || subtitleMatch || descriptionMatch || tagMatch || contentMatch;
         });
 
     renderSearchResults(filteredPosts);
 });
-

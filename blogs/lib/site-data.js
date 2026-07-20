@@ -17,7 +17,13 @@ const POST_ALLOWED_KEYS = new Set([
     'category',
     'series',
     'languages',
-    'slug'
+    'slug',
+    'description_eng',
+    'description_kor',
+    'tags',
+    'cover',
+    'status',
+    'updated'
 ]);
 
 function createSlug(title) {
@@ -74,6 +80,65 @@ function validatePostShape(post, seriesMap, errors) {
     if (post.series && !seriesMap[post.series]) {
         errors.push(`Post "${post.id}" references unknown series "${post.series}".`);
     }
+
+    ['description_eng', 'description_kor', 'cover', 'status', 'updated', 'slug'].forEach((key) => {
+        validateStringField(post, key, errors, `post "${post.id || 'unknown'}"`, false);
+    });
+
+    if (post.status && !['published', 'draft'].includes(post.status)) {
+        errors.push(`Invalid status "${post.status}" in post "${post.id}".`);
+    }
+
+    if (post.updated && !/^\d{4}-\d{2}-\d{2}$/.test(post.updated)) {
+        errors.push(`Invalid updated date "${post.updated}" in post "${post.id}".`);
+    }
+
+    if (post.updated && post.date && post.updated < post.date) {
+        errors.push(`Updated date precedes published date in post "${post.id}".`);
+    }
+
+    if (post.slug && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(post.slug)) {
+        errors.push(`Invalid slug "${post.slug}" in post "${post.id}".`);
+    }
+
+    if (post.tags !== undefined) {
+        if (!Array.isArray(post.tags)) {
+            errors.push(`"tags" must be an array in post "${post.id}".`);
+        } else {
+            const seenTags = new Set();
+            post.tags.forEach((tag) => {
+                if (typeof tag !== 'string' || !tag.trim()) {
+                    errors.push(`Post "${post.id}" contains an invalid tag.`);
+                } else if (seenTags.has(tag)) {
+                    errors.push(`Post "${post.id}" contains duplicate tag "${tag}".`);
+                }
+                seenTags.add(tag);
+            });
+        }
+    }
+
+    const status = post.status || 'published';
+    if (status === 'published') {
+        ['slug', 'description_eng', 'cover', 'updated'].forEach((key) => {
+            if (!post[key]) {
+                errors.push(`Published post "${post.id}" must define "${key}".`);
+            }
+        });
+        if (post.languages?.includes('kor') && !post.description_kor) {
+            errors.push(`Published post "${post.id}" must define "description_kor" for Korean content.`);
+        }
+        if (!Array.isArray(post.tags) || post.tags.length === 0) {
+            errors.push(`Published post "${post.id}" must define at least one tag.`);
+        }
+        if (post.cover === '/assets/blog_bg.jpeg') {
+            errors.push(`Published post "${post.id}" must use a post-specific cover.`);
+        }
+        if (isExternalUrl(post.cover || '')) {
+            errors.push(`Published post "${post.id}" must use a local cover.`);
+        }
+    }
+
+    validateLocalFileReference(post.cover, errors, `post "${post.id || 'unknown'}"`, 'cover');
 }
 
 function validateStringField(item, key, errors, label, required = true) {
@@ -161,6 +226,9 @@ function validatePortfolioProjectShape(project, index, errors) {
 
     validateLocalFileReference(project.url, errors, label, 'url', { allowGeneratedProjectRoute: true });
     ['image', 'gif', 'video', 'poster'].forEach((key) => {
+        if (project[key] && isExternalUrl(project[key])) {
+            errors.push(`"${key}" in ${label} must be local.`);
+        }
         validateLocalFileReference(project[key], errors, label, key);
     });
 }
@@ -189,11 +257,19 @@ function validateTalkShape(talk, index, errors) {
 }
 
 function normalizeSiteData(rawSiteData) {
-    const posts = rawSiteData.posts.map((post) => ({
-        ...post,
-        languages: [...post.languages],
-        slug: post.slug || createSlug(post.title_eng || post.id)
-    })).sort((a, b) => new Date(b.date) - new Date(a.date));
+    const posts = rawSiteData.posts
+        .filter((post) => post.status !== 'draft')
+        .map((post) => ({
+            ...post,
+            languages: [...post.languages],
+            tags: Array.isArray(post.tags) ? [...post.tags] : [],
+            status: post.status || 'published',
+            description_eng: post.description_eng || post.subtitle_eng || '',
+            description_kor: post.description_kor || post.subtitle_kor || post.description_eng || post.subtitle_eng || '',
+            cover: post.cover || '/assets/blog_bg.jpeg',
+            updated: post.updated || post.date,
+            slug: post.slug || createSlug(post.title_eng || post.id)
+        })).sort((a, b) => new Date(b.date) - new Date(a.date));
 
     const postById = Object.fromEntries(posts.map((post) => [post.id, post]));
     const slugMapping = Object.fromEntries(posts.map((post) => [post.id, post.slug]));
@@ -279,6 +355,8 @@ function validateSiteData(rawSiteData) {
         }
         if (!item.teaserImage) {
             errors.push(`Featured portfolio post "${item.id}" is missing teaserImage.`);
+        } else if (isExternalUrl(item.teaserImage)) {
+            errors.push(`Featured portfolio post "${item.id}" must use a local teaserImage.`);
         } else {
             validateLocalFileReference(item.teaserImage, errors, `featured portfolio post ${item.id}`, 'teaserImage');
         }
