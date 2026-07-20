@@ -67,7 +67,7 @@
       "id": "resume",
       "type": "resume",
       "title": "Resume",
-      "cvUrl": "https://raw.githubusercontent.com/hwan-h-heo/hwan-h-heo.io/main/assets/Hwan_Heo_s_Curriculum_Vitae.pdf",
+      "cvUrl": "/assets/Hwan_Heo_s_Curriculum_Vitae.pdf",
       "columns": [
         {
           "sections": [

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://hwan-h-heo.io/sitemap.xml
+Sitemap: https://hwan-h-heo.github.io/sitemap.xml
