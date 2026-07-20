@@ -94,8 +94,8 @@ Key observations from the comparative study:
 <th>VGGSfM</th>
 </tr>
 <tr>
-<td><img src="https://github.com/hwanhuh/Radiance-Fields-from-VGGSfM-Mast3r/raw/main/assets/pen_sparse_mast3r.PNG" alt="Pen Sparse MASt3R" style="max-width: 100%; height: auto;"/></td>
-<td><img src="https://github.com/hwanhuh/Radiance-Fields-from-VGGSfM-Mast3r/raw/main/assets/pen_sparse_vggsfm.PNG" alt="Pen Sparse VGGSfM" style="max-width: 100%; height: auto;"/></td>
+<td><img src="assets/remote-1d89c78ffe52.png" alt="Pen Sparse MASt3R" style="max-width: 100%; height: auto;"/></td>
+<td><img src="assets/remote-bd0f5e98c13f.png" alt="Pen Sparse VGGSfM" style="max-width: 100%; height: auto;"/></td>
 </tr>
 </table>
 
@@ -107,8 +107,8 @@ Key observations from the comparative study:
 <th>VGGSfM</th>
 </tr>
 <tr>
-<td><img src="https://github.com/hwanhuh/Radiance-Fields-from-VGGSfM-Mast3r/raw/main/assets/pen_sparse_mast3r_2dgs.gif" alt="Pen Sparse MASt3R 2DGS" style="max-width: 100%; height: auto;"/></td>
-<td><img src="https://github.com/hwanhuh/Radiance-Fields-from-VGGSfM-Mast3r/raw/main/assets/pen_sparse_vggsfm_2dgs.gif" alt="Pen Sparse VGGSfM 2DGS" style="max-width: 100%; height: auto;"/></td>
+<td><img src="assets/remote-de64f4440a7f.gif" alt="Pen Sparse MASt3R 2DGS" style="max-width: 100%; height: auto;"/></td>
+<td><img src="assets/remote-45b882ad7784.gif" alt="Pen Sparse VGGSfM 2DGS" style="max-width: 100%; height: auto;"/></td>
 </tr>
 </table>
 

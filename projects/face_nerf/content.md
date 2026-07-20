@@ -30,7 +30,7 @@ In traditional neural radiance field (NeRF) setups, monocular portrait synthesis
 
 ### Fast Feed-Forward Face Blendshape Prediction
 
-![Image](https://zielon.github.io/assets/img/mica/teaser.jpg)
+![Image](assets/remote-3ae2543678b9.jpg)
 
 To efficiently estimate the 3D Morphable Model (3DMM) parameters, we implemented a feed-forward approach.
 While methods like MICA utilize a frame-wise, mesh-based differentiable rendering pipeline for parameter estimation, this technique, though accurate, is computationally expensive, requiring over 15 hours of preprocessing for just 3-5 minutes of video.

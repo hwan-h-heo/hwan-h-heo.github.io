@@ -31,7 +31,7 @@ author: Hwan Heo
 
 하나는 노이즈에서부터 점차 이미지를 생성해나가는 **Diffusion Model** 이고, 다른 하나는 노이즈와 이미지를 직접적으로 잇는 **Flow** 기반 모델이다.
 
-<img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/1ab12865-9dad-43b1-b8cc-9bdefeb7bbf0/image.png'>
+<img style='width:100%' src='./assets/remote-37fd8aba8f3c.png'>
 
 특히 Diffusion Model 은 복잡한 **Stochastic Differential Equation (SDE)** 을 기반으로 한다. 이는 마치 입자가 무작위적인 힘에 의해 이리저리 흔들리며 움직이는 '[Brownina Motion](https://en.wikipedia.org/wiki/Brownian_motion)' 처럼, 구불구불하고 예측 불가능한 경로를 통해 샘플을 생성하는 방식이다. 이는 뛰어난 성능을 보였지만, 본질적으로 수많은 단계를 거쳐야 하기 때문에 느린 생성 속도라는 단점을 안고 있었다.
 
@@ -124,7 +124,7 @@ $$
 이 trajectory 위에서 샘플 $x_0$ 은 시간 $t=0$ 에서의 위치이고, 우리가 원하는 데이터 $x_1$ 는 시간 $t=1$ 에서의 최종 위치가 된다.
 
 
-<img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/5ee390a6-efc6-4002-902b-ad618208f591/image.png'>
+<img style='width:100%' src='./assets/remote-f8c5025b3c67.png'>
 
 즉, transformation $\phi$ 는 다음과 같이 multiple function 의 composition 으로 표현되고, 
 $$
@@ -372,7 +372,7 @@ $$
 -   **$t=0$:** $\mu_0(x_1) = 0, \sigma_0(x_1) = 1$
 -   **$t=1$:** $\mu_1(x_1) = x_1, \sigma_1(x_1) = \sigma_{min} \approx 0$
 
-<img style='width:100%' src='https://mlg.eng.cam.ac.uk/blog/assets/images/flow-matching/representative.gif'>
+<img style='width:100%' src='./assets/remote-58cb161215e2.gif'>
 
 이는 diffusion 의 **Forward Process $q(x_t|x_0)$** 와 정확히 같은 개념적 구조를 가진다. DDPM 이 $x_0$ 에서 noise 로 가는 경로를 정의했다면, CFM 은 반대로 target $x_1$을 고정하고 그곳으로 향하는 가상의 경로를 정의하는 것이라고 해석할 수 있다. 
 
@@ -393,7 +393,7 @@ _이 때, 주어진 conditional probability 를 만족하는 무수히 많은 co
 
 | path 1 | path 2 |
 | --- | --- | 
-| <img style='width:100%' src='https://mlg.eng.cam.ac.uk/blog/assets/images/flow-matching/forward_samples-one-color-3.png'> | <img style='width:100%' src='https://mlg.eng.cam.ac.uk/blog/assets/images/flow-matching/forward_samples_ot-one-color.png'>|
+| <img style='width:100%' src='./assets/remote-921b9ad95d66.png'> | <img style='width:100%' src='./assets/remote-c74959385540.png'>|
 
 ---
 
@@ -456,7 +456,7 @@ $$
 
 이는 알 수 없는 $u_t$에 대한 regression problem 을, 우리가 직접 설계하여 정답을 알고 있는 $u_t(\cdot|x_1)$에 대한 regression problem 로 완벽하게 대체할 수 있음을 의미한다.
 
-<img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/a427e259-aea4-4fd2-bc2e-c79ecccec7fa/image.png'>
+<img style='width:100%' src='./assets/remote-63e35c0aefb1.png'>
 
 
 ---
@@ -473,7 +473,7 @@ $$
 
 이는 ***standard normal distribution (base distribution, $p_0$)에서 샘플링한 노이즈 $x_0$ 를 시간 $t$의 target distribution $p_t(x|x_1)$ 위의 한 점 $x_t$ 로 deterministic 하게 매핑하는 함수***이다. 
 
-<img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/7aa8314d-5da3-49f1-a1d7-9c61519ccf6f/image.png'>
+<img style='width:100%' src='./assets/remote-d2c5fec78d21.png'>
 
 이 덕분에 우리는 복잡한 분포에서 샘플링할 필요 없이, 간단한 덧셈과 곱셈만으로 학습에 필요한 데이터 $x_t$를 생성할 수 있다.
 
@@ -481,7 +481,7 @@ $$
 
 ### 3.2. Final Training Algorithm
 
-<img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/596d4307-1517-4089-b569-532cf45f5711/image.png'>
+<img style='width:100%' src='./assets/remote-eb0c00175b28.png'>
 
 
 이 모든 과정을 종합하면, 최종 학습 알고리즘은 다음과 같이 단순해진다.
@@ -499,7 +499,7 @@ $$
 
 이 **_'두 점을 잇는 deterministic path'_** 라는 아이디어는 DDIM 의 핵심 통찰과도 맞닿아 있으며, Flow Matching 은 이를 학습 패러다임 자체에 녹여내어 생성 모델의 학습 효율성을 극적으로 끌어올렸다.
 
-<img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/bbb4577e-b79c-421a-a64a-249fc3870f45/image.png'>
+<img style='width:100%' src='./assets/remote-50de32e5117c.png'>
 
 
 ---
@@ -533,7 +533,7 @@ $$
 마지막으로 Rectified Flow 은 또다른 장점이 존재한다. 
 
 한 번의 학습으로 얻어진 coupling $(Z_0, Z_1)$ 은 초기 노이즈와 데이터의 독립적인 coupling $(X_0, X_1)$ 보다 이미 훨씬 정돈된 (less entangled) 상태이다. 만약 우리가 이 $(Z_0, Z_1)$ 을 새로운 '데이터'로 삼아 다시 한번 Rectified Flow 를 학습시키면 어떻게 될까? Rectified Flow 연구진은 이 _**'Reflow'**_ 과정을 반복할수록 샘플들의 이동 경로가 기하급수적으로 직선에 가까워짐을 보였다.
-<img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/a8976100-56f6-44c7-8d4c-5c478765acf4/image.png'>
+<img style='width:100%' src='./assets/remote-8c73a4d78896.png'>
 
 
 이는 단 몇 번의 반복만으로도 거의 완벽한 직선 경로를 학습할 수 있다는 의미이며, 생성 과정에서 필요한 ODE 스텝 수를 획기적으로 줄여 (심지어 단 한 스텝으로도) 매우 빠른 샘플링을 가능하게 한다.
@@ -560,7 +560,7 @@ $$
 
 먼저 [optimal transport](https://en.wikipedia.org/wiki/Transportation_theory_(mathematics)) 를 직관적으로 이해해보자. 여기 흙이 쌓여있는 언덕 ($X$, 소스 분포)이 있고, 이 흙을 모두 파내서 어딘가에 있는 구덩이 ($Y$, 타겟 분포)를 메워야 한다고 상상해보자.
 
-<img style='width:100%' src="https://velog.velcdn.com/images/gjghks950/post/61bc7892-6d30-4492-868d-411503b39fea/image.png" width="100%">
+<img style='width:100%' src="./assets/remote-526387c8d0ca.png" width="100%">
 
 이때 "가장 효율적으로" 흙을 옮기려면 어떻게 해야 할까? 
 
@@ -595,7 +595,7 @@ $$
 
 유튜브 veritasium 에 action 에 대해서 정말 훌륭하게 설명하는 영상이 있으므로 참고하길 바란다: [영상 link](https://www.youtube.com/watch?v=Q10_srZ-pbs&t=1658s)
 
-<img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/253304cd-36b1-4d87-a4f5-10e9906b00b8/image.png'>
+<img style='width:100%' src='./assets/remote-914bee69f2e3.png'>
 
 - [Fermat's Principle](https://en.wikipedia.org/wiki/Fermat%27s_principle) 로 알려진 빛의 굴절 현상도 (거리가 아닌 시간 최소화) Least Action Principle 의 한 예이다. 
 
@@ -750,7 +750,7 @@ $$
 {v_t(x) = -\nabla \phi(x, t)}
 $$
 
-<img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/d1b2b608-cd74-4b7e-b215-c7e0a5aaf7b1/image.png'>
+<img style='width:100%' src='./assets/remote-2bbef7285be8.png'>
 - Vector field (right) and corresponding scalar potential (left).
 
 **Density $p$ 에 대한 functional derivative**
@@ -815,7 +815,7 @@ $$
 Action 을 최소화하고 continuity equation 을 만족하는 최적의 흐름을 따르는 모든 입자의 **가속도는 0** 이다. 이는 각 입자가 시작점 $z_0$에서 도착점 $z_1$까지 **등속 직선 운동**을 한다는 것을 수학적으로 증명한다.
 
 이것이 바로 Rectified Flow가 두 분포의 샘플 $z_0, z_1$을 뽑아 그 사이를 잇는 **직선 경로**를 학습의 목표로 삼는 강력한 이론적 배경이다. 모델이 학습하는 속도 벡터 $$v = z_1 - z_0$$는 이 최적 경로의 속도장에 해당한다.
-<img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/ca65945c-c165-4ce3-93a8-04431b02e37f/image.png'>
+<img style='width:100%' src='./assets/remote-40629d4b233a.png'>
 
 
 따라서 Rectified Flow가 채택한 '직선 경로' $z_t = (1-t)z_0 + t z_1$ 는 임의의 선택이 아니라, **물리 법칙과 수학적 최적화에 근거한 가장 자연스럽고 효율적인 경로**라고 해석할 수 있다.

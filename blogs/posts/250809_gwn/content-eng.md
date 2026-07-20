@@ -136,7 +136,7 @@ Here, $\theta_i$ is the signed angle formed by two consecutive vertices $c_i, c_
 Winding Number can be immediately generalized to 3D. In this case, the **angle** in 2D space is replaced by the **solid angle, ($\Omega$)** in 3D. 
 The solid angle is a measure of how much space a surface occupies when viewed from a point.
 
-<img src='https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Angle_solide_coordonnees.svg/500px-Angle_solide_coordonnees.svg.png' width=40%>
+<img src='./assets/remote-74dfc1934801.png' width=40%>
 
 The winding number of a closed surface $S$ with respect to point $p$ is defined as the total solid angle subtended by $S$ at $p$, divided by the solid angle of the entire sphere, $4\pi$.
 

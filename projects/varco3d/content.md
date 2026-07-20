@@ -81,14 +81,14 @@ To avoid the cost of generating high-resolution active voxels from scratch, I pr
 
 | Coarse Mesh | Voxelized Active Structure |
 | --- | --- |
-| ![Coarse mesh](https://velog.velcdn.com/images/gjghks950/post/cce0d145-7f64-4b44-b7b5-df55bd03dccf/image.png) | ![Voxelized structure](https://velog.velcdn.com/images/gjghks950/post/045698e6-b168-49e1-a163-e273b44ad68f/image.png) |
+| ![Coarse mesh](assets/remote-06671f65972d.png) | ![Voxelized structure](assets/remote-82d7ccc46efd.png) |
 
 For this stage, I implemented a CUDA kernel for parallel mesh-to-voxel distance computation.
 This reduced the pipeline from coarse mesh generation to active voxel generation to **under 5 seconds**, making the sparse voxel refinement direction more practical for service-oriented inference.
 
 The resulting sparse voxel-based model was presented internally as the VARCO 3D 1.0-preview direction.
 
-![VARCO 3D 1.0-preview result](https://velog.velcdn.com/images/gjghks950/post/febf339b-fb85-4cd6-b3cc-2272b4f304b1/image.png)
+![VARCO 3D 1.0-preview result](assets/remote-dec1b1acbb14.png)
 
 ## VecSet-Lattice Refinement
 
@@ -104,7 +104,7 @@ In this setup:
 
 | Coarse Mesh | Voxel Query | Fine Mesh |
 | --- | --- | --- |
-| ![Coarse mesh](https://velog.velcdn.com/images/gjghks950/post/b583be7b-4b38-4247-8d14-e7a9f2d04b8e/image.png){.varco-lattice-img} | ![Voxel query](https://velog.velcdn.com/images/gjghks950/post/6d8d2b6b-6c51-425c-b313-f931136437b2/image.png){.varco-lattice-img} | ![Fine mesh](https://velog.velcdn.com/images/gjghks950/post/e0b5cbcf-b3b5-4cf7-a21c-cc1d6b273b11/image.png){.varco-lattice-img} |
+| ![Coarse mesh](assets/remote-5cb2a959b9d1.png){.varco-lattice-img} | ![Voxel query](assets/remote-9ca32db34e84.png){.varco-lattice-img} | ![Fine mesh](assets/remote-2c37d81fd55d.png){.varco-lattice-img} |
 
 This refinement direction showed a major training-efficiency improvement.
 Where the earlier VecSet DiT setup took much longer to converge, the structure-aware DiT with voxel-query conditioning converged in roughly one day in the reported development setting.
@@ -113,7 +113,7 @@ Where the earlier VecSet DiT setup took much longer to converge, the structure-a
 
 The VecSet-Lattice direction showed detail comparable to or better than the sparse voxel preview while producing more robust mesh topology and fewer artifacts.
 
-![VARCO 3D sparse voxel vs VecSet-Lattice comparison](https://velog.velcdn.com/images/gjghks950/post/46cd00b9-dff6-4102-9c18-d333214b72e0/image.png){width=88%}
+![VARCO 3D sparse voxel vs VecSet-Lattice comparison](assets/remote-eb6322f90365.png){width=88%}
 
 ## Result
 

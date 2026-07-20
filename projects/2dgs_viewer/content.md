@@ -52,7 +52,9 @@ This project addresses the gap in readily available tools for interacting with 2
 
 :::{.viewer-feature-grid .viewer-feature-grid-2}
 :::{.viewer-feature-card data-aos="fade-up"}
-![Rendering Features](https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_train.gif){.feature-img .lazy-image style="margin-bottom:0.7rem"}
+<video class="feature-img" autoplay muted loop playsinline preload="metadata" aria-label="Rendering mode controls in the 2D Gaussian Splatting viewer">
+    <source src="assets/rendering-suite.mp4" type="video/mp4">
+</video>
 
 ##### Advanced Rendering Suite
 
@@ -60,7 +62,9 @@ To enable comprehensive analysis, the viewer supports a diverse set of rendering
 
 :::
 :::{.viewer-feature-card data-aos="fade-up" data-aos-delay="100"}
-![Training Features](https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_train2.gif){.feature-img .lazy-image style="margin-bottom:0.7rem"}
+<video class="feature-img" autoplay muted loop playsinline preload="metadata" aria-label="Interactive 2D Gaussian Splatting training workflow">
+    <source src="assets/training-workflow.mp4" type="video/mp4">
+</video>
 
 ##### Integrated Training Capability
 
@@ -76,7 +80,9 @@ For a more seamless workflow, the viewer supports training functionality directl
 
 :::{.viewer-feature-grid .viewer-feature-grid-3}
 :::{.viewer-feature-card data-aos="fade-up"}
-![General Features](https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_general_opt.gif){.feature-img .lazy-image style="margin-bottom:0.7rem"}
+<video class="feature-img" autoplay muted loop playsinline preload="metadata" aria-label="General viewer controls and crop box tools">
+    <source src="assets/general-controls.mp4" type="video/mp4">
+</video>
 
 ##### Intuitive General Controls
 
@@ -84,7 +90,9 @@ The viewer features user-friendly general controls, including Render Type select
 
 :::
 :::{.viewer-feature-card data-aos="fade-up" data-aos-delay="100"}
-![Edit Features](https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_edit_opt.gif){.feature-img .lazy-image style="margin-bottom:0.7rem"}
+<video class="feature-img" autoplay muted loop playsinline preload="metadata" aria-label="Splat editing and mesh export tools">
+    <source src="assets/editing-and-export.mp4" type="video/mp4">
+</video>
 
 ##### Interactive Editing and Mesh Export
 
@@ -92,7 +100,9 @@ Users can directly modify and save splats within the viewer.  Also, the implemen
 
 :::
 :::{.viewer-feature-card data-aos="fade-up" data-aos-delay="200"}
-![Transform Features](https://github.com/hwanhuh/2D-GS-Viser-Viewer/raw/main/assets/viser_transform_opt.gif){.feature-img .lazy-image style="margin-bottom:0.7rem"}
+<video class="feature-img" autoplay muted loop playsinline preload="metadata" aria-label="Rigid transformation controls for Gaussian Splatting scenes">
+    <source src="assets/rigid-transform.mp4" type="video/mp4">
+</video>
 
 ##### Rigid Transformation Capabilities
 
