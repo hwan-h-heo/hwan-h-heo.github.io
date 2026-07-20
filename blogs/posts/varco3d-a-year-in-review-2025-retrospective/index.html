@@ -4,29 +4,30 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="A technical retrospective on recent 3D generative AI systems" />
-    <meta name="keywords" content="post, 3d-generation, 3D graphics, computer vision, machine learning" />
+    <meta name="keywords" content="post, 3d-generation, 3D Generation, Generative AI, 3D graphics, computer vision, machine learning" />
     <meta name="author" content="Hwan Heo" />
     <link rel="canonical" href="https://hwan-h-heo.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://hwan-h-heo.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" />
     <meta property="og:title" content="Varco3D: A Year in Review — 2025 Retrospective" />
     <meta property="og:description" content="A technical retrospective on recent 3D generative AI systems" />
-    <meta property="og:image" content="https://velog.velcdn.com/images/gjghks950/post/c6ffdcc4-0f99-4778-92a9-6ffaba60cf6f/image.gif" />
+    <meta property="og:image" content="https://hwan-h-heo.io/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif" />
     <meta property="og:site_name" content="HwanHeo's Blog" />
     <meta property="article:published_time" content="2026-01-15T00:00:00.000Z" />
+    <meta property="article:modified_time" content="2026-01-15T00:00:00.000Z" />
     <meta property="article:author" content="Hwan Heo" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://hwan-h-heo.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" />
     <meta name="twitter:title" content="Varco3D: A Year in Review — 2025 Retrospective" />
     <meta name="twitter:description" content="A technical retrospective on recent 3D generative AI systems" />
-    <meta name="twitter:image" content="https://velog.velcdn.com/images/gjghks950/post/c6ffdcc4-0f99-4778-92a9-6ffaba60cf6f/image.gif" />
+    <meta name="twitter:image" content="https://hwan-h-heo.io/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif" />
     <script type="application/ld+json">
     {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   "headline": "Varco3D: A Year in Review — 2025 Retrospective",
   "description": "A technical retrospective on recent 3D generative AI systems",
-  "image": "https://velog.velcdn.com/images/gjghks950/post/c6ffdcc4-0f99-4778-92a9-6ffaba60cf6f/image.gif",
+  "image": "https://hwan-h-heo.io/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif",
   "author": {
     "@type": "Person",
     "name": "Hwan Heo",
@@ -56,15 +57,14 @@
     <script type="importmap">
         {
             "imports": {
-                "three": "https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.module.js",
-                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.150.0/examples/jsm/",
+                "three": "/vendor/three/build/three.module.js",
+                "three/addons/": "/vendor/three/examples/jsm/",
                 "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
             }
         }
     </script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/25.0.0/tween.umd.js"></script>
-    <script src="https://use.fontawesome.com/releases/v6.5.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="/vendor/tween/tween.umd.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
@@ -72,12 +72,11 @@
     <link href="/blogs/css/blog_post_specific.css" rel="stylesheet" />
     <link href="/blogs/css/code-copy.css" rel="stylesheet" />
     <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1.9.1/css/academicons.min.css">
+    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 
     <style>
         pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; font-size: 0.9rem !important; }
@@ -87,6 +86,8 @@
         table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; }
         th { width: 15%; background-color: #f2f2f2; }
+        .post-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
+        .post-tags span { display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,0.6); color: #fff; border-radius: 999px; padding: 0.16rem 0.55rem; font-size: 0.72rem; background: rgba(0,0,0,0.18); }
     </style>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
@@ -102,7 +103,7 @@
         <div class="container px-4 px-lg-5">
             <a class="navbar-brand" href="/blogs/">Blog Home</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
-                Menu <i class="fas fa-bars"></i>
+                Menu <i class="bi bi-list"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
@@ -112,7 +113,7 @@
         </div>
     </nav>
 
-    <header class="masthead" style="background-image: url('/assets/image_fx_.jpg')">
+    <header class="masthead" style="background-image: url('/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif')">
         <div class="container position-relative px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-7">
@@ -124,6 +125,7 @@
                             <span style="margin: 0 8px;">•</span>
                             <i class="bi bi-clock" style="margin-right: 4px;"></i>20 min read
                         </span>
+                        <div class="post-tags"><span>3D Generation</span><span>Generative AI</span></div>
                         <hr/>
                     </div>
                 </div>
@@ -154,7 +156,7 @@
 
 <h2 id="toc-heading-0">Introduction</h2>
 <p>I have never been particularly adept at documenting personal reflections. Nevertheless, 2025 brought far too many changes to dismiss as merely another year passing. It was a year in which I experienced the sensation of my life&#39;s trajectory being abruptly twisted—both professionally and personally. In particular, the spin-off of &#39;NC AI&#39; as an independent entity and the technical and organizational upheaval I encountered throughout that process became a defining catalyst that fundamentally redefined the direction of my work. I would like to begin this piece by reflecting on the year alongside that record.</p>
-<img src='https://velog.velcdn.com/images/gjghks950/post/c6ffdcc4-0f99-4778-92a9-6ffaba60cf6f/image.gif' width=60%>
+<img src='/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif' width=60%>
 
 <ul>
 <li><em>Generated by Varco3D, NC AI&#39;s proprietary 3D Generative Model</em></li>
@@ -176,12 +178,12 @@
 <ol>
 <li><strong>Saturated Color</strong>: Due to the use of high CFG scale to enforce mode seeking</li>
 <li><strong>Janus Problem (multi-face problem)</strong>: Frontal bias of 2D models &amp; lack of multi-view consistency
-<img src="https://velog.velcdn.com/images/gjghks950/post/9c770a68-fb0e-490e-9121-ff82e9556a0d/image.png" alt=""></li>
+<img src="/blogs/posts/260115_Varco3D/assets/remote-a41163ba3c80.png" alt=""></li>
 <li><strong>Slow speed</strong>: Because generating an asset requires hundreds of 2D model inferences while updating NeRF or 3D Gaussian Splatting (GS)</li>
 <li><strong>Noisy Geometry</strong></li>
 </ol>
 <p>As SDS research progressed, issues like color saturation and the Janus problem were somewhat alleviated, but geometric quality and speed remained challenging. In particular, even the results of &#39;Dreamcraft3D&#39;—which was SOTA at the time in 2024—showed dismal geometry quality when converted to polygonal mesh, starkly demonstrating SDS&#39;s limitations.</p>
-<img src='https://velog.velcdn.com/images/gjghks950/post/c8b109b4-eece-4d87-80fd-14eebfc3f114/image.png' width=70%>
+<img src='/blogs/posts/260115_Varco3D/assets/remote-f1d893b774d4.png' width=70%>
 
 <p>The cause of these problems can be traced to SDS&#39;s optimization objective.</p>
 <p>
@@ -210,7 +212,7 @@ $$
 <iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/HvyPxxDzrwo?si=1A8HVOcStAQE4rAS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 <p>This approach involved rendering a given mesh as depth and normal maps from multiple angles, then using ControlNet to generate multi-view images and back-projecting them onto the mesh.</p>
-<img src='https://velog.velcdn.com/images/gjghks950/post/5791f4d3-96f1-430f-a768-f17078d27b8d/image.png' width=50%>
+<img src='/blogs/posts/260115_Varco3D/assets/remote-d832175607cd.png' width=50%>
 
 <ul>
 <li><em>Visualization of multi-view images back-projection on mesh</em></li>
@@ -219,18 +221,18 @@ $$
 <hr>
 <h3 id="toc-heading-4">1.3 Beyond SDS; Native 3D Generation</h3>
 <p>Around that time, on another axis of 3D generation research, 3D diffusion model research using 3D Native VAE was expanding. This approach, represented by <strong>&#39;VecSet VAE,&#39;</strong> is a VAE structure that compresses point clouds sampled from polygonal meshes into a latent space and then reconstructs an SDF field from that space. (For details, refer to <a href="https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation/">The Era of 3D Generative Models</a>)</p>
-<p><img src="https://velog.velcdn.com/images/gjghks950/post/8dface2a-a920-4884-830a-893bfe9aac18/image.png" alt=""></p>
+<p><img src="/blogs/posts/260115_Varco3D/assets/remote-8cd489d1938b.png" alt=""></p>
 <ul>
 <li><em>ShapeVAE illustration</em></li>
 </ul>
 <p>Through such ShapeVAE, training a Diffusion Model or Flow Matching model from a latent space that compresses meshes with hundreds of thousands of faces into roughly 2K–8K token length is the basic framework of <strong>&#39;3D Native Generative Models.&#39;</strong></p>
-<p><img src="https://velog.velcdn.com/images/gjghks950/post/0dbcb900-9bc1-429a-83e5-ab9bbb6f6149/image.png" alt=""></p>
+<p><img src="/blogs/posts/260115_Varco3D/assets/remote-5e3e4b4b19ce.png" alt=""></p>
 <ul>
 <li>Sample results from <a href="https://nju-3dv.github.io/projects/Direct3D/">Direct3D</a>, one of the 3D DiT models trained on ShapeVAE</li>
 </ul>
 <p>I judged that by combining this 3D native geometry generation research with the ideas from Texture Copilot, it would be possible to build a complete pipeline that circumvents SDS&#39;s chronic problems. Based on this belief, at the end of 2024, I undertook the CaPa project, which involved directly training ShapeVAE and DiT models, as well as designing attention modules for multi-view generation to solve the Janus problem in texturing.</p>
 <p><a href="https://ncsoft.github.io/CaPa/"><strong>CaPa Project Page</strong></a>
-<img src='https://velog.velcdn.com/images/gjghks950/post/4b0b7f5b-9ed7-49f3-891e-786aaa7df2c6/image.png' width=70%></p>
+<img src='/blogs/posts/260115_Varco3D/assets/remote-329e04631f27.png' width=70%></p>
 <p>Working on this project, I became convinced that optimization-based 3D generation methodologies would eventually reach their limits. DiT based on ShapeVAE is a feed-forward method, making it much faster for asset generation than SDS, and scaling up the DiT model size allows extending the success of scaling laws to the 3D domain.</p>
 <hr>
 <h2 id="toc-heading-5">2. Pursue SOTA: 3D Sovereign AI</h2>
@@ -255,8 +257,8 @@ $$
 </tr>
 </thead>
 <tbody><tr>
-<td><img src='https://velog.velcdn.com/images/gjghks950/post/a242006f-8df6-436a-b2e1-73554fceaa6a/image.gif' width=100%></td>
-<td><img src='https://velog.velcdn.com/images/gjghks950/post/1dae42a8-40a7-41f0-86e2-e017540d2c6b/image.gif' width=100%></td>
+<td><img src='/blogs/posts/260115_Varco3D/assets/remote-2eb29116fc96.gif' width=100%></td>
+<td><img src='/blogs/posts/260115_Varco3D/assets/remote-1798f8300291.gif' width=100%></td>
 </tr>
 </tbody></table>
 <hr>
@@ -271,8 +273,8 @@ $$
 </tr>
 </thead>
 <tbody><tr>
-<td><img src='https://velog.velcdn.com/images/gjghks950/post/aeb6614c-ee1f-443d-979b-e9b2686035ad/image.png' width=500px></td>
-<td><img src='https://velog.velcdn.com/images/gjghks950/post/e0425769-0bbb-4d93-8a3e-9f0a5360fb36/image.png' width=490px></td>
+<td><img src='/blogs/posts/260115_Varco3D/assets/remote-f3fb6adec58f.png' width=500px></td>
+<td><img src='/blogs/posts/260115_Varco3D/assets/remote-b7e8fe7f5d7e.png' width=490px></td>
 </tr>
 </tbody></table>
 <p>At that time, observing Hunyuan 3D 2.5—a 10B-scale model released before Sparc3D—I believed that high-quality mesh generation was a domain achievable only through scaling laws.</p>
@@ -280,7 +282,7 @@ $$
 <blockquote>
 <p><em><strong>Why does such a difference arise?</strong></em></p>
 </blockquote>
-<p><img src="https://velog.velcdn.com/images/gjghks950/post/5dd57129-4236-4e6c-a314-0bf9db58ab94/image.png" alt=""></p>
+<p><img src="/blogs/posts/260115_Varco3D/assets/remote-3cf490792ce8.png" alt=""></p>
 <ul>
 <li><em>Reconstruction of Sparc3D&#39;s inference pipeline illustration</em></li>
 </ul>
@@ -297,7 +299,7 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
 <p><em>&#39;Who will be responsible for generating active voxels?&#39;</em></p>
 <p>As mentioned earlier, sparse voxel-based 3D generation models are essentially 3D SR models, so a method was needed to generate the &#39;input for SR&#39;—that is, approximate global shape information.</p>
 <p>Trellis, which pioneered the direction of sparse voxel-based 3D generation, uses a separately designed model for this purpose. However, to use this model for mesh generation at resolutions of $1024^3$ or higher rather than the existing $256^3$, the resolution of active voxels also needed to be raised to the $128^3$ level, which caused serious computational issues.</p>
-<img src='https://velog.velcdn.com/images/gjghks950/post/962a05ea-f1ff-4c9a-b86a-76a5be185889/image.png' width=60%>
+<img src='/blogs/posts/260115_Varco3D/assets/remote-2a9ca1783b1c.png' width=60%>
 
 <p>In Trellis&#39;s model formulation, this is equivalent to training and inferring a diffusion-based model on a dense voxel grid of $32^3$. In other words, it&#39;s a model with full attention cost of $32^3 \times 32^3$, or $1M$ tokens, and training this with our resources at the time was nearly impossible.</p>
 <p>At this point, I proposed the idea of <strong>&#39;voxelizing the coarse mesh created by Varco3D-α (VecSet) and using it as input to the DiT.&#39;</strong> This strategy was to leverage the already-proven global shape generation capability of the VecSet model while circumventing the high-resolution computation problem. (By the time of this writing, this has already become a common idea.)</p>
@@ -309,14 +311,14 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
 </tr>
 </thead>
 <tbody><tr>
-<td><img src="https://velog.velcdn.com/images/gjghks950/post/cce0d145-7f64-4b44-b7b5-df55bd03dccf/image.png" alt="Image"></td>
-<td><img src="https://velog.velcdn.com/images/gjghks950/post/045698e6-b168-49e1-a163-e273b44ad68f/image.png" alt="Image"></td>
+<td><img src="/blogs/posts/260115_Varco3D/assets/remote-06671f65972d.png" alt="Image"></td>
+<td><img src="/blogs/posts/260115_Varco3D/assets/remote-82d7ccc46efd.png" alt="Image"></td>
 </tr>
 </tbody></table>
 <p>For this, I implemented a CUDA kernel that computes the distance between mesh and voxel centers in parallel, and as a result, I was able to reduce the process from coarse mesh generation to active voxel generation to under 5 seconds.</p>
 <p>After solving this and various other issues, and successfully training on AWS&#39;s 64 A100 GPUs (8 multi-node), we were able to present Varco3D 1.0-preview—our own sparse voxel-based 3D generation model—around November 2025.</p>
 <p>Below are the results of <a href="https://3d.varco.ai/explore"><em><strong>Varco3D 1.0-preview</strong></em></a>, a sparse voxel-based 3D generation model.</p>
-<p><img src="https://velog.velcdn.com/images/gjghks950/post/febf339b-fb85-4cd6-b3cc-2272b4f304b1/image.png" alt=""></p>
+<p><img src="/blogs/posts/260115_Varco3D/assets/remote-dec1b1acbb14.png" alt=""></p>
 <hr>
 <h2 id="toc-heading-9">3. Back to VecSet</h2>
 <br/>
@@ -325,7 +327,7 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
 <p>Do you remember that sparse voxel-based methodologies (Sparc3D, etc.) dramatically improved training efficiency and quality by separating global shape and local detail generation?</p>
 <p><a href="https://lattice3d.github.io/"><strong>Lattice</strong></a> is the core structure behind Hunyuan3D 2.5/3.0&#39;s geometry generation model released by Tencent. Like Sparc3D and others, it applies a two-stage approach to the VecSet methodology—first generating a global shape, then using that result as guidance to generate local details.
 <em>(In fact, considering the release timing of Hunyuan3D 2.5, it appears that Tencent internally validated and completed training on the coarse-to-fine structure much earlier than research like Sparc3D)</em></p>
-<img src='https://velog.velcdn.com/images/gjghks950/post/757ef66c-ba84-4276-9ee8-2d8d7e19549c/image.png' width=50%>
+<img src='/blogs/posts/260115_Varco3D/assets/remote-41022b09f050.png' width=50%>
 
 <p>Specifically, it consists of the following two-stage pipeline:</p>
 <ul>
@@ -333,19 +335,19 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
 <li><strong>Voxelize &amp; Sampling</strong>: Voxelize this, then extract representative points within each voxel through FPS (Farthest Point Sampling).</li>
 <li><strong>Structure-Aware DiT</strong>: Use the coordinates of these points as <strong>&#39;Voxel Query&#39;</strong> and apply RoPE (Rotary Positional Embeddings) to the coordinate information before inputting to the DiT.</li>
 </ul>
-<p>${}$<img src='https://velog.velcdn.com/images/gjghks950/post/247a1e4d-3701-4b00-9b60-a80490dcec71/image.png' width=30%></p>
+<p>${}$<img src='/blogs/posts/260115_Varco3D/assets/remote-11ecc1e8c03f.png' width=30%></p>
 <hr>
 <h3 id="toc-heading-11">3.2 FlashVDM; Vice-Versa of Lattice?</h3>
 <p>I speculate that the idea for this paper originated from experiments in <a href="https://github.com/Tencent-Hunyuan/FlashVDM"><strong>FlashVDM</strong></a>, a study on accelerating VecSet decoding (the authors are also the same). FlashVDM proposed <strong>octree-decoding (Hierarchical Decoding)</strong> for the existing VecSet decoding stage, which required <strong>dense grid point queries</strong> for SDF extraction, reducing decoding time by tens of times.</p>
-<p><img src="https://velog.velcdn.com/images/gjghks950/post/f3f44325-05ae-4891-8088-9a1f14759ca0/image.png" alt=""></p>
+<p><img src="/blogs/posts/260115_Varco3D/assets/remote-d05de1f944fa.png" alt=""></p>
 <ul>
 <li><em><strong>Visualization of FlashVDM.</strong></em> When reconstructing the mesh on the <em>Right</em> through the VAE decoder, FlashVDM first identifies active voxels at a coarse resolution (Left → Right), then increases resolution only within the range of these active voxels to reconstruct high-resolution SDF.</li>
 </ul>
-<img src='https://velog.velcdn.com/images/gjghks950/post/55d404e1-be95-42f8-b677-7ddd004657f3/image.png' width=50%>
+<img src='/blogs/posts/260115_Varco3D/assets/remote-361723135c58.png' width=50%>
 
 <p>Beyond octree-decoding, an important characteristic of VecSet VAE reported in FlashVDM is that <strong>when the VecSet VAE Decoder receives point queries to decode SDF values, spatially adjacent point queries focus only on attention with similar latent tokens.</strong> Reversing this discovery leads to the conclusion that VecSet&#39;s latent tokens already have a close relationship with spatial location and inherently possess strong locality.</p>
 <p>This leads to the assumption that if positional information is provided correctly, fine details can be filled in without needing to relearn the entire structure. In other words, if we can convey the connection to 3D spatial location when training/inferring the DiT model, we can design a refinement model that knows information about the global shape, just like sparse voxel methodologies. The DiT doesn&#39;t create shapes from scratch in empty space, but rather focuses only on local detail generation while receiving strong guidance about the global shape.</p>
-<p><img src="https://velog.velcdn.com/images/gjghks950/post/2fe2f746-9665-4321-8895-7e1229328f7b/image.png" alt=""></p>
+<p><img src="/blogs/posts/260115_Varco3D/assets/remote-34753712de5b.png" alt=""></p>
 <p>Lattice drastically shortened training efficiency and enabled a coarse-to-fine structure in VecSet by voxelizing the coarse mesh, then injecting the sampled representative coordinates through RoPE embedding.</p>
 <p>There are also incidental benefits of voxelization. While existing VecSet accepts <em>&#39;any point coordinates&#39;</em> in space as input, voxelization causes RoPE embedding to concentrate on points on a regular grid, significantly reducing the search space for the generative model. By providing inductive bias, the model rapidly acquires spatial prior knowledge.</p>
 <hr>
@@ -361,20 +363,20 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
 </tr>
 </thead>
 <tbody><tr>
-<td><img src="https://velog.velcdn.com/images/gjghks950/post/b583be7b-4b38-4247-8d14-e7a9f2d04b8e/image.png" alt=""></td>
-<td><img src="https://velog.velcdn.com/images/gjghks950/post/6d8d2b6b-6c51-425c-b313-f931136437b2/image.png" alt=""></td>
-<td><img src="https://velog.velcdn.com/images/gjghks950/post/e0b5cbcf-b3b5-4cf7-a21c-cc1d6b273b11/image.png" alt=""></td>
+<td><img src="/blogs/posts/260115_Varco3D/assets/remote-5cb2a959b9d1.png" alt=""></td>
+<td><img src="/blogs/posts/260115_Varco3D/assets/remote-9ca32db34e84.png" alt=""></td>
+<td><img src="/blogs/posts/260115_Varco3D/assets/remote-2c37d81fd55d.png" alt=""></td>
 </tr>
 </tbody></table>
 <h4><em>vs.</em> Sparse-Voxel Method</h4>
 <p>It was encouraging that the model outputs showed detail equal to or better than Varco3D 1.0-preview (Sparse Voxel), while also demonstrating much more robust mesh topology and fewer artifacts. This model will be officially updated as the Varco3D 1.0 model after going through inference optimization.</p>
 <p>Below are some comparisons with Varco3D 1.0 preview, which uses the same coarse-to-fine approach.</p>
-<p><img src="https://velog.velcdn.com/images/gjghks950/post/46cd00b9-dff6-4102-9c18-d333214b72e0/image.png" alt=""></p>
+<p><img src="/blogs/posts/260115_Varco3D/assets/remote-eb6322f90365.png" alt=""></p>
 <ul>
 <li><strong>Varco3D 1.0-preview (sparse voxel)</strong> <em>vs.</em> <strong>Varco3D 1.0 (VecSet-Lattice)</strong></li>
 </ul>
 <p>While the sparse voxel-based Varco3D 1.0 preview model also generates excessive detail and artifacts, the Varco3D 1.0 model produces clean and robust outputs.</p>
-<p><img src="https://velog.velcdn.com/images/gjghks950/post/60f06b88-8772-4c67-b53f-e883e191fb57/image.png" alt=""></p>
+<p><img src="/blogs/posts/260115_Varco3D/assets/remote-c92c366ed46f.png" alt=""></p>
 <ul>
 <li><strong>Varco3D 1.0-preview (sparse voxel)</strong> <em>vs.</em> <strong>Varco3D 1.0 (VecSet-Lattice)</strong></li>
 </ul>
@@ -387,7 +389,7 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
 <p><strong><em>Advantage</em> — Detailed Generation</strong>: Unlike Lattice, which samples via FPS, sparse voxel methods use all active voxels, often excelling over Lattice in terms of local detail.</p>
 <p><strong><em>Disadvantage</em> — Instability</strong>: There are significant shortcomings in terms of training and inference stability. Token length varies for each piece of data, and the number of active voxels at $128^3$ resolution alone averages over 80K. Additionally, because all active voxels are used, the quality is highly dependent on the quality of active voxels.</p>
 <p>At this token length, full attention training is practically impossible, so one must either use Sliding Window Attention like Swin Transformer or downsample to 64/32 resolution for full attention and then upsample again, which introduces structural instability in the process.</p>
-<img src='https://velog.velcdn.com/images/gjghks950/post/494309cf-9b97-4753-b7a9-52ee3cba592f/image.png' width=70%>
+<img src='/blogs/posts/260115_Varco3D/assets/remote-dfc4c3230951.png' width=70%>
 
 <ul>
 <li>Direct3D-S2&#39;s 3D sliding window attention mechanism</li>
@@ -402,12 +404,12 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
 <p>Finally, what I am paying attention to in the 3D generation field in 2026 is <strong>the change in 3D representation itself.</strong></p>
 <p>All the methods described so far have been under the shadow of SDF (Signed Distance Function). SDF is a value that indicates how far a point in space is from an object&#39;s surface (Distance) and whether it is inside or outside (Sign). This is converted to a mesh through the Marching Cubes algorithm, but there is a critical constraint: <strong>&#39;it must be a closed object (watertight).&#39;</strong> Since only sealed shapes that do not leak water can be represented, there were clear limitations in generating &#39;open surfaces&#39; such as torn collar edges, thin paper, or cross-sections of transparent glass.</p>
 <p>Recently released <a href="https://microsoft.github.io/TRELLIS.2/">Trellis-2</a> and <a href="https://github.com/Luo-Yihao/FaithC">FaithC</a> chose an approach where AI directly predicts <strong>QEM (Quadric Error Metric)</strong> parameters instead of predicting SDF values to solve this problem.</p>
-<p><img src="https://velog.velcdn.com/images/gjghks950/post/dd98c4b4-dca3-428b-888d-87928fb4c249/image.png" alt=""></p>
+<p><img src="/blogs/posts/260115_Varco3D/assets/remote-9fc346759c86.png" alt=""></p>
 <ul>
 <li><em>Illustration of FaithC</em></li>
 </ul>
 <p>Of course, there are clear trade-offs with this approach as well. The biggest problem I noticed through direct generation was &#39;topological discontinuity&#39;—in simple terms, the phenomenon of results being torn. I believe this occurs because, with the strong continuity constraint of SDF removed, the predicted values of each voxel generated by the model fail to connect smoothly with each other.</p>
-<p><img src="https://velog.velcdn.com/images/gjghks950/post/340bb5e1-9542-4ad4-a183-51fb00441fe9/image.png" alt=""></p>
+<p><img src="/blogs/posts/260115_Varco3D/assets/remote-d9b61cf191e7.png" alt=""></p>
 <ul>
 <li>Generated by Trellis 2</li>
 </ul>
@@ -417,7 +419,7 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
 <h2 id="toc-heading-16">Epilogue</h2>
 <p>As I conclude this piece, I want to share some honest reflections that have settled in a corner of my heart as a researcher.</p>
 <p>Objectively speaking, the current Varco3D is still difficult to claim as superior when compared to closed SOTA models released by global big tech companies. Facing their capital power, which deploys thousands or tens of thousands of H100 GPUs, the reality of having to train models with 64 A100s sometimes brings a sense of helplessness. While saying &quot;we lack resources&quot; sometimes feels like a cowardly excuse, at the same time, anxiety rushes in when I find myself struggling just to keep up with the new research that pours out every morning.</p>
-<p><img src="https://velog.velcdn.com/images/gjghks950/post/a6061cdb-918f-406b-94e9-e208aa46073f/image.png" alt=""></p>
+<p><img src="/blogs/posts/260115_Varco3D/assets/remote-96eb2ba7b888.png" alt=""></p>
 <ul>
 <li>Varco3D-1.0 <em>vs.</em> Hunyuan3D-3.1 <em>vs.</em> Meshy-6</li>
 </ul>
@@ -436,6 +438,7 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
 <li><a href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/">Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D</a></li>
 </ul>
 <br/>
+
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     <div id="post-navigation" class="mt-4"></div>
@@ -463,6 +466,15 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "3D 생성형 AI 서비스; Varco3D 개발기",
       "subtitle_eng": "A technical retrospective on recent 3D generative AI systems",
       "subtitle_kor": "최근 3D 생성형 AI 시스템을 돌아보는 기술 회고",
+      "description_eng": "A technical retrospective on recent 3D generative AI systems",
+      "description_kor": "최근 3D 생성형 AI 시스템을 돌아보는 기술 회고",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif",
+      "status": "published",
+      "updated": "2026-01-15",
       "date": "2026-01-15",
       "category": "post",
       "series": "3d-generation",
@@ -478,6 +490,14 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "SDF 와 Eikonal Equation 의 관계는?",
       "subtitle_eng": "Why signed distance field induces eikonal equation",
       "subtitle_kor": "Eikonal equation 의 해가 왜 signed distance field 인지 알아보자",
+      "description_eng": "Why signed distance field induces eikonal equation",
+      "description_kor": "Eikonal equation 의 해가 왜 signed distance field 인지 알아보자",
+      "tags": [
+        "Graphics"
+      ],
+      "cover": "/blogs/posts/250823_sdf/assets/remote-12d4629724c7.png",
+      "status": "published",
+      "updated": "2025-08-23",
       "date": "2025-08-23",
       "category": "note",
       "series": "graphics",
@@ -493,6 +513,15 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
       "subtitle_eng": "Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow",
       "subtitle_kor": "Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구",
+      "description_eng": "Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow",
+      "description_kor": "Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250810_flow/assets/remote-40629d4b233a.png",
+      "status": "published",
+      "updated": "2025-08-10",
       "date": "2025-08-10",
       "category": "post",
       "series": "3d-generation",
@@ -508,6 +537,14 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "Generalized Winding Number",
       "subtitle_eng": "How to make a robust SDF using GWN from Mesh",
       "subtitle_kor": "Mesh 에서 GWN 을 이용하여 견고한 SDF 를 계산하는 방법",
+      "description_eng": "How to make a robust SDF using GWN from Mesh",
+      "description_kor": "Mesh 에서 GWN 을 이용하여 견고한 SDF 를 계산하는 방법",
+      "tags": [
+        "Graphics"
+      ],
+      "cover": "/blogs/posts/250809_gwn/assets/image-2.png",
+      "status": "published",
+      "updated": "2025-08-09",
       "date": "2025-08-09",
       "category": "note",
       "series": "graphics",
@@ -523,6 +560,15 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "Large 3D Generative Model 구축하기 (2) VAE and DiT 분석",
       "subtitle_eng": "VAE and DiT Architecture for Vecset vs. Sparse-Voxel",
       "subtitle_kor": "VAE and DiT 구조 분석 for Vecset vs. Sparse-Voxel",
+      "description_eng": "VAE and DiT Architecture for Vecset vs. Sparse-Voxel",
+      "description_kor": "VAE and DiT 구조 분석 for Vecset vs. Sparse-Voxel",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250710_building_large_3d_2/assets/image-13.png",
+      "status": "published",
+      "updated": "2025-07-10",
       "date": "2025-07-10",
       "category": "post",
       "series": "3d-generation",
@@ -538,6 +584,15 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "Large 3D Generative Model 구축하기 (1) 데이터 전처리",
       "subtitle_eng": "Watertight Mesh Conversion and Salient Edge Sampling",
       "subtitle_kor": "Watertight Mesh 변환과 Salient Edge Sampling",
+      "description_eng": "Watertight Mesh Conversion and Salient Edge Sampling",
+      "description_kor": "Watertight Mesh 변환과 Salient Edge Sampling",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250702_building_large_3d_1/assets/image-10.png",
+      "status": "published",
+      "updated": "2025-07-02",
       "date": "2025-07-02",
       "category": "post",
       "series": "3d-generation",
@@ -553,6 +608,15 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "커스텀 3D 웹뷰어 만들기",
       "subtitle_eng": "Custom Threejs 3D Model Viewer",
       "subtitle_kor": "커스텀 Three.js 3D 모델 뷰어",
+      "description_eng": "Custom Threejs 3D Model Viewer",
+      "description_kor": "커스텀 Three.js 3D 모델 뷰어",
+      "tags": [
+        "Web 3D",
+        "Three.js"
+      ],
+      "cover": "/blogs/posts/250310_model_viewer/assets/image.png",
+      "status": "published",
+      "updated": "2025-03-10",
       "date": "2025-03-10",
       "category": "post",
       "series": "web-3d",
@@ -568,6 +632,15 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "3D 생성 모델의 시대",
       "subtitle_eng": "From ShapeVAE to Trellis and Hunyuan3D",
       "subtitle_kor": "ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것",
+      "description_eng": "From ShapeVAE to Trellis and Hunyuan3D",
+      "description_kor": "ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif",
+      "status": "published",
+      "updated": "2025-03-02",
       "date": "2025-03-02",
       "category": "post",
       "series": "3d-generation",
@@ -583,6 +656,15 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "X-Ray 와 NeRF",
       "subtitle_eng": "NeRF for Tomography & Tip for NeRF Viewer",
       "subtitle_kor": "의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁",
+      "description_eng": "NeRF for Tomography & Tip for NeRF Viewer",
+      "description_kor": "의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/250106_tomography/assets/image1.png",
+      "status": "published",
+      "updated": "2025-01-06",
       "date": "2025-01-06",
       "category": "post",
       "series": "nerf-and-gs",
@@ -598,6 +680,15 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "웹사이트에 3D GS 삽입하기",
       "subtitle_eng": "Tutorial for GS Scene w/ Three-js",
       "subtitle_kor": "Three-js 이용한 custom GS scene 웹뷰어 tutorial",
+      "description_eng": "Tutorial for GS Scene w/ Three-js",
+      "description_kor": "Three-js 이용한 custom GS scene 웹뷰어 tutorial",
+      "tags": [
+        "Web 3D",
+        "Three.js"
+      ],
+      "cover": "/assets/guitar.jpeg",
+      "status": "published",
+      "updated": "2024-09-17",
       "date": "2024-09-17",
       "category": "post",
       "series": "web-3d",
@@ -613,6 +704,15 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "3D Gaussian Ray Tracing 톺아보기",
       "subtitle_eng": "In-Depth Review of 3D Gaussian Ray Tracing by NVIDIA",
       "subtitle_kor": "3D Gaussian Ray Tracing 분석하기",
+      "description_eng": "In-Depth Review of 3D Gaussian Ray Tracing by NVIDIA",
+      "description_kor": "3D Gaussian Ray Tracing 분석하기",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240823_grt/assets/teaser.gif",
+      "status": "published",
+      "updated": "2024-08-23",
       "date": "2024-08-23",
       "category": "post",
       "series": "nerf-and-gs",
@@ -628,6 +728,15 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "Gaussian Splatting Rasterization 완벽 분석",
       "subtitle_eng": "Understanding 3D GS's Rasterization Algorithm",
       "subtitle_kor": "GS rasterization 알고리즘과 cuda 구현 톺아보기",
+      "description_eng": "Understanding 3D GS's Rasterization Algorithm",
+      "description_kor": "GS rasterization 알고리즘과 cuda 구현 톺아보기",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240805_gs/assets/garden.gif",
+      "status": "published",
+      "updated": "2024-08-05",
       "date": "2024-08-05",
       "category": "post",
       "series": "nerf-and-gs",
@@ -641,6 +750,15 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "id": "240721_sfm",
       "title_eng": "Radiance Fields from Deep-based Structure-from-Motion",
       "subtitle_eng": "Comparison of VGGSfM & MAsT3R",
+      "description_eng": "Comparison of VGGSfM & MAsT3R",
+      "description_kor": "Comparison of VGGSfM & MAsT3R",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240721_sfm/assets/sfm.jpg",
+      "status": "published",
+      "updated": "2024-07-21",
       "date": "2024-07-21",
       "category": "post",
       "series": "nerf-and-gs",
@@ -655,6 +773,15 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "2D Gaussian Splatting 톺아보기",
       "subtitle_eng": "Understanding 2D GS's Algorithm",
       "subtitle_kor": "3D GS 의 mesh recon 어려움과 이를 해결한 2D GS",
+      "description_eng": "Understanding 2D GS's Algorithm",
+      "description_kor": "3D GS 의 mesh recon 어려움과 이를 해결한 2D GS",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240602_2dgs/assets/teaser.gif",
+      "status": "published",
+      "updated": "2024-06-02",
       "date": "2024-06-02",
       "category": "post",
       "series": "nerf-and-gs",
@@ -670,6 +797,15 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "Diffusion 으로 추정한 Depth 진짜 좋나요?",
       "subtitle_eng": "Making Mesh from Estimated Depth Map by Diffusion",
       "subtitle_kor": "Diffusion 으로 추정한 Depth Map 을 이용해 Textured Mesh 만들어보기 (feat. Marigold)",
+      "description_eng": "Making Mesh from Estimated Depth Map by Diffusion",
+      "description_kor": "Diffusion 으로 추정한 Depth Map 을 이용해 Textured Mesh 만들어보기 (feat. Marigold)",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/240426_diffusion_depth/assets/teaser.jpeg",
+      "status": "published",
+      "updated": "2024-04-26",
       "date": "2024-04-26",
       "category": "post",
       "series": "3d-generation",
@@ -685,6 +821,15 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "Sora 가 상상하는 3D World",
       "subtitle_eng": "Radiance Fields Reconstruction from Video Generative AI",
       "subtitle_kor": "Video Generative AI 로부터 NeRF reconstruction 해보기",
+      "description_eng": "Radiance Fields Reconstruction from Video Generative AI",
+      "description_kor": "Video Generative AI 로부터 NeRF reconstruction 해보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/240226_sora/assets/image.gif",
+      "status": "published",
+      "updated": "2024-02-26",
       "date": "2024-02-26",
       "category": "post",
       "series": "3d-generation",
@@ -699,6 +844,15 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "NeRF 를 게임 제작에서 이용할 수 있을까?",
       "subtitle_eng": "Explore Limitations of NeRF",
       "subtitle_kor": "NeRF 의 단점을 살펴보자",
+      "description_eng": "Explore Limitations of NeRF",
+      "description_kor": "NeRF 의 단점을 살펴보자",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/231130_nerf_in_game/assets/diget.gif",
+      "status": "published",
+      "updated": "2023-11-30",
       "date": "2023-11-30",
       "category": "post",
       "series": "nerf-and-gs",
@@ -713,6 +867,15 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "Instant-NGP 리뷰 및 재구현",
       "subtitle_eng": "Review of Instant-NGP and PyTorch Re-Implementation",
       "subtitle_kor": "Review of Instant-NGP and PyTorch Re-Implementation",
+      "description_eng": "Review of Instant-NGP and PyTorch Re-Implementation",
+      "description_kor": "Review of Instant-NGP and PyTorch Re-Implementation",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/230202_ngp/assets/ngp_nerf.gif",
+      "status": "published",
+      "updated": "2023-02-02",
       "date": "2023-02-02",
       "category": "post",
       "series": "nerf-and-gs",
@@ -727,6 +890,15 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "Position Encoding 이 NeRF 에서 필수적인 이유",
       "subtitle_eng": "Review of Fourier Features Let Networks Learn High-Frequency Functions",
       "subtitle_kor": "Fourier Features Let Networks Learn High-Frequency Functions 리뷰",
+      "description_eng": "Review of Fourier Features Let Networks Learn High-Frequency Functions",
+      "description_kor": "Fourier Features Let Networks Learn High-Frequency Functions 리뷰",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/211128_fourier/assets/main.png",
+      "status": "published",
+      "updated": "2021-11-28",
       "date": "2021-11-28",
       "category": "post",
       "series": "nerf-and-gs",
@@ -741,6 +913,14 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "Change of Basis",
       "subtitle_eng": "Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)",
       "subtitle_kor": "대각화와 고윳값, 특이값 분해, Principal Component Analysis (PCA)",
+      "description_eng": "Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)",
+      "description_kor": "대각화와 고윳값, 특이값 분해, Principal Component Analysis (PCA)",
+      "tags": [
+        "Linear Algebra"
+      ],
+      "cover": "/blogs/posts/210910_lin_alg_2/assets/image-1.png",
+      "status": "published",
+      "updated": "2021-09-10",
       "date": "2021-09-10",
       "category": "note",
       "series": "linear-algebra",
@@ -756,6 +936,14 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "Linear System",
       "subtitle_eng": "Linear System, Linear Transformation, and its Intuitions",
       "subtitle_kor": "선형시스템과 선형변환, 이에 대한 직관들",
+      "description_eng": "Linear System, Linear Transformation, and its Intuitions",
+      "description_kor": "선형시스템과 선형변환, 이에 대한 직관들",
+      "tags": [
+        "Linear Algebra"
+      ],
+      "cover": "/blogs/posts/210909_lin_alg_1/assets/image.png",
+      "status": "published",
+      "updated": "2021-09-09",
       "date": "2021-09-09",
       "category": "note",
       "series": "linear-algebra",
@@ -771,6 +959,14 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "3D Stereo Vision and Epipolar Geometry",
       "subtitle_eng": "Camera Projection, Stereo, and Epipolar Geometry",
       "subtitle_kor": "Camera Projection, Stereo, and Epipolar Geometry",
+      "description_eng": "Camera Projection, Stereo, and Epipolar Geometry",
+      "description_kor": "Camera Projection, Stereo, and Epipolar Geometry",
+      "tags": [
+        "Computer Vision"
+      ],
+      "cover": "/blogs/posts/210602_cv4/assets/svg6.svg",
+      "status": "published",
+      "updated": "2021-06-02",
       "date": "2021-06-02",
       "category": "note",
       "series": "computer-vision",
@@ -785,6 +981,14 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "Homography and Image Alignment",
       "subtitle_eng": "Image Transformation, Homography, and Correspondence Matching",
       "subtitle_kor": "Image Transformation, Homography, and Correspondence Matching",
+      "description_eng": "Image Transformation, Homography, and Correspondence Matching",
+      "description_kor": "Image Transformation, Homography, and Correspondence Matching",
+      "tags": [
+        "Computer Vision"
+      ],
+      "cover": "/blogs/posts/210502_cv3/assets/svg4.svg",
+      "status": "published",
+      "updated": "2021-05-02",
       "date": "2021-05-02",
       "category": "note",
       "series": "computer-vision",
@@ -799,6 +1003,14 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "Feature Extraction and Detection",
       "subtitle_eng": "Image Gradient, Sobel Filter, LoG, and Detection",
       "subtitle_kor": "Image Gradient, Sobel Filter, LoG, and Detection",
+      "description_eng": "Image Gradient, Sobel Filter, LoG, and Detection",
+      "description_kor": "Image Gradient, Sobel Filter, LoG, and Detection",
+      "tags": [
+        "Computer Vision"
+      ],
+      "cover": "/blogs/posts/210402_cv2/assets/svg1.svg",
+      "status": "published",
+      "updated": "2021-04-02",
       "date": "2021-04-02",
       "category": "note",
       "series": "computer-vision",
@@ -813,6 +1025,14 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
       "title_kor": "Image Filter and Morphology",
       "subtitle_eng": "Various Image Filters and Morphology (Erosion & Dilation)",
       "subtitle_kor": "다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여",
+      "description_eng": "Various Image Filters and Morphology (Erosion & Dilation)",
+      "description_kor": "다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여",
+      "tags": [
+        "Computer Vision"
+      ],
+      "cover": "/blogs/posts/210302_cv1/assets/image-1.jpg",
+      "status": "published",
+      "updated": "2021-03-02",
       "date": "2021-03-02",
       "category": "note",
       "series": "computer-vision",

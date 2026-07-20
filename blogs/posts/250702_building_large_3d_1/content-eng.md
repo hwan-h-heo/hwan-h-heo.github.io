@@ -542,7 +542,7 @@ However, excellent open-source models are continuously being released. To levera
 
 Since working on the CaPa Project last year, I have been training our own 3D generative model and developing a 3D generation service based on it. We plan to announce it publicly soon, and I hope to be able to introduce it then.
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/AtQNAuQY4-A/0.jpg)](https://www.youtube.com/watch?v=AtQNAuQY4-A)
+[![IMAGE ALT TEXT HERE](./assets/remote-cdf831714204.jpg)](https://www.youtube.com/watch?v=AtQNAuQY4-A)
 
 The next article in this series will delve into the architectures of ShapeVAE and Flow Models, as well as strategies for efficiently training 3D Generative Models by setting up a multi-node environment and using the sharding strategies of DeepSpeed v3 and FSDP.
 

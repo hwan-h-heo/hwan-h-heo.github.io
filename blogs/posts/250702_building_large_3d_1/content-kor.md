@@ -564,7 +564,7 @@ salient_points = mesh.salient_point_sample(64000, thresh_bihedral=30)
 
 필자는 작년 CaPa Project 를 진행한 이후로 자체 3D 생성 모델을 학습시키고, 이를 기반으로하는 3D 생성 서비스를 개발 중에 있다. 곧 사외 공개 예정이 있으니 이를 소개할 수 있으면 좋을 것 같다. 
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/AtQNAuQY4-A/0.jpg)](https://www.youtube.com/watch?v=AtQNAuQY4-A)
+[![IMAGE ALT TEXT HERE](./assets/remote-cdf831714204.jpg)](https://www.youtube.com/watch?v=AtQNAuQY4-A)
 
 이 시리즈의 다음 글에서는 본격적인 ShapeVAE, Flow Model Structure 분석 등과, training 에 필요한 multi-node 환경을 구축하고 Deepspeed v3, FSDP 의 sharding 전략을 사용하여 3D Generative Model 을 효율적으로 학습시키기 위한 전략 등에 대해 다뤄볼 예정이다.
 

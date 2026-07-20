@@ -28,7 +28,7 @@ While I've written a similar post on velog before, this article aims to provide 
 
 A **SDF** (Signed Distance Function) is a representation that, for each point in space, provides the shortest distance to a surface. The set of points where this distance value is zero—the zero-level set or isosurface—defines the actual surface.
 
-![](https://ar5iv.labs.arxiv.org/html/1901.05103/assets/x2.png)
+![](./assets/remote-12d4629724c7.png)
 
 SDFs are critical not only in modern fields like 3D generative AI and neural surface reconstruction but also in classical computer graphics for tasks such as physical simulation, animation, and mesh repair for watertightness.
 
@@ -218,14 +218,14 @@ The Eikonal loss plays a critical role by forcing the scalar field output by the
 In 3D reconstruction using Implicit Neural Networks (INNs), such as in NeRF, SDFs are often learned to reconstruct surfaces. Calculating the Eikonal loss term in this context requires the second derivative of the MLP. However, the `tcnn` library, which is essential for training INNs, does not officially support second derivatives. Consequently, SDF methods that use a hash-grid (or feature-grid) representation compute the gradient not analytically but numerically, using ***finite differences*** to obtain a ***numerical gradient***.
 
 <video id="video-2"  controls style='width: 100%' autoplay playsinline loop >
-    <source src='https://research.nvidia.com/labs/dir/neuralangelo/assets/numerical_gradient.mp4' type='video/mp4'>
+    <source src='./assets/neuralangelo-numerical-gradient.mp4' type='video/mp4'>
 </video>
 
 A prime example is [Neuralangelo](https://research.nvidia.com/labs/dir/neuralangelo/), which calculates gradients in this manner.
 This is partly to circumvent the technical limitations of the tcnn library, but more importantly, the numerical gradient provides a smoothing effect on the gradient field, which helps stabilize optimization in the early stages of training. Neuralangelo actively leverages this by employing a coarse-to-fine strategy that progressively recovers finer details as training advances, leading to the generation of incredible geometric detail as the hash grid resolution increases.
 
 <video id="video-1"  controls style='width: 100%' autoplay playsinline loop >
-    <source src='https://research.nvidia.com/labs/dir/neuralangelo/assets/coarse_to_fine.mp4' type='video/mp4'>
+    <source src='./assets/neuralangelo-coarse-to-fine.mp4' type='video/mp4'>
 </video>
 
 *Ref*: [Boundary regularity for the distance functions, and the eikonal equation](https://arxiv.org/pdf/2409.01774)

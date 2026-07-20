@@ -29,7 +29,7 @@ velog 에서 비슷한 글을 작성한 적 있지만, 엄밀성을 더하여 �
 
 **SDF** (Signed Distance Function) 는 공간 내의 각 점에 대해 해당 점에서 표면까지의 최단 거리를 나타내며, 그 거리 값이 0인 점들의 집합, 즉 zero-level set (isosurface) 이 바로 실제 surface 를 정의하는 representation 이다. 
 
-![](https://ar5iv.labs.arxiv.org/html/1901.05103/assets/x2.png)
+![](./assets/remote-12d4629724c7.png)
 
 이는 Surface reconstruction, 3D generation 등 최신 3D AI 분야뿐만 아니라, watertight mesh repair, 충돌 처리, 애니메이션 등 물리학적 시뮬레이션에서도 중요한 역할을 한다.
 
@@ -226,7 +226,7 @@ $$
 NeRF 등 Implicit Neural Network (INN) 를 이용한 3D reconstruction 에서 surface reconstruction 을 위해 SDF 를 학습하는 경우가 있다. 이 경우에 eikonal loss term 을 계산하려면 MLP 에 대한 second derivative 가 필요한데, INN 학습에 필수적인 tcnn library 에는 공식적으로 second derivative 기능을 제공하지 않는다. 따라서 Hash-Grid (feature-grid) representation 을 사용하는 SDF method 는 gradient 를 analytic 하게 계산하는 대신 ***finite difference*** 를 이용하여 ***numerical gradient*** 를 계산한다. 
 
 <video id="video-2"  controls style='width: 100%' autoplay playsinline loop >
-    <source src='https://research.nvidia.com/labs/dir/neuralangelo/assets/numerical_gradient.mp4' type='video/mp4'>
+    <source src='./assets/neuralangelo-numerical-gradient.mp4' type='video/mp4'>
 </video>
 
 
@@ -234,9 +234,8 @@ NeRF 등 Implicit Neural Network (INN) 를 이용한 3D reconstruction 에서 su
 이는 부분적으로 tcnn 라이브러리의 기술적 한계를 우회하기 위한 것이지만, 더 중요한 것은 numerial gradient 가 gradient field 에 smoothing 효과를 제공하여 학습 초기 단계에서 최적화를 안정화하는 데 도움이 된다는 것이다. Neuralangelo는 학습이 진행됨에 따라 점진적으로 미세한 디테일을 복구하는 'Coarse-to-fine' strategy 을 사용하여 이를 적극적으로 활용한다. 이는 neuralangelo 의 original Instant-NGP 대비 학습 시간 증가의 원인 중 하나이지만, Hash Grid Resolution 이 높아질수록 엄청난 geometric detail 이 생기는 것을 볼 수 있다.
 
 <video id="video-1"  controls style='width: 100%' autoplay playsinline loop >
-    <source src='https://research.nvidia.com/labs/dir/neuralangelo/assets/coarse_to_fine.mp4' type='video/mp4'>
+    <source src='./assets/neuralangelo-coarse-to-fine.mp4' type='video/mp4'>
 </video>
 
 *Ref*: [Boundary regularity for the distance functions, and the eikonal equation](https://arxiv.org/pdf/2409.01774)
-
 

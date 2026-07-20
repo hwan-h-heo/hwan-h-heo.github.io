@@ -31,7 +31,7 @@ The recent landscape of generative models can be broadly divided into two main a
 
 One is the **Diffusion Model**, which gradually generates an image from noise. The other is the **Flow**-based model, which directly connects noise and the image.
 
-<img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/1ab12865-9dad-43b1-b8cc-9bdefeb7bbf0/image.png'>
+<img style='width:100%' src='./assets/remote-37fd8aba8f3c.png'>
 
 Diffusion Models, in particular, are based on a complex **Stochastic Differential Equation (SDE)**. This method generates samples through a winding, unpredictable path, much like '[Brownian Motion](https://en.wikipedia.org/wiki/Brownian_motion),' where a particle moves about, buffeted by random forces. While this has shown outstanding performance, it inherently suffers from the drawback of slow generation speed due to the numerous steps required.
 
@@ -116,7 +116,7 @@ This means modeling the transformation process as a **_continuous trajectory_** 
 
 On this trajectory, the sample $x_0$ is the position at time $t=0$, and the desired data $x_1$ is the final position at time $t=1$.
 
-<img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/5ee390a6-efc6-4002-902b-ad618208f591/image.png'>
+<img style='width:100%' src='./assets/remote-f8c5025b3c67.png'>
 
 That is, the transformation $\phi$ is expressed as a composition of multiple functions,
 $$
@@ -353,7 +353,7 @@ We can set the boundary conditions such that at time $t=0$, it is a standard nor
 -   **$t=0$:** $\mu_0(x_1) = 0, \sigma_0(x_1) = 1$
 -   **$t=1$:** $\mu_1(x_1) = x_1, \sigma_1(x_1) = \sigma_{min} \approx 0$
 
-<img style='width:100%' src='https://mlg.eng.cam.ac.uk/blog/assets/images/flow-matching/representative.gif'>
+<img style='width:100%' src='./assets/remote-58cb161215e2.gif'>
 
 This has the exact same conceptual structure as the **Forward Process $q(x_t|x_0)$** in diffusion. While DDPM defined a path from $x_0$ to noise, CFM can be interpreted as fixing the target $x_1$ and defining a virtual path towards it.
 
@@ -373,7 +373,7 @@ _Remember that there are infinitely many conditional vector fields that satisfy 
 
 | path 1 | path 2 |
 | --- | --- |
-| <img style='width:100%' src='https://mlg.eng.cam.ac.uk/blog/assets/images/flow-matching/forward_samples-one-color-3.png'> | <img style='width:100%' src='https://mlg.eng.cam.ac.uk/blog/assets/images/flow-matching/forward_samples_ot-one-color.png'>|
+| <img style='width:100%' src='./assets/remote-921b9ad95d66.png'> | <img style='width:100%' src='./assets/remote-c74959385540.png'>|
 
 ---
 
@@ -434,7 +434,7 @@ $$
 
 This means we can perfectly replace the regression problem for the unknown $u_t$ with a regression problem for $u_t(\cdot|x_1)$, which we have designed and for which we know the answer.
 
-<img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/a427e259-aea4-4fd2-bc2e-c79ecccec7fa/image.png'>
+<img style='width:100%' src='./assets/remote-63e35c0aefb1.png'>
 
 ---
 
@@ -450,7 +450,7 @@ $$
 
 This is a ***function that deterministically maps a noise sample $x_0$ from a standard normal distribution (base distribution, $p_0$) to a point $x_t$ on the target distribution $p_t(x|x_1)$ at time $t$***.
 
-<img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/7aa8314d-5da3-49f1-a1d7-9c61519ccf6f/image.png'>
+<img style='width:100%' src='./assets/remote-d2c5fec78d21.png'>
 
 Thanks to this, we can generate the necessary training data $x_t$ with simple addition and multiplication, without needing to sample from complex distributions.
 
@@ -458,7 +458,7 @@ Thanks to this, we can generate the necessary training data $x_t$ with simple ad
 
 ### 3.2. Final Training Algorithm
 
-<img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/596d4307-1517-4089-b569-532cf45f5711/image.png'>
+<img style='width:100%' src='./assets/remote-eb0c00175b28.png'>
 
 Combining all these processes, the final training algorithm becomes remarkably simple.
 
@@ -475,7 +475,7 @@ In conclusion, Flow Matching completely eliminates the need to solve ODEs during
 
 This idea of a **_'deterministic path connecting two points'_** aligns with the core insight of DDIM, and Flow Matching incorporates this into the learning paradigm itself, dramatically increasing the training efficiency of generative models.
 
-<img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/bbb4577e-b79c-421a-a64a-249fc3870f45/image.png'>
+<img style='width:100%' src='./assets/remote-50de32e5117c.png'>
 
 ---
 
@@ -507,7 +507,7 @@ The neural network learns to solve a _**very simple regression problem**_: given
 Finally, Rectified Flow has another advantage.
 
 The coupling $(Z_0, Z_1)$ obtained from a single training run is already in a much more ordered (less entangled) state than the initial independent coupling $(X_0, X_1)$. What if we use this $(Z_0, Z_1)$ as new 'data' and train a Rectified Flow again? The Rectified Flow researchers showed that repeating this _**'Reflow'**_ process makes the travel paths of the samples exponentially closer to straight lines.
-<img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/a8976100-56f6-44c7-8d4c-5c478765acf4/image.png'>
+<img style='width:100%' src='./assets/remote-8c73a4d78896.png'>
 
 This means that a nearly perfect straight-line path can be learned with just a few iterations, which revolutionizes the number of ODE steps required during the generation process (even down to a single step), enabling very fast sampling.
 
@@ -531,7 +531,7 @@ This is deeply related to the problem of Dynamic Optimal Transport, which minimi
 
 First, let's intuitively understand [optimal transport](https://en.wikipedia.org/wiki/Transportation_theory_(mathematics)). Imagine there's a hill of soil ($X$, the source distribution), and you need to dig up all this soil to fill a pit somewhere else ($Y$, the target distribution).
 
-<img style='width:100%' src="https://velog.velcdn.com/images/gjghks950/post/61bc7892-6d30-4492-868d-411503b39fea/image.png" width="100%">
+<img style='width:100%' src="./assets/remote-526387c8d0ca.png" width="100%">
 
 How should you move the soil to be "most efficient"?
 
@@ -565,7 +565,7 @@ $$
 
 The YouTube channel Veritasium has an excellent video explaining action, which I highly recommend: [video link](https://www.youtube.com/watch?v=Q10_srZ-pbs&t=1658s)
 
-<img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/253304cd-36b1-4d87-a4f5-10e9906b00b8/image.png'>
+<img style='width:100%' src='./assets/remote-914bee69f2e3.png'>
 
 - The phenomenon of light refraction, known as [Fermat's Principle](https://en.wikipedia.org/wiki/Fermat%27s_principle) (minimizing time, not distance), is also an example of the Least Action Principle.
 
@@ -718,7 +718,7 @@ $$
 {v_t(x) = -\nabla \phi(x, t)}
 $$
 
-<img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/d1b2b608-cd74-4b7e-b215-c7e0a5aaf7b1/image.png'>
+<img style='width:100%' src='./assets/remote-2bbef7285be8.png'>
 - Vector field (right) and corresponding scalar potential (left).
 
 **Functional derivative with respect to Density $p$**
@@ -781,7 +781,7 @@ $$
 The **acceleration of all particles** following the optimal flow that minimizes the action and satisfies the continuity equation is **zero**. This mathematically proves that each particle undergoes **uniform linear motion** from its starting point $z_0$ to its destination $z_1$.
 
 This is the strong theoretical background for why Rectified Flow takes the **straight-line path** connecting samples $z_0, z_1$ from two distributions as its learning target. The velocity vector $$v = z_1 - z_0$$ that the model learns corresponds to the velocity field of this optimal path.
-<img style='width:100%' src='https://velog.velcdn.com/images/gjghks950/post/ca65945c-c165-4ce3-93a8-04431b02e37f/image.png'>
+<img style='width:100%' src='./assets/remote-40629d4b233a.png'>
 
 Therefore, the 'straight-line path' $z_t = (1-t)z_0 + t z_1$ adopted by Rectified Flow is not an arbitrary choice but can be interpreted as the **most natural and efficient path based on physical laws and mathematical optimization**.
 

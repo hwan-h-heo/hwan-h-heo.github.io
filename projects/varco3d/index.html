@@ -22,8 +22,6 @@
   <link href="../../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
   <link href="../../assets/css/used.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1.9.1/css/academicons.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
   <style>
     table { width: 100%; border-collapse: collapse; }
@@ -397,7 +395,7 @@
     <div class="social-links text-center">
       <a href="https://github.com/hwanhuh" class="github"><i class="bi bi-github"></i></a>
       <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin"><i class="bi bi-linkedin"></i></a>
-      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram"><i class="ai ai-google-scholar"></i></a>
+      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram"><i class="bi bi-mortarboard-fill"></i></a>
       <a href="mailto:gjghks950@naver.com" class="google-plus"><i class="bi bi-envelope-fill"></i></a>
     </div>
 
@@ -521,14 +519,14 @@ To avoid the cost of generating high-resolution active voxels from scratch, I pr
 </tr>
 </thead>
 <tbody><tr>
-<td><img src="https://velog.velcdn.com/images/gjghks950/post/cce0d145-7f64-4b44-b7b5-df55bd03dccf/image.png" alt="Coarse mesh" class="img-fluid"></td>
-<td><img src="https://velog.velcdn.com/images/gjghks950/post/045698e6-b168-49e1-a163-e273b44ad68f/image.png" alt="Voxelized structure" class="img-fluid"></td>
+<td><img src="assets/remote-06671f65972d.png" alt="Coarse mesh" class="img-fluid"></td>
+<td><img src="assets/remote-82d7ccc46efd.png" alt="Voxelized structure" class="img-fluid"></td>
 </tr>
 </tbody></table>
 <p>For this stage, I implemented a CUDA kernel for parallel mesh-to-voxel distance computation.
 This reduced the pipeline from coarse mesh generation to active voxel generation to <strong>under 5 seconds</strong>, making the sparse voxel refinement direction more practical for service-oriented inference.</p>
 <p>The resulting sparse voxel-based model was presented internally as the VARCO 3D 1.0-preview direction.</p>
-<p><img src="https://velog.velcdn.com/images/gjghks950/post/febf339b-fb85-4cd6-b3cc-2272b4f304b1/image.png" alt="VARCO 3D 1.0-preview result" class="img-fluid"></p>
+<p><img src="assets/remote-dec1b1acbb14.png" alt="VARCO 3D 1.0-preview result" class="img-fluid"></p>
 <h2>VecSet-Lattice Refinement</h2>
 <p>The later direction revisited VecSet-based generation through a Lattice-style coarse-to-fine formulation.
 The key idea was to preserve the global shape capability of VecSet models while injecting stronger spatial structure into the generative model.</p>
@@ -548,16 +546,16 @@ The key idea was to preserve the global shape capability of VecSet models while 
 </tr>
 </thead>
 <tbody><tr>
-<td><img src="https://velog.velcdn.com/images/gjghks950/post/b583be7b-4b38-4247-8d14-e7a9f2d04b8e/image.png" alt="Coarse mesh" class="varco-lattice-img img-fluid"></td>
-<td><img src="https://velog.velcdn.com/images/gjghks950/post/6d8d2b6b-6c51-425c-b313-f931136437b2/image.png" alt="Voxel query" class="varco-lattice-img img-fluid"></td>
-<td><img src="https://velog.velcdn.com/images/gjghks950/post/e0b5cbcf-b3b5-4cf7-a21c-cc1d6b273b11/image.png" alt="Fine mesh" class="varco-lattice-img img-fluid"></td>
+<td><img src="assets/remote-5cb2a959b9d1.png" alt="Coarse mesh" class="varco-lattice-img img-fluid"></td>
+<td><img src="assets/remote-9ca32db34e84.png" alt="Voxel query" class="varco-lattice-img img-fluid"></td>
+<td><img src="assets/remote-2c37d81fd55d.png" alt="Fine mesh" class="varco-lattice-img img-fluid"></td>
 </tr>
 </tbody></table>
 <p>This refinement direction showed a major training-efficiency improvement.
 Where the earlier VecSet DiT setup took much longer to converge, the structure-aware DiT with voxel-query conditioning converged in roughly one day in the reported development setting.</p>
 <h3>Sparse Voxel vs. VecSet-Lattice</h3>
 <p>The VecSet-Lattice direction showed detail comparable to or better than the sparse voxel preview while producing more robust mesh topology and fewer artifacts.</p>
-<img src="https://velog.velcdn.com/images/gjghks950/post/46cd00b9-dff6-4102-9c18-d333214b72e0/image.png" alt="VARCO 3D sparse voxel vs VecSet-Lattice comparison" width="88%" class="img-fluid">
+<img src="assets/remote-eb6322f90365.png" alt="VARCO 3D sparse voxel vs VecSet-Lattice comparison" width="88%" class="img-fluid">
 
 <h2>Result</h2>
 

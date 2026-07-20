@@ -134,7 +134,7 @@ $$
 Winding Number 는 3차원으로 즉시 일반화될 수 있다. 이때 2D space 에서의 **각도(angle)** 는 3D의 **입체각 (solid angle, $\Omega$)** 으로 대체된다. 
 입체각은 한 점에서 표면을 바라볼 때 그 표면이 얼마나 큰 공간을 차지하는지를 나타내는 척도이다.
 
-<img src='https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Angle_solide_coordonnees.svg/500px-Angle_solide_coordonnees.svg.png' width=40%>
+<img src='./assets/remote-74dfc1934801.png' width=40%>
 
 점 $p$ 에 대한 닫힌 서피스 $S$ 의 winding number 는 $p$ 에서 $S$ 가 만드는 총 solid angle 을 구 전체의 solid angle 인 $4\pi$로 나눈 값으로 정의된다.
 

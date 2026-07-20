@@ -12,7 +12,17 @@
       "languages": [
         "eng",
         "kor"
-      ]
+      ],
+      "slug": "varco3d-a-year-in-review-2025-retrospective",
+      "description_eng": "A technical retrospective on recent 3D generative AI systems",
+      "description_kor": "최근 3D 생성형 AI 시스템을 돌아보는 기술 회고",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif",
+      "status": "published",
+      "updated": "2026-01-15"
     },
     {
       "id": "250823_sdf",
@@ -26,7 +36,16 @@
       "languages": [
         "eng",
         "kor"
-      ]
+      ],
+      "slug": "sdf-and-eikonal-equation",
+      "description_eng": "Why signed distance field induces eikonal equation",
+      "description_kor": "Eikonal equation 의 해가 왜 signed distance field 인지 알아보자",
+      "tags": [
+        "Graphics"
+      ],
+      "cover": "/blogs/posts/250823_sdf/assets/remote-12d4629724c7.png",
+      "status": "published",
+      "updated": "2025-08-23"
     },
     {
       "id": "250810_flow",
@@ -40,7 +59,17 @@
       "languages": [
         "eng",
         "kor"
-      ]
+      ],
+      "slug": "from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models",
+      "description_eng": "Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow",
+      "description_kor": "Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250810_flow/assets/remote-40629d4b233a.png",
+      "status": "published",
+      "updated": "2025-08-10"
     },
     {
       "id": "250809_gwn",
@@ -54,7 +83,16 @@
       "languages": [
         "eng",
         "kor"
-      ]
+      ],
+      "slug": "generalized-winding-number",
+      "description_eng": "How to make a robust SDF using GWN from Mesh",
+      "description_kor": "Mesh 에서 GWN 을 이용하여 견고한 SDF 를 계산하는 방법",
+      "tags": [
+        "Graphics"
+      ],
+      "cover": "/blogs/posts/250809_gwn/assets/image-2.png",
+      "status": "published",
+      "updated": "2025-08-09"
     },
     {
       "id": "250710_building_large_3d_2",
@@ -68,7 +106,17 @@
       "languages": [
         "eng",
         "kor"
-      ]
+      ],
+      "slug": "building-large-3d-generative-model-2-vae-and-dit-deep-dive",
+      "description_eng": "VAE and DiT Architecture for Vecset vs. Sparse-Voxel",
+      "description_kor": "VAE and DiT 구조 분석 for Vecset vs. Sparse-Voxel",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250710_building_large_3d_2/assets/image-13.png",
+      "status": "published",
+      "updated": "2025-07-10"
     },
     {
       "id": "250702_building_large_3d_1",
@@ -82,7 +130,17 @@
       "languages": [
         "eng",
         "kor"
-      ]
+      ],
+      "slug": "building-large-3d-generative-model-1-data-pre-processing",
+      "description_eng": "Watertight Mesh Conversion and Salient Edge Sampling",
+      "description_kor": "Watertight Mesh 변환과 Salient Edge Sampling",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250702_building_large_3d_1/assets/image-10.png",
+      "status": "published",
+      "updated": "2025-07-02"
     },
     {
       "id": "250310_model_viewer",
@@ -96,7 +154,17 @@
       "languages": [
         "eng",
         "kor"
-      ]
+      ],
+      "slug": "3d-model-viewer-in-web",
+      "description_eng": "Custom Threejs 3D Model Viewer",
+      "description_kor": "커스텀 Three.js 3D 모델 뷰어",
+      "tags": [
+        "Web 3D",
+        "Three.js"
+      ],
+      "cover": "/blogs/posts/250310_model_viewer/assets/image.png",
+      "status": "published",
+      "updated": "2025-03-10"
     },
     {
       "id": "250302_3d_latent_diffusion",
@@ -110,7 +178,17 @@
       "languages": [
         "eng",
         "kor"
-      ]
+      ],
+      "slug": "an-era-of-3d-generation",
+      "description_eng": "From ShapeVAE to Trellis and Hunyuan3D",
+      "description_kor": "ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif",
+      "status": "published",
+      "updated": "2025-03-02"
     },
     {
       "id": "250106_tomography",
@@ -124,7 +202,17 @@
       "languages": [
         "eng",
         "kor"
-      ]
+      ],
+      "slug": "neural-rendering-beyond-photography",
+      "description_eng": "NeRF for Tomography & Tip for NeRF Viewer",
+      "description_kor": "의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/250106_tomography/assets/image1.png",
+      "status": "published",
+      "updated": "2025-01-06"
     },
     {
       "id": "240917_3djs",
@@ -138,7 +226,17 @@
       "languages": [
         "eng",
         "kor"
-      ]
+      ],
+      "slug": "add-gaussian-splatting-to-your-website",
+      "description_eng": "Tutorial for GS Scene w/ Three-js",
+      "description_kor": "Three-js 이용한 custom GS scene 웹뷰어 tutorial",
+      "tags": [
+        "Web 3D",
+        "Three.js"
+      ],
+      "cover": "/assets/guitar.jpeg",
+      "status": "published",
+      "updated": "2024-09-17"
     },
     {
       "id": "240823_grt",
@@ -152,7 +250,17 @@
       "languages": [
         "eng",
         "kor"
-      ]
+      ],
+      "slug": "dont-rasterize-but-ray-trace-3d-gaussian",
+      "description_eng": "In-Depth Review of 3D Gaussian Ray Tracing by NVIDIA",
+      "description_kor": "3D Gaussian Ray Tracing 분석하기",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240823_grt/assets/teaser.gif",
+      "status": "published",
+      "updated": "2024-08-23"
     },
     {
       "id": "240805_gs",
@@ -166,7 +274,17 @@
       "languages": [
         "eng",
         "kor"
-      ]
+      ],
+      "slug": "a-comprehensive-analysis-of-gaussian-splatting-rasterization",
+      "description_eng": "Understanding 3D GS's Rasterization Algorithm",
+      "description_kor": "GS rasterization 알고리즘과 cuda 구현 톺아보기",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240805_gs/assets/garden.gif",
+      "status": "published",
+      "updated": "2024-08-05"
     },
     {
       "id": "240721_sfm",
@@ -177,7 +295,16 @@
       "series": "nerf-and-gs",
       "languages": [
         "eng"
-      ]
+      ],
+      "slug": "radiance-fields-from-deep-based-structure-from-motion",
+      "description_eng": "Comparison of VGGSfM & MAsT3R",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240721_sfm/assets/sfm.jpg",
+      "status": "published",
+      "updated": "2024-07-21"
     },
     {
       "id": "240602_2dgs",
@@ -191,7 +318,17 @@
       "languages": [
         "eng",
         "kor"
-      ]
+      ],
+      "slug": "under-the-3d-geometrically-accurate-2d-gaussian-splatting",
+      "description_eng": "Understanding 2D GS's Algorithm",
+      "description_kor": "3D GS 의 mesh recon 어려움과 이를 해결한 2D GS",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240602_2dgs/assets/teaser.gif",
+      "status": "published",
+      "updated": "2024-06-02"
     },
     {
       "id": "240426_diffusion_depth",
@@ -205,7 +342,17 @@
       "languages": [
         "eng",
         "kor"
-      ]
+      ],
+      "slug": "is-diffusions-estimated-depth-really-good",
+      "description_eng": "Making Mesh from Estimated Depth Map by Diffusion",
+      "description_kor": "Diffusion 으로 추정한 Depth Map 을 이용해 Textured Mesh 만들어보기 (feat. Marigold)",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/240426_diffusion_depth/assets/teaser.jpeg",
+      "status": "published",
+      "updated": "2024-04-26"
     },
     {
       "id": "240226_sora",
@@ -218,7 +365,17 @@
       "series": "3d-generation",
       "languages": [
         "eng"
-      ]
+      ],
+      "slug": "can-sora-understand-3d",
+      "description_eng": "Radiance Fields Reconstruction from Video Generative AI",
+      "description_kor": "Video Generative AI 로부터 NeRF reconstruction 해보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/240226_sora/assets/image.gif",
+      "status": "published",
+      "updated": "2024-02-26"
     },
     {
       "id": "231130_nerf_in_game",
@@ -231,7 +388,17 @@
       "series": "nerf-and-gs",
       "languages": [
         "eng"
-      ]
+      ],
+      "slug": "can-nerf-be-used-in-game",
+      "description_eng": "Explore Limitations of NeRF",
+      "description_kor": "NeRF 의 단점을 살펴보자",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/231130_nerf_in_game/assets/diget.gif",
+      "status": "published",
+      "updated": "2023-11-30"
     },
     {
       "id": "230202_ngp",
@@ -244,7 +411,17 @@
       "series": "nerf-and-gs",
       "languages": [
         "eng"
-      ]
+      ],
+      "slug": "instant-ngp-review-re-implementation",
+      "description_eng": "Review of Instant-NGP and PyTorch Re-Implementation",
+      "description_kor": "Review of Instant-NGP and PyTorch Re-Implementation",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/230202_ngp/assets/ngp_nerf.gif",
+      "status": "published",
+      "updated": "2023-02-02"
     },
     {
       "id": "211128_fourier",
@@ -257,7 +434,17 @@
       "series": "nerf-and-gs",
       "languages": [
         "eng"
-      ]
+      ],
+      "slug": "why-positional-encoding-makes-nerf-more-powerful",
+      "description_eng": "Review of Fourier Features Let Networks Learn High-Frequency Functions",
+      "description_kor": "Fourier Features Let Networks Learn High-Frequency Functions 리뷰",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/211128_fourier/assets/main.png",
+      "status": "published",
+      "updated": "2021-11-28"
     },
     {
       "id": "210910_lin_alg_2",
@@ -271,7 +458,16 @@
       "languages": [
         "eng",
         "kor"
-      ]
+      ],
+      "slug": "change-of-basis",
+      "description_eng": "Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)",
+      "description_kor": "대각화와 고윳값, 특이값 분해, Principal Component Analysis (PCA)",
+      "tags": [
+        "Linear Algebra"
+      ],
+      "cover": "/blogs/posts/210910_lin_alg_2/assets/image-1.png",
+      "status": "published",
+      "updated": "2021-09-10"
     },
     {
       "id": "210909_lin_alg_1",
@@ -285,7 +481,16 @@
       "languages": [
         "eng",
         "kor"
-      ]
+      ],
+      "slug": "linear-system",
+      "description_eng": "Linear System, Linear Transformation, and its Intuitions",
+      "description_kor": "선형시스템과 선형변환, 이에 대한 직관들",
+      "tags": [
+        "Linear Algebra"
+      ],
+      "cover": "/blogs/posts/210909_lin_alg_1/assets/image.png",
+      "status": "published",
+      "updated": "2021-09-09"
     },
     {
       "id": "210602_cv4",
@@ -298,7 +503,16 @@
       "series": "computer-vision",
       "languages": [
         "eng"
-      ]
+      ],
+      "slug": "3d-stereo-vision-and-epipolar-geometry",
+      "description_eng": "Camera Projection, Stereo, and Epipolar Geometry",
+      "description_kor": "Camera Projection, Stereo, and Epipolar Geometry",
+      "tags": [
+        "Computer Vision"
+      ],
+      "cover": "/blogs/posts/210602_cv4/assets/svg6.svg",
+      "status": "published",
+      "updated": "2021-06-02"
     },
     {
       "id": "210502_cv3",
@@ -311,7 +525,16 @@
       "series": "computer-vision",
       "languages": [
         "eng"
-      ]
+      ],
+      "slug": "homography-and-image-alignment",
+      "description_eng": "Image Transformation, Homography, and Correspondence Matching",
+      "description_kor": "Image Transformation, Homography, and Correspondence Matching",
+      "tags": [
+        "Computer Vision"
+      ],
+      "cover": "/blogs/posts/210502_cv3/assets/svg4.svg",
+      "status": "published",
+      "updated": "2021-05-02"
     },
     {
       "id": "210402_cv2",
@@ -324,7 +547,16 @@
       "series": "computer-vision",
       "languages": [
         "eng"
-      ]
+      ],
+      "slug": "feature-extraction-and-detection",
+      "description_eng": "Image Gradient, Sobel Filter, LoG, and Detection",
+      "description_kor": "Image Gradient, Sobel Filter, LoG, and Detection",
+      "tags": [
+        "Computer Vision"
+      ],
+      "cover": "/blogs/posts/210402_cv2/assets/svg1.svg",
+      "status": "published",
+      "updated": "2021-04-02"
     },
     {
       "id": "210302_cv1",
@@ -337,7 +569,16 @@
       "series": "computer-vision",
       "languages": [
         "eng"
-      ]
+      ],
+      "slug": "image-filter-and-morphology",
+      "description_eng": "Various Image Filters and Morphology (Erosion & Dilation)",
+      "description_kor": "다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여",
+      "tags": [
+        "Computer Vision"
+      ],
+      "cover": "/blogs/posts/210302_cv1/assets/image-1.jpg",
+      "status": "published",
+      "updated": "2021-03-02"
     }
   ],
   "series": {
@@ -550,37 +791,37 @@
   "featuredPortfolioPosts": [
     {
       "id": "260115_Varco3D",
-      "teaserImage": "https://velog.velcdn.com/images/gjghks950/post/c6ffdcc4-0f99-4778-92a9-6ffaba60cf6f/image.gif",
+      "teaserImage": "/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif",
       "teaserAlt": "Varco3D retrospective teaser"
     },
     {
       "id": "250810_flow",
-      "teaserImage": "https://velog.velcdn.com/images/gjghks950/post/ca65945c-c165-4ce3-93a8-04431b02e37f/image.png",
+      "teaserImage": "/blogs/posts/250810_flow/assets/remote-40629d4b233a.png",
       "teaserAlt": "Flow Matching blog post teaser"
     },
     {
       "id": "250702_building_large_3d_1",
-      "teaserImage": "blogs/posts/250702_building_large_3d_1/assets/image-10.png",
+      "teaserImage": "/blogs/posts/250702_building_large_3d_1/assets/image-10.png",
       "teaserAlt": "Building large 3D generative model teaser"
     },
     {
       "id": "250310_model_viewer",
-      "teaserImage": "blogs/posts/250310_model_viewer/assets/image.png",
+      "teaserImage": "/blogs/posts/250310_model_viewer/assets/image.png",
       "teaserAlt": "Web 3D viewer post teaser"
     },
     {
       "id": "250302_3d_latent_diffusion",
-      "teaserImage": "blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif",
+      "teaserImage": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif",
       "teaserAlt": "3D latent diffusion blog post teaser"
     },
     {
       "id": "240823_grt",
-      "teaserImage": "blogs/posts/240823_grt/assets/teaser.gif",
+      "teaserImage": "/blogs/posts/240823_grt/assets/teaser.gif",
       "teaserAlt": "3D Gaussian ray tracing blog post teaser"
     },
     {
       "id": "240805_gs",
-      "teaserImage": "blogs/posts/240805_gs/assets/garden.gif",
+      "teaserImage": "/blogs/posts/240805_gs/assets/garden.gif",
       "teaserAlt": "Differentiable Gaussian rasterization blog teaser"
     }
   ]

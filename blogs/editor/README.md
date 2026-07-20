@@ -7,7 +7,7 @@ A markdown editor for creating blog posts, registering metadata, and publishing 
 - ✍️ **Live Preview**: See your content rendered as you type
 - 💾 **Draft Management**: Save and load per-language markdown drafts locally
 - 📝 **Post Publishing**: Create or update `site-data.json` and `posts/{postId}/content-*.md` in one flow
-- 🗂️ **Metadata Editing**: Manage post id, date, category, series, languages, and portfolio featured settings
+- 🗂️ **Metadata Editing**: Manage identity, descriptions, slug, tags, cover, status, dates, languages, and portfolio feature settings
 - ✅ **Validation**: Duplicate id checks, allowed category/series validation, and language/file alignment
 - 🎨 **Blog-Matched Styling**: Preview looks exactly like published posts
 - 📐 **Math Support**: Write LaTeX equations with KaTeX
@@ -43,7 +43,7 @@ Then navigate to the editor - draft management features are hidden.
 ## Workflow
 
 1. **Start editor**: `npm run edit`
-2. **Fill metadata**: Set post id, title, date, category, series, languages, and optional featured teaser info
+2. **Fill metadata**: Set identity, titles/descriptions, dates, slug, tags, local cover, status, languages, and optional featured teaser info
 3. **Write content**: Use the English/Korean tabs to edit markdown
 4. **Save draft**: Save the active language tab if you want a local snapshot
 5. **Publish**: Click `Publish` to write metadata and markdown files together
@@ -61,6 +61,8 @@ editor/
 ├── editor.js          # Editor app logic
 ├── edit.html          # Redirect to index.html
 ├── drafts/            # Local markdown drafts (gitignored)
+├── draft-assets/      # Temporary uploads (gitignored and excluded from deployment)
+├── project-snapshots/ # Local project backups (gitignored and excluded from deployment)
 └── README.md          # This file
 
 posts/

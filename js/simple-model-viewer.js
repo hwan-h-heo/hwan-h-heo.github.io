@@ -9,9 +9,9 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
 
 const ENVIRONMENT_URLS = {
-    env1: 'https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/spruit_sunrise_1k_HDR.hdr',
-    env2: 'https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/aircraft_workshop_01_1k.hdr',
-    env3: 'https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/lebombo_1k.hdr',
+    env1: '/assets/viewer/spruit-sunrise.hdr',
+    env2: '/assets/viewer/aircraft-workshop.hdr',
+    env3: '/assets/viewer/lebombo.hdr',
 };
 
 const TEXTURE_INPUT_IDS = {
@@ -256,6 +256,10 @@ class SimpleModelViewer extends HTMLElement {
                     overflow: hidden;
                 }
 
+                *, *::before, *::after {
+                    box-sizing: border-box;
+                }
+
                 #loadingProgressBar {
                     position: absolute;
                     top: 0;
@@ -397,6 +401,7 @@ class SimpleModelViewer extends HTMLElement {
                     flex-direction: column;
                     gap: 0.35rem;
                     z-index: 1000;
+                    width: min(25rem, calc(100vw - 2rem));
                     max-width: 25rem;
                     max-height: calc(100vh - 2rem);
                     box-shadow: var(--panel-shadow);
@@ -772,7 +777,9 @@ class SimpleModelViewer extends HTMLElement {
                     font-size: 0.8rem;
                     margin-right: 0;
                     color: var(--text-main);
-                    width: 8.3rem;
+                    flex: 1 1 0;
+                    min-width: 0;
+                    width: auto;
                     box-shadow: none;
                 }
 
@@ -929,10 +936,31 @@ class SimpleModelViewer extends HTMLElement {
                 #dropHint.active {
                     display: flex;
                 }
+
+                @media (max-width: 480px) {
+                    .controls {
+                        top: 0.5rem;
+                        right: 0.5rem;
+                        left: 0.5rem;
+                    }
+
+                    .right-ui-panel {
+                        max-width: none;
+                        max-height: calc(100vh - 1rem);
+                    }
+
+                    #panelContent {
+                        max-height: calc(100vh - 6rem);
+                    }
+
+                    .tab-button {
+                        padding-inline: 0.35rem;
+                    }
+                }
             </style>
             <div class="controls">
                 <div class="right-ui-panel">
-                    <button id="togglePanelBtn" style="width:100%"><i class="bi bi-caret-right"></i></button>
+                    <button id="togglePanelBtn" type="button" aria-label="Expand controls" style="width:100%">&gt;</button>
                     <div id="panelContent" style="display: none;">
                         <div class="tab-buttons">
                             <button class="tab-button active" data-tab="render"><strong>Render</strong></button>
@@ -1390,16 +1418,15 @@ class SimpleModelViewer extends HTMLElement {
         });
 
         this.textureLoader = new THREE.TextureLoader();
-        this.whiteTexture = this.textureLoader.load('https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/white.jpg');
+        this.whiteTexture = this.textureLoader.load('/assets/viewer/white.jpg');
         this.whiteTexture.mapping = THREE.EquirectangularReflectionMapping;
 
-        this.gradTexture = this.textureLoader.load('https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/gradient.jpg');
+        this.gradTexture = this.textureLoader.load('/assets/viewer/gradient.jpg');
         this.gradTexture.mapping = THREE.EquirectangularReflectionMapping;
 
         this.dracoLoader = new DRACOLoader();
         this.objLoader = new OBJLoader();
-        this.dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/versioned/decoders/1.5.7/' );
-        // this.dracoLoader.setDecoderPath( './draco/' );
+        this.dracoLoader.setDecoderPath('/vendor/three/examples/jsm/libs/draco/gltf/');
         this.gltfLoader = new GLTFLoader();
         this.fbxLoader = new FBXLoader(); 
         this.plyLoader = new PLYLoader();
@@ -2710,7 +2737,11 @@ class SimpleModelViewer extends HTMLElement {
                 controlsDiv.style.display = 'block';
             }
         } else if (name === 'ui'){
-            this.shadowRoot.querySelector('#panelContent').style.display = 'block'
+            const content = this.shadowRoot.querySelector('#panelContent');
+            const button = this.shadowRoot.querySelector('#togglePanelBtn');
+            content.style.display = 'block';
+            button.textContent = '<';
+            button.setAttribute('aria-label', 'Collapse controls');
         } else if (name === 'light-off') {
             this.state.lightsOn = !(newValue !== null);
             this.ambientLight.visible = this.state.lightsOn;
@@ -3132,11 +3163,13 @@ class SimpleModelViewer extends HTMLElement {
             const content = this.shadowRoot.querySelector('#panelContent');
             const button = this.shadowRoot.querySelector('#togglePanelBtn');
             if (content.style.display === 'none') {
-                controls.style.width = '25rem';
+                controls.style.width = 'min(25rem, calc(100vw - 2rem))';
                 content.style.display = `block`;
-                button.innerHTML = `<i class="bi bi-caret-left"></i>`;
+                button.textContent = '<';
+                button.setAttribute('aria-label', 'Collapse controls');
             } else {
-                button.innerHTML = `<i class="bi bi-caret-right"></i>`;
+                button.textContent = '>';
+                button.setAttribute('aria-label', 'Expand controls');
                 controls.style.width = '4rem';
                 content.style.display = `none`;
             }
