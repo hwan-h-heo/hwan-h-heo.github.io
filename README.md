@@ -1,4 +1,4 @@
-# hwan-h-heo.io
+# hwan-h-heo.github.io
 Personal Portfolio & Blog of Hwan Heo 
 
 Cite: https://hwan-h-heo.github.io

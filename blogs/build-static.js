@@ -5,6 +5,7 @@ const { parseMarkdownWithMath } = require('./js/markdown-with-math');
 
 const { copyRecursiveSync, ensureDirSync } = require('./lib/fs-utils');
 const { loadSiteData } = require('./lib/site-data');
+const { SITE_URL } = require('./lib/site-config');
 const { renderPostPage } = require('./lib/render-post-page');
 const { parseProjectMarkdown } = require('./lib/project-markdown');
 const { renderProjectPage } = require('./lib/render-project-page');
@@ -392,10 +393,9 @@ function generateProjectPages() {
 }
 
 function generateSitemap() {
-    const baseUrl = 'https://hwan-h-heo.io';
     const urls = buildSitemapEntries(siteData).map((entry) => ({
         ...entry,
-        loc: `${baseUrl}${entry.path}`
+        loc: `${SITE_URL}${entry.path}`
     }));
 
     const lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'];
@@ -419,7 +419,7 @@ function generateRobotsTxt() {
     const robotsTxt = `User-agent: *
 Allow: /
 
-Sitemap: https://hwan-h-heo.io/sitemap.xml
+Sitemap: ${SITE_URL}/sitemap.xml
 `;
 
     fs.writeFileSync(path.join(distDir, 'robots.txt'), robotsTxt);

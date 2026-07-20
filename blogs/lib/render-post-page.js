@@ -1,3 +1,5 @@
+const { SITE_URL } = require('./site-config');
+
 function serializeForScript(value) {
     return JSON.stringify(value, null, 2).replace(/</g, '\\u003c');
 }
@@ -8,19 +10,19 @@ function resolveOgImage(post, featuredPortfolioPosts) {
             return post.cover;
         }
 
-        return `https://hwan-h-heo.io/${post.cover.replace(/^\/+/, '')}`;
+        return `${SITE_URL}/${post.cover.replace(/^\/+/, '')}`;
     }
 
     const featured = featuredPortfolioPosts.find((item) => item.id === post.id);
     if (!featured || !featured.teaserImage) {
-        return 'https://hwan-h-heo.io/assets/image_fx_.jpg';
+        return `${SITE_URL}/assets/image_fx_.jpg`;
     }
 
     if (/^https?:\/\//.test(featured.teaserImage)) {
         return featured.teaserImage;
     }
 
-    return `https://hwan-h-heo.io/${featured.teaserImage.replace(/^\/+/, '')}`;
+    return `${SITE_URL}/${featured.teaserImage.replace(/^\/+/, '')}`;
 }
 
 function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime, siteData }) {
@@ -34,7 +36,7 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
     const isoDate = new Date(post.date).toISOString();
     const updatedIsoDate = new Date(post.updated || post.date).toISOString();
     const slug = lang === 'eng' ? post.slug : `${post.slug}-kor`;
-    const canonicalUrl = `https://hwan-h-heo.io/blogs/posts/${slug}/`;
+    const canonicalUrl = `${SITE_URL}/blogs/posts/${slug}/`;
     const ogImage = resolveOgImage(post, siteData.featuredPortfolioPosts);
     const alternateLang = lang === 'eng' ? 'kor' : 'eng';
     const hasAlternateLang = post.languages.includes(alternateLang);
@@ -64,14 +66,14 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
         author: {
             '@type': 'Person',
             name: 'Hwan Heo',
-            url: 'https://hwan-h-heo.io'
+            url: SITE_URL
         },
         publisher: {
             '@type': 'Person',
             name: 'Hwan Heo',
             logo: {
                 '@type': 'ImageObject',
-                url: 'https://hwan-h-heo.io/assets/favicon.ico'
+                url: `${SITE_URL}/assets/favicon.ico`
             }
         },
         datePublished: isoDate,

@@ -4,6 +4,7 @@ const path = require('path');
 
 const { chromium } = require('playwright');
 
+const { SITE_URL } = require('../blogs/lib/site-config');
 const { loadSiteData } = require('../blogs/lib/site-data');
 const { buildPublicRoutes } = require('../blogs/lib/site-routes');
 
@@ -41,6 +42,9 @@ function parseArguments(argv) {
     };
 
     argv.forEach((argument) => {
+        if (argument === '--production') {
+            options.baseUrl = SITE_URL;
+        }
         if (argument.startsWith('--base-url=')) {
             options.baseUrl = argument.slice('--base-url='.length).replace(/\/+$/, '');
         }

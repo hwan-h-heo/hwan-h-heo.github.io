@@ -102,6 +102,7 @@
 - Replaced the 3D viewer's remote Three.js, Tween.js, texture, and HDR dependencies with pinned local build assets.
 - Replaced public social icon CDN dependencies with the repository's local Bootstrap Icons files.
 - Added full source-asset checking and Playwright rendering checks for every public route.
+- Aligned canonical URLs, sitemap output, social metadata, and production verification with `https://hwan-h-heo.github.io` through a shared site configuration.
 
 ### Validation
 - `npm run verify` passed for 25 published posts and 3 portfolio blocks.

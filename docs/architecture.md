@@ -130,6 +130,8 @@ npm run deploy
 
 `npm run deploy` first runs `npm run verify`, then publishes the already-verified `blogs/dist/` directory. The build copies pinned Three.js/Tween runtime files from `blogs/node_modules` and excludes `blogs/editor/drafts`, `draft-assets`, and `project-snapshots` from public output.
 
+The public origin is `https://hwan-h-heo.github.io`. Node-side canonical URLs, Open Graph images, sitemap entries, robots.txt, and production verification share `SITE_URL` from `blogs/lib/site-config.js`.
+
 Important generated paths:
 
 - `blogs/dist/index.html`

@@ -13,7 +13,7 @@
     "check:assets": "node scripts/check-assets.js",
     "check:render": "node scripts/check-rendered-site.js",
     "verify": "npm run check:content && npm run check:assets && npm run build && npm run check:render",
-    "verify:production": "node scripts/check-rendered-site.js --base-url=https://hwan-h-heo.io",
+    "verify:production": "node scripts/check-rendered-site.js --production",
     "freeze:routes": "node scripts/freeze-route-compatibility.js"
   },
   "devDependencies": {
