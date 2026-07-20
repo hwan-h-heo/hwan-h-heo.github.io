@@ -3,8 +3,20 @@
   "version": "1.0.0",
   "description": "Hwan Heo's portfolio site with integrated blog",
   "scripts": {
+    "setup": "npm install && npm --prefix blogs install",
     "build": "npm --prefix blogs run build",
     "dev": "npm --prefix blogs run dev",
-    "deploy": "npm --prefix blogs run deploy"
+    "deploy": "npm run verify && npm --prefix blogs run deploy:dist",
+    "new:post": "node scripts/new-post.js",
+    "new:project": "node scripts/new-project.js",
+    "check:content": "node scripts/check-content.js",
+    "check:assets": "node scripts/check-assets.js",
+    "check:render": "node scripts/check-rendered-site.js",
+    "verify": "npm run check:content && npm run check:assets && npm run build && npm run check:render",
+    "verify:production": "node scripts/check-rendered-site.js --base-url=https://hwan-h-heo.io",
+    "freeze:routes": "node scripts/freeze-route-compatibility.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.1"
   }
 }
