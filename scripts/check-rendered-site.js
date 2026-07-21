@@ -147,7 +147,11 @@ function getLaunchOptions() {
 
 async function waitForDynamicContent(page, route) {
     const checks = {
-        portfolio: () => document.querySelectorAll('[data-portfolio-block] > *').length >= 3,
+        portfolio: () => {
+            return document.querySelectorAll('[data-portfolio-block] > *').length >= 3
+                && document.querySelectorAll('#portfolio-projects .portfolio-box').length > 0
+                && document.querySelectorAll('#portfolio-blog-posts .testimonial-item').length > 0;
+        },
         'blog-index': () => document.querySelectorAll('.post-preview').length > 0,
         'blog-search': () => document.querySelectorAll('.post-preview').length > 0,
         post: () => (document.querySelector('.post-content, article')?.textContent || '').trim().length > 100,
