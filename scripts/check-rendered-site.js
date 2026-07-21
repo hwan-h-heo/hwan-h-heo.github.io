@@ -318,6 +318,66 @@ async function inspect3DCanvas(page) {
     });
 }
 
+async function inspectPreviewLayout(page) {
+    return page.evaluate(() => {
+        const issues = [];
+        const pairs = [
+            ['#portfolio-projects .portfolio-box', '.aspect-ratio-box', '.polar_content'],
+            ['#portfolio-blog-posts .testimonial-item', '.testimonial-img', '.testimonial-content'],
+            ['.post-preview .post-card-link', '.post-card-cover', '.post-card-body']
+        ];
+
+        const intersects = (first, second) => {
+            const overlapWidth = Math.min(first.right, second.right) - Math.max(first.left, second.left);
+            const overlapHeight = Math.min(first.bottom, second.bottom) - Math.max(first.top, second.top);
+            return overlapWidth > 1 && overlapHeight > 1;
+        };
+
+        pairs.forEach(([containerSelector, mediaSelector, textSelector]) => {
+            document.querySelectorAll(containerSelector).forEach((container, index) => {
+                const media = container.querySelector(mediaSelector);
+                const text = container.querySelector(textSelector);
+                if (!media || !text) {
+                    return;
+                }
+                if (intersects(media.getBoundingClientRect(), text.getBoundingClientRect())) {
+                    issues.push(`${containerSelector}[${index}] media overlaps text`);
+                }
+            });
+        });
+
+        return issues;
+    });
+}
+
+async function checkMobilePreviewLayout(context, baseUrl, route) {
+    const page = await context.newPage();
+    try {
+        await page.setViewportSize({ width: 390, height: 844 });
+        const response = await page.goto(`${baseUrl}${route.path}`, {
+            waitUntil: 'domcontentloaded',
+            timeout: 30000
+        });
+        if (!response || !response.ok()) {
+            throw new Error(`Page returned ${response ? response.status() : 'no response'}.`);
+        }
+        await waitForDynamicContent(page, route);
+        const layoutIssues = await inspectPreviewLayout(page);
+        const horizontalOverflow = await page.evaluate(() => {
+            return document.documentElement.scrollWidth > document.documentElement.clientWidth + 1;
+        });
+        if (horizontalOverflow) {
+            layoutIssues.push('document has horizontal overflow at 390px');
+        }
+        if (layoutIssues.length) {
+            throw new Error(layoutIssues.map((message) => `layout: ${message}`).join('\n'));
+        }
+        process.stdout.write(`PASS ${route.path} (390px preview layout)\n`);
+    } finally {
+        await page.close();
+    }
+}
+
 async function checkRoute(context, baseUrl, route, options, totals) {
     const page = await context.newPage();
     const localFailures = [];
@@ -353,6 +413,7 @@ async function checkRoute(context, baseUrl, route, options, totals) {
         }
         await waitForDynamicContent(page, route);
         const inspection = await inspectRenderedMedia(page, origin);
+        const layoutIssues = await inspectPreviewLayout(page);
         if (route.type === 'utility') {
             const canvasInspection = await inspect3DCanvas(page);
             if (!canvasInspection.ok) {
@@ -368,11 +429,12 @@ async function checkRoute(context, baseUrl, route, options, totals) {
             });
         }
 
-        if (localFailures.length || pageErrors.length || inspection.broken.length) {
+        if (localFailures.length || pageErrors.length || inspection.broken.length || layoutIssues.length) {
             const details = [
                 ...localFailures.map((message) => `request: ${message}`),
                 ...pageErrors.map((message) => `script: ${message}`),
-                ...inspection.broken.map((item) => `${item.type}: ${item.url} (${item.reason})`)
+                ...inspection.broken.map((item) => `${item.type}: ${item.url} (${item.reason})`),
+                ...layoutIssues.map((message) => `layout: ${message}`)
             ];
             throw new Error(details.join('\n'));
         }
@@ -436,6 +498,14 @@ async function main() {
             } catch (error) {
                 failures.push({ route: route.path, message: error.message });
                 process.stderr.write(`FAIL ${route.path}\n${error.message}\n`);
+            }
+        }
+        for (const route of routes.filter((entry) => ['portfolio', 'blog-index', 'blog-search'].includes(entry.type))) {
+            try {
+                await checkMobilePreviewLayout(context, baseUrl, route);
+            } catch (error) {
+                failures.push({ route: `${route.path} (390px)`, message: error.message });
+                process.stderr.write(`FAIL ${route.path} (390px)\n${error.message}\n`);
             }
         }
     } finally {

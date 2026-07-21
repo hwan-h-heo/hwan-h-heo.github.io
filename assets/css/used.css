@@ -408,9 +408,10 @@ a.testimonial-link:hover {
 }
 
 .testimonials .testimonial-item {
-  display: block;
+  display: grid;
+  grid-template-rows: auto 1fr;
   position: relative;
-  border-radius: 9px; 
+  border-radius: 8px;
   overflow: hidden;
   background: #fdfdfd9e;
   transition: var(--transition-smooth); 
@@ -428,7 +429,11 @@ a.testimonial-link:hover {
 }
 
 .testimonials .testimonial-item .testimonial-content {
-  padding: 1rem 1.25rem; 
+  position: relative;
+  z-index: 2;
+  min-height: 5.4rem;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.96);
 }
 
 .testimonials .testimonial-item .testimonial-content h6 {
@@ -441,6 +446,7 @@ a.testimonial-link:hover {
   line-height: 1.4;
   font-style: italic; 
   font-weight: 400;
+  overflow-wrap: anywhere;
 }
 
 .testimonials .swiper-slide {
@@ -452,6 +458,7 @@ a.testimonial-link:hover {
   width: 100%;
   overflow: hidden; 
   position: relative; 
+  z-index: 1;
   aspect-ratio: 16 / 9;
 }
 
@@ -492,7 +499,7 @@ a.testimonial-link:hover {
   display: flex;
   flex-direction: column;
   position: relative;
-  border-radius: 18px;
+  border-radius: 8px;
   overflow: hidden;
   background: var(--surface-color);
   transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
@@ -543,8 +550,7 @@ a.testimonial-link:hover {
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(180deg, rgba(15, 23, 42, 0.04) 0%, rgba(15, 23, 42, 0.22) 58%, rgba(15, 23, 42, 0.72) 100%);
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.02), rgba(15, 23, 42, 0.1));
   pointer-events: none;
   z-index: 1;
 }
@@ -569,26 +575,26 @@ a.testimonial-link:hover {
 }
 
 .polar_content {
-  position: absolute;
-  bottom: 0;
-  left: 0;
+  position: relative;
   width: 100%;
-  padding: 2.9rem 1.05rem 1rem;
+  min-height: 7.4rem;
+  padding: 0.9rem 1.05rem 1rem;
   box-sizing: border-box;
-  background: linear-gradient(180deg, transparent 0%, rgba(2, 6, 23, 0.78) 42%, rgba(2, 6, 23, 0.92) 100%);
-  flex-shrink: 0;
+  background: var(--surface-color);
+  flex: 1 0 auto;
   z-index: 2;
 }
 
 .polar_content h6 {
-  color: #ffffff;
+  color: var(--heading-color);
   margin: 0;
   font-size: 0.96rem;
   line-height: 1.35;
-  min-height: 0;
+  min-height: 2.6em;
   font-weight: 650;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
   text-wrap: balance;
+  overflow-wrap: anywhere;
 }
 .portfolio-box-caption {
   display: none;
@@ -602,29 +608,21 @@ a.testimonial-link:hover {
 }
 
 .portfolio-card-summary {
-  color: rgba(255, 255, 255, 0.76);
+  color: #64748b;
   display: -webkit-box;
   font-size: 0.78rem;
   line-height: 1.35;
   margin: 0.45rem 0 0;
-  max-height: 0;
-  opacity: 0;
+  max-height: 3.2em;
+  opacity: 1;
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
-  transform: translateY(4px);
-  transition: max-height 0.24s ease, opacity 0.24s ease, transform 0.24s ease;
+  transform: none;
 }
 
 .click-prompt {
   display: none;
-}
-
-.portfolio-box:hover .portfolio-card-summary,
-.portfolio-box.is-active .portfolio-card-summary {
-  max-height: 3.2em;
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .top-left .badge {
