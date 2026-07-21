@@ -3198,19 +3198,27 @@ html {
     grid-template-columns: minmax(150px, 0.3fr) minmax(0, 1fr);
     gap: 0.95rem;
     align-items: stretch;
+    position: relative;
+    isolation: isolate;
 }
 
 .post-card-cover {
+    position: relative;
+    z-index: 1;
     min-height: 108px;
     aspect-ratio: 4 / 3;
     border-radius: 8px;
+    overflow: hidden;
     background-size: cover;
     background-position: center;
     border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .post-card-body {
+    position: relative;
+    z-index: 2;
     min-width: 0;
+    background: #ffffff;
 }
 
 .post-card-body .post-title {
@@ -3218,6 +3226,7 @@ html {
     line-height: 1.32;
     margin-top: 0;
     margin-bottom: 0.4rem;
+    overflow-wrap: anywhere;
 }
 
 .post-card-body .post-subtitle {
