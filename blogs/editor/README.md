@@ -5,7 +5,9 @@ A markdown editor for creating blog posts, registering metadata, and publishing 
 ## Features
 
 - ✍️ **Live Preview**: See your content rendered as you type
+- 🧩 **Layout Editing**: Edit the title, publishing details, and Markdown blocks directly in a post-shaped canvas
 - 💾 **Draft Management**: Save and load per-language markdown drafts locally
+- ☁️ **Google Drive Drafts**: Save and restore complete post workspaces as visible Markdown files in Drive
 - 📝 **Post Publishing**: Create or update `site-data.json` and `posts/{postId}/content-*.md` in one flow
 - 🗂️ **Metadata Editing**: Manage identity, descriptions, slug, tags, cover, status, dates, languages, and portfolio feature settings
 - ✅ **Validation**: Duplicate id checks, allowed category/series validation, and language/file alignment
@@ -32,6 +34,17 @@ In edit mode, you can:
 - Create or update `posts/{postId}/content-eng.md` and optional `content-kor.md`
 - Configure `featuredPortfolioPosts` entry for the current post
 
+### Google Drive Drafts
+
+Drive drafts work in both local edit mode and the static GitHub Pages editor.
+
+1. In Google Cloud, enable the Google Drive API and create a Web application OAuth Client ID.
+2. Add the editor origin, such as `http://localhost:3030`, to Authorized JavaScript origins.
+3. Open **Google Drive → Setup** in the editor and paste the Client ID.
+4. Use **Save to Drive** and **Drive drafts** in the top bar.
+
+The editor requests the narrow `drive.file` scope and creates a visible `Hwan Blog Drafts` folder. Each draft contains `draft.json`, `content-eng.md`, and optional `content-kor.md`. Drive access tokens remain in memory; the Client ID and created root folder ID are stored locally. Draft assets are not uploaded in this first version.
+
 ### Dev Mode (Preview Only)
 
 ```bash
@@ -44,7 +57,7 @@ Then navigate to the editor - draft management features are hidden.
 
 1. **Start editor**: `npm run edit`
 2. **Fill metadata**: Set identity, titles/descriptions, dates, slug, tags, local cover, status, languages, and optional featured teaser info
-3. **Write content**: Use the English/Korean tabs to edit markdown
+3. **Write content**: Use the English/Korean tabs and click blocks in Layout view, or switch to Markdown for the split source editor
 4. **Save draft**: Save the active language tab if you want a local snapshot
 5. **Publish**: Click `Publish` to write metadata and markdown files together
 
@@ -76,6 +89,7 @@ posts/
 - Drafts are stored locally in `editor/drafts/`
 - Post ID format: `YYMMDD_slug` (e.g., `250101_title`)
 - Use standard Markdown syntax
+- Layout view opens a clicked content block in place; use `Ctrl/Cmd + Enter` to finish or `Esc` to cancel
 - Math: Inline `$x^2$`, Block `$$x^2$$`
 - Code blocks: Use triple backticks with language
 
