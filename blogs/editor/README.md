@@ -5,6 +5,7 @@ A markdown editor for creating blog posts, registering metadata, and publishing 
 ## Features
 
 - ✍️ **Live Preview**: See your content rendered as you type
+- 🧩 **Layout Editing**: Edit the title, publishing details, and Markdown blocks directly in a post-shaped canvas
 - 💾 **Draft Management**: Save and load per-language markdown drafts locally
 - 📝 **Post Publishing**: Create or update `site-data.json` and `posts/{postId}/content-*.md` in one flow
 - 🗂️ **Metadata Editing**: Manage identity, descriptions, slug, tags, cover, status, dates, languages, and portfolio feature settings
@@ -44,7 +45,7 @@ Then navigate to the editor - draft management features are hidden.
 
 1. **Start editor**: `npm run edit`
 2. **Fill metadata**: Set identity, titles/descriptions, dates, slug, tags, local cover, status, languages, and optional featured teaser info
-3. **Write content**: Use the English/Korean tabs to edit markdown
+3. **Write content**: Use the English/Korean tabs and click blocks in Layout view, or switch to Markdown for the split source editor
 4. **Save draft**: Save the active language tab if you want a local snapshot
 5. **Publish**: Click `Publish` to write metadata and markdown files together
 
@@ -76,6 +77,7 @@ posts/
 - Drafts are stored locally in `editor/drafts/`
 - Post ID format: `YYMMDD_slug` (e.g., `250101_title`)
 - Use standard Markdown syntax
+- Layout view opens a clicked content block in place; use `Ctrl/Cmd + Enter` to finish or `Esc` to cancel
 - Math: Inline `$x^2$`, Block `$$x^2$$`
 - Code blocks: Use triple backticks with language
 

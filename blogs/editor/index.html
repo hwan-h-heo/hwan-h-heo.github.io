@@ -239,7 +239,19 @@
 
             <section class="editor-stage">
                 <div class="toolbar">
-                    <div id="language-tabs" class="language-tabs"></div>
+                    <div class="toolbar-navigation">
+                        <div id="language-tabs" class="language-tabs"></div>
+                        <div class="editor-view-tabs" aria-label="Editor view">
+                            <button id="layout-view-button" class="editor-view-tab is-active" type="button" aria-pressed="true">
+                                <i class="bi bi-layout-text-window-reverse"></i>
+                                Layout
+                            </button>
+                            <button id="markdown-view-button" class="editor-view-tab" type="button" aria-pressed="false">
+                                <i class="bi bi-markdown"></i>
+                                Markdown
+                            </button>
+                        </div>
+                    </div>
                     <div class="toolbar-actions">
                         <div class="toolbar-group" aria-label="Markdown formatting">
                             <button class="icon-button" type="button" data-insert="heading2" title="Insert H2 heading">H2</button>
@@ -281,7 +293,58 @@
                     </div>
                 </div>
 
-                <div id="editor-grid" class="editor-grid">
+                <section id="layout-editor" class="layout-editor" aria-label="Layout editor">
+                    <div class="layout-editor-hint">
+                        <span><i class="bi bi-cursor"></i> Click a title or content block to edit it in place.</span>
+                        <span>⌘/Ctrl + Enter finishes a block · Esc cancels</span>
+                    </div>
+
+                    <div class="blog-layout-canvas">
+                        <div class="layout-blog-nav">
+                            <strong>Blog Home</strong>
+                            <span>Layout editing</span>
+                        </div>
+                        <header id="layout-post-header" class="layout-post-header">
+                            <button id="layout-cover-button" class="layout-cover-button" type="button">
+                                <i class="bi bi-image"></i>
+                                Change cover
+                            </button>
+                            <div class="layout-post-heading">
+                                <div
+                                    id="layout-title"
+                                    class="layout-title"
+                                    contenteditable="true"
+                                    role="textbox"
+                                    aria-label="Post title"
+                                    data-placeholder="Click to add a title"
+                                    spellcheck="true"
+                                ></div>
+                                <div class="layout-post-meta">
+                                    <span>Posted on</span>
+                                    <input id="layout-date" class="layout-date-input" type="date" aria-label="Post date" />
+                                    <span aria-hidden="true">•</span>
+                                    <span><i class="bi bi-clock"></i> <span id="layout-reading-time">1 min read</span></span>
+                                </div>
+                                <label class="layout-tags-field">
+                                    <i class="bi bi-tags"></i>
+                                    <input id="layout-tags" type="text" placeholder="Add tags, separated by commas" aria-label="Post tags" />
+                                </label>
+                            </div>
+                        </header>
+
+                        <main class="layout-post-main">
+                            <article id="preview-content" class="preview-content layout-preview-content"></article>
+                            <button id="append-block-button" class="append-block-button" type="button">
+                                <i class="bi bi-plus-lg"></i>
+                                Add content block
+                            </button>
+                        </main>
+
+                        <footer class="layout-blog-footer">Copyright © Hwan Heo</footer>
+                    </div>
+                </section>
+
+                <div id="editor-grid" class="editor-grid is-hidden" aria-label="Markdown editor">
                     <div class="editor-panel">
                         <div class="panel-header panel-header-inline">
                             <h2>Markdown</h2>
@@ -295,7 +358,7 @@
                             <h2>Preview</h2>
                             <div class="stats">Relative draft assets are previewed automatically.</div>
                         </div>
-                        <article id="preview-content" class="preview-content"></article>
+                        <article id="source-preview-content" class="preview-content"></article>
                     </div>
                 </div>
             </section>

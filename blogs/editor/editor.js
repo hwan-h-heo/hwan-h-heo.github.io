@@ -4,6 +4,7 @@
     const CONTENT_DELIMITER = '--- 여기부터 실제 콘텐츠 ---';
     const SIDEBAR_COLLAPSED_KEY = 'blog-editor-sidebar-collapsed';
     const PANE_RATIO_KEY = 'blog-editor-pane-ratio';
+    const EDITOR_VIEW_KEY = 'blog-editor-view';
     const AUTOSAVE_KEY = 'blog-editor-autosave-v2';
     const AUTOSAVE_DELAY_MS = 1500;
     const DIAGNOSTICS_DELAY_MS = 350;
@@ -71,7 +72,8 @@
         },
         ui: {
             sidebarCollapsed: false,
-            editorPaneRatio: 0.52
+            editorPaneRatio: 0.52,
+            editorView: 'layout'
         },
         autosave: {
             timerId: null,
@@ -83,7 +85,9 @@
             diagnostics: [],
             diagnosticsTimerId: null,
             diagnosticsRevision: 0,
-            outline: []
+            outline: [],
+            blocks: [],
+            activeBlock: null
         }
     };
 
@@ -98,6 +102,7 @@
         marked.setOptions({ gfm: true, breaks: false });
         applySidebarState();
         applyPaneRatio();
+        applyEditorView();
 
         resetWorkspace(true);
         renderModeBadge();
@@ -159,9 +164,20 @@
             'featured-order',
             'featured-order-hint',
             'language-tabs',
+            'layout-view-button',
+            'markdown-view-button',
+            'layout-editor',
+            'layout-post-header',
+            'layout-cover-button',
+            'layout-title',
+            'layout-date',
+            'layout-reading-time',
+            'layout-tags',
+            'append-block-button',
             'editor-grid',
             'editor-textarea',
             'preview-content',
+            'source-preview-content',
             'editor-stats',
             'autosave-status',
             'autosave-meta',
@@ -207,6 +223,17 @@
         el.discardSessionButton.addEventListener('click', () => discardAutosaveSnapshot(true));
         el.languageKor.addEventListener('change', handleLanguageToggle);
         el.featuredEnabled.addEventListener('change', syncFormToState);
+        el.layoutViewButton.addEventListener('click', () => setEditorView('layout'));
+        el.markdownViewButton.addEventListener('click', () => setEditorView('markdown'));
+        el.layoutTitle.addEventListener('input', handleLayoutTitleInput);
+        el.layoutTitle.addEventListener('blur', handleLayoutTitleBlur);
+        el.layoutTitle.addEventListener('keydown', handleLayoutTitleKeydown);
+        el.layoutDate.addEventListener('change', handleLayoutDateInput);
+        el.layoutTags.addEventListener('input', handleLayoutTagsInput);
+        el.layoutCoverButton.addEventListener('click', changeLayoutCover);
+        el.appendBlockButton.addEventListener('click', appendVisualBlock);
+        el.previewContent.addEventListener('click', handleVisualEditorClick);
+        el.previewContent.addEventListener('paste', handleImagePaste);
         el.modalOverlay.addEventListener('click', (event) => {
             if (event.target === el.modalOverlay) {
                 closeModal();
@@ -248,10 +275,12 @@
         el.editorTextarea.addEventListener('paste', handleImagePaste);
 
         document.querySelectorAll('[data-insert]').forEach((button) => {
+            button.addEventListener('pointerdown', (event) => event.preventDefault());
             button.addEventListener('click', () => insertMarkdown(button.dataset.insert));
         });
 
         document.querySelectorAll('[data-snippet]').forEach((button) => {
+            button.addEventListener('pointerdown', (event) => event.preventDefault());
             button.addEventListener('click', () => insertSnippet(button.dataset.snippet));
         });
 
@@ -273,9 +302,13 @@
             if (Number.isFinite(storedRatio)) {
                 state.ui.editorPaneRatio = clamp(storedRatio, 0.32, 0.68);
             }
+            state.ui.editorView = window.localStorage.getItem(EDITOR_VIEW_KEY) === 'markdown'
+                ? 'markdown'
+                : 'layout';
         } catch (error) {
             state.ui.sidebarCollapsed = false;
             state.ui.editorPaneRatio = 0.52;
+            state.ui.editorView = 'layout';
         }
     }
 
@@ -351,6 +384,35 @@
         state.ui.sidebarCollapsed = !state.ui.sidebarCollapsed;
         applySidebarState();
         persistUiPreference(SIDEBAR_COLLAPSED_KEY, state.ui.sidebarCollapsed ? '1' : '0');
+    }
+
+    function setEditorView(view) {
+        if (view !== 'layout' && view !== 'markdown') {
+            return;
+        }
+
+        finishVisualBlockEdit();
+        state.ui.editorView = view;
+        applyEditorView();
+        persistUiPreference(EDITOR_VIEW_KEY, view);
+
+        if (view === 'markdown') {
+            window.requestAnimationFrame(() => el.editorTextarea.focus());
+        }
+    }
+
+    function applyEditorView() {
+        if (!el.layoutEditor || !el.editorGrid) {
+            return;
+        }
+
+        const isLayout = state.ui.editorView === 'layout';
+        el.layoutEditor.classList.toggle('is-hidden', !isLayout);
+        el.editorGrid.classList.toggle('is-hidden', isLayout);
+        el.layoutViewButton.classList.toggle('is-active', isLayout);
+        el.markdownViewButton.classList.toggle('is-active', !isLayout);
+        el.layoutViewButton.setAttribute('aria-pressed', String(isLayout));
+        el.markdownViewButton.setAttribute('aria-pressed', String(!isLayout));
     }
 
     function applySidebarState() {
@@ -561,6 +623,7 @@
         renderFeatureFields();
         renderKoreanFields();
         renderFeaturedOrderHint();
+        renderLayoutMetadata();
 
         if (!options.skipAutosave) {
             queueAutosave();
@@ -568,6 +631,7 @@
     }
 
     function handleLanguageToggle() {
+        finishVisualBlockEdit();
         syncFormToState();
         if (!state.metadata.languages.includes(state.activeLanguage)) {
             state.activeLanguage = 'eng';
@@ -593,6 +657,7 @@
     }
 
     function switchLanguage(language) {
+        finishVisualBlockEdit();
         state.contents[state.activeLanguage] = el.editorTextarea.value;
         state.activeLanguage = language;
         updateEditor();
@@ -604,6 +669,97 @@
 
     function updateEditor() {
         el.editorTextarea.value = state.contents[state.activeLanguage] || '';
+    }
+
+    function activeTitleKey() {
+        return state.activeLanguage === 'kor' ? 'title_kor' : 'title_eng';
+    }
+
+    function renderLayoutMetadata() {
+        if (!el.layoutTitle) {
+            return;
+        }
+
+        const title = state.metadata[activeTitleKey()] || '';
+        if (document.activeElement !== el.layoutTitle) {
+            el.layoutTitle.textContent = title;
+        }
+        if (document.activeElement !== el.layoutDate) {
+            el.layoutDate.value = state.metadata.date || '';
+        }
+        if (document.activeElement !== el.layoutTags) {
+            el.layoutTags.value = (state.metadata.tags || []).join(', ');
+        }
+
+        const wordCount = (state.contents[state.activeLanguage] || '').trim().split(/\s+/).filter(Boolean).length;
+        el.layoutReadingTime.textContent = `${Math.max(1, Math.ceil(wordCount / 220))} min read`;
+
+        const cover = resolveLayoutCoverUrl(state.metadata.cover);
+        el.layoutPostHeader.style.backgroundImage = cover
+            ? `linear-gradient(rgba(15, 23, 42, 0.42), rgba(15, 23, 42, 0.7)), url("${cover.replace(/"/g, '%22')}")`
+            : 'linear-gradient(135deg, #26364a, #0f766e)';
+        el.layoutCoverButton.classList.toggle('is-empty', !cover);
+    }
+
+    function resolveLayoutCoverUrl(value) {
+        const cover = String(value || '').trim();
+        if (!cover) {
+            return '';
+        }
+        if (/^(?:https?:|data:|blob:)/.test(cover)) {
+            return cover;
+        }
+        if (state.editMode && cover.startsWith('/blogs/')) {
+            return cover.slice('/blogs'.length);
+        }
+        return cover;
+    }
+
+    function handleLayoutTitleInput() {
+        const value = el.layoutTitle.textContent.replace(/\n+/g, ' ');
+        const key = activeTitleKey();
+        state.metadata[key] = value;
+        const sidebarField = state.activeLanguage === 'kor' ? el.titleKor : el.titleEng;
+        sidebarField.value = value;
+        queueAutosave();
+    }
+
+    function handleLayoutTitleBlur() {
+        const value = el.layoutTitle.textContent.replace(/\n+/g, ' ').trim();
+        state.metadata[activeTitleKey()] = value;
+        el.layoutTitle.textContent = value;
+        const sidebarField = state.activeLanguage === 'kor' ? el.titleKor : el.titleEng;
+        sidebarField.value = value;
+    }
+
+    function handleLayoutTitleKeydown(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            el.layoutTitle.blur();
+        }
+    }
+
+    function handleLayoutDateInput() {
+        el.postDate.value = el.layoutDate.value;
+        syncFormToState();
+    }
+
+    function handleLayoutTagsInput() {
+        el.postTags.value = el.layoutTags.value;
+        state.metadata.tags = [...new Set(el.layoutTags.value.split(',').map((tag) => tag.trim()).filter(Boolean))];
+        queueAutosave();
+    }
+
+    function changeLayoutCover() {
+        const nextCover = window.prompt(
+            'Cover image URL or site path',
+            state.metadata.cover || '/blogs/posts/YYMMDD_post/assets/cover.webp'
+        );
+        if (nextCover === null) {
+            return;
+        }
+        el.postCover.value = nextCover.trim();
+        syncFormToState();
     }
 
     function renderKoreanFields() {
@@ -642,6 +798,21 @@
     function updatePreview() {
         const postId = state.metadata.id.trim();
         const content = stripLegacyContentPreamble(el.editorTextarea.value || '');
+        const html = renderMarkdownHtml(content, postId);
+
+        el.sourcePreviewContent.innerHTML = html;
+        renderVisualPreview(content, postId);
+
+        [el.previewContent, el.sourcePreviewContent].forEach((container) => {
+            enhanceRenderedPreview(container);
+        });
+
+        renderLayoutMetadata();
+        renderHeadingOutline();
+        queuePreviewDiagnostics(postId, content);
+    }
+
+    function renderMarkdownHtml(content, postId) {
         const parseMarkdown = window.blogMarkdown && typeof window.blogMarkdown.parseMarkdownWithMath === 'function'
             ? window.blogMarkdown.parseMarkdownWithMath
             : (source, parser) => parser(source);
@@ -657,10 +828,16 @@
             return basePath ? `${attr}=${quote}${basePath}` : match;
         });
 
-        el.previewContent.innerHTML = html;
+        return html;
+    }
+
+    function enhanceRenderedPreview(container) {
+        if (!container) {
+            return;
+        }
 
         if (typeof renderMathInElement !== 'undefined') {
-            renderMathInElement(el.previewContent, {
+            renderMathInElement(container, {
                 delimiters: [
                     { left: '$$', right: '$$', display: true },
                     { left: '$', right: '$', display: false },
@@ -672,11 +849,274 @@
         }
 
         if (window.Prism && Prism.highlightAllUnder) {
-            Prism.highlightAllUnder(el.previewContent);
+            Prism.highlightAllUnder(container);
+        }
+    }
+
+    function buildVisualBlocks(content) {
+        const tokens = marked.lexer(content || '');
+        const blocks = [];
+        let offset = 0;
+
+        tokens.forEach((token) => {
+            const raw = token.raw || '';
+            const start = offset;
+            offset += raw.length;
+
+            if (token.type === 'space' && blocks.length > 0) {
+                blocks[blocks.length - 1].raw += raw;
+                blocks[blocks.length - 1].end = offset;
+                return;
+            }
+
+            if (!raw.trim()) {
+                return;
+            }
+
+            blocks.push({
+                type: token.type || 'paragraph',
+                raw,
+                start,
+                end: offset
+            });
+        });
+
+        if (offset < content.length && blocks.length > 0) {
+            blocks[blocks.length - 1].raw += content.slice(offset);
+            blocks[blocks.length - 1].end = content.length;
         }
 
-        renderHeadingOutline();
-        queuePreviewDiagnostics(postId, content);
+        return blocks;
+    }
+
+    function renderVisualPreview(content, postId) {
+        state.preview.activeBlock = null;
+        state.preview.blocks = buildVisualBlocks(content);
+
+        if (state.preview.blocks.length === 0) {
+            el.previewContent.innerHTML = `
+                <button class="visual-empty-state" type="button" data-append-block>
+                    <i class="bi bi-plus-circle"></i>
+                    <strong>Start this post</strong>
+                    <span>Add the first content block and write directly in the layout.</span>
+                </button>
+            `;
+            return;
+        }
+
+        el.previewContent.innerHTML = state.preview.blocks.map((block, index) => `
+            <div class="visual-block visual-block-${escapeHtml(block.type)}" data-block-index="${index}" tabindex="0">
+                <div class="visual-block-content">${renderMarkdownHtml(block.raw, postId)}</div>
+                <div class="visual-block-actions" aria-label="Content block actions">
+                    <button type="button" data-edit-block="${index}" title="Edit this block"><i class="bi bi-pencil"></i></button>
+                    <button type="button" data-delete-block="${index}" title="Delete this block"><i class="bi bi-trash3"></i></button>
+                </div>
+            </div>
+            <button class="visual-add-button" type="button" data-insert-after="${index}" title="Add a block here" aria-label="Add a content block here">
+                <i class="bi bi-plus"></i>
+            </button>
+        `).join('');
+    }
+
+    function handleVisualEditorClick(event) {
+        const appendButton = event.target.closest('[data-append-block]');
+        if (appendButton) {
+            appendVisualBlock();
+            return;
+        }
+
+        const addButton = event.target.closest('[data-insert-after]');
+        if (addButton) {
+            insertVisualBlockAfter(Number.parseInt(addButton.dataset.insertAfter, 10));
+            return;
+        }
+
+        const deleteButton = event.target.closest('[data-delete-block]');
+        if (deleteButton) {
+            event.stopPropagation();
+            deleteVisualBlock(Number.parseInt(deleteButton.dataset.deleteBlock, 10));
+            return;
+        }
+
+        const editButton = event.target.closest('[data-edit-block]');
+        if (editButton) {
+            event.stopPropagation();
+            beginVisualBlockEdit(Number.parseInt(editButton.dataset.editBlock, 10));
+            return;
+        }
+
+        const block = event.target.closest('[data-block-index]');
+        if (!block || event.target.closest('textarea')) {
+            return;
+        }
+
+        if (event.target.closest('a')) {
+            event.preventDefault();
+        }
+        beginVisualBlockEdit(Number.parseInt(block.dataset.blockIndex, 10));
+    }
+
+    function beginVisualBlockEdit(index) {
+        if (!Number.isInteger(index)) {
+            return;
+        }
+
+        if (state.preview.activeBlock && state.preview.activeBlock.index === index) {
+            const activeTextarea = el.previewContent.querySelector('.visual-block-source');
+            if (activeTextarea) {
+                activeTextarea.focus();
+            }
+            return;
+        }
+
+        if (state.preview.activeBlock) {
+            finishVisualBlockEdit();
+        }
+
+        const block = state.preview.blocks[index];
+        const blockElement = el.previewContent.querySelector(`[data-block-index="${index}"]`);
+        if (!block || !blockElement) {
+            return;
+        }
+
+        const contentElement = blockElement.querySelector('.visual-block-content');
+        const textarea = document.createElement('textarea');
+        textarea.className = 'visual-block-source';
+        textarea.value = block.raw;
+        textarea.spellcheck = true;
+        textarea.setAttribute('aria-label', 'Markdown for this content block');
+        contentElement.replaceChildren(textarea);
+        blockElement.classList.add('is-editing');
+
+        state.preview.activeBlock = {
+            index,
+            start: block.start,
+            end: block.end,
+            originalRaw: block.raw
+        };
+
+        textarea.addEventListener('input', () => {
+            updateActiveVisualBlock(textarea.value);
+            resizeVisualBlockTextarea(textarea);
+        });
+        textarea.addEventListener('blur', () => {
+            window.setTimeout(() => {
+                if (state.preview.activeBlock && !el.previewContent.contains(document.activeElement)) {
+                    finishVisualBlockEdit();
+                }
+            }, 0);
+        });
+        textarea.addEventListener('keydown', handleVisualBlockKeydown);
+        textarea.focus();
+        textarea.select();
+        resizeVisualBlockTextarea(textarea);
+    }
+
+    function resizeVisualBlockTextarea(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = `${Math.max(96, textarea.scrollHeight + 2)}px`;
+    }
+
+    function updateActiveVisualBlock(value) {
+        const active = state.preview.activeBlock;
+        if (!active) {
+            return;
+        }
+
+        const content = el.editorTextarea.value;
+        const nextContent = `${content.slice(0, active.start)}${value}${content.slice(active.end)}`;
+        active.end = active.start + value.length;
+        state.preview.blocks[active.index].raw = value;
+        state.preview.blocks[active.index].end = active.end;
+        el.editorTextarea.value = nextContent;
+        state.contents[state.activeLanguage] = nextContent;
+        updateStats();
+        renderLayoutMetadata();
+        queueAutosave();
+    }
+
+    function finishVisualBlockEdit() {
+        if (!state.preview.activeBlock) {
+            return;
+        }
+        state.preview.activeBlock = null;
+        updatePreview();
+    }
+
+    function cancelVisualBlockEdit() {
+        const active = state.preview.activeBlock;
+        if (!active) {
+            return;
+        }
+
+        const content = el.editorTextarea.value;
+        const restored = `${content.slice(0, active.start)}${active.originalRaw}${content.slice(active.end)}`;
+        el.editorTextarea.value = restored;
+        state.contents[state.activeLanguage] = restored;
+        state.preview.activeBlock = null;
+        updateStats();
+        updatePreview();
+        queueAutosave();
+    }
+
+    function handleVisualBlockKeydown(event) {
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            cancelVisualBlockEdit();
+            return;
+        }
+
+        if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
+            event.preventDefault();
+            finishVisualBlockEdit();
+        }
+    }
+
+    function deleteVisualBlock(index) {
+        finishVisualBlockEdit();
+        const block = state.preview.blocks[index];
+        if (!block) {
+            return;
+        }
+        replaceMarkdownRange(block.start, block.end, '');
+        updatePreview();
+    }
+
+    function appendVisualBlock() {
+        finishVisualBlockEdit();
+        const lastIndex = state.preview.blocks.length - 1;
+        insertVisualBlockAfter(lastIndex);
+    }
+
+    function insertVisualBlockAfter(index) {
+        finishVisualBlockEdit();
+        const content = el.editorTextarea.value;
+        const block = state.preview.blocks[index];
+        const insertionPoint = block ? block.end : content.length;
+        const needsLeadingBreak = insertionPoint > 0 && !content.slice(0, insertionPoint).endsWith('\n\n');
+        const placeholder = 'Start writing here.';
+        const inserted = `${needsLeadingBreak ? '\n\n' : ''}${placeholder}\n\n`;
+        const placeholderStart = insertionPoint + (needsLeadingBreak ? 2 : 0);
+
+        replaceMarkdownRange(insertionPoint, insertionPoint, inserted);
+        updatePreview();
+
+        const nextIndex = state.preview.blocks.findIndex((item) => (
+            item.start <= placeholderStart && item.end > placeholderStart
+        ));
+        if (nextIndex >= 0) {
+            beginVisualBlockEdit(nextIndex);
+        }
+    }
+
+    function replaceMarkdownRange(start, end, replacement) {
+        const content = el.editorTextarea.value;
+        const nextContent = `${content.slice(0, start)}${replacement}${content.slice(end)}`;
+        el.editorTextarea.value = nextContent;
+        state.contents[state.activeLanguage] = nextContent;
+        updateStats();
+        renderLayoutMetadata();
+        queueAutosave();
     }
 
     function updateStats() {
@@ -730,46 +1170,73 @@
             return;
         }
 
-        const start = el.editorTextarea.selectionStart;
-        const end = el.editorTextarea.selectionEnd;
-        const selected = el.editorTextarea.value.slice(start, end);
+        const target = getWritingTarget(true);
+        if (!target) {
+            return;
+        }
+        const start = target.selectionStart;
+        const end = target.selectionEnd;
+        const selected = target.value.slice(start, end);
         const selectionText = selected || '';
         const withSelection = snippet.template.replace(/{{selection}}/g, selectionText);
         const cursorMarker = '__CURSOR__';
         const cursorIndex = withSelection.indexOf(cursorMarker);
         const replacement = withSelection.replace(cursorMarker, '');
 
-        el.editorTextarea.value = `${el.editorTextarea.value.slice(0, start)}${replacement}${el.editorTextarea.value.slice(end)}`;
-        el.editorTextarea.focus();
+        target.value = `${target.value.slice(0, start)}${replacement}${target.value.slice(end)}`;
+        target.focus();
 
         if (cursorIndex >= 0) {
             const caret = start + cursorIndex;
-            el.editorTextarea.selectionStart = caret;
-            el.editorTextarea.selectionEnd = caret;
+            target.selectionStart = caret;
+            target.selectionEnd = caret;
         } else {
             const caret = start + replacement.length;
-            el.editorTextarea.selectionStart = caret;
-            el.editorTextarea.selectionEnd = caret;
+            target.selectionStart = caret;
+            target.selectionEnd = caret;
         }
 
-        state.contents[state.activeLanguage] = el.editorTextarea.value;
-        updatePreview();
-        updateStats();
-        queueAutosave();
+        syncWritingTarget(target);
     }
 
     function wrapSelection(before, after) {
-        const start = el.editorTextarea.selectionStart;
-        const end = el.editorTextarea.selectionEnd;
-        const selected = el.editorTextarea.value.slice(start, end);
+        const target = getWritingTarget(true);
+        if (!target) {
+            return;
+        }
+        const start = target.selectionStart;
+        const end = target.selectionEnd;
+        const selected = target.value.slice(start, end);
         const replacement = `${before}${selected}${after}`;
 
-        el.editorTextarea.value = `${el.editorTextarea.value.slice(0, start)}${replacement}${el.editorTextarea.value.slice(end)}`;
-        el.editorTextarea.focus();
-        el.editorTextarea.selectionStart = start + before.length;
-        el.editorTextarea.selectionEnd = start + before.length + selected.length;
+        target.value = `${target.value.slice(0, start)}${replacement}${target.value.slice(end)}`;
+        target.focus();
+        target.selectionStart = start + before.length;
+        target.selectionEnd = start + before.length + selected.length;
 
-        state.contents[state.activeLanguage] = el.editorTextarea.value;
+        syncWritingTarget(target);
+    }
+
+    function getWritingTarget(createVisualBlock) {
+        if (state.ui.editorView === 'layout') {
+            let visualTextarea = el.previewContent.querySelector('.visual-block-source');
+            if (!visualTextarea && createVisualBlock) {
+                appendVisualBlock();
+                visualTextarea = el.previewContent.querySelector('.visual-block-source');
+            }
+            return visualTextarea;
+        }
+        return el.editorTextarea;
+    }
+
+    function syncWritingTarget(target) {
+        if (target.classList.contains('visual-block-source')) {
+            updateActiveVisualBlock(target.value);
+            resizeVisualBlockTextarea(target);
+            return;
+        }
+
+        state.contents[state.activeLanguage] = target.value;
         updatePreview();
         updateStats();
         queueAutosave();
@@ -1148,10 +1615,15 @@
 
                 focusEditorHeading(targetHeading);
 
-                if (targetHeading.previewId) {
-                    const previewTarget = document.getElementById(targetHeading.previewId);
-                    if (previewTarget) {
-                        el.previewContent.scrollTo({
+                const activePreview = state.ui.editorView === 'layout'
+                    ? el.previewContent
+                    : el.sourcePreviewContent;
+                const previewTarget = activePreview.querySelectorAll('h2, h3')[headingIndex];
+                if (previewTarget) {
+                    if (state.ui.editorView === 'layout') {
+                        previewTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    } else {
+                        activePreview.scrollTo({
                             top: Math.max(0, previewTarget.offsetTop - 18),
                             behavior: 'smooth'
                         });
@@ -1211,6 +1683,20 @@
 
     function focusEditorHeading(heading) {
         if (!el.editorTextarea) {
+            return;
+        }
+
+        if (state.ui.editorView === 'layout') {
+            const blockIndex = state.preview.blocks.findIndex((block) => (
+                block.start <= heading.startIndex && block.end >= heading.endIndex
+            ));
+            if (blockIndex >= 0) {
+                const blockElement = el.previewContent.querySelector(`[data-block-index="${blockIndex}"]`);
+                if (blockElement) {
+                    blockElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                beginVisualBlockEdit(blockIndex);
+            }
             return;
         }
 
