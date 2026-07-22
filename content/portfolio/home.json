@@ -55,9 +55,9 @@
               "items": [
                 {
                   "title": "Hwan Heo | 허환",
-                  "bodyHtml": "<em>AI Research Engineer with 3+ years of experience building production 3D AI systems across large-scale model training, inference optimization, neural rendering, and graphics algorithms.</em>",
+                  "bodyHtml": "<em>AI Research Engineer building production 3D AI systems across generative models, neural rendering, and graphics.</em>",
                   "bulletsHtml": [
-                    "AI Research Engineer at NC AI (NCSOFT)",
+                    "AI Research Engineer at NC AI",
                     "Research Personnel, Alternative Military Service"
                   ]
                 }
@@ -67,16 +67,14 @@
               "title": "Education",
               "items": [
                 {
-                  "titleHtml": "<i class=\"bi bi-mortarboard-fill\"></i> Master of Computer Science &amp; Engineering",
+                  "titleHtml": "<i class=\"bi bi-mortarboard-fill\"></i> M.S. in Computer Science &amp; Engineering",
                   "period": "2020 - 2022",
-                  "metaHtml": "MLV Lab, Korea University, Seoul",
-                  "bodyHtml": "Studied advanced machine learning, computer vision, generalization and related areas, building a theoretical and practical foundation."
+                  "metaHtml": "MLV Lab, Korea University, Seoul"
                 },
                 {
-                  "titleHtml": "<i class=\"bi bi-mortarboard-fill\"></i> Bachelor of Computer Science &amp; Engineering",
+                  "titleHtml": "<i class=\"bi bi-mortarboard-fill\"></i> B.S. in Computer Science &amp; Engineering",
                   "period": "2015 - 2020",
-                  "metaHtml": "Korea University, Seoul",
-                  "bodyHtml": "Gained a comprehensive understanding of computer science principles and engineering fundamentals through a rigorous undergraduate program."
+                  "metaHtml": "Korea University, Seoul"
                 }
               ]
             }
@@ -92,7 +90,7 @@
                   "period": "2025 - Present",
                   "metaHtml": "3D Generation, NC AI",
                   "bulletsHtml": [
-                    "Spearheaded the research and development of core algorithms for <em>VARCO 3D</em>, NC AI's flagship 3D generation service <a href=\"https://www.varco.ai/3d\" class=\"bi bi-link-45deg\"></a>"
+                    "Leading <em>VARCO 3D</em> R&amp;D across generative model training, inference optimization, graphics algorithms, and deployment."
                   ]
                 },
                 {
@@ -100,9 +98,7 @@
                   "period": "2023 - 2025",
                   "metaHtml": "Neural Rendering &amp; 3D Generation, NCSOFT Research",
                   "bulletsHtml": [
-                    "Led research and development of 3D asset generation, focusing on 3D Latent Diffusion and Texture Synthesis: <em>CaPa</em> <a href=\"https://ncsoft.github.io/CaPa/\" class=\"bi bi-link-45deg\"></a>",
-                    "Developed and applied novel Neural Rendering solutions, including:",
-                    "<ul><li>Integrated Gaussian Splatting into a proprietary game engine <a href=\"projects/nerf_in_game/\" class=\"bi bi-link-45deg\"></a></li><li>Created a high-speed Neural Facial Avatar for multi-camera systems <a href=\"projects/face_nerf/\" class=\"bi bi-link-45deg\"></a></li></ul>"
+                    "Developed 3D generation and neural rendering systems spanning latent diffusion, texture synthesis, Gaussian Splatting, and neural avatars."
                   ]
                 },
                 {
@@ -110,7 +106,7 @@
                   "period": "2022",
                   "metaHtml": "Generation Research, NAVER AI Lab",
                   "bulletsHtml": [
-                    "Researched a novel neural rendering method using joint optimization of camera poses and hash grid radiance fields <a href=\"https://dl.acm.org/doi/10.5555/3618408.3618936\" class=\"bi bi-link-45deg\"></a>"
+                    "Researched pose optimization for neural rendering."
                   ]
                 }
               ]

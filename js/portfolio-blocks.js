@@ -134,48 +134,180 @@
         return '';
     }
 
-    function initHeroAboutScrollHandoff() {
-        const hero = root.document.getElementById('home');
-        const about = root.document.getElementById('about');
-        if (!hero || !about || hero.dataset.scrollHandoffBound === 'true') {
+    function markSectionReady(section) {
+        if (!section) return;
+        section.dataset.sectionReady = 'true';
+        section.dispatchEvent(new root.CustomEvent('portfolio:section-ready'));
+    }
+
+    function initSectionScrollHandoff() {
+        const sections = Array.from(root.document.querySelectorAll('main > section[id]'));
+        const page = root.document.documentElement;
+        if (sections.length < 2 || page.dataset.sectionScrollBound === 'true') {
             return;
         }
 
-        hero.dataset.scrollHandoffBound = 'true';
+        page.dataset.sectionScrollBound = 'true';
         const reducedMotion = root.matchMedia('(prefers-reduced-motion: reduce)').matches;
         let accumulatedWheelDelta = 0;
         let wheelDirection = 0;
         let wheelResetTimer;
+        let wheelReleaseTimer;
         let touchStartY = null;
+        let touchGestureLocked = false;
         let isSnapping = false;
+        let wheelGestureLocked = false;
+        let wheelLockStartedAt = 0;
 
-        const heroIsActive = () => root.scrollY < about.offsetTop - 2;
-        const aboutStartIsActive = () => {
-            const distanceFromAbout = root.scrollY - about.offsetTop;
-            return distanceFromAbout >= -2 && distanceFromAbout <= 48;
+        const delay = (milliseconds) => new Promise(resolve => root.setTimeout(resolve, milliseconds));
+        const getCurrentSectionIndex = () => {
+            const position = root.scrollY + 2;
+            let currentIndex = 0;
+            sections.forEach((section, index) => {
+                if (section.offsetTop <= position) currentIndex = index;
+            });
+            return currentIndex;
         };
-        const snapToSection = (section, canSnap) => {
-            if (isSnapping || !canSnap()) {
+        const getSnapTarget = (direction) => {
+            const currentIndex = getCurrentSectionIndex();
+            const current = sections[currentIndex];
+            const currentTop = current.offsetTop;
+            const currentBottom = currentTop + current.offsetHeight;
+            const next = sections[currentIndex + 1];
+            const snapSized = current.offsetHeight <= root.innerHeight * 1.2;
+            const betweenSnapAnchors = next
+                && snapSized
+                && root.scrollY > currentTop + 48
+                && root.scrollY < next.offsetTop - 2;
+
+            if (betweenSnapAnchors) {
+                return direction > 0 ? next : current;
+            }
+
+            if (direction > 0 && currentIndex < sections.length - 1) {
+                const reachesSectionEnd = root.scrollY + root.innerHeight >= currentBottom - 12;
+                const fitsViewport = current.offsetHeight <= root.innerHeight + 24;
+                const alignedAtStart = Math.abs(root.scrollY - currentTop) <= 48;
+                return reachesSectionEnd || (fitsViewport && alignedAtStart)
+                    ? sections[currentIndex + 1]
+                    : null;
+            }
+
+            if (direction < 0 && currentIndex > 0) {
+                const previous = sections[currentIndex - 1];
+                const atSectionStart = root.scrollY <= currentTop + 48;
+                const previousIsSnapSized = previous.offsetHeight <= root.innerHeight * 1.2;
+                return atSectionStart && previousIsSnapSized ? previous : null;
+            }
+
+            return null;
+        };
+        const waitForSectionReady = (section) => {
+            if (section.dataset.sectionReady !== 'false') {
+                return Promise.resolve();
+            }
+
+            return new Promise(resolve => {
+                const finish = () => {
+                    root.clearTimeout(timeoutId);
+                    section.removeEventListener('portfolio:section-ready', finish);
+                    resolve();
+                };
+                const timeoutId = root.setTimeout(finish, 560);
+                section.addEventListener('portfolio:section-ready', finish, { once: true });
+            });
+        };
+        const prepareSection = async (section) => {
+            const wasReady = section.dataset.sectionReady !== 'false';
+            await waitForSectionReady(section);
+
+            const imageDecodes = Array.from(section.querySelectorAll('img'))
+                .slice(0, 8)
+                .map(image => {
+                    if (typeof image.decode === 'function') {
+                        return image.decode().catch(() => undefined);
+                    }
+                    return Promise.resolve();
+                });
+            await Promise.race([Promise.all(imageDecodes), delay(240)]);
+            return wasReady;
+        };
+        const animateScrollTo = (section, duration) => new Promise(resolve => {
+            const startY = root.scrollY;
+            const distance = section.offsetTop - startY;
+            if (duration === 0 || Math.abs(distance) < 1) {
+                root.scrollTo(0, section.offsetTop);
+                resolve();
                 return;
             }
 
-            isSnapping = true;
-            section.scrollIntoView({
-                behavior: reducedMotion ? 'auto' : 'smooth',
-                block: 'start'
-            });
-            root.setTimeout(() => {
-                isSnapping = false;
-            }, reducedMotion ? 0 : 900);
+            const startedAt = root.performance.now();
+            const step = (timestamp) => {
+                const progress = Math.min((timestamp - startedAt) / duration, 1);
+                const eased = progress < 0.5
+                    ? 4 * progress * progress * progress
+                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+                const liveDistance = section.offsetTop - startY;
+                root.scrollTo(0, startY + liveDistance * eased);
+                if (progress < 1) {
+                    root.requestAnimationFrame(step);
+                    return;
+                }
+                root.scrollTo(0, section.offsetTop);
+                resolve();
+            };
+            root.requestAnimationFrame(step);
+        });
+        const warmAdjacentSections = (section) => {
+            const index = sections.indexOf(section);
+            const warm = () => {
+                [sections[index - 1], sections[index + 1]]
+                    .filter(Boolean)
+                    .forEach(adjacent => prepareSection(adjacent));
+            };
+            if (typeof root.requestIdleCallback === 'function') {
+                root.requestIdleCallback(warm, { timeout: 700 });
+            } else {
+                root.setTimeout(warm, 80);
+            }
         };
-        const snapToAbout = () => snapToSection(about, heroIsActive);
-        const snapToHero = () => snapToSection(hero, aboutStartIsActive);
+        const releaseWheelGestureAfterRest = () => {
+            root.clearTimeout(wheelReleaseTimer);
+            const quietPeriod = 140;
+            const minimumLock = Math.max(0, 220 - (root.performance.now() - wheelLockStartedAt));
+            wheelReleaseTimer = root.setTimeout(() => {
+                wheelGestureLocked = false;
+            }, Math.max(quietPeriod, minimumLock));
+        };
+        const snapToSection = async (section) => {
+            if (!section || isSnapping) return;
+
+            isSnapping = true;
+            wheelGestureLocked = true;
+            wheelLockStartedAt = root.performance.now();
+            page.classList.add('section-transitioning');
+            try {
+                const wasReady = await prepareSection(section);
+                const duration = reducedMotion ? 0 : (wasReady ? 720 : 940);
+                await animateScrollTo(section, duration);
+                warmAdjacentSections(section);
+            } finally {
+                page.classList.remove('section-transitioning');
+                isSnapping = false;
+                releaseWheelGestureAfterRest();
+            }
+        };
 
         root.addEventListener('wheel', (event) => {
+            if (isSnapping || wheelGestureLocked) {
+                event.preventDefault();
+                releaseWheelGestureAfterRest();
+                return;
+            }
+
             const direction = Math.sign(event.deltaY);
-            const shouldSnapDown = direction > 0 && heroIsActive();
-            const shouldSnapUp = direction < 0 && aboutStartIsActive();
-            if (!shouldSnapDown && !shouldSnapUp) {
+            const target = direction ? getSnapTarget(direction) : null;
+            if (!target) {
                 accumulatedWheelDelta = 0;
                 wheelDirection = 0;
                 return;
@@ -195,58 +327,66 @@
 
             if (accumulatedWheelDelta >= 24) {
                 accumulatedWheelDelta = 0;
-                shouldSnapDown ? snapToAbout() : snapToHero();
+                snapToSection(target);
             }
         }, { passive: false });
 
         root.addEventListener('touchstart', (event) => {
-            const canSnap = heroIsActive() || aboutStartIsActive();
-            touchStartY = canSnap ? event.touches[0]?.clientY ?? null : null;
+            touchStartY = event.touches[0]?.clientY ?? null;
+            if (isSnapping) touchGestureLocked = true;
         }, { passive: true });
 
         root.addEventListener('touchmove', (event) => {
-            if (touchStartY === null) {
+            if (isSnapping || touchGestureLocked) {
+                event.preventDefault();
                 return;
             }
+            if (touchStartY === null) return;
 
             const currentY = event.touches[0]?.clientY;
-            if (typeof currentY !== 'number') {
-                return;
-            }
+            if (typeof currentY !== 'number') return;
 
             const movement = touchStartY - currentY;
-            const shouldSnapDown = movement >= 20 && heroIsActive();
-            const shouldSnapUp = movement <= -20 && aboutStartIsActive();
-            if (shouldSnapDown || shouldSnapUp) {
+            if (Math.abs(movement) < 24) return;
+
+            const target = getSnapTarget(Math.sign(movement));
+            if (target) {
                 event.preventDefault();
                 touchStartY = null;
-                shouldSnapDown ? snapToAbout() : snapToHero();
+                touchGestureLocked = true;
+                snapToSection(target);
             }
         }, { passive: false });
 
         root.addEventListener('touchend', () => {
             touchStartY = null;
+            touchGestureLocked = false;
+        }, { passive: true });
+
+        root.addEventListener('touchcancel', () => {
+            touchStartY = null;
+            touchGestureLocked = false;
         }, { passive: true });
 
         root.addEventListener('keydown', (event) => {
-            const target = event.target;
-            const isEditable = target instanceof root.HTMLElement
-                && (target.isContentEditable || /^(INPUT|SELECT|TEXTAREA)$/.test(target.tagName));
-            if (isEditable) {
-                return;
-            }
+            const targetElement = event.target;
+            const isEditable = targetElement instanceof root.HTMLElement
+                && (targetElement.isContentEditable || /^(INPUT|SELECT|TEXTAREA)$/.test(targetElement.tagName));
+            if (isEditable || isSnapping || event.repeat) return;
 
-            const isSpaceDown = event.key === ' ' && !event.shiftKey;
-            const isSpaceUp = event.key === ' ' && event.shiftKey;
-            const shouldSnapDown = heroIsActive()
-                && (['ArrowDown', 'PageDown'].includes(event.key) || isSpaceDown);
-            const shouldSnapUp = aboutStartIsActive()
-                && (['ArrowUp', 'PageUp'].includes(event.key) || isSpaceUp);
-            if (shouldSnapDown || shouldSnapUp) {
+            const isDown = ['ArrowDown', 'PageDown'].includes(event.key)
+                || (event.key === ' ' && !event.shiftKey);
+            const isUp = ['ArrowUp', 'PageUp'].includes(event.key)
+                || (event.key === ' ' && event.shiftKey);
+            const direction = isDown ? 1 : (isUp ? -1 : 0);
+            const target = direction ? getSnapTarget(direction) : null;
+            if (target) {
                 event.preventDefault();
-                shouldSnapDown ? snapToAbout() : snapToHero();
+                snapToSection(target);
             }
         });
+
+        warmAdjacentSections(sections[0]);
     }
 
     async function loadPortfolioBlocks() {
@@ -263,6 +403,7 @@
             return;
         }
 
+        let coreStatus = 'true';
         try {
             const data = await loadPortfolioBlocks();
             const blocksById = Object.fromEntries((data.blocks || []).map((block) => [block.id, block]));
@@ -274,9 +415,10 @@
                     target.innerHTML = renderBlock(block);
                     renderedBlock = true;
                 }
+                if (block) markSectionReady(target);
             });
 
-            initHeroAboutScrollHandoff();
+            initSectionScrollHandoff();
             if (!renderedBlock) {
                 return;
             }
@@ -285,7 +427,13 @@
                 root.AOS.refresh();
             }
         } catch (error) {
+            coreStatus = 'error';
             console.error(error);
+        } finally {
+            root.document.documentElement.dataset.portfolioCoreReady = coreStatus;
+            root.document.dispatchEvent(new root.CustomEvent('portfolio:core-ready', {
+                detail: { status: coreStatus }
+            }));
         }
     }
 

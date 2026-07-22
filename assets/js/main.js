@@ -1,3 +1,46 @@
+(function initPortfolioPreloader() {
+  const preloader = document.getElementById('preloader');
+  if (!preloader) return;
+
+  const delay = (milliseconds) => new Promise(resolve => window.setTimeout(resolve, milliseconds));
+  const coreReady = new Promise(resolve => {
+    if (document.documentElement.dataset.portfolioCoreReady) {
+      resolve();
+      return;
+    }
+    document.addEventListener('portfolio:core-ready', resolve, { once: true });
+  });
+  const heroImageReady = new Promise(resolve => {
+    const image = new Image();
+    image.addEventListener('load', resolve, { once: true });
+    image.addEventListener('error', resolve, { once: true });
+    image.src = '/assets/image_fx_.jpg';
+    if (image.complete) resolve();
+  });
+  const fontsReady = document.fonts?.ready?.catch(() => undefined) || Promise.resolve();
+  let revealed = false;
+
+  const reveal = () => {
+    if (revealed) return;
+    revealed = true;
+    preloader.classList.add('is-hidden');
+    preloader.setAttribute('aria-hidden', 'true');
+  };
+
+  Promise.all([
+    delay(260),
+    Promise.race([
+      Promise.all([coreReady, heroImageReady, fontsReady]),
+      delay(1800)
+    ])
+  ]).then(reveal);
+
+  window.addEventListener('pageshow', event => {
+    if (event.persisted) reveal();
+  }, { once: true });
+  window.setTimeout(reveal, 2200);
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
   const header = document.getElementById('header');
   const hero = document.getElementById('home');
