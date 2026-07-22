@@ -34,6 +34,8 @@
 .header {
   color: var(--default-color);
   background-color: var(--background-color);
+  font-family: var(--default-font);
+  font-size: 16px;
   position: fixed;
   top: 0;
   left: 0;
@@ -64,6 +66,7 @@
 }
 
 .header .logo h1 {
+  font-family: var(--heading-font);
   font-size: 24px;
   margin: 0;
   font-weight: 700;
@@ -160,6 +163,24 @@
   white-space: nowrap;
   transition: 0.3s;
   width: 100%;
+  position: relative;
+}
+
+.navmenu a::after {
+  content: '';
+  position: absolute;
+  left: 40px;
+  bottom: 8px;
+  width: 2rem;
+  height: 1px;
+  background: color-mix(in srgb, var(--accent-color), transparent 20%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+
+.navmenu a.active::after {
+  transform: scaleX(1);
 }
 
 .navmenu a .navicon,

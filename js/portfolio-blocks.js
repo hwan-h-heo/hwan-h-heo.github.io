@@ -26,52 +26,48 @@
     }
 
     function renderHero(block) {
+        const subtitle = block.subtitle || (block.typedItems || []).join(' · ');
         return `
             <div class="hero-content">
                 <h1>${escapeHtml(block.title)}</h1>
                 <hr/>
                 <p class="subtitle">
-                    <span class="typed" data-typed-items="${escapeHtml((block.typedItems || []).join(', '))}"></span>
+                    <span class="hero-subtitle-text">${escapeHtml(subtitle)}</span>
                 </p>
                 <p class="lead">${escapeHtml(block.lead)}</p>
                 <div class="social-links">
                     ${renderIconLinks(block.links)}
                 </div>
             </div>
+            <a href="#about" class="scroll-down-arrow" aria-label="Scroll down">
+                <span class="scroll-down-label">Research · Projects · Notes</span>
+                <i class="bi bi-chevron-double-down"></i>
+            </a>
         `;
-    }
-
-    function renderFacts(facts) {
-        return (facts || []).map((fact) => `
-            <li><i class="bi bi-chevron-right"></i> <strong>${escapeHtml(fact.label)}:</strong> <span>${fact.valueHtml || ''}</span></li>
-        `).join('');
     }
 
     function renderAbout(block) {
         return `
             <div class="container section-title" data-aos="fade-up">
                 <h2>${escapeHtml(block.title)}</h2>
-                <p>${block.introHtml || ''}</p>
             </div>
 
             <div class="container" data-aos="fade-up" data-aos-delay="100">
-                <div class="row gy-4 justify-content-center">
+                <div class="row gy-4 align-items-center justify-content-center">
                     <div class="col-lg-4" style="transition: 0.3s ease-in-out;">
-                        <img src="${escapeHtml(block.image)}" class="img-fluid" alt="${escapeHtml(block.imageAlt)}">
+                        <img src="${escapeHtml(block.image)}" class="img-fluid about-profile-image" alt="${escapeHtml(block.imageAlt)}">
                     </div>
-                    <div class="col-lg-8 content">
-                        <h2>${escapeHtml(block.role)}</h2>
-                        <p class="fst-italic py-3">${escapeHtml(block.tagline)}</p>
-                        <div class="row">
-                            <div class="col-10">
-                                <ul>${renderFacts(block.facts)}</ul>
-                            </div>
+                    <div class="col-lg-8 content about-copy">
+                        <div class="about-identity">
+                            <h2 class="about-name">${escapeHtml(block.name || block.role)}</h2>
+                            <p class="about-role">${escapeHtml(block.role)}</p>
+                            <p class="about-affiliation">${escapeHtml(block.affiliation)}</p>
                         </div>
-                        <p class="py-3">${block.bodyHtml || ''}</p>
+                        <p class="about-intro">${block.introHtml || ''}</p>
+                        <p class="about-bio">${block.bodyHtml || ''}</p>
                     </div>
                 </div>
             </div>
-            <a href="#about" class="scroll-down-arrow" aria-label="Scroll down"><i class="bi bi-chevron-double-down"></i></a>
         `;
     }
 
@@ -138,21 +134,259 @@
         return '';
     }
 
-    function restartTypedEffect() {
-        root.document.querySelectorAll('.typed').forEach((typedElement) => {
-            if (root.Typed) {
-                const typedStrings = typedElement.getAttribute('data-typed-items');
-                if (typedStrings) {
-                    new root.Typed(typedElement, {
-                        strings: typedStrings.split(',').map((item) => item.trim()),
-                        loop: true,
-                        typeSpeed: 100,
-                        backSpeed: 50,
-                        backDelay: 2000
-                    });
+    function markSectionReady(section) {
+        if (!section) return;
+        section.dataset.sectionReady = 'true';
+        section.dispatchEvent(new root.CustomEvent('portfolio:section-ready'));
+    }
+
+    function initSectionScrollHandoff() {
+        const sections = Array.from(root.document.querySelectorAll('main > section[id]'));
+        const page = root.document.documentElement;
+        if (sections.length < 2 || page.dataset.sectionScrollBound === 'true') {
+            return;
+        }
+
+        page.dataset.sectionScrollBound = 'true';
+        const reducedMotion = root.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let accumulatedWheelDelta = 0;
+        let wheelDirection = 0;
+        let wheelResetTimer;
+        let wheelReleaseTimer;
+        let touchStartY = null;
+        let touchGestureLocked = false;
+        let isSnapping = false;
+        let wheelGestureLocked = false;
+        let wheelLockStartedAt = 0;
+
+        const delay = (milliseconds) => new Promise(resolve => root.setTimeout(resolve, milliseconds));
+        const getCurrentSectionIndex = () => {
+            const position = root.scrollY + 2;
+            let currentIndex = 0;
+            sections.forEach((section, index) => {
+                if (section.offsetTop <= position) currentIndex = index;
+            });
+            return currentIndex;
+        };
+        const getSnapTarget = (direction) => {
+            const currentIndex = getCurrentSectionIndex();
+            const current = sections[currentIndex];
+            const currentTop = current.offsetTop;
+            const currentBottom = currentTop + current.offsetHeight;
+            const next = sections[currentIndex + 1];
+            const snapSized = current.offsetHeight <= root.innerHeight * 1.2;
+            const betweenSnapAnchors = next
+                && snapSized
+                && root.scrollY > currentTop + 48
+                && root.scrollY < next.offsetTop - 2;
+
+            if (betweenSnapAnchors) {
+                return direction > 0 ? next : current;
+            }
+
+            if (direction > 0 && currentIndex < sections.length - 1) {
+                const reachesSectionEnd = root.scrollY + root.innerHeight >= currentBottom - 12;
+                const fitsViewport = current.offsetHeight <= root.innerHeight + 24;
+                const alignedAtStart = Math.abs(root.scrollY - currentTop) <= 48;
+                return reachesSectionEnd || (fitsViewport && alignedAtStart)
+                    ? sections[currentIndex + 1]
+                    : null;
+            }
+
+            if (direction < 0 && currentIndex > 0) {
+                const previous = sections[currentIndex - 1];
+                const atSectionStart = root.scrollY <= currentTop + 48;
+                const previousIsSnapSized = previous.offsetHeight <= root.innerHeight * 1.2;
+                return atSectionStart && previousIsSnapSized ? previous : null;
+            }
+
+            return null;
+        };
+        const waitForSectionReady = (section) => {
+            if (section.dataset.sectionReady !== 'false') {
+                return Promise.resolve();
+            }
+
+            return new Promise(resolve => {
+                const finish = () => {
+                    root.clearTimeout(timeoutId);
+                    section.removeEventListener('portfolio:section-ready', finish);
+                    resolve();
+                };
+                const timeoutId = root.setTimeout(finish, 560);
+                section.addEventListener('portfolio:section-ready', finish, { once: true });
+            });
+        };
+        const prepareSection = async (section) => {
+            const wasReady = section.dataset.sectionReady !== 'false';
+            await waitForSectionReady(section);
+
+            const imageDecodes = Array.from(section.querySelectorAll('img'))
+                .slice(0, 8)
+                .map(image => {
+                    if (typeof image.decode === 'function') {
+                        return image.decode().catch(() => undefined);
+                    }
+                    return Promise.resolve();
+                });
+            await Promise.race([Promise.all(imageDecodes), delay(240)]);
+            return wasReady;
+        };
+        const animateScrollTo = (section, duration) => new Promise(resolve => {
+            const startY = root.scrollY;
+            const distance = section.offsetTop - startY;
+            if (duration === 0 || Math.abs(distance) < 1) {
+                root.scrollTo(0, section.offsetTop);
+                resolve();
+                return;
+            }
+
+            const startedAt = root.performance.now();
+            const step = (timestamp) => {
+                const progress = Math.min((timestamp - startedAt) / duration, 1);
+                const eased = progress < 0.5
+                    ? 4 * progress * progress * progress
+                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+                const liveDistance = section.offsetTop - startY;
+                root.scrollTo(0, startY + liveDistance * eased);
+                if (progress < 1) {
+                    root.requestAnimationFrame(step);
+                    return;
                 }
+                root.scrollTo(0, section.offsetTop);
+                resolve();
+            };
+            root.requestAnimationFrame(step);
+        });
+        const warmAdjacentSections = (section) => {
+            const index = sections.indexOf(section);
+            const warm = () => {
+                [sections[index - 1], sections[index + 1]]
+                    .filter(Boolean)
+                    .forEach(adjacent => prepareSection(adjacent));
+            };
+            if (typeof root.requestIdleCallback === 'function') {
+                root.requestIdleCallback(warm, { timeout: 700 });
+            } else {
+                root.setTimeout(warm, 80);
+            }
+        };
+        const releaseWheelGestureAfterRest = () => {
+            root.clearTimeout(wheelReleaseTimer);
+            const quietPeriod = 140;
+            const minimumLock = Math.max(0, 220 - (root.performance.now() - wheelLockStartedAt));
+            wheelReleaseTimer = root.setTimeout(() => {
+                wheelGestureLocked = false;
+            }, Math.max(quietPeriod, minimumLock));
+        };
+        const snapToSection = async (section) => {
+            if (!section || isSnapping) return;
+
+            isSnapping = true;
+            wheelGestureLocked = true;
+            wheelLockStartedAt = root.performance.now();
+            page.classList.add('section-transitioning');
+            try {
+                const wasReady = await prepareSection(section);
+                const duration = reducedMotion ? 0 : (wasReady ? 720 : 940);
+                await animateScrollTo(section, duration);
+                warmAdjacentSections(section);
+            } finally {
+                page.classList.remove('section-transitioning');
+                isSnapping = false;
+                releaseWheelGestureAfterRest();
+            }
+        };
+
+        root.addEventListener('wheel', (event) => {
+            if (isSnapping || wheelGestureLocked) {
+                event.preventDefault();
+                releaseWheelGestureAfterRest();
+                return;
+            }
+
+            const direction = Math.sign(event.deltaY);
+            const target = direction ? getSnapTarget(direction) : null;
+            if (!target) {
+                accumulatedWheelDelta = 0;
+                wheelDirection = 0;
+                return;
+            }
+
+            event.preventDefault();
+            if (direction !== wheelDirection) {
+                accumulatedWheelDelta = 0;
+                wheelDirection = direction;
+            }
+            accumulatedWheelDelta += Math.abs(event.deltaY);
+            root.clearTimeout(wheelResetTimer);
+            wheelResetTimer = root.setTimeout(() => {
+                accumulatedWheelDelta = 0;
+                wheelDirection = 0;
+            }, 180);
+
+            if (accumulatedWheelDelta >= 24) {
+                accumulatedWheelDelta = 0;
+                snapToSection(target);
+            }
+        }, { passive: false });
+
+        root.addEventListener('touchstart', (event) => {
+            touchStartY = event.touches[0]?.clientY ?? null;
+            if (isSnapping) touchGestureLocked = true;
+        }, { passive: true });
+
+        root.addEventListener('touchmove', (event) => {
+            if (isSnapping || touchGestureLocked) {
+                event.preventDefault();
+                return;
+            }
+            if (touchStartY === null) return;
+
+            const currentY = event.touches[0]?.clientY;
+            if (typeof currentY !== 'number') return;
+
+            const movement = touchStartY - currentY;
+            if (Math.abs(movement) < 24) return;
+
+            const target = getSnapTarget(Math.sign(movement));
+            if (target) {
+                event.preventDefault();
+                touchStartY = null;
+                touchGestureLocked = true;
+                snapToSection(target);
+            }
+        }, { passive: false });
+
+        root.addEventListener('touchend', () => {
+            touchStartY = null;
+            touchGestureLocked = false;
+        }, { passive: true });
+
+        root.addEventListener('touchcancel', () => {
+            touchStartY = null;
+            touchGestureLocked = false;
+        }, { passive: true });
+
+        root.addEventListener('keydown', (event) => {
+            const targetElement = event.target;
+            const isEditable = targetElement instanceof root.HTMLElement
+                && (targetElement.isContentEditable || /^(INPUT|SELECT|TEXTAREA)$/.test(targetElement.tagName));
+            if (isEditable || isSnapping || event.repeat) return;
+
+            const isDown = ['ArrowDown', 'PageDown'].includes(event.key)
+                || (event.key === ' ' && !event.shiftKey);
+            const isUp = ['ArrowUp', 'PageUp'].includes(event.key)
+                || (event.key === ' ' && event.shiftKey);
+            const direction = isDown ? 1 : (isUp ? -1 : 0);
+            const target = direction ? getSnapTarget(direction) : null;
+            if (target) {
+                event.preventDefault();
+                snapToSection(target);
             }
         });
+
+        warmAdjacentSections(sections[0]);
     }
 
     async function loadPortfolioBlocks() {
@@ -169,6 +403,7 @@
             return;
         }
 
+        let coreStatus = 'true';
         try {
             const data = await loadPortfolioBlocks();
             const blocksById = Object.fromEntries((data.blocks || []).map((block) => [block.id, block]));
@@ -180,18 +415,25 @@
                     target.innerHTML = renderBlock(block);
                     renderedBlock = true;
                 }
+                if (block) markSectionReady(target);
             });
 
+            initSectionScrollHandoff();
             if (!renderedBlock) {
                 return;
             }
 
-            restartTypedEffect();
             if (root.AOS) {
                 root.AOS.refresh();
             }
         } catch (error) {
+            coreStatus = 'error';
             console.error(error);
+        } finally {
+            root.document.documentElement.dataset.portfolioCoreReady = coreStatus;
+            root.document.dispatchEvent(new root.CustomEvent('portfolio:core-ready', {
+                detail: { status: coreStatus }
+            }));
         }
     }
 

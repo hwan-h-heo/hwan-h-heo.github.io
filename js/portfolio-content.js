@@ -125,24 +125,37 @@
     }
 
     document.addEventListener('DOMContentLoaded', async function() {
+        const section = document.getElementById('portfolio');
         const projectContainer = document.getElementById('portfolio-projects');
         const publicationsContainer = document.getElementById('portfolio-publications');
         const talksContainer = document.getElementById('portfolio-talks');
+        const markReady = () => {
+            if (!section) return;
+            section.dataset.sectionReady = 'true';
+            section.dispatchEvent(new CustomEvent('portfolio:section-ready'));
+        };
 
         if (!projectContainer || !publicationsContainer || !talksContainer || !window.siteDataClient) {
+            markReady();
             return;
         }
 
-        const siteData = await window.siteDataClient.loadSiteData();
+        try {
+            const siteData = await window.siteDataClient.loadSiteData();
 
-        projectContainer.innerHTML = (siteData.portfolioProjects || []).map(renderProject).join('');
-        publicationsContainer.innerHTML = (siteData.publications || []).map(renderPublication).join('');
-        talksContainer.innerHTML = (siteData.talks || []).map(renderTalk).join('');
+            projectContainer.innerHTML = (siteData.portfolioProjects || []).map(renderProject).join('');
+            publicationsContainer.innerHTML = (siteData.publications || []).map(renderPublication).join('');
+            talksContainer.innerHTML = (siteData.talks || []).map(renderTalk).join('');
 
-        if (window.initPortfolioBoxes) {
-            window.initPortfolioBoxes(projectContainer);
+            if (window.initPortfolioBoxes) {
+                window.initPortfolioBoxes(projectContainer);
+            }
+
+            initPortfolioLayout(document.querySelector('.portfolio .isotope-layout'), projectContainer);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            markReady();
         }
-
-        initPortfolioLayout(document.querySelector('.portfolio .isotope-layout'), projectContainer);
     });
 })();
