@@ -26,6 +26,14 @@
                 <button id="new-post-button" class="button button-secondary">New post</button>
                 <button id="load-post-button" class="button button-secondary">Load post</button>
                 <button id="save-draft-button" class="button button-secondary">Save draft</button>
+                <button id="drive-load-button" class="button button-secondary">
+                    <i class="bi bi-cloud-arrow-down"></i>
+                    Drive drafts
+                </button>
+                <button id="drive-save-button" class="button button-secondary">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                    Save to Drive
+                </button>
                 <button id="publish-button" class="button button-primary">Publish</button>
             </div>
         </header>
@@ -202,6 +210,33 @@
                             <button id="download-button" class="button button-secondary">Download</button>
                             <button id="upload-button" class="button button-secondary">Upload</button>
                         </div>
+                    </section>
+
+                    <section class="panel drive-panel">
+                        <div class="panel-header">
+                            <h2>Google Drive</h2>
+                            <span id="drive-status" class="pill">Not configured</span>
+                        </div>
+                        <p id="drive-summary" class="panel-copy">
+                            Connect a Google account to save complete post drafts as Markdown files.
+                        </p>
+                        <div class="drive-actions">
+                            <button id="drive-connect-button" class="button button-secondary" type="button">
+                                <i class="bi bi-google"></i>
+                                Connect
+                            </button>
+                            <button id="drive-settings-button" class="button button-secondary" type="button">
+                                <i class="bi bi-gear"></i>
+                                Setup
+                            </button>
+                            <a id="drive-open-folder" class="button button-secondary is-hidden" href="#" target="_blank" rel="noopener">
+                                <i class="bi bi-folder2-open"></i>
+                                Open folder
+                            </a>
+                        </div>
+                        <p class="drive-note">
+                            Saves metadata plus <code>content-eng.md</code> and <code>content-kor.md</code>. Access is limited to files created by this editor.
+                        </p>
                     </section>
 
                     <section class="panel">

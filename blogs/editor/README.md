@@ -7,6 +7,7 @@ A markdown editor for creating blog posts, registering metadata, and publishing 
 - ✍️ **Live Preview**: See your content rendered as you type
 - 🧩 **Layout Editing**: Edit the title, publishing details, and Markdown blocks directly in a post-shaped canvas
 - 💾 **Draft Management**: Save and load per-language markdown drafts locally
+- ☁️ **Google Drive Drafts**: Save and restore complete post workspaces as visible Markdown files in Drive
 - 📝 **Post Publishing**: Create or update `site-data.json` and `posts/{postId}/content-*.md` in one flow
 - 🗂️ **Metadata Editing**: Manage identity, descriptions, slug, tags, cover, status, dates, languages, and portfolio feature settings
 - ✅ **Validation**: Duplicate id checks, allowed category/series validation, and language/file alignment
@@ -32,6 +33,17 @@ In edit mode, you can:
 - Publish metadata to `data/site-data.json`
 - Create or update `posts/{postId}/content-eng.md` and optional `content-kor.md`
 - Configure `featuredPortfolioPosts` entry for the current post
+
+### Google Drive Drafts
+
+Drive drafts work in both local edit mode and the static GitHub Pages editor.
+
+1. In Google Cloud, enable the Google Drive API and create a Web application OAuth Client ID.
+2. Add the editor origin, such as `http://localhost:3030`, to Authorized JavaScript origins.
+3. Open **Google Drive → Setup** in the editor and paste the Client ID.
+4. Use **Save to Drive** and **Drive drafts** in the top bar.
+
+The editor requests the narrow `drive.file` scope and creates a visible `Hwan Blog Drafts` folder. Each draft contains `draft.json`, `content-eng.md`, and optional `content-kor.md`. Drive access tokens remain in memory; the Client ID and created root folder ID are stored locally. Draft assets are not uploaded in this first version.
 
 ### Dev Mode (Preview Only)
 

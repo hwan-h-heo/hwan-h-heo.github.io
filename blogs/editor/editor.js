@@ -5,6 +5,14 @@
     const SIDEBAR_COLLAPSED_KEY = 'blog-editor-sidebar-collapsed';
     const PANE_RATIO_KEY = 'blog-editor-pane-ratio';
     const EDITOR_VIEW_KEY = 'blog-editor-view';
+    const DRIVE_CLIENT_ID_KEY = 'blog-editor-google-client-id';
+    const DRIVE_ROOT_FOLDER_KEY = 'blog-editor-google-drive-root';
+    const DRIVE_AUTHORIZED_KEY = 'blog-editor-google-drive-authorized';
+    const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
+    const DRIVE_API_BASE = 'https://www.googleapis.com/drive/v3';
+    const DRIVE_UPLOAD_BASE = 'https://www.googleapis.com/upload/drive/v3';
+    const DRIVE_FOLDER_MIME = 'application/vnd.google-apps.folder';
+    const DRIVE_ROOT_FOLDER_NAME = 'Hwan Blog Drafts';
     const AUTOSAVE_KEY = 'blog-editor-autosave-v2';
     const AUTOSAVE_DELAY_MS = 1500;
     const DIAGNOSTICS_DELAY_MS = 350;
@@ -81,6 +89,18 @@
             lastSavedAt: null,
             snapshotAvailable: null
         },
+        drive: {
+            clientId: '',
+            accessToken: '',
+            tokenExpiresAt: 0,
+            tokenClient: null,
+            rootFolderId: '',
+            activeDraftFolderId: '',
+            activeDraftKey: '',
+            status: 'unconfigured',
+            busy: false,
+            scriptPromise: null
+        },
         preview: {
             diagnostics: [],
             diagnosticsTimerId: null,
@@ -98,6 +118,7 @@
     async function init() {
         cacheElements();
         loadUiPreferences();
+        loadDrivePreferences();
         bindEvents();
         marked.setOptions({ gfm: true, breaks: false });
         applySidebarState();
@@ -113,14 +134,19 @@
         updatePreview();
         updateStats();
         updateControls();
+        renderDriveState();
 
         if (state.editMode) {
             await loadBootstrap();
         } else {
-            renderSelectOptions();
-            showFeedback('neutral', 'Preview only mode', [
-                'Open this page through `npm run edit` to save drafts, register metadata, and publish posts.'
+            await loadPublicBootstrap();
+            showFeedback('neutral', 'Browser draft mode', [
+                'Google Drive drafts are available here. Publishing still requires the local editor server.'
             ]);
+        }
+
+        if (state.drive.clientId) {
+            loadGoogleIdentityScript().catch(() => renderDriveState());
         }
 
         hydrateRecoverySnapshot();
@@ -194,6 +220,13 @@
             'new-post-button',
             'load-post-button',
             'save-draft-button',
+            'drive-load-button',
+            'drive-save-button',
+            'drive-status',
+            'drive-summary',
+            'drive-connect-button',
+            'drive-settings-button',
+            'drive-open-folder',
             'publish-button',
             'load-selected-post-button',
             'load-draft-button',
@@ -210,6 +243,10 @@
         el.newPostButton.addEventListener('click', handleNewPost);
         el.loadPostButton.addEventListener('click', openLoadPostModal);
         el.saveDraftButton.addEventListener('click', saveDraft);
+        el.driveLoadButton.addEventListener('click', openDriveDraftModal);
+        el.driveSaveButton.addEventListener('click', saveDriveDraft);
+        el.driveConnectButton.addEventListener('click', connectGoogleDrive);
+        el.driveSettingsButton.addEventListener('click', openDriveSettingsModal);
         el.publishButton.addEventListener('click', publishPost);
         el.loadSelectedPostButton.addEventListener('click', () => {
             if (el.existingPostSelect.value) {
@@ -312,6 +349,18 @@
         }
     }
 
+    function loadDrivePreferences() {
+        try {
+            state.drive.clientId = window.localStorage.getItem(DRIVE_CLIENT_ID_KEY) || '';
+            state.drive.rootFolderId = window.localStorage.getItem(DRIVE_ROOT_FOLDER_KEY) || '';
+            state.drive.status = state.drive.clientId ? 'disconnected' : 'unconfigured';
+        } catch (error) {
+            state.drive.clientId = '';
+            state.drive.rootFolderId = '';
+            state.drive.status = 'unconfigured';
+        }
+    }
+
     function persistUiPreference(key, value) {
         try {
             window.localStorage.setItem(key, value);
@@ -330,6 +379,8 @@
         state.originalId = '';
         state.lockedLanguages = ['eng'];
         state.activeLanguage = 'eng';
+        state.drive.activeDraftFolderId = '';
+        state.drive.activeDraftKey = '';
         state.metadata = {
             id: '',
             date: new Date().toISOString().slice(0, 10),
@@ -485,7 +536,9 @@
     }
 
     function renderModeBadge() {
-        el.modeBadge.textContent = state.editMode ? 'Edit mode' : 'Preview only';
+        el.modeBadge.textContent = state.editMode
+            ? 'Edit mode'
+            : (state.drive.clientId ? 'Drive draft mode' : 'Browser draft mode');
         el.workspaceMode.textContent = state.mode === 'update' ? `Editing ${state.originalId}` : 'New post';
         el.postId.disabled = state.mode === 'update';
         el.languageKor.disabled = state.mode === 'update' && state.lockedLanguages.includes('kor');
@@ -571,6 +624,36 @@
             updateControls();
             renderSelectOptions();
             showFeedback('error', 'Editor bootstrap failed', [error.message]);
+        }
+    }
+
+    async function loadPublicBootstrap() {
+        try {
+            const response = await fetch('../data/site-data.json', { cache: 'no-store' });
+            if (!response.ok) {
+                throw new Error('Published site metadata is unavailable.');
+            }
+            const siteData = await response.json();
+            const featuredMap = new Map(
+                (siteData.featuredPortfolioPosts || []).map((item, index) => [item.id, { ...item, order: index }])
+            );
+            state.bootstrap = {
+                categories: ['post', 'note'],
+                languages: ['eng', 'kor'],
+                series: siteData.series || {},
+                posts: [...(siteData.posts || [])].sort((a, b) => new Date(b.date) - new Date(a.date)),
+                featuredPortfolioPosts: siteData.featuredPortfolioPosts || []
+            };
+            state.bootstrap.posts.forEach((post) => {
+                post.featured = featuredMap.get(post.id) || null;
+            });
+            renderSelectOptions();
+            if (!state.metadata.series) {
+                state.metadata.series = Object.keys(state.bootstrap.series)[0] || '';
+                renderFormFromState();
+            }
+        } catch (error) {
+            renderSelectOptions();
         }
     }
 
@@ -1317,6 +1400,647 @@
         });
 
         return response.json();
+    }
+
+    function loadGoogleIdentityScript() {
+        if (window.google && window.google.accounts && window.google.accounts.oauth2) {
+            return Promise.resolve();
+        }
+        if (state.drive.scriptPromise) {
+            return state.drive.scriptPromise;
+        }
+
+        state.drive.scriptPromise = new Promise((resolve, reject) => {
+            const existingScript = document.getElementById('google-identity-script');
+            const script = existingScript || document.createElement('script');
+            const handleLoad = () => {
+                if (window.google && window.google.accounts && window.google.accounts.oauth2) {
+                    resolve();
+                    return;
+                }
+                reject(new Error('Google Identity Services did not initialize.'));
+            };
+            const handleError = () => reject(new Error('Could not load Google Identity Services.'));
+
+            script.addEventListener('load', handleLoad, { once: true });
+            script.addEventListener('error', handleError, { once: true });
+            if (!existingScript) {
+                script.id = 'google-identity-script';
+                script.src = 'https://accounts.google.com/gsi/client';
+                script.async = true;
+                script.defer = true;
+                document.head.appendChild(script);
+            }
+        }).catch((error) => {
+            state.drive.scriptPromise = null;
+            throw error;
+        });
+
+        return state.drive.scriptPromise;
+    }
+
+    function hasValidDriveToken() {
+        return Boolean(
+            state.drive.accessToken
+            && state.drive.tokenExpiresAt > Date.now() + 30000
+        );
+    }
+
+    function renderDriveState() {
+        if (!el.driveStatus) {
+            return;
+        }
+
+        const configured = Boolean(state.drive.clientId);
+        const connected = hasValidDriveToken();
+        const statusLabels = {
+            unconfigured: 'Not configured',
+            disconnected: 'Ready to connect',
+            connecting: 'Connecting…',
+            connected: 'Connected',
+            saving: 'Saving…',
+            loading: 'Loading…',
+            error: 'Needs attention'
+        };
+        const visibleStatus = state.drive.busy
+            ? state.drive.status
+            : (connected ? 'connected' : (configured ? state.drive.status : 'unconfigured'));
+
+        el.driveStatus.textContent = statusLabels[visibleStatus] || 'Google Drive';
+        el.driveSummary.textContent = !configured
+            ? 'Add a Google OAuth Client ID, then connect your Drive account.'
+            : connected
+                ? `Drafts save to “${DRIVE_ROOT_FOLDER_NAME}”. Access tokens stay in this browser tab only.`
+                : 'Click Connect when you want to save or load a Drive draft.';
+        el.driveConnectButton.innerHTML = connected
+            ? '<i class="bi bi-arrow-repeat"></i> Reconnect'
+            : '<i class="bi bi-google"></i> Connect';
+
+        [el.driveConnectButton, el.driveSettingsButton, el.driveSaveButton, el.driveLoadButton].forEach((control) => {
+            control.disabled = state.drive.busy;
+        });
+
+        const hasFolder = Boolean(state.drive.rootFolderId);
+        el.driveOpenFolder.classList.toggle('is-hidden', !hasFolder);
+        el.driveOpenFolder.href = hasFolder
+            ? `https://drive.google.com/drive/folders/${encodeURIComponent(state.drive.rootFolderId)}`
+            : '#';
+        renderModeBadge();
+    }
+
+    function setDriveBusy(status, busy) {
+        state.drive.status = status;
+        state.drive.busy = busy;
+        renderDriveState();
+    }
+
+    function openDriveSettingsModal() {
+        const origin = window.location.origin;
+        openModal('Google Drive Setup', `
+            <div class="drive-setup">
+                <p class="panel-copy">
+                    Create a Web application OAuth Client ID in Google Cloud, enable the Google Drive API,
+                    and add <code>${escapeHtml(origin)}</code> to Authorized JavaScript origins.
+                </p>
+                <label class="field">
+                    <span>OAuth Client ID</span>
+                    <input id="drive-client-id-input" type="text" value="${escapeHtml(state.drive.clientId)}" placeholder="1234567890-abc.apps.googleusercontent.com" autocomplete="off" />
+                </label>
+                <div class="drive-setup-links">
+                    <a class="button button-secondary" href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener">
+                        Open Google Cloud Console
+                    </a>
+                    <a class="button button-secondary" href="https://console.cloud.google.com/apis/library/drive.googleapis.com" target="_blank" rel="noopener">
+                        Enable Drive API
+                    </a>
+                </div>
+                <div class="modal-actions">
+                    <button class="button button-primary" type="button" data-save-drive-settings>Save settings</button>
+                    <button class="button button-secondary" type="button" data-clear-drive-settings>Clear</button>
+                </div>
+                <p class="drive-note">
+                    The Client ID is public configuration, not a secret. Drive access tokens are kept in memory and are never written to local storage.
+                </p>
+            </div>
+        `);
+
+        const input = el.modalBody.querySelector('#drive-client-id-input');
+        input.focus();
+        el.modalBody.querySelector('[data-save-drive-settings]').addEventListener('click', () => {
+            saveDriveSettings(input.value);
+        });
+        el.modalBody.querySelector('[data-clear-drive-settings]').addEventListener('click', clearDriveSettings);
+    }
+
+    function saveDriveSettings(value) {
+        const clientId = String(value || '').trim();
+        if (!/^\d+-[A-Za-z0-9_-]+\.apps\.googleusercontent\.com$/.test(clientId)) {
+            showFeedback('error', 'Google Drive setup incomplete', [
+                'Enter a valid Web application OAuth Client ID ending in `.apps.googleusercontent.com`.'
+            ]);
+            return;
+        }
+
+        const changed = clientId !== state.drive.clientId;
+        state.drive.clientId = clientId;
+        state.drive.status = 'disconnected';
+        if (changed) {
+            state.drive.accessToken = '';
+            state.drive.tokenExpiresAt = 0;
+            state.drive.tokenClient = null;
+            state.drive.rootFolderId = '';
+            window.localStorage.removeItem(DRIVE_ROOT_FOLDER_KEY);
+        }
+        window.localStorage.setItem(DRIVE_CLIENT_ID_KEY, clientId);
+        closeModal();
+        renderDriveState();
+        loadGoogleIdentityScript().catch(() => renderDriveState());
+        showFeedback('success', 'Google Drive configured', [
+            'Click Connect, Save to Drive, or Drive drafts to authorize this editor.'
+        ]);
+    }
+
+    function clearDriveSettings() {
+        if (state.drive.accessToken && window.google && google.accounts && google.accounts.oauth2) {
+            google.accounts.oauth2.revoke(state.drive.accessToken, () => {});
+        }
+        state.drive.clientId = '';
+        state.drive.accessToken = '';
+        state.drive.tokenExpiresAt = 0;
+        state.drive.tokenClient = null;
+        state.drive.rootFolderId = '';
+        state.drive.activeDraftFolderId = '';
+        state.drive.activeDraftKey = '';
+        state.drive.status = 'unconfigured';
+        window.localStorage.removeItem(DRIVE_CLIENT_ID_KEY);
+        window.localStorage.removeItem(DRIVE_ROOT_FOLDER_KEY);
+        window.localStorage.removeItem(DRIVE_AUTHORIZED_KEY);
+        closeModal();
+        renderDriveState();
+    }
+
+    async function requestGoogleDriveToken() {
+        if (!state.drive.clientId) {
+            openDriveSettingsModal();
+            return false;
+        }
+        if (hasValidDriveToken()) {
+            return true;
+        }
+
+        await loadGoogleIdentityScript();
+        const wasAuthorized = window.localStorage.getItem(DRIVE_AUTHORIZED_KEY) === '1';
+        const tokenResponse = await new Promise((resolve, reject) => {
+            state.drive.tokenClient = google.accounts.oauth2.initTokenClient({
+                client_id: state.drive.clientId,
+                scope: DRIVE_SCOPE,
+                callback: (response) => {
+                    if (!response || response.error) {
+                        reject(new Error(response && response.error_description ? response.error_description : 'Google authorization was not completed.'));
+                        return;
+                    }
+                    resolve(response);
+                },
+                error_callback: (error) => reject(new Error(error && error.message ? error.message : 'Google authorization popup was closed.'))
+            });
+            state.drive.tokenClient.requestAccessToken({ prompt: wasAuthorized ? '' : 'consent' });
+        });
+
+        state.drive.accessToken = tokenResponse.access_token;
+        state.drive.tokenExpiresAt = Date.now() + (Number(tokenResponse.expires_in || 3600) * 1000);
+        state.drive.status = 'connected';
+        window.localStorage.setItem(DRIVE_AUTHORIZED_KEY, '1');
+        renderDriveState();
+        return true;
+    }
+
+    async function connectGoogleDrive() {
+        if (!state.drive.clientId) {
+            openDriveSettingsModal();
+            return;
+        }
+
+        setDriveBusy('connecting', true);
+        try {
+            await requestGoogleDriveToken();
+            await ensureDriveRootFolder();
+            state.drive.status = 'connected';
+            showFeedback('success', 'Google Drive connected', [
+                `Drafts will be stored in “${DRIVE_ROOT_FOLDER_NAME}”.`
+            ]);
+        } catch (error) {
+            state.drive.status = 'error';
+            showFeedback('error', 'Google Drive connection failed', [error.message]);
+        } finally {
+            state.drive.busy = false;
+            renderDriveState();
+        }
+    }
+
+    async function driveApiRequest(url, options = {}) {
+        if (!hasValidDriveToken()) {
+            throw new Error('Google Drive authorization expired. Connect again and retry.');
+        }
+
+        const response = await fetch(url, {
+            ...options,
+            headers: {
+                Authorization: `Bearer ${state.drive.accessToken}`,
+                ...(options.headers || {})
+            }
+        });
+
+        if (!response.ok) {
+            let detail = '';
+            try {
+                const payload = await response.json();
+                detail = payload.error && payload.error.message ? payload.error.message : '';
+            } catch (error) {
+                detail = '';
+            }
+            if (response.status === 401) {
+                state.drive.accessToken = '';
+                state.drive.tokenExpiresAt = 0;
+                state.drive.status = 'disconnected';
+                renderDriveState();
+            }
+            const requestError = new Error(detail || `Google Drive request failed (${response.status}).`);
+            requestError.status = response.status;
+            throw requestError;
+        }
+
+        if (options.responseType === 'text') {
+            return response.text();
+        }
+        if (response.status === 204) {
+            return null;
+        }
+        return response.json();
+    }
+
+    function escapeDriveQueryValue(value) {
+        return String(value).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    }
+
+    async function listDriveFiles(query, fields = 'id,name,mimeType,modifiedTime,appProperties,parents') {
+        const parameters = new URLSearchParams({
+            q: query,
+            spaces: 'drive',
+            pageSize: '100',
+            orderBy: 'modifiedTime desc',
+            fields: `files(${fields})`
+        });
+        const payload = await driveApiRequest(`${DRIVE_API_BASE}/files?${parameters.toString()}`);
+        return payload.files || [];
+    }
+
+    async function createDriveFolder(name, parentId, appProperties = {}) {
+        const metadata = {
+            name,
+            mimeType: DRIVE_FOLDER_MIME,
+            appProperties
+        };
+        if (parentId) {
+            metadata.parents = [parentId];
+        }
+        return driveApiRequest(`${DRIVE_API_BASE}/files?fields=id,name,mimeType,modifiedTime,appProperties`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(metadata)
+        });
+    }
+
+    async function ensureDriveRootFolder() {
+        if (state.drive.rootFolderId) {
+            try {
+                const folder = await driveApiRequest(
+                    `${DRIVE_API_BASE}/files/${encodeURIComponent(state.drive.rootFolderId)}?fields=id,name,mimeType,trashed`
+                );
+                if (folder.mimeType === DRIVE_FOLDER_MIME && !folder.trashed) {
+                    return folder.id;
+                }
+            } catch (error) {
+                if (error.status !== 404) {
+                    throw error;
+                }
+            }
+            state.drive.rootFolderId = '';
+            window.localStorage.removeItem(DRIVE_ROOT_FOLDER_KEY);
+        }
+
+        const query = [
+            `name = '${escapeDriveQueryValue(DRIVE_ROOT_FOLDER_NAME)}'`,
+            `mimeType = '${DRIVE_FOLDER_MIME}'`,
+            'trashed = false'
+        ].join(' and ');
+        const matches = await listDriveFiles(query);
+        const folder = matches[0] || await createDriveFolder(DRIVE_ROOT_FOLDER_NAME, '', {
+            hwanBlogEditor: '1'
+        });
+
+        state.drive.rootFolderId = folder.id;
+        window.localStorage.setItem(DRIVE_ROOT_FOLDER_KEY, folder.id);
+        renderDriveState();
+        return folder.id;
+    }
+
+    function buildDriveDraftKey() {
+        if (state.drive.activeDraftKey) {
+            return state.drive.activeDraftKey;
+        }
+        const identity = state.metadata.id || state.metadata.slug;
+        state.drive.activeDraftKey = identity
+            ? `post-${identity}`
+            : `draft-${Date.now()}`;
+        return state.drive.activeDraftKey;
+    }
+
+    function buildDriveDraftFolderName() {
+        const identity = state.metadata.id || state.metadata.slug || 'untitled';
+        const title = state.metadata.title_eng || state.metadata.title_kor || 'Untitled post';
+        return `${identity} — ${title}`.replace(/[\\/:*?"<>|]/g, '-').slice(0, 120);
+    }
+
+    async function ensureDriveDraftFolder(rootFolderId, draftKey) {
+        if (state.drive.activeDraftFolderId) {
+            return state.drive.activeDraftFolderId;
+        }
+
+        const folders = await listDriveFiles([
+            `'${escapeDriveQueryValue(rootFolderId)}' in parents`,
+            `mimeType = '${DRIVE_FOLDER_MIME}'`,
+            'trashed = false'
+        ].join(' and '));
+        const existing = folders.find((folder) => (
+            folder.appProperties && folder.appProperties.hwanBlogDraftKey === draftKey
+        ));
+        const folder = existing || await createDriveFolder(buildDriveDraftFolderName(), rootFolderId, {
+            hwanBlogDraft: '1',
+            hwanBlogDraftKey: draftKey,
+            postId: state.metadata.id || ''
+        });
+        state.drive.activeDraftFolderId = folder.id;
+        return folder.id;
+    }
+
+    async function uploadDriveTextFile(folderId, name, mimeType, content, existingFileId) {
+        const boundary = `blog_editor_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+        const metadata = { name, mimeType };
+        if (!existingFileId) {
+            metadata.parents = [folderId];
+        }
+        const body = [
+            `--${boundary}`,
+            'Content-Type: application/json; charset=UTF-8',
+            '',
+            JSON.stringify(metadata),
+            `--${boundary}`,
+            `Content-Type: ${mimeType}; charset=UTF-8`,
+            '',
+            content,
+            `--${boundary}--`,
+            ''
+        ].join('\r\n');
+        const target = existingFileId
+            ? `${DRIVE_UPLOAD_BASE}/files/${encodeURIComponent(existingFileId)}?uploadType=multipart&fields=id,name,modifiedTime`
+            : `${DRIVE_UPLOAD_BASE}/files?uploadType=multipart&fields=id,name,modifiedTime`;
+
+        return driveApiRequest(target, {
+            method: existingFileId ? 'PATCH' : 'POST',
+            headers: { 'Content-Type': `multipart/related; boundary=${boundary}` },
+            body
+        });
+    }
+
+    async function updateDriveDraftFolder(folderId, savedAt) {
+        return driveApiRequest(`${DRIVE_API_BASE}/files/${encodeURIComponent(folderId)}?fields=id,name,modifiedTime,appProperties`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: buildDriveDraftFolderName(),
+                appProperties: {
+                    hwanBlogDraft: '1',
+                    hwanBlogDraftKey: state.drive.activeDraftKey,
+                    postId: state.metadata.id || '',
+                    savedAt
+                }
+            })
+        });
+    }
+
+    function buildDriveDraftManifest(savedAt) {
+        syncFormToState({ skipAutosave: true });
+        state.contents[state.activeLanguage] = el.editorTextarea.value;
+        return {
+            version: 1,
+            savedAt,
+            draftKey: state.drive.activeDraftKey,
+            mode: state.mode,
+            originalId: state.originalId,
+            activeLanguage: state.activeLanguage,
+            lockedLanguages: [...state.lockedLanguages],
+            metadata: {
+                ...state.metadata,
+                languages: [...state.metadata.languages],
+                tags: [...state.metadata.tags]
+            },
+            files: {
+                eng: 'content-eng.md',
+                kor: state.metadata.languages.includes('kor') ? 'content-kor.md' : ''
+            }
+        };
+    }
+
+    async function saveDriveDraft() {
+        if (!state.drive.clientId) {
+            openDriveSettingsModal();
+            return;
+        }
+
+        finishVisualBlockEdit();
+        setDriveBusy('saving', true);
+        try {
+            await requestGoogleDriveToken();
+            const rootFolderId = await ensureDriveRootFolder();
+            const draftKey = buildDriveDraftKey();
+            const draftFolderId = await ensureDriveDraftFolder(rootFolderId, draftKey);
+            const files = await listDriveFiles(`'${escapeDriveQueryValue(draftFolderId)}' in parents and trashed = false`);
+            const filesByName = new Map(files.map((file) => [file.name, file]));
+            const savedAt = new Date().toISOString();
+            const manifest = buildDriveDraftManifest(savedAt);
+
+            await uploadDriveTextFile(
+                draftFolderId,
+                'content-eng.md',
+                'text/markdown',
+                state.contents.eng || '',
+                filesByName.get('content-eng.md') && filesByName.get('content-eng.md').id
+            );
+            if (state.metadata.languages.includes('kor')) {
+                await uploadDriveTextFile(
+                    draftFolderId,
+                    'content-kor.md',
+                    'text/markdown',
+                    state.contents.kor || '',
+                    filesByName.get('content-kor.md') && filesByName.get('content-kor.md').id
+                );
+            }
+            await uploadDriveTextFile(
+                draftFolderId,
+                'draft.json',
+                'application/json',
+                JSON.stringify(manifest, null, 2),
+                filesByName.get('draft.json') && filesByName.get('draft.json').id
+            );
+            await updateDriveDraftFolder(draftFolderId, savedAt);
+
+            state.drive.status = 'connected';
+            showFeedback('success', 'Drive draft saved', [
+                `${buildDriveDraftFolderName()}/draft.json`,
+                ...state.metadata.languages.map((language) => `content-${language}.md`)
+            ]);
+        } catch (error) {
+            state.drive.status = 'error';
+            showFeedback('error', 'Drive draft save failed', [error.message]);
+        } finally {
+            state.drive.busy = false;
+            renderDriveState();
+        }
+    }
+
+    function formatDriveTimestamp(value) {
+        const date = new Date(value || '');
+        return Number.isNaN(date.getTime()) ? 'Unknown save time' : date.toLocaleString();
+    }
+
+    function buildDriveDraftListHtml(folders) {
+        if (folders.length === 0) {
+            return '<p class="panel-copy">No Drive drafts have been saved by this editor yet.</p>';
+        }
+
+        return `<div class="draft-list">${folders.map((folder) => {
+            const properties = folder.appProperties || {};
+            return `
+                <div class="draft-item drive-draft-item">
+                    <div>
+                        <div class="draft-name">${escapeHtml(folder.name)}</div>
+                        <div class="hint">${escapeHtml(formatDriveTimestamp(properties.savedAt || folder.modifiedTime))}</div>
+                    </div>
+                    <button class="button button-secondary" type="button" data-load-drive-folder="${escapeHtml(folder.id)}">Load</button>
+                </div>
+            `;
+        }).join('')}</div>`;
+    }
+
+    async function openDriveDraftModal() {
+        if (!state.drive.clientId) {
+            openDriveSettingsModal();
+            return;
+        }
+
+        setDriveBusy('loading', true);
+        try {
+            await requestGoogleDriveToken();
+            const rootFolderId = await ensureDriveRootFolder();
+            const folders = await listDriveFiles([
+                `'${escapeDriveQueryValue(rootFolderId)}' in parents`,
+                `mimeType = '${DRIVE_FOLDER_MIME}'`,
+                'trashed = false'
+            ].join(' and '));
+            const drafts = folders.filter((folder) => (
+                folder.appProperties && folder.appProperties.hwanBlogDraft === '1'
+            ));
+            openModal('Google Drive Drafts', buildDriveDraftListHtml(drafts));
+            el.modalBody.querySelectorAll('[data-load-drive-folder]').forEach((button) => {
+                button.addEventListener('click', () => loadDriveDraft(button.dataset.loadDriveFolder));
+            });
+            state.drive.status = 'connected';
+        } catch (error) {
+            state.drive.status = 'error';
+            showFeedback('error', 'Drive draft list failed', [error.message]);
+        } finally {
+            state.drive.busy = false;
+            renderDriveState();
+        }
+    }
+
+    async function downloadDriveTextFile(fileId) {
+        return driveApiRequest(
+            `${DRIVE_API_BASE}/files/${encodeURIComponent(fileId)}?alt=media`,
+            { responseType: 'text' }
+        );
+    }
+
+    function normalizeDriveDraftMetadata(metadata) {
+        const value = metadata && typeof metadata === 'object' ? metadata : {};
+        return sanitizeRecoveredMetadata({
+            ...value,
+            languages: Array.isArray(value.languages) ? value.languages : ['eng'],
+            tags: Array.isArray(value.tags) ? value.tags : []
+        });
+    }
+
+    async function loadDriveDraft(folderId) {
+        setDriveBusy('loading', true);
+        try {
+            const files = await listDriveFiles(`'${escapeDriveQueryValue(folderId)}' in parents and trashed = false`);
+            const filesByName = new Map(files.map((file) => [file.name, file]));
+            const manifestFile = filesByName.get('draft.json');
+            const englishFile = filesByName.get('content-eng.md');
+            if (!manifestFile || !englishFile) {
+                throw new Error('This draft is missing draft.json or content-eng.md.');
+            }
+
+            const manifest = JSON.parse(await downloadDriveTextFile(manifestFile.id));
+            if (!manifest || manifest.version !== 1) {
+                throw new Error('This Drive draft format is not supported.');
+            }
+            const englishContent = await downloadDriveTextFile(englishFile.id);
+            const koreanFile = filesByName.get('content-kor.md');
+            const koreanContent = koreanFile ? await downloadDriveTextFile(koreanFile.id) : DEFAULT_CONTENT.kor;
+
+            state.mode = manifest.mode === 'update' ? 'update' : 'create';
+            state.originalId = manifest.originalId || '';
+            state.lockedLanguages = Array.isArray(manifest.lockedLanguages) && manifest.lockedLanguages.length > 0
+                ? manifest.lockedLanguages.filter((language) => language === 'eng' || language === 'kor')
+                : ['eng'];
+            state.metadata = normalizeDriveDraftMetadata(manifest.metadata);
+            state.contents = {
+                eng: englishContent,
+                kor: koreanContent
+            };
+            state.activeLanguage = state.metadata.languages.includes(manifest.activeLanguage)
+                ? manifest.activeLanguage
+                : 'eng';
+            state.drive.activeDraftFolderId = folderId;
+            state.drive.activeDraftKey = manifest.draftKey
+                || (state.metadata.id ? `post-${state.metadata.id}` : `draft-${Date.now()}`);
+
+            renderFormFromState();
+            renderLanguageTabs();
+            updateEditor();
+            updatePreview();
+            updateStats();
+            renderKoreanFields();
+            renderFeatureFields();
+            renderModeBadge();
+            updateControls();
+            if (el.existingPostSelect) {
+                el.existingPostSelect.value = state.mode === 'update' ? state.originalId : '';
+            }
+            closeModal();
+            queueAutosave();
+            state.drive.status = 'connected';
+            showFeedback('success', 'Drive draft loaded', [
+                `${state.metadata.id || state.metadata.title_eng || 'Untitled draft'} is ready to edit.`
+            ]);
+        } catch (error) {
+            state.drive.status = 'error';
+            showFeedback('error', 'Drive draft load failed', [error.message]);
+        } finally {
+            state.drive.busy = false;
+            renderDriveState();
+        }
     }
 
     function handleVisibilityChange() {

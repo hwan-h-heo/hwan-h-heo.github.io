@@ -65,9 +65,10 @@ textarea {
 
 .topbar {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     gap: 18px;
-    align-items: flex-start;
+    align-items: stretch;
     padding: 18px 20px;
     border: 1px solid var(--border);
     border-radius: 28px;
@@ -114,8 +115,8 @@ textarea {
 
 .topbar-actions {
     align-items: center;
-    justify-content: flex-end;
-    max-width: min(100%, 720px);
+    justify-content: flex-start;
+    max-width: 100%;
 }
 
 .button,
@@ -382,6 +383,62 @@ textarea {
 
 .action-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.drive-panel {
+    border-color: rgba(66, 133, 244, 0.16);
+    background:
+        linear-gradient(145deg, rgba(239, 246, 255, 0.88), rgba(255, 255, 255, 0.82));
+}
+
+.drive-panel .pill {
+    background: rgba(66, 133, 244, 0.11);
+    color: #2456a6;
+}
+
+.drive-actions,
+.drive-setup-links,
+.modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.drive-actions .button {
+    flex: 1 1 auto;
+}
+
+.drive-note {
+    margin: 12px 0 0;
+    color: var(--muted);
+    font-size: 10.5px;
+    line-height: 1.55;
+}
+
+.drive-note code {
+    padding: 1px 5px;
+    border-radius: 999px;
+    background: rgba(66, 133, 244, 0.09);
+    color: #24467c;
+}
+
+.drive-setup .panel-copy {
+    font-size: 12.5px;
+}
+
+.drive-setup-links .button {
+    text-decoration: none;
+}
+
+.drive-draft-item > div {
+    min-width: 0;
+}
+
+.drive-draft-item .draft-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .checkbox-row {
