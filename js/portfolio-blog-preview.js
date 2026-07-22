@@ -6,25 +6,36 @@ document.addEventListener('DOMContentLoaded', async function() {
         return;
     }
 
-    const { loadSiteData, getPostTitle, getPostUrl } = window.siteDataClient;
+    const { loadSiteData, getPostTitle, getPostDescription, getPostUrl } = window.siteDataClient;
     const siteData = await loadSiteData();
+
+    const escapeHtml = (value) => String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 
     const slidesHtml = siteData.featuredPortfolioPosts
         .filter((item) => item.post)
-        .map((item) => `
+        .map((item) => {
+            const title = getPostTitle(item.post, 'eng');
+            const subtitle = item.post.subtitle_eng || getPostDescription(item.post, 'eng');
+
+            return `
             <div class="swiper-slide">
-              <a href="${getPostUrl(item.post, 'eng')}" target="_blank" class="testimonial-link">
-                <div class="testimonial-item">
-                  <div class="testimonial-content">
-                    <h6>${getPostTitle(item.post, 'eng')}</h6>
-                  </div>
-                  <div class="testimonial-img">
-                    <img src="${item.teaserImage}" class="img-fluid" alt="${item.teaserAlt || getPostTitle(item.post, 'eng')}">
-                  </div>
+              <a href="${escapeHtml(getPostUrl(item.post, 'eng'))}" target="_blank" rel="noopener noreferrer" class="portfolio-box blog-preview-card">
+                <div class="aspect-ratio-box">
+                  <img src="${escapeHtml(item.teaserImage)}" class="img-fluid" alt="${escapeHtml(item.teaserAlt || title)}">
+                </div>
+                <div class="polar_content">
+                  <h6 title="${escapeHtml(title)}">${escapeHtml(title)}</h6>
+                  <p class="portfolio-card-summary">${escapeHtml(subtitle)}</p>
                 </div>
               </a>
             </div>
-        `).join('');
+        `;
+        }).join('');
 
     container.innerHTML = slidesHtml;
 

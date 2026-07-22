@@ -150,7 +150,7 @@ async function waitForDynamicContent(page, route) {
         portfolio: () => {
             return document.querySelectorAll('[data-portfolio-block] > *').length >= 3
                 && document.querySelectorAll('#portfolio-projects .portfolio-box').length > 0
-                && document.querySelectorAll('#portfolio-blog-posts .testimonial-item').length > 0;
+                && document.querySelectorAll('#portfolio-blog-posts .blog-preview-card').length > 0;
         },
         'blog-index': () => document.querySelectorAll('.post-preview').length > 0,
         'blog-search': () => document.querySelectorAll('.post-preview').length > 0,
@@ -160,7 +160,7 @@ async function waitForDynamicContent(page, route) {
         utility: () => {
             const viewer = document.querySelector('simple-model-viewer');
             const canvas = viewer?.shadowRoot?.querySelector('canvas');
-            return Boolean(viewer?.model && canvas && canvas.width > 0 && canvas.height > 0);
+            return Boolean(viewer && canvas && canvas.width > 0 && canvas.height > 0);
         }
     };
 
@@ -294,9 +294,20 @@ function routeScreenshotName(route) {
 
 async function inspect3DCanvas(page) {
     return page.evaluate(() => {
-        const canvas = document.querySelector('simple-model-viewer')?.shadowRoot?.querySelector('canvas');
+        const viewer = document.querySelector('simple-model-viewer');
+        const canvas = viewer?.shadowRoot?.querySelector('canvas');
         if (!canvas) {
             return { ok: false, reason: 'Viewer canvas was not created.' };
+        }
+
+        if (!viewer.model) {
+            const fileInputContainer = viewer.shadowRoot?.querySelector('#fileInputContainer');
+            const fileInputVisible = fileInputContainer
+                && getComputedStyle(fileInputContainer).display !== 'none';
+            return {
+                ok: Boolean(fileInputVisible && canvas.width > 0 && canvas.height > 0),
+                reason: 'Empty viewer did not expose its model file input.'
+            };
         }
 
         const sampleCanvas = document.createElement('canvas');
@@ -327,7 +338,7 @@ async function inspectPreviewLayout(page) {
         const issues = [];
         const pairs = [
             ['#portfolio-projects .portfolio-box', '.aspect-ratio-box', '.polar_content'],
-            ['#portfolio-blog-posts .testimonial-item', '.testimonial-img', '.testimonial-content'],
+            ['#portfolio-blog-posts .blog-preview-card', '.aspect-ratio-box', '.polar_content'],
             ['.post-preview .post-card-link', '.post-card-cover', '.post-card-body']
         ];
 

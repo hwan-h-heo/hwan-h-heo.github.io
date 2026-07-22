@@ -26,52 +26,48 @@
     }
 
     function renderHero(block) {
+        const subtitle = block.subtitle || (block.typedItems || []).join(' · ');
         return `
             <div class="hero-content">
                 <h1>${escapeHtml(block.title)}</h1>
                 <hr/>
                 <p class="subtitle">
-                    <span class="typed" data-typed-items="${escapeHtml((block.typedItems || []).join(', '))}"></span>
+                    <span class="hero-subtitle-text">${escapeHtml(subtitle)}</span>
                 </p>
                 <p class="lead">${escapeHtml(block.lead)}</p>
                 <div class="social-links">
                     ${renderIconLinks(block.links)}
                 </div>
             </div>
+            <a href="#about" class="scroll-down-arrow" aria-label="Scroll down">
+                <span class="scroll-down-label">Research · Projects · Notes</span>
+                <i class="bi bi-chevron-double-down"></i>
+            </a>
         `;
-    }
-
-    function renderFacts(facts) {
-        return (facts || []).map((fact) => `
-            <li><i class="bi bi-chevron-right"></i> <strong>${escapeHtml(fact.label)}:</strong> <span>${fact.valueHtml || ''}</span></li>
-        `).join('');
     }
 
     function renderAbout(block) {
         return `
             <div class="container section-title" data-aos="fade-up">
                 <h2>${escapeHtml(block.title)}</h2>
-                <p>${block.introHtml || ''}</p>
             </div>
 
             <div class="container" data-aos="fade-up" data-aos-delay="100">
-                <div class="row gy-4 justify-content-center">
+                <div class="row gy-4 align-items-center justify-content-center">
                     <div class="col-lg-4" style="transition: 0.3s ease-in-out;">
-                        <img src="${escapeHtml(block.image)}" class="img-fluid" alt="${escapeHtml(block.imageAlt)}">
+                        <img src="${escapeHtml(block.image)}" class="img-fluid about-profile-image" alt="${escapeHtml(block.imageAlt)}">
                     </div>
-                    <div class="col-lg-8 content">
-                        <h2>${escapeHtml(block.role)}</h2>
-                        <p class="fst-italic py-3">${escapeHtml(block.tagline)}</p>
-                        <div class="row">
-                            <div class="col-10">
-                                <ul>${renderFacts(block.facts)}</ul>
-                            </div>
+                    <div class="col-lg-8 content about-copy">
+                        <div class="about-identity">
+                            <h2 class="about-name">${escapeHtml(block.name || block.role)}</h2>
+                            <p class="about-role">${escapeHtml(block.role)}</p>
+                            <p class="about-affiliation">${escapeHtml(block.affiliation)}</p>
                         </div>
-                        <p class="py-3">${block.bodyHtml || ''}</p>
+                        <p class="about-intro">${block.introHtml || ''}</p>
+                        <p class="about-bio">${block.bodyHtml || ''}</p>
                     </div>
                 </div>
             </div>
-            <a href="#about" class="scroll-down-arrow" aria-label="Scroll down"><i class="bi bi-chevron-double-down"></i></a>
         `;
     }
 
@@ -138,19 +134,117 @@
         return '';
     }
 
-    function restartTypedEffect() {
-        root.document.querySelectorAll('.typed').forEach((typedElement) => {
-            if (root.Typed) {
-                const typedStrings = typedElement.getAttribute('data-typed-items');
-                if (typedStrings) {
-                    new root.Typed(typedElement, {
-                        strings: typedStrings.split(',').map((item) => item.trim()),
-                        loop: true,
-                        typeSpeed: 100,
-                        backSpeed: 50,
-                        backDelay: 2000
-                    });
-                }
+    function initHeroAboutScrollHandoff() {
+        const hero = root.document.getElementById('home');
+        const about = root.document.getElementById('about');
+        if (!hero || !about || hero.dataset.scrollHandoffBound === 'true') {
+            return;
+        }
+
+        hero.dataset.scrollHandoffBound = 'true';
+        const reducedMotion = root.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let accumulatedWheelDelta = 0;
+        let wheelDirection = 0;
+        let wheelResetTimer;
+        let touchStartY = null;
+        let isSnapping = false;
+
+        const heroIsActive = () => root.scrollY < about.offsetTop - 2;
+        const aboutStartIsActive = () => {
+            const distanceFromAbout = root.scrollY - about.offsetTop;
+            return distanceFromAbout >= -2 && distanceFromAbout <= 48;
+        };
+        const snapToSection = (section, canSnap) => {
+            if (isSnapping || !canSnap()) {
+                return;
+            }
+
+            isSnapping = true;
+            section.scrollIntoView({
+                behavior: reducedMotion ? 'auto' : 'smooth',
+                block: 'start'
+            });
+            root.setTimeout(() => {
+                isSnapping = false;
+            }, reducedMotion ? 0 : 900);
+        };
+        const snapToAbout = () => snapToSection(about, heroIsActive);
+        const snapToHero = () => snapToSection(hero, aboutStartIsActive);
+
+        root.addEventListener('wheel', (event) => {
+            const direction = Math.sign(event.deltaY);
+            const shouldSnapDown = direction > 0 && heroIsActive();
+            const shouldSnapUp = direction < 0 && aboutStartIsActive();
+            if (!shouldSnapDown && !shouldSnapUp) {
+                accumulatedWheelDelta = 0;
+                wheelDirection = 0;
+                return;
+            }
+
+            event.preventDefault();
+            if (direction !== wheelDirection) {
+                accumulatedWheelDelta = 0;
+                wheelDirection = direction;
+            }
+            accumulatedWheelDelta += Math.abs(event.deltaY);
+            root.clearTimeout(wheelResetTimer);
+            wheelResetTimer = root.setTimeout(() => {
+                accumulatedWheelDelta = 0;
+                wheelDirection = 0;
+            }, 180);
+
+            if (accumulatedWheelDelta >= 24) {
+                accumulatedWheelDelta = 0;
+                shouldSnapDown ? snapToAbout() : snapToHero();
+            }
+        }, { passive: false });
+
+        root.addEventListener('touchstart', (event) => {
+            const canSnap = heroIsActive() || aboutStartIsActive();
+            touchStartY = canSnap ? event.touches[0]?.clientY ?? null : null;
+        }, { passive: true });
+
+        root.addEventListener('touchmove', (event) => {
+            if (touchStartY === null) {
+                return;
+            }
+
+            const currentY = event.touches[0]?.clientY;
+            if (typeof currentY !== 'number') {
+                return;
+            }
+
+            const movement = touchStartY - currentY;
+            const shouldSnapDown = movement >= 20 && heroIsActive();
+            const shouldSnapUp = movement <= -20 && aboutStartIsActive();
+            if (shouldSnapDown || shouldSnapUp) {
+                event.preventDefault();
+                touchStartY = null;
+                shouldSnapDown ? snapToAbout() : snapToHero();
+            }
+        }, { passive: false });
+
+        root.addEventListener('touchend', () => {
+            touchStartY = null;
+        }, { passive: true });
+
+        root.addEventListener('keydown', (event) => {
+            const target = event.target;
+            const isEditable = target instanceof root.HTMLElement
+                && (target.isContentEditable || /^(INPUT|SELECT|TEXTAREA)$/.test(target.tagName));
+            if (isEditable) {
+                return;
+            }
+
+            const isSpaceDown = event.key === ' ' && !event.shiftKey;
+            const isSpaceUp = event.key === ' ' && event.shiftKey;
+            const shouldSnapDown = heroIsActive()
+                && (['ArrowDown', 'PageDown'].includes(event.key) || isSpaceDown);
+            const shouldSnapUp = aboutStartIsActive()
+                && (['ArrowUp', 'PageUp'].includes(event.key) || isSpaceUp);
+            if (shouldSnapDown || shouldSnapUp) {
+                event.preventDefault();
+                shouldSnapDown ? snapToAbout() : snapToHero();
             }
         });
     }
@@ -182,11 +276,11 @@
                 }
             });
 
+            initHeroAboutScrollHandoff();
             if (!renderedBlock) {
                 return;
             }
 
-            restartTypedEffect();
             if (root.AOS) {
                 root.AOS.refresh();
             }

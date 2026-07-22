@@ -229,6 +229,24 @@ align-items: center;
 white-space: nowrap;
 transition: 0.3s;
 width: 100%;
+position: relative;
+}
+
+.navmenu a::after {
+content: '';
+position: absolute;
+left: 40px;
+bottom: 8px;
+width: 2rem;
+height: 1px;
+background: color-mix(in srgb, var(--accent-color), transparent 20%);
+transform: scaleX(0);
+transform-origin: left;
+transition: transform 0.25s ease;
+}
+
+.navmenu a.active::after {
+transform: scaleX(1);
 }
 
 .navmenu a .navicon,
@@ -346,10 +364,47 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 .hero p { font-size: 20px; }
 }
 .about .content h2 { font-weight: 700; font-size: 24px; }
-.about .content ul { list-style: none; padding: 0px; }
-.about .content ul li { margin-bottom: 20px; display: flex; align-items: center; }
-.about .content ul strong { margin-right: 10px; }
-.about .content ul i { font-size: 16px; margin-right: 5px; color: var(--accent-color); line-height: 0; }
+.about .about-identity {
+  margin-bottom: 2rem;
+}
+.about .about-profile-image {
+  filter: brightness(0.99) contrast(1.06);
+}
+.about .content .about-name {
+  font-size: 1.85rem;
+  line-height: 1.15;
+  margin-bottom: 0.65rem;
+}
+.about .content .about-name::after {
+  content: '';
+  display: block;
+  width: 4rem;
+  height: 1px;
+  margin-top: 0.7rem;
+  background: color-mix(in srgb, var(--accent-color), transparent 45%);
+}
+.about .about-role {
+  color: var(--accent-color);
+  font-size: 1.08rem;
+  font-weight: 600;
+  margin-bottom: 0.15rem;
+}
+.about .about-affiliation {
+  color: color-mix(in srgb, var(--default-color), transparent 35%);
+  font-size: 0.96rem;
+  margin-bottom: 0;
+}
+.about .about-intro,
+.about .about-bio {
+  line-height: 1.75;
+}
+.about .about-intro {
+  font-size: 1.03rem;
+  margin-bottom: 2rem;
+}
+.about .about-bio {
+  margin-bottom: 0;
+}
 .resume .resume-title {
   font-size: 1.5rem;
   margin-bottom: 1rem;
@@ -408,23 +463,26 @@ a.testimonial-link:hover {
 }
 
 .testimonials .testimonial-item {
-  display: grid;
-  grid-template-rows: auto 1fr;
+  display: flex;
+  flex-direction: column;
   position: relative;
   border-radius: 8px;
   overflow: hidden;
-  background: #fdfdfd9e;
-  transition: var(--transition-smooth); 
-  border: 1px solid var(--border-color); 
+  background: var(--surface-color);
+  transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
   height: 100%;
-  min-height: 0; 
-  text-align: left; 
+  min-height: 0;
+  text-align: left;
   box-sizing: border-box;
+  isolation: isolate;
 }
 
 .testimonials .testimonial-item:hover {
-  transform: translateY(-8px) scale(1.02); 
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); 
+  transform: translateY(-5px);
+  border-color: rgba(20, 157, 221, 0.22);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
   z-index: 10;
 }
 
@@ -432,34 +490,60 @@ a.testimonial-link:hover {
   position: relative;
   z-index: 2;
   min-height: 5.4rem;
-  padding: 1rem 1.25rem;
-  background: rgba(255, 255, 255, 0.96);
+  padding: 0.9rem 1.05rem 1rem;
+  background: var(--surface-color);
+  box-sizing: border-box;
+  flex: 1 0 auto;
 }
 
 .testimonials .testimonial-item .testimonial-content h6 {
-  font-family: var(--font-default);
-  color: var(--accent-color);
-  /* color: #4a4a4a; */
-  padding: 0.5rem 0.5rem;
-  margin-bottom: 0;
-  font-size: 1rem;
-  line-height: 1.4;
-  font-style: italic; 
-  font-weight: 400;
+  color: var(--heading-color);
+  padding: 0;
+  margin: 0;
+  font-size: 0.96rem;
+  line-height: 1.35;
+  min-height: 2.6em;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-wrap: balance;
   overflow-wrap: anywhere;
 }
 
 .testimonials .swiper-slide {
-  padding: 15px 15px;
+  height: auto;
+  padding: 0 0.75rem 1.5rem;
+}
+
+.testimonials .portfolio-blog-swiper {
+  margin-inline: -0.75rem;
+}
+
+.testimonials .blog-preview-card .polar_content h6 {
+  display: -webkit-box;
+  max-height: 2.7em;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 
 .testimonials .testimonial-item .testimonial-img {
   width: 100%;
-  overflow: hidden; 
-  position: relative; 
+  overflow: hidden;
+  position: relative;
   z-index: 1;
   aspect-ratio: 16 / 9;
+  background: #0f172a;
+}
+
+.testimonials .testimonial-item .testimonial-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.02), rgba(15, 23, 42, 0.1));
+  pointer-events: none;
+  z-index: 1;
 }
 
 .testimonials .testimonial-item .testimonial-img img {
@@ -468,13 +552,14 @@ a.testimonial-link:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; 
+  object-fit: cover;
   display: block;
-  transition: transform 0.3s ease; 
+  transition: transform 0.36s ease, filter 0.36s ease;
 }
 
 .testimonials .testimonial-item:hover .testimonial-img img {
-  transform: scale(1.05); 
+  transform: scale(1.035);
+  filter: saturate(1.04) contrast(1.02);
 }
 
 .testimonials .testimonial-item p {
@@ -751,9 +836,10 @@ a.testimonial-link:hover {
     margin-bottom: 2rem;
 }
 
-.hero .typed {
+.hero .hero-subtitle-text {
     color: #06b6d4; /* accent-color from design_sample */
     font-weight: 600;
+    border-bottom: 0;
 }
 
 .hero .lead {
@@ -786,10 +872,24 @@ a.testimonial-link:hover {
 
 .scroll-down-arrow {
   position: absolute;
-  bottom: 1.5rem; 
+  bottom: 1.5rem;
   left: 50%;
-  transform: translateX(-50%); 
-  z-index: 10; 
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  color: rgba(255, 255, 255, 0.52);
+  white-space: nowrap;
+}
+
+.scroll-down-label {
+  font-family: var(--nav-font);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.09em;
+  transition: color 0.3s ease;
 }
 
 .scroll-down-arrow i {
@@ -804,6 +904,10 @@ a.testimonial-link:hover {
 .scroll-down-arrow:hover i {
   color: rgba(255, 255, 255, 1); 
   animation-play-state: paused; 
+}
+
+.scroll-down-arrow:hover .scroll-down-label {
+  color: rgba(255, 255, 255, 0.88);
 }
 
 @keyframes bounce-glow {

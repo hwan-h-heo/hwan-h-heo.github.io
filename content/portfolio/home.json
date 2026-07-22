@@ -5,27 +5,23 @@
       "id": "home",
       "type": "hero",
       "title": "Hwan Heo",
-      "typedItems": [
-        "3D Generative AI",
-        "Neural Rendering",
-        "Production 3D Systems"
-      ],
-      "lead": "Building production-oriented 3D generative AI and neural rendering systems.",
+      "subtitle": "AI Research Engineer",
+      "lead": "Building production 3D AI systems at NC AI",
       "links": [
         {
-          "label": "GitHub",
-          "url": "https://github.com/hwanhuh",
-          "icon": "bi bi-github"
-        },
-        {
-          "label": "LinkedIn",
-          "url": "https://www.linkedin.com/in/hwan-heo-0905korea/",
-          "icon": "bi bi-linkedin"
+          "label": "CV",
+          "url": "/assets/Hwan_Heo_s_Curriculum_Vitae.pdf",
+          "icon": "bi bi-file-earmark-person"
         },
         {
           "label": "Google Scholar",
           "url": "https://scholar.google.com/citations?user=RulvYTkAAAAJ",
           "icon": "bi bi-mortarboard-fill"
+        },
+        {
+          "label": "GitHub",
+          "url": "https://github.com/hwanhuh",
+          "icon": "bi bi-github"
         },
         {
           "label": "Email",
@@ -38,30 +34,13 @@
       "id": "about",
       "type": "aboutProfile",
       "title": "About",
-      "introHtml": "Hi, I'm <strong>Hwan Heo (허환)</strong>, an AI Researcher focused on 3D generative models, neural rendering, and production-oriented 3D asset creation. By day, I build 3D worlds with AI; by night, I'm usually wandering through music, guitar, or random STEM rabbit holes. This site is where I collect the work, notes, and experiments behind that mix.",
-      "image": "assets/prof2.jpg",
-      "imageAlt": "profile image",
-      "role": "AI Researcher",
-      "tagline": "Specializing in 3D Computer Vision.",
-      "facts": [
-        {
-          "label": "Interest",
-          "valueHtml": "3D Vision & Graphics AI"
-        },
-        {
-          "label": "Degree",
-          "valueHtml": "Master's in Computer Science"
-        },
-        {
-          "label": "E-mail",
-          "valueHtml": "<a href='mailto:gjghks950@naver.com'>gjghks950@naver.com</a>"
-        },
-        {
-          "label": "City",
-          "valueHtml": "Sungnam, South Korea"
-        }
-      ],
-      "bodyHtml": "I am an AI Researcher at <strong>NC AI</strong>, where I lead the research efforts for the <strong>VARCO 3D team</strong>. My work focuses on training large-scale 3D generative models and setting the technical direction for our key projects in 3D AI Service. I hold both a B.S. and M.S. in Computer Science from <strong>Korea University</strong>, where I was advised by Professor <a href=\"https://www.hyunwoojkim.com/\">Hyunwoo J. Kim</a>. Previously, I was a Research Intern at <strong>NAVER AI Lab</strong>, mentored by Dr. <a href=\"https://wityworks.com/\">Jin-Hwa Kim</a>."
+      "introHtml": "Hi, I'm <strong>Hwan Heo (허환)</strong>, an AI Research Engineer working across 3D AI and graphics. By day, I build 3D worlds with AI; by night, I'm usually wandering through music, guitar, or random STEM rabbit holes. This site is where I collect the work, notes, and experiments behind that mix.",
+      "image": "assets/profile4.png",
+      "imageAlt": "Portrait of Hwan Heo",
+      "name": "Hwan Heo",
+      "role": "AI Research Engineer",
+      "affiliation": "NC AI, South Korea",
+      "bodyHtml": "At <strong>NC AI</strong>, I lead research and engineering for the <strong>VARCO 3D team</strong>, developing production 3D AI systems across large-scale generative model training, inference optimization, and graphics algorithms. I hold both a B.S. and M.S. in Computer Science from <strong>Korea University</strong>, where I was advised by Professor <a href=\"https://www.hyunwoojkim.com/\">Hyunwoo J. Kim</a>. Previously, I was a Research Intern at <strong>NAVER AI Lab</strong>, mentored by Dr. <a href=\"https://wityworks.com/\">Jin-Hwa Kim</a>."
     },
     {
       "id": "resume",
@@ -76,9 +55,9 @@
               "items": [
                 {
                   "title": "Hwan Heo | 허환",
-                  "bodyHtml": "<em>AI Researcher specializing in 3D Computer Vision with 3+ years of experience in Neural Rendering and 3D Generation systems.</em>",
+                  "bodyHtml": "<em>AI Research Engineer with 3+ years of experience building production 3D AI systems across large-scale model training, inference optimization, neural rendering, and graphics algorithms.</em>",
                   "bulletsHtml": [
-                    "AI Researcher at NC AI (NCSOFT)",
+                    "AI Research Engineer at NC AI (NCSOFT)",
                     "Research Personnel, Alternative Military Service"
                   ]
                 }
@@ -109,7 +88,7 @@
               "title": "Experience",
               "items": [
                 {
-                  "titleHtml": "<i class=\"bi bi-building-fill\"></i> AI Researcher",
+                  "titleHtml": "<i class=\"bi bi-building-fill\"></i> AI Research Engineer",
                   "period": "2025 - Present",
                   "metaHtml": "3D Generation, NC AI",
                   "bulletsHtml": [
