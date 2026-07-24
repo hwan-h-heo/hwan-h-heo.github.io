@@ -52,7 +52,7 @@
       "id": "about",
       "type": "aboutProfile",
       "title": "About",
-      "introHtml": "Hi, I'm <strong>Hwan Heo (허환)</strong>, a Lead 3D AI Research Engineer working where generative models, systems, and graphics meet. I enjoy carrying ideas all the way from representations and training code to the meshes people actually use.",
+      "introHtml": "Hi, I'm <strong>Hwan Heo (허환)</strong>. I work where generative models, systems, and graphics meet, carrying ideas all the way from representations and training code to the meshes people actually use.",
       "image": "assets/profile4.png",
       "imageAlt": "Portrait of Hwan Heo",
       "name": "Hwan Heo",
@@ -76,7 +76,7 @@
                   "bodyHtml": "<em>AI Research Engineer building production 3D AI systems across generative models, neural rendering, and graphics.</em>",
                   "bulletsHtml": [
                     "AI Research Engineer at NC AI",
-                    "Research Personnel, Alternative Military Service"
+                    "Former Research Personnel · Alternative Military Service"
                   ]
                 }
               ]
