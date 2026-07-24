@@ -186,7 +186,9 @@
         let touchGestureLocked = false;
         let isSnapping = false;
         let wheelGestureLocked = false;
-        let wheelLockStartedAt = 0;
+        let activeWheelTransition = '';
+        let carriedWheelDelta = 0;
+        let carriedWheelEvents = 0;
         let portfolioBoundaryHeld = false;
         const portfolioSection = root.document.getElementById('portfolio');
         const blogSection = root.document.getElementById('blog');
@@ -307,20 +309,18 @@
                 root.setTimeout(warm, 80);
             }
         };
-        const releaseWheelGestureAfterRest = () => {
+        const releaseWheelGesture = () => {
             root.clearTimeout(wheelReleaseTimer);
-            const quietPeriod = 140;
-            const minimumLock = Math.max(0, 220 - (root.performance.now() - wheelLockStartedAt));
             wheelReleaseTimer = root.setTimeout(() => {
                 wheelGestureLocked = false;
-            }, Math.max(quietPeriod, minimumLock));
+            }, 90);
         };
         const snapToPosition = async (section, getTargetY, preferredDuration) => {
             if (!section || isSnapping) return;
 
             isSnapping = true;
             wheelGestureLocked = true;
-            wheelLockStartedAt = root.performance.now();
+            root.clearTimeout(wheelReleaseTimer);
             page.classList.add('section-transitioning');
             try {
                 const wasReady = await prepareSection(section);
@@ -332,18 +332,36 @@
             } finally {
                 page.classList.remove('section-transitioning');
                 isSnapping = false;
-                releaseWheelGestureAfterRest();
+                releaseWheelGesture();
             }
         };
-        const snapToSection = (section) => {
-            return snapToPosition(section, () => section.offsetTop);
+        const snapToSection = (section, preferredDuration) => {
+            return snapToPosition(section, () => section.offsetTop, preferredDuration);
         };
         const snapToPortfolioEnd = () => {
             return snapToPosition(
                 portfolioSection,
                 () => getPortfolioEndAnchor() ?? root.scrollY,
-                480
+                360
             );
+        };
+        const holdAtPortfolioEnd = async () => {
+            activeWheelTransition = 'hold-portfolio-end';
+            carriedWheelDelta = 0;
+            carriedWheelEvents = 0;
+            await snapToPortfolioEnd();
+
+            const continueIntoBlog = carriedWheelEvents >= 4 && carriedWheelDelta >= 180;
+            activeWheelTransition = '';
+            carriedWheelDelta = 0;
+            carriedWheelEvents = 0;
+            if (!continueIntoBlog) return;
+
+            await delay(70);
+            portfolioBoundaryHeld = false;
+            activeWheelTransition = 'enter-blog';
+            await snapToSection(blogSection, 480);
+            activeWheelTransition = '';
         };
         const getPortfolioBoundaryAction = (direction, deltaY) => {
             const endAnchor = getPortfolioEndAnchor();
@@ -383,7 +401,12 @@
         root.addEventListener('wheel', (event) => {
             if (isSnapping || wheelGestureLocked) {
                 event.preventDefault();
-                releaseWheelGestureAfterRest();
+                if (isSnapping
+                    && activeWheelTransition === 'hold-portfolio-end'
+                    && event.deltaY > 0) {
+                    carriedWheelDelta += Math.abs(event.deltaY);
+                    carriedWheelEvents += 1;
+                }
                 return;
             }
 
@@ -406,13 +429,19 @@
                     accumulatedWheelDelta = 0;
                     if (boundaryAction.type === 'hold-portfolio-end') {
                         portfolioBoundaryHeld = true;
-                        snapToPortfolioEnd();
+                        holdAtPortfolioEnd();
                     } else if (boundaryAction.type === 'enter-blog') {
                         portfolioBoundaryHeld = false;
-                        snapToSection(blogSection);
+                        activeWheelTransition = 'enter-blog';
+                        snapToSection(blogSection, 480).finally(() => {
+                            activeWheelTransition = '';
+                        });
                     } else {
                         portfolioBoundaryHeld = false;
-                        snapToPortfolioEnd();
+                        activeWheelTransition = 'return-portfolio-end';
+                        snapToPortfolioEnd().finally(() => {
+                            activeWheelTransition = '';
+                        });
                     }
                 }
                 return;
