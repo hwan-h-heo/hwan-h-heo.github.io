@@ -10,13 +10,6 @@
     }
     document.addEventListener('portfolio:core-ready', resolve, { once: true });
   });
-  const heroImageReady = new Promise(resolve => {
-    const image = new Image();
-    image.addEventListener('load', resolve, { once: true });
-    image.addEventListener('error', resolve, { once: true });
-    image.src = '/assets/hero-bg-3d-ai-candidate.png';
-    if (image.complete) resolve();
-  });
   const fontsReady = document.fonts?.ready?.catch(() => undefined) || Promise.resolve();
   let revealed = false;
 
@@ -25,12 +18,16 @@
     revealed = true;
     preloader.classList.add('is-hidden');
     preloader.setAttribute('aria-hidden', 'true');
+    window.setTimeout(() => {
+      preloader.dataset.revealComplete = 'true';
+      document.dispatchEvent(new CustomEvent('portfolio:preloader-hidden'));
+    }, 430);
   };
 
   Promise.all([
     delay(260),
     Promise.race([
-      Promise.all([coreReady, heroImageReady, fontsReady]),
+      Promise.all([coreReady, fontsReady]),
       delay(1800)
     ])
   ]).then(reveal);
