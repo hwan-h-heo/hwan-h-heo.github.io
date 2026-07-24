@@ -28,7 +28,7 @@
 
     function renderProject(project) {
         const filters = (project.categories || []).map((category) => `filter-${category}`).join(' ');
-        const targetAttrs = project.external ? ' target="_blank"' : '';
+        const targetAttrs = project.external ? ' target="_blank" rel="noopener noreferrer"' : '';
         const externalIcon = project.external ? ' <i class="bi bi-box-arrow-up-right"></i>' : '';
         const badgeHtml = project.badge
             ? `<div class="top-left"><h6><span class="badge">${escapeHtml(project.badge)}</span></h6></div>`
@@ -38,8 +38,8 @@
             : '';
 
         return `
-            <div class="col-lg-4 col-sm-6 portfolio-item isotope-item ${filters}">
-                <a class="portfolio-box" href="${escapeHtml(project.url)}"${targetAttrs} rel="noopener noreferrer">
+            <article class="col-lg-4 col-sm-6 portfolio-item isotope-item ${filters}">
+                <a class="portfolio-box" href="${escapeHtml(project.url)}"${targetAttrs}>
                     <div class="aspect-ratio-box">
                         ${renderMedia(project)}
                     </div>
@@ -47,37 +47,39 @@
                     ${badgeHtml}
                     <div class="polar_content">
                         <h6 data-hover-text="${escapeHtml(project.summary)}">${escapeHtml(project.title)}${externalIcon}</h6>
+                        <p class="portfolio-card-summary">${escapeHtml(project.summary)}</p>
                     </div>
                     <p class="click-prompt">Click to see details</p>
                 </a>
-            </div>
+            </article>
         `;
     }
 
     function renderLink(link) {
         const icon = link.icon || 'bi-link';
+        const external = /^https?:\/\//.test(link.url || '');
+        const targetAttrs = external ? ' target="_blank" rel="noopener noreferrer"' : '';
         return `
-            <a class="btn btn-sm btn-outline-dark" href="${escapeHtml(link.url)}">
-                <div class="d-inline-block bi ${escapeHtml(icon)} me-2"></div>${escapeHtml(link.label)}
+            <a class="portfolio-paper-link" href="${escapeHtml(link.url)}"${targetAttrs}>
+                <i class="bi ${escapeHtml(icon)}" aria-hidden="true"></i>
+                ${escapeHtml(link.label)}
             </a>
         `;
     }
 
     function renderPublication(publication) {
         const linksHtml = (publication.links || []).length
-            ? `<div>${publication.links.map(renderLink).join('')}</div>`
+            ? publication.links.map(renderLink).join('')
             : '';
 
         return `
-            <li class="mb-4">
-                <p class="mb-1"><i class="bi bi-file-earmark-text"></i><strong> ${escapeHtml(publication.title)}</strong></p>
-                <p class="mb-0">
-                    <em>
-                        ${publication.authorsHtml}<br/>
-                        ${publication.venueHtml}
-                    </em>
-                </p>
-                ${linksHtml}
+            <li class="portfolio-publication">
+                <div class="portfolio-publication-copy">
+                    <h3>${escapeHtml(publication.title)}</h3>
+                    <p class="portfolio-publication-authors">${publication.authorsHtml}</p>
+                    <p class="portfolio-publication-venue">${publication.venueHtml}</p>
+                </div>
+                ${linksHtml ? `<div class="portfolio-paper-links">${linksHtml}</div>` : ''}
             </li>
         `;
     }
@@ -86,9 +88,12 @@
         const titleHtml = talk.titleHtml || escapeHtml(talk.title);
 
         return `
-            <li class="mb-4">
-                <p class="mb-1"><strong>${titleHtml}</strong></p>
-                <p class="mb-0"><em>${talk.venueHtml}</em>, <em>${escapeHtml(talk.date)}</em></p>
+            <li class="portfolio-talk">
+                <time>${escapeHtml(talk.date)}</time>
+                <div>
+                    <h3>${titleHtml}</h3>
+                    <p>${talk.venueHtml}</p>
+                </div>
             </li>
         `;
     }
@@ -124,6 +129,20 @@
         });
     }
 
+    const api = {
+        renderProject,
+        renderPublication,
+        renderTalk
+    };
+
+    if (typeof module === 'object' && module.exports) {
+        module.exports = api;
+    }
+
+    if (typeof document === 'undefined') {
+        return;
+    }
+
     document.addEventListener('DOMContentLoaded', async function() {
         const section = document.getElementById('portfolio');
         const projectContainer = document.getElementById('portfolio-projects');
@@ -143,15 +162,21 @@
         try {
             const siteData = await window.siteDataClient.loadSiteData();
 
-            projectContainer.innerHTML = (siteData.portfolioProjects || []).map(renderProject).join('');
-            publicationsContainer.innerHTML = (siteData.publications || []).map(renderPublication).join('');
-            talksContainer.innerHTML = (siteData.talks || []).map(renderTalk).join('');
+            if (!projectContainer.querySelector('.portfolio-box')) {
+                projectContainer.innerHTML = (siteData.portfolioProjects || []).map(renderProject).join('');
+            }
+            if (!publicationsContainer.querySelector('.portfolio-publication')) {
+                publicationsContainer.innerHTML = (siteData.publications || []).map(renderPublication).join('');
+            }
+            if (!talksContainer.querySelector('.portfolio-talk')) {
+                talksContainer.innerHTML = (siteData.talks || []).map(renderTalk).join('');
+            }
 
             if (window.initPortfolioBoxes) {
                 window.initPortfolioBoxes(projectContainer);
             }
 
-            initPortfolioLayout(document.querySelector('.portfolio .isotope-layout'), projectContainer);
+            initPortfolioLayout(section, projectContainer);
         } catch (error) {
             console.error(error);
         } finally {

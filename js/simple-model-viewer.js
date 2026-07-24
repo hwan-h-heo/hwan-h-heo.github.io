@@ -251,13 +251,20 @@ class SimpleModelViewer extends HTMLElement {
                     border-radius: 18px;
                     min-height: 300px;
                     background: var(--viewer-bg);
-                    font-family: "Avenir Next", "Segoe UI", Verdana, Geneva, Arial, sans-serif;
+                    font-family: "Inter", "Noto Sans KR", system-ui, -apple-system, "Segoe UI", sans-serif;
                     position: relative; /* Required for absolute positioning of panels */
                     overflow: hidden;
                 }
 
                 *, *::before, *::after {
                     box-sizing: border-box;
+                }
+
+                button,
+                input,
+                select,
+                textarea {
+                    font-family: inherit;
                 }
 
                 #loadingProgressBar {

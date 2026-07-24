@@ -11,6 +11,11 @@ const { parseProjectMarkdown } = require('./lib/project-markdown');
 const { renderProjectPage } = require('./lib/render-project-page');
 const { buildSitemapEntries, listProjectEntries } = require('./lib/site-routes');
 const { renderBlock: renderPortfolioBlock } = require('../js/portfolio-blocks');
+const {
+    renderProject: renderPortfolioProject,
+    renderPublication,
+    renderTalk
+} = require('../js/portfolio-content');
 
 const siteData = loadSiteData();
 const distDir = path.join(__dirname, 'dist');
@@ -84,6 +89,24 @@ function generatePortfolioIndex() {
             return `${openingTag}${renderPortfolioBlock(block)}${closingTag}`;
         });
     });
+
+    html = html
+        .replace(
+            '<!-- portfolio-projects-static -->',
+            (siteData.portfolioProjects || []).map(renderPortfolioProject).join('')
+        )
+        .replace(
+            '<!-- portfolio-publications-static -->',
+            (siteData.publications || []).map(renderPublication).join('')
+        )
+        .replace(
+            '<!-- portfolio-talks-static -->',
+            (siteData.talks || []).map(renderTalk).join('')
+        )
+        .replace(
+            '</head>',
+            `  <script type="application/ld+json">${serializeStructuredData(buildPortfolioStructuredData())}</script>\n</head>`
+        );
 
     fs.writeFileSync(path.join(distDir, 'index.html'), html);
 }
@@ -160,6 +183,81 @@ function calculateReadingTime(content) {
 
 function escapeRegExp(value) {
     return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function stripHtml(value) {
+    return String(value || '')
+        .replace(/<br\s*\/?>/gi, ' ')
+        .replace(/<[^>]+>/g, '')
+        .replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function serializeStructuredData(value) {
+    return JSON.stringify(value).replace(/</g, '\\u003c');
+}
+
+function buildPortfolioStructuredData() {
+    const personId = `${SITE_URL}/#person`;
+    const publications = (siteData.publications || []).map((publication) => {
+        const paperLink = (publication.links || []).find((link) => link.label === 'paper');
+        const authors = stripHtml(publication.authorsHtml)
+            .split(',')
+            .map((name) => name.trim())
+            .filter(Boolean)
+            .map((name) => ({
+                '@type': 'Person',
+                name
+            }));
+
+        return {
+            '@type': 'ScholarlyArticle',
+            name: publication.title,
+            author: authors,
+            url: paperLink?.url || `${SITE_URL}/#portfolio`,
+            isPartOf: {
+                '@type': 'CreativeWork',
+                name: stripHtml(publication.venueHtml)
+            }
+        };
+    });
+
+    return {
+        '@context': 'https://schema.org',
+        '@graph': [
+            {
+                '@type': 'Person',
+                '@id': personId,
+                name: 'Hwan Heo',
+                alternateName: '허환',
+                url: SITE_URL,
+                jobTitle: 'Lead 3D AI Research Engineer',
+                worksFor: {
+                    '@type': 'Organization',
+                    name: 'NC AI'
+                },
+                alumniOf: {
+                    '@type': 'CollegeOrUniversity',
+                    name: 'Korea University'
+                },
+                sameAs: [
+                    'https://scholar.google.com/citations?user=RulvYTkAAAAJ',
+                    'https://github.com/hwanhuh',
+                    'https://www.linkedin.com/in/hwan-heo-0905korea/'
+                ],
+                knowsAbout: [
+                    '3D generative AI',
+                    'Neural rendering',
+                    'CUDA inference optimization',
+                    'Computer graphics'
+                ]
+            },
+            ...publications
+        ]
+    };
 }
 
 function generateTOC(htmlContent) {

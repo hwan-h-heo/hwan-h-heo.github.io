@@ -4,20 +4,20 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Hwan Heo | AI Research Engineer in 3D AI</title>
-  <meta name="description" content="Portfolio of Hwan Heo, an AI research engineer building production 3D AI systems across generative model training, inference optimization, neural rendering, and graphics." />
+  <title>Hwan Heo | Lead 3D AI Research Engineer</title>
+  <meta name="description" content="Portfolio of Hwan Heo, a Lead 3D AI Research Engineer building production generative systems across native 3D representations, large-model training, CUDA inference, and graphics." />
   <meta name="author" content="Hwan Heo" />
   <link rel="canonical" href="https://hwan-h-heo.github.io/" />
-  <meta property="og:title" content="Hwan Heo | AI Research Engineer in 3D AI" />
-  <meta property="og:description" content="Portfolio of Hwan Heo, an AI research engineer building production 3D AI systems across generative model training, inference optimization, neural rendering, and graphics." />
+  <meta property="og:title" content="Hwan Heo | Lead 3D AI Research Engineer" />
+  <meta property="og:description" content="Building production-scale 3D generative systems from native representations and large-model training to CUDA inference and graphics pipelines." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://hwan-h-heo.github.io/" />
   <meta property="og:image" content="https://hwan-h-heo.github.io/assets/icon.webp" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Hwan Heo | AI Research Engineer in 3D AI" />
-  <meta name="twitter:description" content="Portfolio of Hwan Heo, an AI research engineer building production 3D AI systems across generative model training, inference optimization, neural rendering, and graphics." />
+  <meta name="twitter:title" content="Hwan Heo | Lead 3D AI Research Engineer" />
+  <meta name="twitter:description" content="Building production-scale 3D generative systems from native representations and large-model training to CUDA inference and graphics pipelines." />
   <meta name="twitter:image" content="https://hwan-h-heo.github.io/assets/icon.webp" />
-  <link rel="preload" as="image" href="/assets/image_fx_.jpg" fetchpriority="high" />
+  <link rel="preload" as="image" href="/assets/hero-bg-3d-ai-candidate.png" fetchpriority="high" />
   <noscript><style>#preloader { display: none !important; }</style></noscript>
 
   <!-- Favicons -->
@@ -27,7 +27,7 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect" />
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -74,9 +74,9 @@
       <ul>
         <li><a href="#home" class="active"><i class="bi bi-house navicon"></i>Home</a></li>
         <li><a href="#about"><i class="bi bi-person navicon"></i> About</a></li>
-        <li><a href="#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
         <li><a href="#portfolio"><i class="bi bi-images navicon"></i> Portfolio</a></li>
         <li><a href="#blog"> <i class="bi bi-keyboard navicon"></i> Blog </a></li>
+        <li><a href="#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
       </ul>
     </nav>
   </header>
@@ -88,44 +88,55 @@
     <!-- About Section -->
     <section id="about" class="about section" data-portfolio-block="about" data-section-ready="false"></section><!-- /About Section -->
 
-    <!-- Resume Section -->
-    <section id="resume" class="resume section" data-portfolio-block="resume" data-section-ready="false"></section><!-- /Resume Section -->
-
     <!-- Portfolio Section -->
-    <section id="portfolio" class="portfolio section light-background" data-section-ready="false">
+    <section id="portfolio" class="portfolio section light-background" data-section-ready="false" data-default-filter="*" data-layout="masonry" data-sort="original-order">
 
       <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
+      <div class="container section-title portfolio-section-heading" data-aos="fade-up">
         <h2>Portfolio</h2>
-        <!-- <p>
-          <strong> </strong> Research & Development: Featured Publication &amp Project Lists
-        </p> -->
-        <h5>Selected Works</h5>
+        <ul class="portfolio-filters isotope-filters" aria-label="Filter portfolio projects">
+          <li data-filter="*" class="filter-active">All</li>
+          <li data-filter=".filter-research">Research</li>
+          <li data-filter=".filter-app">Application</li>
+          <li data-filter=".filter-per">Personal</li>
+        </ul>
       </div><!-- End Section Title -->
 
-      <div class="container col-12">
-        <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order" data-dynamic-source="portfolio">
-          <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
-            <li data-filter="*" class="filter-active">All</li>
-            <li data-filter=".filter-research">Research</li>
-            <li data-filter=".filter-app">Application</li>
-            <li data-filter=".filter-per">Personal</li>
-          </ul><!-- End Portfolio Filters -->
+      <div class="container portfolio-content">
+        <div class="row gy-4 isotope-container" id="portfolio-projects" data-aos="fade-up"><!-- portfolio-projects-static --></div>
 
-          <div class="row gy-4 isotope-container" id="portfolio-projects" data-aos="fade-up"></div>
-          <br/>
-          <div class="row gy-4" data-aos="fade-up">
-            <div class="col-12 portfolio-item filter-active filter-research filter-app filter-per"> 
-              <br/>
-              <h5>Selected Publications</h5>
-              <hr/>
-              <ul id="portfolio-publications"></ul>
-              <br/>
-              <h5>Invited Talks</h5>
-              <hr/>
-              <ul id="portfolio-talks"></ul>
+        <div class="portfolio-evidence" data-aos="fade-up">
+          <details class="portfolio-disclosure">
+            <summary>
+              <span>
+                <span class="portfolio-disclosure-kicker">Research</span>
+                <strong>Selected Papers</strong>
+              </span>
+              <span class="portfolio-disclosure-meta">
+                <span>4 publications</span>
+                <i class="bi bi-chevron-down" aria-hidden="true"></i>
+              </span>
+            </summary>
+            <div class="portfolio-disclosure-panel">
+              <ol class="portfolio-publication-list" id="portfolio-publications"><!-- portfolio-publications-static --></ol>
             </div>
-          </div>
+          </details>
+
+          <details class="portfolio-disclosure">
+            <summary>
+              <span>
+                <span class="portfolio-disclosure-kicker">Speaking</span>
+                <strong>Invited Talks</strong>
+              </span>
+              <span class="portfolio-disclosure-meta">
+                <span>6 talks</span>
+                <i class="bi bi-chevron-down" aria-hidden="true"></i>
+              </span>
+            </summary>
+            <div class="portfolio-disclosure-panel">
+              <ul class="portfolio-talk-list" id="portfolio-talks"><!-- portfolio-talks-static --></ul>
+            </div>
+          </details>
         </div>
       </div>
     </section>
@@ -133,11 +144,11 @@
     <section id="blog" class="testimonials section light-background" data-aos="fade-up" data-section-ready="false">
       <!-- Section Title -->
       <div class="container section-title">
-        <h2><a href="blogs/" target="_blank">Blogs <i class="bi bi-box-arrow-up-right"></i> </a></h2>
+        <h2><a href="blogs/" target="_blank">Technical Writing <i class="bi bi-box-arrow-up-right"></i> </a></h2>
         <p>Technical notes on 3D AI, from theory to production:<br/>generative models and large-scale training, neural rendering, graphics algorithms, and web-based 3D tools.</p>
       </div><!-- End Section Title -->
       <div class="container">
-        <h5>Featured Recent Posts</h5>
+        <h5>Selected Notes</h5>
         <div class="swiper portfolio-blog-swiper">
           <script type="application/json" class="swiper-config">
             {
@@ -176,6 +187,9 @@
         <p>You can also find me on my <a href="https://velog.io/@gjghks950/posts">Korean Blog</a>, <br/> or <a href="https://www.youtube.com/@hwanshobbystorage861">YouTube channel</a> for sharing my original guitar play & arrangement (currently on a break). </p>
       </div>
     </section><!-- /Testimonials Section -->
+
+    <!-- Resume Section -->
+    <section id="resume" class="resume section" data-portfolio-block="resume" data-section-ready="false"></section><!-- /Resume Section -->
   </main>
 
   <footer id="footer" class="footer position-relative light-background">

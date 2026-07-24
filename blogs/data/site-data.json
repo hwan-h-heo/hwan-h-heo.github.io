@@ -90,7 +90,7 @@
       "tags": [
         "Graphics"
       ],
-      "cover": "/blogs/posts/250809_gwn/assets/image-2.png",
+      "cover": "/blogs/posts/250809_gwn/assets/image.png",
       "status": "published",
       "updated": "2025-08-09"
     },
@@ -795,29 +795,9 @@
       "teaserAlt": "Varco3D retrospective teaser"
     },
     {
-      "id": "250810_flow",
-      "teaserImage": "/blogs/posts/250810_flow/assets/remote-40629d4b233a.png",
-      "teaserAlt": "Flow Matching blog post teaser"
-    },
-    {
-      "id": "250702_building_large_3d_1",
-      "teaserImage": "/blogs/posts/250702_building_large_3d_1/assets/image-10.png",
-      "teaserAlt": "Building large 3D generative model teaser"
-    },
-    {
-      "id": "250310_model_viewer",
-      "teaserImage": "/blogs/posts/250310_model_viewer/assets/image.png",
-      "teaserAlt": "Web 3D viewer post teaser"
-    },
-    {
-      "id": "250302_3d_latent_diffusion",
-      "teaserImage": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif",
-      "teaserAlt": "3D latent diffusion blog post teaser"
-    },
-    {
-      "id": "240823_grt",
-      "teaserImage": "/blogs/posts/240823_grt/assets/teaser.gif",
-      "teaserAlt": "3D Gaussian ray tracing blog post teaser"
+      "id": "250809_gwn",
+      "teaserImage": "/blogs/posts/250809_gwn/assets/image.png",
+      "teaserAlt": "Winding number around a closed curve"
     },
     {
       "id": "240805_gs",
