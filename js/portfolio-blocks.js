@@ -20,9 +20,35 @@
     }
 
     function renderIconLinks(links) {
-        return (links || []).map((link) => `
-            <a aria-label="${escapeHtml(link.label)}" href="${escapeHtml(link.url)}"><i class="${escapeHtml(link.icon)}"></i></a>
-        `).join('');
+        return (links || []).map((link) => {
+            const external = /^https?:\/\//.test(link.url || '');
+            const target = external ? ' target="_blank" rel="noopener noreferrer"' : '';
+            return `
+                <a aria-label="${escapeHtml(link.label)}" href="${escapeHtml(link.url)}"${target}>
+                    <i class="${escapeHtml(link.icon)}"></i>
+                </a>
+            `;
+        }).join('');
+    }
+
+    function renderHeroActions(actions) {
+        return (actions || []).map((action) => {
+            const style = ['section', 'download'].includes(action.style)
+                ? action.style
+                : 'section';
+            const download = action.download ? ' download' : '';
+            const icon = action.download
+                ? 'bi-download'
+                : (action.url || '').startsWith('#')
+                    ? 'bi-arrow-down'
+                    : 'bi-arrow-up-right';
+            return `
+                <a class="hero-action hero-action--${style}" href="${escapeHtml(action.url)}"${download}>
+                    ${escapeHtml(action.label)}
+                    <i class="bi ${icon}" aria-hidden="true"></i>
+                </a>
+            `;
+        }).join('');
     }
 
     function renderHero(block) {
@@ -35,12 +61,15 @@
                     <span class="hero-subtitle-text">${escapeHtml(subtitle)}</span>
                 </p>
                 <p class="lead">${escapeHtml(block.lead)}</p>
+                <div class="hero-actions">
+                    ${renderHeroActions(block.actions)}
+                </div>
                 <div class="social-links">
                     ${renderIconLinks(block.links)}
                 </div>
             </div>
             <a href="#about" class="scroll-down-arrow" aria-label="Scroll down">
-                <span class="scroll-down-label">Research · Projects · Notes</span>
+                <span class="scroll-down-label">About · Projects · Notes</span>
                 <i class="bi bi-chevron-double-down"></i>
             </a>
         `;
@@ -158,8 +187,15 @@
         let isSnapping = false;
         let wheelGestureLocked = false;
         let wheelLockStartedAt = 0;
+        let portfolioBoundaryHeld = false;
+        const portfolioSection = root.document.getElementById('portfolio');
+        const blogSection = root.document.getElementById('blog');
 
         const delay = (milliseconds) => new Promise(resolve => root.setTimeout(resolve, milliseconds));
+        const getPortfolioEndAnchor = () => {
+            if (!portfolioSection || !blogSection) return null;
+            return Math.max(portfolioSection.offsetTop, blogSection.offsetTop - root.innerHeight);
+        };
         const getCurrentSectionIndex = () => {
             const position = root.scrollY + 2;
             let currentIndex = 0;
@@ -232,11 +268,11 @@
             await Promise.race([Promise.all(imageDecodes), delay(240)]);
             return wasReady;
         };
-        const animateScrollTo = (section, duration) => new Promise(resolve => {
+        const animateScrollToPosition = (getTargetY, duration) => new Promise(resolve => {
             const startY = root.scrollY;
-            const distance = section.offsetTop - startY;
+            const distance = getTargetY() - startY;
             if (duration === 0 || Math.abs(distance) < 1) {
-                root.scrollTo(0, section.offsetTop);
+                root.scrollTo(0, getTargetY());
                 resolve();
                 return;
             }
@@ -247,13 +283,13 @@
                 const eased = progress < 0.5
                     ? 4 * progress * progress * progress
                     : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                const liveDistance = section.offsetTop - startY;
+                const liveDistance = getTargetY() - startY;
                 root.scrollTo(0, startY + liveDistance * eased);
                 if (progress < 1) {
                     root.requestAnimationFrame(step);
                     return;
                 }
-                root.scrollTo(0, section.offsetTop);
+                root.scrollTo(0, getTargetY());
                 resolve();
             };
             root.requestAnimationFrame(step);
@@ -279,7 +315,7 @@
                 wheelGestureLocked = false;
             }, Math.max(quietPeriod, minimumLock));
         };
-        const snapToSection = async (section) => {
+        const snapToPosition = async (section, getTargetY, preferredDuration) => {
             if (!section || isSnapping) return;
 
             isSnapping = true;
@@ -288,14 +324,60 @@
             page.classList.add('section-transitioning');
             try {
                 const wasReady = await prepareSection(section);
-                const duration = reducedMotion ? 0 : (wasReady ? 720 : 940);
-                await animateScrollTo(section, duration);
+                const duration = reducedMotion
+                    ? 0
+                    : (preferredDuration || (wasReady ? 720 : 940));
+                await animateScrollToPosition(getTargetY, duration);
                 warmAdjacentSections(section);
             } finally {
                 page.classList.remove('section-transitioning');
                 isSnapping = false;
                 releaseWheelGestureAfterRest();
             }
+        };
+        const snapToSection = (section) => {
+            return snapToPosition(section, () => section.offsetTop);
+        };
+        const snapToPortfolioEnd = () => {
+            return snapToPosition(
+                portfolioSection,
+                () => getPortfolioEndAnchor() ?? root.scrollY,
+                480
+            );
+        };
+        const getPortfolioBoundaryAction = (direction, deltaY) => {
+            const endAnchor = getPortfolioEndAnchor();
+            if (endAnchor === null || !blogSection || !direction) return null;
+
+            const position = root.scrollY;
+            const blogTop = blogSection.offsetTop;
+            const projectedPosition = position + deltaY;
+            const tolerance = 4;
+
+            if (portfolioBoundaryHeld && position < endAnchor - 48) {
+                portfolioBoundaryHeld = false;
+            }
+
+            if (direction > 0
+                && position < blogTop - tolerance
+                && projectedPosition >= endAnchor - tolerance) {
+                if (portfolioBoundaryHeld && position >= endAnchor - tolerance) {
+                    return { type: 'enter-blog', threshold: 72 };
+                }
+                return { type: 'hold-portfolio-end', threshold: 18 };
+            }
+
+            if (direction < 0
+                && position >= blogTop - tolerance
+                && projectedPosition <= blogTop + 24) {
+                return { type: 'return-portfolio-end', threshold: 18 };
+            }
+
+            if (direction < 0 && position <= endAnchor + tolerance) {
+                portfolioBoundaryHeld = false;
+            }
+
+            return null;
         };
 
         root.addEventListener('wheel', (event) => {
@@ -306,6 +388,36 @@
             }
 
             const direction = Math.sign(event.deltaY);
+            const boundaryAction = getPortfolioBoundaryAction(direction, event.deltaY);
+            if (boundaryAction) {
+                event.preventDefault();
+                if (direction !== wheelDirection) {
+                    accumulatedWheelDelta = 0;
+                    wheelDirection = direction;
+                }
+                accumulatedWheelDelta += Math.abs(event.deltaY);
+                root.clearTimeout(wheelResetTimer);
+                wheelResetTimer = root.setTimeout(() => {
+                    accumulatedWheelDelta = 0;
+                    wheelDirection = 0;
+                }, 220);
+
+                if (accumulatedWheelDelta >= boundaryAction.threshold) {
+                    accumulatedWheelDelta = 0;
+                    if (boundaryAction.type === 'hold-portfolio-end') {
+                        portfolioBoundaryHeld = true;
+                        snapToPortfolioEnd();
+                    } else if (boundaryAction.type === 'enter-blog') {
+                        portfolioBoundaryHeld = false;
+                        snapToSection(blogSection);
+                    } else {
+                        portfolioBoundaryHeld = false;
+                        snapToPortfolioEnd();
+                    }
+                }
+                return;
+            }
+
             const target = direction ? getSnapTarget(direction) : null;
             if (!target) {
                 accumulatedWheelDelta = 0;

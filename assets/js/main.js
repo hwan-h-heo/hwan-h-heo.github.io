@@ -14,7 +14,7 @@
     const image = new Image();
     image.addEventListener('load', resolve, { once: true });
     image.addEventListener('error', resolve, { once: true });
-    image.src = '/assets/image_fx_.jpg';
+    image.src = '/assets/hero-bg-3d-ai-candidate.png';
     if (image.complete) resolve();
   });
   const fontsReady = document.fonts?.ready?.catch(() => undefined) || Promise.resolve();

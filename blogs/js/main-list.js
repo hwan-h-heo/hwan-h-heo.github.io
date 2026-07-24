@@ -101,6 +101,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     function renderAllTabs(lang) {
+        document.documentElement.lang = lang === 'kor' ? 'ko' : 'en';
         renderAllPosts(lang);
         renderNotes(lang);
         renderSeries(lang);

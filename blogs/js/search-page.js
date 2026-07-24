@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
 
         const currentLang = localStorage.getItem('language') || 'eng';
+        document.documentElement.lang = currentLang === 'kor' ? 'ko' : 'en';
         const resultsHtml = filteredPosts.map((post) => {
             const title = getPostTitle(post, currentLang);
             const subtitle = getPostDescription(post, currentLang);
