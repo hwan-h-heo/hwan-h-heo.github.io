@@ -1676,15 +1676,26 @@ h6 {
   }
 
   .hero .subtitle {
-    max-width: 15ch;
+    max-width: none;
+    font-size: clamp(1rem, 5.1vw, 1.25rem);
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+  }
+
+  .hero-actions {
+    flex-wrap: nowrap;
+    gap: clamp(0.3rem, 1.8vw, 0.7rem);
   }
 
   .hero-action {
-    font-size: 0.75rem;
+    flex: 0 0 auto;
+    gap: 0.25rem;
+    font-size: clamp(0.58rem, 2.7vw, 0.72rem);
+    white-space: nowrap;
   }
 
   .hero-action--download {
-    padding: 0.5rem 0.7rem;
+    padding: 0.45rem clamp(0.3rem, 1.4vw, 0.6rem);
   }
 
   .portfolio-section-heading {
