@@ -640,7 +640,7 @@
       "categories": [
         "research"
       ],
-      "badge": "Featured on HuggingFace",
+      "badge": "Featured on Hugging Face",
       "image": "assets/thumbnails/capa_thumbnail.png",
       "gif": "assets/capa_teaser.webp",
       "alt": "CaPa teaser"
@@ -666,7 +666,7 @@
         "per",
         "app"
       ],
-      "badge": "Featured on Github (150+ stars)",
+      "badge": "Featured on GitHub (150+ stars)",
       "image": "assets/thumbnails/2dgs_viewer_thumbnail.png",
       "gif": "assets/2dgs_viewer_teaser.webp",
       "alt": "2D GS viewer teaser"
@@ -679,7 +679,7 @@
       "categories": [
         "per"
       ],
-      "badge": "Featured on Github (200+ stars)",
+      "badge": "Featured on GitHub (200+ stars)",
       "image": "assets/thumbnails/deepsfm_thumbnail.png",
       "gif": "assets/sfm_teaser.webp",
       "alt": "DeepSFM and NeRF face teaser"
@@ -689,7 +689,7 @@
     {
       "title": "CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation",
       "authorsHtml": "<strong>Hwan Heo</strong>, Jangyeong Kim, Seongyeong Lee, Jeong-A Wi, Junyoung Choi, Sangjun Ahn",
-      "venueHtml": "<em>Technical Report</em>, Featured on <strong>HuggingFace's Daily Papers</strong>, <strong>TLDR AI</strong>",
+      "venueHtml": "<em>Technical Report</em>, Featured on <strong>Hugging Face Daily Papers</strong>, <strong>TLDR AI</strong>",
       "links": [
         {
           "label": "paper",

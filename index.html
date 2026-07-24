@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="hero-wave-pending">
 
 <head>
   <meta charset="utf-8">
@@ -17,8 +17,22 @@
   <meta name="twitter:title" content="Hwan Heo | Lead 3D AI Research Engineer" />
   <meta name="twitter:description" content="Building production-scale 3D generative systems from native representations and large-model training to CUDA inference and graphics pipelines." />
   <meta name="twitter:image" content="https://hwan-h-heo.github.io/assets/icon.webp" />
-  <link rel="preload" as="image" href="/assets/hero-bg-3d-ai-candidate.png" fetchpriority="high" />
-  <noscript><style>#preloader { display: none !important; }</style></noscript>
+  <noscript>
+    <style>
+      #preloader { display: none !important; }
+      .scroll-down-arrow {
+        opacity: 1 !important;
+        transform: translateX(-50%) !important;
+      }
+      .index-page .hero::before {
+        background:
+          linear-gradient(90deg, rgba(16, 16, 17, 0.98) 0%, rgba(16, 16, 17, 0.9) 36%, rgba(16, 16, 17, 0.2) 76%),
+          url("/assets/hero-bg-3d-ai-candidate.png") center / cover no-repeat !important;
+        background-color: #101011 !important;
+        background-blend-mode: normal, luminosity !important;
+      }
+    </style>
+  </noscript>
 
   <!-- Favicons -->
   <link href="assets/favicon.ico" rel="icon">
@@ -47,7 +61,7 @@
       gtag('js', new Date());
       gtag('config', 'G-RF7ETSKPK9');
   </script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://hwan-h-heo.github.io/#person","name":"Hwan Heo","alternateName":"허환","url":"https://hwan-h-heo.github.io","jobTitle":"Lead 3D AI Research Engineer","worksFor":{"@type":"Organization","name":"NC AI"},"alumniOf":{"@type":"CollegeOrUniversity","name":"Korea University"},"sameAs":["https://scholar.google.com/citations?user=RulvYTkAAAAJ","https://github.com/hwanhuh","https://www.linkedin.com/in/hwan-heo-0905korea/"],"knowsAbout":["3D generative AI","Neural rendering","CUDA inference optimization","Computer graphics"]},{"@type":"ScholarlyArticle","name":"CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation","author":[{"@type":"Person","name":"Hwan Heo"},{"@type":"Person","name":"Jangyeong Kim"},{"@type":"Person","name":"Seongyeong Lee"},{"@type":"Person","name":"Jeong-A Wi"},{"@type":"Person","name":"Junyoung Choi"},{"@type":"Person","name":"Sangjun Ahn"}],"url":"https://arxiv.org/abs/2501.09433","isPartOf":{"@type":"CreativeWork","name":"Technical Report, Featured on HuggingFace's Daily Papers, TLDR AI"}},{"@type":"ScholarlyArticle","name":"DreamSurfels: Generative Gaussian Surfels for Geometrically Accurate 3D Content Creation","author":[{"@type":"Person","name":"Hwan Heo"},{"@type":"Person","name":"Sangjun Ahn"}],"url":"https://hwan-h-heo.github.io/#portfolio","isPartOf":{"@type":"CreativeWork","name":"The 15th International Conference on ICT Convergence (ICTC), Oct 2024 Oral presentation, domestic conference"}},{"@type":"ScholarlyArticle","name":"Robust Camera Pose Refinement for Multi-Resolution Hash Encoding","author":[{"@type":"Person","name":"Hwan Heo"},{"@type":"Person","name":"Taekyung Kim"},{"@type":"Person","name":"J. Lee"},{"@type":"Person","name":"Jiyoung Lee"},{"@type":"Person","name":"Soohyun Kim"},{"@type":"Person","name":"Hyunwoo J. Kim"},{"@type":"Person","name":"Jin-Hwa Kim"}],"url":"https://dl.acm.org/doi/10.5555/3618408.3618936","isPartOf":{"@type":"CreativeWork","name":"The 40th International Conference on Machine Learning (ICML), Jul 2023"}},{"@type":"ScholarlyArticle","name":"Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild","author":[{"@type":"Person","name":"Jaewon Lee"},{"@type":"Person","name":"Injae Kim"},{"@type":"Person","name":"Hwan Heo"},{"@type":"Person","name":"Hyunwoo J. Kim"}],"url":"https://arxiv.org/abs/2303.03966","isPartOf":{"@type":"CreativeWork","name":"preprint, arXiv 2023"}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://hwan-h-heo.github.io/#person","name":"Hwan Heo","alternateName":"허환","url":"https://hwan-h-heo.github.io","jobTitle":"Lead 3D AI Research Engineer","worksFor":{"@type":"Organization","name":"NC AI"},"alumniOf":{"@type":"CollegeOrUniversity","name":"Korea University"},"sameAs":["https://scholar.google.com/citations?user=RulvYTkAAAAJ","https://github.com/hwanhuh","https://www.linkedin.com/in/hwan-heo-0905korea/"],"knowsAbout":["3D generative AI","Neural rendering","CUDA inference optimization","Computer graphics"]},{"@type":"ScholarlyArticle","name":"CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation","author":[{"@type":"Person","name":"Hwan Heo"},{"@type":"Person","name":"Jangyeong Kim"},{"@type":"Person","name":"Seongyeong Lee"},{"@type":"Person","name":"Jeong-A Wi"},{"@type":"Person","name":"Junyoung Choi"},{"@type":"Person","name":"Sangjun Ahn"}],"url":"https://arxiv.org/abs/2501.09433","isPartOf":{"@type":"CreativeWork","name":"Technical Report, Featured on Hugging Face Daily Papers, TLDR AI"}},{"@type":"ScholarlyArticle","name":"DreamSurfels: Generative Gaussian Surfels for Geometrically Accurate 3D Content Creation","author":[{"@type":"Person","name":"Hwan Heo"},{"@type":"Person","name":"Sangjun Ahn"}],"url":"https://hwan-h-heo.github.io/#portfolio","isPartOf":{"@type":"CreativeWork","name":"The 15th International Conference on ICT Convergence (ICTC), Oct 2024 Oral presentation, domestic conference"}},{"@type":"ScholarlyArticle","name":"Robust Camera Pose Refinement for Multi-Resolution Hash Encoding","author":[{"@type":"Person","name":"Hwan Heo"},{"@type":"Person","name":"Taekyung Kim"},{"@type":"Person","name":"J. Lee"},{"@type":"Person","name":"Jiyoung Lee"},{"@type":"Person","name":"Soohyun Kim"},{"@type":"Person","name":"Hyunwoo J. Kim"},{"@type":"Person","name":"Jin-Hwa Kim"}],"url":"https://dl.acm.org/doi/10.5555/3618408.3618936","isPartOf":{"@type":"CreativeWork","name":"The 40th International Conference on Machine Learning (ICML), Jul 2023"}},{"@type":"ScholarlyArticle","name":"Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild","author":[{"@type":"Person","name":"Jaewon Lee"},{"@type":"Person","name":"Injae Kim"},{"@type":"Person","name":"Hwan Heo"},{"@type":"Person","name":"Hyunwoo J. Kim"}],"url":"https://arxiv.org/abs/2303.03966","isPartOf":{"@type":"CreativeWork","name":"preprint, arXiv 2023"}}]}</script>
 </head>
 
 <body class="index-page">
@@ -153,7 +167,7 @@
                             <p class="about-role">Lead 3D AI Research Engineer</p>
                             <p class="about-affiliation">NC AI · VARCO 3D</p>
                         </div>
-                        <p class="about-intro">Hi, I'm <strong>Hwan Heo (허환)</strong>, a Lead 3D AI Research Engineer working where generative models, systems, and graphics meet. I enjoy carrying ideas all the way from representations and training code to the meshes people actually use.</p>
+                        <p class="about-intro">Hi, I'm <strong>Hwan Heo (허환)</strong>. I work where generative models, systems, and graphics meet, carrying ideas all the way from representations and training code to the meshes people actually use.</p>
                         <p class="about-bio">At <strong>NC AI</strong>, I lead research and engineering for the <strong>VARCO 3D team</strong>, developing production 3D AI systems across large-scale generative model training, inference optimization, and graphics algorithms. I hold both a B.S. and M.S. in Computer Science from <strong>Korea University</strong>, where I was advised by Professor <a href="https://www.hyunwoojkim.com/">Hyunwoo J. Kim</a>. Previously, I was a Research Intern at <strong>NAVER AI Lab</strong>, mentored by Dr. <a href="https://wityworks.com/">Jin-Hwa Kim</a>.<br><br>When I'm away from CUDA kernels and mesh pipelines, I'm usually playing guitar, making music, or following an unexpected STEM rabbit hole. This site is both a record of the systems I've helped ship and a notebook for the ideas I keep exploring.</p>
                     </div>
                 </div>
@@ -218,7 +232,7 @@
         
                     </div>
                     <div class="loading-spinner" style="display: none;"></div>
-                    <div class="top-left"><h6><span class="badge">Featured on HuggingFace</span></h6></div>
+                    <div class="top-left"><h6><span class="badge">Featured on Hugging Face</span></h6></div>
                     <div class="polar_content">
                         <h6 data-hover-text="Developed a two-stage model that carves geometry, then paints high-resolution textures.">CaPa</h6>
                         <p class="portfolio-card-summary">Developed a two-stage model that carves geometry, then paints high-resolution textures.</p>
@@ -252,7 +266,7 @@
         
                     </div>
                     <div class="loading-spinner" style="display: none;"></div>
-                    <div class="top-left"><h6><span class="badge">Featured on Github (150+ stars)</span></h6></div>
+                    <div class="top-left"><h6><span class="badge">Featured on GitHub (150+ stars)</span></h6></div>
                     <div class="polar_content">
                         <h6 data-hover-text="Built a browser viewer to inspect, edit, train, and export 2D Gaussian Splatting scenes.">2D GS Viewer</h6>
                         <p class="portfolio-card-summary">Built a browser viewer to inspect, edit, train, and export 2D Gaussian Splatting scenes.</p>
@@ -269,7 +283,7 @@
         
                     </div>
                     <div class="loading-spinner" style="display: none;"></div>
-                    <div class="top-left"><h6><span class="badge">Featured on Github (200+ stars)</span></h6></div>
+                    <div class="top-left"><h6><span class="badge">Featured on GitHub (200+ stars)</span></h6></div>
                     <div class="polar_content">
                         <h6 data-hover-text="Compared VGGSfM and MASt3R for camera recovery in Gaussian Splatting and radiance fields.">Deep SfM for Radiance Fields</h6>
                         <p class="portfolio-card-summary">Compared VGGSfM and MASt3R for camera recovery in Gaussian Splatting and radiance fields.</p>
@@ -297,7 +311,7 @@
                 <div class="portfolio-publication-copy">
                     <h3>CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation</h3>
                     <p class="portfolio-publication-authors"><strong>Hwan Heo</strong>, Jangyeong Kim, Seongyeong Lee, Jeong-A Wi, Junyoung Choi, Sangjun Ahn</p>
-                    <p class="portfolio-publication-venue"><em>Technical Report</em>, Featured on <strong>HuggingFace's Daily Papers</strong>, <strong>TLDR AI</strong></p>
+                    <p class="portfolio-publication-venue"><em>Technical Report</em>, Featured on <strong>Hugging Face Daily Papers</strong>, <strong>TLDR AI</strong></p>
                 </div>
                 <div class="portfolio-paper-links">
             <a class="portfolio-paper-link" href="https://arxiv.org/abs/2501.09433" target="_blank" rel="noopener noreferrer">
@@ -482,7 +496,7 @@
           <div class="swiper-pagination"></div>
         </div>
         <hr/>
-        <p>You can also find me on my <a href="https://velog.io/@gjghks950/posts">Korean Blog</a>, <br/> or <a href="https://www.youtube.com/@hwanshobbystorage861">YouTube channel</a> for sharing my original guitar play & arrangement (currently on a break). </p>
+        <p>You can also find me on my <a href="https://velog.io/@gjghks950/posts">Korean blog</a> or <a href="https://www.youtube.com/@hwanshobbystorage861">YouTube channel</a>, where I share guitar performances and arrangements (currently on a break).</p>
       </div>
     </section><!-- /Testimonials Section -->
 
@@ -509,7 +523,7 @@
                 
                 
                 <p><em>AI Research Engineer building production 3D AI systems across generative models, neural rendering, and graphics.</em></p>
-                <ul><li>AI Research Engineer at NC AI</li><li>Research Personnel, Alternative Military Service</li></ul>
+                <ul><li>AI Research Engineer at NC AI</li><li>Former Research Personnel · Alternative Military Service</li></ul>
             </div>
         
         
@@ -605,6 +619,7 @@
   <script src="js/portfolio-blocks.js"></script>
   <script src="js/portfolio-content.js"></script>
   <script src="js/portfolio-blog-preview.js"></script>
+  <script type="module" src="js/hero-wave.js"></script>
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
