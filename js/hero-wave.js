@@ -29,7 +29,9 @@ function queueInitialization() {
         initializeHeroWave();
     };
 
-    if ('requestIdleCallback' in window) {
+    if (window.matchMedia('(max-width: 767px)').matches) {
+        window.requestAnimationFrame(initialize);
+    } else if ('requestIdleCallback' in window) {
         window.requestIdleCallback(initialize, { timeout: 800 });
     } else {
         window.setTimeout(initialize, 80);
@@ -64,16 +66,16 @@ function createHeroWave(THREE) {
         || Boolean(navigator.connection?.saveData)
         || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4)
         || (navigator.deviceMemory && navigator.deviceMemory <= 4);
-    const pixelRatioCap = isCompact ? 1.25 : 1.5;
+    const pixelRatioCap = isCompact ? 1.6 : 1.5;
     const waveSegments = isCompact ? [36, 18] : [56, 26];
     const wireSegments = isCompact ? [18, 9] : [28, 13];
     const driftingParticleCount = isCompact ? 110 : 230;
-    const introCycleDuration = 8.2;
+    const introCycleDuration = isCompact ? 6.4 : 8.2;
     const ambientCycleDuration = 10.5;
     const ambientPlaybackRate = 0.88;
     const introRevealStartPhase = 0.035;
     const introRevealEndPhase = 0.18;
-    const ctaRevealPhase = 0.64;
+    const ctaRevealPhase = isCompact ? 0.58 : 0.64;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 60);
@@ -278,7 +280,8 @@ function createHeroWave(THREE) {
         uCtaTarget: { value: new THREE.Vector3(-3, -2.4, 0) },
         uHiOffset: { value: new THREE.Vector3() },
         uHiScale: { value: 1 },
-        uTrailBend: { value: new THREE.Vector3() }
+        uTrailBend: { value: new THREE.Vector3() },
+        uTrailStrength: { value: 1 }
     };
 
     const particleMaterial = new THREE.ShaderMaterial({
@@ -294,6 +297,7 @@ function createHeroWave(THREE) {
             uniform vec3 uHiOffset;
             uniform float uHiScale;
             uniform vec3 uTrailBend;
+            uniform float uTrailStrength;
             attribute float aSeed;
             attribute vec3 aFlowOrigin;
             attribute float aSpeed;
@@ -434,6 +438,7 @@ function createHeroWave(THREE) {
                     * trailRelease
                     * trailSelection
                     * smoothstep(0.72, 1.0, hiGather);
+                float easedTrailGuide = trailGuide * uTrailStrength;
                 float trailDelay = pathNoise * 0.05;
                 float trailProgress = smoothstep(
                     0.49 + trailDelay,
@@ -478,7 +483,7 @@ function createHeroWave(THREE) {
                 trailPosition.z += sin(trailProgress * 3.14159)
                     * (aSeed - 0.5)
                     * 0.8;
-                transformed = mix(transformed, trailPosition, trailGuide);
+                transformed = mix(transformed, trailPosition, easedTrailGuide);
                 float scatterArc = sin(scatterProgress * 3.14159)
                     * firstCycle
                     * trailSelection;
@@ -503,7 +508,7 @@ function createHeroWave(THREE) {
                 vAlpha = visibility * mix(flowingAlpha, formedAlpha, meshEase);
                 vAlpha += visibility * frontier * 0.28;
                 vAlpha += visibility
-                    * trailGuide
+                    * easedTrailGuide
                     * (0.12 + ctaSelection * 0.22);
                 vAlpha += visibility * firstCycle * cluster * 0.08;
                 float introAmbient = smoothstep(0.86, 0.98, phase);
@@ -514,7 +519,7 @@ function createHeroWave(THREE) {
                         + transformed.y * 0.25
                         + aSeed * 0.28
                         + frontier * 0.24
-                        + trailGuide * (0.08 + ctaSelection * 0.12)
+                        + easedTrailGuide * (0.08 + ctaSelection * 0.12)
                         + firstCycle * cluster * 0.08,
                     0.0,
                     1.0
@@ -527,7 +532,7 @@ function createHeroWave(THREE) {
                         + aSeed * 1.7
                         + meshEase * 0.35
                         + frontier * 0.8
-                        + trailGuide * (0.2 + ctaSelection * 0.35)
+                        + easedTrailGuide * (0.2 + ctaSelection * 0.35)
                         + firstCycle * cluster * 0.2
                 )
                     * uPixelRatio
@@ -762,6 +767,7 @@ function createHeroWave(THREE) {
 
     function setSceneLayout() {
         const rect = hero.getBoundingClientRect();
+        const phone = rect.width <= 480;
         const narrow = rect.width <= 768;
         const desktopProgress = Math.min(
             Math.max((rect.width - 768) / 432, 0),
@@ -790,18 +796,19 @@ function createHeroWave(THREE) {
             -1.65
         );
         sharedUniforms.uHiScale.value = narrow
-            ? 0.72
+            ? (phone ? 0.68 : 0.72)
             : 0.84 + desktopEase * 0.16;
         sharedUniforms.uHiOffset.value.set(
-            narrow ? -0.45 : 0,
-            narrow ? 4.9 : 1,
+            phone ? -1.25 : (narrow ? -0.45 : 0),
+            phone ? 5.22 : (narrow ? 4.9 : 1),
             0
         );
         sharedUniforms.uTrailBend.value.set(
-            narrow ? 2.4 : 0.25,
-            narrow ? 0.2 : 0,
+            phone ? -2.25 : (narrow ? 2.4 : 0.25),
+            phone ? 0.75 : (narrow ? 0.2 : 0),
             0
         );
+        sharedUniforms.uTrailStrength.value = phone ? 0.12 : (narrow ? 0.72 : 1);
 
         camera.updateMatrixWorld(true);
         group.updateMatrixWorld(true);
@@ -811,7 +818,17 @@ function createHeroWave(THREE) {
             new THREE.Vector3(0, 0, group.position.z)
         );
         const ctaWorldTarget = new THREE.Vector3();
-        ctaRaycaster.setFromCamera(new THREE.Vector2(0, -0.84), camera);
+        const ctaElement = phone
+            ? hero.querySelector('.hero-actions .hero-action:first-child')
+            : hero.querySelector('.scroll-down-arrow');
+        const ctaRect = ctaElement?.getBoundingClientRect();
+        const ctaNdc = ctaRect
+            ? new THREE.Vector2(
+                (((ctaRect.left + ctaRect.width * 0.5) - rect.left) / rect.width) * 2 - 1,
+                1 - (((ctaRect.top + ctaRect.height * 0.5) - rect.top) / rect.height) * 2
+            )
+            : new THREE.Vector2(0, -0.84);
+        ctaRaycaster.setFromCamera(ctaNdc, camera);
         if (ctaRaycaster.ray.intersectPlane(ctaPlane, ctaWorldTarget)) {
             group.worldToLocal(ctaWorldTarget);
             sharedUniforms.uCtaTarget.value.copy(ctaWorldTarget);
@@ -971,7 +988,17 @@ function createHeroWave(THREE) {
     window.requestAnimationFrame(() => {
         hero.classList.add('hero-wave-ready');
     });
-    queueIntroTimeline();
+
+    if (root.dataset.heroWaveBypassed === 'true') {
+        hero.classList.remove('hero-intro-sweeping');
+        hero.classList.add('hero-intro-visible', 'hero-cta-visible');
+        hero.style.removeProperty('--hero-reveal-opacity');
+        animationTime = introCycleDuration;
+        introHasStarted = true;
+        lastFrameTime = performance.now();
+    } else {
+        queueIntroTimeline();
+    }
     startRendering();
 }
 

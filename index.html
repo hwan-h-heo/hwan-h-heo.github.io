@@ -37,6 +37,7 @@
   <!-- Favicons -->
   <link href="assets/favicon.ico" rel="icon">
   <link href="assets/favicon.ico" rel="apple-touch-icon">
+  <link rel="modulepreload" href="/vendor/three/build/three.module.js">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect" />
@@ -52,6 +53,21 @@
 
   <!-- Main CSS File -->
   <link href="assets/css/used.css" rel="stylesheet">
+
+  <script>
+    window.setTimeout(function releaseDelayedHero() {
+      const root = document.documentElement;
+      if (!root.classList.contains('hero-wave-pending')) return;
+
+      const hero = document.getElementById('home');
+      root.dataset.heroWaveBypassed = 'true';
+      root.classList.remove('hero-wave-pending');
+      root.classList.add('hero-wave-fallback');
+      hero?.classList.remove('hero-intro-sweeping');
+      hero?.classList.add('hero-intro-visible', 'hero-cta-visible');
+      hero?.style.removeProperty('--hero-reveal-opacity');
+    }, window.matchMedia('(max-width: 767px)').matches ? 3200 : 4500);
+  </script>
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
