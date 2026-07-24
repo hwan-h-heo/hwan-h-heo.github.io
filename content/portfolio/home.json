@@ -27,11 +27,6 @@
       ],
       "links": [
         {
-          "label": "Google Scholar",
-          "url": "https://scholar.google.com/citations?user=RulvYTkAAAAJ",
-          "icon": "bi bi-mortarboard-fill"
-        },
-        {
           "label": "GitHub",
           "url": "https://github.com/hwanhuh",
           "icon": "bi bi-github"
@@ -40,6 +35,11 @@
           "label": "LinkedIn",
           "url": "https://www.linkedin.com/in/hwan-heo-0905korea/",
           "icon": "bi bi-linkedin"
+        },
+        {
+          "label": "Google Scholar",
+          "url": "https://scholar.google.com/citations?user=RulvYTkAAAAJ",
+          "icon": "bi bi-mortarboard-fill"
         },
         {
           "label": "Email",

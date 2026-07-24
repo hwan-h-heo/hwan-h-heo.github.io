@@ -257,7 +257,7 @@ function createHeroWave(THREE) {
 
         surfaceHiTargets[offset] = letterX + (Math.random() - 0.5) * 0.075;
         surfaceHiTargets[offset + 1] = letterY + (Math.random() - 0.5) * 0.075;
-        surfaceHiTargets[offset + 2] = (Math.random() - 0.5) * 0.16;
+        surfaceHiTargets[offset + 2] = (Math.random() - 0.5) * 0.52;
     }
 
     surfaceGeometry.setAttribute('aSeed', new THREE.BufferAttribute(surfaceSeeds, 1));
@@ -280,6 +280,8 @@ function createHeroWave(THREE) {
         uCtaTarget: { value: new THREE.Vector3(-3, -2.4, 0) },
         uHiOffset: { value: new THREE.Vector3() },
         uHiScale: { value: 1 },
+        uHiDepth: { value: 1 },
+        uHiLineAlpha: { value: 0.2 },
         uTrailBend: { value: new THREE.Vector3() },
         uTrailStrength: { value: 1 }
     };
@@ -296,6 +298,7 @@ function createHeroWave(THREE) {
             uniform vec3 uCtaTarget;
             uniform vec3 uHiOffset;
             uniform float uHiScale;
+            uniform float uHiDepth;
             uniform vec3 uTrailBend;
             uniform float uTrailStrength;
             attribute float aSeed;
@@ -398,13 +401,30 @@ function createHeroWave(THREE) {
                         + sin(aSeed * 19.0 + uTime * 0.7) * 0.2,
                     center.y + sin(clusterAngle) * clusterRadius
                 );
+                float hiYaw = 0.31 + sin(uTime * 0.2 + aSeed * 4.0) * 0.03;
+                float hiYawCos = cos(hiYaw);
+                float hiYawSin = sin(hiYaw);
+                vec3 hiLocal = vec3(
+                    aHiTarget.x * uHiScale,
+                    aHiTarget.y * uHiScale,
+                    aHiTarget.z * uHiScale * uHiDepth
+                );
+                hiLocal.z += sin(
+                    aHiTarget.x * 2.1 + aHiTarget.y * 1.6 + aSeed * 8.0
+                ) * 0.12 * uHiDepth;
+                vec3 hiTilted = vec3(
+                    hiLocal.x * hiYawCos + hiLocal.z * hiYawSin,
+                    hiLocal.y + hiLocal.z * 0.06,
+                    -hiLocal.x * hiYawSin + hiLocal.z * hiYawCos
+                );
+                float hiDepthLight = smoothstep(-0.42, 0.42, hiTilted.z);
                 vec3 hiTarget = vec3(
-                    center.x + uHiOffset.x + aHiTarget.x * uHiScale,
+                    center.x + uHiOffset.x + hiTilted.x,
                     waveHeight(center, uTime)
                         + 0.18
                         + uHiOffset.y
-                        + aHiTarget.y * uHiScale,
-                    center.y + uHiOffset.z + aHiTarget.z * uHiScale
+                        + hiTilted.y,
+                    center.y + uHiOffset.z + hiTilted.z
                 );
                 vec3 clusterTarget = mix(cloudTarget, hiTarget, firstCycle);
                 float clusterEase = cluster * cluster * (3.0 - 2.0 * cluster);
@@ -510,9 +530,20 @@ function createHeroWave(THREE) {
                 vAlpha += visibility
                     * easedTrailGuide
                     * (0.12 + ctaSelection * 0.22);
-                vAlpha += visibility * firstCycle * cluster * 0.08;
-                float introAmbient = smoothstep(0.86, 0.98, phase);
-                float introVisibility = max(hiSelection, introAmbient);
+                vAlpha += visibility
+                    * firstCycle
+                    * cluster
+                    * (0.06 + hiDepthLight * 0.07);
+                float introAmbient = smoothstep(0.64, 0.98, phase);
+                float introBackground = mix(
+                    0.36,
+                    0.55,
+                    smoothstep(0.0, 0.34, phase)
+                );
+                float introVisibility = max(
+                    max(hiSelection, introAmbient),
+                    introBackground
+                );
                 vAlpha *= mix(1.0, introVisibility, firstCycle);
                 vTint = clamp(
                     0.4
@@ -520,7 +551,7 @@ function createHeroWave(THREE) {
                         + aSeed * 0.28
                         + frontier * 0.24
                         + easedTrailGuide * (0.08 + ctaSelection * 0.12)
-                        + firstCycle * cluster * 0.08,
+                        + firstCycle * cluster * (0.08 + hiDepthLight * 0.2),
                     0.0,
                     1.0
                 );
@@ -533,7 +564,7 @@ function createHeroWave(THREE) {
                         + meshEase * 0.35
                         + frontier * 0.8
                         + easedTrailGuide * (0.2 + ctaSelection * 0.35)
-                        + firstCycle * cluster * 0.2
+                        + firstCycle * cluster * (0.18 + hiDepthLight * 0.36)
                 )
                     * uPixelRatio
                     * perspective;
@@ -617,6 +648,118 @@ function createHeroWave(THREE) {
     surfaceWireframe.renderOrder = 1;
     group.add(surfaceWireframe);
 
+    const hiLineVertices = [];
+    function addHiSegment(x1, y1, z1, x2, y2, z2) {
+        hiLineVertices.push(x1, y1, z1, x2, y2, z2);
+    }
+
+    function addHiStrokeLayer(z) {
+        addHiSegment(-1.05, -1.05, z, -1.05, 1.05, z);
+        addHiSegment(-0.1, -1.05, z, -0.1, 1.05, z);
+        addHiSegment(-1.05, 0, z, -0.1, 0, z);
+        addHiSegment(0.62, -1.05, z, 0.62, 0.43, z);
+        addHiSegment(0.48, 0.92, z, 0.76, 0.92, z);
+        addHiSegment(0.62, 0.78, z, 0.62, 1.06, z);
+    }
+
+    const hiFrontDepth = 0.36;
+    const hiBackDepth = -0.36;
+    addHiStrokeLayer(hiFrontDepth);
+    addHiStrokeLayer(hiBackDepth);
+    [
+        [-1.05, -1.05],
+        [-1.05, 1.05],
+        [-0.1, -1.05],
+        [-0.1, 1.05],
+        [-1.05, 0],
+        [-0.1, 0],
+        [0.62, -1.05],
+        [0.62, 0.43],
+        [0.48, 0.92],
+        [0.76, 0.92],
+        [0.62, 0.78],
+        [0.62, 1.06]
+    ].forEach(([x, y]) => {
+        addHiSegment(x, y, hiBackDepth, x, y, hiFrontDepth);
+    });
+
+    const hiLineGeometry = new THREE.BufferGeometry();
+    hiLineGeometry.setAttribute(
+        'position',
+        new THREE.Float32BufferAttribute(hiLineVertices, 3)
+    );
+    const hiLineMaterial = new THREE.ShaderMaterial({
+        uniforms: sharedUniforms,
+        transparent: true,
+        depthTest: false,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        vertexShader: `
+            uniform float uTime;
+            uniform vec3 uHiOffset;
+            uniform float uHiScale;
+            uniform float uHiDepth;
+            uniform float uHiLineAlpha;
+            varying float vAlpha;
+            varying float vTint;
+
+            ${waveHeightShader}
+
+            void main() {
+                vec2 center = formationCenter(uTime);
+                float phase = cyclePhase(uTime);
+                float linePulse = firstCycleMask(uTime)
+                    * smoothstep(0.30, 0.42, phase)
+                    * (1.0 - smoothstep(0.68, 0.82, phase));
+                float hiYaw = 0.31 + sin(uTime * 0.2) * 0.02;
+                float hiYawCos = cos(hiYaw);
+                float hiYawSin = sin(hiYaw);
+                vec3 hiLocal = vec3(
+                    position.x * uHiScale,
+                    position.y * uHiScale,
+                    position.z * uHiScale * uHiDepth
+                );
+                vec3 hiTilted = vec3(
+                    hiLocal.x * hiYawCos + hiLocal.z * hiYawSin,
+                    hiLocal.y + hiLocal.z * 0.06,
+                    -hiLocal.x * hiYawSin + hiLocal.z * hiYawCos
+                );
+                float depthLight = smoothstep(-0.3, 0.3, hiTilted.z);
+                vec3 transformed = vec3(
+                    center.x + uHiOffset.x + hiTilted.x,
+                    waveHeight(center, uTime)
+                        + 0.18
+                        + uHiOffset.y
+                        + hiTilted.y,
+                    center.y + uHiOffset.z + hiTilted.z
+                );
+                vAlpha = linePulse
+                    * uHiLineAlpha
+                    * (0.55 + depthLight * 0.45);
+                vTint = depthLight;
+                gl_Position = projectionMatrix
+                    * modelViewMatrix
+                    * vec4(transformed, 1.0);
+            }
+        `,
+        fragmentShader: `
+            varying float vAlpha;
+            varying float vTint;
+
+            void main() {
+                vec3 color = mix(
+                    vec3(0.18, 0.58, 0.78),
+                    vec3(0.82, 0.96, 1.0),
+                    vTint
+                );
+                gl_FragColor = vec4(color, vAlpha);
+            }
+        `
+    });
+    const hiLineFrame = new THREE.LineSegments(hiLineGeometry, hiLineMaterial);
+    hiLineFrame.renderOrder = 4;
+    group.add(hiLineFrame);
+
     const driftingGeometry = new THREE.BufferGeometry();
     const driftingPositions = new Float32Array(driftingParticleCount * 3);
     const driftingSeeds = new Float32Array(driftingParticleCount);
@@ -673,11 +816,11 @@ function createHeroWave(THREE) {
                     * (0.08 + pulse * 0.28)
                     * (0.35 + aSeed * 0.65)
                     * (1.0 - formation * 0.76);
-                float introAmbient = smoothstep(
-                    0.86,
+                float introAmbient = 0.38 + smoothstep(
+                    0.58,
                     0.98,
                     cyclePhase(uTime)
-                );
+                ) * 0.62;
                 vAlpha *= mix(
                     1.0,
                     introAmbient,
@@ -798,9 +941,11 @@ function createHeroWave(THREE) {
         sharedUniforms.uHiScale.value = narrow
             ? (phone ? 0.68 : 0.72)
             : 0.84 + desktopEase * 0.16;
+        sharedUniforms.uHiDepth.value = phone ? 0.66 : (narrow ? 0.78 : 1.04);
+        sharedUniforms.uHiLineAlpha.value = phone ? 0.26 : (narrow ? 0.38 : 0.64);
         sharedUniforms.uHiOffset.value.set(
-            phone ? -1.25 : (narrow ? -0.45 : 0),
-            phone ? 5.22 : (narrow ? 4.9 : 1),
+            phone ? -1.25 : (narrow ? -0.45 : -0.8 - desktopEase * 1.75),
+            phone ? 5.22 : (narrow ? 4.9 : 1.55 + desktopEase * 0.45),
             0
         );
         sharedUniforms.uTrailBend.value.set(
@@ -950,9 +1095,11 @@ function createHeroWave(THREE) {
         );
         surfaceGeometry.dispose();
         wireGeometry.dispose();
+        hiLineGeometry.dispose();
         driftingGeometry.dispose();
         particleMaterial.dispose();
         wireMaterial.dispose();
+        hiLineMaterial.dispose();
         driftingMaterial.dispose();
         renderer.dispose();
         renderer.domElement.remove();
