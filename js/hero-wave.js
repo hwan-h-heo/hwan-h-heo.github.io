@@ -5,13 +5,25 @@ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 let initializationQueued = false;
 let initialized = false;
 
+function markHeroCtaVisible() {
+    if (!hero) {
+        return;
+    }
+
+    const wasVisible = hero.classList.contains('hero-cta-visible');
+    hero.classList.add('hero-cta-visible');
+    if (!wasVisible) {
+        document.dispatchEvent(new CustomEvent('portfolio:hero-cta-visible'));
+    }
+}
+
 function showStaticFallback() {
     root.classList.remove('hero-wave-pending');
     root.classList.add('hero-wave-fallback');
     hero?.classList.remove('hero-intro-sweeping');
     hero?.style.removeProperty('--hero-reveal-opacity');
     hero?.classList.add('hero-intro-visible');
-    hero?.classList.add('hero-cta-visible');
+    markHeroCtaVisible();
 }
 
 function supportsWebGL() {
@@ -75,7 +87,7 @@ function createHeroWave(THREE) {
     const ambientPlaybackRate = 0.88;
     const introRevealStartPhase = 0.035;
     const introRevealEndPhase = 0.18;
-    const ctaRevealPhase = isCompact ? 0.58 : 0.64;
+    const ctaRevealPhase = isCompact ? 0.46 : 0.51;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 60);
@@ -191,8 +203,8 @@ function createHeroWave(THREE) {
 
         float ctaFlowPulse(float time) {
             float phase = cyclePhase(time);
-            float travel = smoothstep(0.50, 0.60, phase);
-            float release = 1.0 - smoothstep(0.82, 0.98, phase);
+            float travel = smoothstep(0.42, 0.52, phase);
+            float release = 1.0 - smoothstep(0.71, 0.87, phase);
             return travel * release * firstCycleMask(time);
         }
 
@@ -380,8 +392,8 @@ function createHeroWave(THREE) {
                 );
                 float releaseDelay = pathNoise * 0.045;
                 float hiRelease = 1.0 - smoothstep(
-                    0.60 + releaseDelay,
-                    0.78 + releaseDelay,
+                    0.49 + releaseDelay,
+                    0.67 + releaseDelay,
                     phase
                 );
                 float introCluster = hiGather
@@ -445,13 +457,13 @@ function createHeroWave(THREE) {
 
                 float trailSelection = hiSelection * firstCycle;
                 float trailRelease = 1.0 - smoothstep(
-                    0.78 + releaseDelay,
-                    0.92 + releaseDelay,
+                    0.67 + releaseDelay,
+                    0.81 + releaseDelay,
                     phase
                 );
                 float scatterProgress = smoothstep(
-                    0.78 + releaseDelay,
-                    0.92 + releaseDelay,
+                    0.67 + releaseDelay,
+                    0.81 + releaseDelay,
                     phase
                 );
                 float trailGuide = ctaFlowPulse(uTime)
@@ -461,8 +473,8 @@ function createHeroWave(THREE) {
                 float easedTrailGuide = trailGuide * uTrailStrength;
                 float trailDelay = pathNoise * 0.05;
                 float trailProgress = smoothstep(
-                    0.49 + trailDelay,
-                    0.66 + trailDelay,
+                    0.41 + trailDelay,
+                    0.58 + trailDelay,
                     phase
                 );
                 float endpointAngle = aSeed * 6.283;
@@ -710,7 +722,7 @@ function createHeroWave(THREE) {
                 float phase = cyclePhase(uTime);
                 float linePulse = firstCycleMask(uTime)
                     * smoothstep(0.30, 0.42, phase)
-                    * (1.0 - smoothstep(0.68, 0.82, phase));
+                    * (1.0 - smoothstep(0.57, 0.71, phase));
                 float hiYaw = 0.31 + sin(uTime * 0.2) * 0.02;
                 float hiYawCos = cos(hiYaw);
                 float hiYawSin = sin(hiYaw);
@@ -1029,7 +1041,7 @@ function createHeroWave(THREE) {
             !hero.classList.contains('hero-cta-visible')
             && animationTime >= introCycleDuration * ctaRevealPhase
         ) {
-            hero.classList.add('hero-cta-visible');
+            markHeroCtaVisible();
         }
 
         camera.position.x += (
@@ -1138,7 +1150,8 @@ function createHeroWave(THREE) {
 
     if (root.dataset.heroWaveBypassed === 'true') {
         hero.classList.remove('hero-intro-sweeping');
-        hero.classList.add('hero-intro-visible', 'hero-cta-visible');
+        hero.classList.add('hero-intro-visible');
+        markHeroCtaVisible();
         hero.style.removeProperty('--hero-reveal-opacity');
         animationTime = introCycleDuration;
         introHasStarted = true;

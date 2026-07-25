@@ -55,6 +55,46 @@
   <link href="assets/css/used.css" rel="stylesheet">
 
   <script>
+    (function initHeroScrollLock() {
+      const root = document.documentElement;
+      const hash = window.location.hash;
+      if (hash && hash !== '#home') return;
+
+      const scrollKeys = new Set(['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' ']);
+      let locked = true;
+      root.classList.add('hero-scroll-locked');
+
+      const shouldIgnoreKey = (event) => {
+        const target = event.target;
+        return target instanceof HTMLElement
+          && (target.isContentEditable || /^(INPUT|SELECT|TEXTAREA)$/.test(target.tagName));
+      };
+      const preventScroll = (event) => {
+        if (!locked) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      };
+      const preventScrollKey = (event) => {
+        if (!locked || !scrollKeys.has(event.key) || shouldIgnoreKey(event)) return;
+        preventScroll(event);
+      };
+      const release = () => {
+        if (!locked) return;
+        locked = false;
+        root.classList.remove('hero-scroll-locked');
+        window.removeEventListener('wheel', preventScroll, { capture: true });
+        window.removeEventListener('touchmove', preventScroll, { capture: true });
+        window.removeEventListener('keydown', preventScrollKey, { capture: true });
+        document.removeEventListener('portfolio:hero-cta-visible', release);
+      };
+
+      window.releasePortfolioHeroScrollLock = release;
+      window.addEventListener('wheel', preventScroll, { passive: false, capture: true });
+      window.addEventListener('touchmove', preventScroll, { passive: false, capture: true });
+      window.addEventListener('keydown', preventScrollKey, { capture: true });
+      document.addEventListener('portfolio:hero-cta-visible', release);
+    })();
+
     window.setTimeout(function releaseDelayedHero() {
       const root = document.documentElement;
       if (!root.classList.contains('hero-wave-pending')) return;
@@ -66,6 +106,8 @@
       hero?.classList.remove('hero-intro-sweeping');
       hero?.classList.add('hero-intro-visible', 'hero-cta-visible');
       hero?.style.removeProperty('--hero-reveal-opacity');
+      document.dispatchEvent(new CustomEvent('portfolio:hero-cta-visible'));
+      window.releasePortfolioHeroScrollLock?.();
     }, window.matchMedia('(max-width: 767px)').matches ? 3200 : 4500);
   </script>
 
@@ -123,7 +165,10 @@
 
       <!-- Section Title -->
       <div class="container section-title portfolio-section-heading" data-aos="fade-up">
-        <h2>Portfolio</h2>
+        <div class="portfolio-heading-copy">
+          <h2>Portfolio</h2>
+          <p class="portfolio-credibility">Production 3D AI systems · 4 papers · 6 invited talks</p>
+        </div>
         <ul class="portfolio-filters isotope-filters" aria-label="Filter portfolio projects">
           <li data-filter="*" class="filter-active">All</li>
           <li data-filter=".filter-research">Research</li>
@@ -177,8 +222,8 @@
         <h2><a href="blogs/" target="_blank">Technical Writing <i class="bi bi-box-arrow-up-right"></i> </a></h2>
         <p>Technical notes on 3D AI, from theory to production:<br/>generative models and large-scale training, neural rendering, graphics algorithms, and web-based 3D tools.</p>
       </div><!-- End Section Title -->
-      <div class="container">
-        <h5>Selected Notes</h5>
+      <div class="container portfolio-blog-content">
+        <h5 class="portfolio-blog-subheading">Selected Notes</h5>
         <div class="swiper portfolio-blog-swiper">
           <script type="application/json" class="swiper-config">
             {
@@ -213,8 +258,10 @@
           <p><br/></p>
           <div class="swiper-pagination"></div>
         </div>
-        <hr/>
-        <p>You can also find me on my <a href="https://velog.io/@gjghks950/posts">Korean blog</a> or <a href="https://www.youtube.com/@hwanshobbystorage861">YouTube channel</a>, where I share guitar performances and arrangements (currently on a break).</p>
+        <aside class="portfolio-blog-side-notes" aria-label="Additional channels">
+          <span class="portfolio-blog-side-notes-kicker">Elsewhere</span>
+          <p>You can also find me on my <a href="https://velog.io/@gjghks950/posts">Korean blog</a> or <a href="https://www.youtube.com/@hwanshobbystorage861">YouTube channel</a>, where I share guitar performances and arrangements (currently on a break).</p>
+        </aside>
       </div>
     </section><!-- /Testimonials Section -->
 
