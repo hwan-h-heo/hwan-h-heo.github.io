@@ -6,7 +6,11 @@
       "type": "hero",
       "title": "Hwan Heo",
       "subtitle": "Lead 3D AI Research Engineer",
-      "lead": "Building production-scale 3D generative systems—from native representations and large-model training to CUDA inference and graphics pipelines.",
+      "lead": "Building production-scale 3D generative systems from native representations and large-model training to CUDA inference and graphics pipelines.",
+      "leadLines": [
+        "Building production-scale 3D generative systems from native representations",
+        "and large-model training to CUDA inference and graphics pipelines."
+      ],
       "actions": [
         {
           "label": "Selected Work",

@@ -81,7 +81,7 @@ function createHeroWave(THREE) {
     const pixelRatioCap = isCompact ? 1.6 : 1.5;
     const waveSegments = isCompact ? [36, 18] : [56, 26];
     const wireSegments = isCompact ? [18, 9] : [28, 13];
-    const driftingParticleCount = isCompact ? 110 : 230;
+    const driftingParticleCount = isCompact ? 150 : 340;
     const introCycleDuration = isCompact ? 6.4 : 8.2;
     const ambientCycleDuration = 10.5;
     const ambientPlaybackRate = 0.88;
@@ -203,9 +203,8 @@ function createHeroWave(THREE) {
 
         float ctaFlowPulse(float time) {
             float phase = cyclePhase(time);
-            float travel = smoothstep(0.42, 0.52, phase);
-            float release = 1.0 - smoothstep(0.71, 0.87, phase);
-            return travel * release * firstCycleMask(time);
+            float travel = smoothstep(0.46, 0.56, phase);
+            return travel * firstCycleMask(time);
         }
 
         float surfaceBoundsFade(vec3 point) {
@@ -335,7 +334,7 @@ function createHeroWave(THREE) {
                 float ctaNoise = fract(
                     sin(aSeed * 131.71 + aSpeed * 73.19) * 24634.6345
                 );
-                float hiSelection = 1.0 - step(0.88, aSpeed);
+                float hiSelection = 1.0 - step(0.74, aSpeed);
                 float ctaSelection = hiSelection
                     * (1.0 - step(0.52, ctaNoise));
 
@@ -384,16 +383,11 @@ function createHeroWave(THREE) {
                 float regularSelection = formationSelection(position, uTime);
                 float regularCluster = clusterPulse(uTime)
                     * regularSelection;
-                float hiGatherDelay = pathNoise * 0.12;
-                float hiGather = smoothstep(
-                    0.06 + hiGatherDelay,
-                    0.34 + hiGatherDelay,
-                    phase
-                );
+                float hiGather = 1.0;
                 float releaseDelay = pathNoise * 0.045;
                 float hiRelease = 1.0 - smoothstep(
-                    0.49 + releaseDelay,
-                    0.67 + releaseDelay,
+                    0.52 + releaseDelay,
+                    0.70 + releaseDelay,
                     phase
                 );
                 float introCluster = hiGather
@@ -438,6 +432,11 @@ function createHeroWave(THREE) {
                         + hiTilted.y,
                     center.y + uHiOffset.z + hiTilted.z
                 );
+                hiTarget += vec3(
+                    sin(uTime * 0.34 + aSeed * 17.0) * 0.045,
+                    cos(uTime * 0.29 + aSeed * 11.0) * 0.035,
+                    sin(uTime * 0.25 + aSeed * 23.0) * 0.055
+                ) * firstCycle * hiSelection * hiRelease;
                 vec3 clusterTarget = mix(cloudTarget, hiTarget, firstCycle);
                 float clusterEase = cluster * cluster * (3.0 - 2.0 * cluster);
                 vec3 gatherCurl = vec3(
@@ -457,13 +456,13 @@ function createHeroWave(THREE) {
 
                 float trailSelection = hiSelection * firstCycle;
                 float trailRelease = 1.0 - smoothstep(
-                    0.67 + releaseDelay,
-                    0.81 + releaseDelay,
+                    0.80 + releaseDelay,
+                    0.94,
                     phase
                 );
                 float scatterProgress = smoothstep(
-                    0.67 + releaseDelay,
-                    0.81 + releaseDelay,
+                    0.78 + releaseDelay,
+                    0.94,
                     phase
                 );
                 float trailGuide = ctaFlowPulse(uTime)
@@ -473,8 +472,8 @@ function createHeroWave(THREE) {
                 float easedTrailGuide = trailGuide * uTrailStrength;
                 float trailDelay = pathNoise * 0.05;
                 float trailProgress = smoothstep(
-                    0.41 + trailDelay,
-                    0.58 + trailDelay,
+                    0.50 + trailDelay,
+                    0.70 + trailDelay,
                     phase
                 );
                 float endpointAngle = aSeed * 6.283;
@@ -518,7 +517,8 @@ function createHeroWave(THREE) {
                 transformed = mix(transformed, trailPosition, easedTrailGuide);
                 float scatterArc = sin(scatterProgress * 3.14159)
                     * firstCycle
-                    * trailSelection;
+                    * trailSelection
+                    * 0.58;
                 transformed += vec3(
                     sin(aSeed * 29.0 + uTime * 0.3) * 0.5,
                     cos(aSeed * 19.0) * 0.34,
@@ -546,16 +546,27 @@ function createHeroWave(THREE) {
                     * firstCycle
                     * cluster
                     * (0.06 + hiDepthLight * 0.07);
-                float introAmbient = smoothstep(0.64, 0.98, phase);
+                float hiReadGlow = mix(
+                    0.42,
+                    0.82,
+                    smoothstep(0.36, 0.52, phase)
+                );
+                vAlpha *= mix(
+                    1.0,
+                    hiReadGlow,
+                    firstCycle * hiSelection * cluster
+                );
                 float introBackground = mix(
-                    0.36,
-                    0.55,
+                    0.58,
+                    0.72,
                     smoothstep(0.0, 0.34, phase)
                 );
-                float introVisibility = max(
-                    max(hiSelection, introAmbient),
-                    introBackground
+                float backgroundFade = mix(
+                    introBackground,
+                    0.06,
+                    smoothstep(0.46, 0.60, phase)
                 );
+                float introVisibility = mix(backgroundFade, 1.0, hiSelection);
                 vAlpha *= mix(1.0, introVisibility, firstCycle);
                 vTint = clamp(
                     0.4
@@ -721,8 +732,8 @@ function createHeroWave(THREE) {
                 vec2 center = formationCenter(uTime);
                 float phase = cyclePhase(uTime);
                 float linePulse = firstCycleMask(uTime)
-                    * smoothstep(0.30, 0.42, phase)
-                    * (1.0 - smoothstep(0.57, 0.71, phase));
+                    * smoothstep(0.0, 0.04, phase)
+                    * (1.0 - smoothstep(0.48, 0.64, phase));
                 float hiYaw = 0.31 + sin(uTime * 0.2) * 0.02;
                 float hiYawCos = cos(hiYaw);
                 float hiYawSin = sin(hiYaw);
@@ -745,9 +756,15 @@ function createHeroWave(THREE) {
                         + hiTilted.y,
                     center.y + uHiOffset.z + hiTilted.z
                 );
+                float lineReadGlow = mix(
+                    0.48,
+                    0.82,
+                    smoothstep(0.36, 0.52, phase)
+                );
                 vAlpha = linePulse
                     * uHiLineAlpha
-                    * (0.55 + depthLight * 0.45);
+                    * (0.55 + depthLight * 0.45)
+                    * lineReadGlow;
                 vTint = depthLight;
                 gl_Position = projectionMatrix
                     * modelViewMatrix
@@ -825,17 +842,21 @@ function createHeroWave(THREE) {
                 );
                 float pulse = 0.52 + 0.48 * sin(uTime * 0.92 + aSeed * 21.0);
                 vAlpha = edge
-                    * (0.08 + pulse * 0.28)
+                    * (0.12 + pulse * 0.34)
                     * (0.35 + aSeed * 0.65)
                     * (1.0 - formation * 0.76);
-                float introAmbient = 0.38 + smoothstep(
-                    0.58,
-                    0.98,
-                    cyclePhase(uTime)
-                ) * 0.62;
+                float introBackgroundFade = mix(
+                    1.0,
+                    0.05,
+                    smoothstep(
+                        0.46,
+                        0.60,
+                        cyclePhase(uTime)
+                    )
+                );
                 vAlpha *= mix(
                     1.0,
-                    introAmbient,
+                    introBackgroundFade,
                     firstCycleMask(uTime)
                 );
                 vTint = 0.35 + aSeed * 0.65;

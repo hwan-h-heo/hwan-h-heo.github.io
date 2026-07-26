@@ -51,6 +51,16 @@
         }).join('');
     }
 
+    function renderHeroLead(block) {
+        const lines = Array.isArray(block.leadLines) && block.leadLines.length
+            ? block.leadLines
+            : [block.lead];
+        return lines
+            .filter((line) => line)
+            .map((line) => `<span class="hero-lead-line">${escapeHtml(line)}</span>`)
+            .join('\n');
+    }
+
     function renderHero(block) {
         const subtitle = block.subtitle || (block.typedItems || []).join(' · ');
         return `
@@ -60,7 +70,7 @@
                 <p class="subtitle">
                     <span class="hero-subtitle-text">${escapeHtml(subtitle)}</span>
                 </p>
-                <p class="lead">${escapeHtml(block.lead)}</p>
+                <p class="lead">${renderHeroLead(block)}</p>
                 <div class="hero-actions">
                     ${renderHeroActions(block.actions)}
                 </div>
