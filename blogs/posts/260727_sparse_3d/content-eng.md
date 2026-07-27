@@ -282,12 +282,12 @@ The Agent's largest contribution was not only in writing kernels on my behalf. I
 
 Fusion and null-context were independently toggled on and off across the same 10 payloads.
 
-| Comparison | Sum of 10 asset means | Reduction | Output |
+| Path | Sum of 10 asset means | Reduction vs `pure_eager` | Output |
 | --- | ---: | ---: | --- |
-| `pure_eager`  | `239.829s` | `3.45%` |  |
+| `pure_eager`  | `239.829s` | - | Reference |
 | `null_context [N, D], [1, D]` | `229.348s` | `4.37%` | Byte-exact |
 
-The null-context optimization reduced per-asset latency by `5.87~3.96%` while producing byte-exact outputs.
+The null-context optimization reduced per-asset latency by `3.96~5.87%` while producing byte-exact outputs.
 
 #### Public 3D Gen Models: Hunyuan3D, Direct3D, and Trellis
 
@@ -563,7 +563,7 @@ The reductions below are not ratios of summed time. For each asset, we first com
 | Comparison | Equal-weight latency reduction |
 | --- | ---: |
 | `canonical_cache_null` vs `pure_eager` | **`4.37%`** |
-| `kernel_fusion` vs `kernel_fusion` | **`18.734%`** |
+| `kernel_fusion` vs `pure_eager` | **`18.734%`** |
 | `canonical_cache_combined` vs `pure_eager` | **`25.66%`** |
 | `canonical_cache_null` vs `prior_exact_null` | `0.53%` |
 | `canonical_cache_combined` vs `prior_exact_combined` | `1.78%` |
