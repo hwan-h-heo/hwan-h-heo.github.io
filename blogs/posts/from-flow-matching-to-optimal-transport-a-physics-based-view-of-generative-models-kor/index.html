@@ -79,13 +79,6 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
     <style>
-        pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; font-size: 0.9rem !important; }
-        pre code { font-size: 0.9rem !important; }
-        .main-content a { color: #15B886; text-decoration: none; }
-        .main-content a:hover { color: #11926b; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; }
-        th { width: 15%; background-color: #f2f2f2; }
         .post-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
         .post-tags span { display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,0.6); color: #fff; border-radius: 999px; padding: 0.16rem 0.55rem; font-size: 0.72rem; background: rgba(0,0,0,0.18); }
     </style>
@@ -140,7 +133,7 @@
                     <div id="series-container"></div>
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7 main-content">
-                    <nav class="toc"><ul><li><a href="#toc-heading-0">1. Normalizing Flow</a><ul><li><a href="#toc-heading-1">1.1. What is Flow</a></li><li><a href="#toc-heading-2">1.2. Likelihood of Normalizing Flow</a></li></ul></li><li><a href="#toc-heading-3">2. Continuous Normalizing Flow</a><ul><li><a href="#toc-heading-4">2.1. Continuous Flow</a></li><li><a href="#toc-heading-5">2.2. Likelihood of CNF</a></li></ul></li><li><a href="#toc-heading-6">3. Flow Matching</a><ul><li><a href="#toc-heading-7">3.1. Conditional Flow Matching</a></li><li><a href="#toc-heading-8">3.2. Final Training Algorithm</a></li><li><a href="#toc-heading-9">3.3. Rectified Flow</a></li></ul></li><li><a href="#toc-heading-10">4. Optimal Transport</a><ul><li><a href="#toc-heading-11">4.1. What is Optimal Transport</a></li><li><a href="#toc-heading-12">4.2. Dynamic Optimal Port</a></li></ul></li><li><a href="#toc-heading-13">5. Classical Mechnics</a><ul><li><a href="#toc-heading-14">5.1. What is Action</a></li><li><a href="#toc-heading-15">5.2. Euler-Lagrange Equation</a></li><li><a href="#toc-heading-16">5.3. Action in Optimal Transport</a></li><li><a href="#toc-heading-17">5.4. Why Recitifed-Flow is Linear?</a></li></ul></li><li><a href="#toc-heading-18">6. Rectified Flow on Manifolf</a><ul><li><a href="#toc-heading-19">6.1. Dynamics on a Manifold</a></li><li><a href="#toc-heading-20">6.2. Flow Matching on a Manifold</a></li><li><a href="#toc-heading-21">6.3. Geodesic Flow</a></li></ul></li><li><a href="#toc-heading-22">7. Last Dicussion: Why Linear?</a><ul></ul></li></ul></nav><button id="copyButton">
+                    <nav class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="1. Normalizing Flow" aria-label="1. Normalizing Flow">1. Normalizing Flow</a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-1" title="1.1. What is Flow" aria-label="1.1. What is Flow">1.1. What is Flow</a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-2" title="1.2. Likelihood of Normalizing Flow" aria-label="1.2. Likelihood of Normalizing Flow">1.2. Likelihood of Normalizing Fl...</a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-3" title="2. Continuous Normalizing Flow" aria-label="2. Continuous Normalizing Flow">2. Continuous Normalizing Flow</a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="2.1. Continuous Flow" aria-label="2.1. Continuous Flow">2.1. Continuous Flow</a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="2.2. Likelihood of CNF" aria-label="2.2. Likelihood of CNF">2.2. Likelihood of CNF</a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-6" title="3. Flow Matching" aria-label="3. Flow Matching">3. Flow Matching</a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="3.1. Conditional Flow Matching" aria-label="3.1. Conditional Flow Matching">3.1. Conditional Flow Matching</a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="3.2. Final Training Algorithm" aria-label="3.2. Final Training Algorithm">3.2. Final Training Algorithm</a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-9" title="3.3. Rectified Flow" aria-label="3.3. Rectified Flow">3.3. Rectified Flow</a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-10" title="4. Optimal Transport" aria-label="4. Optimal Transport">4. Optimal Transport</a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-11" title="4.1. What is Optimal Transport" aria-label="4.1. What is Optimal Transport">4.1. What is Optimal Transport</a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-12" title="4.2. Dynamic Optimal Port" aria-label="4.2. Dynamic Optimal Port">4.2. Dynamic Optimal Port</a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-13" title="5. Classical Mechnics" aria-label="5. Classical Mechnics">5. Classical Mechnics</a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-14" title="5.1. What is Action" aria-label="5.1. What is Action">5.1. What is Action</a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-15" title="5.2. Euler-Lagrange Equation" aria-label="5.2. Euler-Lagrange Equation">5.2. Euler-Lagrange Equation</a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-16" title="5.3. Action in Optimal Transport" aria-label="5.3. Action in Optimal Transport">5.3. Action in Optimal Transport</a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-17" title="5.4. Why Recitifed-Flow is Linear?" aria-label="5.4. Why Recitifed-Flow is Linear?">5.4. Why Recitifed-Flow is Linear?</a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-18" title="6. Rectified Flow on Manifolf" aria-label="6. Rectified Flow on Manifolf">6. Rectified Flow on Manifolf</a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-19" title="6.1. Dynamics on a Manifold" aria-label="6.1. Dynamics on a Manifold">6.1. Dynamics on a Manifold</a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-20" title="6.2. Flow Matching on a Manifold" aria-label="6.2. Flow Matching on a Manifold">6.2. Flow Matching on a Manifold</a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-21" title="6.3. Geodesic Flow" aria-label="6.3. Geodesic Flow">6.3. Geodesic Flow</a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-22" title="7. Last Dicussion: Why Linear?" aria-label="7. Last Dicussion: Why Linear?">7. Last Dicussion: Why Linear?</a></li></ol></nav><button id="copyButton">
 <i class="bi bi-share-fill"></i>
 </button>
 
@@ -926,6 +919,31 @@ $$
     <script>
         window.siteData = {
   "posts": [
+    {
+      "id": "260727_sparse_3d",
+      "title_eng": "What the Compiler Missed in Sparse 3D Inference",
+      "title_kor": "컴파일러가 놓친 Sparse 3D Forward 최적화",
+      "subtitle_eng": "Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0",
+      "subtitle_kor": "Null-Context Attention 제거와 CUDA Fusion으로 줄인 3D 생성 지연시간",
+      "description_eng": "Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0",
+      "description_kor": "Null-Context Attention 제거와 CUDA Fusion으로 줄인 3D 생성 지연시간",
+      "tags": [
+        "3D Generation",
+        "Generative AI",
+        "CUDA"
+      ],
+      "cover": "/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png",
+      "status": "published",
+      "updated": "2026-07-27",
+      "date": "2026-07-27",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "optimizing-sparse-3d-generation-inference"
+    },
     {
       "id": "260115_Varco3D",
       "title_eng": "Varco3D: A Year in Review — 2025 Retrospective",

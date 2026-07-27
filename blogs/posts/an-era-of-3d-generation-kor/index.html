@@ -79,13 +79,6 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
     <style>
-        pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; font-size: 0.9rem !important; }
-        pre code { font-size: 0.9rem !important; }
-        .main-content a { color: #15B886; text-decoration: none; }
-        .main-content a:hover { color: #11926b; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; }
-        th { width: 15%; background-color: #f2f2f2; }
         .post-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
         .post-tags span { display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,0.6); color: #fff; border-radius: 999px; padding: 0.16rem 0.55rem; font-size: 0.72rem; background: rgba(0,0,0,0.18); }
     </style>
@@ -140,7 +133,7 @@
                     <div id="series-container"></div>
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7 main-content">
-                    <nav class="toc"><ul><li><a href="#toc-heading-0">들어가며</a><ul></ul></li><li><a href="#toc-heading-1">Preliminary: What is Latent?</a><ul></ul></li><li><a href="#toc-heading-2">1. ShapeVAE</a><ul><li><a href="#toc-heading-3">Challenges for ShapeVAE</a></li></ul></li><li><a href="#toc-heading-4">2. Trellis</a><ul><li><a href="#toc-heading-5">2.1. Structured Latent Representation</a></li><li><a href="#toc-heading-6">2.2. SLAT Generation</a></li></ul></li><li><a href="#toc-heading-7">3. Hunyuan3D-v2</a><ul><li><a href="#toc-heading-8">3.1. Hunyuan-ShapeVAE</a></li><li><a href="#toc-heading-9">3.2. Hunyuan3D-DiT</a></li><li><a href="#toc-heading-10">3.3. Hunyuan3D-paint</a></li></ul></li><li><a href="#toc-heading-11">4. Trellis vs Hunyuan3D</a><ul></ul></li><li><a href="#toc-heading-12">Closing</a><ul></ul></li></ul></nav><button id="copyButton">
+                    <nav class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="들어가며" aria-label="들어가며">들어가며</a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="Preliminary: What is Latent?" aria-label="Preliminary: What is Latent?">Preliminary: What is Latent?</a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="1. ShapeVAE" aria-label="1. ShapeVAE">1. ShapeVAE</a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="Challenges for ShapeVAE" aria-label="Challenges for ShapeVAE">Challenges for ShapeVAE</a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-4" title="2. Trellis" aria-label="2. Trellis">2. Trellis</a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="2.1. Structured Latent Representation" aria-label="2.1. Structured Latent Representation">2.1. Structured Latent Representa...</a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="2.2. SLAT Generation" aria-label="2.2. SLAT Generation">2.2. SLAT Generation</a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-7" title="3. Hunyuan3D-v2" aria-label="3. Hunyuan3D-v2">3. Hunyuan3D-v2</a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="3.1. Hunyuan-ShapeVAE" aria-label="3.1. Hunyuan-ShapeVAE">3.1. Hunyuan-ShapeVAE</a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-9" title="3.2. Hunyuan3D-DiT" aria-label="3.2. Hunyuan3D-DiT">3.2. Hunyuan3D-DiT</a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="3.3. Hunyuan3D-paint" aria-label="3.3. Hunyuan3D-paint">3.3. Hunyuan3D-paint</a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-11" title="4. Trellis vs Hunyuan3D" aria-label="4. Trellis vs Hunyuan3D">4. Trellis vs Hunyuan3D</a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-12" title="Closing" aria-label="Closing">Closing</a></li></ol></nav><button id="copyButton">
     <i class="bi bi-share-fill"></i>
 </button>
 
@@ -598,6 +591,31 @@ $$ </p>
     <script>
         window.siteData = {
   "posts": [
+    {
+      "id": "260727_sparse_3d",
+      "title_eng": "What the Compiler Missed in Sparse 3D Inference",
+      "title_kor": "컴파일러가 놓친 Sparse 3D Forward 최적화",
+      "subtitle_eng": "Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0",
+      "subtitle_kor": "Null-Context Attention 제거와 CUDA Fusion으로 줄인 3D 생성 지연시간",
+      "description_eng": "Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0",
+      "description_kor": "Null-Context Attention 제거와 CUDA Fusion으로 줄인 3D 생성 지연시간",
+      "tags": [
+        "3D Generation",
+        "Generative AI",
+        "CUDA"
+      ],
+      "cover": "/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png",
+      "status": "published",
+      "updated": "2026-07-27",
+      "date": "2026-07-27",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "optimizing-sparse-3d-generation-inference"
+    },
     {
       "id": "260115_Varco3D",
       "title_eng": "Varco3D: A Year in Review — 2025 Retrospective",

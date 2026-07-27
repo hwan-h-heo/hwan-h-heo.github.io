@@ -11,6 +11,18 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference/</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference-kor/</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective/</loc>
     <lastmod>2026-01-15</lastmod>
     <changefreq>monthly</changefreq>

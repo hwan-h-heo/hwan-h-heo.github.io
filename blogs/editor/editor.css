@@ -38,7 +38,7 @@ body {
         radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 26%),
         radial-gradient(circle at 80% 8%, rgba(56, 189, 248, 0.08), transparent 22%),
         linear-gradient(180deg, #f9fbfd 0%, #eef3f8 100%);
-    font-family: "Manrope", "Open Sans", sans-serif;
+    font-family: var(--blog-sans);
 }
 
 body.is-pane-resizing {
@@ -704,7 +704,7 @@ textarea {
     padding: 0 clamp(22px, 5vw, 70px);
     border-bottom: 1px solid rgba(15, 23, 42, 0.07);
     color: #212529;
-    font-family: "Open Sans", "Manrope", sans-serif;
+    font-family: var(--blog-sans);
 }
 
 .layout-blog-nav strong {
@@ -768,7 +768,7 @@ textarea {
     margin: 0;
     border-radius: 10px;
     color: #fff;
-    font-family: "Open Sans", "Manrope", sans-serif;
+    font-family: var(--blog-heading);
     font-size: clamp(32px, 5vw, 54px);
     font-weight: 800;
     line-height: 1.12;
@@ -795,9 +795,9 @@ textarea {
     gap: 7px;
     margin-top: 18px;
     color: rgba(255, 255, 255, 0.86);
-    font-family: "Lora", serif;
+    font-family: var(--blog-sans);
     font-size: 14px;
-    font-style: italic;
+    font-style: normal;
 }
 
 .layout-date-input {
@@ -1043,9 +1043,9 @@ textarea {
     padding: 32px 20px;
     border-top: 1px solid rgba(15, 23, 42, 0.08);
     color: #6c757d;
-    font-family: "Lora", serif;
+    font-family: var(--blog-sans);
     font-size: 12px;
-    font-style: italic;
+    font-style: normal;
     text-align: center;
 }
 
@@ -1131,52 +1131,6 @@ textarea {
     overflow: auto;
     padding: 16px 18px 22px;
     background: var(--panel-strong);
-}
-
-.preview-content h1,
-.preview-content h2,
-.preview-content h3 {
-    margin-top: 1.4rem;
-    margin-bottom: 0.8rem;
-    font-family: "Manrope", "Open Sans", sans-serif;
-    font-weight: 800;
-    line-height: 1.2;
-    letter-spacing: -0.03em;
-}
-
-.preview-content h1 {
-    font-size: 1.75rem;
-}
-
-.preview-content h2 {
-    font-size: 1.35rem;
-}
-
-.preview-content h3 {
-    font-size: 1.1rem;
-}
-
-.preview-content p,
-.preview-content li {
-    font-family: "Lora", serif;
-    font-size: 0.97rem;
-    line-height: 1.75;
-}
-
-.preview-content code {
-    font-size: 0.86em;
-}
-
-.preview-content img,
-.preview-content video {
-    display: block;
-    max-width: 100%;
-    height: auto;
-    border-radius: 16px;
-}
-
-.preview-content pre {
-    border-radius: 16px;
 }
 
 .stats {
