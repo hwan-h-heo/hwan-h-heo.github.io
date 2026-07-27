@@ -99,7 +99,7 @@ Sparse 3D에는 아직 비슷한 표준 runtime이 없다. 그렇다고 막연�
 | 방법 | 실제 관찰 | 판단 |
 | --- | --- | --- |
 | CUDA Graph | Token 수를 bucket으로 고정하려면 padding과 graph별 memory pool이 필요하다. Padding token도 attention과 GEMM에 들어가 sparse compute의 이점을 줄인다. | Production token 분포에서 관리 비용 대비 기대 이득이 작아 보류했다. |
-| `torch.compile` | 대표 sparse transformer block이 `13`개 graph와 `12`개 graph break로 나뉘었다. 주요 원인은 `SparseTensor.shape/layout`의 `.item()`·`bincount`, Python slice/list/dict 기반 layout과 cache, `varco_kernels` PyCapsule custom op, FlashAttention dispatcher의 Python branch였다. MLP-only compile도 안정적인 wall-time 이득이 없었고 BF16 결과가 달라졌다. | 전체 model compile은 보류했다. 시도한다면 metadata를 graph 밖에서 계산하고 tensor-only body만 `fullgraph=True, dynamic=True`로 검증하며, block 단위 이득이 `3%` 미만이면 중단한다. |
+| `torch.compile` | 대표 sparse transformer block이 `13`개 graph와 `12`개 graph break로 나뉘었다. 주요 원인은 `SparseTensor.shape/layout`의 `.item()`·`bincount`, Python slice/list/dict 기반 layout과 cache, FlashAttention dispatcher의 Python branch였다. MLP-only compile도 안정적인 wall-time 이득이 없었고 BF16 결과가 달라졌다. | 전체 model compile은 보류했다. 시도한다면 metadata를 graph 밖에서 계산하고 tensor-only body만 `fullgraph=True, dynamic=True`로 검증하며, block 단위 이득이 `3%` 미만이면 중단한다. |
 | TensorRT | 바로 변환하면 dense Linear·MLP 일부만 engine에 들어가고 FlashAttention, custom kernel과 sparse metadata path는 PyTorch fallback으로 나뉠 가능성이 컸다. 전체 engine화를 위해서는 SparseTensor flattening, `torch.library` schema와 fake/meta kernel, varlen attention·sparse op plugin, token 범위별 optimization profile이 필요했다. | 기술적으로 가능하지만 사실상 별도 porting project였다. 현재 구조에서는 비용 대비 기대 이득이 낮아 보류했다. |
 
 Profiler상 전체 비용의 약 `87.6%`는 이미 FlashAttention과 cuBLAS/cuBLASLt GEMM이었다. 이 수치는 최적화 여지가 `12.4%`뿐이라는 뜻은 아니다. 이미 빠른 kernel도 불필요하게 호출될 수 있고, kernel 사이의 memory 이동과 dispatch는 여전히 줄일 수 있다.
