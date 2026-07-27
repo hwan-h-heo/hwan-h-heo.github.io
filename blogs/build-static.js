@@ -266,23 +266,8 @@ function escapeHtml(value) {
         .replace(/'/g, '&#39;');
 }
 
-function truncateTocLabel(label, maxLength) {
-    const normalized = label.replace(/\s+/g, ' ').trim();
-    if (normalized.length <= maxLength) {
-        return {
-            text: normalized,
-            truncated: false
-        };
-    }
-
-    const prefixMatch = normalized.match(/^(\d+(?:\.\d+)*\.?\s+)/);
-    const prefix = prefixMatch ? prefixMatch[1] : '';
-    const available = Math.max(18, maxLength - prefix.length - 1);
-    const body = normalized.slice(prefix.length, prefix.length + available).trimEnd();
-    return {
-        text: `${prefix}${body}`,
-        truncated: true
-    };
+function normalizeTocLabel(label) {
+    return label.replace(/\s+/g, ' ').trim();
 }
 
 function serializeStructuredData(value) {
@@ -367,13 +352,11 @@ function generateTOC(htmlContent, lang = 'eng') {
     modifiedContent.replace(/<h([23])[^>]*id="([^"]+)"[^>]*>(.*?)<\/h\1>/gi, (match, level, id, text) => {
         const plainText = stripHtml(text);
         if (plainText) {
-            const label = truncateTocLabel(plainText, Number(level) === 2 ? 38 : 34);
             headings.push({
                 level: Number(level),
                 id,
                 text: plainText,
-                label: label.text,
-                truncated: label.truncated
+                label: normalizeTocLabel(plainText)
             });
         }
         return match;
@@ -402,9 +385,7 @@ function generateTOC(htmlContent, lang = 'eng') {
     const renderTocLink = (heading) => {
         const fullText = escapeHtml(heading.text);
         const label = escapeHtml(heading.label);
-        const truncatedClass = heading.truncated ? ' is-truncated' : '';
-        const ellipsis = heading.truncated ? '<span class="toc-ellipsis" aria-hidden="true">...</span>' : '';
-        return `<a class="toc-link${truncatedClass}" href="#${heading.id}" title="${fullText}" aria-label="${fullText}"><span class="toc-link-text">${label}</span>${ellipsis}</a>`;
+        return `<a class="toc-link" href="#${heading.id}" title="${fullText}" aria-label="${fullText}"><span class="toc-link-text">${label}</span></a>`;
     };
 
     const tocTitle = lang === 'kor' ? '목차' : 'On This Page';

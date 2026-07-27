@@ -213,23 +213,6 @@
             });
         }
 
-        function updateTocOverflowMarkers() {
-            const tocBounds = toc.getBoundingClientRect();
-            toc.querySelectorAll('.toc-link').forEach((link) => {
-                const label = link.querySelector('.toc-link-text');
-                if (!label) {
-                    return;
-                }
-
-                const labelBounds = label.getBoundingClientRect();
-                const linkBounds = link.getBoundingClientRect();
-                const clippedByContainer = labelBounds.right > tocBounds.right - 2;
-                const clippedByLink = labelBounds.right > linkBounds.right - 2;
-                const clippedByTextBox = label.scrollWidth > label.clientWidth + 1;
-                link.classList.toggle('is-overflowing', clippedByContainer || clippedByLink || clippedByTextBox);
-            });
-        }
-
         function syncToc() {
             const windowHeight = window.innerHeight;
             const activationOffset = Math.min(220, Math.max(120, windowHeight * 0.32));
@@ -264,14 +247,12 @@
         window.addEventListener('resize', () => {
             updateTocVisibility();
             updateSublistHeights();
-            updateTocOverflowMarkers();
         });
         updateTocVisibility();
         initTocItems();
         updateSublistHeights();
-        updateTocOverflowMarkers();
         if (document.fonts?.ready) {
-            document.fonts.ready.then(updateTocOverflowMarkers).catch(() => {});
+            document.fonts.ready.then(updateSublistHeights).catch(() => {});
         }
         syncToc();
     }
