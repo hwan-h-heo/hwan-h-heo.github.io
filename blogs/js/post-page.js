@@ -43,10 +43,53 @@
     function setupShareButton() {
         const copyButton = document.getElementById('copyButton');
         const shareModal = document.getElementById('myshare_modal');
-        const closeModal = shareModal ? shareModal.querySelector('.share_modal_close') : null;
+
+        if (!copyButton || !shareModal) {
+            return;
+        }
+
+        copyButton.setAttribute('type', 'button');
+        copyButton.setAttribute('aria-label', 'Copy post link');
+        copyButton.setAttribute('title', 'Copy link');
+        copyButton.innerHTML = '<i class="bi bi-link-45deg" aria-hidden="true"></i>';
+
+        shareModal.setAttribute('role', 'status');
+        shareModal.setAttribute('aria-live', 'polite');
+        shareModal.setAttribute('aria-hidden', 'true');
+
+        const modalContent = shareModal.querySelector('.share_modal-content');
+        const modalLabels = window.blogPostPageConfig?.lang === 'kor'
+            ? {
+                copied: '링크 복사됨',
+                ready: '글 주소를 바로 공유할 수 있습니다.'
+            }
+            : {
+                copied: 'Link copied',
+                ready: 'Post URL is ready to share.'
+            };
+
+        if (modalContent) {
+            modalContent.innerHTML = `
+                <button class="share_modal_close" type="button" aria-label="Dismiss">
+                    <i class="bi bi-x-lg" aria-hidden="true"></i>
+                </button>
+                <span class="share_modal-icon" aria-hidden="true">
+                    <i class="bi bi-check2"></i>
+                </span>
+                <span class="share_modal-message">
+                    <strong>${modalLabels.copied}</strong>
+                    <small>${modalLabels.ready}</small>
+                </span>
+                <div class="copy_indicator-container">
+                    <div class="copy_indicator" id="share_modalIndicator"></div>
+                </div>
+            `;
+        }
+
+        const closeModal = shareModal.querySelector('.share_modal_close');
         const indicator = document.getElementById('share_modalIndicator');
 
-        if (!copyButton || !shareModal || !indicator) {
+        if (!indicator) {
             return;
         }
 
@@ -54,7 +97,7 @@
 
         function updateShareButtonVisibility() {
             const headerHeight = document.querySelector('.masthead')?.offsetHeight || 300;
-            copyButton.style.display = window.innerWidth > 1280 && window.scrollY > headerHeight ? 'block' : 'none';
+            copyButton.style.display = window.innerWidth > 1280 && window.scrollY > headerHeight ? 'inline-flex' : 'none';
         }
 
         function animateIndicator() {
@@ -72,6 +115,8 @@
                 if (progress < 1) {
                     animationId = requestAnimationFrame(step);
                 } else {
+                    shareModal.classList.remove('is-visible');
+                    shareModal.setAttribute('aria-hidden', 'true');
                     shareModal.style.display = 'none';
                 }
             }
@@ -82,6 +127,8 @@
 
         function closeShareModal() {
             cancelAnimationFrame(animationId);
+            shareModal.classList.remove('is-visible');
+            shareModal.setAttribute('aria-hidden', 'true');
             shareModal.style.display = 'none';
             indicator.style.width = '0%';
         }
@@ -95,6 +142,10 @@
 
             navigator.clipboard.writeText(url.href).then(function() {
                 shareModal.style.display = 'block';
+                shareModal.setAttribute('aria-hidden', 'false');
+                window.requestAnimationFrame(() => {
+                    shareModal.classList.add('is-visible');
+                });
                 indicator.style.width = '100%';
                 animateIndicator();
             }).catch(function(error) {
@@ -233,11 +284,17 @@
         const labels = config.lang === 'kor'
             ? {
                 kicker: '시리즈',
-                current: '현재 글'
+                current: '현재 글',
+                older: '이전 글',
+                next: '다음 글',
+                explore: '다른 시리즈'
             }
             : {
                 kicker: 'Series',
-                current: 'Current'
+                current: 'Current',
+                older: 'Older Post',
+                next: 'Next Post',
+                explore: 'Explore Series'
             };
 
         const currentIndex = postsInSeries.findIndex((post) => post.id === config.postId);
@@ -297,20 +354,45 @@
         const olderPost = postsInSeries[currentIndex + 1];
         const nextPost = postsInSeries[currentIndex - 1];
 
-        let navHtml = '<div class="d-flex justify-content-between mb-4">';
+        function truncatePostNavTitle(title) {
+            return title.length > 58 ? `${title.slice(0, 55)}...` : title;
+        }
+
+        function renderPostNavCard({ href, type, label, title }) {
+            return `
+                <a class="post-nav-card is-${type}" href="${href}">
+                    <span class="post-nav-kicker">
+                        <span>${escapeHtml(label)}</span>
+                    </span>
+                    <strong>${escapeHtml(truncatePostNavTitle(title))}</strong>
+                </a>
+            `;
+        }
+
+        let navHtml = '<nav class="post-nav-grid" aria-label="Post navigation">';
 
         if (olderPost) {
             const olderTitle = getPostTitle(olderPost, config.lang);
             const olderSlug = config.lang === 'eng' ? olderPost.slug : `${olderPost.slug}-kor`;
-            navHtml += `<a class="btn btn-light text-uppercase" href="/blogs/posts/${olderSlug}/" style="width: 40%; text-align: center;">← Older Post<br><small style="font-size: 0.7rem; text-transform: none;">${olderTitle.length > 25 ? olderTitle.substring(0, 25) + '...' : olderTitle}</small></a>`;
+            navHtml += renderPostNavCard({
+                href: `/blogs/posts/${olderSlug}/`,
+                type: 'older',
+                label: labels.older,
+                title: olderTitle
+            });
         } else if (nextPost) {
-            navHtml += '<div></div>';
+            navHtml += '<span class="post-nav-spacer" aria-hidden="true"></span>';
         }
 
         if (nextPost) {
             const nextTitle = getPostTitle(nextPost, config.lang);
             const nextSlug = config.lang === 'eng' ? nextPost.slug : `${nextPost.slug}-kor`;
-            navHtml += `<a class="btn btn-light text-uppercase" href="/blogs/posts/${nextSlug}/" style="width: 40%; text-align: center;">Next Post →<br><small style="font-size: 0.7rem; text-transform: none;">${nextTitle.length > 25 ? nextTitle.substring(0, 25) + '...' : nextTitle}</small></a>`;
+            navHtml += renderPostNavCard({
+                href: `/blogs/posts/${nextSlug}/`,
+                type: 'next',
+                label: labels.next,
+                title: nextTitle
+            });
         } else {
             const otherSeriesIds = Object.keys(siteData.series).filter((seriesId) => seriesId !== currentPost.series);
             const randomSeriesId = otherSeriesIds[Math.floor(Math.random() * otherSeriesIds.length)];
@@ -323,13 +405,18 @@
                 const recommendedSeriesTitle = siteData.series[randomSeriesId]?.[config.lang]
                     || siteData.series[randomSeriesId]?.eng
                     || 'Series';
-                navHtml += `<a class="btn btn-outline-secondary text-uppercase" href="/blogs/posts/${recommendedSlug}/" style="width: 40%; text-align: center;">Explore Series<br><small style="font-size: 0.7rem; text-transform: none;">${recommendedSeriesTitle}</small></a>`;
+                navHtml += renderPostNavCard({
+                    href: `/blogs/posts/${recommendedSlug}/`,
+                    type: 'explore',
+                    label: labels.explore,
+                    title: recommendedSeriesTitle
+                });
             } else {
-                navHtml += '<div></div>';
+                navHtml += '<span class="post-nav-spacer" aria-hidden="true"></span>';
             }
         }
 
-        navHtml += '</div>';
+        navHtml += '</nav>';
         navContainer.innerHTML = navHtml;
     }
 
@@ -353,9 +440,92 @@
         }
     }
 
+    function syncLanguagePreference() {
+        const config = window.blogPostPageConfig;
+        if (!config?.lang) {
+            return;
+        }
+
+        document.documentElement.lang = config.lang === 'kor' ? 'ko' : 'en';
+
+        try {
+            localStorage.setItem('language', config.lang);
+        } catch (error) {
+            console.warn('Failed to persist language preference:', error);
+        }
+
+        document.querySelectorAll('[data-language-target]').forEach((link) => {
+            link.addEventListener('click', () => {
+                const targetLang = link.dataset.languageTarget;
+                if (!targetLang) {
+                    return;
+                }
+
+                try {
+                    localStorage.setItem('language', targetLang);
+                } catch (error) {
+                    console.warn('Failed to persist language preference:', error);
+                }
+            });
+        });
+    }
+
+    function setupAutoRevealNav() {
+        const nav = document.getElementById('mainNav');
+        if (!nav) {
+            return;
+        }
+
+        let lastScrollY = window.scrollY;
+        let ticking = false;
+
+        function isMenuOpen() {
+            return Boolean(nav.querySelector('.navbar-collapse.show'));
+        }
+
+        function updateNav() {
+            const currentY = Math.max(window.scrollY, 0);
+            const headerHeight = document.querySelector('.masthead')?.offsetHeight || 260;
+            const pinStart = Math.max(96, Math.min(headerHeight * 0.5, headerHeight - 72));
+            const delta = currentY - lastScrollY;
+
+            if (currentY <= pinStart) {
+                nav.classList.remove('is-fixed', 'is-visible');
+            } else {
+                nav.classList.add('is-fixed');
+
+                if (isMenuOpen() || delta < -6) {
+                    nav.classList.add('is-visible');
+                } else if (delta > 6) {
+                    nav.classList.remove('is-visible');
+                }
+            }
+
+            lastScrollY = currentY;
+            ticking = false;
+        }
+
+        function requestUpdate() {
+            if (ticking) {
+                return;
+            }
+            ticking = true;
+            window.requestAnimationFrame(updateNav);
+        }
+
+        window.addEventListener('scroll', requestUpdate, { passive: true });
+        window.addEventListener('resize', requestUpdate);
+        nav.querySelector('.navbar-toggler')?.addEventListener('click', () => {
+            window.setTimeout(requestUpdate, 0);
+        });
+        updateNav();
+    }
+
     function initializePage() {
+        syncLanguagePreference();
         initializeMathRendering();
         setupShareButton();
+        setupAutoRevealNav();
         initializeTOC();
         renderSeriesNavigation();
         initializeSpecialViewers();

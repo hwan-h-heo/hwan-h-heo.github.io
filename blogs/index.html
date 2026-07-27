@@ -20,10 +20,19 @@
             gtag('js', new Date());
             gtag('config', 'G-RF7ETSKPK9');
         </script>
+        <script>
+            (function() {
+                try {
+                    const storedTheme = localStorage.getItem('blog-theme');
+                    const theme = storedTheme === 'dark' || storedTheme === 'light' ? storedTheme : 'light';
+                    document.documentElement.dataset.theme = theme;
+                } catch (error) {}
+            })();
+        </script>
     <link href="css/sidebar.css" rel="stylesheet">
     <link href="css/typography.css" rel="stylesheet">
     </head>
-    <body>
+    <body class="blog-home-page">
         <header id="header" class="header dark-background d-flex flex-column">
             <i class="header-toggle d-xl-none bi bi-list"></i>
         
@@ -45,87 +54,84 @@
             <nav id="navmenu" class="navmenu">
                 <ul>
                     <li><a href="../"><i class="bi bi-house navicon"></i>Home</a></li>
-                    <li><a href="./" class="active"> <i class="bi bi-keyboard navicon"></i> Blog Home </a></li>
+                    <li><a href="./" class="active"> <i class="bi bi-keyboard navicon"></i> Hwan's Blog </a></li>
                     <hr/>
                     <li style="padding-left: 1rem;"><a href="./3DViewer/"><i class="bi bi-box navicon"></i>3D Viewer</a></li>
                     <li style="padding-left: 1rem;"><a href="./editor/"><i class="bi bi-pencil-square navicon"></i>Editor</a></li>
                 </ul>
-                <div class="my-4" style="position: fixed; bottom: 0px; width: 275px">
-                    <!-- <input type="text" id="searchInput" class="form-control" placeholder="Search posts by title or keyword"> -->
-                    <form id="search-form">
-                        <br/>
-                        <div class="input-group">
-                            <input type="text" id="searchInput" class="form-control" placeholder="Enter search term...">
-                            <button class="btn btn-dark" type="submit" id="search-button" aria-label="Search">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </form>
-                </div>
             </nav>
 
         </header>
-        <main class="main">
-        <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
-            <div class="container px-2 px-lg-3">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                    Setting
-                    <i class="bi bi-list"></i>
+        <main class="main blog-home-main">
+        <nav class="blog-home-topbar" id="blogHomeTopbar" aria-label="Blog utilities">
+            <div class="blog-home-toolbar-actions">
+                <form id="blog-home-search-form" class="blog-home-search" role="search">
+                    <label class="visually-hidden" for="blog-home-search-input">Search posts</label>
+                    <input type="text" id="blog-home-search-input" data-placeholder-i18n="searchPlaceholder" placeholder="Search...">
+                    <button type="submit" aria-label="Search">
+                        <i class="bi bi-search" aria-hidden="true"></i>
+                    </button>
+                </form>
+                <button class="blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false">
+                    <i class="bi bi-moon-stars" aria-hidden="true"></i>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                        <div class="language-toggle text-center my-3">
-                            <a id="lang-toggle-main" class="btn btn-sm" style="color: #ccc; font-size: 0.7rem">
-                            </a>
-                        </div>
-                    </ul>
-                </div>
+                <button id="lang-toggle-main" class="blog-home-language" type="button" aria-label="Switch language"></button>
             </div>
         </nav>
-        <!-- Page Header-->
-        <header class="masthead" style="background-image: url('../assets/image_fx_.jpg');  background-position: center 34%; background-size: cover;">
+
+        <header class="masthead blog-home-hero" style="background-image: url('../assets/image_fx_.jpg'); background-position: center 34%; background-size: cover;">
             <div class="container position-relative px-4 px-lg-5">
-                <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-md-10 col-lg-9 col-xl-9" style="padding-top: 2rem;">
-                        <div class="site-heading">
-                            <h3> Hwan's Blog </h3>
-                            <p>
-                                3D Vision and Machine Learning
-                            </p>
-                        </div>
+                <div class="blog-home-hero-grid">
+                    <div class="blog-home-hero-copy">
+                        <span class="blog-home-kicker" data-i18n="heroKicker">Hwan's Blog</span>
+                        <h1 data-i18n="heroTitle">Research notes for 3D AI systems</h1>
+                        <p data-i18n="heroIntro">3D generation, computer vision, graphics, CUDA inference, and the implementation details that usually stay between commits.</p>
                     </div>
                 </div>
             </div>
         </header>
-        <!-- Main Content-->
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-9 col-xl-9">
-                    <ul class="nav nav-tabs nav-justified mb-4" style='font-size: 1rem;'>
-                        <li class="nav-item">
-                            <a class="nav-link active" data-bs-toggle="tab" href="#posts-tab">Posts</a>
+
+        <div class="container px-4 px-lg-5 blog-home-container">
+            <section id="blog-home-feature" class="blog-home-feature" aria-live="polite"></section>
+
+            <section class="blog-home-archive" aria-labelledby="blog-home-archive-title">
+                <div class="blog-home-archive-head">
+                    <div>
+                        <h2 id="blog-home-archive-title" data-i18n="archiveTitle">Archive</h2>
+                    </div>
+                    <ul class="nav blog-home-tabs" role="tablist" aria-label="Blog categories">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="posts-tab-control" data-bs-toggle="tab" data-bs-target="#posts-tab" type="button" role="tab" aria-controls="posts-tab" aria-selected="true">
+                                <span data-i18n="tabPosts">Posts</span>
+                                <span class="blog-home-tab-count" id="posts-count"></span>
+                            </button>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#notes-tab">Notes</a>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="notes-tab-control" data-bs-toggle="tab" data-bs-target="#notes-tab" type="button" role="tab" aria-controls="notes-tab" aria-selected="false">
+                                <span data-i18n="tabNotes">Notes</span>
+                                <span class="blog-home-tab-count" id="notes-count"></span>
+                            </button>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#series-tab">Series</a>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="series-tab-control" data-bs-toggle="tab" data-bs-target="#series-tab" type="button" role="tab" aria-controls="series-tab" aria-selected="false">
+                                <span data-i18n="tabSeries">Series</span>
+                                <span class="blog-home-tab-count" id="series-count"></span>
+                            </button>
                         </li>
                     </ul>
-    
-                    <div class="tab-content">
-                        <div class="tab-pane fade show active" id="posts-tab">
-                        </div>
-                        
-                        <div class="tab-pane fade" id="series-tab">
-                        </div>
-    
-                        <div class="tab-pane fade" id="notes-tab">
-                        </div>
+                </div>
+
+                <div class="tab-content blog-home-tab-content">
+                    <div class="tab-pane fade show active" id="posts-tab" role="tabpanel" aria-labelledby="posts-tab-control" tabindex="0">
                     </div>
+
+                    <div class="tab-pane fade" id="notes-tab" role="tabpanel" aria-labelledby="notes-tab-control" tabindex="0">
+                    </div>
+
+                    <div class="tab-pane fade" id="series-tab" role="tabpanel" aria-labelledby="series-tab-control" tabindex="0">
+                    </div>
+                </div>
+            </section>
 
                     <!-- Divider-->
                     <!-- Pager-->
@@ -138,11 +144,9 @@
                             </svg>
                         </button>
                     </div>
-                </div>
-            </div>
         </div>
         <!-- Footer-->
-        <footer class="border-top">
+        <footer class="blog-home-footer">
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-9 col-xl-9">
@@ -155,9 +159,10 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="./js/site-data-client.js"></script>
         <script src="./js/blog-shell.js"></script>
+        <script src="./js/theme-toggle.js"></script>
         <script src="./js/main-list.js"></script>
         <script>
-            initBlogShell({ formSelector: '#search-form', inputSelector: '#searchInput' });
+            initBlogShell({ formSelector: '#blog-home-search-form', inputSelector: '#blog-home-search-input' });
         </script>
     </main>
     </body>
