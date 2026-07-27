@@ -411,17 +411,17 @@ unconditional:
 <table>
 <thead>
 <tr>
-<th>비교</th>
+<th>Path</th>
 <th align="right">Sum of 10 asset means</th>
-<th align="right">감소율</th>
+<th align="right">Reduction vs <code>pure_eager</code></th>
 <th>Output</th>
 </tr>
 </thead>
 <tbody><tr>
 <td><code>pure_eager</code></td>
 <td align="right"><code>239.829s</code></td>
-<td align="right"><code>3.45%</code></td>
-<td></td>
+<td align="right">-</td>
+<td>Reference</td>
 </tr>
 <tr>
 <td><code>null_context [N, D], [1, D]</code></td>
@@ -430,7 +430,7 @@ unconditional:
 <td>Byte-exact</td>
 </tr>
 </tbody></table>
-<p>Null context 최적화는 byte-exact 한 결과물을 만들면서 asset별로 <code>5.87~3.96%</code>의 latency를 줄일 수 있었다.</p>
+<p>Null context 최적화는 byte-exact 한 결과물을 만들면서 asset별로 <code>3.96~5.87%</code>의 latency를 줄일 수 있었다.</p>
 <h4>Public 3D Gen Models: Hunyuan3D, Direct3D, and Trellis</h4>
 <p>VARCO3D에서 결과가 나온 뒤에는 이 아이디어가 우리 implementation에만 해당하는지 확인하고 싶었다.
 최근 image-to-3D model 다수는 우리 모델과 마찬가지로 Unconditional branch가 zero image token을 사용하고, 같은 최적화를 적용할 수 있다고 생각해 대표적인 3 public model: Hunyuan3D 2.1, Direct3D-s2, Trellis2 에 byte-exact 최적화를 적용해보았다.</p>
@@ -710,7 +710,7 @@ Kernel call분석에는 standalone <code>aten::gelu</code>가 step당 48회 반�
 <td align="right"><strong><code>4.37%</code></strong></td>
 </tr>
 <tr>
-<td><code>kernel_fusion</code> vs <code>kernel_fusion</code></td>
+<td><code>kernel_fusion</code> vs <code>pure_eager</code></td>
 <td align="right"><strong><code>18.734%</code></strong></td>
 </tr>
 <tr>

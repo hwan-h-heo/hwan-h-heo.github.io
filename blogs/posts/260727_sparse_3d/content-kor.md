@@ -282,12 +282,12 @@ Agent의 가장 큰 효과는 kernel을 대신 작성한 데만 있지 않았다
 
 Fusion과 null-context를 같은 10개 payload에서 독립적으로 on/off했다.
 
-| 비교 | Sum of 10 asset means | 감소율 | Output |
+| Path | Sum of 10 asset means | Reduction vs `pure_eager` | Output |
 | --- | ---: | ---: | --- |
-| `pure_eager`  | `239.829s` | `3.45%` |  |
+| `pure_eager`  | `239.829s` | - | Reference |
 | `null_context [N, D], [1, D]` | `229.348s` | `4.37%` | Byte-exact |
 
-Null context 최적화는 byte-exact 한 결과물을 만들면서 asset별로 `5.87~3.96%`의 latency를 줄일 수 있었다.
+Null context 최적화는 byte-exact 한 결과물을 만들면서 asset별로 `3.96~5.87%`의 latency를 줄일 수 있었다.
 
 #### Public 3D Gen Models: Hunyuan3D, Direct3D, and Trellis
 
@@ -563,7 +563,7 @@ Active token 수가 `3,664–30,227`인 production asset 10개에 대해 같은 
 | Comparison | Equal-weight latency reduction |
 | --- | ---: |
 | `canonical_cache_null` vs `pure_eager` | **`4.37%`** |
-| `kernel_fusion` vs `kernel_fusion` | **`18.734%`** |
+| `kernel_fusion` vs `pure_eager` | **`18.734%`** |
 | `canonical_cache_combined` vs `pure_eager` | **`25.66%`** |
 | `canonical_cache_null` vs `prior_exact_null` | `0.53%` |
 | `canonical_cache_combined` vs `prior_exact_combined` | `1.78%` |

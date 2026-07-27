@@ -411,17 +411,17 @@ unconditional:
 <table>
 <thead>
 <tr>
-<th>Comparison</th>
+<th>Path</th>
 <th align="right">Sum of 10 asset means</th>
-<th align="right">Reduction</th>
+<th align="right">Reduction vs <code>pure_eager</code></th>
 <th>Output</th>
 </tr>
 </thead>
 <tbody><tr>
 <td><code>pure_eager</code></td>
 <td align="right"><code>239.829s</code></td>
-<td align="right"><code>3.45%</code></td>
-<td></td>
+<td align="right">-</td>
+<td>Reference</td>
 </tr>
 <tr>
 <td><code>null_context [N, D], [1, D]</code></td>
@@ -430,7 +430,7 @@ unconditional:
 <td>Byte-exact</td>
 </tr>
 </tbody></table>
-<p>The null-context optimization reduced per-asset latency by <code>5.87~3.96%</code> while producing byte-exact outputs.</p>
+<p>The null-context optimization reduced per-asset latency by <code>3.96~5.87%</code> while producing byte-exact outputs.</p>
 <h4>Public 3D Gen Models: Hunyuan3D, Direct3D, and Trellis</h4>
 <p>After seeing results in VARCO3D, I wanted to check whether this idea applied only to our implementation.
 Because many recent image-to-3D models, like ours, use zero image tokens in the unconditional branch, I thought the same optimization would apply. So I applied the byte-exact optimization to three representative public models: Hunyuan3D 2.1, Direct3D-s2, and Trellis2.</p>
@@ -710,7 +710,7 @@ In other words, simply replacing the GELU formula with a fast CUDA kernel did no
 <td align="right"><strong><code>4.37%</code></strong></td>
 </tr>
 <tr>
-<td><code>kernel_fusion</code> vs <code>kernel_fusion</code></td>
+<td><code>kernel_fusion</code> vs <code>pure_eager</code></td>
 <td align="right"><strong><code>18.734%</code></strong></td>
 </tr>
 <tr>
