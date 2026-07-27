@@ -212,10 +212,13 @@ The conclusion is simple.
 
 > ***We did not need to make null-context attention faster. We did not need the full unconditional attention workload at all.***
 
-<video controls playsinline preload="metadata" aria-label="Null-context attention simplification animation">
-  <source src="./assets/null-context-attention.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+<figure class="post-media">
+  <video controls playsinline preload="metadata" aria-label="Null-context attention simplification animation">
+    <source src="./assets/null-context-attention.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <figcaption>Illustration of the zero-context case. The optimization applies more generally whenever all transformed value rows are identical; the context does not need to be numerically zero.</figcaption>
+</figure>
 
 ### 2.3. From a Compatible Reference Path to a Canonical Cache
 
@@ -582,7 +585,7 @@ The final combined path reduced equal-weight average per-asset latency by `25.66
 
 The fusion group reduced CUDA launches by `72.18%` relative to eager, and moved 720 standalone GELU calls into the cuBLASLt epilogue.
 
-By contrast, the earlier exact null path increased the total launch count because of the copy and indexing launches needed to construct the compact unconditional workload, but it reduced both the FlashAttention workload and wall time. This is why launch count alone is not enough to judge performance. The canonical cache later trimmed the remaining output-projection and reconstruction paths further, as reflected in the additional latency gains in 6.1 and 6.2.
+By contrast, the earlier exact null path increased the total launch count because of the copy and indexing launches needed to construct the compact unconditional workload, but it reduced both the FlashAttention workload and wall time. This is why launch count alone is not enough to judge performance. The canonical cache later trimmed the remaining output-projection and reconstruction paths further, as reflected in the additional latency gains in Section 6.1.
 
 
 ---
@@ -671,7 +674,7 @@ However, this path was not bitwise-exact with the unconditional row of the refer
 
 Therefore, I did not accept the direct `M=1` result under a tolerance. Instead, I searched for a calibration shape that produced the same raw bits as the production reference.
 
-### 7.3. Canonical Cache, Bitwise-Exact by Construction
+### 7.3. Canonical Cache, Bitwise-Exact After Qualification
 
 At startup, construct a canonical input whose every row is $b_V$.
 
@@ -707,10 +710,7 @@ Y_{-} =
 \right).
 $$
 
-In the validated production configuration on A100, PyTorch 2.7.1+cu128, and CUDA 12.8, this cache matched the existing reference unconditional row at the raw-bit level. This result does not necessarily mean that the same cuBLAS algorithm, tile shape, or reduction path was selected.
-
-`M=256` is not mathematically special.
-- cf: 256 was selected as a representative canonical tile threshold that encourages NVIDIA A100 Tensor Cores to reach Full Warp/Block occupancy and choose an optimal GEMM algorithm (rather than Skinny GEMV).
+`M=256` was selected empirically from the tested canonical shapes. It was large enough to avoid the observed `M=1` behavior and reproduced the reference BF16 bits in the qualified production environment; no assumption is made about the exact cuBLAS algorithm or tile configuration selected.
 
 #### Startup qualification and fallback
 

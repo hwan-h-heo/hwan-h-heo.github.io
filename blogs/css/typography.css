@@ -94,13 +94,22 @@ header.masthead .post-heading h2 {
     letter-spacing: -0.045em;
 }
 
+@media (min-width: 992px) {
+    header.masthead .post-heading {
+        width: min(86vw, 58rem);
+        max-width: calc(100vw - 4rem);
+        margin-left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
 header.masthead .post-heading h2 {
-    max-width: 22ch;
+    max-width: 100%;
     margin: 0 0 0.9rem;
     font-size: clamp(1.85rem, 4vw, 2.55rem);
     font-weight: 700;
     line-height: 1.22;
-    text-wrap: balance;
+    text-wrap: pretty;
 }
 
 header.masthead .post-heading .meta {
@@ -176,7 +185,7 @@ header.masthead .post-heading .meta {
     font-weight: 700;
     line-height: 1.38;
     letter-spacing: -0.035em;
-    text-wrap: balance;
+    text-wrap: pretty;
 }
 
 .main-content h2 {
@@ -307,6 +316,20 @@ header.masthead .post-heading .meta {
     letter-spacing: -0.005em;
 }
 
+.main-content figure.post-media {
+    margin: 1.8rem auto;
+}
+
+.main-content figure.post-media video,
+.main-content figure.post-media img {
+    margin: 0 auto 0.55rem;
+}
+
+.main-content figure.post-media figcaption {
+    max-width: 58rem;
+    margin: 0 auto;
+}
+
 .main-content img,
 .main-content video {
     display: block;
@@ -390,6 +413,7 @@ html[lang="ko"] .post-card-body .post-title,
 html[lang="ko"] header.masthead .post-heading h2 {
     font-family: var(--blog-korean);
     letter-spacing: -0.04em;
+    word-break: keep-all;
 }
 
 html[lang="ko"] .main-content,
