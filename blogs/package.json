@@ -4,6 +4,7 @@
   "description": "Hwan Heo's blog with static site generation and enhanced markdown editor",
   "scripts": {
     "build": "node build-static.js",
+    "build:incremental": "node build-static.js --incremental",
     "dev": "npm run build && npx http-server dist -p 8080 -o",
     "deploy": "npm run build && npm run deploy:dist",
     "deploy:dist": "gh-pages -d dist --dotfiles",

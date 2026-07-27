@@ -9,7 +9,8 @@ const { SITE_URL } = require('./lib/site-config');
 const { renderPostPage } = require('./lib/render-post-page');
 const { parseProjectMarkdown } = require('./lib/project-markdown');
 const { renderProjectPage } = require('./lib/render-project-page');
-const { buildSitemapEntries, listProjectEntries } = require('./lib/site-routes');
+const { buildSitemapEntries, getPostRoute, listProjectEntries } = require('./lib/site-routes');
+const { analyzeChangedFiles, getChangedFiles, serializeChangedFiles } = require('../scripts/lib/change-impact');
 const { renderBlock: renderPortfolioBlock } = require('../js/portfolio-blocks');
 const {
     renderProject: renderPortfolioProject,
@@ -19,6 +20,27 @@ const {
 
 const siteData = loadSiteData();
 const distDir = path.join(__dirname, 'dist');
+const repoRoot = path.join(__dirname, '..');
+
+function parseArguments(argv) {
+    const options = {
+        changedFiles: [],
+        incremental: false
+    };
+
+    argv.forEach((argument) => {
+        if (argument === '--incremental') {
+            options.incremental = true;
+            return;
+        }
+
+        if (argument.startsWith('--changed=')) {
+            options.changedFiles.push(...argument.slice('--changed='.length).split(',').filter(Boolean));
+        }
+    });
+
+    return options;
+}
 
 function resetDistDir() {
     if (fs.existsSync(distDir)) {
@@ -75,6 +97,45 @@ function copyStaticAssets() {
     copyProjectAssets();
     copyRuntimeDependencies();
     generatePortfolioIndex();
+}
+
+function copyPostSource(postId) {
+    const srcPath = path.join(__dirname, 'posts', postId);
+    const destPath = path.join(distDir, 'blogs', 'posts', postId);
+
+    fs.rmSync(destPath, { recursive: true, force: true });
+
+    if (!fs.existsSync(srcPath)) {
+        return;
+    }
+
+    copyRecursiveSync(srcPath, destPath);
+    console.log(`Copied post source: blogs/posts/${postId}`);
+}
+
+function getIncrementalStaticDestination(filePath) {
+    const normalizedPath = filePath.replace(/\\/g, '/').replace(/^\.\/+/, '');
+    if (normalizedPath.startsWith('blogs/')) {
+        return path.join(distDir, normalizedPath);
+    }
+
+    return path.join(distDir, normalizedPath);
+}
+
+function copyIncrementalStaticFiles(filePaths) {
+    filePaths.forEach((filePath) => {
+        const srcPath = path.join(repoRoot, filePath);
+        const destPath = getIncrementalStaticDestination(filePath);
+
+        if (!fs.existsSync(srcPath)) {
+            fs.rmSync(destPath, { recursive: true, force: true });
+            console.log(`Removed static file: ${filePath}`);
+            return;
+        }
+
+        copyRecursiveSync(srcPath, destPath);
+        console.log(`Copied static file: ${filePath}`);
+    });
 }
 
 function generatePortfolioIndex() {
@@ -420,38 +481,60 @@ function normalizePostContent(post, content, htmlContent, lang) {
     return updatedHtmlContent;
 }
 
-function generatePostPages() {
+function generatePostPage(post, lang) {
+    const mdPath = path.join(__dirname, 'posts', post.id, `content-${lang}.md`);
+    if (!fs.existsSync(mdPath)) {
+        throw new Error(`Missing content file: ${mdPath}`);
+    }
+
+    const mdContent = fs.readFileSync(mdPath, 'utf8');
+    const parts = mdContent.split('--- 여기부터 실제 콘텐츠 ---');
+    const content = parts.length > 1 ? parts[1].trim() : mdContent;
+
+    const parsedHtml = parseMarkdownWithMath(content, (source) => marked.parse(source));
+    const normalizedHtml = normalizePostContent(post, content, parsedHtml, lang);
+    const metaDescription = (post[`description_${lang}`] || post[`subtitle_${lang}`] || post.description_eng || post.subtitle_eng || '').substring(0, 160);
+    const readingTime = calculateReadingTime(normalizedHtml);
+    const html = renderPostPage({
+        post,
+        lang,
+        contentHtml: normalizedHtml,
+        metaDescription,
+        readingTime,
+        siteData
+    });
+
+    const slugDir = lang === 'eng' ? post.slug : `${post.slug}-kor`;
+    const postDir = path.join(distDir, 'blogs', 'posts', slugDir);
+    ensureDirSync(postDir);
+    fs.writeFileSync(path.join(postDir, 'index.html'), html);
+    console.log(`Generated: /blogs/posts/${slugDir}/index.html`);
+    return getPostRoute(post, lang);
+}
+
+function getTargetLanguages(post, postTargets) {
+    if (!postTargets) {
+        return post.languages;
+    }
+
+    const languages = postTargets.get(post.id);
+    if (!languages) {
+        return [];
+    }
+
+    return post.languages.filter((lang) => languages.has(lang));
+}
+
+function generatePostPages(postTargets = null) {
+    const routes = [];
+
     siteData.posts.forEach((post) => {
-        post.languages.forEach((lang) => {
-            const mdPath = path.join(__dirname, 'posts', post.id, `content-${lang}.md`);
-            if (!fs.existsSync(mdPath)) {
-                throw new Error(`Missing content file: ${mdPath}`);
-            }
-
-            const mdContent = fs.readFileSync(mdPath, 'utf8');
-            const parts = mdContent.split('--- 여기부터 실제 콘텐츠 ---');
-            const content = parts.length > 1 ? parts[1].trim() : mdContent;
-
-            const parsedHtml = parseMarkdownWithMath(content, (source) => marked.parse(source));
-            const normalizedHtml = normalizePostContent(post, content, parsedHtml, lang);
-            const metaDescription = (post[`description_${lang}`] || post[`subtitle_${lang}`] || post.description_eng || post.subtitle_eng || '').substring(0, 160);
-            const readingTime = calculateReadingTime(normalizedHtml);
-            const html = renderPostPage({
-                post,
-                lang,
-                contentHtml: normalizedHtml,
-                metaDescription,
-                readingTime,
-                siteData
-            });
-
-            const slugDir = lang === 'eng' ? post.slug : `${post.slug}-kor`;
-            const postDir = path.join(distDir, 'blogs', 'posts', slugDir);
-            ensureDirSync(postDir);
-            fs.writeFileSync(path.join(postDir, 'index.html'), html);
-            console.log(`Generated: /blogs/posts/${slugDir}/index.html`);
+        getTargetLanguages(post, postTargets).forEach((lang) => {
+            routes.push(generatePostPage(post, lang));
         });
     });
+
+    return routes;
 }
 
 function validateContentFiles() {
@@ -606,4 +689,46 @@ function buildSite() {
     console.log(`Output directory: ${distDir}`);
 }
 
-buildSite();
+function buildIncremental(options = {}) {
+    const changedFiles = getChangedFiles({
+        changedFiles: options.changedFiles,
+        repoRoot
+    });
+    const impact = analyzeChangedFiles(changedFiles, siteData);
+
+    if (!fs.existsSync(path.join(distDir, 'index.html'))) {
+        console.log('Incremental build needs an existing blogs/dist. Running full build.');
+        buildSite();
+        return;
+    }
+
+    if (impact.strategy !== 'incremental') {
+        console.log('Incremental build fell back to a full build.');
+        impact.reasons.forEach((reason) => console.log(`- ${reason}`));
+        buildSite();
+        return;
+    }
+
+    validateContentFiles();
+    copyIncrementalStaticFiles(impact.staticFiles || []);
+    impact.postTargets.forEach((languages, postId) => {
+        copyPostSource(postId);
+    });
+    const generatedRoutes = generatePostPages(impact.postTargets);
+    generateSitemap();
+    generateRobotsTxt();
+    generateSupportFiles();
+
+    console.log('\nIncremental build completed successfully.');
+    console.log(`Changed files: ${serializeChangedFiles(changedFiles) || '(none)'}`);
+    console.log(`Static files copied: ${(impact.staticFiles || []).length}`);
+    console.log(`Post pages generated: ${generatedRoutes.length}`);
+    generatedRoutes.forEach((route) => console.log(`- ${route}`));
+}
+
+const options = parseArguments(process.argv.slice(2));
+if (options.incremental) {
+    buildIncremental(options);
+} else {
+    buildSite();
+}

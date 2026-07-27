@@ -212,10 +212,13 @@ $$
 
 > ***Null-context attention을 더 빠르게 만들 필요가 없었다. Full unconditional attention workload 자체가 필요하지 않았다.***
 
-<video controls playsinline preload="metadata" aria-label="Null-context attention simplification animation">
-  <source src="./assets/null-context-attention.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+<figure class="post-media">
+  <video controls playsinline preload="metadata" aria-label="Null-context attention simplification animation">
+    <source src="./assets/null-context-attention.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <figcaption>Zero-context case를 보여주는 illustration. 이 최적화는 transformed value row들이 모두 동일한 경우라면 더 일반적으로 적용된다. Context가 수치적으로 0일 필요는 없다.</figcaption>
+</figure>
 
 ### 2.3. Reference-compatible path에서 canonical cache까지
 
@@ -582,7 +585,7 @@ Active token 수가 `3,664–30,227`인 production asset 10개에 대해 같은 
 
 Fusion group은 eager 대비 CUDA launch를 `72.18%` 줄였고, standalone GELU 720회를 cuBLASLt epilogue로 옮겼다.
 
-반면 이전 exact null path는 compact unconditional workload를 구성하는 copy와 indexing launch 때문에 총 launch 수가 늘었지만, FlashAttention workload와 wall time은 줄었다. Launch count 하나만으로 성능을 판단할 수 없는 이유다. 이후 canonical cache는 남아 있던 output-projection·reconstruction 경로를 더 줄였고, 6.1과 6.2의 추가 latency 개선으로 확인됐다.
+반면 이전 exact null path는 compact unconditional workload를 구성하는 copy와 indexing launch 때문에 총 launch 수가 늘었지만, FlashAttention workload와 wall time은 줄었다. Launch count 하나만으로 성능을 판단할 수 없는 이유다. 이후 canonical cache는 남아 있던 output-projection·reconstruction 경로를 더 줄였고, 6.1절의 추가 latency 개선으로 확인됐다.
 
 
 ---
@@ -671,7 +674,7 @@ cache:  [1, D]
 
 따라서 direct `M=1` 결과를 허용 오차로 승인하지 않고, production reference와 같은 raw bit를 만드는 calibration shape를 탐색했다.
 
-### 7.3. Canonical cache: bitwise-exact by construction
+### 7.3. Canonical cache: qualification 이후의 bitwise-exact
 
 Startup에서 모든 row가 $b_V$인 canonical input을 만든다.
 
@@ -707,10 +710,7 @@ Y_{-} =
 \right).
 $$
 
-A100·PyTorch 2.7.1+cu128·CUDA 12.8의 검증 대상 production configuration에서는 이 cache가 기존 reference unconditional row와 raw-bit로 일치했다. 이 결과가 반드시 동일한 cuBLAS algorithm, tile shape 또는 reduction path가 선택됐음을 의미하지는 않는다.
-
-`M=256`은 수학적으로 특별한 값이 아니다.
-- cf: 256은 NVIDIA A100 Tensor Core가 Full Warp/Block occupancy를 달성하여 최적의 GEMM 알고리즘 (Skinny GEMV가 아닌)을 선택하도록 유도하는 대표적인 canonical tile threshold로 선정한 값이다.
+`M=256`은 테스트한 canonical shape들 중에서 경험적으로 선택했다. 관찰된 `M=1` behavior를 피하기에 충분히 컸고, qualification을 통과한 production environment에서 reference BF16 bit를 재현했다. 선택된 정확한 cuBLAS algorithm이나 tile configuration에 대해서는 어떤 가정도 하지 않는다.
 
 #### Startup qualification과 fallback
 

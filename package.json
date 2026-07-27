@@ -5,8 +5,10 @@
   "scripts": {
     "setup": "npm install && npm --prefix blogs install",
     "build": "npm --prefix blogs run build",
+    "build:incremental": "npm --prefix blogs run build:incremental",
     "dev": "npm --prefix blogs run dev",
     "deploy": "npm run verify && npm --prefix blogs run deploy:dist",
+    "deploy:quick": "node scripts/quick-deploy.js",
     "new:post": "node scripts/new-post.js",
     "new:project": "node scripts/new-project.js",
     "check:content": "node scripts/check-content.js",
