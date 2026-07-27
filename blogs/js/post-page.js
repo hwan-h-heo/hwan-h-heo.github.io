@@ -3,6 +3,27 @@
         return post[`title_${lang}`] || post.title_eng;
     }
 
+    function escapeHtml(value) {
+        return String(value || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function formatSeriesDate(value) {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+            return '';
+        }
+
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}.${month}.${day}`;
+    }
+
     function initializeMathRendering() {
         if (typeof renderMathInElement === 'undefined') {
             return;
@@ -101,48 +122,84 @@
         }
 
         let tocItems = [];
-        const bottomMargin = 0.2;
 
         function updateTocVisibility() {
             const headerHeight = document.querySelector('.masthead')?.offsetHeight || 300;
-            toc.style.display = window.scrollY > headerHeight ? 'block' : 'none';
+            const isVisible = window.innerWidth > 1280 && window.scrollY > headerHeight;
+            toc.classList.toggle('is-visible', isVisible);
+            toc.setAttribute('aria-hidden', isVisible ? 'false' : 'true');
+        }
+
+        function getDirectAnchor(item) {
+            return Array.from(item.children).find((child) => child.tagName === 'A') || item.querySelector('a');
         }
 
         function initTocItems() {
             tocItems = Array.from(toc.querySelectorAll('li')).map((item) => {
-                const anchor = item.querySelector('a');
+                const anchor = getDirectAnchor(item);
                 const href = anchor?.getAttribute('href');
                 if (!href || href === '#') {
                     return null;
                 }
 
+                const parentItem = item.parentElement?.closest('li') || null;
+                const level = item.dataset.level || (parentItem ? '3' : '2');
+                item.dataset.level = level;
+                item.classList.add('toc-item', `toc-item-level-${level}`);
+                anchor.classList.add('toc-link');
+
                 return {
                     listItem: item,
+                    parentItem,
                     target: document.getElementById(href.slice(1))
                 };
             }).filter((item) => item && item.target);
         }
 
+        function updateSublistHeights() {
+            toc.querySelectorAll('.toc-sublist, ul ul').forEach((list) => {
+                list.style.setProperty('--toc-sublist-height', `${list.scrollHeight}px`);
+            });
+        }
+
         function syncToc() {
             const windowHeight = window.innerHeight;
+            const activationOffset = Math.min(220, Math.max(120, windowHeight * 0.32));
             let currentSection = null;
 
             tocItems.forEach((item) => {
                 const targetBounds = item.target.getBoundingClientRect();
-                if (targetBounds.top <= windowHeight * (1 - bottomMargin)) {
+                if (targetBounds.top <= activationOffset) {
                     currentSection = item;
                 }
             });
 
             tocItems.forEach((item) => {
-                item.listItem.classList.toggle('active', item === currentSection);
+                item.listItem.classList.remove('active', 'is-current', 'is-parent', 'is-expanded');
             });
+
+            if (!currentSection) {
+                return;
+            }
+
+            currentSection.listItem.classList.add('active', 'is-current', 'is-expanded');
+
+            let parentItem = currentSection.parentItem;
+            while (parentItem) {
+                parentItem.classList.add('is-parent', 'is-expanded');
+                parentItem = parentItem.parentElement?.closest('li') || null;
+            }
         }
 
         document.addEventListener('scroll', updateTocVisibility);
         window.addEventListener('scroll', syncToc, false);
+        window.addEventListener('resize', () => {
+            updateTocVisibility();
+            updateSublistHeights();
+        });
         updateTocVisibility();
         initTocItems();
+        updateSublistHeights();
         syncToc();
     }
 
@@ -173,33 +230,70 @@
             || siteData.series[currentPost.series]?.eng
             || 'Series';
 
-        const listItems = postsInSeries.map((post) => {
+        const labels = config.lang === 'kor'
+            ? {
+                kicker: '시리즈',
+                current: '현재 글'
+            }
+            : {
+                kicker: 'Series',
+                current: 'Current'
+            };
+
+        const currentIndex = postsInSeries.findIndex((post) => post.id === config.postId);
+        const countLabel = config.lang === 'kor'
+            ? `${postsInSeries.length}편`
+            : `${postsInSeries.length} posts`;
+        const listItems = postsInSeries.map((post, index) => {
             const title = getPostTitle(post, config.lang);
             const slug = config.lang === 'eng' ? post.slug : `${post.slug}-kor`;
+            const date = formatSeriesDate(post.date);
+            const number = String(index + 1).padStart(2, '0');
             if (post.id === config.postId) {
-                return `<li><strong>${title}</strong></li>`;
+                return `
+                    <li class="series-post is-current" aria-current="page">
+                        <span class="series-post-index">${number}</span>
+                        <span class="series-post-copy">
+                            <strong>${escapeHtml(title)}</strong>
+                            ${date ? `<span>${date}</span>` : ''}
+                        </span>
+                        <span class="series-current-pill">${labels.current}</span>
+                    </li>
+                `;
             }
-            return `<li><a href="/blogs/posts/${slug}/">${title}</a></li>`;
+            return `
+                <li class="series-post">
+                    <a href="/blogs/posts/${slug}/">
+                        <span class="series-post-index">${number}</span>
+                        <span class="series-post-copy">
+                            <strong>${escapeHtml(title)}</strong>
+                            ${date ? `<span>${date}</span>` : ''}
+                        </span>
+                    </a>
+                </li>
+            `;
         }).join('');
 
         seriesContainer.innerHTML = `
-            <div class="accordion mb-4" id="seriesAccordion">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#seriesAccordionBody" aria-expanded="false" aria-controls="seriesAccordionBody">
-                            <strong>${seriesTitle}</strong>
-                        </button>
-                    </h2>
-                    <div id="seriesAccordionBody" class="accordion-collapse collapse" data-bs-parent="#seriesAccordion">
-                        <div class="accordion-body">
-                            <ol>${listItems}</ol>
-                        </div>
-                    </div>
+            <details class="series-card">
+                <summary class="series-summary">
+                    <span class="series-icon" aria-hidden="true"><i class="bi bi-collection"></i></span>
+                    <span class="series-summary-copy">
+                        <span class="series-kicker">${labels.kicker}</span>
+                        <strong>${escapeHtml(seriesTitle)}</strong>
+                    </span>
+                    <span class="series-meta">${currentIndex + 1} / ${postsInSeries.length}</span>
+                    <span class="series-toggle">
+                        <span>${countLabel}</span>
+                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                    </span>
+                </summary>
+                <div class="series-body">
+                    <ol class="series-list">${listItems}</ol>
                 </div>
-            </div>
+            </details>
         `;
 
-        const currentIndex = postsInSeries.findIndex((post) => post.id === config.postId);
         const olderPost = postsInSeries[currentIndex + 1];
         const nextPost = postsInSeries[currentIndex - 1];
 
@@ -273,4 +367,3 @@
         initializePage();
     }
 })();
-

@@ -162,13 +162,6 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
     <style>
-        pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; font-size: 0.9rem !important; }
-        pre code { font-size: 0.9rem !important; }
-        .main-content a { color: #15B886; text-decoration: none; }
-        .main-content a:hover { color: #11926b; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; }
-        th { width: 15%; background-color: #f2f2f2; }
         .post-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
         .post-tags span { display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,0.6); color: #fff; border-radius: 999px; padding: 0.16rem 0.55rem; font-size: 0.72rem; background: rgba(0,0,0,0.18); }
     </style>

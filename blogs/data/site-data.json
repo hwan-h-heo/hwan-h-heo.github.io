@@ -1,6 +1,31 @@
 {
   "posts": [
     {
+      "id": "260727_sparse_3d",
+      "title_eng": "What the Compiler Missed in Sparse 3D Inference",
+      "title_kor": "컴파일러가 놓친 Sparse 3D Forward 최적화",
+      "subtitle_eng": "Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0",
+      "subtitle_kor": "Null-Context Attention 제거와 CUDA Fusion으로 줄인 3D 생성 지연시간",
+      "date": "2026-07-27",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "optimizing-sparse-3d-generation-inference",
+      "description_eng": "Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0",
+      "description_kor": "Null-Context Attention 제거와 CUDA Fusion으로 줄인 3D 생성 지연시간",
+      "tags": [
+        "3D Generation",
+        "Generative AI",
+        "CUDA"
+      ],
+      "cover": "/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png",
+      "status": "published",
+      "updated": "2026-07-27"
+    },
+    {
       "id": "260115_Varco3D",
       "title_eng": "Varco3D: A Year in Review — 2025 Retrospective",
       "title_kor": "3D 생성형 AI 서비스; Varco3D 개발기",
@@ -789,14 +814,14 @@
   ],
   "featuredPortfolioPosts": [
     {
+      "id": "260727_sparse_3d",
+      "teaserImage": "/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png",
+      "teaserAlt": "VARCO3D sparse 3D inference optimization result"
+    },
+    {
       "id": "260115_Varco3D",
       "teaserImage": "/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif",
       "teaserAlt": "Varco3D retrospective teaser"
-    },
-    {
-      "id": "250809_gwn",
-      "teaserImage": "/blogs/posts/250809_gwn/assets/image.png",
-      "teaserAlt": "Winding number around a closed curve"
     },
     {
       "id": "240805_gs",

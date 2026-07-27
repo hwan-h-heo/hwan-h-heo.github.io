@@ -1579,24 +1579,6 @@ h6 {
   color: #fff;
 }
 
-.hero-wave-pending .hero .hero-actions,
-.hero-wave-pending .hero .social-links,
-.hero-wave-active .hero:not(.hero-cta-visible) .hero-actions,
-.hero-wave-active .hero:not(.hero-cta-visible) .social-links {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(0.65rem);
-}
-
-.hero-wave-active .hero.hero-cta-visible .hero-actions,
-.hero-wave-active .hero.hero-cta-visible .social-links,
-.hero-wave-fallback .hero .hero-actions,
-.hero-wave-fallback .hero .social-links {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
-
 .scroll-down-arrow {
   right: auto;
   bottom: 1.15rem;

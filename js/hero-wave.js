@@ -996,9 +996,7 @@ function createHeroWave(THREE) {
             new THREE.Vector3(0, 0, group.position.z)
         );
         const ctaWorldTarget = new THREE.Vector3();
-        const ctaElement = phone
-            ? hero.querySelector('.hero-actions .hero-action:first-child')
-            : hero.querySelector('.scroll-down-arrow');
+        const ctaElement = hero.querySelector('.scroll-down-arrow');
         const ctaRect = ctaElement?.getBoundingClientRect();
         const ctaNdc = ctaRect
             ? new THREE.Vector2(

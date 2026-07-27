@@ -882,11 +882,14 @@
         const postId = state.metadata.id.trim();
         const content = stripLegacyContentPreamble(el.editorTextarea.value || '');
         const html = renderMarkdownHtml(content, postId);
+        const isKoreanContent = state.activeLanguage === 'kor';
 
         el.sourcePreviewContent.innerHTML = html;
         renderVisualPreview(content, postId);
 
         [el.previewContent, el.sourcePreviewContent].forEach((container) => {
+            container.classList.toggle('is-korean-content', isKoreanContent);
+            container.lang = isKoreanContent ? 'ko' : 'en';
             enhanceRenderedPreview(container);
         });
 

@@ -196,6 +196,28 @@ function stripHtml(value) {
         .trim();
 }
 
+function escapeHtml(value) {
+    return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function truncateTocLabel(label, maxLength) {
+    const normalized = label.replace(/\s+/g, ' ').trim();
+    if (normalized.length <= maxLength) {
+        return normalized;
+    }
+
+    const prefixMatch = normalized.match(/^(\d+(?:\.\d+)*\.?\s+)/);
+    const prefix = prefixMatch ? prefixMatch[1] : '';
+    const available = Math.max(18, maxLength - prefix.length - 1);
+    const body = normalized.slice(prefix.length, prefix.length + available).trimEnd();
+    return `${prefix}${body}...`;
+}
+
 function serializeStructuredData(value) {
     return JSON.stringify(value).replace(/</g, '\\u003c');
 }
@@ -260,7 +282,7 @@ function buildPortfolioStructuredData() {
     };
 }
 
-function generateTOC(htmlContent) {
+function generateTOC(htmlContent, lang = 'eng') {
     const headingRegex = /<h([23])([^>]*)>(.*?)<\/h\1>/gi;
     const headings = [];
     let headingCounter = 0;
@@ -276,7 +298,15 @@ function generateTOC(htmlContent) {
     });
 
     modifiedContent.replace(/<h([23])[^>]*id="([^"]+)"[^>]*>(.*?)<\/h\1>/gi, (match, level, id, text) => {
-        headings.push({ level: Number(level), id, text });
+        const plainText = stripHtml(text);
+        if (plainText) {
+            headings.push({
+                level: Number(level),
+                id,
+                text: plainText,
+                label: truncateTocLabel(plainText, Number(level) === 2 ? 38 : 34)
+            });
+        }
         return match;
     });
 
@@ -284,25 +314,37 @@ function generateTOC(htmlContent) {
         return { tocHtml: '', contentHtml: modifiedContent };
     }
 
-    let tocHtml = '<ul>';
-    let currentH2 = false;
+    const tocSections = [];
+    let currentSection = null;
 
     headings.forEach((heading) => {
         if (heading.level === 2) {
-            if (currentH2) {
-                tocHtml += '</ul></li>';
-            }
-            tocHtml += `<li><a href="#${heading.id}">${heading.text}</a><ul>`;
-            currentH2 = true;
-        } else if (currentH2) {
-            tocHtml += `<li><a href="#${heading.id}">${heading.text}</a></li>`;
+            currentSection = { ...heading, children: [] };
+            tocSections.push(currentSection);
+        } else if (currentSection) {
+            currentSection.children.push(heading);
         }
     });
 
-    if (currentH2) {
-        tocHtml += '</ul></li>';
+    if (tocSections.length === 0) {
+        return { tocHtml: '', contentHtml: modifiedContent };
     }
-    tocHtml += '</ul>';
+
+    const renderTocLink = (heading) => {
+        const fullText = escapeHtml(heading.text);
+        const label = escapeHtml(heading.label);
+        return `<a class="toc-link" href="#${heading.id}" title="${fullText}" aria-label="${fullText}">${label}</a>`;
+    };
+
+    const tocTitle = lang === 'kor' ? '목차' : 'On This Page';
+    const tocItems = tocSections.map((section) => {
+        const childHtml = section.children.length
+            ? `<ol class="toc-sublist">${section.children.map((child) => `<li class="toc-item toc-item-level-3" data-level="3">${renderTocLink(child)}</li>`).join('')}</ol>`
+            : '';
+        return `<li class="toc-item toc-item-level-2" data-level="2">${renderTocLink(section)}${childHtml}</li>`;
+    }).join('');
+
+    const tocHtml = `<div class="toc-title">${tocTitle}</div><ol class="toc-list">${tocItems}</ol>`;
 
     return { tocHtml, contentHtml: modifiedContent };
 }
@@ -314,7 +356,7 @@ function replaceLegacyPostLinks(htmlContent) {
     });
 }
 
-function normalizePostContent(post, content, htmlContent) {
+function normalizePostContent(post, content, htmlContent, lang) {
     let updatedHtmlContent = htmlContent;
 
     const shareButtonHtml = `<button id="copyButton">
@@ -338,8 +380,8 @@ function normalizePostContent(post, content, htmlContent) {
     }
 
     if (!content.includes('<nav class="toc">')) {
-        const { tocHtml, contentHtml } = generateTOC(updatedHtmlContent);
-        updatedHtmlContent = tocHtml ? `<nav class="toc">${tocHtml}</nav>${contentHtml}` : contentHtml;
+        const { tocHtml, contentHtml } = generateTOC(updatedHtmlContent, lang);
+        updatedHtmlContent = tocHtml ? `<nav class="toc" aria-label="Table of contents">${tocHtml}</nav>${contentHtml}` : contentHtml;
     }
 
     updatedHtmlContent = updatedHtmlContent.replace(
@@ -374,7 +416,7 @@ function generatePostPages() {
             const content = parts.length > 1 ? parts[1].trim() : mdContent;
 
             const parsedHtml = parseMarkdownWithMath(content, (source) => marked.parse(source));
-            const normalizedHtml = normalizePostContent(post, content, parsedHtml);
+            const normalizedHtml = normalizePostContent(post, content, parsedHtml, lang);
             const metaDescription = (post[`description_${lang}`] || post[`subtitle_${lang}`] || post.description_eng || post.subtitle_eng || '').substring(0, 160);
             const readingTime = calculateReadingTime(normalizedHtml);
             const html = renderPostPage({
