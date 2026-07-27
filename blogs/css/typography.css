@@ -461,3 +461,147 @@ html[lang="ko"] .post-card-body .post-subtitle {
         font-size: clamp(1.65rem, 8vw, 2.1rem);
     }
 }
+
+html[data-theme="dark"] .main-content {
+    color: #c9d3df;
+}
+
+html[data-theme="dark"] .main-content h1,
+html[data-theme="dark"] .main-content h2,
+html[data-theme="dark"] .main-content h3,
+html[data-theme="dark"] .main-content h4,
+html[data-theme="dark"] .main-content h5,
+html[data-theme="dark"] .main-content h6 {
+    color: #e8eef6;
+}
+
+html[data-theme="dark"] .main-content a {
+    color: #4dd7b4;
+}
+
+html[data-theme="dark"] .main-content a:hover {
+    color: #94f1d8;
+    text-decoration-color: rgba(148, 241, 216, 0.35);
+}
+
+html[data-theme="dark"] .main-content strong {
+    color: #eef4fb;
+}
+
+html[data-theme="dark"] .main-content :not(pre) > code {
+    background: rgba(77, 215, 180, 0.1);
+    color: #aaf0dc;
+}
+
+html[data-theme="dark"] .main-content pre,
+html[data-theme="dark"] .main-content pre[class*="language-"] {
+    border-color: #263241;
+    background: #111820;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+html[data-theme="dark"] .main-content code[class*="language-"],
+html[data-theme="dark"] .main-content pre[class*="language-"] {
+    color: #c9d3df;
+    text-shadow: none;
+}
+
+html[data-theme="dark"] .main-content .token.comment,
+html[data-theme="dark"] .main-content .token.prolog,
+html[data-theme="dark"] .main-content .token.doctype,
+html[data-theme="dark"] .main-content .token.cdata {
+    color: #8290a1;
+}
+
+html[data-theme="dark"] .main-content .token.punctuation {
+    color: #aab6c4;
+}
+
+html[data-theme="dark"] .main-content .token.property,
+html[data-theme="dark"] .main-content .token.tag,
+html[data-theme="dark"] .main-content .token.boolean,
+html[data-theme="dark"] .main-content .token.number,
+html[data-theme="dark"] .main-content .token.constant,
+html[data-theme="dark"] .main-content .token.symbol,
+html[data-theme="dark"] .main-content .token.deleted {
+    color: #ffb4a8;
+}
+
+html[data-theme="dark"] .main-content .token.selector,
+html[data-theme="dark"] .main-content .token.attr-name,
+html[data-theme="dark"] .main-content .token.string,
+html[data-theme="dark"] .main-content .token.char,
+html[data-theme="dark"] .main-content .token.builtin,
+html[data-theme="dark"] .main-content .token.inserted {
+    color: #8debd3;
+}
+
+html[data-theme="dark"] .main-content .token.operator,
+html[data-theme="dark"] .main-content .token.entity,
+html[data-theme="dark"] .main-content .token.url,
+html[data-theme="dark"] .main-content .language-css .token.string,
+html[data-theme="dark"] .main-content .style .token.string {
+    color: #d0b7ff;
+    background: transparent;
+}
+
+html[data-theme="dark"] .main-content .token.atrule,
+html[data-theme="dark"] .main-content .token.attr-value,
+html[data-theme="dark"] .main-content .token.keyword {
+    color: #8fb8ff;
+}
+
+html[data-theme="dark"] .main-content .token.function,
+html[data-theme="dark"] .main-content .token.class-name {
+    color: #ffd580;
+}
+
+html[data-theme="dark"] .main-content .token.regex,
+html[data-theme="dark"] .main-content .token.important,
+html[data-theme="dark"] .main-content .token.variable {
+    color: #f2a6d3;
+}
+
+html[data-theme="dark"] .main-content blockquote {
+    border-color: rgba(77, 215, 180, 0.2);
+    background:
+        linear-gradient(135deg, rgba(77, 215, 180, 0.12), rgba(79, 143, 205, 0.075));
+    color: #c8d3df;
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.18);
+}
+
+html[data-theme="dark"] .main-content blockquote strong {
+    color: #f2f7fc;
+    font-weight: 600;
+}
+
+html[data-theme="dark"] .main-content blockquote cite,
+html[data-theme="dark"] .main-content blockquote footer,
+html[data-theme="dark"] .main-content figcaption,
+html[data-theme="dark"] .main-content .caption {
+    color: #93a2b3;
+}
+
+html[data-theme="dark"] .main-content table {
+    border-color: #263241;
+    background: #111820;
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.2);
+}
+
+html[data-theme="dark"] .main-content th,
+html[data-theme="dark"] .main-content td {
+    border-color: #263241;
+}
+
+html[data-theme="dark"] .main-content thead th {
+    background: #172130;
+    color: #e8eef6;
+}
+
+html[data-theme="dark"] .main-content tbody tr:nth-child(even) td {
+    background: #141d29;
+}
+
+html[data-theme="dark"] header.masthead .post-heading .meta {
+    color: rgba(255, 255, 255, 0.76);
+}

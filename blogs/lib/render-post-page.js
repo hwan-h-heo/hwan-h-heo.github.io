@@ -173,17 +173,27 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
         gtag('js', new Date());
         gtag('config', 'G-RF7ETSKPK9');
     </script>
+        <script>
+            (function() {
+                try {
+                    const storedTheme = localStorage.getItem('blog-theme');
+                    const theme = storedTheme === 'dark' || storedTheme === 'light' ? storedTheme : 'light';
+                    document.documentElement.dataset.theme = theme;
+                } catch (error) {}
+            })();
+        </script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
         <div class="container px-4 px-lg-5">
-            <a class="navbar-brand" href="/blogs/">Blog Home</a>
+            <a class="navbar-brand" href="/blogs/">Hwan's Blog</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
                 Menu <i class="bi bi-list"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                    ${alternateHref ? `<li class="nav-item"><a href="${alternateHref}" class="btn nav-link px-lg-3 py-3 py-lg-4" style="font-size:0.7rem">${alternateLang === 'eng' ? 'ENG' : 'KOR'}</a></li>` : ''}
+                    <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
+                    ${alternateHref ? `<li class="nav-item"><a href="${alternateHref}" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="${alternateLang}" style="font-size:0.7rem">${alternateLang === 'eng' ? 'ENG' : 'KOR'}</a></li>` : ''}
                 </ul>
             </div>
         </div>
@@ -237,12 +247,18 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
 
     <script>
         window.siteData = ${serializeForScript(clientSiteData)};
-        window.blogPostPageConfig = ${serializeForScript({ postId: post.id, lang })};
+        window.blogPostPageConfig = ${serializeForScript({
+            postId: post.id,
+            lang,
+            alternateLang,
+            alternateHref
+        })};
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="/blogs/js/code-copy.js"></script>
+    <script src="/blogs/js/theme-toggle.js"></script>
     <script src="/blogs/js/scroll-progress.js"></script>
     <script src="/blogs/js/post-page.js"></script>
 </body>

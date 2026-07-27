@@ -101,3 +101,26 @@ pre[class*="language-"] .copy-code-button:hover {
     content: 'Copied!';
     opacity: 1;
 }
+
+html[data-theme="dark"] .copy-code-button {
+    border-color: #324155;
+    background: rgba(17, 24, 32, 0.92);
+    color: #b7c4d3;
+}
+
+html[data-theme="dark"] .copy-code-button:hover {
+    border-color: #4dd7b4;
+    background: #172130;
+    color: #8debd3;
+}
+
+html[data-theme="dark"] .copy-code-button.copied {
+    border-color: #2fb586;
+    background: #2fb586;
+    color: #07110e;
+}
+
+html[data-theme="dark"] .copy-code-button::after {
+    background: #1b2430;
+    color: #e8eef6;
+}

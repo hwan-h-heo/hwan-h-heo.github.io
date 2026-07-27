@@ -358,17 +358,34 @@ function replaceLegacyPostLinks(htmlContent) {
 
 function normalizePostContent(post, content, htmlContent, lang) {
     let updatedHtmlContent = htmlContent;
+    const shareLabels = lang === 'kor'
+        ? {
+            copied: '링크 복사됨',
+            ready: '글 주소를 바로 공유할 수 있습니다.'
+        }
+        : {
+            copied: 'Link copied',
+            ready: 'Post URL is ready to share.'
+        };
 
-    const shareButtonHtml = `<button id="copyButton">
-    <i class="bi bi-share-fill"></i>
+    const shareButtonHtml = `<button id="copyButton" type="button" aria-label="Copy post link">
+    <i class="bi bi-link-45deg" aria-hidden="true"></i>
 </button>
 
-<div id="myshare_modal" class="share_modal">
+<div id="myshare_modal" class="share_modal" role="status" aria-live="polite" aria-hidden="true">
     <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
+        <button class="share_modal_close" type="button" aria-label="Dismiss">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+        <span class="share_modal-icon" aria-hidden="true">
+            <i class="bi bi-check2"></i>
+        </span>
+        <span class="share_modal-message">
+            <strong>${shareLabels.copied}</strong>
+            <small>${shareLabels.ready}</small>
+        </span>
         <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
+            <div class="copy_indicator" id="share_modalIndicator"></div>
         </div>
     </div>
 </div>
