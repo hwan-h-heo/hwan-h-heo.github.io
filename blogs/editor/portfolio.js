@@ -465,12 +465,15 @@
                 ${field('projectTitle', 'Title', metadata.title || item.title || '')}
                 ${textarea('projectHeroTitle', 'Hero title HTML', metadata.heroTitle || metadata.title || item.title || '', true)}
                 ${textarea('projectSubtitles', 'Subtitles (one per line)', (metadata.subtitles || []).join('\n'))}
+                ${textarea('projectOverview', 'Overview paragraphs (blank line between paragraphs)', (metadata.overview || []).join('\n\n'))}
+                ${textarea('projectContributions', 'Core contributions (one per line)', (metadata.contributions || []).join('\n'))}
+                ${textarea('projectDetails', 'Details (Label | Value | optional URL)', (metadata.details || []).map((detail) => [detail.label, detail.value, detail.url].filter(Boolean).join(' | ')).join('\n'))}
                 ${textarea('projectDescription', 'Meta description', metadata.description || '')}
                 ${textarea('projectKeywords', 'Meta keywords', metadata.keywords || '')}
                 <div class="project-snippet-bar" aria-label="Project snippets">
                     <div class="project-snippet-group">
-                        <button class="button button-secondary" type="button" data-project-snippet="overview">Overview block</button>
-                        <button class="button button-secondary" type="button" data-project-snippet="details">Details box</button>
+                        <button class="button button-secondary" type="button" data-project-snippet="section">Section</button>
+                        <button class="button button-secondary" type="button" data-project-snippet="impact">Impact note</button>
                         <button class="button button-secondary" type="button" data-project-snippet="table">Comparison table</button>
                     </div>
                     <div class="project-snippet-group">
@@ -503,6 +506,7 @@
                         `).join('')}
                     </div>
                 </label>
+                ${field('tags', 'Tags (comma-separated)', (item.tags || []).join(', '))}
                 <label class="checkbox-row checkbox-row-stacked">
                     <input name="external" type="checkbox" ${item.external ? 'checked' : ''} />
                     <span>Open as external link</span>
@@ -601,8 +605,8 @@
 
     function insertProjectSnippet(snippetId) {
         const snippets = {
-            overview: ':::{.container .portfolio-details-container .col-11}\\n:::{.row .gy-4}\\n:::{.col-lg-8}\\n:::{.portfolio-description}\\n## Project Overview\\n\\nDescribe the project here.\\n:::\\n:::\\n:::\\n:::',
-            details: ':::{.portfolio-info}\\n### Project Details\\n\\n- **Category**: Research\\n- **Technology**: Add technologies here\\n- **Project URL**: <a href="#" target="_blank" class="portfolio-link"><i class="bi bi-link-45deg"></i> Project Page</a>\\n:::',
+            section: '## Section Title\\n\\nExplain the technical decision and its result here.',
+            impact: '> **Why it mattered.** Connect the work to its practical or historical impact.',
             figure: '<figure>\\n  <img class="img-fluid" src="assets/image.png" alt="Describe the image">\\n  <figcaption class="text-center mt-2"><strong>Figure.</strong> Caption here.</figcaption>\\n</figure>',
             video: '<div class="text-center">\\n  <video controls muted loop class="img-fluid">\\n    <source src="assets/video.mp4" type="video/mp4">\\n  </video>\\n</div>',
             table: '<table>\\n  <tr>\\n    <th>Method A</th>\\n    <th>Method B</th>\\n  </tr>\\n  <tr>\\n    <td>Result A</td>\\n    <td>Result B</td>\\n  </tr>\\n</table>'
@@ -644,9 +648,21 @@
             const contentField = el.portfolioForm.elements.projectPageContent;
             if (contentField && bundle) {
                 bundle.metadata = {
+                    ...bundle.metadata,
                     title: getFieldValue('projectTitle'),
                     heroTitle: getFieldValue('projectHeroTitle'),
                     subtitles: getFieldValue('projectSubtitles').split('\n').map((line) => line.trim()).filter(Boolean),
+                    layout: bundle.metadata.layout || 'case-study',
+                    overview: getFieldValue('projectOverview').split(/\n\s*\n/).map((paragraph) => paragraph.trim()).filter(Boolean),
+                    contributions: getFieldValue('projectContributions').split('\n').map((line) => line.trim()).filter(Boolean),
+                    details: getFieldValue('projectDetails').split('\n').map((line) => {
+                        const [label = '', value = '', url = ''] = line.split('|').map((part) => part.trim());
+                        return {
+                            label,
+                            value,
+                            ...(url ? { url } : {})
+                        };
+                    }).filter((detail) => detail.label && detail.value),
                     description: getFieldValue('projectDescription'),
                     keywords: getFieldValue('projectKeywords'),
                     sourceBackup: bundle.metadata.sourceBackup || ''
@@ -661,6 +677,7 @@
                 item[key] = getFieldValue(key);
             });
             item.categories = [...el.portfolioForm.querySelectorAll('input[name="categories"]:checked')].map((input) => input.value);
+            item.tags = getFieldValue('tags').split(',').map((tag) => tag.trim()).filter(Boolean);
             item.external = Boolean(el.portfolioForm.querySelector('input[name="external"]')?.checked);
             removeEmptyFields(item, ['badge', 'image', 'gif', 'video', 'poster', 'alt']);
             if (!item.external) {

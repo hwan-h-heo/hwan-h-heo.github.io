@@ -39,6 +39,13 @@
         return PROJECT_ACTION_LABELS[project.id] || 'Project Page';
     }
 
+    function renderProjectTags(project) {
+        return (project.tags || [])
+            .slice(0, 3)
+            .map((tag) => `<span class="portfolio-project-tag">${escapeHtml(tag)}</span>`)
+            .join('');
+    }
+
     function renderMedia(project) {
         if (project.video) {
             return `
@@ -70,6 +77,7 @@
             : '';
         const selectedLabel = selected ? '<span>Selected Project</span>' : '<span>Project Archive</span>';
         const actionLabel = getProjectActionLabel(project);
+        const tagsHtml = renderProjectTags(project);
         const hidden = selected ? '' : ' hidden';
 
         return `
@@ -87,6 +95,7 @@
                         </span>
                         <span class="portfolio-project-title">${escapeHtml(project.title)}${externalIcon}</span>
                         <span class="portfolio-project-summary">${escapeHtml(project.summary)}</span>
+                        ${tagsHtml ? `<span class="portfolio-project-tags">${tagsHtml}</span>` : ''}
                         <span class="portfolio-project-meta">${escapeHtml(actionLabel)} <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
                     </span>
                 </a>

@@ -5,70 +5,35 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Neural Rendering in Game Engine</title>
-  <meta content="Robust 360 videos to gaussian splatting and GS optimization for game engines" name="description">
+  <meta content="Case study of a 360-video-to-Gaussian-Splatting pipeline with fisheye CUDA rasterization and Unity and Unreal Engine deployment." name="description">
   <meta content="" name="keywords">
 
-  <!-- Favicons -->
   <link href="../../assets/favicon.ico" rel="icon">
   <link href="../../assets/favicon.ico" rel="apple-touch-icon">
 
-  <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link rel="preconnect" href="<https://fonts.googleapis.com>">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Vendor CSS Files -->
   <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="../../assets/vendor/aos/aos.css" rel="stylesheet">
   <link href="../../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
   <link href="../../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
-  <!-- Main CSS File -->
   <link href="../../assets/css/used.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1.9.1/css/academicons.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  
   <script src="../../js/mathjax-config.js"></script>
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({            
-            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}            
-        });
-    </script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            width: 50%;
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
-            vertical-align: middle;
-        }
-        th {
-            width: 15%; /* Reduced width of the header column */
-            background-color: #f2f2f2; 
-        }
-        .progress-bar {
-          height: 0.4rem;
-          background: #6EA8FE;
-          width: 0%;
-          z-index: 9999;
-          position: fixed;
-        }
-    </style>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-RF7ETSKPK9');
-    </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    table { width: 100%; border-collapse: collapse; }
+    th, td { width: 50%; border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; }
+    th { width: 15%; background-color: #f2f2f2; }
+    .progress-bar { height: 0.4rem; background: #6EA8FE; width: 0%; z-index: 9999; position: fixed; }
+    .feature-img { max-width: 100%; height: auto; }
+    .gif-container { display: flex; justify-content: center; align-items: center; }
+    .gif-container img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+  </style>
   <style id="project-detail-common-style">
     .portfolio-details-page .header {
       scrollbar-width: none;
@@ -77,39 +42,64 @@
       display: none;
     }
     .navmenu .project-nav-selector {
-      margin: -0.35rem 0 0.4rem;
+      margin: 0.2rem 0.9rem 0.85rem;
     }
     .navmenu .project-nav-selector details {
       color: var(--nav-color);
+      position: relative;
     }
     .navmenu .project-nav-selector summary {
       align-items: center;
-      background: rgba(255, 255, 255, 0.06);
-      border-left: 2px solid var(--accent-color);
-      border-radius: 0 10px 10px 0;
+      background: rgba(255, 255, 255, 0.055);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 12px;
       color: var(--nav-hover-color);
       cursor: pointer;
       display: flex;
       font-family: var(--nav-font);
-      font-size: 0.86rem;
-      gap: 0.35rem;
-      line-height: 1.28;
+      gap: 0.6rem;
       list-style: none;
-      margin: 0 0.35rem 0 1.25rem;
-      padding: 0.5rem 0.55rem 0.5rem 0.75rem;
-      transition: background-color 0.2s ease, color 0.2s ease;
+      margin: 0;
+      min-height: 58px;
+      padding: 0.62rem 0.7rem;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+    .navmenu .project-nav-selector summary:hover {
+      background: rgba(255, 255, 255, 0.085);
+      border-color: rgba(20, 157, 221, 0.36);
     }
     .navmenu .project-nav-selector summary::-webkit-details-marker {
       display: none;
     }
-    .navmenu .project-nav-selector summary .navicon,
-    .navmenu .project-nav-selector .project-selector-options .navicon {
+    .navmenu .project-nav-selector summary .navicon {
       color: var(--accent-color);
       flex: 0 0 auto;
-      font-size: 0.95rem;
-      margin-right: 0.05rem;
+      font-size: 1rem;
+      margin: 0;
     }
-    .navmenu .project-nav-selector summary span,
+    .navmenu .project-selector-copy {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      gap: 0.13rem;
+      min-width: 0;
+    }
+    .navmenu .project-selector-copy small {
+      color: color-mix(in srgb, var(--nav-color), transparent 28%);
+      font-family: var(--mono-font);
+      font-size: 0.59rem;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+    .navmenu .project-selector-copy strong {
+      color: var(--nav-hover-color);
+      font-size: 0.78rem;
+      font-weight: 650;
+      line-height: 1.28;
+    }
+    .navmenu .project-selector-copy strong,
     .navmenu .project-selector-options a span {
       display: -webkit-box;
       overflow: hidden;
@@ -119,8 +109,7 @@
     .navmenu .project-nav-selector .project-selector-toggle {
       color: color-mix(in srgb, var(--nav-color), transparent 20%);
       flex: 0 0 auto;
-      font-size: 0.75rem;
-      margin-left: auto;
+      font-size: 0.68rem;
       transition: transform 0.2s ease, color 0.2s ease;
     }
     .navmenu .project-nav-selector details[open] .project-selector-toggle {
@@ -128,26 +117,78 @@
       transform: rotate(180deg);
     }
     .navmenu .project-selector-options {
-      border-left: 1px solid color-mix(in srgb, var(--nav-color), transparent 82%);
-      margin: 0.35rem 0.35rem 0.1rem 2.15rem;
-      padding: 0.05rem 0 0.1rem 0.35rem;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 12px;
+      display: grid;
+      gap: 0.08rem;
+      margin-top: 0.38rem;
+      padding: 0.35rem;
     }
     .navmenu .project-selector-options a,
     .navmenu .project-selector-options a:focus {
-      align-items: flex-start;
-      border-radius: 8px;
+      align-items: center;
+      border-radius: 9px;
       color: color-mix(in srgb, var(--nav-color), transparent 8%);
       display: flex;
       font-family: var(--nav-font);
-      font-size: 0.8rem;
-      gap: 0.25rem;
-      line-height: 1.25;
-      padding: 0.38rem 0.45rem;
+      font-size: 0.75rem;
+      gap: 0.55rem;
+      line-height: 1.3;
+      padding: 0.48rem 0.52rem;
       transition: color 0.2s ease, background-color 0.2s ease;
     }
     .navmenu .project-selector-options a:hover {
       background: rgba(255, 255, 255, 0.05);
       color: var(--nav-hover-color);
+    }
+    .navmenu .project-selector-index {
+      color: var(--accent-color);
+      display: block !important;
+      flex: 0 0 1.5rem;
+      font-family: var(--mono-font);
+      font-size: 0.61rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      overflow: visible !important;
+    }
+    .portfolio-details .project-hero-header {
+      margin-bottom: 3.4rem;
+      max-width: 900px;
+    }
+    .portfolio-details .project-hero-kicker {
+      color: #149ddd;
+      display: inline-block;
+      font-family: var(--mono-font);
+      font-size: 0.67rem;
+      font-weight: 500;
+      letter-spacing: 0.11em;
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+    }
+    .portfolio-details .project-hero-header h1 {
+      font-size: clamp(2rem, 4.1vw, 3.15rem);
+      letter-spacing: -0.045em;
+      line-height: 1.08;
+      overflow-wrap: anywhere;
+      text-wrap: balance;
+    }
+    .portfolio-details .project-hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      justify-content: center;
+      margin-top: 1.15rem;
+    }
+    .portfolio-details .project-hero-meta span {
+      background: #f8fafc;
+      border: 1px solid rgba(15, 23, 42, 0.09);
+      border-radius: 999px;
+      color: #64748b;
+      font-size: 0.72rem;
+      font-weight: 650;
+      line-height: 1.2;
+      padding: 0.34rem 0.62rem;
     }
     .portfolio-details .portfolio-description h2 {
       margin-top: 1.25rem;
@@ -164,9 +205,6 @@
     .portfolio-details .portfolio-description li {
       line-height: 1.72;
     }
-    .portfolio-details .project-hero-header {
-      max-width: 880px;
-    }
     .portfolio-details .portfolio-details-container {
       max-width: 1040px;
     }
@@ -179,51 +217,122 @@
       max-width: 760px;
       width: min(100%, 760px);
     }
-    .portfolio-details .container.col-11.varco-feature-strip {
-      margin: -0.25rem auto 2.2rem;
-      max-width: 440px;
+    .portfolio-details .project-overview > p:first-of-type {
+      color: #334155;
+      font-size: 1.04rem;
+      line-height: 1.72;
     }
-    .portfolio-details .varco-feature-strip p,
-    .portfolio-details .varco-feature-strip p > img:only-child {
+    .portfolio-details .project-case-study-overview {
+      margin-bottom: 3.8rem;
+    }
+    .portfolio-details .project-case-study-shell {
+      max-width: 900px;
+    }
+    .portfolio-details .project-case-study-article {
       margin: 0 auto;
+      max-width: 820px;
     }
-    .portfolio-details .varco-feature-strip img {
-      background: #f8fafc;
-      border: 1px solid rgba(15, 23, 42, 0.08);
-      box-shadow: 0 20px 48px rgba(15, 23, 42, 0.13);
+    .portfolio-details .project-case-study-article > h2 {
+      border-top: 1px solid rgba(15, 23, 42, 0.09);
+      font-size: clamp(1.45rem, 2.4vw, 1.8rem);
+      margin: 3.8rem 0 1rem;
+      padding-top: 2.7rem;
+    }
+    .portfolio-details .project-case-study-article > h2:first-child {
+      border-top: 0;
+      margin-top: 0;
+      padding-top: 0;
+    }
+    .portfolio-details .project-case-study-article h3 {
+      color: #172033;
+      font-size: 1.08rem;
+      font-weight: 760;
+      margin: 2.15rem 0 0.7rem;
+    }
+    .portfolio-details .project-case-study-article h4 {
+      color: #334155;
+      font-size: 0.96rem;
+      font-weight: 720;
+      margin: 1.7rem 0 0.55rem;
+    }
+    .portfolio-details .project-case-study-article p,
+    .portfolio-details .project-case-study-article li {
+      color: #475569;
+      font-size: 0.96rem;
+      line-height: 1.74;
+    }
+    .portfolio-details .project-case-study-article blockquote {
+      background: linear-gradient(135deg, rgba(20, 157, 221, 0.09), rgba(20, 157, 221, 0.025));
+      border: 1px solid rgba(20, 157, 221, 0.2);
+      border-radius: 16px;
+      margin: 1.35rem 0 2.1rem;
+      padding: 1rem 1.1rem;
+    }
+    .portfolio-details .project-case-study-article blockquote p {
+      color: #334155;
+      font-size: 0.94rem;
+      line-height: 1.66;
+      margin: 0;
+    }
+    .portfolio-details .project-case-study-article blockquote strong {
+      color: #0878ad;
+    }
+    .portfolio-details .project-case-study-article > iframe {
+      aspect-ratio: 16 / 9;
+      border: 0;
+      box-shadow: 0 16px 34px rgba(15, 23, 42, 0.12);
       display: block;
       height: auto;
-      object-fit: contain;
+      margin: 1.35rem 0;
       width: 100%;
     }
-    .portfolio-details .varco-version-stack {
-      display: grid;
-      gap: 0.9rem;
-      margin: 1.15rem 0 1.35rem;
+    .portfolio-details .project-case-study-article figure {
+      margin: 1.4rem 0;
     }
-    .portfolio-details .varco-version-item {
-      background: #f8fafc;
-      border-left: 3px solid #149ddd;
-      border-radius: 0 12px 12px 0;
-      padding: 0.95rem 1.05rem;
+    .portfolio-details .project-case-study-article figcaption {
+      color: #7b8491;
+      font-size: 0.76rem;
+      line-height: 1.5;
+      margin-top: 0.55rem;
+      text-align: center;
     }
-    .portfolio-details .varco-version-item h3 {
+    .portfolio-details .project-case-study-article hr {
+      border: 0;
+      border-top: 1px solid rgba(15, 23, 42, 0.09);
+      margin: 2.6rem 0;
+      opacity: 1;
+    }
+    .portfolio-details .project-case-study-article mjx-container[display="true"] {
+      margin: 1.35rem 0 !important;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 0.45rem 0;
+    }
+    .portfolio-details .project-contributions {
+      background: linear-gradient(145deg, #f8fafc, #ffffff);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 16px;
+      margin-top: 1.35rem;
+      padding: 1rem 1.1rem 0.85rem;
+    }
+    .portfolio-details .project-contributions > p:first-child {
       color: #0f172a;
-      font-size: 0.92rem;
+      font-size: 0.78rem;
       font-weight: 760;
-      letter-spacing: 0;
-      margin: 0 0 0.35rem;
+      letter-spacing: 0.055em;
+      margin-bottom: 0.55rem;
+      text-transform: uppercase;
     }
-    .portfolio-details .varco-version-item p {
+    .portfolio-details .project-contributions ul {
+      margin: 0;
+      padding-left: 1.1rem;
+    }
+    .portfolio-details .project-contributions li {
       color: #526070;
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       line-height: 1.58;
-      margin: 0.35rem 0 0;
-    }
-    .portfolio-details .varco-version-item p:first-of-type {
-      color: #149ddd;
-      font-weight: 720;
-      line-height: 1.42;
+      margin: 0.32rem 0;
     }
     .portfolio-details img,
     .portfolio-details video,
@@ -278,21 +387,6 @@
       top: 0;
       width: 100%;
     }
-    .portfolio-details .varco-object-embed {
-      background: #f8fafc;
-      border: 1px solid rgba(15, 23, 42, 0.08);
-      border-radius: 16px;
-      box-shadow: 0 16px 34px rgba(15, 23, 42, 0.1);
-      margin: 1.5rem auto 0.65rem;
-      overflow: hidden;
-      width: 100%;
-    }
-    .portfolio-details .varco-object-embed iframe {
-      border: 0;
-      display: block;
-      height: min(500px, 70vh);
-      width: 100%;
-    }
     .portfolio-details p > img:only-child {
       display: block;
       margin: 1rem auto;
@@ -311,68 +405,6 @@
     .portfolio-details table img {
       border-radius: 10px;
       width: 100%;
-    }
-    .portfolio-details table .varco-lattice-img {
-      aspect-ratio: 1 / 1;
-      display: block;
-      height: clamp(140px, 18vw, 230px);
-      margin: 0 auto;
-      object-fit: contain;
-      padding: 0.35rem;
-      width: 100%;
-    }
-    .portfolio-details table:has(.varco-lattice-img) th,
-    .portfolio-details table:has(.varco-lattice-img) td {
-      text-align: center;
-      vertical-align: middle;
-      width: 33.333%;
-    }
-    .portfolio-details .viewer-feature-group {
-      margin: 1.4rem 0 1.8rem;
-    }
-    .portfolio-details .viewer-feature-group > h4 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      margin-bottom: 0.95rem;
-    }
-    .portfolio-details .viewer-feature-grid {
-      display: grid;
-      gap: 1rem;
-      width: 100%;
-    }
-    .portfolio-details .viewer-feature-grid-2 {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .portfolio-details .viewer-feature-grid-3 {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-    .portfolio-details .viewer-feature-card {
-      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-      border: 1px solid rgba(15, 23, 42, 0.08);
-      border-radius: 18px;
-      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      overflow: hidden;
-      padding: 1rem;
-    }
-    .portfolio-details .viewer-feature-card .feature-img {
-      aspect-ratio: 16 / 9;
-      border-radius: 12px;
-      object-fit: cover;
-      width: 100%;
-    }
-    .portfolio-details .viewer-feature-card h5 {
-      font-size: 1.02rem;
-      font-weight: 700;
-      margin: 0.35rem 0 0.45rem;
-    }
-    .portfolio-details .viewer-feature-card p,
-    .portfolio-details .viewer-feature-card li {
-      font-size: 0.94rem;
-      line-height: 1.62;
     }
     .portfolio-details .portfolio-info {
       border: 1px solid rgba(15, 23, 42, 0.08);
@@ -469,12 +501,18 @@
       .portfolio-details .portfolio-info {
         margin-bottom: 1.25rem;
       }
-      .portfolio-details .viewer-feature-grid-2,
-      .portfolio-details .viewer-feature-grid-3 {
-        grid-template-columns: 1fr;
+      .portfolio-details .project-hero-header {
+        margin-bottom: 2.4rem;
       }
-      .portfolio-details .container.col-11.varco-feature-strip {
-        max-width: 320px;
+      .portfolio-details .project-case-study-overview {
+        margin-bottom: 2.6rem;
+      }
+      .portfolio-details .project-case-study-article > h2 {
+        margin-top: 3rem;
+        padding-top: 2.2rem;
+      }
+      .portfolio-details .project-hero-header h1 {
+        font-size: clamp(1.8rem, 8.5vw, 2.45rem);
       }
       .portfolio-details .project-page-nav {
         grid-template-columns: 1fr;
@@ -485,43 +523,56 @@
       }
     }
   </style>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RF7ETSKPK9');
+  </script>
 </head>
-<div class="progress-container">
+
+<body class="portfolio-details-page">
+  <div class="progress-container">
     <div class="progress-bar" id="myBar"></div>
   </div>
-<body class="portfolio-details-page">
-  <div class="mobile-topbar">
-    <i class="header-toggle d-xl-none bi bi-list"></i>
-  </div>
+
   <header id="header" class="header dark-background d-flex flex-column">
+    <i class="header-toggle d-xl-none bi bi-list"></i>
+
     <div class="profile-img">
-      <img src="../../assets/icon.webp" alt="" class="img-fluid rounded-circle">
+      <img src="../../assets/icon.webp" alt="Hwan Heo icon" class="img-fluid rounded-circle">
     </div>
 
-    <a href="index.html" class="logo d-flex align-items-center justify-content-center">
+    <a href="../../" class="logo d-flex align-items-center justify-content-center">
       <h1 class="sitename">Hwan Heo</h1>
     </a>
 
     <div class="social-links text-center">
       <a href="https://github.com/hwanhuh" class="github"><i class="bi bi-github"></i></a>
       <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin"><i class="bi bi-linkedin"></i></a>
-      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram"><i class="ai ai-google-scholar"></i></i></a>
-      <a href="mailto:gjghks950@naver.com" class="google-plus"><i class="bi bi-envelope"></i></a>
+      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram"><i class="bi bi-mortarboard-fill"></i></a>
+      <a href="mailto:gjghks950@naver.com" class="google-plus"><i class="bi bi-envelope-fill"></i></a>
     </div>
 
     <nav id="navmenu" class="navmenu">
       <ul>
         <li><a href="../../#home"><i class="bi bi-house navicon"></i>Home</a></li>
-        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Project</a></li>
+        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Projects</a></li>
         <li class="project-nav-selector">
           <details>
-            <summary aria-current="page"><i class="bi bi-dot navicon"></i><span>Neural Rendering in Game Engine</span><i class="bi bi-chevron-down project-selector-toggle"></i></summary>
+            <summary aria-current="page">
+              <i class="bi bi-grid navicon" aria-hidden="true"></i>
+              <span class="project-selector-copy"><small>Switch project</small><strong>Neural Rendering in Game Engine</strong></span>
+              <i class="bi bi-chevron-down project-selector-toggle" aria-hidden="true"></i>
+            </summary>
             <div class="project-selector-options">
-          <a href="../varco3d/"><i class="bi bi-arrow-return-right navicon"></i><span>VARCO 3D</span></a>
-          <a href="../capa/"><i class="bi bi-arrow-return-right navicon"></i><span>CaPa</span></a>
-          <a href="../deepsfm/"><i class="bi bi-arrow-return-right navicon"></i><span>Deep SfM for Radiance Fields</span></a>
-          <a href="../2dgs_viewer/"><i class="bi bi-arrow-return-right navicon"></i><span>2D GS Viewer</span></a>
-          <a href="../instant_pose/"><i class="bi bi-arrow-return-right navicon"></i><span>Instant Pose</span></a>
+          <a href="../varco3d/"><span class="project-selector-index">01</span><span>VARCO 3D</span></a>
+          <a href="../capa/"><span class="project-selector-index">02</span><span>CaPa</span></a>
+          <a href="../deepsfm/"><span class="project-selector-index">03</span><span>Deep SfM for Radiance Fields</span></a>
+          <a href="../2dgs_viewer/"><span class="project-selector-index">04</span><span>2D GS Viewer</span></a>
+          <a href="../instant_pose/"><span class="project-selector-index">05</span><span>Instant Pose</span></a>
             </div>
           </details>
         </li>
@@ -533,11 +584,8 @@
   </header>
 
   <main class="main">
-
-    <!-- Page Title -->
     <div class="page-title dark-background">
       <div class="container d-lg-flex justify-content-between align-items-center">
-        <!-- <h1 class="mb-2 mb-lg-0">Title</h1> -->
         <nav class="breadcrumbs">
           <ol>
             <li><a href="../../">Home</a></li>
@@ -545,164 +593,133 @@
           </ol>
         </nav>
       </div>
-    </div><!-- End Page Title -->
+    </div>
 
-    <!-- Portfolio Details Section -->
     <section id="portfolio-details" class="portfolio-details section">
       <div class="row gx-5 justify-content-center">
-        <div class="project-hero-header text-center mb-5 col-11 col-lg-10 col-xl-8 col-xxl-7">
+        <div class="project-hero-header text-center col-11 col-lg-10 col-xl-8 col-xxl-7">
+          <span class="project-hero-kicker">Project Case Study</span>
           <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline">Neural Rendering in Game Engine</span></h1>
-          <div class="fs-3 fw-light text-muted">NC Research</div>
+          <div class="project-hero-meta"><span>NCSOFT Research</span><span>Real-time Neural Rendering</span></div>
         </div>
       </div>
 
-<div class="container portfolio-details-container col-11">
-<div class="row gy-4">
-<div class="col-lg-8">
-<div class="portfolio-description">
-<h2>Project Overview</h2>
-<p>This project explores how <strong>neural rendering assets</strong> can move from offline reconstruction into interactive game-engine environments.
-The pipeline spans 360-camera capture, Gaussian Splatting-based scene reconstruction, custom camera modeling, asset optimization, and integration into Unity and Unreal Engine.</p>
-<p>The key practical constraint is that detailed neural scenes are not automatically game-engine ready.
-They require camera-model-aware reconstruction, splat pruning, runtime-compatible rendering strategies, and careful conversion into engine-side representations.
-This project focuses on that deployment gap: making reconstructed neural scenes usable inside real-time graphics environments.</p>
+      <div class="container portfolio-details-container col-11 project-case-study-overview">
+        <div class="row gy-4">
+          <div class="col-lg-8">
+            <div class="portfolio-description project-overview">
+              <h2>Project Overview</h2>
+              <p>I led an applied research effort to move neural rendering from offline reconstruction into Unity and Unreal Engine. The pipeline covered 360-video capture, fisheye-aware Gaussian Splatting, scene optimization, and engine integration.</p>
+              <p>The core challenge was preserving quality while changing camera models, reducing millions of Gaussians, and fitting a research representation into real engine budgets.</p>
+              <div class="project-contributions">
+                <p>Core contributions</p>
+                <ul>
+                  <li>Built a 360-video capture-to-Gaussian-Splatting pipeline for large scenes.</li>
+                  <li>Implemented a custom CUDA Gaussian rasterizer for native fisheye camera supervision.</li>
+                  <li>Integrated Unity and Unreal Engine scenes with contribution-aware pruning for particle limits.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <aside class="portfolio-info">
+              <h3>Project Details</h3>
+              <ul>
+              <li><strong>Role</strong>Research Lead, Real-time Neural Rendering</li>
+              <li><strong>Organization</strong>NCSOFT Research</li>
+              <li><strong>Output</strong>Interactive Unity and Unreal Engine scenes</li>
+              <li><strong>Related Writing</strong><a href="/blogs/posts/can-nerf-be-used-in-game/">Can NeRF be Used in Game?</a></li>
+              </ul>
+            </aside>
+          </div>
+        </div>
+      </div>
 
-<div class="video-container">
-<iframe width="720" height="405" src="https://www.youtube.com/embed/3OqbvUaoNFw?si=GxEnL9nG7fuVT0x0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      <div class="container col-11 project-case-study-shell">
+        <article class="portfolio-description project-case-study-article">
+<h2>Neural Rendering with 360 Video</h2>
+<iframe width="720" height="405" src="https://www.youtube.com/embed/3OqbvUaoNFw?si=GxEnL9nG7fuVT0x0" title="Neural rendering game-engine pipeline overview" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-</div>
-<div class="mt-4">
-<p><strong>Key Contributions:</strong></p>
-<ul>
-<li>Built a 360-camera-to-Gaussian-Splatting pipeline for large-scene neural reconstruction.</li>
-<li>Developed fisheye/spherical camera handling for robust Gaussian Splatting reconstruction.</li>
-<li>Optimized Gaussian Splatting scenes for Unity and Unreal Engine deployment.</li>
-<li>Explored pruning and refinement strategies for particle-count constraints in Unreal Engine.</li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="col-lg-4">
-<div class="portfolio-info">
-<h3>Project Details</h3>
-<ul>
-<li><strong>Role</strong>Research Lead, Real-time Neural Rendering</li>
-<li><strong>Category</strong>Application, Neural Rendering, Game Engine Integration</li>
-<li><strong>Organization</strong>NCSOFT Research</li>
-<li><strong>Technology</strong>Gaussian Splatting, CUDA Rasterization, Unity, Unreal Engine, 360 Camera</li>
-<li><strong>Related Blog</strong><a href="/blogs/posts/can-nerf-be-used-in-game/">Can NeRF be Used in Game?</a></li>
-</ul>
-
-</div>
-</div>
-</div>
-</div>
-<div class="row gx-5 justify-content-center">
-<div class="project-readable portfolio-description">
-<h2>Neural Rendering w/ 360 Videos</h2>
-<hr>
-<h3>Using 360 Camera for Effective Large Scene Capturing</h3>
-<p>To efficiently capture large scenes for 3D scene reconstruction, we utilize 360-degree videos as ground truth (GT) sources for novel view synthesis (NVS). Unlike standard cameras, 360 cameras are equipped with dual fisheye lenses positioned back-to-back, enabling them to capture a full spherical view of the environment in a single frame.
-This configuration provides a wider field of view than conventional cameras, allowing us to record large areas with fewer capture points.</p>
+<h3>Capturing Large Scenes with a 360 Camera</h3>
+<p>To capture large scenes efficiently, I used 360-degree video as the ground-truth source for novel-view synthesis.
+A consumer 360 camera has two fisheye lenses positioned back to back, capturing a full spherical view with fewer camera positions than a conventional narrow-FOV setup.</p>
 <figure>
-<img class="img-fluid" src="assets/1_360_park_sample.jpg">
-<figcaption> a sample of captured 360 scene </figcaption>
+  <img src="assets/1_360_park_sample.jpg" alt="A frame captured with the 360-camera setup" class="img-fluid">
+  <figcaption>A sample frame from the large-scene 360-video capture.</figcaption>
 </figure>
 
-<h3>Spherical 3D Gaussian Splatting</h3>
-<p>Initially, we trained the 3D Gaussian Splatting (GS) model using 360-degree equirectangular images.
-However, the results were suboptimal, primarily due to <em><strong>stitching errors</strong></em>inherent in the process of combining fisheye images to create 360-degree panoramas.
-These errors introduced distortions and inconsistencies, which negatively impacted the quality of the reconstructed 3D scenes.</p>
-<p>To overcome this limitation, we shifted to using the original fisheye images as our ground truth (GT) sources.
-By directly utilizing fisheye images, we avoided the stitching artifacts and preserved the integrity of the captured data.
-To further optimize this approach, we developed a <em><strong>custom CUDA-based Gaussian rasterization module</strong></em> tailored to the fisheye camera model.
-This module extended the capabilities of the original rasterization module, which lacked native support for fisheye projections, enabling more accurate and efficient processing of spherical scene data.</p>
+<h3>Fisheye-Aware Gaussian Splatting</h3>
+<p>The first reconstruction pipeline trained 3D Gaussian Splatting on stitched equirectangular images.
+The results were suboptimal because the stitching process introduced seams and geometric distortions, which then became incorrect supervision for the 3D scene.</p>
+<p>I switched the training source to the original fisheye images.
+This avoided panorama stitching, but the standard Gaussian rasterizer assumed a pinhole camera and could not project splats into fisheye views.
+I therefore developed a <strong>custom CUDA Gaussian rasterization module</strong> for the fisheye camera model, extending the reconstruction pipeline to work directly with the original rays.</p>
 <table>
-<tr>
-<th>Fisheye Camera Model</th>
-<th>Spherical Camera Model</th>
-</tr>
-<tr>
-<td><img class="img-fluid" src="assets/fisheye.jpg" alt="Fisheye Camera"></td>
-<td><img class="img-fluid" src="assets/spherical.jpg" alt="Spherical Camera"></td>
-</tr>
-<tr>
-<th colspan='2'> 3D GS Reconstruction </th>
-</tr>
-<tr>
-<td><img class="img-fluid" src="assets/3_comparison_01_final.jpg" alt="Comparison 01 Final"></td>
-<td><img class="img-fluid" src="assets/3_comparison_01_first.jpg" alt="Comparison 01 First"></td>
-</tr>
-<tr>
-<td><img class="img-fluid" src="assets/3_comparison_02_final.jpg" alt="Comparison 02 Final"></td>
-<td><img class="img-fluid" src="assets/3_comparison_02_first.jpg" alt="Comparison 02 First"></td>
-</tr>
+  <tr>
+    <th>Fisheye camera model</th>
+    <th>Spherical camera model</th>
+  </tr>
+  <tr>
+    <td><img src="assets/fisheye.jpg" alt="Fisheye camera projection" class="img-fluid"></td>
+    <td><img src="assets/spherical.jpg" alt="Spherical camera projection" class="img-fluid"></td>
+  </tr>
+  <tr>
+    <th colspan="2">Gaussian Splatting reconstruction</th>
+  </tr>
+  <tr>
+    <td><img src="assets/3_comparison_01_final.jpg" alt="Fisheye-supervised reconstruction result one" class="img-fluid"></td>
+    <td><img src="assets/3_comparison_01_first.jpg" alt="Spherical reconstruction result one" class="img-fluid"></td>
+  </tr>
+  <tr>
+    <td><img src="assets/3_comparison_02_final.jpg" alt="Fisheye-supervised reconstruction result two" class="img-fluid"></td>
+    <td><img src="assets/3_comparison_02_first.jpg" alt="Spherical reconstruction result two" class="img-fluid"></td>
+  </tr>
 </table>
 
-<p>Here is the final reconstructed scene from 360 camera capture.</p>
+<p>The resulting scene was reconstructed directly from the dual-fisheye capture:</p>
+<iframe width="720" height="405" src="https://www.youtube.com/embed/ISm-IL3HzmM?si=OyIAPB1Cgc70ADXU" title="Gaussian Splatting scene reconstructed from 360-camera footage" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-<div class="video-container">
-<iframe width="720" height="405" src="https://www.youtube.com/embed/ISm-IL3HzmM?si=OyIAPB1Cgc70ADXU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<h2>Gaussian Splatting in Game Engines</h2>
+<p>With the reconstructed scene, I moved the representation into Unity and Unreal Engine, where it could be combined with normal engine controls and interactive content.</p>
+<p>For Unity, I implemented the Gaussian rasterization path and reduced representation cost with vector quantization.
+The following virtual-world demo combines the reconstructed scene with a neural avatar, also produced with a Radiance Field technique.</p>
+<iframe width="720" height="405" src="https://www.youtube.com/embed/p5YXFOXWeW0?si=padif0-DUOVX4PHV" title="Interactive Gaussian Splatting and neural avatar scene in Unity" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-</div>
-<h2>Gaussian Splatting w/ Game Engine</h2>
-<hr>
-<p>With the reconstructed 3D neural rendering scene, we further integrate it into game engines
-such as Unity or Unreal, which provide mature tooling for interactive 3D environments.</p>
-<p>The integration of the Gaussian Splatting and Game Engine can be easily implemented using
-GS rasterization rule.
-We further optimize it using vector-quantization so that the Unity-GS can be rendered within its
-original rapid performance.</p>
-<p>Below is the GS&#39;s virtual world experience which is fully interactive within the Unity engine,
-with our neural avatar also reconstructed by radiance fields technique.</p>
-
-<div class="video-container">
-<iframe width="720" height="405" src="https://www.youtube.com/embed/p5YXFOXWeW0?si=padif0-DUOVX4PHV" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
-</div>
-<p>In Unreal Engine (UE), Gaussian Splatting scenes can be constructed similarly.
-However, we&#39;ve encountered a significant limitation:
-Unreal&#39;s Niagara system can effectively render only up to 2 million particles. Given that a fully reconstructed scene often consists of over 6 million particles, this limitation leads to suboptimal results without optimization.
-This issue has also been reported with the <a href="https://github.com/xverse-engine/XV3DGS-UEPlugin/issues/6">XVERSE&#39;s UE GS plugin</a>.</p>
-<p>To overcome this, it&#39;s necessary to prune the splats so that the particle count stays within UE&#39;s upper limit.
-We define the <em>contribution</em> of each splat as the sum of the intersected rays across all the training images.
-Mathematically, this can be expressed as:</p>
-
-<div class="math-container">
-<p>$$ C = \sum_{k=1}^{n} C_k, \quad
-C_k = \sum_{p \in \mathcal{P}_k} \alpha_i(p) \prod_{j=1}^{i(p)-1} (1 - \alpha_j)
+<h3>Contribution-Based Pruning for Unreal Engine</h3>
+<p>The Unreal Engine path exposed a different limitation.
+The tested Niagara setup could render roughly two million particles effectively, while a complete reconstructed scene often contained more than six million Gaussians.
+Without optimization, the scene could not fit the engine&#39;s practical particle budget.</p>
+<p>I defined each Gaussian&#39;s <strong>contribution</strong> as its accumulated alpha-composited influence over all training images:</p>
+<p>$$
+C = \sum_{k=1}^{n} C_k,
+\qquad
+C_k =
+\sum_{p \in \mathcal{P}_k}
+\alpha_i(p)
+\prod_{j=1}^{i(p)-1}(1-\alpha_j).
 $$</p>
-
-</div>
-<p>We estimated the contribution of all trained splats and pruned the particles accordingly.
-The pruned GS scene was then aligned.
-This prune-and-refine process was iteratively optimized through only a few steps.
-Below is a comparison between the original GS scene and the pruned GS scene in UE.</p>
+<p>This score measures how much a splat actually contributes to rendered pixels rather than pruning only by opacity or geometric size.
+I removed the least-contributing Gaussians, briefly refined the retained scene, and repeated the prune-and-refine process for a small number of steps.</p>
 <table>
-<tr>
-<th> Original GS in UE </th>
-<th> Pruned GS in UE</th>
-</tr>
-<tr>
-<td><img class="img-fluid" src="assets/UE_org.png" alt="Fisheye Camera"></td>
-<td><img class="img-fluid" src="assets/UE_pruned.png" alt="Spherical Camera"></td>
-</tr>
+  <tr>
+    <th>Original scene in Unreal Engine</th>
+    <th>Pruned and refined scene</th>
+  </tr>
+  <tr>
+    <td><img src="assets/UE_org.png" alt="Original Gaussian Splatting scene in Unreal Engine" class="img-fluid"></td>
+    <td><img src="assets/UE_pruned.png" alt="Pruned Gaussian Splatting scene in Unreal Engine" class="img-fluid"></td>
+  </tr>
 </table>
----
 
-<p>Below is the result video that demonstrates the interactive experience achieved with our pipeline in Unreal Engine, showcasing the fidelity and performance of pruned Gaussian Splatting.</p>
+<h2>Result</h2>
+<p>The final demonstration runs the pruned Gaussian Splatting scene interactively inside Unreal Engine.
+The project established the practical boundaries of the complete pipeline: camera-model errors at capture time, representation cost at engine import, and the pruning signal required to preserve quality under a hard runtime budget.</p>
+<iframe width="720" height="405" src="https://www.youtube.com/embed/FzoZVsvgVW0?si=GWOYlR0Ho8pgj2Cf" title="Pruned Gaussian Splatting scene running in Unreal Engine" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-<div class="video-container">
-<iframe width="720" height="405" src="https://www.youtube.com/embed/FzoZVsvgVW0?si=GWOYlR0Ho8pgj2Cf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<p>For broader context, see <a href="/blogs/posts/can-nerf-be-used-in-game/">Can NeRF be Used in Game?</a>.</p>
 
-</div>
-<p>This pipeline demonstrates the potential of integrating advanced neural rendering techniques into interactive applications. Future work will explore further optimizations for real-time rendering and expanding the pipeline&#39;s scalability to larger scenes.</p>
-<hr>
-<p>For more insights, see my blog post discussing the practical challenges and solutions for using NeRF in game engines: <a href="/blogs/posts/can-nerf-be-used-in-game/">Can NeRF be Used in Game?</a></p>
-
-</div>
-</div>
+        </article>
+      </div>
 <div class="container project-page-nav">
         <a class="project-page-nav-link project-page-nav-prev" href="../instant_pose/">
           <span class="project-page-nav-kicker"><i class="bi bi-arrow-left"></i> Previous Project</span>
@@ -713,27 +730,20 @@ Below is a comparison between the original GS scene and the pruned GS scene in U
           <strong>VARCO 3D</strong>
         </a>
       </div>
-    </section><!-- /Portfolio Details Section -->
-
+    </section>
   </main>
 
   <footer id="footer" class="footer position-relative light-background">
-
     <div class="container">
       <div class="copyright text-center ">
         <p>© <span>Copyright</span> <strong class="px-1 sitename">Hwan Heo</strong> <span>All Rights Reserved</span></p>
       </div>
     </div>
-
   </footer>
 
-  <!-- Scroll Top -->
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <!-- Preloader -->
   <div id="preloader"></div>
 
-  <!-- Vendor JS Files -->
   <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../../assets/vendor/php-email-form/validate.js"></script>
   <script src="../../assets/vendor/aos/aos.js"></script>
@@ -744,26 +754,20 @@ Below is a comparison between the original GS scene and the pruned GS scene in U
   <script src="../../assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
   <script src="../../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
   <script src="../../assets/vendor/swiper/swiper-bundle.min.js"></script>
-
-  <!-- Main JS File -->
   <script src="../../assets/js/main.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const observer = new IntersectionObserver(() => {
-            updateScrollIndicator();
-        });
-
-        document.querySelectorAll("model-viewer").forEach((viewer) => observer.observe(viewer));
-
         window.onscroll = updateScrollIndicator;
         window.onresize = updateScrollIndicator;
 
         function updateScrollIndicator() {
+            const bar = document.getElementById("myBar");
+            if (!bar) return;
             var winScroll = document.documentElement.scrollTop;
             var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             if (height > 0) {
                 var scrolled = (winScroll / height) * 100;
-                document.getElementById("myBar").style.width = scrolled + "%";
+                bar.style.width = scrolled + "%";
             }
         }
     });
@@ -771,8 +775,3 @@ Below is a comparison between the original GS scene and the pruned GS scene in U
 </body>
 
 </html>
-
-
-
-
-
