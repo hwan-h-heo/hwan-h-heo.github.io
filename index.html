@@ -55,46 +55,6 @@
   <link href="assets/css/used.css" rel="stylesheet">
 
   <script>
-    (function initHeroScrollLock() {
-      const root = document.documentElement;
-      const hash = window.location.hash;
-      if (hash && hash !== '#home') return;
-
-      const scrollKeys = new Set(['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' ']);
-      let locked = true;
-      root.classList.add('hero-scroll-locked');
-
-      const shouldIgnoreKey = (event) => {
-        const target = event.target;
-        return target instanceof HTMLElement
-          && (target.isContentEditable || /^(INPUT|SELECT|TEXTAREA)$/.test(target.tagName));
-      };
-      const preventScroll = (event) => {
-        if (!locked) return;
-        event.preventDefault();
-        event.stopImmediatePropagation();
-      };
-      const preventScrollKey = (event) => {
-        if (!locked || !scrollKeys.has(event.key) || shouldIgnoreKey(event)) return;
-        preventScroll(event);
-      };
-      const release = () => {
-        if (!locked) return;
-        locked = false;
-        root.classList.remove('hero-scroll-locked');
-        window.removeEventListener('wheel', preventScroll, { capture: true });
-        window.removeEventListener('touchmove', preventScroll, { capture: true });
-        window.removeEventListener('keydown', preventScrollKey, { capture: true });
-        document.removeEventListener('portfolio:hero-cta-visible', release);
-      };
-
-      window.releasePortfolioHeroScrollLock = release;
-      window.addEventListener('wheel', preventScroll, { passive: false, capture: true });
-      window.addEventListener('touchmove', preventScroll, { passive: false, capture: true });
-      window.addEventListener('keydown', preventScrollKey, { capture: true });
-      document.addEventListener('portfolio:hero-cta-visible', release);
-    })();
-
     window.setTimeout(function releaseDelayedHero() {
       const root = document.documentElement;
       if (!root.classList.contains('hero-wave-pending')) return;
@@ -107,7 +67,6 @@
       hero?.classList.add('hero-intro-visible', 'hero-cta-visible');
       hero?.style.removeProperty('--hero-reveal-opacity');
       document.dispatchEvent(new CustomEvent('portfolio:hero-cta-visible'));
-      window.releasePortfolioHeroScrollLock?.();
     }, window.matchMedia('(max-width: 767px)').matches ? 3200 : 4500);
   </script>
 
@@ -145,9 +104,9 @@
     <nav id="navmenu" class="navmenu">
       <ul>
         <li><a href="#home" class="active"><i class="bi bi-house navicon"></i>Home</a></li>
-        <li><a href="#about"><i class="bi bi-person navicon"></i> About</a></li>
         <li><a href="#portfolio"><i class="bi bi-images navicon"></i> Portfolio</a></li>
         <li><a href="#blog"> <i class="bi bi-keyboard navicon"></i> Blog </a></li>
+        <li><a href="#about"><i class="bi bi-person navicon"></i> About</a></li>
         <li><a href="#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
       </ul>
     </nav>
@@ -156,9 +115,6 @@
   <main class="main">
     <!-- Hero Section -->
     <section id="home" class="hero section dark-background" data-portfolio-block="home" data-section-ready="false"></section><!-- /Hero Section -->
-
-    <!-- About Section -->
-    <section id="about" class="about section" data-portfolio-block="about" data-section-ready="false"></section><!-- /About Section -->
 
     <!-- Portfolio Section -->
     <section id="portfolio" class="portfolio section light-background" data-section-ready="false">
@@ -262,6 +218,9 @@
         </aside>
       </div>
     </section><!-- /Testimonials Section -->
+
+    <!-- About Section -->
+    <section id="about" class="about section" data-portfolio-block="about" data-section-ready="false"></section><!-- /About Section -->
 
     <!-- Resume Section -->
     <section id="resume" class="resume section" data-portfolio-block="resume" data-section-ready="false"></section><!-- /Resume Section -->

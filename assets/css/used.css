@@ -45,16 +45,6 @@ scroll-behavior: smooth;
   scroll-behavior: auto;
 }
 
-html.hero-scroll-locked,
-html.hero-scroll-locked body {
-  overflow: hidden;
-  overscroll-behavior: none;
-}
-
-html.hero-scroll-locked body {
-  touch-action: none;
-}
-
 #preloader {
   position: fixed;
   inset: 0;
