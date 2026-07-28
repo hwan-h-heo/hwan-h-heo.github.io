@@ -21,6 +21,12 @@
             .replace(/'/g, '&#39;');
     }
 
+    const HERO_ACTION_ICONS = {
+        '#portfolio': 'bi-images',
+        '#blog': 'bi-keyboard',
+        '#about': 'bi-person'
+    };
+
     function renderHeroActions(actions) {
         return (actions || []).map((action) => {
             const style = ['section', 'download'].includes(action.style)
@@ -28,16 +34,21 @@
                 : 'section';
             const isSectionLink = (action.url || '').startsWith('#');
             const download = action.download ? ' download' : '';
-            const icon = action.download
-                ? 'bi-download'
-                : isSectionLink
-                    ? ''
-                    : 'bi-arrow-up-right';
-            const iconHtml = icon ? `<i class="bi ${icon}" aria-hidden="true"></i>` : '';
+            const leadingIcon = HERO_ACTION_ICONS[action.url || ''] || '';
+            const trailingIcon = leadingIcon
+                ? ''
+                : action.download
+                    ? 'bi-download'
+                    : isSectionLink
+                        ? ''
+                        : 'bi-arrow-up-right';
+            const leadingIconHtml = leadingIcon ? `<i class="bi ${leadingIcon}" aria-hidden="true"></i>` : '';
+            const trailingIconHtml = trailingIcon ? `<i class="bi ${trailingIcon}" aria-hidden="true"></i>` : '';
             return `
                 <a class="hero-action hero-action--${style}" href="${escapeHtml(action.url)}"${download}>
-                    ${escapeHtml(action.label)}
-                    ${iconHtml}
+                    ${leadingIconHtml}
+                    <span>${escapeHtml(action.label)}</span>
+                    ${trailingIconHtml}
                 </a>
             `;
         }).join('');

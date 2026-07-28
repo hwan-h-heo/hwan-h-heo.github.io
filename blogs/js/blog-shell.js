@@ -14,7 +14,7 @@
         }
 
         headerToggleBtn.addEventListener('click', headerToggle);
-        document.querySelectorAll('#navmenu a').forEach((navmenu) => {
+        document.querySelectorAll('#navmenu a, .sidebar-labs-panel a').forEach((navmenu) => {
             navmenu.addEventListener('click', () => {
                 if (document.querySelector('.header-show')) {
                     headerToggle();
