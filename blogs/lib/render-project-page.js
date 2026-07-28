@@ -31,6 +31,16 @@ ${items}
         </li>`;
 }
 
+function renderProjectNavItems(projectNav) {
+    const projectSidebarNav = renderProjectSidebarNav(projectNav);
+    return `        <li><a href="../../#home"><i class="bi bi-house navicon"></i>Home</a></li>
+        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Project</a></li>
+${projectSidebarNav}
+        <li><a href="../../blogs/"><i class="bi bi-keyboard navicon"></i> Blog</a></li>
+        <li><a href="../../#about"><i class="bi bi-person navicon"></i> About</a></li>
+        <li><a href="../../#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>`;
+}
+
 function renderProjectPager(projectNav) {
     if (!projectNav || !projectNav.previous || !projectNav.next) {
         return '';
@@ -519,19 +529,11 @@ function patchLegacyLazyLoadingScript(html) {
     );
 }
 
-function injectProjectSidebarNav(html, projectNav) {
-    const sidebarHtml = renderProjectSidebarNav(projectNav);
-    if (!sidebarHtml || html.includes('class="project-nav-selector"')) {
-        return html;
-    }
-
-    const portfolioItemPattern = /(<li><a\s+href=["']\.\.\/\.\.\/#portfolio["'][^>]*>[\s\S]*?<\/a><\/li>)/i;
-    if (portfolioItemPattern.test(html)) {
-        return html.replace(portfolioItemPattern, `$1\n${sidebarHtml}`);
-    }
-
+function replaceProjectNavItems(html, projectNav) {
     const navPattern = /(<nav\s+id=["']navmenu["'][^>]*>\s*<ul>)([\s\S]*?)(<\/ul>\s*<\/nav>)/i;
-    return html.replace(navPattern, (match, openTag, items, closeTag) => `${openTag}${items}\n${sidebarHtml}\n      ${closeTag}`);
+    return html.replace(navPattern, (match, openTag, items, closeTag) => `${openTag}
+${renderProjectNavItems(projectNav)}
+      ${closeTag}`);
 }
 
 function renderProjectPageFromLegacyTemplate({ project, contentHtml, legacyHtml, projectNav }) {
@@ -543,7 +545,7 @@ function renderProjectPageFromLegacyTemplate({ project, contentHtml, legacyHtml,
     html = replaceOrInsertMeta(html, 'description', project.description || '');
     html = replaceOrInsertMeta(html, 'keywords', project.keywords || '');
     html = injectCommonProjectStyle(html);
-    html = injectProjectSidebarNav(html, projectNav);
+    html = replaceProjectNavItems(html, projectNav);
     html = patchLegacyLazyLoadingScript(html);
     html = html.replace(/<li class=["']current["']>[\s\S]*?<\/li>/i, `<li class="current">${escapeHtml(title)}</li>`);
 
@@ -564,7 +566,6 @@ function renderProjectPage({ project, contentHtml, legacyHtml, projectNav = null
     const description = project.description || '';
     const keywords = project.keywords || '';
     const detailsInner = renderProjectDetailsInner(project, contentHtml, projectNav);
-    const projectSidebarNav = renderProjectSidebarNav(projectNav);
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -636,12 +637,7 @@ function renderProjectPage({ project, contentHtml, legacyHtml, projectNav = null
 
     <nav id="navmenu" class="navmenu">
       <ul>
-        <li><a href="../../#home"><i class="bi bi-house navicon"></i>Home</a></li>
-        <li><a href="../../#about"><i class="bi bi-person navicon"></i> About</a></li>
-        <li><a href="../../#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
-        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Project</a></li>
-${projectSidebarNav}
-        <li><a href="../../blogs/"><i class="bi bi-keyboard navicon"></i> Blog <i class="bi bi-link-45deg"></i></a></li>
+${renderProjectNavItems(projectNav)}
       </ul>
     </nav>
   </header>

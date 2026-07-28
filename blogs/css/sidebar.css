@@ -32,10 +32,15 @@
 }
 
 .header {
+  --default-font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --heading-font: "Manrope", "Inter", system-ui, sans-serif;
+  --nav-font: "Inter", system-ui, sans-serif;
   color: var(--default-color);
   background-color: var(--background-color);
   font-family: var(--default-font);
   font-size: 16px;
+  display: flex;
+  flex-direction: column;
   position: fixed;
   top: 0;
   left: 0;
@@ -142,6 +147,8 @@
 }
 
 .navmenu {
+  flex: 1 1 auto;
+  min-height: 0;
   padding: 0;
   z-index: 9997;
 }
@@ -265,4 +272,122 @@
 .navmenu .dropdown>.dropdown-active {
   display: block;
   background-color: rgba(33, 37, 41, 0.03);
+}
+
+.sidebar-labs {
+  margin-top: auto;
+  padding: 0 0 18px;
+  position: relative;
+  z-index: 9998;
+}
+
+.sidebar-labs-menu {
+  position: relative;
+}
+
+.sidebar-labs-menu summary {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  color: var(--nav-color);
+  cursor: pointer;
+  display: flex;
+  font-family: var(--nav-font);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.15;
+  list-style: none;
+  padding: 10px 10px;
+  position: relative;
+  transition: color 0.3s;
+  user-select: none;
+  width: 100%;
+}
+
+.sidebar-labs-menu summary::after {
+  content: '';
+  position: absolute;
+  left: 36px;
+  bottom: 5px;
+  width: 1.6rem;
+  height: 1px;
+  background: color-mix(in srgb, var(--accent-color), transparent 20%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+
+.sidebar-labs-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.sidebar-labs-menu summary:hover,
+.sidebar-labs-menu[open] summary,
+.sidebar-labs-menu.is-active summary {
+  color: var(--nav-hover-color);
+}
+
+.sidebar-labs-menu[open] summary::after,
+.sidebar-labs-menu.is-active summary::after {
+  transform: scaleX(1);
+}
+
+.sidebar-labs-menu summary .navicon,
+.sidebar-labs-panel a .navicon {
+  flex: 0 0 auto;
+  font-size: 17px;
+  margin-right: 9px;
+}
+
+.sidebar-labs-menu summary:hover .navicon,
+.sidebar-labs-menu[open] summary .navicon,
+.sidebar-labs-menu.is-active summary .navicon,
+.sidebar-labs-panel a:hover .navicon,
+.sidebar-labs-panel a.active .navicon {
+  color: var(--accent-color);
+}
+
+.sidebar-labs-chevron {
+  font-size: 10px;
+  margin-left: auto;
+  opacity: 0.75;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.sidebar-labs-menu[open] .sidebar-labs-chevron {
+  opacity: 1;
+  transform: rotate(180deg);
+}
+
+.sidebar-labs-panel {
+  background: var(--background-color);
+  border-left: 1px solid color-mix(in srgb, var(--nav-color), transparent 82%);
+  bottom: calc(100% + 2px);
+  display: grid;
+  gap: 0;
+  left: 27px;
+  padding: 3px 0 3px 8px;
+  position: absolute;
+  right: 10px;
+}
+
+.sidebar-labs-panel a,
+.sidebar-labs-panel a:focus {
+  align-items: center;
+  background: transparent;
+  border-radius: 0;
+  color: var(--nav-color);
+  display: flex;
+  font-family: var(--nav-font);
+  font-size: 13px;
+  padding: 6px 0;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.sidebar-labs-panel a:hover,
+.sidebar-labs-panel a.active,
+.sidebar-labs-panel a.active:focus {
+  color: var(--nav-hover-color);
 }

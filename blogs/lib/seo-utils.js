@@ -425,7 +425,7 @@ function renderChronologicalPostNavigation(siteData, post, lang = 'eng') {
         navHtml += renderPostNavCard({
             href: '/blogs/',
             type: 'explore',
-            label: 'Blog Home',
+            label: 'Blog',
             title: 'All posts'
         });
     }

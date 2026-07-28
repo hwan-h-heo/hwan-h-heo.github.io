@@ -62,7 +62,7 @@ function renderArchivePage({ title, description, canonicalPath, posts, siteData 
             <nav class="blog-home-topbar" id="blogHomeTopbar" aria-label="Blog utilities">
                 <a class="blog-home-back" href="/blogs/" aria-label="Back to blog home">
                     <i class="bi bi-arrow-left" aria-hidden="true"></i>
-                    <span>Blog Home</span>
+                    <span>Blog</span>
                 </a>
                 <div class="blog-home-toolbar-actions">
                     <form id="blog-home-search-form" class="blog-home-search" role="search">

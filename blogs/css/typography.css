@@ -57,20 +57,23 @@ samp {
 }
 
 .header {
-    font-family: var(--blog-sans);
+    font-family: var(--default-font);
+    line-height: 1.65;
 }
 
-.header .logo h1 {
-    font-family: var(--blog-heading);
-    font-size: 1.45rem;
-    letter-spacing: -0.045em;
+.header .logo h1,
+.header .logo .sitename {
+    font-family: var(--heading-font);
+    font-size: 24px;
+    letter-spacing: -0.03em;
 }
 
 .navmenu a,
 .navmenu a:focus {
-    font-family: var(--blog-sans);
-    font-size: 0.94rem;
-    letter-spacing: -0.012em;
+    font-family: var(--nav-font);
+    font-size: 15px;
+    line-height: 1.6;
+    letter-spacing: -0.006em;
 }
 
 .header #searchInput {
