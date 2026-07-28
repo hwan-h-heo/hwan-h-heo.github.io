@@ -547,11 +547,3 @@ Since working on the CaPa Project last year, I have been training our own 3D gen
 The next article in this series will delve into the architectures of ShapeVAE and Flow Models, as well as strategies for efficiently training 3D Generative Models by setting up a multi-node environment and using the sharding strategies of DeepSpeed v3 and FSDP.
 
 **_Stay Tuned!_**
-
----
-
-**You may also like:**
-
--   [Is the Era of NeRF and SDS in 3D Generation Coming to an End? (kor)](https://velog.io/@gjghks950/3d)
--   [The Age of 3D Generative Models](/blogs/posts/?id=250302_3d_latent_diffusion)
-

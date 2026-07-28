@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="Technical articles tagged 3D Generation, covering implementation details and research notes by Hwan Heo." />
+        <meta name="author" content="Hwan Heo" />
+        <title>3D Generation Articles | Hwan Heo</title>
+        <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/tags/3d-generation/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="3D Generation Articles" />
+        <meta property="og:description" content="Technical articles tagged 3D Generation, covering implementation details and research notes by Hwan Heo." />
+        <meta property="og:url" content="https://hwan-h-heo.github.io/blogs/tags/3d-generation/" />
+        <meta property="og:image" content="https://hwan-h-heo.github.io/assets/image_fx_.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="3D Generation Articles" />
+        <meta name="twitter:description" content="Technical articles tagged 3D Generation, covering implementation details and research notes by Hwan Heo." />
+        <meta name="twitter:image" content="https://hwan-h-heo.github.io/assets/image_fx_.jpg" />
+        <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"3D Generation Articles","description":"Technical articles tagged 3D Generation, covering implementation details and research notes by Hwan Heo.","url":"https://hwan-h-heo.github.io/blogs/tags/3d-generation/","isPartOf":{"@type":"Blog","name":"Hwan Heo's Blog","url":"https://hwan-h-heo.github.io/blogs/"}}</script>
+        <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="/blogs/css/used.css" rel="stylesheet" />
+        <link href="/blogs/css/sidebar.css" rel="stylesheet" />
+        <link href="/blogs/css/typography.css" rel="stylesheet" />
+        <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
+        <script>
+            (function() {
+                try {
+                    const storedTheme = localStorage.getItem('blog-theme');
+                    const theme = storedTheme === 'dark' || storedTheme === 'light' ? storedTheme : 'light';
+                    document.documentElement.dataset.theme = theme;
+                } catch (error) {}
+            })();
+        </script>
+    </head>
+    <body class="blog-home-page blog-archive-page">
+        <main class="main blog-home-main">
+            <nav class="blog-home-topbar" id="blogHomeTopbar" aria-label="Blog utilities">
+                <a class="blog-home-back" href="/blogs/" aria-label="Back to blog home">
+                    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                    <span>Blog Home</span>
+                </a>
+                <div class="blog-home-toolbar-actions">
+                    <form id="blog-home-search-form" class="blog-home-search" role="search">
+                        <label class="visually-hidden" for="blog-home-search-input">Search posts</label>
+                        <input type="text" id="blog-home-search-input" placeholder="Search...">
+                        <button type="submit" aria-label="Search">
+                            <i class="bi bi-search" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                    <button class="blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false">
+                        <i class="bi bi-moon-stars" aria-hidden="true"></i>
+                    </button>
+                    <button id="lang-toggle-main" class="blog-home-language" type="button" aria-label="Switch language preference">KOR</button>
+                </div>
+            </nav>
+
+            <header class="masthead blog-home-hero" style="background-image: url('/assets/image_fx_.jpg'); background-position: center 34%; background-size: cover;">
+                <div class="container position-relative px-4 px-lg-5">
+                    <div class="blog-home-hero-grid">
+                        <div class="blog-home-hero-copy">
+                            <span class="blog-home-kicker">Archive</span>
+                            <h1>3D Generation Articles</h1>
+                            <p>Technical articles tagged 3D Generation, covering implementation details and research notes by Hwan Heo.</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="container px-4 px-lg-5 blog-home-container">
+                <section class="blog-home-archive" aria-labelledby="archive-posts-heading">
+                    <div class="blog-home-archive-head">
+                        <div>
+                            <h2 id="archive-posts-heading">Articles</h2>
+                        </div>
+                    </div>
+                    <div class="blog-home-tab-content">
+                        
+        <article class="post-preview" data-post-id="260727_sparse_3d" data-post-category="post">
+            <div class="post-card-link">
+                <a href="/blogs/posts/optimizing-sparse-3d-generation-inference/" class="post-card-cover" aria-label="Read What the Compiler Missed in Sparse 3D Inference" style="background-image: url('/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png')">
+                </a>
+                <div class="post-card-body">
+                    <div class="post-card-eyebrow">
+                        <span>Post</span>
+                        <span>3D Generative AI</span>
+                    </div>
+                    <h3 class="post-title"><a href="/blogs/posts/optimizing-sparse-3d-generation-inference/">What the Compiler Missed in Sparse 3D Inference</a></h3>
+                    <p class="post-subtitle">Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0</p>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a><span class="post-tag">CUDA</span></div>
+                </div>
+            </div>
+            <p class="post-meta">
+                3D Generative AI / <time datetime="2026-07-27">July 27, 2026</time> / Languages: <a href="/blogs/posts/optimizing-sparse-3d-generation-inference/" hreflang="en">English</a>, <a href="/blogs/posts/optimizing-sparse-3d-generation-inference-kor/" hreflang="ko">Korean</a>
+            </p>
+        </article>
+    
+        <article class="post-preview" data-post-id="260115_Varco3D" data-post-category="post">
+            <div class="post-card-link">
+                <a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" class="post-card-cover" aria-label="Read Varco3D: A Year in Review — 2025 Retrospective" style="background-image: url('/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif')">
+                </a>
+                <div class="post-card-body">
+                    <div class="post-card-eyebrow">
+                        <span>Post</span>
+                        <span>3D Generative AI</span>
+                    </div>
+                    <h3 class="post-title"><a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/">Varco3D: A Year in Review — 2025 Retrospective</a></h3>
+                    <p class="post-subtitle">A technical retrospective on recent 3D generative AI systems</p>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
+                </div>
+            </div>
+            <p class="post-meta">
+                3D Generative AI / <time datetime="2026-01-15">January 15, 2026</time> / Languages: <a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" hreflang="en">English</a>, <a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/" hreflang="ko">Korean</a>
+            </p>
+        </article>
+    
+        <article class="post-preview" data-post-id="250810_flow" data-post-category="post">
+            <div class="post-card-link">
+                <a href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/" class="post-card-cover" aria-label="Read From Flow Matching to Optimal Transport: A Physics-based View of Generative Models" style="background-image: url('/blogs/posts/250810_flow/assets/remote-40629d4b233a.png')">
+                </a>
+                <div class="post-card-body">
+                    <div class="post-card-eyebrow">
+                        <span>Post</span>
+                        <span>3D Generative AI</span>
+                    </div>
+                    <h3 class="post-title"><a href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/">From Flow Matching to Optimal Transport: A Physics-based View of Generative Models</a></h3>
+                    <p class="post-subtitle">Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow</p>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
+                </div>
+            </div>
+            <p class="post-meta">
+                3D Generative AI / <time datetime="2025-08-10">August 10, 2025</time> / Languages: <a href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/" hreflang="en">English</a>, <a href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models-kor/" hreflang="ko">Korean</a>
+            </p>
+        </article>
+    
+        <article class="post-preview" data-post-id="250710_building_large_3d_2" data-post-category="post">
+            <div class="post-card-link">
+                <a href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/" class="post-card-cover" aria-label="Read Building Large 3D Generative Model (2) VAE and DiT Deep Dive" style="background-image: url('/blogs/posts/250710_building_large_3d_2/assets/image-13.png')">
+                </a>
+                <div class="post-card-body">
+                    <div class="post-card-eyebrow">
+                        <span>Post</span>
+                        <span>3D Generative AI</span>
+                    </div>
+                    <h3 class="post-title"><a href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/">Building Large 3D Generative Model (2) VAE and DiT Deep Dive</a></h3>
+                    <p class="post-subtitle">VAE and DiT Architecture for Vecset vs. Sparse-Voxel</p>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
+                </div>
+            </div>
+            <p class="post-meta">
+                3D Generative AI / <time datetime="2025-07-10">July 10, 2025</time> / Languages: <a href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/" hreflang="en">English</a>, <a href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive-kor/" hreflang="ko">Korean</a>
+            </p>
+        </article>
+    
+        <article class="post-preview" data-post-id="250702_building_large_3d_1" data-post-category="post">
+            <div class="post-card-link">
+                <a href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/" class="post-card-cover" aria-label="Read Building Large 3D Generative Model (1) Data pre-processing" style="background-image: url('/blogs/posts/250702_building_large_3d_1/assets/image-10.png')">
+                </a>
+                <div class="post-card-body">
+                    <div class="post-card-eyebrow">
+                        <span>Post</span>
+                        <span>3D Generative AI</span>
+                    </div>
+                    <h3 class="post-title"><a href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/">Building Large 3D Generative Model (1) Data pre-processing</a></h3>
+                    <p class="post-subtitle">Watertight Mesh Conversion and Salient Edge Sampling</p>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
+                </div>
+            </div>
+            <p class="post-meta">
+                3D Generative AI / <time datetime="2025-07-02">July 2, 2025</time> / Languages: <a href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/" hreflang="en">English</a>, <a href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing-kor/" hreflang="ko">Korean</a>
+            </p>
+        </article>
+    
+        <article class="post-preview" data-post-id="250302_3d_latent_diffusion" data-post-category="post">
+            <div class="post-card-link">
+                <a href="/blogs/posts/an-era-of-3d-generation/" class="post-card-cover" aria-label="Read An Era of 3D Generation" style="background-image: url('/blogs/posts/250302_3d_latent_diffusion/assets/teaser-poster.jpg')">
+                </a>
+                <div class="post-card-body">
+                    <div class="post-card-eyebrow">
+                        <span>Post</span>
+                        <span>3D Generative AI</span>
+                    </div>
+                    <h3 class="post-title"><a href="/blogs/posts/an-era-of-3d-generation/">An Era of 3D Generation</a></h3>
+                    <p class="post-subtitle">From ShapeVAE to Trellis and Hunyuan3D</p>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
+                </div>
+            </div>
+            <p class="post-meta">
+                3D Generative AI / <time datetime="2025-03-02">March 2, 2025</time> / Languages: <a href="/blogs/posts/an-era-of-3d-generation/" hreflang="en">English</a>, <a href="/blogs/posts/an-era-of-3d-generation-kor/" hreflang="ko">Korean</a>
+            </p>
+        </article>
+    
+        <article class="post-preview" data-post-id="240426_diffusion_depth" data-post-category="post">
+            <div class="post-card-link">
+                <a href="/blogs/posts/is-diffusions-estimated-depth-really-good/" class="post-card-cover" aria-label="Read Is Diffusion&#39;s Estimated Depth Really Good?" style="background-image: url('/blogs/posts/240426_diffusion_depth/assets/teaser.jpeg')">
+                </a>
+                <div class="post-card-body">
+                    <div class="post-card-eyebrow">
+                        <span>Post</span>
+                        <span>3D Generative AI</span>
+                    </div>
+                    <h3 class="post-title"><a href="/blogs/posts/is-diffusions-estimated-depth-really-good/">Is Diffusion&#39;s Estimated Depth Really Good?</a></h3>
+                    <p class="post-subtitle">Making Mesh from Estimated Depth Map by Diffusion</p>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
+                </div>
+            </div>
+            <p class="post-meta">
+                3D Generative AI / <time datetime="2024-04-26">April 26, 2024</time> / Languages: <a href="/blogs/posts/is-diffusions-estimated-depth-really-good/" hreflang="en">English</a>, <a href="/blogs/posts/is-diffusions-estimated-depth-really-good-kor/" hreflang="ko">Korean</a>
+            </p>
+        </article>
+    
+        <article class="post-preview" data-post-id="240226_sora" data-post-category="post">
+            <div class="post-card-link">
+                <a href="/blogs/posts/can-sora-understand-3d/" class="post-card-cover" aria-label="Read Can Sora Understand 3D?" style="background-image: url('/blogs/posts/240226_sora/assets/big-sur-gs-poster.jpg')">
+                </a>
+                <div class="post-card-body">
+                    <div class="post-card-eyebrow">
+                        <span>Post</span>
+                        <span>3D Generative AI</span>
+                    </div>
+                    <h3 class="post-title"><a href="/blogs/posts/can-sora-understand-3d/">Can Sora Understand 3D?</a></h3>
+                    <p class="post-subtitle">Radiance Fields Reconstruction from Video Generative AI</p>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
+                </div>
+            </div>
+            <p class="post-meta">
+                3D Generative AI / <time datetime="2024-02-26">February 26, 2024</time> / Languages: <a href="/blogs/posts/can-sora-understand-3d/" hreflang="en">English</a>
+            </p>
+        </article>
+    
+                    </div>
+                </section>
+            </div>
+        </main>
+        <script src="/blogs/js/site-data-client.js"></script>
+        <script src="/blogs/js/blog-shell.js"></script>
+        <script src="/blogs/js/theme-toggle.js"></script>
+        <script>
+            initBlogShell({ formSelector: '#blog-home-search-form', inputSelector: '#blog-home-search-input' });
+            (function() {
+                const button = document.getElementById('lang-toggle-main');
+                if (!button) {
+                    return;
+                }
+
+                function currentLanguage() {
+                    try {
+                        return localStorage.getItem('language') === 'kor' ? 'kor' : 'eng';
+                    } catch (error) {
+                        return 'eng';
+                    }
+                }
+
+                function setLanguage(language) {
+                    document.documentElement.lang = language === 'kor' ? 'ko' : 'en';
+                    button.textContent = language === 'eng' ? 'KOR' : 'ENG';
+                    updateArchiveCards(language);
+                }
+
+                async function updateArchiveCards(language) {
+                    if (!window.siteDataClient) {
+                        return;
+                    }
+
+                    try {
+                        const siteData = await window.siteDataClient.loadSiteData();
+                        document.querySelectorAll('.post-preview[data-post-id]').forEach(function(card) {
+                            const post = siteData.postById[card.dataset.postId];
+                            if (!post) {
+                                return;
+                            }
+
+                            const title = window.siteDataClient.getPostTitle(post, language);
+                            const description = window.siteDataClient.getPostDescription(post, language);
+                            const url = window.siteDataClient.getPostUrl(post, language);
+                            const titleLink = card.querySelector('.post-title a');
+                            const coverLink = card.querySelector('.post-card-cover');
+                            const subtitle = card.querySelector('.post-subtitle');
+
+                            if (titleLink) {
+                                titleLink.textContent = title;
+                                titleLink.href = url;
+                            }
+
+                            if (coverLink) {
+                                coverLink.href = url;
+                                coverLink.setAttribute('aria-label', 'Read ' + title);
+                            }
+
+                            if (subtitle) {
+                                subtitle.textContent = description;
+                            }
+                        });
+                    } catch (error) {
+                        console.warn('Failed to update archive language:', error);
+                    }
+                }
+
+                setLanguage(currentLanguage());
+                button.addEventListener('click', function() {
+                    const nextLanguage = currentLanguage() === 'eng' ? 'kor' : 'eng';
+                    try {
+                        localStorage.setItem('language', nextLanguage);
+                    } catch (error) {}
+                    setLanguage(nextLanguage);
+                });
+            })();
+        </script>
+    </body>
+</html>

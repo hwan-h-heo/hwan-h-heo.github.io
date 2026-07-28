@@ -24,36 +24,63 @@ document.addEventListener('DOMContentLoaded', async function() {
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#39;');
 
-        const slidesHtml = siteData.featuredPortfolioPosts
+        const formatDate = (value) => {
+            const date = new Date(`${value}T00:00:00`);
+            if (Number.isNaN(date.getTime())) {
+                return '';
+            }
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        };
+
+        const getSeriesTitle = (post) => {
+            const series = post.series && siteData.series?.[post.series];
+            return series?.eng || post.series || 'Blog';
+        };
+
+        const renderTags = (post) => (post.tags || [])
+            .slice(0, 3)
+            .map((tag) => `<span class="portfolio-blog-preview-tag">${escapeHtml(tag)}</span>`)
+            .join('');
+
+        const postsHtml = siteData.featuredPortfolioPosts
             .filter((item) => item.post)
             .map((item) => {
                 const title = getPostTitle(item.post, 'eng');
                 const subtitle = item.post.subtitle_eng || getPostDescription(item.post, 'eng');
+                const seriesTitle = getSeriesTitle(item.post);
+                const category = item.post.category === 'note' ? 'Note' : 'Post';
+                const date = formatDate(item.post.date);
+                const tagsHtml = renderTags(item.post);
+                const image = item.teaserImage || item.post.cover || '/assets/blog_bg.jpeg';
 
                 return `
-            <div class="swiper-slide">
-              <a href="${escapeHtml(getPostUrl(item.post, 'eng'))}" target="_blank" rel="noopener noreferrer" class="portfolio-box blog-preview-card">
-                <div class="aspect-ratio-box">
-                  <img src="${escapeHtml(item.teaserImage)}" class="img-fluid" alt="${escapeHtml(item.teaserAlt || title)}">
-                </div>
-                <div class="polar_content">
-                  <h6 title="${escapeHtml(title)}">${escapeHtml(title)}</h6>
-                  <p class="portfolio-card-summary">${escapeHtml(subtitle)}</p>
-                </div>
+            <article class="portfolio-blog-preview-item">
+              <a href="${escapeHtml(getPostUrl(item.post, 'eng'))}" target="_blank" rel="noopener noreferrer" class="portfolio-blog-preview-link">
+                <span class="portfolio-blog-preview-cover" aria-hidden="true">
+                  <img src="${escapeHtml(image)}" alt="">
+                </span>
+                <span class="portfolio-blog-preview-body">
+                  <span class="portfolio-blog-preview-eyebrow">
+                    <span>${escapeHtml(category)}</span>
+                    <span>${escapeHtml(seriesTitle)}</span>
+                  </span>
+                  <span class="portfolio-blog-preview-title">${escapeHtml(title)}</span>
+                  ${subtitle ? `<span class="portfolio-blog-preview-summary">${escapeHtml(subtitle)}</span>` : ''}
+                  ${tagsHtml ? `<span class="portfolio-blog-preview-tags">${tagsHtml}</span>` : ''}
+                  ${date ? `<span class="portfolio-blog-preview-meta">${escapeHtml(seriesTitle)} / ${escapeHtml(date)}</span>` : ''}
+                </span>
               </a>
-            </div>
+            </article>
         `;
             }).join('');
 
-        container.innerHTML = slidesHtml;
-
-        const configElement = swiperElement.querySelector('.swiper-config');
-        if (!configElement || !window.Swiper) {
-            return;
-        }
-
-        const config = JSON.parse(configElement.textContent.trim());
-        new Swiper(swiperElement, config);
+        swiperElement.classList.add('portfolio-blog-list-shell');
+        container.className = 'portfolio-blog-list';
+        container.innerHTML = postsHtml;
     } catch (error) {
         console.error(error);
     } finally {

@@ -589,7 +589,6 @@ Indeed, if we solve the differential equation to find the path that minimizes th
 
 ---
 
-  
 ### 5.2. Euler-Lagrange Equation
 
 The [Euler-Lagrange Equation](https://en.wikipedia.org/wiki/Euler%E2%80%93Lagrange_equation) is a differential equation for the condition that makes the action minimal (or stationary, i.e., an extremum or a saddle point!).
@@ -896,8 +895,6 @@ Therefore, the 'straight-line path' idea of Rectified Flow was not a special cas
 
 ## 7. Last Discussion: Why Linear?
 
-<br/>
-
 #### Q. The Mystery of Rectified Flow: Why Does the 'Wrong' Straight Path Work?
 
 As we've seen, the most ideal transformation path we seek is the **Geodesic**, the shortest distance on a manifold. This generalizes the addition/subtraction of Euclidean space into the language of manifolds, `exp/log` maps, and can be considered the 'ultimate' form of Rectified Flow.
@@ -964,14 +961,6 @@ Starting with the next article, I will return to the *Building a Large 3D Genera
 Thank you :)
 
 ---
-
-You may also like
-
-- [An Era of 3D Generative Models](/blogs/posts/?id=250302_3d_latent_diffusion)
-- [Building Large 3D Generative Models (1) - 3D Data Pre-processing](/blogs/posts/?id=250702_building_large_3d_1)
-- [Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D](/blogs/posts/?id=250710_building_large_3d_2)
-
-
 **References**
 
 - [An Introduction to Flow Matching](https://mlg.eng.cam.ac.uk/blog/2024/01/20/flow-matching.html)
@@ -981,5 +970,3 @@ You may also like
 - [Flow Matching Guide and Code](https://arxiv.org/abs/2412.06264)
 - [Flow Straight and Fast: Learning to Generate and Transfer Data with Rectified Flow](https://arxiv.org/abs/2209.03003)
 - [Rectified Flow: A Marginal Preserving Approach to Optimal Transport](https://arxiv.org/abs/2209.14577)
-
-<br/>

@@ -22,7 +22,6 @@ author: Hwan Heo
 ### TL; DR
  
 Winding Number 의 정의와, 이를 3D 로 확장한 Generalized Winding Number 가 왜 SDF 계산에서 쓰일 수 있는지 알아보자! 
-<br/>
 
 ## Introduction 
 
@@ -42,7 +41,6 @@ SDF 는 그 이름과 같이, '부호를 가진 거리 함수' 인데, *어떤 �
 이 글에서는 SDF 를 우아하게 정의하고, broken mesh 의 hole 이나 self intersction 등의 문제를 repair 하는 능력을 갖춘 ***Generalized Winding Number*** 를 알아볼 것이다.  
 
 ## What is Winding Number?
-<br/>
 
 <figure id="figure-1" >
   <img src='./250809_gwn/assets/image.png' alt='img alt' width='70%'>
@@ -187,7 +185,6 @@ $$
 - ${1}/{4\pi}$ : normalization term 으로, 구 전체의 입체각인 $4\pi$ 와 같다. 
 
 
-
 이 역시 서피스가 삼각형 메시로 구성되어 있다면, 각 삼각형이 만드는 입체각 $\Omega_f$의 합으로 정확하게 discreatize 될 수 있을 것이다.
 
 <p>
@@ -205,8 +202,6 @@ $$
 ---
 
 ## GWN Field for SDF
-
-<br/>
 
 ### SDF from GWN
 

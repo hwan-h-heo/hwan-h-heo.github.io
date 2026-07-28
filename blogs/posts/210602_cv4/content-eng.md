@@ -21,8 +21,6 @@ author: Hwan Heo
 
 ## 8. Camera Models
 
-<br/>
-
 #### The Pinhole Camera Model (Camera Obscura)
 
 The simplest model for a camera is the **pinhole camera**. It consists of a light-proof box with a tiny aperture (the pinhole) on one side and an image plane (film or sensor) on the other. Light rays from a 3D point in the world pass through the pinhole and project an inverted image onto the image plane.
@@ -154,8 +152,6 @@ plt.show()
 ---
 
 ## 9. Panoramas
-
-<br/>
 
 #### Creating Panoramas with Homographies
 
@@ -371,5 +367,3 @@ plt.show()
 #### Result:
 
 <img src='./210302_cv1/assets/image-9.jpg' width=100%>
-
----

@@ -7,11 +7,14 @@
     <meta name="keywords" content="post, 3d-generation, 3D Generation, Generative AI, 3D graphics, computer vision, machine learning" />
     <meta name="author" content="Hwan Heo" />
     <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation-kor/" />
+    <link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation/" />
+    <link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation-kor/" />
+    <link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation/" />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation-kor/" />
     <meta property="og:title" content="3D 생성 모델의 시대" />
     <meta property="og:description" content="ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것" />
-    <meta property="og:image" content="https://hwan-h-heo.github.io/blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif" />
+    <meta property="og:image" content="https://hwan-h-heo.github.io/blogs/posts/250302_3d_latent_diffusion/assets/teaser-poster.jpg" />
     <meta property="og:site_name" content="HwanHeo's Blog" />
     <meta property="article:published_time" content="2025-03-02T00:00:00.000Z" />
     <meta property="article:modified_time" content="2025-03-02T00:00:00.000Z" />
@@ -20,60 +23,19 @@
     <meta name="twitter:url" content="https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation-kor/" />
     <meta name="twitter:title" content="3D 생성 모델의 시대" />
     <meta name="twitter:description" content="ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것" />
-    <meta name="twitter:image" content="https://hwan-h-heo.github.io/blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif" />
-    <script type="application/ld+json">
-    {
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "3D 생성 모델의 시대",
-  "description": "ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것",
-  "image": "https://hwan-h-heo.github.io/blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif",
-  "author": {
-    "@type": "Person",
-    "name": "Hwan Heo",
-    "url": "https://hwan-h-heo.github.io"
-  },
-  "publisher": {
-    "@type": "Person",
-    "name": "Hwan Heo",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://hwan-h-heo.github.io/assets/favicon.ico"
-    }
-  },
-  "datePublished": "2025-03-02T00:00:00.000Z",
-  "dateModified": "2025-03-02T00:00:00.000Z",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation-kor/"
-  },
-  "inLanguage": "ko"
-}
-    </script>
+    <meta name="twitter:image" content="https://hwan-h-heo.github.io/blogs/posts/250302_3d_latent_diffusion/assets/teaser-poster.jpg" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"3D 생성 모델의 시대","description":"ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것","url":"https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation-kor/","mainEntityOfPage":"https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation-kor/","image":["https://hwan-h-heo.github.io/blogs/posts/250302_3d_latent_diffusion/assets/teaser-poster.jpg"],"author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"publisher":{"@type":"Person","name":"Hwan Heo"},"datePublished":"2025-03-02","dateModified":"2025-03-02","inLanguage":"ko"}</script>
 
-    <title>3D 생성 모델의 시대 - HwanHeo's Blog</title>
+    <title>3D 생성 모델의 시대 | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
-
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "/vendor/three/build/three.module.js",
-                "three/addons/": "/vendor/three/examples/jsm/",
-                "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
-            }
-        }
-    </script>
-
-    <script src="/vendor/tween/tween.umd.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
     <link href="/blogs/css/used.css" rel="stylesheet" />
     <link href="/blogs/css/typography.css" rel="stylesheet" />
     <link href="/blogs/css/blog_post_specific.css" rel="stylesheet" />
-    <link href="/blogs/css/code-copy.css" rel="stylesheet" />
     <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
     <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+    <link href="/blogs/css/code-copy.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -104,31 +66,31 @@
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
         <div class="container px-4 px-lg-5">
             <a class="navbar-brand" href="/blogs/">Hwan's Blog</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+            <button class="navbar-toggler" type="button" data-nav-toggle aria-controls="navbarResponsive" aria-expanded="false">
                 Menu <i class="bi bi-list"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
-                    <li class="nav-item"><a href="../an-era-of-3d-generation/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="eng" style="font-size:0.7rem">ENG</a></li>
+                    <li class="nav-item"><a href="/blogs/posts/an-era-of-3d-generation/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="eng" style="font-size:0.7rem">ENG</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <header class="masthead" style="background-image: url('/blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif')">
+    <header class="masthead" style="background-image: url('/blogs/posts/250302_3d_latent_diffusion/assets/teaser-poster.jpg')">
         <div class="container position-relative px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     <div class="post-heading">
                         <br/>
-                        <h2>3D 생성 모델의 시대</h2>
+                        <h1>3D 생성 모델의 시대</h1>
                         <span class="meta">
-                            Posted on March 2, 2025
+                            Posted on <time datetime="2025-03-02">March 2, 2025</time>
                             <span style="margin: 0 8px;">•</span>
                             <i class="bi bi-clock" style="margin-right: 4px;"></i>20 min read
                         </span>
-                        <div class="post-tags"><span>3D Generation</span><span>Generative AI</span></div>
+                        <div class="post-tags"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
                         <hr/>
                     </div>
                 </div>
@@ -140,7 +102,104 @@
         <div class="container px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div id="series-container"></div>
+                    
+                    <nav class="breadcrumbs" aria-label="Breadcrumb">
+                        <ol>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/blogs/">Blog</a></li>
+                            <li><a href="/blogs/series/3d-generation/">3D 생성 AI</a></li>
+                            <li aria-current="page">3D 생성 모델의 시대</li>
+                        </ol>
+                    </nav>
+    
+                    <div id="series-container">
+            <details class="series-card">
+                <summary class="series-summary">
+                    <span class="series-icon" aria-hidden="true"><i class="bi bi-collection"></i></span>
+                    <span class="series-summary-copy">
+                        <span class="series-kicker">Series</span>
+                        <strong>3D 생성 AI</strong>
+                    </span>
+                    <span class="series-meta">6 / 7</span>
+                    <span class="series-toggle">
+                        <span>7 posts</span>
+                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                    </span>
+                </summary>
+                <div class="series-body">
+                    <ol class="series-list">
+                <li class="series-post">
+                    <a href="/blogs/posts/optimizing-sparse-3d-generation-inference-kor/">
+                        <span class="series-post-index">01</span>
+                        <span class="series-post-copy">
+                            <strong>컴파일러가 놓친 Sparse 3D Forward 최적화</strong>
+                            <span>2026.07.27</span>
+                        </span>
+                    </a>
+                </li>
+        
+                <li class="series-post">
+                    <a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/">
+                        <span class="series-post-index">02</span>
+                        <span class="series-post-copy">
+                            <strong>3D 생성형 AI 서비스; Varco3D 개발기</strong>
+                            <span>2026.01.15</span>
+                        </span>
+                    </a>
+                </li>
+        
+                <li class="series-post">
+                    <a href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models-kor/">
+                        <span class="series-post-index">03</span>
+                        <span class="series-post-copy">
+                            <strong>From Flow Matching to Optimal Transport: A Physics-based View of Generative Models</strong>
+                            <span>2025.08.10</span>
+                        </span>
+                    </a>
+                </li>
+        
+                <li class="series-post">
+                    <a href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive-kor/">
+                        <span class="series-post-index">04</span>
+                        <span class="series-post-copy">
+                            <strong>Large 3D Generative Model 구축하기 (2) VAE and DiT 분석</strong>
+                            <span>2025.07.10</span>
+                        </span>
+                    </a>
+                </li>
+        
+                <li class="series-post">
+                    <a href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing-kor/">
+                        <span class="series-post-index">05</span>
+                        <span class="series-post-copy">
+                            <strong>Large 3D Generative Model 구축하기 (1) 데이터 전처리</strong>
+                            <span>2025.07.02</span>
+                        </span>
+                    </a>
+                </li>
+        
+                    <li class="series-post is-current" aria-current="page">
+                        <span class="series-post-index">06</span>
+                        <span class="series-post-copy">
+                            <strong>3D 생성 모델의 시대</strong>
+                            <span>2025.03.02</span>
+                        </span>
+                        <span class="series-current-pill">Current</span>
+                    </li>
+            
+                <li class="series-post">
+                    <a href="/blogs/posts/is-diffusions-estimated-depth-really-good-kor/">
+                        <span class="series-post-index">07</span>
+                        <span class="series-post-copy">
+                            <strong>Diffusion 으로 추정한 Depth 진짜 좋나요?</strong>
+                            <span>2024.04.26</span>
+                        </span>
+                    </a>
+                </li>
+        </ol>
+                </div>
+            </details>
+    </div>
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7 main-content">
                     <nav class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="들어가며" aria-label="들어가며"><span class="toc-link-text">들어가며</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="Preliminary: What is Latent?" aria-label="Preliminary: What is Latent?"><span class="toc-link-text">Preliminary: What is Latent?</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="1. ShapeVAE" aria-label="1. ShapeVAE"><span class="toc-link-text">1. ShapeVAE</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="Challenges for ShapeVAE" aria-label="Challenges for ShapeVAE"><span class="toc-link-text">Challenges for ShapeVAE</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-4" title="2. Trellis" aria-label="2. Trellis"><span class="toc-link-text">2. Trellis</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="2.1. Structured Latent Representation" aria-label="2.1. Structured Latent Representation"><span class="toc-link-text">2.1. Structured Latent Representation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="2.2. SLAT Generation" aria-label="2.2. SLAT Generation"><span class="toc-link-text">2.2. SLAT Generation</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-7" title="3. Hunyuan3D-v2" aria-label="3. Hunyuan3D-v2"><span class="toc-link-text">3. Hunyuan3D-v2</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="3.1. Hunyuan-ShapeVAE" aria-label="3.1. Hunyuan-ShapeVAE"><span class="toc-link-text">3.1. Hunyuan-ShapeVAE</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-9" title="3.2. Hunyuan3D-DiT" aria-label="3.2. Hunyuan3D-DiT"><span class="toc-link-text">3.2. Hunyuan3D-DiT</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="3.3. Hunyuan3D-paint" aria-label="3.3. Hunyuan3D-paint"><span class="toc-link-text">3.3. Hunyuan3D-paint</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-11" title="4. Trellis vs Hunyuan3D" aria-label="4. Trellis vs Hunyuan3D"><span class="toc-link-text">4. Trellis vs Hunyuan3D</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-12" title="Closing" aria-label="Closing"><span class="toc-link-text">Closing</span></a></li></ol></nav><button id="copyButton">
@@ -229,7 +288,7 @@ $$</p>
 <li><a href="https://craftsman3d.github.io/">Craftsman</a></li>
 </ul>
 <p>모두 비슷한 형태의 pipeline design 을 갖는다. 사실 특별할 것도 없는 AutoEncoder 구조이며, 다음과 같은 특징이 있다. </p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-d7ffe0a9323e.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-24.png" alt=""></p>
 <ul>
 <li>Figure: ShapeVAE pipeline (from CraftsMan)</li>
 </ul>
@@ -256,14 +315,14 @@ $$</p>
 <p>$$ \text{Enc}_{\text{learnable}}(\mathbf{X}) = \text{CrossAttn}(\mathbf{L}, \text{PosEmb}(\mathbf{X})) \in \mathbb{R}^{C \times M}
 $$</p>
 <p>정리하자면 ShapeVAE AutoEncoder 는 basis (latent query, <strong>L</strong>) 를 이용해서, 각 data instance (<strong>X</strong>) 에 대해 basis 와 data 간의 관계를 encoding ↔︎ decoding 하는 구조를 학습한다. Shape 에 대한 representation 을 가장 잘 표현하는 <em><strong>latent space</strong></em> 와, 그 latent space 에 대한 정보를 가장 잘 담고 있는 <em><strong>basis (learnable query)</strong></em> 를 배우게 되는 것. </p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-72582200e770.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-26.png" alt=""></p>
 <ul>
 <li>Figure: ShapeVAE pipeline (from 3DShape2vecset)</li>
 </ul>
 <p>Pipeline 에서 각 요소는 다음과 같은 세부사항을 갖는다. </p>
 <ul>
 <li><p><strong>Positional Encoding</strong>: fourier featuring 으로 NeRF / Transformer 에서 쓰이는 sinusodal encoding 의 그것. PE 는 Cartessian Coordinates 를 high-dimensional, frequency domain 으로 mapping 시켜줄 뿐만 아니라 kernel regression 을 학습할 때 coordinates 간의 stationary 성질을 더해준다. </p>
-<img src='/blogs/posts/250302_3d_latent_diffusion/assets/remote-43d2954e40f5.png' width=70% >
+<img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-12.png' width=70% >
 </li>
 <li><p><strong>KL reg term</strong>: Encoder가 생성하는 latent distribution 이 prior distribution (일반적으로 standard Gaussian distribution, $N(0, 1)$) 에 가깝도록 유도한다. 이는 다음과 같은 장점들이 있다.</p>
 <ul>
@@ -304,12 +363,12 @@ sparse 한 특징을 가지고, 3D shape 자체는 ‘2D image’ 의 texture, s
 <p>ShapeVAE 의 성능은 이 중에서도 <em>1) 데이터의 양과 다양성 문제와</em> 그 성능이 직결되었다. 초기 ShapeVAE 는 3D 생성 보다는 surface recosntruction 분야를 generative 하게 접근하는 쪽에 더 가까웠기 때문에 ShapeNet 등 제한적인 데이터셋에서만 학습되었으며, 데이터의 양을 늘려 학습한 경우에도 input image 나 text 를 충실하게 재현하지 못하는 성능을 보였다. </p>
 <p>또 한가지 ShapeVAE 의 문제점은 feature aggregation 을 <em>‘spatial location 에만 dependent 하게 추출&#39;</em> 한다는 점이다. 기본적으로 ShapeVAE 에서 point feature 는 ‘Positional Encoding’ 으로 들어가는데, Positional Encoding 만으로는 공간 상의 local structure (curvature, surface normal) 나 global shape context (connection relation between vertices &amp; faces) 와 같은 중요한 3D 정보를 충분히 포착하기 어렵다. </p>
 <p>이러한 ShapeVAE 를 Geometry Generation 단계에서 적극 활용해 Model / Data capacity 를 크게 늘리고 shape generation 과 texture generation 을 분리한 2-stage pipeline 을 처음 제시한게 바로 <strong>CLAY-Rodin</strong> 이다. </p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-127bec212f8a.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-27.png" alt=""></p>
 <ul>
 <li>Figure: Rodin (paper: <a href="https://sites.google.com/view/clay-3dlm">CLAY</a>)</li>
 </ul>
 <p>Rodin 은 large DiT model (1.5B) 를 이용해 ShapeVAE 와 그 latent space 에서의 shape generation 성능을 크게 올리고, 생성된 shape (mesh) 위에 <em>geometry-guided multi-view generation</em> 을 이용한 texture synthesis 의 2-stage 를 사용하여 그전까지의 3D 생성 퀄리티를 압도하는 결과를 보여주었다. </p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-84e15b335474.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-7.png" alt=""></p>
 <ul>
 <li>Clay 와 유사한 pipeline 을 가진 <a href="https://ncsoft.github.io/CaPa/">CaPa</a>. 3D LDM 으로 mesh 를 생성한 이후 high-quality texture 를 만들어 backprojecting 한다.</li>
 </ul>
@@ -330,7 +389,7 @@ $$</p>
 <p>여기서 $p_i$ 는 voxel index, $(z_i)$ 는 latent vector 이다. 즉 voxel grid 마다 latent vector 가 하나씩 할당되어 있는 구조이고, latent vector set 이 그 자체로 <em><strong>structured (voxelized)</strong></em> 되어 있기 때문에 <em><strong>SLAT</strong></em> 이라고 명명한 듯 하다. </p>
 <p>3D data의 sparsity 으로 인해, activated grid 의 개수는 3D grid 의 총 사이즈보다 매우 작고 $(L &lt;&lt; N^3)$, 이는 상대적으로 높은 해상도로 생성될 수 있음을 의미한다. Instant-NGP 등 voxel-grid NeRF 와도 비슷한 접근인데, ShapeVAE 를 이용해 featured grid 를 예측하는 설계인 셈. </p>
 <p>정의 자체는 ShapeVAE 에서 사용하는 learnable query 를 voxel grid 에 mapping 한 것에 불과할 수 있으나, SLAT 의 핵심은 이 SLAT encoding 을 배우는 과정에서 <strong>DINOv2</strong> feature extractor 를 적극 이용한다는 것이다. </p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-7e6becc80ca1.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-9.png" alt=""></p>
 <p>위 그림과 같이, SLAT 은 VAE 를 학습하는 과정에서 3D assets 에 대한 encoding 을 </p>
 <ol>
 <li><p>Multi-View Rendering </p>
@@ -352,7 +411,7 @@ $$</p>
 <p>Q. 그럼 3D Generation 자체도, ShapeVAE 에서처럼 latent space 에서 Standard Gaussian Distribution 의 random sample 을 넣으면 새로운 asset 이 생성되는가? </p>
 </blockquote>
 <p>아쉽게도 그렇지 않은데, 우선 SLAT 은 <em><strong>‘structure’ (position index)</strong></em> 자체도 의미가 있기 때문에 structure, 즉 어떤 voxel 이 비었는지, 비지 않았는지부터 생성할 필요가 있다. </p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-41593cd15010.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-28.png" alt=""></p>
 <p>이를 위해 Trellis 는 3D Generation 에서 2-stage 의 접근을 사용한다.</p>
 <ol>
 <li><p>Conditional Flow Matching 을 통해 Sparse Structure 생성: rectified flow model 을 이용. (model 1)</p>
@@ -369,7 +428,7 @@ $$
 <p>구체적으로는 GT dense binary grid $\mathbf{O} \in \{0, 1\}^{N \times N \times N}$ 를 3D convolution 을 이용해 low-resolution feature grid $\mathbf{S} \in \mathbb{R}^{D \times D \times D \times C_s}$ 으로 압축하여, 이를 예측하는 Flow Transformer 를 먼저 학습한다. $\mathbf{O}$ 가 coarse 한 형상이기 때문에 3D conv 를 이용한 압축 과정에서 손실이 거의 없고, NN 학습의 효율성을 향상시키는 장점도 있다. 또한, $\mathbf{O}$ 의 binary grid 를 continuous value 로 변환하여 Rectified Flow 학습에 적합하게 만든다.</p>
 <blockquote>
 <p><em><strong>Rectified flow</strong></em> 모델은 diffusion process 에서 data → noise 로 경로를 linear interpolation (input → output) 의 직선 경로를 forward process 로 사용하는 모델이다. 일반적인 Neural ODE solver 의 step 이 비효율적인데 비해 Rectified Flow 는 data → noise 의 linear 한 vector field 를 modeling 하기 때문에 훨씬 빠르고 정확하게 생성이 가능하다. 
-<img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-2362aba79cab.png" alt=""></p>
+<img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-3.png" alt=""></p>
 </blockquote>
 <p>이 과정에서 condition modeling 은 다른 Diffusion model 과 비슷하게 cross-attention 의 KV 에 inject 한다. 즉 Sparse Strucrue Gen 은 일종의 <em><strong>Image/Text-to-3D Coarse Shape Generation</strong></em> 으로 작동한다.</p>
 <p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-37165534383d.png" alt=""></p>
@@ -388,7 +447,7 @@ $$
 <ul>
 <li>cf: <a href="https://github.com/microsoft/TRELLIS/blob/eeacb0bf6a7d25058232d746bef4e5e880b130ff/trellis/utils/postprocessing_utils.py#L399">to_glb</a>, <a href="https://github.com/microsoft/TRELLIS/blob/eeacb0bf6a7d25058232d746bef4e5e880b130ff/trellis/utils/postprocessing_utils.py#L22">fill_holes</a></li>
 </ul>
-<img src='/blogs/posts/250302_3d_latent_diffusion/assets/remote-4034215bd386.png'>
+<img src='/blogs/posts/250302_3d_latent_diffusion/assets/x4-1.png'>
 
 <p>굉장한 퀄리티의 output 을 보여주는데, <a href="https://huggingface.co/spaces/JeffreyXiang/TRELLIS">Demo</a> 에서 모델을 돌려볼 수 있다. </p>
 <p>단점이라면 아직은 instruction (input guidance) 를 완전히 잘 따라가지는 못하고, 상기한대로 Mesh branch 의 output quality 가 떨어지기 때문에 GSs rendering 을 post-processed Mesh 에 baking 하는 복잡한 작업이 필요하다. 또한 이 texture baking 자체는 multi-view rendering 을 기반으로 하기 때문에, occlusion 에서 완벽하게 자유롭지는 못하다. </p>
@@ -402,7 +461,7 @@ $$
 <p>Hunyuan 의 ShapeVAE 설계도 vanilla ShapeVAE 와 많이 다르진 않지만, 몇 가지 주효한 차이점이 있다. </p>
 <ol>
 <li><p><strong>Point Sampling</strong>: ShapeVAE 학습할 시 대게는 GT mesh 로부터 point cloud 는 uniform sampling 을 통해 얻는다. 하지만 이렇게 되면 fine detail 을 잃는 경우가 다수이기 때문에, Hunyuan 은 uniform sampling 에 더불어 Edge / Corner 쪽에 더 집중된 point sampling 전략을 사용한다. 이는 최근 제시된 <a href="https://aruichen.github.io/Dora/">Dora</a> 와도 비슷한 접근법이다.
-<img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-5f69c7a6fbb5.png" alt=""></p>
+<img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-15.png" alt=""></p>
 <p> Figure from Dora. Left: salient points ↔︎  Right: uniform</p>
 </li>
 <li><p><strong>SDF estimation</strong>: VAE output 이 binary voxel grid 가 아니라 SDF value 이다. Binary grid 를 예측해야하는 기존 occupancy 방식과 다르게 이렇게 되면 continuous real value 인 SDF 값을 estimation 하므로 Deeplearning 이 더 안정적인 결과물을 estimation 할 수 있다.</p>
@@ -411,7 +470,7 @@ $$
 <img src='/blogs/posts/250302_3d_latent_diffusion/assets/remote-c7879db1edc6.png' width=70%></li>
 </ol>
 <p>latent space 의 basis 는 배우지 않고 latent space 자체를 더 정밀하게 배우는 전략을 채택한 것인데, salinet sampling 이 각 3D shape 의 fine detail 을 충분히 반영하기 때문에 해당 접근법을 채택한 것 같다. </p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-069ab1fec6e6.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-16.png" alt=""></p>
 <ul>
 <li>Figure: Hunyuan-ShapeVAE</li>
 </ul>
@@ -426,8 +485,8 @@ $$
 </tr>
 </thead>
 <tbody><tr>
-<td><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-1ef6e44f1c6b.png" alt=""></td>
-<td><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-64984c1d96a1.png" alt=""></td>
+<td><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-29.png" alt=""></td>
+<td><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-30.png" alt=""></td>
 </tr>
 </tbody></table>
 <ul>
@@ -436,7 +495,7 @@ $$
 <li><p><strong>my opinion)</strong> Double stream 의 구조를 보면 <em><strong>ControlNet</strong></em> 의 reference net 방식과 유사한데, 아마 ControlNet 방식이 original modal 의 generation capability 를 해치지 않으면서 condition 을 잘 반영하는데서 착안한 구조가 아닐까 싶다.</p>
 </li>
 </ul>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-08c6d666d463.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-31.png" alt=""></p>
 <ul>
 <li>Figure: Hunyuand3D-DiT</li>
 </ul>
@@ -472,11 +531,11 @@ $$</p>
 </tr>
 </thead>
 <tbody><tr>
-<td><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-575b4ad1d110.png" width="300"></td>
+<td><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-10.png" width="300"></td>
 <td><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-2350cd172ffa.png" width="300"></td>
 </tr>
 </tbody></table>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-9bdeffeee417.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-32.png" alt=""></p>
 <ul>
 <li>Architecture Design of Hunyuan3D-Paint</li>
 </ul>
@@ -504,7 +563,7 @@ $$</p>
 </ul>
 <blockquote>
 <p>둘 모두 canonical system 에 projection 하여 geometry-invariant 하게 정보를 주입한다. coordinate 와 normal 정보를 모두 사용하여 공간 상의 위치와 위치간의 관계를 모두 mapping 해주는 것. <a href="https://ai.meta.com/research/publications/meta-3d-texturegen-fast-and-consistent-texture-generation-for-3d-objects/">MetaTextureGen</a> 도 동일한 guide 를 사용하는데, detail / global 측면에서 point + normal 조합이 depth map 에 비해 좋다고 report 하고 있다. 
-<img src='/blogs/posts/250302_3d_latent_diffusion/assets/remote-d984b003b72e.png' width=70%></p>
+<img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-13.png' width=70%></p>
 </blockquote>
 </li>
 </ul>
@@ -523,7 +582,7 @@ $$ </p>
 <p>동일한 구조의 설계를 <a href="https://huanngzh.github.io/MV-Adapter-Page/">MV-Adapter</a> 에서도 보여준 바 있다. 둘 모두 original branch 의 성능을 잃지 않으면서 Multi-View Generation Capability 를 얻으려고 동일한 구조를 설계했음을 알 수 있다. 어찌 보면 ShapeGen-stage 의 double stream 과도 일맥상통하는 설계이다. </p>
 <p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-adde6771d60d.png" alt=""></p>
 <p>이를 이용해 reference image 를 guidance 로 활용하면서, 동시에 multi-view consistency 를 보장하는 diffusion model 설계. 즉, reference image 와 일관성을 유지하면서, 다양한 시점에서도 자연스러운 이미지를 생성할 수 있다. </p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-512f5e3ea266.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-6.png" alt=""></p>
 <ul>
 <li>Figure from MV-Adapter. Parallel 구조의 유용성을 보여주는 ablation study. 우측의 parallel attention 이 reference image 의 특징을 훨씬 잘 반영하는 것을 볼 수 있다.</li>
 </ul>
@@ -535,10 +594,10 @@ $$ </p>
 </tr>
 </thead>
 <tbody><tr>
-<td><strong>Hunyuan</strong>  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/remote-62c38d3ef1c4.png'></td>
+<td><strong>Hunyuan</strong>  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-17.png'></td>
 </tr>
 <tr>
-<td><strong>ImageDream</strong> <img src='/blogs/posts/250302_3d_latent_diffusion/assets/remote-3e2c148aed77.png'></td>
+<td><strong>ImageDream</strong> <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-18.png'></td>
 </tr>
 </tbody></table>
 <hr>
@@ -550,15 +609,18 @@ $$ </p>
 <th>Hunyuan3D</th>
 </tr>
 </thead>
-<tbody><tr>
-<td><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-1522561b550c.gif" alt=""></td>
-<td><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-e3d52be08c5a.gif" alt=""></td>
+<tbody>
+<tr>
+<td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="/blogs/posts/250302_3d_latent_diffusion/assets/image-19-poster.jpg" aria-label="Trellis result 1" style="width: 100%"><source src="/blogs/posts/250302_3d_latent_diffusion/assets/image-19.mp4" type="video/mp4"></video></td>
+<td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="/blogs/posts/250302_3d_latent_diffusion/assets/image-20-poster.jpg" aria-label="Hunyuan3D result 1" style="width: 100%"><source src="/blogs/posts/250302_3d_latent_diffusion/assets/image-20.mp4" type="video/mp4"></video></td>
 </tr>
 <tr>
-<td><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-99ee657ac546.gif" alt=""></td>
-<td><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-9666475a3e19.gif" alt=""></td>
+<td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="/blogs/posts/250302_3d_latent_diffusion/assets/image-21-poster.jpg" aria-label="Trellis result 2" style="width: 100%"><source src="/blogs/posts/250302_3d_latent_diffusion/assets/image-21.mp4" type="video/mp4"></video></td>
+<td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="/blogs/posts/250302_3d_latent_diffusion/assets/image-22-poster.jpg" aria-label="Hunyuan3D result 2" style="width: 100%"><source src="/blogs/posts/250302_3d_latent_diffusion/assets/image-22.mp4" type="video/mp4"></video></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+
 <p>Velog 엔 직접적으로 3D model viewer 를 포팅할 방법이 없어 부득이하게 rendering 결과로 대체한다. </p>
 <p>생성의 input image 로는 하기 이미지를 사용했다. 
 <img src='/blogs/posts/250302_3d_latent_diffusion/assets/remote-705a50a95dbb.png' width=50%></p>
@@ -566,23 +628,63 @@ $$ </p>
 <p>반면 Texture Quality 는 둘 모두 아직 그렇게 높지는 않다. Hunyuan 은 geometry-guided 로 6 view Multi View 를 생성하여 backprojecting 하는 식으로 texture 를 baking 하는데 이 때문에 occlusion 이 좀 있는 편이고, Trellis 는 상대적으로 Hunyuan 보단 occlusion 이 덜하지만 fidelity 가 더 안 좋은 모습이다. 또한 Hunyuan 의 경우 <em>완벽하게</em> geometry guide 와 align 되지는 않아서, 일부 seam 이나 artifacts 들이 trellis 보다 눈에 띄는 경우가 있었다. </p>
 <p>서로 end2end &lt;-&gt; 2-stage pipeline 이기 때문에 나타나는 장단점이 명확한 것 같다. 각자의 부분에서 quality 를 높여가면서 3D Latent Diffusion 후속 연구들이 등장할 것이라 예상되는 부분. </p>
 <p>마지막으로 CaPa Result 를 별첨한다 :)</p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-bede410838ac.gif" alt=""></p>
+<figure>
+<video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="/blogs/posts/250302_3d_latent_diffusion/assets/image-23-poster.jpg" aria-label="Generated 3D asset by CaPa" style="width: 100%"><source src="/blogs/posts/250302_3d_latent_diffusion/assets/image-23.mp4" type="video/mp4"></video>
+</figure>
+
+
 <h2 id="toc-heading-12">Closing</h2>
 <p>지금까지 ShapeVAE 의 기본 개념부터 Trellis / Hunyuan3D 에 이르는 SOTA 3D Latent Diffusion 의 발자취를 상세하게 분석해보았다. </p>
 <p>CLAY 등장 이후에도 한동안 opensource 진영에서 3D 분야의 괄목할만한 성과를 이루지 못했는데, 최근 연구들이 참신한 설계를 보여주며 SOTA quality 를 달성하여 앞으로 3D domain 에서의 생성 모델들에 대해서도 더욱 기대감이 증폭된다. </p>
 <p>특히 개인적으로는 Hunyuan 이 Flux, MV-Adapter 등에서 검증된 설계를 3D Generation scheme 에 적용한 것이 인상깊었다. 좋은 연구를 하고 싶다면 틈틈히 다른 분야의 연구 트렌드에 대한 following 도 놓지 않아야 한다는 것을 다시 한 번 느낀다.</p>
-<p>마지막으로 최근에는 MeshAnything 을 필두로 mesh face 를 auto-regressive 하게 생성하여 일명 &#39;Artistic-Created Mesh&#39; 로 만드는 연구도 주목받고 있지만 (이 연구들도 ShapeVAE latent space 를 이용한다) auto-regressive 방식이라 시간이 오래 걸리고 아직은 퀄리티가 안 좋아서 당분간은 주시하기만 해야할 것 같다. </p>
-<hr>
-<p>You may also likes</p>
-<ul>
-<li><a href="https://velog.io/@gjghks950/3d">3D 생성에서 NeRF 와 SDS 는 도태될 수밖에 없는가? (velog)</a></li>
-<li><a href="/blogs/posts/?id=250702_build_large_3d_1">Building Large 3D Generative Models (1) - 3D Data Pre-processing</a></li>
-<li><a href="/blogs/posts/?id=250710_build_large_3d_2">Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D</a></li>
-</ul>
+<p>마지막으로 최근에는 MeshAnything 을 필두로 mesh face 를 auto-regressive 하게 생성하여 일명 &#39;Artistic-Created Mesh&#39; 로 만드는 연구도 주목받고 있지만 (이 연구들도 ShapeVAE latent space 를 이용한다) auto-regressive 방식이라 시간이 오래 걸리고 아직은 퀄리티가 안 좋아서 당분간은 주시하기만 해야할 것 같다.</p>
 
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div id="post-navigation" class="mt-4"></div>
+                    
+                    <section class="related-posts" aria-labelledby="related-posts-heading">
+                        <h2 id="related-posts-heading">Related Posts</h2>
+                        <div class="related-post-grid">
+                            
+                            <article class="related-post-card">
+                                <a href="https://velog.io/@gjghks950/3d" target="_blank" rel="noopener noreferrer" aria-label="Open 3D 생성에서 NeRF 와 SDS 는 도태될 수밖에 없는가? (velog)">
+                                    <strong>3D 생성에서 NeRF 와 SDS 는 도태될 수밖에 없는가? (velog)</strong>
+                                    <span>External</span>
+                                </a>
+                            </article>
+            
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing-kor/" aria-label="Read Large 3D Generative Model 구축하기 (1) 데이터 전처리">
+                                    <strong>Large 3D Generative Model 구축하기 (1) 데이터 전처리</strong>
+                                    <time datetime="2025-07-02">2025년 7월 2일</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive-kor/" aria-label="Read Large 3D Generative Model 구축하기 (2) VAE and DiT 분석">
+                                    <strong>Large 3D Generative Model 구축하기 (2) VAE and DiT 분석</strong>
+                                    <time datetime="2025-07-10">2025년 7월 10일</time>
+                                </a>
+                            </article>
+        
+                        </div>
+                    </section>
+    
+                    <div id="post-navigation" class="mt-4"><nav class="post-nav-grid" aria-label="Post navigation">
+                <a class="post-nav-card is-older" href="/blogs/posts/neural-rendering-beyond-photography-kor/" aria-label="Older Post: X-Ray 와 NeRF">
+                    <span class="post-nav-kicker">
+                        <span>Older Post</span>
+                    </span>
+                    <strong>X-Ray 와 NeRF</strong>
+                </a>
+    
+                <a class="post-nav-card is-next" href="/blogs/posts/3d-model-viewer-in-web-kor/" aria-label="Newer Post: 커스텀 3D 웹뷰어 만들기">
+                    <span class="post-nav-kicker">
+                        <span>Newer Post</span>
+                    </span>
+                    <strong>커스텀 3D 웹뷰어 만들기</strong>
+                </a>
+    </nav></div>
                 </div>
             </div>
         </div>
@@ -606,9 +708,9 @@ $$ </p>
       "title_eng": "What the Compiler Missed in Sparse 3D Inference",
       "title_kor": "컴파일러가 놓친 Sparse 3D Forward 최적화",
       "subtitle_eng": "Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0",
-      "subtitle_kor": "Null-Context Attention 제거와 CUDA Fusion으로 줄인 3D 생성 지연시간",
+      "subtitle_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
       "description_eng": "Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0",
-      "description_kor": "Null-Context Attention 제거와 CUDA Fusion으로 줄인 3D 생성 지연시간",
+      "description_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
       "tags": [
         "3D Generation",
         "Generative AI",
@@ -804,7 +906,7 @@ $$ </p>
         "3D Generation",
         "Generative AI"
       ],
-      "cover": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif",
+      "cover": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser-poster.jpg",
       "status": "published",
       "updated": "2025-03-02",
       "date": "2025-03-02",
@@ -993,7 +1095,7 @@ $$ </p>
         "3D Generation",
         "Generative AI"
       ],
-      "cover": "/blogs/posts/240226_sora/assets/image.gif",
+      "cover": "/blogs/posts/240226_sora/assets/big-sur-gs-poster.jpg",
       "status": "published",
       "updated": "2024-02-26",
       "date": "2024-02-26",
@@ -1016,7 +1118,7 @@ $$ </p>
         "Neural Rendering",
         "Gaussian Splatting"
       ],
-      "cover": "/blogs/posts/231130_nerf_in_game/assets/diget.gif",
+      "cover": "/blogs/posts/231130_nerf_in_game/assets/VID_4_NeRF_obeject_in_blender-poster.jpg",
       "status": "published",
       "updated": "2023-11-30",
       "date": "2023-11-30",
@@ -1239,10 +1341,19 @@ $$ </p>
   "postId": "250302_3d_latent_diffusion",
   "lang": "kor",
   "alternateLang": "eng",
-  "alternateHref": "../an-era-of-3d-generation/"
+  "alternateHref": "/blogs/posts/an-era-of-3d-generation/",
+  "runtimeFeatures": {
+    "katex": true,
+    "prism": true,
+    "bootstrap": false,
+    "modelViewer": false,
+    "three": false,
+    "tween": false,
+    "simpleModelViewer": false,
+    "gaussianSplats": false
+  }
 };
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="/blogs/js/code-copy.js"></script>

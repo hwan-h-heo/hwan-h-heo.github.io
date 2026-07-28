@@ -5,7 +5,7 @@
       "title_eng": "What the Compiler Missed in Sparse 3D Inference",
       "title_kor": "컴파일러가 놓친 Sparse 3D Forward 최적화",
       "subtitle_eng": "Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0",
-      "subtitle_kor": "Null-Context Attention 제거와 CUDA Fusion으로 줄인 3D 생성 지연시간",
+      "subtitle_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
       "date": "2026-07-27",
       "category": "post",
       "series": "3d-generation",
@@ -15,7 +15,7 @@
       ],
       "slug": "optimizing-sparse-3d-generation-inference",
       "description_eng": "Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0",
-      "description_kor": "Null-Context Attention 제거와 CUDA Fusion으로 줄인 3D 생성 지연시간",
+      "description_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
       "tags": [
         "3D Generation",
         "Generative AI",
@@ -211,7 +211,7 @@
         "3D Generation",
         "Generative AI"
       ],
-      "cover": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif",
+      "cover": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser-poster.jpg",
       "status": "published",
       "updated": "2025-03-02"
     },
@@ -398,7 +398,7 @@
         "3D Generation",
         "Generative AI"
       ],
-      "cover": "/blogs/posts/240226_sora/assets/image.gif",
+      "cover": "/blogs/posts/240226_sora/assets/big-sur-gs-poster.jpg",
       "status": "published",
       "updated": "2024-02-26"
     },
@@ -421,7 +421,7 @@
         "Neural Rendering",
         "Gaussian Splatting"
       ],
-      "cover": "/blogs/posts/231130_nerf_in_game/assets/diget.gif",
+      "cover": "/blogs/posts/231130_nerf_in_game/assets/VID_4_NeRF_obeject_in_blender-poster.jpg",
       "status": "published",
       "updated": "2023-11-30"
     },
@@ -636,7 +636,7 @@
     {
       "id": "varco3d",
       "title": "VARCO 3D",
-      "summary": "Led geometry generation and inference, from sparse-voxel models to textured mesh delivery.",
+      "summary": "Built the production 3D generation stack: 1B+ native models, CUDA inference optimization, mesh cleanup, UV unwrap, and texture back-projection.",
       "url": "projects/varco3d/",
       "categories": [
         "app"
@@ -645,17 +645,6 @@
       "image": "assets/thumbnails/varco3d_thumbnail.png",
       "gif": "assets/varco3d_hero.webp",
       "alt": "VARCO 3D service teaser"
-    },
-    {
-      "id": "nerf-in-game",
-      "title": "Neural Rendering in Game Engine",
-      "summary": "Built a 360° capture-to-engine pipeline, optimizing neural rendering for Unity and Unreal.",
-      "url": "projects/nerf_in_game/",
-      "categories": [
-        "app"
-      ],
-      "image": "projects/nerf_in_game/teaser.jpg",
-      "alt": "NeRF game teaser"
     },
     {
       "id": "capa",
@@ -671,6 +660,33 @@
       "alt": "CaPa teaser"
     },
     {
+      "id": "deepsfm",
+      "title": "Deep SfM for Radiance Fields",
+      "summary": "Compared VGGSfM and MASt3R for camera recovery in Gaussian Splatting and radiance fields.",
+      "url": "projects/deepsfm/",
+      "categories": [
+        "per"
+      ],
+      "badge": "Featured on GitHub (230+ stars)",
+      "image": "assets/thumbnails/deepsfm_thumbnail.png",
+      "gif": "assets/sfm_teaser.webp",
+      "alt": "DeepSFM and NeRF face teaser"
+    },
+    {
+      "id": "2dgs-viewer",
+      "title": "2D GS Viewer",
+      "summary": "Built a browser viewer to inspect, edit, train, and export 2D Gaussian Splatting scenes.",
+      "url": "projects/2dgs_viewer/",
+      "categories": [
+        "per",
+        "app"
+      ],
+      "badge": "Featured on GitHub (160+ stars)",
+      "image": "assets/thumbnails/2dgs_viewer_thumbnail.png",
+      "gif": "assets/2dgs_viewer_teaser.webp",
+      "alt": "2D GS viewer teaser"
+    },
+    {
       "id": "instant-pose",
       "title": "Instant Pose",
       "summary": "Co-developed fast pose refinement for hash-grid NeRF reconstruction, published at ICML 2023.",
@@ -683,31 +699,15 @@
       "alt": "Instant Pose teaser"
     },
     {
-      "id": "2dgs-viewer",
-      "title": "2D GS Viewer",
-      "summary": "Built a browser viewer to inspect, edit, train, and export 2D Gaussian Splatting scenes.",
-      "url": "projects/2dgs_viewer/",
+      "id": "nerf-in-game",
+      "title": "Neural Rendering in Game Engine",
+      "summary": "Built a 360° capture-to-engine pipeline, optimizing neural rendering for Unity and Unreal.",
+      "url": "projects/nerf_in_game/",
       "categories": [
-        "per",
         "app"
       ],
-      "badge": "Featured on GitHub (150+ stars)",
-      "image": "assets/thumbnails/2dgs_viewer_thumbnail.png",
-      "gif": "assets/2dgs_viewer_teaser.webp",
-      "alt": "2D GS viewer teaser"
-    },
-    {
-      "id": "deepsfm",
-      "title": "Deep SfM for Radiance Fields",
-      "summary": "Compared VGGSfM and MASt3R for camera recovery in Gaussian Splatting and radiance fields.",
-      "url": "projects/deepsfm/",
-      "categories": [
-        "per"
-      ],
-      "badge": "Featured on GitHub (200+ stars)",
-      "image": "assets/thumbnails/deepsfm_thumbnail.png",
-      "gif": "assets/sfm_teaser.webp",
-      "alt": "DeepSFM and NeRF face teaser"
+      "image": "projects/nerf_in_game/teaser.jpg",
+      "alt": "NeRF game teaser"
     }
   ],
   "publications": [

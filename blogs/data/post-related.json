@@ -1,0 +1,168 @@
+{
+  "231130_nerf_in_game": {
+    "eng": [
+      "240805_gs",
+      "240602_2dgs"
+    ]
+  },
+  "240226_sora": {
+    "eng": [
+      "240805_gs",
+      "240602_2dgs"
+    ]
+  },
+  "240602_2dgs": {
+    "eng": [
+      "240805_gs",
+      "240823_grt"
+    ],
+    "kor": [
+      "240805_gs",
+      "240823_grt"
+    ]
+  },
+  "240805_gs": {
+    "eng": [
+      "240823_grt",
+      "240602_2dgs",
+      {
+        "title": "A Comprehensive Overview of Gaussian Splatting",
+        "url": "https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362"
+      },
+      {
+        "title": "Gaussian Splatting Notes",
+        "url": "https://github.com/kwea123/gaussian_splatting_notes"
+      }
+    ],
+    "kor": [
+      "240823_grt",
+      "240602_2dgs",
+      {
+        "title": "A Comprehensive Overview of Gaussian Splatting",
+        "url": "https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362"
+      },
+      {
+        "title": "Gaussian Splatting Notes",
+        "url": "https://github.com/kwea123/gaussian_splatting_notes"
+      }
+    ]
+  },
+  "240823_grt": {
+    "eng": [
+      "240805_gs",
+      "240602_2dgs"
+    ],
+    "kor": [
+      "240805_gs",
+      "240602_2dgs"
+    ]
+  },
+  "240917_3djs": {
+    "eng": [
+      "240805_gs",
+      "240823_grt",
+      "240602_2dgs"
+    ],
+    "kor": [
+      "240805_gs",
+      "240823_grt",
+      "240602_2dgs"
+    ]
+  },
+  "250106_tomography": {
+    "eng": [
+      "230202_ngp",
+      "211128_fourier",
+      "240805_gs"
+    ],
+    "kor": [
+      "230202_ngp",
+      "211128_fourier",
+      "240805_gs"
+    ]
+  },
+  "250302_3d_latent_diffusion": {
+    "eng": [
+      "240426_diffusion_depth",
+      "240805_gs"
+    ],
+    "kor": [
+      {
+        "title": "3D 생성에서 NeRF 와 SDS 는 도태될 수밖에 없는가? (velog)",
+        "url": "https://velog.io/@gjghks950/3d"
+      },
+      "250702_building_large_3d_1",
+      "250710_building_large_3d_2"
+    ]
+  },
+  "250310_model_viewer": {
+    "eng": [
+      "240917_3djs",
+      "250302_3d_latent_diffusion"
+    ],
+    "kor": [
+      "240917_3djs",
+      "250302_3d_latent_diffusion"
+    ]
+  },
+  "250702_building_large_3d_1": {
+    "eng": [
+      {
+        "title": "Is the Era of NeRF and SDS in 3D Generation Coming to an End? (kor)",
+        "url": "https://velog.io/@gjghks950/3d"
+      },
+      "250302_3d_latent_diffusion"
+    ],
+    "kor": [
+      {
+        "title": "3D 생성에서 NeRF 와 SDS 는 도태될 수밖에 없는가? (velog)",
+        "url": "https://velog.io/@gjghks950/3d"
+      },
+      "250302_3d_latent_diffusion"
+    ]
+  },
+  "250710_building_large_3d_2": {
+    "eng": [
+      "250302_3d_latent_diffusion",
+      "250702_building_large_3d_1",
+      "250810_flow"
+    ],
+    "kor": [
+      {
+        "title": "3D 생성에서 NeRF 와 SDS 는 도태될 수밖에 없는가? (kor)",
+        "url": "https://velog.io/@gjghks950/3d"
+      },
+      "250302_3d_latent_diffusion",
+      "250702_building_large_3d_1",
+      "250810_flow"
+    ]
+  },
+  "250810_flow": {
+    "eng": [
+      "250302_3d_latent_diffusion",
+      "250702_building_large_3d_1",
+      "250710_building_large_3d_2"
+    ],
+    "kor": [
+      {
+        "title": "3D 생성에서 NeRF 와 SDS 는 도태될 수밖에 없는가?",
+        "url": "https://velog.io/@gjghks950/3d"
+      },
+      "250302_3d_latent_diffusion",
+      "250702_building_large_3d_1",
+      "250710_building_large_3d_2"
+    ]
+  },
+  "260115_Varco3D": {
+    "eng": [
+      "250302_3d_latent_diffusion",
+      "250702_building_large_3d_1",
+      "250710_building_large_3d_2"
+    ],
+    "kor": [
+      "250302_3d_latent_diffusion",
+      "250702_building_large_3d_1",
+      "250710_building_large_3d_2"
+    ]
+  }
+}

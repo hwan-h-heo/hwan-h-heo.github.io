@@ -24,7 +24,9 @@ author: Hwan Heo
 <hr/>
 
 <figure id="figure-0" >
-  <img src='./250302_3d_latent_diffusion/assets/teaser.gif' alt='img alt' width='100%'>
+  <video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/teaser-poster.jpg" aria-label="3D latent diffusion teaser" style="width: 100%">
+    <source src="./250302_3d_latent_diffusion/assets/teaser.mp4" type="video/mp4">
+  </video>
 </figure>
 
 <p id="p-2"><strong id="strong-81" ><em> Diffusion</em></strong>. From Imagen, DALL·E to Stable Diffusion and Midjourney, Diffusion models have surpassed GANs to become the standard paradigm for modern 2D generative models. In particular, the advent of <em id="em-1"><strong id="strong-1">Latent Diffusion</strong></em>, with its promise of:</p>
@@ -417,7 +419,6 @@ $$</p>
 </tr>
 </tbody>
 </table>
-<br/>
 
 <h2 id="h2-6" > 4. Trellis vs Hunyuan? </h2>
 <table id="table-13"  class="table ">
@@ -430,23 +431,31 @@ $$</p>
 <tbody>
 <tr>
 <td><figure id="figure-10" >
-  <img src='./250302_3d_latent_diffusion/assets/image-19.gif' alt='img alt' width='100%'>
+  <video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-19-poster.jpg" aria-label="Trellis result 1" style="width: 100%">
+    <source src="./250302_3d_latent_diffusion/assets/image-19.mp4" type="video/mp4">
+  </video>
 </figure></td>
 <td>
     <figure id="figure-11" >
-  <img src='./250302_3d_latent_diffusion/assets/image-20.gif' alt='img alt' width='100%'>
+  <video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-20-poster.jpg" aria-label="Hunyuan3D result 1" style="width: 100%">
+    <source src="./250302_3d_latent_diffusion/assets/image-20.mp4" type="video/mp4">
+  </video>
 </figure>
 </td>
 </tr>
 <tr>
 <td>
     <figure id="figure-12" >
-  <img src='./250302_3d_latent_diffusion/assets/image-21.gif' alt='img alt' width='100%'>
+  <video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-21-poster.jpg" aria-label="Trellis result 2" style="width: 100%">
+    <source src="./250302_3d_latent_diffusion/assets/image-21.mp4" type="video/mp4">
+  </video>
 </figure>
 </td>
 <td>
     <figure id="figure-13" >
-  <img src='./250302_3d_latent_diffusion/assets/image-22.gif' alt='img alt' width='100%'>
+  <video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-22-poster.jpg" aria-label="Hunyuan3D result 2" style="width: 100%">
+    <source src="./250302_3d_latent_diffusion/assets/image-22.mp4" type="video/mp4">
+  </video>
 </figure>
 </td>
 </tr>
@@ -459,34 +468,15 @@ $$</p>
 <p id="p-118" >The clear advantages and disadvantages seem to arise from their respective end-to-end vs. 2-stage pipelines. It is anticipated that subsequent research in 3D Latent Diffusion will emerge, enhancing quality in each of these aspects.</p>
 <p id="p-119" >Finally, I show CaPa's Result :)</p>
 <figure id="figure-14" >
-  <img src='./250302_3d_latent_diffusion/assets/image-23.gif' alt='img alt' width='100%'>
+  <video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-23-poster.jpg" aria-label="Generated 3D asset by CaPa" style="width: 100%">
+    <source src="./250302_3d_latent_diffusion/assets/image-23.mp4" type="video/mp4">
+  </video>
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Generated 3D asset by CaPa</figcaption>
 </figure>
 
-
-<br/>
 
 <h2 id="h2-5">Closing</h2>
 <p id="p-122">Thus far, I have provided a detailed analysis tracing the evolution of state-of-the-art 3D Latent Diffusion, from the fundamental concepts of ShapeVAE to Trellis and Hunyuan3D.</p>
 <p id="p-123">While the open-source community did not achieve remarkable progress in the 3D field for some time after the emergence of CLAY, recent studies have showcased innovative designs and reached state-of-the-art quality, further fueling anticipation for generative models in the 3D domain.</p>
 <p id="p-124">Personally, Hunyuan's application of proven designs from Flux, MV-Adapter, and other works to the 3D generation scheme is particularly impressive. It reinforces the notion that to conduct impactful research, one must remain attentive to research trends in other fields.</p>
 <p id="p-125">Finally, recent research, led by MeshAnything, is attracting attention by focusing on the auto-regressive generation of mesh faces to create what are termed "Artistic-Created Meshes" (these studies also utilize the ShapeVAE latent space). However, due to its auto-regressive nature, this approach is time-consuming, and the quality is not yet satisfactory; therefore, it seems prudent to observe its development for the time being.</p>
-
-
-<hr/>
-<p>
-    You may also like, 
-</p>
-<ul>
-    <li>
-        <a href="/blogs/posts/?id=240426_diffusion_depth">
-            <span style="text-decoration: underline;">Is Diffusion's Estimated Depth Really Good?</span>
-        </a>
-    </li>
-    <li>
-        <a href="/blogs/posts/?id=240805_gs">
-            <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
-        </a>
-    </li>
-</ul>
-<br/>

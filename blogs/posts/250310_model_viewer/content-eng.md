@@ -42,7 +42,6 @@ author: Hwan Heo
 
 <!-- <img src='./250310_model_viewer/assets/image.gif' width=100%> -->
 
-
 <h2 id="h2-3" > Introduction </h2>
 <p id="p-1" class='lang eng'> Since my work tends to revolve around the 3D domain,
     I occasionally find myself needing to render 3D models on web pages—whether it’s for a quick demo to present internally or to build a project page for a research paper. </p>
@@ -52,7 +51,6 @@ author: Hwan Heo
     I’ll also share details about a custom Three.js-based <code>SimpleModelViewer</code> I’ve developed. If you’re only interested in the custom viewer itself, feel free to jump straight to
     <a href="#h4-3">this section</a>!
 </p>
-
 
 
 <h2 id="h2-1" > Google Model Viewer </h2>
@@ -101,7 +99,6 @@ author: Hwan Heo
     rotation-per-second="60deg"
     skybox-image="https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/spruit_sunrise_1k_HDR.hdr" >
 </model-viewer>
-<br/>
 
 <h3 id="h3-2" > Geometry Rendering </h3>
 <p id="p-12" class='lang eng'> For a basic 3D model viewer, it’s hard to beat Google Model Viewer. However, it’s tricky to modify its default shaders, and it doesn’t support alternative rendering types like Normal, Geometry, or Wireframe. This makes it tough to visually inspect detailed mesh elements beyond the base texture. </p>
@@ -145,7 +142,6 @@ function show_geometry(){
 </model-viewer>
 
 
-
 <h2 id="h2-2" > Threejs-Based Custom Viewer </h2>
 <p id="p-16" class='lang eng'> To implement rendering modes like Normal or Wireframe that Google Model Viewer can’t handle, you’ll need to roll up your sleeves and build a custom model viewer class using Three.js. </p>
 <h3 id="h3-3" > Basic Usage </h3>
@@ -175,8 +171,6 @@ controls = new OrbitControls(this.camera, this.renderer.domElement);
 <p id="p-20" class='lang eng'> Finally, load a GLTF 3D model and add it to the scene: </p>
 <pre id="pre-5"><code style="font-size: 1rem"  class='language-javascript'>loader = new GLTFLoader();
 loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined, (error) => { console.error('Loading Error:', error); });</code></pre>
-<br/>
-
 
 <h3 id="h3-4">Custom Viewer Implementation</h3>
 <p id="p-21" class='lang eng'> A Three.js-based custom viewer offers far greater flexibility compared to Google Model Viewer. It allows you to implement diverse rendering modes like Diffuse, Mesh, Wireframe, and Normal with ease. </p>
@@ -940,35 +934,14 @@ export { SimpleModelViewer };
 </simple-model-viewer>
 <p id="p-28" class='lang eng'> With <code>auto-rotate</code>, a basic motion that continuously updates the mesh's Y-axis rotation can be added. This speed is adjustable via <code>angle-per-second</code>, and the initial camera position is also configurable using the <code>camera-orbit</code> attribute.</p> 
 <p id="p-29" class='lang eng'> By incorporating toggleable settings for features like the <code>Control Panel</code>, I’ve developed a 3D Model Viewer that, while similar to Model Viewer, offers a broader range of functionalities. </p>
-<br/>
 <h3 id="h3-5">Key Takeaways</h3>
-<br/>
 <ul class='lang eng'>
     <li><strong>Google Model Viewer</strong>: Quick and easy setup is its strength, but it’s limited in rendering modes and customization.</li> 
     <li><strong>Three.js Custom Viewer</strong>: Offers flexibility and fine-grained control, though it requires more complex setup and time.</li>
     <li>Choose based on your project’s needs—simplicity or versatility.</li> 
 </ul>
-<br/>
 <h2 id="conclusion">Conclusion</h2>
 
 <p id="p-30" class='lang eng'> Google Model Viewer is a fantastic tool for quickly and easily embedding 3D models on the web. However, when you need finer control or a variety of rendering modes, a Three.js-based custom viewer is the way to go. </p> 
 <p id="p-31" class='lang eng'> In this project, I used Three.js to build a custom viewer supporting Diffuse, Mesh, Wireframe, and Normal rendering modes, complete with a panel for adjusting model position and rotation. This gives users the flexibility to manipulate models and explore different visual effects. </p> 
 <p id="p-32" class='lang eng'> Looking ahead, there’s room to expand with features like lighting controls or camera view saving. I hope this post helps you understand the ins and outs of 3D model viewers and pick the best approach for your next project! </p>
-
-<hr/>
-<p>
-    You may also like, 
-</p>
-<ul>
-    <li>
-        <a href="/blogs/posts/?id=240917_3djs">
-            <span style="text-decoration: underline;">Add Gaussian Splatting to your Website</span>
-        </a>
-    </li>
-    <li>
-        <a href="/blogs/posts/?id=250302_3d_latent_diffusion">
-            <span style="text-decoration: underline;">A Deep Dive into 3D Latent Diffusion</span>
-        </a>
-    </li>
-</ul>
-<br/>

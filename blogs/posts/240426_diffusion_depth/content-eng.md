@@ -31,7 +31,6 @@ author: Hwan Heo
     </ul>
 </nav>
 
-<br/>
 <h2 id="sec1">1. Introduction </h2>
 <p class="lang eng">
     The success of 2D diffusion models has inspired researchers to explore the diffusion process of 
@@ -188,7 +187,6 @@ def get_mesh_from_depth(outname, scale=None):
     as it is currently executed in a non-parallelized manner using a <em>for</em> loop.
 </p>
 
-
 <h2 id="sec3">3. Texturing the Mesh from Depth Maps</h2>
 <p class="lang eng">
     Texturing is a critical aspect of 3D asset creation. For the task at hand, 
@@ -225,7 +223,6 @@ def make_textured_mesh(outname, scale=None):
     as it significantly increases the number of faces, particularly with FHD inputs.
 </p>
 
-
 <h2 id="sec4"> 4. Results & Analysis</h2>
 <p class="lang eng">
     We generated textured meshes using four images from the Marigold Demo.
@@ -234,19 +231,19 @@ def make_textured_mesh(outname, scale=None):
 <table>
     <tr>
         <th>Scene #1</th>
-        <td><img class="img-fluid" src="./240426_diffusion_depth/assets/res1.gif" alt="Scene 1"></td>
+        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240426_diffusion_depth/assets/res1-poster.jpg" aria-label="Scene 1"><source src="./240426_diffusion_depth/assets/res1.mp4" type="video/mp4"></video></td>
     </tr>
     <tr>
         <th>Scene #2</th>
-        <td><img class="img-fluid" src="./240426_diffusion_depth/assets/res2.gif" alt="Scene 2"></td>
+        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240426_diffusion_depth/assets/res2-poster.jpg" aria-label="Scene 2"><source src="./240426_diffusion_depth/assets/res2.mp4" type="video/mp4"></video></td>
     </tr>
     <tr>
         <th>Scene #3</th>
-        <td><img class="img-fluid" src="./240426_diffusion_depth/assets/res3.gif" alt="Scene 1"></td>
+        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240426_diffusion_depth/assets/res3-poster.jpg" aria-label="Scene 3"><source src="./240426_diffusion_depth/assets/res3.mp4" type="video/mp4"></video></td>
     </tr>
     <tr>
         <th>Scene #4</th>
-        <td><img class="img-fluid" src="./240426_diffusion_depth/assets/res4.gif" alt="Scene 2"></td>
+        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240426_diffusion_depth/assets/res4-poster.jpg" aria-label="Scene 4"><source src="./240426_diffusion_depth/assets/res4.mp4" type="video/mp4"></video></td>
     </tr>
 </table>
 
@@ -283,9 +280,3 @@ def make_textured_mesh(outname, scale=None):
     For example, DSINE, a model compared to Marigold, utilizes a geometry-aware method inspired by stereo vision, albeit with a lighter network and slightly lower performance. 
     We hypothesize that diffusion-based depth estimation could achieve improved accuracy if regularization terms are designed with stereo vision principles in mind.
 </p>
-
-<hr>
-<p>
-    You may like also,
-</p>
-<br/>

@@ -9,6 +9,8 @@
     }
 })(typeof window !== 'undefined' ? window : null, function(root) {
     const CONTENT_PATH = '/content/portfolio/home.json';
+    const HERO_SCROLL_CUE_ENABLED = true;
+    const SECTION_SCROLL_HANDOFF_ENABLED = true;
 
     function escapeHtml(value) {
         return String(value || '')
@@ -19,33 +21,23 @@
             .replace(/'/g, '&#39;');
     }
 
-    function renderIconLinks(links) {
-        return (links || []).map((link) => {
-            const external = /^https?:\/\//.test(link.url || '');
-            const target = external ? ' target="_blank" rel="noopener noreferrer"' : '';
-            return `
-                <a aria-label="${escapeHtml(link.label)}" href="${escapeHtml(link.url)}"${target}>
-                    <i class="${escapeHtml(link.icon)}"></i>
-                </a>
-            `;
-        }).join('');
-    }
-
     function renderHeroActions(actions) {
         return (actions || []).map((action) => {
             const style = ['section', 'download'].includes(action.style)
                 ? action.style
                 : 'section';
+            const isSectionLink = (action.url || '').startsWith('#');
             const download = action.download ? ' download' : '';
             const icon = action.download
                 ? 'bi-download'
-                : (action.url || '').startsWith('#')
-                    ? 'bi-arrow-down'
+                : isSectionLink
+                    ? ''
                     : 'bi-arrow-up-right';
+            const iconHtml = icon ? `<i class="bi ${icon}" aria-hidden="true"></i>` : '';
             return `
                 <a class="hero-action hero-action--${style}" href="${escapeHtml(action.url)}"${download}>
                     ${escapeHtml(action.label)}
-                    <i class="bi ${icon}" aria-hidden="true"></i>
+                    ${iconHtml}
                 </a>
             `;
         }).join('');
@@ -61,6 +53,18 @@
             .join('\n');
     }
 
+    function renderHeroScrollCue() {
+        if (!HERO_SCROLL_CUE_ENABLED) {
+            return '';
+        }
+
+        return `
+            <a href="#portfolio" class="scroll-down-arrow" aria-label="Scroll to portfolio">
+                <i class="bi bi-chevron-double-down"></i>
+            </a>
+        `;
+    }
+
     function renderHero(block) {
         const subtitle = block.subtitle || (block.typedItems || []).join(' · ');
         return `
@@ -74,14 +78,8 @@
                 <div class="hero-actions">
                     ${renderHeroActions(block.actions)}
                 </div>
-                <div class="social-links">
-                    ${renderIconLinks(block.links)}
-                </div>
             </div>
-            <a href="#about" class="scroll-down-arrow" aria-label="Scroll down">
-                <span class="scroll-down-label">About · Projects · Notes</span>
-                <i class="bi bi-chevron-double-down"></i>
-            </a>
+            ${renderHeroScrollCue()}
         `;
     }
 
@@ -179,10 +177,22 @@
         section.dispatchEvent(new root.CustomEvent('portfolio:section-ready'));
     }
 
+    function shouldEnableSectionScrollHandoff() {
+        const snapSetting = root.document.documentElement.dataset.sectionSnap
+            || root.document.body?.dataset.sectionSnap;
+        return SECTION_SCROLL_HANDOFF_ENABLED
+            || root.PORTFOLIO_ENABLE_SECTION_SNAP === true
+            || snapSetting === 'on'
+            || snapSetting === 'true';
+    }
+
     function initSectionScrollHandoff() {
         const sections = Array.from(root.document.querySelectorAll('main > section[id]'));
         const page = root.document.documentElement;
-        if (sections.length < 2 || page.dataset.sectionScrollBound === 'true') {
+        const heroSection = root.document.getElementById('home');
+        const heroIndex = sections.indexOf(heroSection);
+        const firstHandoffSection = heroIndex >= 0 ? sections[heroIndex + 1] : null;
+        if (!heroSection || !firstHandoffSection || page.dataset.sectionScrollBound === 'true') {
             return;
         }
 
@@ -196,56 +206,22 @@
         let touchGestureLocked = false;
         let isSnapping = false;
         let wheelGestureLocked = false;
-        let activeWheelTransition = '';
-        let carriedWheelDelta = 0;
-        let carriedWheelEvents = 0;
-        let portfolioBoundaryHeld = false;
-        const portfolioSection = root.document.getElementById('portfolio');
-        const blogSection = root.document.getElementById('blog');
 
         const delay = (milliseconds) => new Promise(resolve => root.setTimeout(resolve, milliseconds));
-        const getPortfolioEndAnchor = () => {
-            if (!portfolioSection || !blogSection) return null;
-            return Math.max(portfolioSection.offsetTop, blogSection.offsetTop - root.innerHeight);
-        };
-        const getCurrentSectionIndex = () => {
-            const position = root.scrollY + 2;
-            let currentIndex = 0;
-            sections.forEach((section, index) => {
-                if (section.offsetTop <= position) currentIndex = index;
-            });
-            return currentIndex;
-        };
         const getSnapTarget = (direction) => {
-            const currentIndex = getCurrentSectionIndex();
-            const current = sections[currentIndex];
-            const currentTop = current.offsetTop;
-            const currentBottom = currentTop + current.offsetHeight;
-            const next = sections[currentIndex + 1];
-            const snapSized = current.offsetHeight <= root.innerHeight * 1.2;
-            const betweenSnapAnchors = next
-                && snapSized
-                && root.scrollY > currentTop + 48
-                && root.scrollY < next.offsetTop - 2;
+            if (!direction) return null;
 
-            if (betweenSnapAnchors) {
-                return direction > 0 ? next : current;
+            const heroTop = heroSection.offsetTop;
+            const handoffTop = firstHandoffSection.offsetTop;
+            const position = root.scrollY;
+            const betweenHeroAndHandoff = position > heroTop + 48 && position < handoffTop - 2;
+
+            if (direction > 0 && position < handoffTop - 2) {
+                return firstHandoffSection;
             }
 
-            if (direction > 0 && currentIndex < sections.length - 1) {
-                const reachesSectionEnd = root.scrollY + root.innerHeight >= currentBottom - 12;
-                const fitsViewport = current.offsetHeight <= root.innerHeight + 24;
-                const alignedAtStart = Math.abs(root.scrollY - currentTop) <= 48;
-                return reachesSectionEnd || (fitsViewport && alignedAtStart)
-                    ? sections[currentIndex + 1]
-                    : null;
-            }
-
-            if (direction < 0 && currentIndex > 0) {
-                const previous = sections[currentIndex - 1];
-                const atSectionStart = root.scrollY <= currentTop + 48;
-                const previousIsSnapSized = previous.offsetHeight <= root.innerHeight * 1.2;
-                return atSectionStart && previousIsSnapSized ? previous : null;
+            if (direction < 0 && (betweenHeroAndHandoff || position <= handoffTop + 48)) {
+                return position > heroTop + 1 ? heroSection : null;
             }
 
             return null;
@@ -348,115 +324,14 @@
         const snapToSection = (section, preferredDuration) => {
             return snapToPosition(section, () => section.offsetTop, preferredDuration);
         };
-        const snapToPortfolioEnd = () => {
-            return snapToPosition(
-                portfolioSection,
-                () => getPortfolioEndAnchor() ?? root.scrollY,
-                360
-            );
-        };
-        const holdAtPortfolioEnd = async () => {
-            activeWheelTransition = 'hold-portfolio-end';
-            carriedWheelDelta = 0;
-            carriedWheelEvents = 0;
-            await snapToPortfolioEnd();
-
-            const continueIntoBlog = carriedWheelEvents >= 4 && carriedWheelDelta >= 180;
-            activeWheelTransition = '';
-            carriedWheelDelta = 0;
-            carriedWheelEvents = 0;
-            if (!continueIntoBlog) return;
-
-            await delay(70);
-            portfolioBoundaryHeld = false;
-            activeWheelTransition = 'enter-blog';
-            await snapToSection(blogSection, 480);
-            activeWheelTransition = '';
-        };
-        const getPortfolioBoundaryAction = (direction, deltaY) => {
-            const endAnchor = getPortfolioEndAnchor();
-            if (endAnchor === null || !blogSection || !direction) return null;
-
-            const position = root.scrollY;
-            const blogTop = blogSection.offsetTop;
-            const projectedPosition = position + deltaY;
-            const tolerance = 4;
-
-            if (portfolioBoundaryHeld && position < endAnchor - 48) {
-                portfolioBoundaryHeld = false;
-            }
-
-            if (direction > 0
-                && position < blogTop - tolerance
-                && projectedPosition >= endAnchor - tolerance) {
-                if (portfolioBoundaryHeld && position >= endAnchor - tolerance) {
-                    return { type: 'enter-blog', threshold: 72 };
-                }
-                return { type: 'hold-portfolio-end', threshold: 18 };
-            }
-
-            if (direction < 0
-                && position >= blogTop - tolerance
-                && projectedPosition <= blogTop + 24) {
-                return { type: 'return-portfolio-end', threshold: 18 };
-            }
-
-            if (direction < 0 && position <= endAnchor + tolerance) {
-                portfolioBoundaryHeld = false;
-            }
-
-            return null;
-        };
 
         root.addEventListener('wheel', (event) => {
             if (isSnapping || wheelGestureLocked) {
                 event.preventDefault();
-                if (isSnapping
-                    && activeWheelTransition === 'hold-portfolio-end'
-                    && event.deltaY > 0) {
-                    carriedWheelDelta += Math.abs(event.deltaY);
-                    carriedWheelEvents += 1;
-                }
                 return;
             }
 
             const direction = Math.sign(event.deltaY);
-            const boundaryAction = getPortfolioBoundaryAction(direction, event.deltaY);
-            if (boundaryAction) {
-                event.preventDefault();
-                if (direction !== wheelDirection) {
-                    accumulatedWheelDelta = 0;
-                    wheelDirection = direction;
-                }
-                accumulatedWheelDelta += Math.abs(event.deltaY);
-                root.clearTimeout(wheelResetTimer);
-                wheelResetTimer = root.setTimeout(() => {
-                    accumulatedWheelDelta = 0;
-                    wheelDirection = 0;
-                }, 220);
-
-                if (accumulatedWheelDelta >= boundaryAction.threshold) {
-                    accumulatedWheelDelta = 0;
-                    if (boundaryAction.type === 'hold-portfolio-end') {
-                        portfolioBoundaryHeld = true;
-                        holdAtPortfolioEnd();
-                    } else if (boundaryAction.type === 'enter-blog') {
-                        portfolioBoundaryHeld = false;
-                        activeWheelTransition = 'enter-blog';
-                        snapToSection(blogSection, 480).finally(() => {
-                            activeWheelTransition = '';
-                        });
-                    } else {
-                        portfolioBoundaryHeld = false;
-                        activeWheelTransition = 'return-portfolio-end';
-                        snapToPortfolioEnd().finally(() => {
-                            activeWheelTransition = '';
-                        });
-                    }
-                }
-                return;
-            }
-
             const target = direction ? getSnapTarget(direction) : null;
             if (!target) {
                 accumulatedWheelDelta = 0;
@@ -537,7 +412,7 @@
             }
         });
 
-        warmAdjacentSections(sections[0]);
+        warmAdjacentSections(heroSection);
     }
 
     async function loadPortfolioBlocks() {
@@ -569,7 +444,9 @@
                 if (block) markSectionReady(target);
             });
 
-            initSectionScrollHandoff();
+            if (shouldEnableSectionScrollHandoff()) {
+                initSectionScrollHandoff();
+            }
             if (!renderedBlock) {
                 return;
             }

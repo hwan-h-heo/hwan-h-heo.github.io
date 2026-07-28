@@ -177,6 +177,52 @@
       max-width: 760px;
       width: min(100%, 760px);
     }
+    .portfolio-details .container.col-11.varco-feature-strip {
+      margin: -0.25rem auto 2.2rem;
+      max-width: 440px;
+    }
+    .portfolio-details .varco-feature-strip p,
+    .portfolio-details .varco-feature-strip p > img:only-child {
+      margin: 0 auto;
+    }
+    .portfolio-details .varco-feature-strip img {
+      background: #f8fafc;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      box-shadow: 0 20px 48px rgba(15, 23, 42, 0.13);
+      display: block;
+      height: auto;
+      object-fit: contain;
+      width: 100%;
+    }
+    .portfolio-details .varco-version-stack {
+      display: grid;
+      gap: 0.9rem;
+      margin: 1.15rem 0 1.35rem;
+    }
+    .portfolio-details .varco-version-item {
+      background: #f8fafc;
+      border-left: 3px solid #149ddd;
+      border-radius: 0 12px 12px 0;
+      padding: 0.95rem 1.05rem;
+    }
+    .portfolio-details .varco-version-item h3 {
+      color: #0f172a;
+      font-size: 0.92rem;
+      font-weight: 760;
+      letter-spacing: 0;
+      margin: 0 0 0.35rem;
+    }
+    .portfolio-details .varco-version-item p {
+      color: #526070;
+      font-size: 0.92rem;
+      line-height: 1.58;
+      margin: 0.35rem 0 0;
+    }
+    .portfolio-details .varco-version-item p:first-of-type {
+      color: #149ddd;
+      font-weight: 720;
+      line-height: 1.42;
+    }
     .portfolio-details img,
     .portfolio-details video,
     .portfolio-details iframe {
@@ -331,6 +377,39 @@
       border-radius: 18px;
       box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
     }
+    .portfolio-details .portfolio-info h3 {
+      font-size: 1.05rem;
+      letter-spacing: 0;
+      margin-bottom: 1rem;
+    }
+    .portfolio-details .portfolio-info ul {
+      display: grid;
+      gap: 0.78rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .portfolio-details .portfolio-info li {
+      color: #475569;
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+    .portfolio-details .portfolio-info li + li {
+      margin-top: 0;
+    }
+    .portfolio-details .portfolio-info li strong {
+      color: #0f172a;
+      display: block;
+      font-size: 0.84rem;
+      font-weight: 760;
+      letter-spacing: 0;
+      line-height: 1.32;
+      margin-bottom: 0.02rem;
+      text-transform: none;
+    }
+    .portfolio-details .portfolio-info a {
+      font-weight: 650;
+    }
     .portfolio-details table {
       border-radius: 14px;
       overflow: hidden;
@@ -392,6 +471,9 @@
       .portfolio-details .viewer-feature-grid-3 {
         grid-template-columns: 1fr;
       }
+      .portfolio-details .container.col-11.varco-feature-strip {
+        max-width: 320px;
+      }
       .portfolio-details .project-page-nav {
         grid-template-columns: 1fr;
       }
@@ -437,10 +519,10 @@
             <summary aria-current="page"><i class="bi bi-dot navicon"></i><span>2D GS Viewer</span><i class="bi bi-chevron-down project-selector-toggle"></i></summary>
             <div class="project-selector-options">
           <a href="../varco3d/"><i class="bi bi-arrow-return-right navicon"></i><span>VARCO 3D</span></a>
-          <a href="../nerf_in_game/"><i class="bi bi-arrow-return-right navicon"></i><span>Neural Rendering in Game Engine</span></a>
           <a href="../capa/"><i class="bi bi-arrow-return-right navicon"></i><span>CaPa</span></a>
-          <a href="../instant_pose/"><i class="bi bi-arrow-return-right navicon"></i><span>Instant Pose</span></a>
           <a href="../deepsfm/"><i class="bi bi-arrow-return-right navicon"></i><span>Deep SfM for Radiance Fields</span></a>
+          <a href="../instant_pose/"><i class="bi bi-arrow-return-right navicon"></i><span>Instant Pose</span></a>
+          <a href="../nerf_in_game/"><i class="bi bi-arrow-return-right navicon"></i><span>Neural Rendering in Game Engine</span></a>
             </div>
           </details>
         </li>
@@ -497,9 +579,9 @@
 <div class="portfolio-info">
 <h3>Project Details</h3>
 <ul>
-<li><strong>Category</strong>: Web Application, 3D Visualization Tool</li>
-<li><strong>Project URL</strong>: <a href="https://github.com/hwanhuh/2D-GS-Viser-Viewer">Viewer Github</a></li>
-<li><strong>Skills Demonstrated</strong>: Python, Viser, CUDA, Gaussian Splatting, Rasterization</li>
+<li><strong>Category</strong>Web Application, 3D Visualization Tool</li>
+<li><strong>Project URL</strong><a href="https://github.com/hwanhuh/2D-GS-Viser-Viewer">Viewer Github</a></li>
+<li><strong>Skills Demonstrated</strong>Python, Viser, CUDA, Gaussian Splatting, Rasterization</li>
 </ul>
 
 </div>
@@ -588,13 +670,13 @@
 
 </div>
 <div class="container project-page-nav">
-        <a class="project-page-nav-link project-page-nav-prev" href="../instant_pose/">
+        <a class="project-page-nav-link project-page-nav-prev" href="../deepsfm/">
           <span class="project-page-nav-kicker"><i class="bi bi-arrow-left"></i> Previous Project</span>
-          <strong>Instant Pose</strong>
-        </a>
-        <a class="project-page-nav-link project-page-nav-next" href="../deepsfm/">
-          <span class="project-page-nav-kicker">Next Project <i class="bi bi-arrow-right"></i></span>
           <strong>Deep SfM for Radiance Fields</strong>
+        </a>
+        <a class="project-page-nav-link project-page-nav-next" href="../instant_pose/">
+          <span class="project-page-nav-kicker">Next Project <i class="bi bi-arrow-right"></i></span>
+          <strong>Instant Pose</strong>
         </a>
       </div>
     </section><!-- /Portfolio Details Section -->

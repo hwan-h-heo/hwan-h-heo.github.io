@@ -123,7 +123,6 @@ download(metadata)
 
 ---
 
-
 ## B. Pre-processing for Shape VAE
 
 ### B.1. 3D Representation
@@ -179,7 +178,6 @@ Diffusion / Flow model 학습보다 선행되는 것은 이 generative model 들
 Implicit representation 은 공간 자체를 함수로 정의하기 때문에, VAE decoder 는 latent vector 로부터 SDF 를 근사하는 parametric model 로써 학습된다. 이를 이용해 voxel grid 에서 SDF 를 query 하고 이를 Marching Cube 등을 통해 다시 Mesh 로 복원하는 것 또한 용이하다.
 
 
-
 그런데 Implicit Representation의 본질적인 특징은 무엇이었는가? 바로 
 
 > "Easy to decide inside ↔︎ outside" 
@@ -199,7 +197,6 @@ SDF $f(x)$ 는 표면을 기준으로 내부면 negative, 외부면 positive 값
 <img src="./250702_building_large_3d_1/assets/image-1.png" width=50%>
 
 - Fig. Non-Watertight  /  Watertight 
-
 
 
 그래서 우리는 모든 Mesh를 '물이 새지 않는', 즉 **Watertight** 한 상태로 만들어줘야 한다. 이는 수학적으로 다음과 같이 정의된다.
@@ -551,7 +548,6 @@ salient_points = mesh.salient_point_sample(64000, thresh_bihedral=30)
 
 ---
 
-
 ## 마치며
 
 이번 글에서는 3D Generative Model 을 구축하기 위한 첫걸음, data pre-processing 에 대해서 심도 깊게 다뤄보았다. 
@@ -569,10 +565,3 @@ salient_points = mesh.salient_point_sample(64000, thresh_bihedral=30)
 이 시리즈의 다음 글에서는 본격적인 ShapeVAE, Flow Model Structure 분석 등과, training 에 필요한 multi-node 환경을 구축하고 Deepspeed v3, FSDP 의 sharding 전략을 사용하여 3D Generative Model 을 효율적으로 학습시키기 위한 전략 등에 대해 다뤄볼 예정이다.
 
 **_Stay Tuned!_**
-
---- 
-
-You may also likes
-
-- [3D 생성에서 NeRF 와 SDS 는 도태될 수밖에 없는가? (velog)](https://velog.io/@gjghks950/3d)
-- [3D 생성 모델의 시대](/blogs/posts/?id=250302_3d_latent_diffusion)

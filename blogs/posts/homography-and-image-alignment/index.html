@@ -7,11 +7,13 @@
     <meta name="keywords" content="note, computer-vision, Computer Vision, 3D graphics, computer vision, machine learning" />
     <meta name="author" content="Hwan Heo" />
     <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/posts/homography-and-image-alignment/" />
+    <link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/homography-and-image-alignment/" />
+    <link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/homography-and-image-alignment/" />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://hwan-h-heo.github.io/blogs/posts/homography-and-image-alignment/" />
     <meta property="og:title" content="Homography and Image Alignment" />
     <meta property="og:description" content="Image Transformation, Homography, and Correspondence Matching" />
-    <meta property="og:image" content="https://hwan-h-heo.github.io/blogs/posts/210502_cv3/assets/svg4.svg" />
+    <meta property="og:image" content="https://hwan-h-heo.github.io/assets/image_fx_.jpg" />
     <meta property="og:site_name" content="HwanHeo's Blog" />
     <meta property="article:published_time" content="2021-05-02T00:00:00.000Z" />
     <meta property="article:modified_time" content="2021-05-02T00:00:00.000Z" />
@@ -20,60 +22,19 @@
     <meta name="twitter:url" content="https://hwan-h-heo.github.io/blogs/posts/homography-and-image-alignment/" />
     <meta name="twitter:title" content="Homography and Image Alignment" />
     <meta name="twitter:description" content="Image Transformation, Homography, and Correspondence Matching" />
-    <meta name="twitter:image" content="https://hwan-h-heo.github.io/blogs/posts/210502_cv3/assets/svg4.svg" />
-    <script type="application/ld+json">
-    {
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "Homography and Image Alignment",
-  "description": "Image Transformation, Homography, and Correspondence Matching",
-  "image": "https://hwan-h-heo.github.io/blogs/posts/210502_cv3/assets/svg4.svg",
-  "author": {
-    "@type": "Person",
-    "name": "Hwan Heo",
-    "url": "https://hwan-h-heo.github.io"
-  },
-  "publisher": {
-    "@type": "Person",
-    "name": "Hwan Heo",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://hwan-h-heo.github.io/assets/favicon.ico"
-    }
-  },
-  "datePublished": "2021-05-02T00:00:00.000Z",
-  "dateModified": "2021-05-02T00:00:00.000Z",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://hwan-h-heo.github.io/blogs/posts/homography-and-image-alignment/"
-  },
-  "inLanguage": "en"
-}
-    </script>
+    <meta name="twitter:image" content="https://hwan-h-heo.github.io/assets/image_fx_.jpg" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Homography and Image Alignment","description":"Image Transformation, Homography, and Correspondence Matching","url":"https://hwan-h-heo.github.io/blogs/posts/homography-and-image-alignment/","mainEntityOfPage":"https://hwan-h-heo.github.io/blogs/posts/homography-and-image-alignment/","image":["https://hwan-h-heo.github.io/assets/image_fx_.jpg"],"author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"publisher":{"@type":"Person","name":"Hwan Heo"},"datePublished":"2021-05-02","dateModified":"2021-05-02","inLanguage":"en"}</script>
 
-    <title>Homography and Image Alignment - HwanHeo's Blog</title>
+    <title>Homography and Image Alignment | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
-
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "/vendor/three/build/three.module.js",
-                "three/addons/": "/vendor/three/examples/jsm/",
-                "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
-            }
-        }
-    </script>
-
-    <script src="/vendor/tween/tween.umd.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
     <link href="/blogs/css/used.css" rel="stylesheet" />
     <link href="/blogs/css/typography.css" rel="stylesheet" />
     <link href="/blogs/css/blog_post_specific.css" rel="stylesheet" />
-    <link href="/blogs/css/code-copy.css" rel="stylesheet" />
     <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
     <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+    <link href="/blogs/css/code-copy.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -104,7 +65,7 @@
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
         <div class="container px-4 px-lg-5">
             <a class="navbar-brand" href="/blogs/">Hwan's Blog</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+            <button class="navbar-toggler" type="button" data-nav-toggle aria-controls="navbarResponsive" aria-expanded="false">
                 Menu <i class="bi bi-list"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
@@ -122,13 +83,13 @@
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     <div class="post-heading">
                         <br/>
-                        <h2>Homography and Image Alignment</h2>
+                        <h1>Homography and Image Alignment</h1>
                         <span class="meta">
-                            Posted on May 2, 2021
+                            Posted on <time datetime="2021-05-02">May 2, 2021</time>
                             <span style="margin: 0 8px;">•</span>
                             <i class="bi bi-clock" style="margin-right: 4px;"></i>7 min read
                         </span>
-                        <div class="post-tags"><span>Computer Vision</span></div>
+                        <div class="post-tags"><a class="post-tag" href="/blogs/tags/computer-vision/">Computer Vision</a></div>
                         <hr/>
                     </div>
                 </div>
@@ -140,7 +101,74 @@
         <div class="container px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div id="series-container"></div>
+                    
+                    <nav class="breadcrumbs" aria-label="Breadcrumb">
+                        <ol>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/blogs/">Blog</a></li>
+                            <li><a href="/blogs/series/computer-vision/">Classical Computer Vision</a></li>
+                            <li aria-current="page">Homography and Image Alignment</li>
+                        </ol>
+                    </nav>
+    
+                    <div id="series-container">
+            <details class="series-card">
+                <summary class="series-summary">
+                    <span class="series-icon" aria-hidden="true"><i class="bi bi-collection"></i></span>
+                    <span class="series-summary-copy">
+                        <span class="series-kicker">Series</span>
+                        <strong>Classical Computer Vision</strong>
+                    </span>
+                    <span class="series-meta">2 / 4</span>
+                    <span class="series-toggle">
+                        <span>4 posts</span>
+                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                    </span>
+                </summary>
+                <div class="series-body">
+                    <ol class="series-list">
+                <li class="series-post">
+                    <a href="/blogs/posts/3d-stereo-vision-and-epipolar-geometry/">
+                        <span class="series-post-index">01</span>
+                        <span class="series-post-copy">
+                            <strong>3D Stereo Vision and Epipolar Geometry</strong>
+                            <span>2021.06.02</span>
+                        </span>
+                    </a>
+                </li>
+        
+                    <li class="series-post is-current" aria-current="page">
+                        <span class="series-post-index">02</span>
+                        <span class="series-post-copy">
+                            <strong>Homography and Image Alignment</strong>
+                            <span>2021.05.02</span>
+                        </span>
+                        <span class="series-current-pill">Current</span>
+                    </li>
+            
+                <li class="series-post">
+                    <a href="/blogs/posts/feature-extraction-and-detection/">
+                        <span class="series-post-index">03</span>
+                        <span class="series-post-copy">
+                            <strong>Feature Extraction and Detection</strong>
+                            <span>2021.04.02</span>
+                        </span>
+                    </a>
+                </li>
+        
+                <li class="series-post">
+                    <a href="/blogs/posts/image-filter-and-morphology/">
+                        <span class="series-post-index">04</span>
+                        <span class="series-post-copy">
+                            <strong>Image Filter and Morphology</strong>
+                            <span>2021.03.02</span>
+                        </span>
+                    </a>
+                </li>
+        </ol>
+                </div>
+            </details>
+    </div>
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7 main-content">
                     <nav class="toc" aria-label="Table of contents"><div class="toc-title">On This Page</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="6. Geometric Transformations" aria-label="6. Geometric Transformations"><span class="toc-link-text">6. Geometric Transformations</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-1" title="Opencv Example" aria-label="Opencv Example"><span class="toc-link-text">Opencv Example</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="7. Image Alignment" aria-label="7. Image Alignment"><span class="toc-link-text">7. Image Alignment</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="Opencv Example" aria-label="Opencv Example"><span class="toc-link-text">Opencv Example</span></a></li></ol></li></ol></nav><button id="copyButton">
@@ -159,8 +187,6 @@
 
 <hr>
 <h2 id="toc-heading-0">6. Geometric Transformations</h2>
-<br/>
-
 <h4>Parametric Transformations</h4>
 <p>A parametric transformation is a global mapping from one 2D coordinate system to another, defined by a set of parameters. These transformations can be represented by matrices and applied to image coordinates.</p>
 <ul>
@@ -375,11 +401,59 @@ plt.show()
 
 <h4>Result:</h4>
 <img src='/blogs/posts/210302_cv1/assets/image-7.jpg' width=100%>
-
-<br/>
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div id="post-navigation" class="mt-4"></div>
+                    
+                    <section class="related-posts" aria-labelledby="related-posts-heading">
+                        <h2 id="related-posts-heading">Related Posts</h2>
+                        <div class="related-post-grid">
+                            
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/3d-stereo-vision-and-epipolar-geometry/" aria-label="Read 3D Stereo Vision and Epipolar Geometry">
+                                    <strong>3D Stereo Vision and Epipolar Geometry</strong>
+                                    <time datetime="2021-06-02">Jun 2, 2021</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/feature-extraction-and-detection/" aria-label="Read Feature Extraction and Detection">
+                                    <strong>Feature Extraction and Detection</strong>
+                                    <time datetime="2021-04-02">Apr 2, 2021</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/image-filter-and-morphology/" aria-label="Read Image Filter and Morphology">
+                                    <strong>Image Filter and Morphology</strong>
+                                    <time datetime="2021-03-02">Mar 2, 2021</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/sdf-and-eikonal-equation/" aria-label="Read SDF and Eikonal Equation">
+                                    <strong>SDF and Eikonal Equation</strong>
+                                    <time datetime="2025-08-23">Aug 23, 2025</time>
+                                </a>
+                            </article>
+        
+                        </div>
+                    </section>
+    
+                    <div id="post-navigation" class="mt-4"><nav class="post-nav-grid" aria-label="Post navigation">
+                <a class="post-nav-card is-older" href="/blogs/posts/feature-extraction-and-detection/" aria-label="Older Post: Feature Extraction and Detection">
+                    <span class="post-nav-kicker">
+                        <span>Older Post</span>
+                    </span>
+                    <strong>Feature Extraction and Detection</strong>
+                </a>
+    
+                <a class="post-nav-card is-next" href="/blogs/posts/3d-stereo-vision-and-epipolar-geometry/" aria-label="Newer Post: 3D Stereo Vision and Epipolar Geometry">
+                    <span class="post-nav-kicker">
+                        <span>Newer Post</span>
+                    </span>
+                    <strong>3D Stereo Vision and Epipolar Geometry</strong>
+                </a>
+    </nav></div>
                 </div>
             </div>
         </div>
@@ -403,9 +477,9 @@ plt.show()
       "title_eng": "What the Compiler Missed in Sparse 3D Inference",
       "title_kor": "컴파일러가 놓친 Sparse 3D Forward 최적화",
       "subtitle_eng": "Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0",
-      "subtitle_kor": "Null-Context Attention 제거와 CUDA Fusion으로 줄인 3D 생성 지연시간",
+      "subtitle_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
       "description_eng": "Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0",
-      "description_kor": "Null-Context Attention 제거와 CUDA Fusion으로 줄인 3D 생성 지연시간",
+      "description_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
       "tags": [
         "3D Generation",
         "Generative AI",
@@ -601,7 +675,7 @@ plt.show()
         "3D Generation",
         "Generative AI"
       ],
-      "cover": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif",
+      "cover": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser-poster.jpg",
       "status": "published",
       "updated": "2025-03-02",
       "date": "2025-03-02",
@@ -790,7 +864,7 @@ plt.show()
         "3D Generation",
         "Generative AI"
       ],
-      "cover": "/blogs/posts/240226_sora/assets/image.gif",
+      "cover": "/blogs/posts/240226_sora/assets/big-sur-gs-poster.jpg",
       "status": "published",
       "updated": "2024-02-26",
       "date": "2024-02-26",
@@ -813,7 +887,7 @@ plt.show()
         "Neural Rendering",
         "Gaussian Splatting"
       ],
-      "cover": "/blogs/posts/231130_nerf_in_game/assets/diget.gif",
+      "cover": "/blogs/posts/231130_nerf_in_game/assets/VID_4_NeRF_obeject_in_blender-poster.jpg",
       "status": "published",
       "updated": "2023-11-30",
       "date": "2023-11-30",
@@ -1036,10 +1110,19 @@ plt.show()
   "postId": "210502_cv3",
   "lang": "eng",
   "alternateLang": "kor",
-  "alternateHref": null
+  "alternateHref": null,
+  "runtimeFeatures": {
+    "katex": true,
+    "prism": true,
+    "bootstrap": false,
+    "modelViewer": false,
+    "three": false,
+    "tween": false,
+    "simpleModelViewer": false,
+    "gaussianSplats": false
+  }
 };
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="/blogs/js/code-copy.js"></script>

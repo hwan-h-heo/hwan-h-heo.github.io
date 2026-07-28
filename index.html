@@ -55,46 +55,6 @@
   <link href="assets/css/used.css" rel="stylesheet">
 
   <script>
-    (function initHeroScrollLock() {
-      const root = document.documentElement;
-      const hash = window.location.hash;
-      if (hash && hash !== '#home') return;
-
-      const scrollKeys = new Set(['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' ']);
-      let locked = true;
-      root.classList.add('hero-scroll-locked');
-
-      const shouldIgnoreKey = (event) => {
-        const target = event.target;
-        return target instanceof HTMLElement
-          && (target.isContentEditable || /^(INPUT|SELECT|TEXTAREA)$/.test(target.tagName));
-      };
-      const preventScroll = (event) => {
-        if (!locked) return;
-        event.preventDefault();
-        event.stopImmediatePropagation();
-      };
-      const preventScrollKey = (event) => {
-        if (!locked || !scrollKeys.has(event.key) || shouldIgnoreKey(event)) return;
-        preventScroll(event);
-      };
-      const release = () => {
-        if (!locked) return;
-        locked = false;
-        root.classList.remove('hero-scroll-locked');
-        window.removeEventListener('wheel', preventScroll, { capture: true });
-        window.removeEventListener('touchmove', preventScroll, { capture: true });
-        window.removeEventListener('keydown', preventScrollKey, { capture: true });
-        document.removeEventListener('portfolio:hero-cta-visible', release);
-      };
-
-      window.releasePortfolioHeroScrollLock = release;
-      window.addEventListener('wheel', preventScroll, { passive: false, capture: true });
-      window.addEventListener('touchmove', preventScroll, { passive: false, capture: true });
-      window.addEventListener('keydown', preventScrollKey, { capture: true });
-      document.addEventListener('portfolio:hero-cta-visible', release);
-    })();
-
     window.setTimeout(function releaseDelayedHero() {
       const root = document.documentElement;
       if (!root.classList.contains('hero-wave-pending')) return;
@@ -107,7 +67,6 @@
       hero?.classList.add('hero-intro-visible', 'hero-cta-visible');
       hero?.style.removeProperty('--hero-reveal-opacity');
       document.dispatchEvent(new CustomEvent('portfolio:hero-cta-visible'));
-      window.releasePortfolioHeroScrollLock?.();
     }, window.matchMedia('(max-width: 767px)').matches ? 3200 : 4500);
   </script>
 
@@ -146,9 +105,9 @@
     <nav id="navmenu" class="navmenu">
       <ul>
         <li><a href="#home" class="active"><i class="bi bi-house navicon"></i>Home</a></li>
-        <li><a href="#about"><i class="bi bi-person navicon"></i> About</a></li>
-        <li><a href="#portfolio"><i class="bi bi-images navicon"></i> Portfolio</a></li>
+        <li><a href="#portfolio"><i class="bi bi-images navicon"></i> Project</a></li>
         <li><a href="#blog"> <i class="bi bi-keyboard navicon"></i> Blog </a></li>
+        <li><a href="#about"><i class="bi bi-person navicon"></i> About</a></li>
         <li><a href="#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
       </ul>
     </nav>
@@ -168,189 +127,169 @@
                 <div class="hero-actions">
                     
                 <a class="hero-action hero-action--section" href="#portfolio">
-                    Selected Work
-                    <i class="bi bi-arrow-down" aria-hidden="true"></i>
+                    Project
+                    
                 </a>
             
                 <a class="hero-action hero-action--section" href="#blog">
-                    Technical Writing
-                    <i class="bi bi-arrow-down" aria-hidden="true"></i>
-                </a>
-            
-                <a class="hero-action hero-action--download" href="/assets/Hwan_Heo_s_Curriculum_Vitae.pdf" download>
-                    Download CV
-                    <i class="bi bi-download" aria-hidden="true"></i>
-                </a>
-            
-                </div>
-                <div class="social-links">
+                    Blog
                     
-                <a aria-label="GitHub" href="https://github.com/hwanhuh" target="_blank" rel="noopener noreferrer">
-                    <i class="bi bi-github"></i>
                 </a>
             
-                <a aria-label="LinkedIn" href="https://www.linkedin.com/in/hwan-heo-0905korea/" target="_blank" rel="noopener noreferrer">
-                    <i class="bi bi-linkedin"></i>
-                </a>
-            
-                <a aria-label="Google Scholar" href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" target="_blank" rel="noopener noreferrer">
-                    <i class="bi bi-mortarboard-fill"></i>
-                </a>
-            
-                <a aria-label="Email" href="mailto:gjghks950@naver.com">
-                    <i class="bi bi-envelope-fill"></i>
+                <a class="hero-action hero-action--section" href="#about">
+                    About
+                    
                 </a>
             
                 </div>
             </div>
-            <a href="#about" class="scroll-down-arrow" aria-label="Scroll down">
-                <span class="scroll-down-label">About · Projects · Notes</span>
+            
+            <a href="#portfolio" class="scroll-down-arrow" aria-label="Scroll to portfolio">
                 <i class="bi bi-chevron-double-down"></i>
             </a>
+        
         </section><!-- /Hero Section -->
 
-    <!-- About Section -->
-    <section id="about" class="about section" data-portfolio-block="about" data-section-ready="false">
-            <div class="container section-title" data-aos="fade-up">
-                <h2>About</h2>
-            </div>
-
-            <div class="container" data-aos="fade-up" data-aos-delay="100">
-                <div class="row gy-4 align-items-center justify-content-center">
-                    <div class="col-lg-4" style="transition: 0.3s ease-in-out;">
-                        <img src="assets/profile4.png" class="img-fluid about-profile-image" alt="Portrait of Hwan Heo">
-                    </div>
-                    <div class="col-lg-8 content about-copy">
-                        <div class="about-identity">
-                            <h2 class="about-name">Hwan Heo</h2>
-                            <p class="about-role">Lead 3D AI Research Engineer</p>
-                            <p class="about-affiliation">NC AI · VARCO 3D</p>
-                        </div>
-                        <p class="about-intro">Hi, I'm <strong>Hwan Heo (허환)</strong>. I work where generative models, systems, and graphics meet, carrying ideas all the way from representations and training code to the meshes people actually use.</p>
-                        <p class="about-bio">At <strong>NC AI</strong>, I lead research and engineering for the <strong>VARCO 3D team</strong>, developing production 3D AI systems across large-scale generative model training, inference optimization, and graphics algorithms. I hold both a B.S. and M.S. in Computer Science from <strong>Korea University</strong>, where I was advised by Professor <a href="https://www.hyunwoojkim.com/">Hyunwoo J. Kim</a>. Previously, I was a Research Intern at <strong>NAVER AI Lab</strong>, mentored by Dr. <a href="https://wityworks.com/">Jin-Hwa Kim</a>.<br><br>When I'm away from CUDA kernels and mesh pipelines, I'm usually playing guitar, making music, or following an unexpected STEM rabbit hole. This site is both a record of the systems I've helped ship and a notebook for the ideas I keep exploring.</p>
-                    </div>
-                </div>
-            </div>
-        </section><!-- /About Section -->
-
     <!-- Portfolio Section -->
-    <section id="portfolio" class="portfolio section light-background" data-section-ready="false" data-default-filter="*" data-layout="masonry" data-sort="original-order">
+    <section id="portfolio" class="portfolio section light-background" data-section-ready="false">
 
       <!-- Section Title -->
       <div class="container section-title portfolio-section-heading" data-aos="fade-up">
         <div class="portfolio-heading-copy">
-          <h2>Portfolio</h2>
+          <h2>Selected Projects</h2>
           <p class="portfolio-credibility">Production 3D AI systems · 4 papers · 6 invited talks</p>
         </div>
-        <ul class="portfolio-filters isotope-filters" aria-label="Filter portfolio projects">
-          <li data-filter="*" class="filter-active">All</li>
-          <li data-filter=".filter-research">Research</li>
-          <li data-filter=".filter-app">Application</li>
-          <li data-filter=".filter-per">Personal</li>
+        <ul class="portfolio-filters portfolio-view-toggle" aria-label="Filter portfolio projects">
+          <li data-portfolio-view="selected" class="filter-active" role="button" tabindex="0" aria-pressed="true">Selected</li>
+          <li data-portfolio-view="all" role="button" tabindex="0" aria-pressed="false">All</li>
         </ul>
       </div><!-- End Section Title -->
 
       <div class="container portfolio-content">
-        <div class="row gy-4 isotope-container" id="portfolio-projects" data-aos="fade-up">
-            <article class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-app">
-                <a class="portfolio-box" href="projects/varco3d/">
-                    <div class="aspect-ratio-box">
+        <div class="portfolio-project-list" id="portfolio-projects" data-aos="fade-up">
+            <article class="portfolio-project-item" data-selected="true">
+                <a class="portfolio-project-link" href="projects/varco3d/">
+                    <span class="portfolio-project-cover">
                         
             <img class="img-fluid" src="assets/thumbnails/varco3d_thumbnail.png" data-static="assets/thumbnails/varco3d_thumbnail.png" data-gif="assets/varco3d_hero.webp" alt="VARCO 3D service teaser">
         
-                    </div>
-                    <div class="loading-spinner" style="display: none;"></div>
-                    <div class="top-left"><h6><span class="badge">Commercial AI Service</span></h6></div>
-                    <div class="polar_content">
-                        <h6 data-hover-text="Led geometry generation and inference, from sparse-voxel models to textured mesh delivery.">VARCO 3D</h6>
-                        <p class="portfolio-card-summary">Led geometry generation and inference, from sparse-voxel models to textured mesh delivery.</p>
-                    </div>
-                    <p class="click-prompt">Click to see details</p>
+                        <div class="loading-spinner" style="display: none;"></div>
+                        <span class="portfolio-project-badge">Commercial AI Service</span>
+                    </span>
+                    <span class="portfolio-project-body">
+                        <span class="portfolio-project-eyebrow">
+                            <span>Selected Project</span>
+                            <span>Application</span>
+                        </span>
+                        <span class="portfolio-project-title">VARCO 3D</span>
+                        <span class="portfolio-project-summary">Built the production 3D generation stack: 1B+ native models, CUDA inference optimization, mesh cleanup, UV unwrap, and texture back-projection.</span>
+                        <span class="portfolio-project-meta">Service Overview <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+                    </span>
                 </a>
             </article>
         
-            <article class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-app">
-                <a class="portfolio-box" href="projects/nerf_in_game/">
-                    <div class="aspect-ratio-box">
-                        
-            <img class="img-fluid" src="projects/nerf_in_game/teaser.jpg" alt="NeRF game teaser">
-        
-                    </div>
-                    
-                    
-                    <div class="polar_content">
-                        <h6 data-hover-text="Built a 360° capture-to-engine pipeline, optimizing neural rendering for Unity and Unreal.">Neural Rendering in Game Engine</h6>
-                        <p class="portfolio-card-summary">Built a 360° capture-to-engine pipeline, optimizing neural rendering for Unity and Unreal.</p>
-                    </div>
-                    <p class="click-prompt">Click to see details</p>
-                </a>
-            </article>
-        
-            <article class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-research">
-                <a class="portfolio-box" href="projects/capa/">
-                    <div class="aspect-ratio-box">
+            <article class="portfolio-project-item" data-selected="true">
+                <a class="portfolio-project-link" href="projects/capa/">
+                    <span class="portfolio-project-cover">
                         
             <img class="img-fluid" src="assets/thumbnails/capa_thumbnail.png" data-static="assets/thumbnails/capa_thumbnail.png" data-gif="assets/capa_teaser.webp" alt="CaPa teaser">
         
-                    </div>
-                    <div class="loading-spinner" style="display: none;"></div>
-                    <div class="top-left"><h6><span class="badge">Featured on Hugging Face</span></h6></div>
-                    <div class="polar_content">
-                        <h6 data-hover-text="Developed a two-stage model that carves geometry, then paints high-resolution textures.">CaPa</h6>
-                        <p class="portfolio-card-summary">Developed a two-stage model that carves geometry, then paints high-resolution textures.</p>
-                    </div>
-                    <p class="click-prompt">Click to see details</p>
+                        <div class="loading-spinner" style="display: none;"></div>
+                        <span class="portfolio-project-badge">Featured on Hugging Face</span>
+                    </span>
+                    <span class="portfolio-project-body">
+                        <span class="portfolio-project-eyebrow">
+                            <span>Selected Project</span>
+                            <span>Research</span>
+                        </span>
+                        <span class="portfolio-project-title">CaPa</span>
+                        <span class="portfolio-project-summary">Developed a two-stage model that carves geometry, then paints high-resolution textures.</span>
+                        <span class="portfolio-project-meta">Research Project <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+                    </span>
                 </a>
             </article>
         
-            <article class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-research">
-                <a class="portfolio-box" href="projects/instant_pose/">
-                    <div class="aspect-ratio-box">
-                        
-            <img class="img-fluid" src="projects/instant_pose/assets/pose_fig2.jpg" alt="Instant Pose teaser">
-        
-                    </div>
-                    
-                    <div class="top-left"><h6><span class="badge">ICML 2023</span></h6></div>
-                    <div class="polar_content">
-                        <h6 data-hover-text="Co-developed fast pose refinement for hash-grid NeRF reconstruction, published at ICML 2023.">Instant Pose</h6>
-                        <p class="portfolio-card-summary">Co-developed fast pose refinement for hash-grid NeRF reconstruction, published at ICML 2023.</p>
-                    </div>
-                    <p class="click-prompt">Click to see details</p>
-                </a>
-            </article>
-        
-            <article class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-per filter-app">
-                <a class="portfolio-box" href="projects/2dgs_viewer/">
-                    <div class="aspect-ratio-box">
-                        
-            <img class="img-fluid" src="assets/thumbnails/2dgs_viewer_thumbnail.png" data-static="assets/thumbnails/2dgs_viewer_thumbnail.png" data-gif="assets/2dgs_viewer_teaser.webp" alt="2D GS viewer teaser">
-        
-                    </div>
-                    <div class="loading-spinner" style="display: none;"></div>
-                    <div class="top-left"><h6><span class="badge">Featured on GitHub (150+ stars)</span></h6></div>
-                    <div class="polar_content">
-                        <h6 data-hover-text="Built a browser viewer to inspect, edit, train, and export 2D Gaussian Splatting scenes.">2D GS Viewer</h6>
-                        <p class="portfolio-card-summary">Built a browser viewer to inspect, edit, train, and export 2D Gaussian Splatting scenes.</p>
-                    </div>
-                    <p class="click-prompt">Click to see details</p>
-                </a>
-            </article>
-        
-            <article class="col-lg-4 col-sm-6 portfolio-item isotope-item filter-per">
-                <a class="portfolio-box" href="projects/deepsfm/">
-                    <div class="aspect-ratio-box">
+            <article class="portfolio-project-item" data-selected="true">
+                <a class="portfolio-project-link" href="projects/deepsfm/">
+                    <span class="portfolio-project-cover">
                         
             <img class="img-fluid" src="assets/thumbnails/deepsfm_thumbnail.png" data-static="assets/thumbnails/deepsfm_thumbnail.png" data-gif="assets/sfm_teaser.webp" alt="DeepSFM and NeRF face teaser">
         
-                    </div>
-                    <div class="loading-spinner" style="display: none;"></div>
-                    <div class="top-left"><h6><span class="badge">Featured on GitHub (200+ stars)</span></h6></div>
-                    <div class="polar_content">
-                        <h6 data-hover-text="Compared VGGSfM and MASt3R for camera recovery in Gaussian Splatting and radiance fields.">Deep SfM for Radiance Fields</h6>
-                        <p class="portfolio-card-summary">Compared VGGSfM and MASt3R for camera recovery in Gaussian Splatting and radiance fields.</p>
-                    </div>
-                    <p class="click-prompt">Click to see details</p>
+                        <div class="loading-spinner" style="display: none;"></div>
+                        <span class="portfolio-project-badge">Featured on GitHub (230+ stars)</span>
+                    </span>
+                    <span class="portfolio-project-body">
+                        <span class="portfolio-project-eyebrow">
+                            <span>Selected Project</span>
+                            <span>Personal</span>
+                        </span>
+                        <span class="portfolio-project-title">Deep SfM for Radiance Fields</span>
+                        <span class="portfolio-project-summary">Compared VGGSfM and MASt3R for camera recovery in Gaussian Splatting and radiance fields.</span>
+                        <span class="portfolio-project-meta">Project Notes <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+                    </span>
+                </a>
+            </article>
+        
+            <article class="portfolio-project-item" data-selected="false" hidden>
+                <a class="portfolio-project-link" href="projects/2dgs_viewer/">
+                    <span class="portfolio-project-cover">
+                        
+            <img class="img-fluid" src="assets/thumbnails/2dgs_viewer_thumbnail.png" data-static="assets/thumbnails/2dgs_viewer_thumbnail.png" data-gif="assets/2dgs_viewer_teaser.webp" alt="2D GS viewer teaser">
+        
+                        <div class="loading-spinner" style="display: none;"></div>
+                        <span class="portfolio-project-badge">Featured on GitHub (160+ stars)</span>
+                    </span>
+                    <span class="portfolio-project-body">
+                        <span class="portfolio-project-eyebrow">
+                            <span>Project Archive</span>
+                            <span>Personal</span>
+                        </span>
+                        <span class="portfolio-project-title">2D GS Viewer</span>
+                        <span class="portfolio-project-summary">Built a browser viewer to inspect, edit, train, and export 2D Gaussian Splatting scenes.</span>
+                        <span class="portfolio-project-meta">Viewer Project <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+                    </span>
+                </a>
+            </article>
+        
+            <article class="portfolio-project-item" data-selected="false" hidden>
+                <a class="portfolio-project-link" href="projects/instant_pose/">
+                    <span class="portfolio-project-cover">
+                        
+            <img class="img-fluid" src="projects/instant_pose/assets/pose_fig2.jpg" alt="Instant Pose teaser">
+        
+                        
+                        <span class="portfolio-project-badge">ICML 2023</span>
+                    </span>
+                    <span class="portfolio-project-body">
+                        <span class="portfolio-project-eyebrow">
+                            <span>Project Archive</span>
+                            <span>Research</span>
+                        </span>
+                        <span class="portfolio-project-title">Instant Pose</span>
+                        <span class="portfolio-project-summary">Co-developed fast pose refinement for hash-grid NeRF reconstruction, published at ICML 2023.</span>
+                        <span class="portfolio-project-meta">Paper Project <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+                    </span>
+                </a>
+            </article>
+        
+            <article class="portfolio-project-item" data-selected="false" hidden>
+                <a class="portfolio-project-link" href="projects/nerf_in_game/">
+                    <span class="portfolio-project-cover">
+                        
+            <img class="img-fluid" src="projects/nerf_in_game/teaser.jpg" alt="NeRF game teaser">
+        
+                        
+                        
+                    </span>
+                    <span class="portfolio-project-body">
+                        <span class="portfolio-project-eyebrow">
+                            <span>Project Archive</span>
+                            <span>Application</span>
+                        </span>
+                        <span class="portfolio-project-title">Neural Rendering in Game Engine</span>
+                        <span class="portfolio-project-summary">Built a 360° capture-to-engine pipeline, optimizing neural rendering for Unity and Unreal.</span>
+                        <span class="portfolio-project-meta">Engine Project <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+                    </span>
                 </a>
             </article>
         </div>
@@ -518,7 +457,7 @@
     <section id="blog" class="testimonials section light-background" data-aos="fade-up" data-section-ready="false">
       <!-- Section Title -->
       <div class="container section-title">
-        <h2><a href="blogs/" target="_blank">Technical Writing <i class="bi bi-box-arrow-up-right"></i> </a></h2>
+        <h2><a href="blogs/" target="_blank">Technical Blog <i class="bi bi-box-arrow-up-right"></i> </a></h2>
         <p>Technical notes on 3D AI, from theory to production:<br/>generative models and large-scale training, neural rendering, graphics algorithms, and web-based 3D tools.</p>
       </div><!-- End Section Title -->
       <div class="container portfolio-blog-content">
@@ -563,6 +502,30 @@
         </aside>
       </div>
     </section><!-- /Testimonials Section -->
+
+    <!-- About Section -->
+    <section id="about" class="about section" data-portfolio-block="about" data-section-ready="false">
+            <div class="container section-title" data-aos="fade-up">
+                <h2>About</h2>
+            </div>
+
+            <div class="container" data-aos="fade-up" data-aos-delay="100">
+                <div class="row gy-4 align-items-center justify-content-center">
+                    <div class="col-lg-4" style="transition: 0.3s ease-in-out;">
+                        <img src="assets/profile4.png" class="img-fluid about-profile-image" alt="Portrait of Hwan Heo">
+                    </div>
+                    <div class="col-lg-8 content about-copy">
+                        <div class="about-identity">
+                            <h2 class="about-name">Hwan Heo</h2>
+                            <p class="about-role">Lead 3D AI Research Engineer</p>
+                            <p class="about-affiliation">NC AI · VARCO 3D</p>
+                        </div>
+                        <p class="about-intro">Hi, I'm <strong>Hwan Heo (허환)</strong>. I work where generative models, systems, and graphics meet, carrying ideas all the way from representations and training code to the meshes people actually use.</p>
+                        <p class="about-bio">At <strong>NC AI</strong>, I lead research and engineering for the <strong>VARCO 3D team</strong>, developing production 3D AI systems across large-scale generative model training, inference optimization, and graphics algorithms. I hold both a B.S. and M.S. in Computer Science from <strong>Korea University</strong>, where I was advised by Professor <a href="https://www.hyunwoojkim.com/">Hyunwoo J. Kim</a>. Previously, I was a Research Intern at <strong>NAVER AI Lab</strong>, mentored by Dr. <a href="https://wityworks.com/">Jin-Hwa Kim</a>.<br><br>When I'm away from CUDA kernels and mesh pipelines, I'm usually playing guitar, making music, or following an unexpected STEM rabbit hole. This site is both a record of the systems I've helped ship and a notebook for the ideas I keep exploring.</p>
+                    </div>
+                </div>
+            </div>
+        </section><!-- /About Section -->
 
     <!-- Resume Section -->
     <section id="resume" class="resume section" data-portfolio-block="resume" data-section-ready="false">

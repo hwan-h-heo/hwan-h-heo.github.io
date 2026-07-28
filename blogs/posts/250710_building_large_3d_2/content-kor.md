@@ -19,7 +19,6 @@ author: Hwan Heo
 
 ---
 
-
 ## Introduction 
 
 [지난 글](./?id=250702_building_large_3d_1) 에서는 Large 3D Generative Model 을 구축하기 위한 첫 단계로, 데이터셋을 준비하고 필수적인 데이터 전처리 과정에 대해서 수학적, 위상학적 원리부터 실제 알고리즘 구현까지 심도 깊게 다뤄보았다.
@@ -328,7 +327,6 @@ def pixel_shuffle_3d(x: torch.Tensor, scale_factor: int) -> torch.Tensor:
 
 ---
 
-
 ## D. DiT on Latent Space
 
 이제 VAE가 만들어낸 두 종류의 latent space 위에서, DiT 기반 생성 모델이 어떻게 다르게 설계되는지 살펴보자. 
@@ -427,7 +425,6 @@ class SparseStructureFlowModel(nn.Module):
         return h
 ```
 - 3D Voxel Grid x를 3D patch 로 나누고, 이를 token sequence 로 변환하여 Transformer에 입력한다. 
-
 
 
 **Trellis 의 patchfy 함수:**
@@ -578,7 +575,7 @@ VA-VAE의 해결책은 simple yet effective 한데, VAE의 latent space 를 **Vi
 Vecset-based VAE는 Point Cloud 를 이용해 3D shape 의 reconstruction 에만 초점을 맞춘, VA-VAE 가 지적한 '_Reconstruction 특화_' VAE와 유사한 측면이 있다. 이는 DiT (Flow Model) 가 input condition (2D) 에 맞는 Shape 을 생성하기 위해, _**구조화되지 않은 넓은 latent space 을 비효율적으로 탐색해야 하므로 수렴이 느리며 성능이 제한될 수 있다는 가설**_ 로 이어진다.
 
 반면 Trellis는 이미 VA-VAE 와 유사한 아이디어를 **3D 에서 SLAT (Structured Latent)이라는 개념으로 구현**했다고 볼 수 있다. SLAT 은 DINO feature map 그 자체를 VAE 의 학습 목표로 삼아, 공간적 구조를 가진 의미론적 latent space 를 만든다. 즉, "**DINO가 이미 충분히 좋으니, 이를 그대로 3D 공간에 매핑해서 쓰자!**"는 접근인 셈. 
-<img src='./250710_building_large_3d_2/assets/image-14.png' width=70%>
+<img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-9.png' width=70%>
 
 하지만 이 방식은 VAE 의 latent space 를 사실상 두 개로 쪼개서 구성한다는 문제가 있다. 즉, ***'어디에 형태가 존재하는가?'*** 를 결정하는 **Structure** 와, ***'그곳에 무엇이 있는가?'*** 를 결정하는 **Feature** 로 구성된다는 것. 이로 인해 생성 과정은 복잡한 2-stage 파이프라인으로 분리된다.
 
@@ -633,15 +630,6 @@ _**Stay Tuned!**_
 
 --- 
 
-You may also like
-
-- [3D 생성에서 NeRF 와 SDS 는 도태될 수밖에 없는가? (kor)](https://velog.io/@gjghks950/3d)
-- [3D 생성 모델의 시대](/blogs/posts/?id=250302_3d_latent_diffusion)
-- [Building Large 3D Generative Models (1) - 3D Data Pre-processing](/blogs/posts/id?=250702_building_large_3d_1)
-- [From Flow Matching to Optimal Transport: A Physics-based View of Generative Models (kor)](/blogs/posts/?id=250810_flow)
-
----
-
 ### References
 
 Vecset-based VAE
@@ -665,5 +653,3 @@ Sparse-Voxel VAE (& its 3D Generation)
 - [SparseFlex](https://arxiv.org/abs/2503.21732) 
 - [Direct3D-S2](https://arxiv.org/abs/2505.17412) 
 - [Sparc3D](https://arxiv.org/abs/2505.14521) 
-
-<br/>

@@ -561,7 +561,7 @@ VA-VAE's solution is simple yet effective: **align the VAE's latent space with t
 The Vecset-based VAE, which uses Point Clouds and focuses solely on reconstructing 3D shapes, has aspects similar to the '_reconstruction-specialized_' VAE pointed out by VA-VAE. This leads to the _**hypothesis that since the DiT (Flow Model) must inefficiently search a vast, unstructured latent space to generate a shape matching the input condition (2D), its convergence may be slow and its performance limited.**_
 
 On the other hand, Trellis can be seen as having already implemented an idea similar to VA-VAE in 3D with its concept of **SLAT (Structured Latent)**. SLAT uses the DINO feature map itself as the VAE's training target, creating a semantic latent space that possesses spatial structure. In essence, the approach is: "**DINO is already good enough, so let's just map it directly onto the 3D space!**"
-<img src='./250710_building_large_3d_2/assets/image-14.png' width=70%>
+<img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-9.png' width=70%>
 
 However, this method has the problem of effectively splitting the VAE's latent space in two. That is, it is composed of **Structure**, which determines ***'where the shape exists?'***, and **Feature**, which determines ***'what exists there?'***. This leads to a complex 2-stage generation pipeline.
 
@@ -614,14 +614,6 @@ _**Stay Tuned!**_
 
 ---
 
-You may also like
-
-- [An Era of 3D Generative AI](/blogs/posts/?id=250302_3d_latent_diffusion)
-- [Building Large 3D Generative Models (1) - 3D Data Pre-processing](/blogs/posts/id?=250702_building_large_3d_1)
-- [From Flow Matching to Optimal Transport: A Physics-based View of Generative Models (kor)](/blogs/posts/?id=250810_flow)
-
----
-
 ### References
 
 Vecset-based VAE
@@ -645,5 +637,3 @@ Sparse-Voxel VAE (& its 3D Generation)
 - [SparseFlex](https://arxiv.org/abs/2503.21732) 
 - [Direct3D-S2](https://arxiv.org/abs/2505.17412) 
 - [Sparc3D](https://arxiv.org/abs/2505.14521) 
-
-<br/>

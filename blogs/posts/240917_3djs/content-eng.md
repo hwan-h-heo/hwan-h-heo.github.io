@@ -31,7 +31,6 @@ author: Hwan Heo
     </ul>
 </nav>
 
-<br/>
 <h2 id="tl-dr">TL; DR</h2>
 <p class="lang eng"> 
     <em>(short article)</em> <br/>
@@ -50,7 +49,6 @@ author: Hwan Heo
     We’ll use this package to integrate advanced point-based rendering into our website. 
     Now, let’s walk through the setup process.
 </p>
-<br/>
 
 <h2 id="step">
     Step-by-Step
@@ -68,7 +66,7 @@ author: Hwan Heo
         "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
     }
 }
-&lt;/script&gt; </code></pre><br/>
+&lt;/script&gt; </code></pre>
 
 <h3 id="step2">Step 2: HTML Structure</h3>
 <p class="lang eng">
@@ -176,7 +174,6 @@ function update() {
         Set <code>'sharedMemoryForWorkers': false</code> for preventing CORS error.
     </li>
 </ul>
-<br/>
 <h3 id="step3">
     Example Result of Custom GS Scene
 </h3>
@@ -200,26 +197,3 @@ function update() {
     <br/><br/>
     That’s all for now!
 </p>
-
-<hr/>
-<p>
-    You may also like, 
-</p>
-<ul>
-    <li>
-        <a href="/blogs/posts/?id=240805_gs">
-            <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
-        </a>
-    </li>
-    <li>
-        <a href="/blogs/posts/?id=240823_grt">
-            <span style="text-decoration: underline;">Don't Rasterize But Ray Trace Gaussian</span>
-        </a>
-    </li>
-    <li>
-        <a href="/blogs/posts/?id=240602_2dgs">
-            <span style="text-decoration: underline;">Under the 3D: Geometrically Accurate 2D Gaussian Splatting </span>
-        </a>
-    </li>
-</ul>
-<br/>

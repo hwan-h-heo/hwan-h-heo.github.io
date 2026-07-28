@@ -8,6 +8,37 @@
             .replace(/'/g, '&#39;');
     }
 
+    const CATEGORY_LABELS = {
+        app: 'Application',
+        research: 'Research',
+        per: 'Personal'
+    };
+    const PROJECT_ACTION_LABELS = {
+        varco3d: 'Service Overview',
+        capa: 'Research Project',
+        deepsfm: 'Project Notes',
+        '2dgs-viewer': 'Viewer Project',
+        'instant-pose': 'Paper Project',
+        'nerf-in-game': 'Engine Project'
+    };
+
+    function isSelectedProject(project, index) {
+        if (typeof project.selected === 'boolean') {
+            return project.selected;
+        }
+        return index < 3;
+    }
+
+    function getProjectCategoryLabels(project) {
+        return (project.categories || [])
+            .map((category) => CATEGORY_LABELS[category] || category)
+            .filter(Boolean);
+    }
+
+    function getProjectActionLabel(project) {
+        return PROJECT_ACTION_LABELS[project.id] || 'Project Page';
+    }
+
     function renderMedia(project) {
         if (project.video) {
             return `
@@ -26,30 +57,38 @@
         `;
     }
 
-    function renderProject(project) {
-        const filters = (project.categories || []).map((category) => `filter-${category}`).join(' ');
+    function renderProject(project, index = 0) {
+        const selected = isSelectedProject(project, index);
+        const categoryLabels = getProjectCategoryLabels(project);
         const targetAttrs = project.external ? ' target="_blank" rel="noopener noreferrer"' : '';
         const externalIcon = project.external ? ' <i class="bi bi-box-arrow-up-right"></i>' : '';
         const badgeHtml = project.badge
-            ? `<div class="top-left"><h6><span class="badge">${escapeHtml(project.badge)}</span></h6></div>`
+            ? `<span class="portfolio-project-badge">${escapeHtml(project.badge)}</span>`
             : '';
         const spinnerHtml = project.gif || project.video
             ? '<div class="loading-spinner" style="display: none;"></div>'
             : '';
+        const selectedLabel = selected ? '<span>Selected Project</span>' : '<span>Project Archive</span>';
+        const actionLabel = getProjectActionLabel(project);
+        const hidden = selected ? '' : ' hidden';
 
         return `
-            <article class="col-lg-4 col-sm-6 portfolio-item isotope-item ${filters}">
-                <a class="portfolio-box" href="${escapeHtml(project.url)}"${targetAttrs}>
-                    <div class="aspect-ratio-box">
+            <article class="portfolio-project-item" data-selected="${selected ? 'true' : 'false'}"${hidden}>
+                <a class="portfolio-project-link" href="${escapeHtml(project.url)}"${targetAttrs}>
+                    <span class="portfolio-project-cover">
                         ${renderMedia(project)}
-                    </div>
-                    ${spinnerHtml}
-                    ${badgeHtml}
-                    <div class="polar_content">
-                        <h6 data-hover-text="${escapeHtml(project.summary)}">${escapeHtml(project.title)}${externalIcon}</h6>
-                        <p class="portfolio-card-summary">${escapeHtml(project.summary)}</p>
-                    </div>
-                    <p class="click-prompt">Click to see details</p>
+                        ${spinnerHtml}
+                        ${badgeHtml}
+                    </span>
+                    <span class="portfolio-project-body">
+                        <span class="portfolio-project-eyebrow">
+                            ${selectedLabel}
+                            ${categoryLabels[0] ? `<span>${escapeHtml(categoryLabels[0])}</span>` : ''}
+                        </span>
+                        <span class="portfolio-project-title">${escapeHtml(project.title)}${externalIcon}</span>
+                        <span class="portfolio-project-summary">${escapeHtml(project.summary)}</span>
+                        <span class="portfolio-project-meta">${escapeHtml(actionLabel)} <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+                    </span>
                 </a>
             </article>
         `;
@@ -98,35 +137,35 @@
         `;
     }
 
-    function initPortfolioLayout(layoutElement, container) {
-        if (!window.Isotope || !window.imagesLoaded || !layoutElement || !container) {
-            return;
-        }
+    function setPortfolioView(section, view) {
+        const resolvedView = view === 'all' ? 'all' : 'selected';
+        section.dataset.portfolioView = resolvedView;
 
-        const layout = layoutElement.getAttribute('data-layout') || 'masonry';
-        const filter = layoutElement.getAttribute('data-default-filter') || '*';
-        const sort = layoutElement.getAttribute('data-sort') || 'original-order';
+        section.querySelectorAll('.portfolio-project-item').forEach((item) => {
+            item.hidden = resolvedView === 'selected' && item.dataset.selected !== 'true';
+        });
 
-        imagesLoaded(container, function() {
-            const isotope = new Isotope(container, {
-                itemSelector: '.isotope-item',
-                layoutMode: layout,
-                filter,
-                sortBy: sort,
-                percentPosition: true
-            });
+        section.querySelectorAll('[data-portfolio-view]').forEach((control) => {
+            const active = control.dataset.portfolioView === resolvedView;
+            control.classList.toggle('filter-active', active);
+            control.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+    }
 
-            layoutElement.querySelectorAll('.isotope-filters li').forEach((filters) => {
-                filters.addEventListener('click', function() {
-                    const activeFilter = layoutElement.querySelector('.isotope-filters .filter-active');
-                    if (activeFilter) {
-                        activeFilter.classList.remove('filter-active');
-                    }
-                    this.classList.add('filter-active');
-                    isotope.arrange({ filter: this.getAttribute('data-filter') });
-                }, false);
+    function initPortfolioViewToggle(section) {
+        if (!section) return;
+
+        section.querySelectorAll('[data-portfolio-view]').forEach((control) => {
+            const activate = () => setPortfolioView(section, control.dataset.portfolioView);
+            control.addEventListener('click', activate);
+            control.addEventListener('keydown', (event) => {
+                if (event.key !== 'Enter' && event.key !== ' ') return;
+                event.preventDefault();
+                activate();
             });
         });
+
+        setPortfolioView(section, section.dataset.portfolioView || 'selected');
     }
 
     const api = {
@@ -162,7 +201,9 @@
         try {
             const siteData = await window.siteDataClient.loadSiteData();
 
-            if (!projectContainer.querySelector('.portfolio-box')) {
+            projectContainer.className = 'portfolio-project-list';
+
+            if (!projectContainer.querySelector('.portfolio-project-item')) {
                 projectContainer.innerHTML = (siteData.portfolioProjects || []).map(renderProject).join('');
             }
             if (!publicationsContainer.querySelector('.portfolio-publication')) {
@@ -176,7 +217,7 @@
                 window.initPortfolioBoxes(projectContainer);
             }
 
-            initPortfolioLayout(section, projectContainer);
+            initPortfolioViewToggle(section);
         } catch (error) {
             console.error(error);
         } finally {

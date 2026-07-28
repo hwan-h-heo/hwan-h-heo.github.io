@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://hwan-h-heo.github.io/</loc>
     <changefreq>weekly</changefreq>
@@ -12,261 +12,471 @@
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference/" />
     <lastmod>2026-07-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference/" />
     <lastmod>2026-07-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" />
     <lastmod>2026-01-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" />
     <lastmod>2026-01-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/sdf-and-eikonal-equation/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/sdf-and-eikonal-equation/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/sdf-and-eikonal-equation-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/sdf-and-eikonal-equation/" />
     <lastmod>2025-08-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/sdf-and-eikonal-equation-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/sdf-and-eikonal-equation/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/sdf-and-eikonal-equation-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/sdf-and-eikonal-equation/" />
     <lastmod>2025-08-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/" />
     <lastmod>2025-08-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/" />
     <lastmod>2025-08-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/generalized-winding-number/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/generalized-winding-number/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/generalized-winding-number-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/generalized-winding-number/" />
     <lastmod>2025-08-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/generalized-winding-number-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/generalized-winding-number/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/generalized-winding-number-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/generalized-winding-number/" />
     <lastmod>2025-08-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/" />
     <lastmod>2025-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/" />
     <lastmod>2025-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/building-large-3d-generative-model-1-data-pre-processing-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/" />
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/building-large-3d-generative-model-1-data-pre-processing-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/building-large-3d-generative-model-1-data-pre-processing-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/" />
     <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/3d-model-viewer-in-web/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/3d-model-viewer-in-web/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/3d-model-viewer-in-web-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/3d-model-viewer-in-web/" />
     <lastmod>2025-03-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/3d-model-viewer-in-web-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/3d-model-viewer-in-web/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/3d-model-viewer-in-web-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/3d-model-viewer-in-web/" />
     <lastmod>2025-03-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation/" />
     <lastmod>2025-03-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation/" />
     <lastmod>2025-03-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/neural-rendering-beyond-photography/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/neural-rendering-beyond-photography/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/neural-rendering-beyond-photography-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/neural-rendering-beyond-photography/" />
     <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/neural-rendering-beyond-photography-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/neural-rendering-beyond-photography/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/neural-rendering-beyond-photography-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/neural-rendering-beyond-photography/" />
     <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/add-gaussian-splatting-to-your-website/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/add-gaussian-splatting-to-your-website/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/add-gaussian-splatting-to-your-website-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/add-gaussian-splatting-to-your-website/" />
     <lastmod>2024-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/add-gaussian-splatting-to-your-website-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/add-gaussian-splatting-to-your-website/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/add-gaussian-splatting-to-your-website-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/add-gaussian-splatting-to-your-website/" />
     <lastmod>2024-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian/" />
     <lastmod>2024-08-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian/" />
     <lastmod>2024-08-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/" />
     <lastmod>2024-08-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/" />
     <lastmod>2024-08-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/radiance-fields-from-deep-based-structure-from-motion/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/radiance-fields-from-deep-based-structure-from-motion/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/radiance-fields-from-deep-based-structure-from-motion/" />
     <lastmod>2024-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting/" />
     <lastmod>2024-06-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting/" />
     <lastmod>2024-06-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/is-diffusions-estimated-depth-really-good/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/is-diffusions-estimated-depth-really-good/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/is-diffusions-estimated-depth-really-good-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/is-diffusions-estimated-depth-really-good/" />
     <lastmod>2024-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/is-diffusions-estimated-depth-really-good-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/is-diffusions-estimated-depth-really-good/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/is-diffusions-estimated-depth-really-good-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/is-diffusions-estimated-depth-really-good/" />
     <lastmod>2024-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/can-sora-understand-3d/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/can-sora-understand-3d/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/can-sora-understand-3d/" />
     <lastmod>2024-02-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/can-nerf-be-used-in-game/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/can-nerf-be-used-in-game/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/can-nerf-be-used-in-game/" />
     <lastmod>2023-11-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/instant-ngp-review-re-implementation/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/instant-ngp-review-re-implementation/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/instant-ngp-review-re-implementation/" />
     <lastmod>2023-02-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/" />
     <lastmod>2021-11-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/change-of-basis/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/change-of-basis/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/change-of-basis-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/change-of-basis/" />
     <lastmod>2021-09-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/change-of-basis-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/change-of-basis/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/change-of-basis-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/change-of-basis/" />
     <lastmod>2021-09-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/linear-system/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/linear-system/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/linear-system-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/linear-system/" />
     <lastmod>2021-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/linear-system-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/linear-system/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/linear-system-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/linear-system/" />
     <lastmod>2021-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/3d-stereo-vision-and-epipolar-geometry/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/3d-stereo-vision-and-epipolar-geometry/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/3d-stereo-vision-and-epipolar-geometry/" />
     <lastmod>2021-06-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/homography-and-image-alignment/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/homography-and-image-alignment/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/homography-and-image-alignment/" />
     <lastmod>2021-05-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/feature-extraction-and-detection/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/feature-extraction-and-detection/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/feature-extraction-and-detection/" />
     <lastmod>2021-04-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/image-filter-and-morphology/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/image-filter-and-morphology/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/image-filter-and-morphology/" />
     <lastmod>2021-03-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/series/3d-generation/</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/series/web-3d/</loc>
+    <lastmod>2025-03-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/series/computer-vision/</loc>
+    <lastmod>2021-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/series/graphics/</loc>
+    <lastmod>2025-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/series/linear-algebra/</loc>
+    <lastmod>2021-09-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/series/nerf-and-gs/</loc>
+    <lastmod>2025-01-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/tags/3d-generation/</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/tags/computer-vision/</loc>
+    <lastmod>2021-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/tags/gaussian-splatting/</loc>
+    <lastmod>2025-01-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/tags/generative-ai/</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/tags/graphics/</loc>
+    <lastmod>2025-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/tags/linear-algebra/</loc>
+    <lastmod>2021-09-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/tags/neural-rendering/</loc>
+    <lastmod>2025-01-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/tags/three-js/</loc>
+    <lastmod>2025-03-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/tags/web-3d/</loc>
+    <lastmod>2025-03-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/projects/2dgs_viewer/</loc>

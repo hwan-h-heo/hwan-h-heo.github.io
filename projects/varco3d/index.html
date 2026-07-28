@@ -4,9 +4,9 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>VARCO 3D: 3D Generative AI Service</title>
-  <meta content="Portfolio draft for VARCO 3D, NC AI&#39;s commercial 3D generation service, summarizing model development from CaPa-inspired pipelines to sparse voxel and VecSet-Lattice generation." name="description">
-  <meta content="VARCO 3D, NC AI, 3D Generation, 3D Generative AI, ShapeVAE, DiT, Sparse Voxel, VecSet, Lattice, Texture Generation" name="keywords">
+  <title>VARCO 3D: Production 3D Generative AI</title>
+  <meta content="Portfolio page for VARCO 3D, summarizing 1B+ in-house 3D generative model development, CUDA inference optimization, mesh post-processing, UV unwrapping, and texture back-projection." name="description">
+  <meta content="VARCO 3D, NC AI, 3D Generation, 3D Generative AI, VecSet-based ShapeVAE, Dense DiT Denoiser, Sparse DC VAE, Sparse DiT Denoiser, CUDA, cuBLASLt, QEM Decimation, UV Unwrapping, Texture Back Projection" name="keywords">
 
   <link href="../../assets/favicon.ico" rel="icon">
   <link href="../../assets/favicon.ico" rel="apple-touch-icon">
@@ -141,6 +141,52 @@
       margin-right: auto;
       max-width: 760px;
       width: min(100%, 760px);
+    }
+    .portfolio-details .container.col-11.varco-feature-strip {
+      margin: -0.25rem auto 2.2rem;
+      max-width: 440px;
+    }
+    .portfolio-details .varco-feature-strip p,
+    .portfolio-details .varco-feature-strip p > img:only-child {
+      margin: 0 auto;
+    }
+    .portfolio-details .varco-feature-strip img {
+      background: #f8fafc;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      box-shadow: 0 20px 48px rgba(15, 23, 42, 0.13);
+      display: block;
+      height: auto;
+      object-fit: contain;
+      width: 100%;
+    }
+    .portfolio-details .varco-version-stack {
+      display: grid;
+      gap: 0.9rem;
+      margin: 1.15rem 0 1.35rem;
+    }
+    .portfolio-details .varco-version-item {
+      background: #f8fafc;
+      border-left: 3px solid #149ddd;
+      border-radius: 0 12px 12px 0;
+      padding: 0.95rem 1.05rem;
+    }
+    .portfolio-details .varco-version-item h3 {
+      color: #0f172a;
+      font-size: 0.92rem;
+      font-weight: 760;
+      letter-spacing: 0;
+      margin: 0 0 0.35rem;
+    }
+    .portfolio-details .varco-version-item p {
+      color: #526070;
+      font-size: 0.92rem;
+      line-height: 1.58;
+      margin: 0.35rem 0 0;
+    }
+    .portfolio-details .varco-version-item p:first-of-type {
+      color: #149ddd;
+      font-weight: 720;
+      line-height: 1.42;
     }
     .portfolio-details img,
     .portfolio-details video,
@@ -296,6 +342,39 @@
       border-radius: 18px;
       box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
     }
+    .portfolio-details .portfolio-info h3 {
+      font-size: 1.05rem;
+      letter-spacing: 0;
+      margin-bottom: 1rem;
+    }
+    .portfolio-details .portfolio-info ul {
+      display: grid;
+      gap: 0.78rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .portfolio-details .portfolio-info li {
+      color: #475569;
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+    .portfolio-details .portfolio-info li + li {
+      margin-top: 0;
+    }
+    .portfolio-details .portfolio-info li strong {
+      color: #0f172a;
+      display: block;
+      font-size: 0.84rem;
+      font-weight: 760;
+      letter-spacing: 0;
+      line-height: 1.32;
+      margin-bottom: 0.02rem;
+      text-transform: none;
+    }
+    .portfolio-details .portfolio-info a {
+      font-weight: 650;
+    }
     .portfolio-details table {
       border-radius: 14px;
       overflow: hidden;
@@ -357,6 +436,9 @@
       .portfolio-details .viewer-feature-grid-3 {
         grid-template-columns: 1fr;
       }
+      .portfolio-details .container.col-11.varco-feature-strip {
+        max-width: 320px;
+      }
       .portfolio-details .project-page-nav {
         grid-template-columns: 1fr;
       }
@@ -404,16 +486,16 @@
         <li><a href="../../#home"><i class="bi bi-house navicon"></i>Home</a></li>
         <li><a href="../../#about"><i class="bi bi-person navicon"></i> About</a></li>
         <li><a href="../../#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
-        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Portfolio</a></li>
+        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Project</a></li>
         <li class="project-nav-selector">
           <details>
             <summary aria-current="page"><i class="bi bi-dot navicon"></i><span>VARCO 3D</span><i class="bi bi-chevron-down project-selector-toggle"></i></summary>
             <div class="project-selector-options">
-          <a href="../nerf_in_game/"><i class="bi bi-arrow-return-right navicon"></i><span>Neural Rendering in Game Engine</span></a>
           <a href="../capa/"><i class="bi bi-arrow-return-right navicon"></i><span>CaPa</span></a>
-          <a href="../instant_pose/"><i class="bi bi-arrow-return-right navicon"></i><span>Instant Pose</span></a>
-          <a href="../2dgs_viewer/"><i class="bi bi-arrow-return-right navicon"></i><span>2D GS Viewer</span></a>
           <a href="../deepsfm/"><i class="bi bi-arrow-return-right navicon"></i><span>Deep SfM for Radiance Fields</span></a>
+          <a href="../2dgs_viewer/"><i class="bi bi-arrow-return-right navicon"></i><span>2D GS Viewer</span></a>
+          <a href="../instant_pose/"><i class="bi bi-arrow-return-right navicon"></i><span>Instant Pose</span></a>
+          <a href="../nerf_in_game/"><i class="bi bi-arrow-return-right navicon"></i><span>Neural Rendering in Game Engine</span></a>
             </div>
           </details>
         </li>
@@ -428,7 +510,7 @@
         <nav class="breadcrumbs">
           <ol>
             <li><a href="../../">Home</a></li>
-            <li class="current">VARCO 3D: 3D Generative AI Service</li>
+            <li class="current">VARCO 3D: Production 3D Generative AI</li>
           </ol>
         </nav>
       </div>
@@ -437,29 +519,30 @@
     <section id="portfolio-details" class="portfolio-details section">
       <div class="row gx-5 justify-content-center">
         <div class="project-hero-header text-center mb-5 col-11 col-lg-10 col-xl-8 col-xxl-7">
-          <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline">VARCO 3D: 3D Generative AI Service</span></h1>
-          <div class="fs-3 fw-light text-muted">NC AI</div>
+          <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline">VARCO 3D: Production 3D Generative AI</span></h1>
+          <div class="fs-3 fw-light text-muted">NC AI / Production 3D Generation</div>
         </div>
       </div>
 
+<div class="container col-11 varco-feature-strip">
+<p><img src="/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png" alt="VARCO 3D 2.0 generated textured character" class="img-fluid"></p>
+
+</div>
 <div class="container portfolio-details-container col-11">
 <div class="row gy-4">
 <div class="col-lg-8">
 <div class="portfolio-description">
 <h2>Project Overview</h2>
-<p><strong>VARCO 3D</strong> is NC AI&#39;s commercial 3D generative AI service for producing textured 3D assets from generative model pipelines.
-My role has been focused on <strong>core algorithm research and development</strong> for the VARCO 3D team: training 3D generative models, setting technical directions, and connecting research prototypes to service-oriented generation pipelines.</p>
-<p>The project sits at the intersection of <strong>native 3D generation</strong>, <strong>mesh-oriented geometry synthesis</strong>, and <strong>texture generation</strong>.
-Rather than relying on slow optimization-based SDS pipelines, the development direction moved toward feed-forward 3D generation systems that can better satisfy production constraints: generation speed, mesh usability, topology quality, texture fidelity, and commercial deployability.</p>
+<p><strong>VARCO 3D</strong> is NC AI&#39;s production 3D generative AI service for creating textured meshes from native 3D generation models and GPU-first geometry processing.
+My work spans the full generation stack: <strong>mesh pre/post-processing</strong>, <strong>designing and training 1B+ parameter in-house 3D generative models from scratch</strong>, and moving research-grade inference paths into production service.</p>
 
 <div class="mt-4">
-<p><strong>Core contributions represented in this draft:</strong></p>
+<p><strong>Core contributions</strong></p>
 <ul>
-<li><strong>Service-oriented 3D generation R&amp;D</strong>: contributed to the algorithmic development of NC AI&#39;s flagship 3D generation service.</li>
-<li><strong>CaPa-to-VARCO pipeline expansion</strong>: evolved the CaPa direction into a broader service pipeline combining geometry generation and texture generation.</li>
-<li><strong>Sparse voxel model development</strong>: explored high-detail sparse voxel generation for the VARCO 3D 1.0-preview direction.</li>
-<li><strong>Fast active voxel preparation</strong>: implemented CUDA-based mesh-to-voxel distance computation, reducing the coarse-mesh-to-active-voxel preparation process to under 5 seconds.</li>
-<li><strong>VecSet-Lattice refinement</strong>: trained a structure-aware DiT model with voxel-query positional conditioning, improving convergence speed and mesh robustness.</li>
+<li><strong>Large-scale 3D model R&amp;D</strong>: designed and trained in-house 3D generative models at 1B+ parameter scale, covering the transition from VARCO 3D 1.0 to 2.0.</li>
+<li><strong>Production inference optimization</strong>: analyzed the forward path, removed null-context attention arithmetic, and fused memory-bound paths with custom CUDA kernels and cuBLASLt epilogues.</li>
+<li><strong>Mesh post-processing</strong>: implemented CUDA-based solid correction, QEM decimation, topology cleaning, and large-mesh UV unwrapping paths for production outputs.</li>
+<li><strong>Texture delivery</strong>: built a CUDA rasterizer based texture back-projection pipeline that maps multi-view generated images into UV texture space.</li>
 </ul>
 
 </div>
@@ -469,13 +552,15 @@ Rather than relying on slow optimization-based SDS pipelines, the development di
 <div class="portfolio-info">
 <h3>Project Details</h3>
 <ul>
-<li><strong>Role</strong>: Core 3D Generation Model R&amp;D</li>
-<li><strong>Category</strong>: Commercial AI Service, 3D Generation</li>
-<li><strong>Organization</strong>: NC AI</li>
-<li><strong>Technology</strong>: ShapeVAE, DiT, Rectified Flow, Sparse Voxel VAE, VecSet, Lattice, CUDA</li>
-<li><strong>Service URL</strong>: <a href="https://www.varco.ai/3d">VARCO 3D</a></li>
-<li><strong>Related Blog</strong>: <a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/">Varco3D: A Year in Review</a></li>
-<li><strong>Related Project</strong>: <a href="/projects/capa/">CaPa</a></li>
+<li><strong>Role</strong>3D Generative Model and Production Pipeline R&amp;D</li>
+<li><strong>Category</strong>Commercial AI Service, 3D Generation</li>
+<li><strong>Organization</strong>NC AI</li>
+<li><strong>Model Scale</strong>1B+ parameter in-house 3D generative models</li>
+<li><strong>Technology</strong>VecSet-based ShapeVAE, Dense DiT Denoiser, Sparse DC VAE, Sparse DiT Denoiser, CUDA, cuBLASLt, QEM, UV Unwrapping, CUDA Rasterization</li>
+<li><strong>Service URL</strong><a href="https://www.varco.ai/3d">VARCO 3D</a></li>
+<li><strong>Latest Technical Writing</strong><a href="/blogs/posts/optimizing-sparse-3d-generation-inference/">Sparse 3D Inference Optimization</a></li>
+<li><strong>Development Retrospective</strong><a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/">Varco3D: A Year in Review</a></li>
+<li><strong>Related Project</strong><a href="/projects/capa/">CaPa</a></li>
 </ul>
 
 </div>
@@ -484,101 +569,70 @@ Rather than relying on slow optimization-based SDS pipelines, the development di
 </div>
 <div class="row gx-5 justify-content-center">
 <div class="project-readable portfolio-description">
-<h2>Technical Direction</h2>
-<p>VARCO 3D&#39;s development can be understood as a transition from <strong>optimization-driven 3D generation</strong> to <strong>feed-forward native 3D generation</strong>.
-Earlier SDS-style methods were compelling because they could reuse strong 2D diffusion models, but they suffered from practical limitations for game-ready or production-oriented assets: saturated color, Janus artifacts, slow per-asset optimization, and noisy geometry.</p>
-<p>The direction that became more practical was to split the problem into two major stages:</p>
+<h2>System Focus</h2>
+<p>The practical target of VARCO 3D is not just to synthesize geometry.
+The service path has to produce a textured mesh that is fast to generate, stable to post-process, and usable by downstream 3D workflows.</p>
+<p>I worked across three connected layers:</p>
 <ol>
-<li><strong>Geometry generation</strong>: generate a mesh-oriented 3D structure using native 3D latent representations.</li>
-<li><strong>Texture generation</strong>: synthesize multi-view texture observations and back-project them to the generated mesh.</li>
+<li><strong>Native 3D generation</strong>: train large in-house geometry models rather than relying on slow per-asset SDS optimization.</li>
+<li><strong>Production inference</strong>: profile and rewrite the expensive denoising path so the model can run under service latency constraints.</li>
+<li><strong>Mesh and texture processing</strong>: convert generated geometry into cleaned, decimated, unwrapped, textured mesh assets.</li>
 </ol>
-<p>This direction built on lessons from CaPa and extended them toward a service setting where speed, quality, and controllability matter simultaneously.</p>
-<h2>VARCO 3D Alpha</h2>
-<p>The initial VARCO 3D alpha pipeline followed a CaPa-inherited architecture:</p>
-<ul>
-<li><strong>Geometry</strong>: ShapeVAE + DiT / flow-based generative modeling.</li>
-<li><strong>Texture</strong>: multi-view image synthesis and mesh texture back-projection.</li>
-</ul>
+<h2>Architecture Shift</h2>
+<p>The model stack moved from dense latent generation to sparse active-structure generation.
+That shift mattered because it changed both the training target and the serving bottleneck.</p>
 
-<div class="video-container">
-<iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/AtQNAuQY4-A?si=pQWlS8qawVOyFSqK" title="VARCO 3D alpha demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<div class="varco-version-stack">
+<div class="varco-version-item">
+<h3>VARCO 3D 1.0</h3>
+<p><strong>VecSet-based ShapeVAE + Dense DiT Denoiser</strong></p>
+<p>Dense geometry generation with lattice-conditioned refinement, focused on producing stable mesh structure from native 3D latents.</p>
 
 </div>
-<p>One of the key observations from this phase was that geometry generation has a different scaling profile from 2D image generation.
-Compared with RGB images, artist-authored mesh geometry has less background variation and less high-frequency visual complexity, making native 3D geometry training a tractable direction under realistic compute constraints.</p>
-<h2>Sparse Voxel Preview</h2>
-<p>After the alpha release, sparse voxel-based methods became an important technical inflection point.
-Sparse voxel representations changed the problem structure: instead of forcing one model to generate every detail globally, the system can separate <strong>global shape</strong> from <strong>local detail refinement</strong>.</p>
-<p>The core engineering challenge was how to provide active voxel information efficiently.
-To avoid the cost of generating high-resolution active voxels from scratch, I proposed using a coarse mesh generated by the existing VecSet-based model, then voxelizing that mesh as the input structure for the sparse voxel DiT.</p>
-<table>
-<thead>
-<tr>
-<th>Coarse Mesh</th>
-<th>Voxelized Active Structure</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><img src="assets/remote-06671f65972d.png" alt="Coarse mesh" class="img-fluid"></td>
-<td><img src="assets/remote-82d7ccc46efd.png" alt="Voxelized structure" class="img-fluid"></td>
-</tr>
-</tbody></table>
-<p>For this stage, I implemented a CUDA kernel for parallel mesh-to-voxel distance computation.
-This reduced the pipeline from coarse mesh generation to active voxel generation to <strong>under 5 seconds</strong>, making the sparse voxel refinement direction more practical for service-oriented inference.</p>
-<p>The resulting sparse voxel-based model was presented internally as the VARCO 3D 1.0-preview direction.</p>
-<p><img src="assets/remote-dec1b1acbb14.png" alt="VARCO 3D 1.0-preview result" class="img-fluid"></p>
-<h2>VecSet-Lattice Refinement</h2>
-<p>The later direction revisited VecSet-based generation through a Lattice-style coarse-to-fine formulation.
-The key idea was to preserve the global shape capability of VecSet models while injecting stronger spatial structure into the generative model.</p>
-<p>In this setup:</p>
-<ul>
-<li>A coarse mesh is first generated.</li>
-<li>The coarse mesh is voxelized.</li>
-<li>Representative voxel queries are sampled.</li>
-<li>A structure-aware DiT uses the voxel query coordinates through positional conditioning to generate refined geometry.</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Coarse Mesh</th>
-<th>Voxel Query</th>
-<th>Fine Mesh</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><img src="assets/remote-5cb2a959b9d1.png" alt="Coarse mesh" class="varco-lattice-img img-fluid"></td>
-<td><img src="assets/remote-9ca32db34e84.png" alt="Voxel query" class="varco-lattice-img img-fluid"></td>
-<td><img src="assets/remote-2c37d81fd55d.png" alt="Fine mesh" class="varco-lattice-img img-fluid"></td>
-</tr>
-</tbody></table>
-<p>This refinement direction showed a major training-efficiency improvement.
-Where the earlier VecSet DiT setup took much longer to converge, the structure-aware DiT with voxel-query conditioning converged in roughly one day in the reported development setting.</p>
-<h3>Sparse Voxel vs. VecSet-Lattice</h3>
-<p>The VecSet-Lattice direction showed detail comparable to or better than the sparse voxel preview while producing more robust mesh topology and fewer artifacts.</p>
-<img src="assets/remote-eb6322f90365.png" alt="VARCO 3D sparse voxel vs VecSet-Lattice comparison" width="88%" class="img-fluid">
+<div class="varco-version-item">
+<h3>VARCO 3D 2.0</h3>
+<p><strong>Sparse DC VAE + Sparse DiT Denoiser</strong></p>
+<p>Sparse latent generation over active 3D structure, built for higher-detail outputs and a more scalable production inference path.</p>
 
+</div>
+</div>
+<p>The tradeoff is that sparse assets are less uniform at runtime.
+Token count and active layout vary by input, so the serving path needed model-aware profiling and custom CUDA work rather than only generic graph-level acceleration.</p>
+<h2>Production Inference Optimization</h2>
+<p>On the VARCO 3D 2.0 sparse denoiser, I profiled the forward path and identified null-context attention as arithmetic the model did not need to repeat.
+The optimized path replaces unconditional cross-attention with a fixed-vector path, then fuses memory-bound tensor operations through custom CUDA kernels and cuBLASLt epilogues.</p>
+<p>This was not a benchmark-only shortcut.
+The optimized path entered production serving, with numerical validation and fallback rules defined around the fused kernels.
+The full write-up covers the numerical validation contract, fallback rules, and latency results:</p>
+<p><a href="/blogs/posts/optimizing-sparse-3d-generation-inference/">Read the VARCO 3D 2.0 inference optimization write-up</a></p>
+<h2>Mesh and Texture Pipeline</h2>
+<p>To extend geometry generation into textured mesh delivery, I implemented and optimized the post-generation pipeline around GPU execution:</p>
+<ul>
+<li><strong>CUDA-based QEM and topology cleaning</strong> for stable simplification and production mesh repair.</li>
+<li><strong>Custom UDF kernels</strong> for fast solid correction from generated geometry.</li>
+<li><strong>Flood-fill acceleration kernels</strong> to make occupancy and solidness correction practical at service scale.</li>
+<li><strong>Optimized tile-based UV unwrapping</strong> so algorithmic unwrap remains stable on million-face meshes.</li>
+<li><strong>CUDA rasterizer based back-projection</strong> that uses UV IDs to project multi-view generated images directly into texture map space.</li>
+</ul>
+<p>This layer is where the generated result becomes a deployable asset: cleaned geometry, controlled face count, valid UVs, and texture maps produced without a slow CPU-bound handoff.</p>
 <h2>Result</h2>
 
 <div class="varco-object-embed">
-<iframe src="https://3d.varco.ai/test-embed/02072a988541af639c393f1d4c45f2ef.glb" width="100%" height="500px" title="VARCO 3D 1.0 generated object" style="border: none;"></iframe>
+<iframe src="https://3d.varco.ai/test-embed/58a4bcc4fb191c53d0ffc5f420a1462d.glb" width="100%" height="500px" title="VARCO 3D 2.0 generated object" style="border: none;" loading="lazy" allowfullscreen></iframe>
 
 </div>
-<p><em>Varco3D 1.0</em></p>
-<p>VARCO 3D became a clear turning point in my work: from isolated 3D generation research toward building a commercial 3D AI service.
-The project required connecting model architecture decisions, training strategy, GPU-scale experiments, CUDA-side preprocessing, texture synthesis, and product constraints into one practical generation pipeline.</p>
-<p>For the full technical retrospective and development narrative, see the related blog post:</p>
-<p><a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/">Read the VARCO 3D development retrospective</a></p>
+<p><em>Generated by VARCO 3D 2.0.</em></p>
 
 </div>
 </div>
 <div class="container project-page-nav">
-        <a class="project-page-nav-link project-page-nav-prev" href="../deepsfm/">
+        <a class="project-page-nav-link project-page-nav-prev" href="../nerf_in_game/">
           <span class="project-page-nav-kicker"><i class="bi bi-arrow-left"></i> Previous Project</span>
-          <strong>Deep SfM for Radiance Fields</strong>
-        </a>
-        <a class="project-page-nav-link project-page-nav-next" href="../nerf_in_game/">
-          <span class="project-page-nav-kicker">Next Project <i class="bi bi-arrow-right"></i></span>
           <strong>Neural Rendering in Game Engine</strong>
+        </a>
+        <a class="project-page-nav-link project-page-nav-next" href="../capa/">
+          <span class="project-page-nav-kicker">Next Project <i class="bi bi-arrow-right"></i></span>
+          <strong>CaPa</strong>
         </a>
       </div>
     </section>

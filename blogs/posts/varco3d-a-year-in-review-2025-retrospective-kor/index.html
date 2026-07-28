@@ -3,14 +3,17 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="최근 3D 생성형 AI 시스템을 돌아보는 기술 회고" />
+    <meta name="description" content="최근 3D 생성형 AI 시스템을 돌아보는 기술 회고. 개인적인 소회를 기록하는 행위에 그리 능숙한 편은 아니다. 그럼에도 2025년은 단순한 연차의 축적으로 치부하기엔 너무 많은 것이 바뀌었다. 커리어와 개인사 양면에서 삶의 궤도가 급격히 뒤틀리는 감각을 경험한 해였고, 특히 &#39;NC" />
     <meta name="keywords" content="post, 3d-generation, 3D Generation, Generative AI, 3D graphics, computer vision, machine learning" />
     <meta name="author" content="Hwan Heo" />
     <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/" />
+    <link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" />
+    <link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/" />
+    <link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/" />
     <meta property="og:title" content="3D 생성형 AI 서비스; Varco3D 개발기" />
-    <meta property="og:description" content="최근 3D 생성형 AI 시스템을 돌아보는 기술 회고" />
+    <meta property="og:description" content="최근 3D 생성형 AI 시스템을 돌아보는 기술 회고. 개인적인 소회를 기록하는 행위에 그리 능숙한 편은 아니다. 그럼에도 2025년은 단순한 연차의 축적으로 치부하기엔 너무 많은 것이 바뀌었다. 커리어와 개인사 양면에서 삶의 궤도가 급격히 뒤틀리는 감각을 경험한 해였고, 특히 &#39;NC" />
     <meta property="og:image" content="https://hwan-h-heo.github.io/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif" />
     <meta property="og:site_name" content="HwanHeo's Blog" />
     <meta property="article:published_time" content="2026-01-15T00:00:00.000Z" />
@@ -19,61 +22,18 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/" />
     <meta name="twitter:title" content="3D 생성형 AI 서비스; Varco3D 개발기" />
-    <meta name="twitter:description" content="최근 3D 생성형 AI 시스템을 돌아보는 기술 회고" />
+    <meta name="twitter:description" content="최근 3D 생성형 AI 시스템을 돌아보는 기술 회고. 개인적인 소회를 기록하는 행위에 그리 능숙한 편은 아니다. 그럼에도 2025년은 단순한 연차의 축적으로 치부하기엔 너무 많은 것이 바뀌었다. 커리어와 개인사 양면에서 삶의 궤도가 급격히 뒤틀리는 감각을 경험한 해였고, 특히 &#39;NC" />
     <meta name="twitter:image" content="https://hwan-h-heo.github.io/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif" />
-    <script type="application/ld+json">
-    {
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "3D 생성형 AI 서비스; Varco3D 개발기",
-  "description": "최근 3D 생성형 AI 시스템을 돌아보는 기술 회고",
-  "image": "https://hwan-h-heo.github.io/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif",
-  "author": {
-    "@type": "Person",
-    "name": "Hwan Heo",
-    "url": "https://hwan-h-heo.github.io"
-  },
-  "publisher": {
-    "@type": "Person",
-    "name": "Hwan Heo",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://hwan-h-heo.github.io/assets/favicon.ico"
-    }
-  },
-  "datePublished": "2026-01-15T00:00:00.000Z",
-  "dateModified": "2026-01-15T00:00:00.000Z",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/"
-  },
-  "inLanguage": "ko"
-}
-    </script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"3D 생성형 AI 서비스; Varco3D 개발기","description":"최근 3D 생성형 AI 시스템을 돌아보는 기술 회고. 개인적인 소회를 기록하는 행위에 그리 능숙한 편은 아니다. 그럼에도 2025년은 단순한 연차의 축적으로 치부하기엔 너무 많은 것이 바뀌었다. 커리어와 개인사 양면에서 삶의 궤도가 급격히 뒤틀리는 감각을 경험한 해였고, 특히 'NC","url":"https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/","mainEntityOfPage":"https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/","image":["https://hwan-h-heo.github.io/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif"],"author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"publisher":{"@type":"Person","name":"Hwan Heo"},"datePublished":"2026-01-15","dateModified":"2026-01-15","inLanguage":"ko"}</script>
 
-    <title>3D 생성형 AI 서비스; Varco3D 개발기 - HwanHeo's Blog</title>
+    <title>3D 생성형 AI 서비스; Varco3D 개발기 | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
-
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "/vendor/three/build/three.module.js",
-                "three/addons/": "/vendor/three/examples/jsm/",
-                "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
-            }
-        }
-    </script>
-
-    <script src="/vendor/tween/tween.umd.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
     <link href="/blogs/css/used.css" rel="stylesheet" />
     <link href="/blogs/css/typography.css" rel="stylesheet" />
     <link href="/blogs/css/blog_post_specific.css" rel="stylesheet" />
-    <link href="/blogs/css/code-copy.css" rel="stylesheet" />
     <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
     <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -104,13 +64,13 @@
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
         <div class="container px-4 px-lg-5">
             <a class="navbar-brand" href="/blogs/">Hwan's Blog</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+            <button class="navbar-toggler" type="button" data-nav-toggle aria-controls="navbarResponsive" aria-expanded="false">
                 Menu <i class="bi bi-list"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
-                    <li class="nav-item"><a href="../varco3d-a-year-in-review-2025-retrospective/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="eng" style="font-size:0.7rem">ENG</a></li>
+                    <li class="nav-item"><a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="eng" style="font-size:0.7rem">ENG</a></li>
                 </ul>
             </div>
         </div>
@@ -122,13 +82,13 @@
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     <div class="post-heading">
                         <br/>
-                        <h2>3D 생성형 AI 서비스; Varco3D 개발기</h2>
+                        <h1>3D 생성형 AI 서비스; Varco3D 개발기</h1>
                         <span class="meta">
-                            Posted on January 15, 2026
+                            Posted on <time datetime="2026-01-15">January 15, 2026</time>
                             <span style="margin: 0 8px;">•</span>
                             <i class="bi bi-clock" style="margin-right: 4px;"></i>15 min read
                         </span>
-                        <div class="post-tags"><span>3D Generation</span><span>Generative AI</span></div>
+                        <div class="post-tags"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
                         <hr/>
                     </div>
                 </div>
@@ -140,7 +100,104 @@
         <div class="container px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div id="series-container"></div>
+                    
+                    <nav class="breadcrumbs" aria-label="Breadcrumb">
+                        <ol>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/blogs/">Blog</a></li>
+                            <li><a href="/blogs/series/3d-generation/">3D 생성 AI</a></li>
+                            <li aria-current="page">3D 생성형 AI 서비스; Varco3D 개발기</li>
+                        </ol>
+                    </nav>
+    
+                    <div id="series-container">
+            <details class="series-card">
+                <summary class="series-summary">
+                    <span class="series-icon" aria-hidden="true"><i class="bi bi-collection"></i></span>
+                    <span class="series-summary-copy">
+                        <span class="series-kicker">Series</span>
+                        <strong>3D 생성 AI</strong>
+                    </span>
+                    <span class="series-meta">2 / 7</span>
+                    <span class="series-toggle">
+                        <span>7 posts</span>
+                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                    </span>
+                </summary>
+                <div class="series-body">
+                    <ol class="series-list">
+                <li class="series-post">
+                    <a href="/blogs/posts/optimizing-sparse-3d-generation-inference-kor/">
+                        <span class="series-post-index">01</span>
+                        <span class="series-post-copy">
+                            <strong>컴파일러가 놓친 Sparse 3D Forward 최적화</strong>
+                            <span>2026.07.27</span>
+                        </span>
+                    </a>
+                </li>
+        
+                    <li class="series-post is-current" aria-current="page">
+                        <span class="series-post-index">02</span>
+                        <span class="series-post-copy">
+                            <strong>3D 생성형 AI 서비스; Varco3D 개발기</strong>
+                            <span>2026.01.15</span>
+                        </span>
+                        <span class="series-current-pill">Current</span>
+                    </li>
+            
+                <li class="series-post">
+                    <a href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models-kor/">
+                        <span class="series-post-index">03</span>
+                        <span class="series-post-copy">
+                            <strong>From Flow Matching to Optimal Transport: A Physics-based View of Generative Models</strong>
+                            <span>2025.08.10</span>
+                        </span>
+                    </a>
+                </li>
+        
+                <li class="series-post">
+                    <a href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive-kor/">
+                        <span class="series-post-index">04</span>
+                        <span class="series-post-copy">
+                            <strong>Large 3D Generative Model 구축하기 (2) VAE and DiT 분석</strong>
+                            <span>2025.07.10</span>
+                        </span>
+                    </a>
+                </li>
+        
+                <li class="series-post">
+                    <a href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing-kor/">
+                        <span class="series-post-index">05</span>
+                        <span class="series-post-copy">
+                            <strong>Large 3D Generative Model 구축하기 (1) 데이터 전처리</strong>
+                            <span>2025.07.02</span>
+                        </span>
+                    </a>
+                </li>
+        
+                <li class="series-post">
+                    <a href="/blogs/posts/an-era-of-3d-generation-kor/">
+                        <span class="series-post-index">06</span>
+                        <span class="series-post-copy">
+                            <strong>3D 생성 모델의 시대</strong>
+                            <span>2025.03.02</span>
+                        </span>
+                    </a>
+                </li>
+        
+                <li class="series-post">
+                    <a href="/blogs/posts/is-diffusions-estimated-depth-really-good-kor/">
+                        <span class="series-post-index">07</span>
+                        <span class="series-post-copy">
+                            <strong>Diffusion 으로 추정한 Depth 진짜 좋나요?</strong>
+                            <span>2024.04.26</span>
+                        </span>
+                    </a>
+                </li>
+        </ol>
+                </div>
+            </details>
+    </div>
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7 main-content">
                     <nav class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Introduction" aria-label="Introduction"><span class="toc-link-text">Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="1. Back to the 2024" aria-label="1. Back to the 2024"><span class="toc-link-text">1. Back to the 2024</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-2" title="1.1 Non-Native 3D Generation" aria-label="1.1 Non-Native 3D Generation"><span class="toc-link-text">1.1 Non-Native 3D Generation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="1.2. Texture Generative AI" aria-label="1.2. Texture Generative AI"><span class="toc-link-text">1.2. Texture Generative AI</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="1.3. Beyond SDS; Native 3D Generation" aria-label="1.3. Beyond SDS; Native 3D Generation"><span class="toc-link-text">1.3. Beyond SDS; Native 3D Generation</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-5" title="2. Pursue SOTA: 3D Sovereign AI" aria-label="2. Pursue SOTA: 3D Sovereign AI"><span class="toc-link-text">2. Pursue SOTA: 3D Sovereign AI</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="2.1. Varco3D-alpha" aria-label="2.1. Varco3D-alpha"><span class="toc-link-text">2.1. Varco3D-alpha</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="2.2. SOTA Sparse Voxel Method" aria-label="2.2. SOTA Sparse Voxel Method"><span class="toc-link-text">2.2. SOTA Sparse Voxel Method</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.3. Varco3D 1.0-preview" aria-label="2.3. Varco3D 1.0-preview"><span class="toc-link-text">2.3. Varco3D 1.0-preview</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-9" title="3. Back to the VecSet" aria-label="3. Back to the VecSet"><span class="toc-link-text">3. Back to the VecSet</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="3.1. Lattice" aria-label="3.1. Lattice"><span class="toc-link-text">3.1. Lattice</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-11" title="3.2. FlashVDM; vice-versa of Lattice?" aria-label="3.2. FlashVDM; vice-versa of Lattice?"><span class="toc-link-text">3.2. FlashVDM; vice-versa of Lattice?</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-12" title="3.3. Varco3D-Lattice" aria-label="3.3. Varco3D-Lattice"><span class="toc-link-text">3.3. Varco3D-Lattice</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-13" title="4. Next Step in 3D Generation" aria-label="4. Next Step in 3D Generation"><span class="toc-link-text">4. Next Step in 3D Generation</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-14" title="4.1. Sparse Voxel vs. VecSet" aria-label="4.1. Sparse Voxel vs. VecSet"><span class="toc-link-text">4.1. Sparse Voxel vs. VecSet</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-15" title="4.2. Beyond SDF: Trellis 2 &amp; Faith-Contouring" aria-label="4.2. Beyond SDF: Trellis 2 &amp; Faith-Contouring"><span class="toc-link-text">4.2. Beyond SDF: Trellis 2 &amp; Faith-Contouring</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-16" title="Epilogue" aria-label="Epilogue"><span class="toc-link-text">Epilogue</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
@@ -245,8 +302,6 @@ $$
 <p>프로젝트를 진행하며 최적화 기반의 3D 생성 방법론은 결국 한계에 다다를 것이라 확신했다. ShapeVAE 기반의 DiT는 feed-forward 방식이기 때문에 SDS보다 asset 생성에 훨씬 빠르며, DiT 모델의 크기를 증대시키며 scaling law의 성공을 3D domain으로 확장할 수 있기 때문이다. </p>
 <hr>
 <h2 id="toc-heading-5">2. Pursue SOTA: 3D Sovereign AI</h2>
-<br/>
-
 <h3 id="toc-heading-6">2.1. Varco3D-alpha</h3>
 <p>새로운 팀으로 옮긴 후 내가 수행한 첫 번째 업무는 CaPa 파이프라인을 확장하여 사내 3D 생성 서비스인 Varco3D-$\alpha$를 출시하는 것이었다. 모델 구조는 CaPa 를 계승한 전형적인 3D 생성 파이프라인을 따랐다.</p>
 <ol>
@@ -254,7 +309,6 @@ $$
 <li><strong>Texture Generation</strong>: 2D Generative Model 을 차용한 Multi-View Image Synthesis to Mesh Back-projection</li>
 </ol>
 <iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/AtQNAuQY4-A?si=pQWlS8qawVOyFSqK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
 
 
 <p>이 모델을 학습시키며 얻은 중요한 직관 중 하나는, &#39;Geometry VAE&#39;를 학습시키는 데는 2D 생성 모델보다 훨씬 적은 데이터와 리소스가 필요하다는 점이었다. 이는 3D geometry의 distribution이 RGB images보다 단순하다는 가정 때문인데, 실제로 아티스트가 제작한 polygonal mesh는 RGB image와 달리 high-frequency detail의 변화나 복잡한 배경이 많지 않다.</p>
@@ -331,8 +385,6 @@ $$
 <p><img src="/blogs/posts/260115_Varco3D/assets/remote-dec1b1acbb14.png" alt=""></p>
 <hr>
 <h2 id="toc-heading-9">3. Back to the VecSet</h2>
-<br/>
-
 <h3 id="toc-heading-10">3.1. Lattice</h3>
 <p>Sparse voxel 기반 방법론(Sparc3D 등)이 global shape과 local detail 생성을 분리하여 학습 효율과 품질을 비약적으로 높인 사실을 기억하는가? </p>
 <p><a href="https://lattice3d.github.io/"><strong>Lattice</strong></a>는 Tencent에서 공개한 Hunyuan3D 2.5/3.0 geometry 생성 모델의 핵심이 되는 구조다. Sparc3D 등과 마찬가지로 먼저 global shape을 생성한 후, 그 결과를 guidance 삼아 local detail을 생성 하는 two-stage 접근법을 VecSet 방법론에 적용하였다. 
@@ -348,7 +400,7 @@ $$
 <hr>
 <h3 id="toc-heading-11">3.2. FlashVDM; vice-versa of Lattice?</h3>
 <p>이 논문의 아이디어는 VecSet decoding 가속화 연구인 <a href="https://github.com/Tencent-Hunyuan/FlashVDM"><strong>FlashVDM</strong></a>의 실험에서 파생된 것이라고 추측한다 (저자 또한 같다). FlashVDM은 SDF 추출에 <strong>dense grid point query</strong>가 필요했던 기존 VecSet decoding 단계에 <strong>octree-decoding (Hierarchical Decoding)</strong> 을 제안하여 수십배로 decoding 시간을 단축한 연구이다. </p>
-<p><img src="/blogs/posts/260115_Varco3D/assets/remote-d05de1f944fa.png" alt=""></p>
+<p><img src="/blogs/posts/260727_sparse_3d/assets/sparse-pipeline.png" alt=""></p>
 <ul>
 <li><em><strong>Visualization of FlashVDM.</strong></em> <em>Right</em> 의 mesh 를 VAE decoder 를 통해 복원할 때, FlashVDM 은 <em>Left</em> 의 좌-&gt;우 처럼 coarse resolution 에서 먼저 active voxel 식별 후 이 active voxel 범위에서만 resolution 을 늘려가면서 고해상도의 SDF 를 복원한다. <img src='/blogs/posts/260115_Varco3D/assets/remote-361723135c58.png' width=50%></li>
 </ul>
@@ -437,18 +489,53 @@ $$
 <ul>
 <li>Varco3D 1.0</li>
 </ul>
-<hr>
-<p>You may also like</p>
-<ul>
-<li><a href="/blogs/posts/an-era-of-3d-generation/">An Era of 3D Generative Models</a></li>
-<li><a href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/">Building Large 3D Generative Models (1) - 3D Data Pre-processing</a></li>
-<li><a href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/">Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D</a></li>
-</ul>
-<br/>
 
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div id="post-navigation" class="mt-4"></div>
+                    
+                    <section class="related-posts" aria-labelledby="related-posts-heading">
+                        <h2 id="related-posts-heading">Related Posts</h2>
+                        <div class="related-post-grid">
+                            
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/an-era-of-3d-generation-kor/" aria-label="Read 3D 생성 모델의 시대">
+                                    <strong>3D 생성 모델의 시대</strong>
+                                    <time datetime="2025-03-02">2025년 3월 2일</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing-kor/" aria-label="Read Large 3D Generative Model 구축하기 (1) 데이터 전처리">
+                                    <strong>Large 3D Generative Model 구축하기 (1) 데이터 전처리</strong>
+                                    <time datetime="2025-07-02">2025년 7월 2일</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive-kor/" aria-label="Read Large 3D Generative Model 구축하기 (2) VAE and DiT 분석">
+                                    <strong>Large 3D Generative Model 구축하기 (2) VAE and DiT 분석</strong>
+                                    <time datetime="2025-07-10">2025년 7월 10일</time>
+                                </a>
+                            </article>
+        
+                        </div>
+                    </section>
+    
+                    <div id="post-navigation" class="mt-4"><nav class="post-nav-grid" aria-label="Post navigation">
+                <a class="post-nav-card is-older" href="/blogs/posts/sdf-and-eikonal-equation-kor/" aria-label="Older Post: SDF 와 Eikonal Equation 의 관계는?">
+                    <span class="post-nav-kicker">
+                        <span>Older Post</span>
+                    </span>
+                    <strong>SDF 와 Eikonal Equation 의 관계는?</strong>
+                </a>
+    
+                <a class="post-nav-card is-next" href="/blogs/posts/optimizing-sparse-3d-generation-inference-kor/" aria-label="Newer Post: 컴파일러가 놓친 Sparse 3D Forward 최적화">
+                    <span class="post-nav-kicker">
+                        <span>Newer Post</span>
+                    </span>
+                    <strong>컴파일러가 놓친 Sparse 3D Forward 최적화</strong>
+                </a>
+    </nav></div>
                 </div>
             </div>
         </div>
@@ -472,9 +559,9 @@ $$
       "title_eng": "What the Compiler Missed in Sparse 3D Inference",
       "title_kor": "컴파일러가 놓친 Sparse 3D Forward 최적화",
       "subtitle_eng": "Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0",
-      "subtitle_kor": "Null-Context Attention 제거와 CUDA Fusion으로 줄인 3D 생성 지연시간",
+      "subtitle_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
       "description_eng": "Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0",
-      "description_kor": "Null-Context Attention 제거와 CUDA Fusion으로 줄인 3D 생성 지연시간",
+      "description_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
       "tags": [
         "3D Generation",
         "Generative AI",
@@ -670,7 +757,7 @@ $$
         "3D Generation",
         "Generative AI"
       ],
-      "cover": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif",
+      "cover": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser-poster.jpg",
       "status": "published",
       "updated": "2025-03-02",
       "date": "2025-03-02",
@@ -859,7 +946,7 @@ $$
         "3D Generation",
         "Generative AI"
       ],
-      "cover": "/blogs/posts/240226_sora/assets/image.gif",
+      "cover": "/blogs/posts/240226_sora/assets/big-sur-gs-poster.jpg",
       "status": "published",
       "updated": "2024-02-26",
       "date": "2024-02-26",
@@ -882,7 +969,7 @@ $$
         "Neural Rendering",
         "Gaussian Splatting"
       ],
-      "cover": "/blogs/posts/231130_nerf_in_game/assets/diget.gif",
+      "cover": "/blogs/posts/231130_nerf_in_game/assets/VID_4_NeRF_obeject_in_blender-poster.jpg",
       "status": "published",
       "updated": "2023-11-30",
       "date": "2023-11-30",
@@ -1105,13 +1192,20 @@ $$
   "postId": "260115_Varco3D",
   "lang": "kor",
   "alternateLang": "eng",
-  "alternateHref": "../varco3d-a-year-in-review-2025-retrospective/"
+  "alternateHref": "/blogs/posts/varco3d-a-year-in-review-2025-retrospective/",
+  "runtimeFeatures": {
+    "katex": true,
+    "prism": false,
+    "bootstrap": false,
+    "modelViewer": false,
+    "three": false,
+    "tween": false,
+    "simpleModelViewer": false,
+    "gaussianSplats": false
+  }
 };
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
-    <script src="/blogs/js/code-copy.js"></script>
+
     <script src="/blogs/js/theme-toggle.js"></script>
     <script src="/blogs/js/scroll-progress.js"></script>
     <script src="/blogs/js/post-page.js"></script>

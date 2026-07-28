@@ -3,40 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting...</title>
+    <meta name="robots" content="noindex, follow">
+    <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/posts/">
+    <title>Legacy Blog URL Redirect | Hwan Heo</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             background-color: #f5f5f5;
         }
         .message {
+            max-width: 38rem;
             text-align: center;
             padding: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="message">
-        <p>Redirecting to the new blog location...</p>
-    </div>
+    <main class="message">
+        <h1>Legacy blog URL</h1>
+        <p id="legacy-redirect-message">Checking the legacy post identifier...</p>
+        <p><a href="/blogs/">Return to the blog archive</a></p>
+    </main>
 
-    <script src="/blogs/js/site-data-client.js"></script>
     <script>
-        (async function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const postId = urlParams.get('id');
-            const siteData = await window.siteDataClient.loadSiteData();
-            const post = siteData.postById[postId];
+        (function() {
+            const redirects = {"260727_sparse_3d":"/blogs/posts/optimizing-sparse-3d-generation-inference/","260115_Varco3D":"/blogs/posts/varco3d-a-year-in-review-2025-retrospective/","250823_sdf":"/blogs/posts/sdf-and-eikonal-equation/","250810_flow":"/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/","250809_gwn":"/blogs/posts/generalized-winding-number/","250710_building_large_3d_2":"/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/","250702_building_large_3d_1":"/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/","250310_model_viewer":"/blogs/posts/3d-model-viewer-in-web/","250302_3d_latent_diffusion":"/blogs/posts/an-era-of-3d-generation/","250106_tomography":"/blogs/posts/neural-rendering-beyond-photography/","240917_3djs":"/blogs/posts/add-gaussian-splatting-to-your-website/","240823_grt":"/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian/","240805_gs":"/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/","240721_sfm":"/blogs/posts/radiance-fields-from-deep-based-structure-from-motion/","240602_2dgs":"/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting/","240426_diffusion_depth":"/blogs/posts/is-diffusions-estimated-depth-really-good/","240226_sora":"/blogs/posts/can-sora-understand-3d/","231130_nerf_in_game":"/blogs/posts/can-nerf-be-used-in-game/","230202_ngp":"/blogs/posts/instant-ngp-review-re-implementation/","211128_fourier":"/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/","210910_lin_alg_2":"/blogs/posts/change-of-basis/","210909_lin_alg_1":"/blogs/posts/linear-system/","210602_cv4":"/blogs/posts/3d-stereo-vision-and-epipolar-geometry/","210502_cv3":"/blogs/posts/homography-and-image-alignment/","210402_cv2":"/blogs/posts/feature-extraction-and-detection/","210302_cv1":"/blogs/posts/image-filter-and-morphology/"};
+            const params = new URLSearchParams(window.location.search);
+            const legacyId = params.get('id') || '';
+            const target = redirects[legacyId];
+            const message = document.getElementById('legacy-redirect-message');
 
-            if (post) {
-                window.location.href = `/blogs/posts/${post.slug}/`;
-            } else {
-                window.location.href = '/blogs/';
+            if (target) {
+                let canonical = document.querySelector('link[rel="canonical"]');
+                if (!canonical) {
+                    canonical = document.createElement('link');
+                    canonical.rel = 'canonical';
+                    document.head.appendChild(canonical);
+                }
+                canonical.href = new URL(target, window.location.origin).href;
+
+                const currentPath = window.location.pathname.replace(/\/+$/, '/');
+                if (currentPath !== target) {
+                    window.location.replace(target);
+                    return;
+                }
+            }
+
+            if (message) {
+                message.textContent = legacyId
+                    ? 'No published post mapping exists for this legacy identifier.'
+                    : 'No legacy post identifier was provided.';
             }
         })();
     </script>

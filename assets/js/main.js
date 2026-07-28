@@ -314,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
  * Portfolio Hover Media Play (with Loading Spinner)
  * ------------------------------------------------------------------- */
 function initPortfolioBoxes(root = document) {
-  const portfolioBoxes = root.querySelectorAll('.portfolio-box:not([data-portfolio-bound])');
+  const portfolioBoxes = root.querySelectorAll('.portfolio-box:not([data-portfolio-bound]), .portfolio-project-link:not([data-portfolio-bound])');
   const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
   portfolioBoxes.forEach(box => {
@@ -323,7 +323,7 @@ function initPortfolioBoxes(root = document) {
     const video = box.querySelector('video');
     const image = box.querySelector('img[data-gif]');
     const spinner = box.querySelector('.loading-spinner');
-    const titleElement = box.querySelector('.polar_content h6');
+    const titleElement = box.querySelector('.polar_content h6, .portfolio-project-title');
 
     if (!titleElement) return;
 
@@ -334,7 +334,7 @@ function initPortfolioBoxes(root = document) {
     let typeInterval;
     let isActive = false; // 터치 디바이스에서 활성 상태 추적
 
-    if (hoverTypingText && !box.querySelector('.portfolio-card-summary')) {
+    if (hoverTypingText && !box.querySelector('.portfolio-card-summary, .portfolio-project-summary')) {
       const summaryElement = document.createElement('p');
       summaryElement.className = 'portfolio-card-summary';
       summaryElement.textContent = hoverTypingText;

@@ -66,7 +66,6 @@ $$
 ---
 
 
-
 ## Proof 1 
 
 > *Proof using Lipschitz Continuity*
@@ -220,7 +219,6 @@ $$
 
 ## Discussion
 
-
 **Rigor and Assumptions**: 두 증명 모두 $f$의 **미분 가능성** 과 **최근접점의 유일성** 을 가정했다. 실제 SDF 는 공간 내 모든 점에서 미분 가능하지는 않다. 미분 불가능한 점들의 집합을 ['medial axis'](https://en.wikipedia.org/wiki/Medial_axis) 또는 'skeleton' 이라 부르며, 이는 $\partial\Omega$ 상의 두 개 이상의 점과 동일한 최단 거리를 갖는 점들의 집합에 해당한다. 하지만 이러한 점들의 집합은 Lebesgue measure 0을 가지므로, SDF는 ***거의 모든 곳에서 Eikonal equation 을 만족한다*** 고 표현하는 것이 가장 엄밀하다.
 
 NeRF 등 Implicit Neural Network (INN) 를 이용한 3D reconstruction 에서 surface reconstruction 을 위해 SDF 를 학습하는 경우가 있다. 이 경우에 eikonal loss term 을 계산하려면 MLP 에 대한 second derivative 가 필요한데, INN 학습에 필수적인 tcnn library 에는 공식적으로 second derivative 기능을 제공하지 않는다. 따라서 Hash-Grid (feature-grid) representation 을 사용하는 SDF method 는 gradient 를 analytic 하게 계산하는 대신 ***finite difference*** 를 이용하여 ***numerical gradient*** 를 계산한다. 
@@ -238,4 +236,3 @@ NeRF 등 Implicit Neural Network (INN) 를 이용한 3D reconstruction 에서 su
 </video>
 
 *Ref*: [Boundary regularity for the distance functions, and the eikonal equation](https://arxiv.org/pdf/2409.01774)
-

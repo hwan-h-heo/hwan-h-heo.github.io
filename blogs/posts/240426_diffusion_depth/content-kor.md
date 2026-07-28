@@ -31,7 +31,6 @@ author: Hwan Heo
     </ul>
 </nav>
 
-<br/>
 <h2 id="sec1">1. Introduction </h2>
 
 <p class="lang kor" >
@@ -215,19 +214,19 @@ def make_textured_mesh(outname, scale=None):
 <table>
     <tr>
         <th>Scene #1</th>
-        <td><img class="img-fluid" src="./240426_diffusion_depth/assets/res1.gif" alt="Scene 1"></td>
+        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240426_diffusion_depth/assets/res1-poster.jpg" aria-label="Scene 1"><source src="./240426_diffusion_depth/assets/res1.mp4" type="video/mp4"></video></td>
     </tr>
     <tr>
         <th>Scene #2</th>
-        <td><img class="img-fluid" src="./240426_diffusion_depth/assets/res2.gif" alt="Scene 2"></td>
+        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240426_diffusion_depth/assets/res2-poster.jpg" aria-label="Scene 2"><source src="./240426_diffusion_depth/assets/res2.mp4" type="video/mp4"></video></td>
     </tr>
     <tr>
         <th>Scene #3</th>
-        <td><img class="img-fluid" src="./240426_diffusion_depth/assets/res3.gif" alt="Scene 1"></td>
+        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240426_diffusion_depth/assets/res3-poster.jpg" aria-label="Scene 3"><source src="./240426_diffusion_depth/assets/res3.mp4" type="video/mp4"></video></td>
     </tr>
     <tr>
         <th>Scene #4</th>
-        <td><img class="img-fluid" src="./240426_diffusion_depth/assets/res4.gif" alt="Scene 2"></td>
+        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240426_diffusion_depth/assets/res4-poster.jpg" aria-label="Scene 4"><source src="./240426_diffusion_depth/assets/res4.mp4" type="video/mp4"></video></td>
     </tr>
 </table>
 
@@ -260,8 +259,3 @@ def make_textured_mesh(outname, scale=None):
     예를 들어 Marigold 에서 비교군으로 잡고 있는 DSINE 는, 성능 자체는 marigold 보다 뒤떨어져도 훨씬 가벼운 network 를 쓰면서, stereo vision 에서 착안한 geomtric aware method 를 사용한다. 
     Diffusion-based depth estimation 도 이와 같은 접근법을 통해 regularization term 을 설계하면 더 좋은 성능으로 이어질 수 있을거라 믿는다.
 </p>
-<hr>
-<p>
-    You may like also,
-</p>
-<br/>

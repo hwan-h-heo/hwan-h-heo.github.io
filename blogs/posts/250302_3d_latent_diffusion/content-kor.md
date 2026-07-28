@@ -33,7 +33,6 @@ author: Hwan Heo
 
 이번 글에서는 **3D Latent Diffusion** 의 개념과 그 핵심이 되는 **ShapeVAE** 를 분석하고, 기존의 Score Distillation Sampling (SDS) 이나 NeRF 기반 Large Reconstruction Model (LRM) 의 한계를 어떻게 극복하는지를 살펴본다. 또한, SOTA 3D 생성 모델인 Trellis와 Hunyuan3D 를 비교 분석하며, 최신 3D 생성 모델들의 설계 차이와 특장점을 깊이 있게 탐구해보자.
 
-
 ## Preliminary: What is Latent? 
 
 <table id="table-1">
@@ -106,7 +105,7 @@ ShapeVAE 란 3D shapes data 에 대해 정의된 AutoEncoder (VAE) 이다. 여�
 모두 비슷한 형태의 pipeline design 을 갖는다. 사실 특별할 것도 없는 AutoEncoder 구조이며, 다음과 같은 특징이 있다. 
 
 
-![](./assets/remote-d7ffe0a9323e.png)
+![](./250302_3d_latent_diffusion/assets/image-24.png)
 
 - Figure: ShapeVAE pipeline (from CraftsMan)
 
@@ -142,24 +141,21 @@ $$
 
 정리하자면 ShapeVAE AutoEncoder 는 basis (latent query, **L**) 를 이용해서, 각 data instance (**X**) 에 대해 basis 와 data 간의 관계를 encoding ↔︎ decoding 하는 구조를 학습한다. Shape 에 대한 representation 을 가장 잘 표현하는 _**latent space**_ 와, 그 latent space 에 대한 정보를 가장 잘 담고 있는 _**basis (learnable query)**_ 를 배우게 되는 것. 
 
-![](./assets/remote-72582200e770.png)
+![](./250302_3d_latent_diffusion/assets/image-26.png)
 
 - Figure: ShapeVAE pipeline (from 3DShape2vecset)
-
 
 
 Pipeline 에서 각 요소는 다음과 같은 세부사항을 갖는다. 
 
 - **Positional Encoding**: fourier featuring 으로 NeRF / Transformer 에서 쓰이는 sinusodal encoding 의 그것. PE 는 Cartessian Coordinates 를 high-dimensional, frequency domain 으로 mapping 시켜줄 뿐만 아니라 kernel regression 을 학습할 때 coordinates 간의 stationary 성질을 더해준다. 
-<img src='./assets/remote-43d2954e40f5.png' width=70% >
+<img src='./250302_3d_latent_diffusion/assets/image-12.png' width=70% >
 
 - **KL reg term**: Encoder가 생성하는 latent distribution 이 prior distribution (일반적으로 standard Gaussian distribution, $N(0, 1)$) 에 가깝도록 유도한다. 이는 다음과 같은 장점들이 있다.
     - **Continuous latent space**: 정규 분포를 따르는 latent space는 연속적이고 부드러운 공간이 되며, latent space 상에서 interpolation 이나 sampling 이 쉬워진다.
     	- latent space 상에서 벡터 연산 (interpolation, extrapolation 등) 을 통해 shape variation 을 자연스럽게 제어할 수 있다. 
     - **Prevent Overfitting**: latent space를 prior distribution에 가깝게 제약함으로써, encoder가 학습 데이터의 분포를 더 일반적인 형태로 학습하도록 유도한다. 
     - **Sampling Ease**: 단순히 standard Gaussian distribution에서 랜덤 샘플링한 후 decoder에 입력하면 새로운 데이터를 생성할 수 있다. 
-
-
 
 
 > **Q. Why learnable query?**
@@ -195,13 +191,13 @@ ShapeVAE 의 성능은 이 중에서도 _1) 데이터의 양과 다양성 문제
 
 이러한 ShapeVAE 를 Geometry Generation 단계에서 적극 활용해 Model / Data capacity 를 크게 늘리고 shape generation 과 texture generation 을 분리한 2-stage pipeline 을 처음 제시한게 바로 **CLAY-Rodin** 이다. 
 
-![](./assets/remote-127bec212f8a.png)
+![](./250302_3d_latent_diffusion/assets/image-27.png)
 
 - Figure: Rodin (paper: [CLAY](https://sites.google.com/view/clay-3dlm))
 
 Rodin 은 large DiT model (1.5B) 를 이용해 ShapeVAE 와 그 latent space 에서의 shape generation 성능을 크게 올리고, 생성된 shape (mesh) 위에 *geometry-guided multi-view generation* 을 이용한 texture synthesis 의 2-stage 를 사용하여 그전까지의 3D 생성 퀄리티를 압도하는 결과를 보여주었다. 
 
-![](./assets/remote-84e15b335474.png)
+![](./250302_3d_latent_diffusion/assets/image-7.png)
 
 - Clay 와 유사한 pipeline 을 가진 [CaPa](https://ncsoft.github.io/CaPa/). 3D LDM 으로 mesh 를 생성한 이후 high-quality texture 를 만들어 backprojecting 한다. 
 
@@ -212,13 +208,11 @@ Rodin 은 large DiT model (1.5B) 를 이용해 ShapeVAE 와 그 latent space 에
 
 를 해결하기 어려웠는데...
 
-
 ## 2. Trellis 
 
 Paper: [Trellis: Structured 3D Latents for Scalable and Versatile 3D Generation](https://trellis3d.github.io/) 
 
 Trellis 는 2024년 말 Microsoft 에서 발표한 SOTA 3D Latent Diffusion 모델이다. 안정성과 fidelity 측면에서 이전 ShapeVAE 기반 접근법들을 크게 상회하는 결과를 보여주었고, end2end 로 shape 뿐만 아니라 texture 를 같이 생성할 수 있다는 장점이 있다. 어떠한 설계를 통해 SOTA quality 를 달성했는지 분석해보자. 
-
 
 ### 2.1. Structured Latent Representation 
 
@@ -235,7 +229,7 @@ $$
 
 정의 자체는 ShapeVAE 에서 사용하는 learnable query 를 voxel grid 에 mapping 한 것에 불과할 수 있으나, SLAT 의 핵심은 이 SLAT encoding 을 배우는 과정에서 **DINOv2** feature extractor 를 적극 이용한다는 것이다. 
 
-![](./assets/remote-7e6becc80ca1.png)
+![](./250302_3d_latent_diffusion/assets/image-9.png)
 
 
 위 그림과 같이, SLAT 은 VAE 를 학습하는 과정에서 3D assets 에 대한 encoding 을 
@@ -257,15 +251,13 @@ $$
 
 VAE 구조 자체는 original ShapeVAE 와 동일하며, latent space 가 잘 정의되어 있다면 Decoder 를 바꿔서 3D GS / Radiance Fields / Mesh 의 output 을 생성하도록 finetune 할 수 있기 때문에, Trellis 는 output 에 GSs, NeRF, Mesh 등 format-agnostic 하게 결과를 예측할 수 있다. (실제 inference branch 에서는 GS 와 Mesh branch 두 개를 사용함)
 
-
 ### 2.2. SLAT Generation  
 
 > Q. 그럼 3D Generation 자체도, ShapeVAE 에서처럼 latent space 에서 Standard Gaussian Distribution 의 random sample 을 넣으면 새로운 asset 이 생성되는가? 
 
 아쉽게도 그렇지 않은데, 우선 SLAT 은 ***‘structure’ (position index)*** 자체도 의미가 있기 때문에 structure, 즉 어떤 voxel 이 비었는지, 비지 않았는지부터 생성할 필요가 있다. 
 
-![](./assets/remote-41593cd15010.png)
-
+![](./250302_3d_latent_diffusion/assets/image-28.png)
 
 
 이를 위해 Trellis 는 3D Generation 에서 2-stage 의 접근을 사용한다.
@@ -285,7 +277,7 @@ $$
 구체적으로는 GT dense binary grid $\mathbf{O} \in \{0, 1\}^{N \times N \times N}$ 를 3D convolution 을 이용해 low-resolution feature grid $\mathbf{S} \in \mathbb{R}^{D \times D \times D \times C_s}$ 으로 압축하여, 이를 예측하는 Flow Transformer 를 먼저 학습한다. $\mathbf{O}$ 가 coarse 한 형상이기 때문에 3D conv 를 이용한 압축 과정에서 손실이 거의 없고, NN 학습의 효율성을 향상시키는 장점도 있다. 또한, $\mathbf{O}$ 의 binary grid 를 continuous value 로 변환하여 Rectified Flow 학습에 적합하게 만든다.
 
 > _**Rectified flow**_ 모델은 diffusion process 에서 data → noise 로 경로를 linear interpolation (input → output) 의 직선 경로를 forward process 로 사용하는 모델이다. 일반적인 Neural ODE solver 의 step 이 비효율적인데 비해 Rectified Flow 는 data → noise 의 linear 한 vector field 를 modeling 하기 때문에 훨씬 빠르고 정확하게 생성이 가능하다. 
-![](./assets/remote-2362aba79cab.png)
+![](./250302_3d_latent_diffusion/assets/image-3.png)
 
 
 이 과정에서 condition modeling 은 다른 Diffusion model 과 비슷하게 cross-attention 의 KV 에 inject 한다. 즉 Sparse Strucrue Gen 은 일종의 _**Image/Text-to-3D Coarse Shape Generation**_ 으로 작동한다.
@@ -309,8 +301,7 @@ Mesh Decoder 가 있기 때문에 Mesh Output 은 Mesh Decoder Branch 의 output
 - cf: [to_glb](https://github.com/microsoft/TRELLIS/blob/eeacb0bf6a7d25058232d746bef4e5e880b130ff/trellis/utils/postprocessing_utils.py#L399), [fill_holes](https://github.com/microsoft/TRELLIS/blob/eeacb0bf6a7d25058232d746bef4e5e880b130ff/trellis/utils/postprocessing_utils.py#L22)
 
 
-
-<img src='./assets/remote-4034215bd386.png'>
+<img src='./250302_3d_latent_diffusion/assets/x4-1.png'>
 
 굉장한 퀄리티의 output 을 보여주는데, [Demo](https://huggingface.co/spaces/JeffreyXiang/TRELLIS) 에서 모델을 돌려볼 수 있다. 
 
@@ -332,7 +323,7 @@ Hunyuan3Dv2 는 Trellis 와 다르게 end2end 가 아니라, Rodin 이나 CaPa �
 Hunyuan 의 ShapeVAE 설계도 vanilla ShapeVAE 와 많이 다르진 않지만, 몇 가지 주효한 차이점이 있다. 
 
 1. **Point Sampling**: ShapeVAE 학습할 시 대게는 GT mesh 로부터 point cloud 는 uniform sampling 을 통해 얻는다. 하지만 이렇게 되면 fine detail 을 잃는 경우가 다수이기 때문에, Hunyuan 은 uniform sampling 에 더불어 Edge / Corner 쪽에 더 집중된 point sampling 전략을 사용한다. 이는 최근 제시된 [Dora](https://aruichen.github.io/Dora/) 와도 비슷한 접근법이다.
-![](./assets/remote-5f69c7a6fbb5.png)
+![](./250302_3d_latent_diffusion/assets/image-15.png)
 	
     Figure from Dora. Left: salient points ↔︎  Right: uniform
 
@@ -343,7 +334,7 @@ Hunyuan 의 ShapeVAE 설계도 vanilla ShapeVAE 와 많이 다르진 않지만, 
 
 latent space 의 basis 는 배우지 않고 latent space 자체를 더 정밀하게 배우는 전략을 채택한 것인데, salinet sampling 이 각 3D shape 의 fine detail 을 충분히 반영하기 때문에 해당 접근법을 채택한 것 같다. 
 
-![](./assets/remote-069ab1fec6e6.png)
+![](./250302_3d_latent_diffusion/assets/image-16.png)
 - Figure: Hunyuan-ShapeVAE
 
 ### 3.2. Hunyuan3D-DiT
@@ -354,14 +345,14 @@ Flux 는 (official technical report 가 없지만) 공개된 dev version 코드�
 
 | SDXL | Flux |
 | --- | --- |
-| ![](./assets/remote-1ef6e44f1c6b.png) | ![](./assets/remote-64984c1d96a1.png) |
+| ![](./250302_3d_latent_diffusion/assets/image-29.png) | ![](./250302_3d_latent_diffusion/assets/image-30.png) |
 
 
 - cf. [unofficial diagram of Flux Pipeline](https://www.reddit.com/media?url=https%3A%2F%2Fpreview.redd.it%2Fa-detailled-flux-1-architecture-diagram-v0-ary85pw338od1.png%3Fwidth%3D7710%26format%3Dpng%26auto%3Dwebp%26s%3D9dd2a75cf75bc2dc1d0f1e7b27fb8a5f67253eb1) 
 
 - **my opinion)** Double stream 의 구조를 보면 ***ControlNet*** 의 reference net 방식과 유사한데, 아마 ControlNet 방식이 original modal 의 generation capability 를 해치지 않으면서 condition 을 잘 반영하는데서 착안한 구조가 아닐까 싶다. 
 
-![](./assets/remote-08c6d666d463.png)
+![](./250302_3d_latent_diffusion/assets/image-31.png)
 - Figure: Hunyuand3D-DiT
 
 Hunyuan 도 이러한 ***‘double-single’*** 구조를 채택하여 condition *(image, text)* instruction 에 대한 정보를 최대한 잃지 않으면서 동시에 3D Shape 도 high-quality 로 생성하는 것을 목표로 한다. 
@@ -385,7 +376,6 @@ $$
 
 언급된 학습 detail 중에 주목할만한 점으로, ViT 계열에서 주로 patch 단위에 positional embedding (PE) 을 더하는 것과 다르게 Hunyuan 은 PE 를 제거했다고 한다. 이는 Shape 생성 시 ‘fixed location’ 에 특정 latent 가 할당되는 것을 막기 위함이라고 한다.
 
-
 ### 3.3. Hunyuan3D-paint
 
 Hunyuan 은 CLAY / CaPa 와 같은 2-stage 방식이기 때문에 texture synthesis 에서 _**Geometry-guided Multi-View Generation**_ 을 이용한다. 하지만 단순히 MVDream / ImageDream 계열 모델 + MV-Depth / Normal ControlNet 을 학습시킨 것이 아니라 quality 를 높이기 위한 참신한 전략들을 다수 도입하였다. 
@@ -394,10 +384,10 @@ Hunyuan 은 CLAY / CaPa 와 같은 2-stage 방식이기 때문에 texture synthe
 
 | **input** | **generated front view (MVDiffusion)** |
 |---|---|
-| <img src="./assets/remote-575b4ad1d110.png" width="300"> | <img src="./assets/remote-2350cd172ffa.png" width="300"> |
+| <img src="./250302_3d_latent_diffusion/assets/image-10.png" width="300"> | <img src="./assets/remote-2350cd172ffa.png" width="300"> |
 
 
-![](./assets/remote-9bdeffeee417.png)
+![](./250302_3d_latent_diffusion/assets/image-32.png)
 
 - Architecture Design of Hunyuan3D-Paint
 
@@ -418,7 +408,7 @@ Hunyuan 은 CLAY / CaPa 와 같은 2-stage 방식이기 때문에 texture synthe
     - **CCM (Canonical Coordinate Maps)**: 3D model surface coordinate vector 를 canonical coordinate system 에 mapping 한 image
     
   > 둘 모두 canonical system 에 projection 하여 geometry-invariant 하게 정보를 주입한다. coordinate 와 normal 정보를 모두 사용하여 공간 상의 위치와 위치간의 관계를 모두 mapping 해주는 것. [MetaTextureGen](https://ai.meta.com/research/publications/meta-3d-texturegen-fast-and-consistent-texture-generation-for-3d-objects/) 도 동일한 guide 를 사용하는데, detail / global 측면에서 point + normal 조합이 depth map 에 비해 좋다고 report 하고 있다. 
-  <img src='./assets/remote-d984b003b72e.png' width=70%>
+  <img src='./250302_3d_latent_diffusion/assets/image-13.png' width=70%>
 
 
 또한 이러한 구조를 효과적으로 학습하기 위해 **Multi-Task Attention** 을 제시하는데, 수식으로 표현하면 다음과 같다. 
@@ -444,7 +434,7 @@ Ref module 과 mv module 이 독립적으로 작동하는 일종의 ‘multi-tas
 이를 이용해 reference image 를 guidance 로 활용하면서, 동시에 multi-view consistency 를 보장하는 diffusion model 설계. 즉, reference image 와 일관성을 유지하면서, 다양한 시점에서도 자연스러운 이미지를 생성할 수 있다. 
 
 
-![](./assets/remote-512f5e3ea266.png)
+![](./250302_3d_latent_diffusion/assets/image-6.png)
 
 - Figure from MV-Adapter. Parallel 구조의 유용성을 보여주는 ablation study. 우측의 parallel attention 이 reference image 의 특징을 훨씬 잘 반영하는 것을 볼 수 있다. 
 
@@ -454,18 +444,32 @@ Ref module 과 mv module 이 독립적으로 작동하는 일종의 ‘multi-tas
 
 | Multi-View Diffusion Results | 
 | --- | 
-|**Hunyuan**  <img src='./assets/remote-62c38d3ef1c4.png'> |
-|**ImageDream** <img src='./assets/remote-3e2c148aed77.png'> |
+|**Hunyuan**  <img src='./250302_3d_latent_diffusion/assets/image-17.png'> |
+|**ImageDream** <img src='./250302_3d_latent_diffusion/assets/image-18.png'> |
 
 
 --- 
 
 ## 4. Trellis vs Hunyuan3D
 
-| Trellis | Hunyuan3D |
-| --- | --- | 
-| ![](./assets/remote-1522561b550c.gif) | ![](./assets/remote-e3d52be08c5a.gif) |
-| ![](./assets/remote-99ee657ac546.gif) | ![](./assets/remote-9666475a3e19.gif) |
+<table>
+<thead>
+<tr>
+<th>Trellis</th>
+<th>Hunyuan3D</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-19-poster.jpg" aria-label="Trellis result 1" style="width: 100%"><source src="./250302_3d_latent_diffusion/assets/image-19.mp4" type="video/mp4"></video></td>
+<td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-20-poster.jpg" aria-label="Hunyuan3D result 1" style="width: 100%"><source src="./250302_3d_latent_diffusion/assets/image-20.mp4" type="video/mp4"></video></td>
+</tr>
+<tr>
+<td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-21-poster.jpg" aria-label="Trellis result 2" style="width: 100%"><source src="./250302_3d_latent_diffusion/assets/image-21.mp4" type="video/mp4"></video></td>
+<td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-22-poster.jpg" aria-label="Hunyuan3D result 2" style="width: 100%"><source src="./250302_3d_latent_diffusion/assets/image-22.mp4" type="video/mp4"></video></td>
+</tr>
+</tbody>
+</table>
 
 Velog 엔 직접적으로 3D model viewer 를 포팅할 방법이 없어 부득이하게 rendering 결과로 대체한다. 
 
@@ -480,10 +484,9 @@ Mesh Quality 의 경우 Trellis 보다 Hunyuan3D 의 topology 가 훨씬 좋다.
 
 마지막으로 CaPa Result 를 별첨한다 :)
 
-![](./assets/remote-bede410838ac.gif)
-
-
-
+<figure>
+<video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-23-poster.jpg" aria-label="Generated 3D asset by CaPa" style="width: 100%"><source src="./250302_3d_latent_diffusion/assets/image-23.mp4" type="video/mp4"></video>
+</figure>
 
 
 ## Closing
@@ -495,12 +498,3 @@ CLAY 등장 이후에도 한동안 opensource 진영에서 3D 분야의 괄목�
 특히 개인적으로는 Hunyuan 이 Flux, MV-Adapter 등에서 검증된 설계를 3D Generation scheme 에 적용한 것이 인상깊었다. 좋은 연구를 하고 싶다면 틈틈히 다른 분야의 연구 트렌드에 대한 following 도 놓지 않아야 한다는 것을 다시 한 번 느낀다.
 
 마지막으로 최근에는 MeshAnything 을 필두로 mesh face 를 auto-regressive 하게 생성하여 일명 'Artistic-Created Mesh' 로 만드는 연구도 주목받고 있지만 (이 연구들도 ShapeVAE latent space 를 이용한다) auto-regressive 방식이라 시간이 오래 걸리고 아직은 퀄리티가 안 좋아서 당분간은 주시하기만 해야할 것 같다. 
-
-
---- 
-
-You may also likes
-
-- [3D 생성에서 NeRF 와 SDS 는 도태될 수밖에 없는가? (velog)](https://velog.io/@gjghks950/3d)
-- [Building Large 3D Generative Models (1) - 3D Data Pre-processing](/blogs/posts/?id=250702_build_large_3d_1)
-- [Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D](/blogs/posts/?id=250710_build_large_3d_2)

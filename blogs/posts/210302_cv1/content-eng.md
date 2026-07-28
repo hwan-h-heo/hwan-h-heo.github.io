@@ -21,7 +21,6 @@ author: Hwan Heo
 
 ## 1. Image Filtering
 
-
 Image filtering is a fundamental process in computer vision used to modify or enhance an image. Common applications include denoising, resizing, and sharpening. Filters can be broadly categorized as linear or non-linear.
 
 #### Linear Filters
@@ -158,7 +157,6 @@ plt.savefig('image-1.jpg', dpi=200)
 
 ## 2. Morphology
 
-
 Morphological image processing is a collection of non-linear techniques for analyzing and processing geometric structures in an image. It operates by probing an image with a small shape or template known as a **structuring element (SE)**. The SE is positioned at all possible locations in the image and is compared with the corresponding neighborhood of pixels.
 
 #### Core Operations
@@ -241,5 +239,3 @@ plt.show()
 #### Result:
 
 <img src='./210302_cv1/assets/image-2.jpg' width=100%>
-
-<br/>

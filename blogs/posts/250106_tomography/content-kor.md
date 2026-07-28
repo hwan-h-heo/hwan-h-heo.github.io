@@ -55,7 +55,6 @@ author: Hwan Heo
 
 <h2 id="tomography-vs-photography">1. Tomography vs. Photography</h2>
 <img class="img-fluid" src="./250106_tomography/assets/image1.png" width="100%" alt="Tomography vs Photography" />
-<br/> 
 <h3 id="photography">1.1. Photography</h3>
 <p class="lang kor" >- <code>'본다'</code> 라는 행위는 물리학적으로 어떤 의미를 지닐까?</p>
 <p class="lang kor" >'본다'는 것은 광원에서 방출된 빛이 물체와 상호작용하여, 물체의 표면에서 특정 파장의 (or energy) 빛을 흡수하거나 반사하고, 흡수되지 않은 파장의 반사된 (reflection) 빛이 관찰자의 눈(또는 감지 장치)에 도달하여 시각적으로 인지되는 과정을 말한다.</p>
@@ -74,7 +73,6 @@ author: Hwan Heo
 <img class="img-fluid" src="./250106_tomography/assets/image2.png" alt="NeRF Rendering Equation" />
 <p class="lang kor" >이와 같이 NeRF 의 rendering equation 은 우리가 물체를 '본다'는 행위를 수식적으로 표현한 결과물이다. 물리적 빛-물체 상호작용 (흡수, 반사, 투명도 등) 의 모든 요소를 통합하여, NeRF는 광선 경로를 따라 누적된 빛의 기여를 계산해 최종적으로 이미지를 생성한다.</p>
 <img class="img-fluid" src="./250106_tomography/assets/image3.png" alt="NeRF Image Generation" />
-<br/>
 
 <h3 id="tomography">1.2. Tomography</h3>
 <p class="lang kor" >그렇다면 Neural Rendering 을 가시광 영역이 아닌 domain 에 적용하려면 어떻게 해야할까?</p>
@@ -101,7 +99,6 @@ $$</p>
 <p class="lang kor" >최종적인 intensity rendering term 은 NeRF 에서처럼 discretized form 으로 다음과 같이 표현된다.</p>
 <p>$$ I_{pred}(\mathbf{r}) = I_0 \cdot \exp\left(-\sum_{i=1}^{N} \rho_i \delta_i\right) $$</p>
 <img class="img-fluid" src="./250106_tomography/assets/image6.png" alt="Tomography Intensity Rendering" />
-<br/>
 
 <h2 id="modeling">2. Modeling</h2>
 <p class="lang kor" >다시 NeRF 로 돌아가보자. Hash Grid NeRF, TensoRF 등의 변형이 있지만, 기본적으로 NeRF 의 골자는 어떠한 3D scene 을 parameterize 해서 표현하자는 것이다.</p>
@@ -112,10 +109,8 @@ $$</p>
 <p class="lang kor" >Beer-Lambert Law 를 바탕으로 수정된 Tomography 의 rendering equation 은 radiodensity $\rho$ 에만 dependent 하므로, Tomography-NeRF 또한 3D Cartessian Coordinate $(x,y,z)$ 을 입력으로 받아 $\rho$ 하나만을 출력하게 하는 구조로 바꿔주면 된다.</p>
 <img class="img-fluid" src="./250106_tomography/assets/image8.png" alt="Tomography NeRF Modeling" />
 <p class="lang kor" >SAX-NeRF 에서는 이후 X-Ray 특성을 고려해서 MLP 를 적용하기보단, Transformer 로 바꿔주고 attention 안에서 ray 간 locality inductive bias 를 고려하는 설계 등을 제시하긴 한다. 하지만 크게 중요한 부분은 아니라고 생각해서 스킵하도록 하겠다. 궁금하면 논문을 참조하길 바란다.</p>
-<br/>
 
 <h2 id="quick-viewer-development-tip">3. Quick Viewer Development Tip</h2>
-<br/>
 <h3 id="viser-viewer">3.1. Viser Viewer</h3>
 <p class="lang kor" >SAX-NeRF 는 code 가 공개되어 있긴 하지만, official viewer 가 없고 visualization 으로 제공하는 기본 코드가 제한적이라 결과를 좀 더 interactive 하게 살펴보기 위해서는 viewer 를 구현할 필요가 있었다.</p>
 <p class="lang kor" ><em>Q. NeRF / GS model 을 interactive 하게 '보기' 위해서는 어떤 요소들이 필요할까?</em></p>
@@ -380,25 +375,3 @@ mesh.export("output.obj")
 <p class="lang kor" >
     Neural Rendering 을 다양한 유형의 데이터에 적용할 수 있는 능력과 이러한 결과를 시각화하는 능력은 다양한 도메인에서도 Neural Rendering 기술을 적용하고 응용해볼 수 있는 잠재력으로써 작용할 것이다.
 </p>
-<hr/>
-<p>
-    You may also like, 
-</p>
-<ul>
-    <li>
-        <a href="./?id=230202_ngp/">
-            <span style="text-decoration: underline;">Instant-NGP Review & Re-Implementation</span>
-        </a>
-    </li>
-    <li>
-        <a href="./?id=211128_fourier/">
-            <span style="text-decoration: underline;">Why Positional Encoding Makes NeRF more Powerful</span>
-        </a>
-    </li>
-    <li>
-        <a href="./?id=240805_gs/">
-            <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
-        </a>
-    </li>
-</ul>
-<br/>

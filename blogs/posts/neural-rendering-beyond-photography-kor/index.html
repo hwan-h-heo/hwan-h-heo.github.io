@@ -3,14 +3,17 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁" />
+    <meta name="description" content="의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁. TL; DR. Photography 가 아닌 domain 에서 Neural Rendering 을 적용하기 위해선 어떤 사항들을 고려해야하는지 생각해보자! + Viewer 가 없는 Neural Rendering" />
     <meta name="keywords" content="post, nerf-and-gs, Neural Rendering, Gaussian Splatting, 3D graphics, computer vision, machine learning" />
     <meta name="author" content="Hwan Heo" />
     <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/posts/neural-rendering-beyond-photography-kor/" />
+    <link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/neural-rendering-beyond-photography/" />
+    <link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/neural-rendering-beyond-photography-kor/" />
+    <link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/neural-rendering-beyond-photography/" />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://hwan-h-heo.github.io/blogs/posts/neural-rendering-beyond-photography-kor/" />
     <meta property="og:title" content="X-Ray 와 NeRF" />
-    <meta property="og:description" content="의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁" />
+    <meta property="og:description" content="의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁. TL; DR. Photography 가 아닌 domain 에서 Neural Rendering 을 적용하기 위해선 어떤 사항들을 고려해야하는지 생각해보자! + Viewer 가 없는 Neural Rendering" />
     <meta property="og:image" content="https://hwan-h-heo.github.io/blogs/posts/250106_tomography/assets/image1.png" />
     <meta property="og:site_name" content="HwanHeo's Blog" />
     <meta property="article:published_time" content="2025-01-06T00:00:00.000Z" />
@@ -19,61 +22,20 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://hwan-h-heo.github.io/blogs/posts/neural-rendering-beyond-photography-kor/" />
     <meta name="twitter:title" content="X-Ray 와 NeRF" />
-    <meta name="twitter:description" content="의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁" />
+    <meta name="twitter:description" content="의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁. TL; DR. Photography 가 아닌 domain 에서 Neural Rendering 을 적용하기 위해선 어떤 사항들을 고려해야하는지 생각해보자! + Viewer 가 없는 Neural Rendering" />
     <meta name="twitter:image" content="https://hwan-h-heo.github.io/blogs/posts/250106_tomography/assets/image1.png" />
-    <script type="application/ld+json">
-    {
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "X-Ray 와 NeRF",
-  "description": "의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁",
-  "image": "https://hwan-h-heo.github.io/blogs/posts/250106_tomography/assets/image1.png",
-  "author": {
-    "@type": "Person",
-    "name": "Hwan Heo",
-    "url": "https://hwan-h-heo.github.io"
-  },
-  "publisher": {
-    "@type": "Person",
-    "name": "Hwan Heo",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://hwan-h-heo.github.io/assets/favicon.ico"
-    }
-  },
-  "datePublished": "2025-01-06T00:00:00.000Z",
-  "dateModified": "2025-01-06T00:00:00.000Z",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://hwan-h-heo.github.io/blogs/posts/neural-rendering-beyond-photography-kor/"
-  },
-  "inLanguage": "ko"
-}
-    </script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"X-Ray 와 NeRF","description":"의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁. TL; DR. Photography 가 아닌 domain 에서 Neural Rendering 을 적용하기 위해선 어떤 사항들을 고려해야하는지 생각해보자! + Viewer 가 없는 Neural Rendering","url":"https://hwan-h-heo.github.io/blogs/posts/neural-rendering-beyond-photography-kor/","mainEntityOfPage":"https://hwan-h-heo.github.io/blogs/posts/neural-rendering-beyond-photography-kor/","image":["https://hwan-h-heo.github.io/blogs/posts/250106_tomography/assets/image1.png"],"author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"publisher":{"@type":"Person","name":"Hwan Heo"},"datePublished":"2025-01-06","dateModified":"2025-01-06","inLanguage":"ko"}</script>
 
-    <title>X-Ray 와 NeRF - HwanHeo's Blog</title>
+    <title>X-Ray 와 NeRF | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
-
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "/vendor/three/build/three.module.js",
-                "three/addons/": "/vendor/three/examples/jsm/",
-                "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
-            }
-        }
-    </script>
-
-    <script src="/vendor/tween/tween.umd.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
     <link href="/blogs/css/used.css" rel="stylesheet" />
     <link href="/blogs/css/typography.css" rel="stylesheet" />
     <link href="/blogs/css/blog_post_specific.css" rel="stylesheet" />
-    <link href="/blogs/css/code-copy.css" rel="stylesheet" />
     <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
     <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+    <link href="/blogs/css/code-copy.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -104,13 +66,13 @@
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
         <div class="container px-4 px-lg-5">
             <a class="navbar-brand" href="/blogs/">Hwan's Blog</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+            <button class="navbar-toggler" type="button" data-nav-toggle aria-controls="navbarResponsive" aria-expanded="false">
                 Menu <i class="bi bi-list"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
-                    <li class="nav-item"><a href="../neural-rendering-beyond-photography/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="eng" style="font-size:0.7rem">ENG</a></li>
+                    <li class="nav-item"><a href="/blogs/posts/neural-rendering-beyond-photography/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="eng" style="font-size:0.7rem">ENG</a></li>
                 </ul>
             </div>
         </div>
@@ -122,13 +84,13 @@
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     <div class="post-heading">
                         <br/>
-                        <h2>X-Ray 와 NeRF</h2>
+                        <h1>X-Ray 와 NeRF</h1>
                         <span class="meta">
-                            Posted on January 6, 2025
+                            Posted on <time datetime="2025-01-06">January 6, 2025</time>
                             <span style="margin: 0 8px;">•</span>
                             <i class="bi bi-clock" style="margin-right: 4px;"></i>10 min read
                         </span>
-                        <div class="post-tags"><span>Neural Rendering</span><span>Gaussian Splatting</span></div>
+                        <div class="post-tags"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                         <hr/>
                     </div>
                 </div>
@@ -140,7 +102,74 @@
         <div class="container px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div id="series-container"></div>
+                    
+                    <nav class="breadcrumbs" aria-label="Breadcrumb">
+                        <ol>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/blogs/">Blog</a></li>
+                            <li><a href="/blogs/series/nerf-and-gs/">Radiance Fields &amp; Gaussian Splatting</a></li>
+                            <li aria-current="page">X-Ray 와 NeRF</li>
+                        </ol>
+                    </nav>
+    
+                    <div id="series-container">
+            <details class="series-card">
+                <summary class="series-summary">
+                    <span class="series-icon" aria-hidden="true"><i class="bi bi-collection"></i></span>
+                    <span class="series-summary-copy">
+                        <span class="series-kicker">Series</span>
+                        <strong>Radiance Fields &amp; Gaussian Splatting</strong>
+                    </span>
+                    <span class="series-meta">1 / 4</span>
+                    <span class="series-toggle">
+                        <span>4 posts</span>
+                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                    </span>
+                </summary>
+                <div class="series-body">
+                    <ol class="series-list">
+                    <li class="series-post is-current" aria-current="page">
+                        <span class="series-post-index">01</span>
+                        <span class="series-post-copy">
+                            <strong>X-Ray 와 NeRF</strong>
+                            <span>2025.01.06</span>
+                        </span>
+                        <span class="series-current-pill">Current</span>
+                    </li>
+            
+                <li class="series-post">
+                    <a href="/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian-kor/">
+                        <span class="series-post-index">02</span>
+                        <span class="series-post-copy">
+                            <strong>3D Gaussian Ray Tracing 톺아보기</strong>
+                            <span>2024.08.23</span>
+                        </span>
+                    </a>
+                </li>
+        
+                <li class="series-post">
+                    <a href="/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization-kor/">
+                        <span class="series-post-index">03</span>
+                        <span class="series-post-copy">
+                            <strong>Gaussian Splatting Rasterization 완벽 분석</strong>
+                            <span>2024.08.05</span>
+                        </span>
+                    </a>
+                </li>
+        
+                <li class="series-post">
+                    <a href="/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting-kor/">
+                        <span class="series-post-index">04</span>
+                        <span class="series-post-copy">
+                            <strong>2D Gaussian Splatting 톺아보기</strong>
+                            <span>2024.06.02</span>
+                        </span>
+                    </a>
+                </li>
+        </ol>
+                </div>
+            </details>
+    </div>
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7 main-content">
                     <!-- <div style="text-align: center;">
@@ -195,7 +224,6 @@
 
 <h2 id="tomography-vs-photography">1. Tomography vs. Photography</h2>
 <img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image1.png" width="100%" alt="Tomography vs Photography" />
-<br/> 
 <h3 id="photography">1.1. Photography</h3>
 <p class="lang kor" >- <code>'본다'</code> 라는 행위는 물리학적으로 어떤 의미를 지닐까?</p>
 <p class="lang kor" >'본다'는 것은 광원에서 방출된 빛이 물체와 상호작용하여, 물체의 표면에서 특정 파장의 (or energy) 빛을 흡수하거나 반사하고, 흡수되지 않은 파장의 반사된 (reflection) 빛이 관찰자의 눈(또는 감지 장치)에 도달하여 시각적으로 인지되는 과정을 말한다.</p>
@@ -214,7 +242,6 @@
 <img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image2.png" alt="NeRF Rendering Equation" />
 <p class="lang kor" >이와 같이 NeRF 의 rendering equation 은 우리가 물체를 '본다'는 행위를 수식적으로 표현한 결과물이다. 물리적 빛-물체 상호작용 (흡수, 반사, 투명도 등) 의 모든 요소를 통합하여, NeRF는 광선 경로를 따라 누적된 빛의 기여를 계산해 최종적으로 이미지를 생성한다.</p>
 <img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image3.png" alt="NeRF Image Generation" />
-<br/>
 
 <h3 id="tomography">1.2. Tomography</h3>
 <p class="lang kor" >그렇다면 Neural Rendering 을 가시광 영역이 아닌 domain 에 적용하려면 어떻게 해야할까?</p>
@@ -241,7 +268,6 @@ $$</p>
 <p class="lang kor" >최종적인 intensity rendering term 은 NeRF 에서처럼 discretized form 으로 다음과 같이 표현된다.</p>
 <p>$$ I_{pred}(\mathbf{r}) = I_0 \cdot \exp\left(-\sum_{i=1}^{N} \rho_i \delta_i\right) $$</p>
 <img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image6.png" alt="Tomography Intensity Rendering" />
-<br/>
 
 <h2 id="modeling">2. Modeling</h2>
 <p class="lang kor" >다시 NeRF 로 돌아가보자. Hash Grid NeRF, TensoRF 등의 변형이 있지만, 기본적으로 NeRF 의 골자는 어떠한 3D scene 을 parameterize 해서 표현하자는 것이다.</p>
@@ -252,10 +278,8 @@ $$</p>
 <p class="lang kor" >Beer-Lambert Law 를 바탕으로 수정된 Tomography 의 rendering equation 은 radiodensity $\rho$ 에만 dependent 하므로, Tomography-NeRF 또한 3D Cartessian Coordinate $(x,y,z)$ 을 입력으로 받아 $\rho$ 하나만을 출력하게 하는 구조로 바꿔주면 된다.</p>
 <img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image8.png" alt="Tomography NeRF Modeling" />
 <p class="lang kor" >SAX-NeRF 에서는 이후 X-Ray 특성을 고려해서 MLP 를 적용하기보단, Transformer 로 바꿔주고 attention 안에서 ray 간 locality inductive bias 를 고려하는 설계 등을 제시하긴 한다. 하지만 크게 중요한 부분은 아니라고 생각해서 스킵하도록 하겠다. 궁금하면 논문을 참조하길 바란다.</p>
-<br/>
 
 <h2 id="quick-viewer-development-tip">3. Quick Viewer Development Tip</h2>
-<br/>
 <h3 id="viser-viewer">3.1. Viser Viewer</h3>
 <p class="lang kor" >SAX-NeRF 는 code 가 공개되어 있긴 하지만, official viewer 가 없고 visualization 으로 제공하는 기본 코드가 제한적이라 결과를 좀 더 interactive 하게 살펴보기 위해서는 viewer 를 구현할 필요가 있었다.</p>
 <p class="lang kor" ><em>Q. NeRF / GS model 을 interactive 하게 '보기' 위해서는 어떤 요소들이 필요할까?</em></p>
@@ -516,31 +540,52 @@ mesh.export(&quot;output.obj&quot;)
 <p class="lang kor" >
     Neural Rendering 을 다양한 유형의 데이터에 적용할 수 있는 능력과 이러한 결과를 시각화하는 능력은 다양한 도메인에서도 Neural Rendering 기술을 적용하고 응용해볼 수 있는 잠재력으로써 작용할 것이다.
 </p>
-<hr/>
-<p>
-    You may also like, 
-</p>
-<ul>
-    <li>
-        <a href="./?id=230202_ngp/">
-            <span style="text-decoration: underline;">Instant-NGP Review & Re-Implementation</span>
-        </a>
-    </li>
-    <li>
-        <a href="./?id=211128_fourier/">
-            <span style="text-decoration: underline;">Why Positional Encoding Makes NeRF more Powerful</span>
-        </a>
-    </li>
-    <li>
-        <a href="./?id=240805_gs/">
-            <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
-        </a>
-    </li>
-</ul>
-<br/>
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div id="post-navigation" class="mt-4"></div>
+                    
+                    <section class="related-posts" aria-labelledby="related-posts-heading">
+                        <h2 id="related-posts-heading">Related Posts</h2>
+                        <div class="related-post-grid">
+                            
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/instant-ngp-review-re-implementation/" aria-label="Read Instant-NGP 리뷰 및 재구현">
+                                    <strong>Instant-NGP 리뷰 및 재구현</strong>
+                                    <time datetime="2023-02-02">2023년 2월 2일</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/" aria-label="Read Position Encoding 이 NeRF 에서 필수적인 이유">
+                                    <strong>Position Encoding 이 NeRF 에서 필수적인 이유</strong>
+                                    <time datetime="2021-11-28">2021년 11월 28일</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization-kor/" aria-label="Read Gaussian Splatting Rasterization 완벽 분석">
+                                    <strong>Gaussian Splatting Rasterization 완벽 분석</strong>
+                                    <time datetime="2024-08-05">2024년 8월 5일</time>
+                                </a>
+                            </article>
+        
+                        </div>
+                    </section>
+    
+                    <div id="post-navigation" class="mt-4"><nav class="post-nav-grid" aria-label="Post navigation">
+                <a class="post-nav-card is-older" href="/blogs/posts/add-gaussian-splatting-to-your-website-kor/" aria-label="Older Post: 웹사이트에 3D GS 삽입하기">
+                    <span class="post-nav-kicker">
+                        <span>Older Post</span>
+                    </span>
+                    <strong>웹사이트에 3D GS 삽입하기</strong>
+                </a>
+    
+                <a class="post-nav-card is-next" href="/blogs/posts/an-era-of-3d-generation-kor/" aria-label="Newer Post: 3D 생성 모델의 시대">
+                    <span class="post-nav-kicker">
+                        <span>Newer Post</span>
+                    </span>
+                    <strong>3D 생성 모델의 시대</strong>
+                </a>
+    </nav></div>
                 </div>
             </div>
         </div>
@@ -564,9 +609,9 @@ mesh.export(&quot;output.obj&quot;)
       "title_eng": "What the Compiler Missed in Sparse 3D Inference",
       "title_kor": "컴파일러가 놓친 Sparse 3D Forward 최적화",
       "subtitle_eng": "Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0",
-      "subtitle_kor": "Null-Context Attention 제거와 CUDA Fusion으로 줄인 3D 생성 지연시간",
+      "subtitle_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
       "description_eng": "Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0",
-      "description_kor": "Null-Context Attention 제거와 CUDA Fusion으로 줄인 3D 생성 지연시간",
+      "description_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
       "tags": [
         "3D Generation",
         "Generative AI",
@@ -762,7 +807,7 @@ mesh.export(&quot;output.obj&quot;)
         "3D Generation",
         "Generative AI"
       ],
-      "cover": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif",
+      "cover": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser-poster.jpg",
       "status": "published",
       "updated": "2025-03-02",
       "date": "2025-03-02",
@@ -951,7 +996,7 @@ mesh.export(&quot;output.obj&quot;)
         "3D Generation",
         "Generative AI"
       ],
-      "cover": "/blogs/posts/240226_sora/assets/image.gif",
+      "cover": "/blogs/posts/240226_sora/assets/big-sur-gs-poster.jpg",
       "status": "published",
       "updated": "2024-02-26",
       "date": "2024-02-26",
@@ -974,7 +1019,7 @@ mesh.export(&quot;output.obj&quot;)
         "Neural Rendering",
         "Gaussian Splatting"
       ],
-      "cover": "/blogs/posts/231130_nerf_in_game/assets/diget.gif",
+      "cover": "/blogs/posts/231130_nerf_in_game/assets/VID_4_NeRF_obeject_in_blender-poster.jpg",
       "status": "published",
       "updated": "2023-11-30",
       "date": "2023-11-30",
@@ -1197,7 +1242,17 @@ mesh.export(&quot;output.obj&quot;)
   "postId": "250106_tomography",
   "lang": "kor",
   "alternateLang": "eng",
-  "alternateHref": "../neural-rendering-beyond-photography/"
+  "alternateHref": "/blogs/posts/neural-rendering-beyond-photography/",
+  "runtimeFeatures": {
+    "katex": true,
+    "prism": true,
+    "bootstrap": true,
+    "modelViewer": false,
+    "three": false,
+    "tween": false,
+    "simpleModelViewer": false,
+    "gaussianSplats": false
+  }
 };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>

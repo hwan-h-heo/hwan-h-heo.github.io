@@ -7,6 +7,9 @@
     <meta name="keywords" content="note, graphics, Graphics, 3D graphics, computer vision, machine learning" />
     <meta name="author" content="Hwan Heo" />
     <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/posts/sdf-and-eikonal-equation-kor/" />
+    <link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/sdf-and-eikonal-equation/" />
+    <link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/sdf-and-eikonal-equation-kor/" />
+    <link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/sdf-and-eikonal-equation/" />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://hwan-h-heo.github.io/blogs/posts/sdf-and-eikonal-equation-kor/" />
     <meta property="og:title" content="SDF 와 Eikonal Equation 의 관계는?" />
@@ -21,59 +24,16 @@
     <meta name="twitter:title" content="SDF 와 Eikonal Equation 의 관계는?" />
     <meta name="twitter:description" content="Eikonal equation 의 해가 왜 signed distance field 인지 알아보자" />
     <meta name="twitter:image" content="https://hwan-h-heo.github.io/blogs/posts/250823_sdf/assets/remote-12d4629724c7.png" />
-    <script type="application/ld+json">
-    {
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "SDF 와 Eikonal Equation 의 관계는?",
-  "description": "Eikonal equation 의 해가 왜 signed distance field 인지 알아보자",
-  "image": "https://hwan-h-heo.github.io/blogs/posts/250823_sdf/assets/remote-12d4629724c7.png",
-  "author": {
-    "@type": "Person",
-    "name": "Hwan Heo",
-    "url": "https://hwan-h-heo.github.io"
-  },
-  "publisher": {
-    "@type": "Person",
-    "name": "Hwan Heo",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://hwan-h-heo.github.io/assets/favicon.ico"
-    }
-  },
-  "datePublished": "2025-08-23T00:00:00.000Z",
-  "dateModified": "2025-08-23T00:00:00.000Z",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://hwan-h-heo.github.io/blogs/posts/sdf-and-eikonal-equation-kor/"
-  },
-  "inLanguage": "ko"
-}
-    </script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"SDF 와 Eikonal Equation 의 관계는?","description":"Eikonal equation 의 해가 왜 signed distance field 인지 알아보자","url":"https://hwan-h-heo.github.io/blogs/posts/sdf-and-eikonal-equation-kor/","mainEntityOfPage":"https://hwan-h-heo.github.io/blogs/posts/sdf-and-eikonal-equation-kor/","image":["https://hwan-h-heo.github.io/blogs/posts/250823_sdf/assets/remote-12d4629724c7.png"],"author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"publisher":{"@type":"Person","name":"Hwan Heo"},"datePublished":"2025-08-23","dateModified":"2025-08-23","inLanguage":"ko"}</script>
 
-    <title>SDF 와 Eikonal Equation 의 관계는? - HwanHeo's Blog</title>
+    <title>SDF 와 Eikonal Equation 의 관계는? | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
-
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "/vendor/three/build/three.module.js",
-                "three/addons/": "/vendor/three/examples/jsm/",
-                "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
-            }
-        }
-    </script>
-
-    <script src="/vendor/tween/tween.umd.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
     <link href="/blogs/css/used.css" rel="stylesheet" />
     <link href="/blogs/css/typography.css" rel="stylesheet" />
     <link href="/blogs/css/blog_post_specific.css" rel="stylesheet" />
-    <link href="/blogs/css/code-copy.css" rel="stylesheet" />
     <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
     <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -104,13 +64,13 @@
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
         <div class="container px-4 px-lg-5">
             <a class="navbar-brand" href="/blogs/">Hwan's Blog</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+            <button class="navbar-toggler" type="button" data-nav-toggle aria-controls="navbarResponsive" aria-expanded="false">
                 Menu <i class="bi bi-list"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
-                    <li class="nav-item"><a href="../sdf-and-eikonal-equation/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="eng" style="font-size:0.7rem">ENG</a></li>
+                    <li class="nav-item"><a href="/blogs/posts/sdf-and-eikonal-equation/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="eng" style="font-size:0.7rem">ENG</a></li>
                 </ul>
             </div>
         </div>
@@ -122,13 +82,13 @@
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     <div class="post-heading">
                         <br/>
-                        <h2>SDF 와 Eikonal Equation 의 관계는?</h2>
+                        <h1>SDF 와 Eikonal Equation 의 관계는?</h1>
                         <span class="meta">
-                            Posted on August 23, 2025
+                            Posted on <time datetime="2025-08-23">August 23, 2025</time>
                             <span style="margin: 0 8px;">•</span>
                             <i class="bi bi-clock" style="margin-right: 4px;"></i>7 min read
                         </span>
-                        <div class="post-tags"><span>Graphics</span></div>
+                        <div class="post-tags"><a class="post-tag" href="/blogs/tags/graphics/">Graphics</a></div>
                         <hr/>
                     </div>
                 </div>
@@ -140,7 +100,54 @@
         <div class="container px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div id="series-container"></div>
+                    
+                    <nav class="breadcrumbs" aria-label="Breadcrumb">
+                        <ol>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/blogs/">Blog</a></li>
+                            <li><a href="/blogs/series/graphics/">Computer Graphics</a></li>
+                            <li aria-current="page">SDF 와 Eikonal Equation 의 관계는?</li>
+                        </ol>
+                    </nav>
+    
+                    <div id="series-container">
+            <details class="series-card">
+                <summary class="series-summary">
+                    <span class="series-icon" aria-hidden="true"><i class="bi bi-collection"></i></span>
+                    <span class="series-summary-copy">
+                        <span class="series-kicker">Series</span>
+                        <strong>Computer Graphics</strong>
+                    </span>
+                    <span class="series-meta">1 / 2</span>
+                    <span class="series-toggle">
+                        <span>2 posts</span>
+                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                    </span>
+                </summary>
+                <div class="series-body">
+                    <ol class="series-list">
+                    <li class="series-post is-current" aria-current="page">
+                        <span class="series-post-index">01</span>
+                        <span class="series-post-copy">
+                            <strong>SDF 와 Eikonal Equation 의 관계는?</strong>
+                            <span>2025.08.23</span>
+                        </span>
+                        <span class="series-current-pill">Current</span>
+                    </li>
+            
+                <li class="series-post">
+                    <a href="/blogs/posts/generalized-winding-number-kor/">
+                        <span class="series-post-index">02</span>
+                        <span class="series-post-copy">
+                            <strong>Generalized Winding Number</strong>
+                            <span>2025.08.09</span>
+                        </span>
+                    </a>
+                </li>
+        </ol>
+                </div>
+            </details>
+    </div>
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7 main-content">
                     <nav class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Introduction" aria-label="Introduction"><span class="toc-link-text">Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="SDF to Eikonal Equation" aria-label="SDF to Eikonal Equation"><span class="toc-link-text">SDF to Eikonal Equation</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="Proof 1" aria-label="Proof 1"><span class="toc-link-text">Proof 1</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="1.1. Supremum of SDF Gradient" aria-label="1.1. Supremum of SDF Gradient"><span class="toc-link-text">1.1. Supremum of SDF Gradient</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="1.2. Infimum of SDF Gradient" aria-label="1.2. Infimum of SDF Gradient"><span class="toc-link-text">1.2. Infimum of SDF Gradient</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="1.3. Conclusion" aria-label="1.3. Conclusion"><span class="toc-link-text">1.3. Conclusion</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-6" title="Proof 2" aria-label="Proof 2"><span class="toc-link-text">Proof 2</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="2.1. Gradient Calculation" aria-label="2.1. Gradient Calculation"><span class="toc-link-text">2.1. Gradient Calculation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.2. Gradient&#39;s Norm" aria-label="2.2. Gradient&#39;s Norm"><span class="toc-link-text">2.2. Gradient&#39;s Norm</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-9" title="Discussion" aria-label="Discussion"><span class="toc-link-text">Discussion</span></a></li></ol></nav><button id="copyButton">
@@ -324,7 +331,50 @@ $$
 
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div id="post-navigation" class="mt-4"></div>
+                    
+                    <section class="related-posts" aria-labelledby="related-posts-heading">
+                        <h2 id="related-posts-heading">Related Posts</h2>
+                        <div class="related-post-grid">
+                            
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/generalized-winding-number-kor/" aria-label="Read Generalized Winding Number">
+                                    <strong>Generalized Winding Number</strong>
+                                    <time datetime="2025-08-09">2025년 8월 9일</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/change-of-basis-kor/" aria-label="Read Change of Basis">
+                                    <strong>Change of Basis</strong>
+                                    <time datetime="2021-09-10">2021년 9월 10일</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/linear-system-kor/" aria-label="Read Linear System">
+                                    <strong>Linear System</strong>
+                                    <time datetime="2021-09-09">2021년 9월 9일</time>
+                                </a>
+                            </article>
+        
+                        </div>
+                    </section>
+    
+                    <div id="post-navigation" class="mt-4"><nav class="post-nav-grid" aria-label="Post navigation">
+                <a class="post-nav-card is-older" href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models-kor/" aria-label="Older Post: From Flow Matching to Optimal Transport: A Physics-based View of Generative Models">
+                    <span class="post-nav-kicker">
+                        <span>Older Post</span>
+                    </span>
+                    <strong>From Flow Matching to Optimal Transport: A Physics-base...</strong>
+                </a>
+    
+                <a class="post-nav-card is-next" href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/" aria-label="Newer Post: 3D 생성형 AI 서비스; Varco3D 개발기">
+                    <span class="post-nav-kicker">
+                        <span>Newer Post</span>
+                    </span>
+                    <strong>3D 생성형 AI 서비스; Varco3D 개발기</strong>
+                </a>
+    </nav></div>
                 </div>
             </div>
         </div>
@@ -348,9 +398,9 @@ $$
       "title_eng": "What the Compiler Missed in Sparse 3D Inference",
       "title_kor": "컴파일러가 놓친 Sparse 3D Forward 최적화",
       "subtitle_eng": "Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0",
-      "subtitle_kor": "Null-Context Attention 제거와 CUDA Fusion으로 줄인 3D 생성 지연시간",
+      "subtitle_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
       "description_eng": "Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0",
-      "description_kor": "Null-Context Attention 제거와 CUDA Fusion으로 줄인 3D 생성 지연시간",
+      "description_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
       "tags": [
         "3D Generation",
         "Generative AI",
@@ -546,7 +596,7 @@ $$
         "3D Generation",
         "Generative AI"
       ],
-      "cover": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser.gif",
+      "cover": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser-poster.jpg",
       "status": "published",
       "updated": "2025-03-02",
       "date": "2025-03-02",
@@ -735,7 +785,7 @@ $$
         "3D Generation",
         "Generative AI"
       ],
-      "cover": "/blogs/posts/240226_sora/assets/image.gif",
+      "cover": "/blogs/posts/240226_sora/assets/big-sur-gs-poster.jpg",
       "status": "published",
       "updated": "2024-02-26",
       "date": "2024-02-26",
@@ -758,7 +808,7 @@ $$
         "Neural Rendering",
         "Gaussian Splatting"
       ],
-      "cover": "/blogs/posts/231130_nerf_in_game/assets/diget.gif",
+      "cover": "/blogs/posts/231130_nerf_in_game/assets/VID_4_NeRF_obeject_in_blender-poster.jpg",
       "status": "published",
       "updated": "2023-11-30",
       "date": "2023-11-30",
@@ -981,13 +1031,20 @@ $$
   "postId": "250823_sdf",
   "lang": "kor",
   "alternateLang": "eng",
-  "alternateHref": "../sdf-and-eikonal-equation/"
+  "alternateHref": "/blogs/posts/sdf-and-eikonal-equation/",
+  "runtimeFeatures": {
+    "katex": true,
+    "prism": false,
+    "bootstrap": false,
+    "modelViewer": false,
+    "three": false,
+    "tween": false,
+    "simpleModelViewer": false,
+    "gaussianSplats": false
+  }
 };
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
-    <script src="/blogs/js/code-copy.js"></script>
+
     <script src="/blogs/js/theme-toggle.js"></script>
     <script src="/blogs/js/scroll-progress.js"></script>
     <script src="/blogs/js/post-page.js"></script>

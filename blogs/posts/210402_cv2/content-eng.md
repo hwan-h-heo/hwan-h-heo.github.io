@@ -17,8 +17,6 @@ author: Hwan Heo
 </div>
 </div>
 
-<br/>
-
 ## 3. Feature Extraction and Edge Detection
 
 ---
@@ -188,8 +186,6 @@ plt.show()
 
 ## 4. Resampling and Resizing
 
-<br/>
-
 #### Aliasing and the Nyquist Theorem
 
 <img src='./210402_cv2/assets/svg2.svg' width=100%>
@@ -273,7 +269,6 @@ plt.show()
 ---
 
 ## 5. Corner Detection
-<br/>
 
 #### The Intuition Behind Corner Detection
 
@@ -378,5 +373,3 @@ plt.show()
 #### Results:
 
 <img src='./210302_cv1/assets/image-5.jpg' width=100%>
-
-<hr/>

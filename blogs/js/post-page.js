@@ -425,8 +425,9 @@
 
     function initializeSpecialViewers() {
         const postId = window.blogPostPageConfig?.postId;
+        const runtimeFeatures = window.blogPostPageConfig?.runtimeFeatures || {};
 
-        if (postId === '240917_3djs') {
+        if (runtimeFeatures.gaussianSplats || postId === '240917_3djs') {
             import('/blogs/3DViewer/js/gaussian_viewer.js').then((module) => {
                 module.initGaussianViewer();
             }).catch((error) => {
@@ -434,7 +435,7 @@
             });
         }
 
-        if (postId === '250310_model_viewer') {
+        if (runtimeFeatures.simpleModelViewer || postId === '250310_model_viewer') {
             import('/js/simple-model-viewer.js').then((module) => {
                 module.initGaussianViewer();
             }).catch((error) => {
@@ -470,6 +471,39 @@
                     console.warn('Failed to persist language preference:', error);
                 }
             });
+        });
+    }
+
+    function setupNavbarCollapse() {
+        const nav = document.getElementById('mainNav');
+        const toggle = nav?.querySelector('[data-nav-toggle]');
+        const collapse = nav?.querySelector('.navbar-collapse');
+
+        if (!toggle || !collapse) {
+            return;
+        }
+
+        function setExpanded(expanded) {
+            collapse.classList.toggle('show', expanded);
+            toggle.setAttribute('aria-expanded', String(expanded));
+        }
+
+        toggle.addEventListener('click', () => {
+            setExpanded(!collapse.classList.contains('show'));
+        });
+
+        collapse.querySelectorAll('a, button').forEach((item) => {
+            item.addEventListener('click', () => {
+                if (window.matchMedia('(max-width: 991.98px)').matches) {
+                    setExpanded(false);
+                }
+            });
+        });
+
+        window.addEventListener('resize', () => {
+            if (!window.matchMedia('(max-width: 991.98px)').matches) {
+                setExpanded(false);
+            }
         });
     }
 
@@ -528,6 +562,7 @@
         syncLanguagePreference();
         initializeMathRendering();
         setupShareButton();
+        setupNavbarCollapse();
         setupAutoRevealNav();
         initializeTOC();
         renderSeriesNavigation();

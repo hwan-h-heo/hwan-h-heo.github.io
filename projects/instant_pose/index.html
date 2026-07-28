@@ -178,6 +178,52 @@
       max-width: 760px;
       width: min(100%, 760px);
     }
+    .portfolio-details .container.col-11.varco-feature-strip {
+      margin: -0.25rem auto 2.2rem;
+      max-width: 440px;
+    }
+    .portfolio-details .varco-feature-strip p,
+    .portfolio-details .varco-feature-strip p > img:only-child {
+      margin: 0 auto;
+    }
+    .portfolio-details .varco-feature-strip img {
+      background: #f8fafc;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      box-shadow: 0 20px 48px rgba(15, 23, 42, 0.13);
+      display: block;
+      height: auto;
+      object-fit: contain;
+      width: 100%;
+    }
+    .portfolio-details .varco-version-stack {
+      display: grid;
+      gap: 0.9rem;
+      margin: 1.15rem 0 1.35rem;
+    }
+    .portfolio-details .varco-version-item {
+      background: #f8fafc;
+      border-left: 3px solid #149ddd;
+      border-radius: 0 12px 12px 0;
+      padding: 0.95rem 1.05rem;
+    }
+    .portfolio-details .varco-version-item h3 {
+      color: #0f172a;
+      font-size: 0.92rem;
+      font-weight: 760;
+      letter-spacing: 0;
+      margin: 0 0 0.35rem;
+    }
+    .portfolio-details .varco-version-item p {
+      color: #526070;
+      font-size: 0.92rem;
+      line-height: 1.58;
+      margin: 0.35rem 0 0;
+    }
+    .portfolio-details .varco-version-item p:first-of-type {
+      color: #149ddd;
+      font-weight: 720;
+      line-height: 1.42;
+    }
     .portfolio-details img,
     .portfolio-details video,
     .portfolio-details iframe {
@@ -332,6 +378,39 @@
       border-radius: 18px;
       box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
     }
+    .portfolio-details .portfolio-info h3 {
+      font-size: 1.05rem;
+      letter-spacing: 0;
+      margin-bottom: 1rem;
+    }
+    .portfolio-details .portfolio-info ul {
+      display: grid;
+      gap: 0.78rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .portfolio-details .portfolio-info li {
+      color: #475569;
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+    .portfolio-details .portfolio-info li + li {
+      margin-top: 0;
+    }
+    .portfolio-details .portfolio-info li strong {
+      color: #0f172a;
+      display: block;
+      font-size: 0.84rem;
+      font-weight: 760;
+      letter-spacing: 0;
+      line-height: 1.32;
+      margin-bottom: 0.02rem;
+      text-transform: none;
+    }
+    .portfolio-details .portfolio-info a {
+      font-weight: 650;
+    }
     .portfolio-details table {
       border-radius: 14px;
       overflow: hidden;
@@ -393,6 +472,9 @@
       .portfolio-details .viewer-feature-grid-3 {
         grid-template-columns: 1fr;
       }
+      .portfolio-details .container.col-11.varco-feature-strip {
+        max-width: 320px;
+      }
       .portfolio-details .project-page-nav {
         grid-template-columns: 1fr;
       }
@@ -438,10 +520,10 @@
             <summary aria-current="page"><i class="bi bi-dot navicon"></i><span>Instant Pose</span><i class="bi bi-chevron-down project-selector-toggle"></i></summary>
             <div class="project-selector-options">
           <a href="../varco3d/"><i class="bi bi-arrow-return-right navicon"></i><span>VARCO 3D</span></a>
-          <a href="../nerf_in_game/"><i class="bi bi-arrow-return-right navicon"></i><span>Neural Rendering in Game Engine</span></a>
           <a href="../capa/"><i class="bi bi-arrow-return-right navicon"></i><span>CaPa</span></a>
-          <a href="../2dgs_viewer/"><i class="bi bi-arrow-return-right navicon"></i><span>2D GS Viewer</span></a>
           <a href="../deepsfm/"><i class="bi bi-arrow-return-right navicon"></i><span>Deep SfM for Radiance Fields</span></a>
+          <a href="../2dgs_viewer/"><i class="bi bi-arrow-return-right navicon"></i><span>2D GS Viewer</span></a>
+          <a href="../nerf_in_game/"><i class="bi bi-arrow-return-right navicon"></i><span>Neural Rendering in Game Engine</span></a>
             </div>
           </details>
         </li>
@@ -510,12 +592,12 @@ The method also uses curriculum-style level-wise learning, improving both camera
 <div class="portfolio-info">
 <h3>Project Details</h3>
 <ul>
-<li><strong>Role</strong>: Research Lead, Camera Pose Optimization</li>
-<li><strong>Category</strong>: Research, Neural Rendering, Camera Pose Estimation</li>
-<li><strong>Publication</strong>: ICML 2023</li>
-<li><strong>Organization</strong>: NAVER AI Lab, Korea University</li>
-<li><strong>Technology</strong>: NeRF, Instant-NGP, Hash Encoding, SE(3) Optimization</li>
-<li><strong>Paper URL</strong>: <a href="https://dl.acm.org/doi/10.5555/3618408.3618936">ACM DL</a></li>
+<li><strong>Role</strong>Research Lead, Camera Pose Optimization</li>
+<li><strong>Category</strong>Research, Neural Rendering, Camera Pose Estimation</li>
+<li><strong>Publication</strong>ICML 2023</li>
+<li><strong>Organization</strong>NAVER AI Lab, Korea University</li>
+<li><strong>Technology</strong>NeRF, Instant-NGP, Hash Encoding, SE(3) Optimization</li>
+<li><strong>Paper URL</strong><a href="https://dl.acm.org/doi/10.5555/3618408.3618936">ACM DL</a></li>
 </ul>
 
 </div>
@@ -650,13 +732,13 @@ we propose to use the mix-up of tri-linear interpolation and smooth gradients:</
 </div>
 </div>
 <div class="container project-page-nav">
-        <a class="project-page-nav-link project-page-nav-prev" href="../capa/">
+        <a class="project-page-nav-link project-page-nav-prev" href="../2dgs_viewer/">
           <span class="project-page-nav-kicker"><i class="bi bi-arrow-left"></i> Previous Project</span>
-          <strong>CaPa</strong>
-        </a>
-        <a class="project-page-nav-link project-page-nav-next" href="../2dgs_viewer/">
-          <span class="project-page-nav-kicker">Next Project <i class="bi bi-arrow-right"></i></span>
           <strong>2D GS Viewer</strong>
+        </a>
+        <a class="project-page-nav-link project-page-nav-next" href="../nerf_in_game/">
+          <span class="project-page-nav-kicker">Next Project <i class="bi bi-arrow-right"></i></span>
+          <strong>Neural Rendering in Game Engine</strong>
         </a>
       </div>
     </section><!-- /Portfolio Details Section -->

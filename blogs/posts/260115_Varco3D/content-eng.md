@@ -111,8 +111,6 @@ Working on this project, I became convinced that optimization-based 3D generatio
 
 ## 2. Pursue SOTA: 3D Sovereign AI
 
-<br/>
-
 ### 2.1 Varco3D-alpha
 
 After moving to the new team, my first task was to expand the CaPa pipeline and launch Varco3D-α, our in-house 3D generation service. The model architecture followed a typical 3D generation pipeline inherited from CaPa.
@@ -196,8 +194,6 @@ Below are the results of [***Varco3D 1.0-preview***](https://3d.varco.ai/explore
 
 ## 3. Back to VecSet
 
-<br/>
-
 ### 3.1 Lattice
 
 Do you remember that sparse voxel-based methodologies (Sparc3D, etc.) dramatically improved training efficiency and quality by separating global shape and local detail generation?
@@ -221,7 +217,7 @@ ${}$<img src='./assets/remote-11ecc1e8c03f.png' width=30%>
 
 I speculate that the idea for this paper originated from experiments in [**FlashVDM**](https://github.com/Tencent-Hunyuan/FlashVDM), a study on accelerating VecSet decoding (the authors are also the same). FlashVDM proposed **octree-decoding (Hierarchical Decoding)** for the existing VecSet decoding stage, which required **dense grid point queries** for SDF extraction, reducing decoding time by tens of times.
 
-![](./assets/remote-d05de1f944fa.png)
+![](/blogs/posts/260727_sparse_3d/assets/sparse-pipeline.png)
 
 - ***Visualization of FlashVDM.*** When reconstructing the mesh on the *Right* through the VAE decoder, FlashVDM first identifies active voxels at a coarse resolution (Left → Right), then increases resolution only within the range of these active voxels to reconstruct high-resolution SDF.
 
@@ -341,14 +337,3 @@ The reason for insisting on our own models under the grand slogan of 'Sovereign 
 <iframe src="https://3d.varco.ai/test-embed/02072a988541af639c393f1d4c45f2ef.glb" width="100%" height="500px" title="설명" style="border: none;"></iframe>
 
 - Varco3D 1.0
-
----
-
-
-You may also like
-
-- [An Era of 3D Generative Models](/blogs/posts/?id=250302_3d_latent_diffusion)
-- [Building Large 3D Generative Models (1) - 3D Data Pre-processing](/blogs/posts/?id=250702_building_large_3d_1)
-- [Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D](/blogs/posts/?id=250710_building_large_3d_2)
-
-<br/>

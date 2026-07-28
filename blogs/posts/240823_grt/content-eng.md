@@ -59,7 +59,6 @@ author: Hwan Heo
     </ul>
 </nav>
 
-<br/>
 <h2 id="tl-dr">TL; DR</h2>
 <p class="lang eng">This article provides an in-depth review of the paper &quot;3D Gaussian Ray Tracing,&quot; which introduces a novel approach to leveraging ray tracing in 3D Gaussian Radiance Fields.</p>
 <p class="lang eng">3D Gaussian Splatting is a powerful and fascinating technology, but it inherits several problems from rasterization. The recently presented 3D Gaussian Ray Tracing (3D GRT) resolves many of these shortcomings by introducing a Differentiable Ray Tracer for 3D Gaussians.</p>
@@ -71,9 +70,8 @@ author: Hwan Heo
     <img src="./240823_grt/assets/teaser.gif" alt="Gaussian RT" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong></strong> 3D Gaussian Ray Tracing</figcaption>
 </figure>
-<br/>
 
-<h2 id="introduction"> 1. Introduction</h2><br/>
+<h2 id="introduction"> 1. Introduction</h2>
 <h3 id="challenges-in-3d-gaussian-splatting">Challenges in 3D Gaussian Splatting</h3>
 <p class="lang eng">
     3D Gaussian Splatting (3D GS) has emerged as a promising approach for high-fidelity novel-view synthesis and real-time rendering, leveraging sophisticated tile-based rasterization. Despite its potential, this area—often referred to as the next frontier in photogrammetry—continues to face several significant challenges.
@@ -117,10 +115,7 @@ author: Hwan Heo
 <p class="lang eng">To address some of these challenges, RadSplat proposes a two-stage learning process. In this approach, Radiance Fields are first learned using Zip-NeRF, which generates perfectly calibrated pinhole images within the NeRF scene. These images are then used as training data for 3D GS.</p>
 <p class="lang eng">However, this method is inefficient due to its two-stage nature and fails to resolve the fundamental limitations posed by rasterization, particularly with physically-based rendering.</p>
 
-<br/>
-
 <h2 id="preliminary"> 2. Background </h2>
-<br/>
 <h3 id="parameterization">2.1. Parameterization</h3>
 <p class="lang eng">The primitive kernel in this method is defined using the covariance matrix in 3D space, consistent with the original 3D GS approach. </p>
 <div class="math-container">
@@ -179,8 +174,6 @@ rgb[idx * C + 2] = result.z;</code></pre>
     </li>
 </ol>
 
-<br/>
-
 <h3 id="bounding-primitives"> 3.1. Bounding Primitives</h3>
 <p class="lang eng">Let&#39;s start with BVH (<span style="text-decoration: underline;"><a href="https://en.wikipedia.org/wiki/Bounding_volume_hierarchy">Bounding Volume Hierarchy</a></span>).</p>
 
@@ -211,7 +204,6 @@ rgb[idx * C + 2] = result.z;</code></pre>
     <li><strong>Accurate Wrapping</strong>: The icosahedron can wrap around a 3D Gaussian distribution effectively, minimizing both false positives and false negatives.</li>
 </ul>
 <p class="lang eng">For an icosahedron inscribed in a unit sphere, the proxy geometry is computed by transforming each vertex using the following formula:</p>
-
 
 
 <p>
@@ -247,7 +239,6 @@ $$</p>
 
 <p class="lang eng">This approach enables a more efficient and accurate ray-tracing mechanism for 3D Gaussians by using an optimized proxy geometry that is both computationally feasible and tightly conforms to the Gaussian distribution.</p>
 
-
 <h3 id="ray-tracing-renderer"> 3.2. Ray Tracing Renderer</h3>
 <figure>
     <img class="img-fluid" src="./240823_grt/assets/fig5.png" width="100%">
@@ -270,7 +261,6 @@ $$</p>
     <img class="img-fluid" src="./240823_grt/assets/fig6.png" width="80%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 6. Next $k$ closest hit Ray Tracer:</strong> on each round of tracing, the next $k$ closest hit particles are collected and sorted into depth order along the ray, the radiance is computed in-order, and the ray is cast again to process the next chunk.  </figcaption>
 </figure>
-<br/>
 
 <h3 id="ray-gaussian-intersection"> 3.3. Ray-Gaussian Intersection</h3>
 <p class="lang eng">To calculate the contribution of each particle during ray tracing, 3D GRT determines the point where the particle&#39;s response (or contribution to the final rendered image) is maximized. This is achieved through the following mathematical formulation:</p>
@@ -321,9 +311,7 @@ $$</p>
     <p>Note that, even though ray tracing is performed in the order of proxy hits, the approximation using this method does not significantly degrade performance, despite any slight differences between proxy hit order and actual maximum response order. </p>
 </div>
 
-<br/>
-
-<h2 id="experiments"> 4. Experiments</h2><br/>
+<h2 id="experiments"> 4. Experiments</h2>
 <h3 id="quantitative-results"> 4.1. Quantitative Results</h3>
 <p class="lang eng">The quantitative evaluations of 3D GRT indicate that there is almost no significant difference between the quantitative metrics of 3D GRT and other novel view synthesis (NVS) techniques. While the fps is slightly lower in comparison, 3D GS still achieves real-time performance.</p>
 
@@ -411,8 +399,6 @@ $$</p>
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 11.</strong> Ray hit count for left: 3D G, right: GG  </figcaption>
 </figure>
 
-<br/>
-
 <h3 id="qualitative-results"> 4.2. Qualitative Results</h3>
 <p class="lang eng">In addition to the quantitative analysis, the qualitative results demonstrate how this method effectively overcomes the limitations of rasterization.</p> 
 <p class="lang eng"> Specifically, the 3D GRT shows significant improvements in modeling and rendering, particularly in handling complex light effects across various camera models. This ability to accurately represent lighting and reflections, which are often challenging in rasterization-based techniques, demonstrates that the method could be highly effective in realistic rendering scenarios.</p>
@@ -425,7 +411,6 @@ $$</p>
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 13.</strong> 3D GRT's reconstruction capability for non-pinhole camera </figcaption>
 </figure>
 <p class="lang eng">Overall, the combination of both quantitative and qualitative evaluations highlights the strengths of this new 3D GS approach, especially in terms of performance, memory efficiency, and the ability to handle complex visual effects.</p>
-<br/>
 
 <h2 id="conclusion"> 5. Conclusion</h2>
 <div class="lang eng">
@@ -434,21 +419,3 @@ $$</p>
     <p>The ray tracing approach significantly broadens the scope of 3D GS, allowing for more accurate modeling of general lighting, image formation, and sub-pixel behaviors. It also facilitates the exploration of global illumination, inverse lighting, and physically-based surface reflection models, paving the way for new research directions in these areas.</p>
     <p>However, the inherent trade-offs between the two methods are evident. While rasterization remains faster in scenarios involving primary rays and static scenes, 3D Gaussian Ray Tracing, despite being carefully optimized for hardware acceleration, still requires more computational resources, particularly when frequent BVH rebuilds are necessary for dynamic scenes.</p>
 </div>
-
-<hr/>
-<p>
-    You may also like, 
-</p>
-<ul>
-    <li>
-        <a href="/blogs/posts/?id=240805_gs">
-            <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
-        </a>
-    </li>
-    <li>
-        <a href="/blogs/posts/?id=240602_2dgs">
-            <span style="text-decoration: underline;">Under the 3D: Geometrically Accurate 2D Gaussian Splatting </span>
-        </a>
-    </li>
-</ul>
-<br/>

@@ -33,7 +33,6 @@ author: Hwan Heo
     </ul>
 </nav>
 
-<br/>
 <h2 id="tl-dr">TL; DR</h2>
 <p>
     Let's delve into the Instant Neural Graphics Primitive with a Multi-Resolution Hash Encoding, and re-implement this with PyTorch!
@@ -56,7 +55,7 @@ author: Hwan Heo
     </li>
 </ul>
 
-<h2 id="sec2"> 2. Background</h2><br/>
+<h2 id="sec2"> 2. Background</h2>
 <h3 id="sec2.1">Positional Encoding</h3>
 <p>For high-fidelity scene reconstruction, NeRF typically uses sinusoidal positional encoding:
 $$
@@ -78,7 +77,7 @@ $$</p>
 </figure>
 <p>However, voxel-based methods have the disadvantage of requiring significantly more memory compared to NeRF, and they often involve complex training processes, including various regularization techniques.</p>
 
-<h2 id="sec3"> 3. Method </h2><br/>
+<h2 id="sec3"> 3. Method </h2>
 <h3 if="overview"> Overview </h3>
 <p>Instant-NGP uses a similar approach to existing voxel-based methods by mapping parametric encodings to the vertices of a voxel. However, it introduces several key differences:</p>
 <ol>
@@ -144,7 +143,6 @@ for i in range(self.n_levels):
     <li>The <code>self.one2one</code> array indicates which levels have a one-to-one correspondence.</li>
     <li><code>self.units</code> stores the voxel size per level.</li>
 </ul>
-<br/>
 
 <h3 id="sec3.2"> 3.2. Hash Grids Encoding </h3>
 <p>For encoding a point $\mathbf{x} \in \mathbb{R}^{d}$ at each level $l$, the point is first mapped onto a hypercube of size 1 at each level:</p>
@@ -262,7 +260,7 @@ for l in range(self.n_levels):
 ```
 </li>
 <li>
-    <p>Otherwise, the index is calculated using the hash function defined in <a href="sec3.2"><strong>3.2</strong></a>.</p>
+    <p>Otherwise, the index is calculated using the hash function defined in <a href="#sec3.2"><strong>3.2</strong></a>.</p>
 
 ```python
 # cf. self.primes = [1, 2654435761, 805459861] 
@@ -334,7 +332,6 @@ corners_all, weights_all = self.hash_grids(x)
 encodings = self.hash_enc(corners_all, weights_all)
 ```
 
-<br/>
 <h2 id="conclusion"> Closing </h2>
 <p>The implementation above demonstrates that by matching the input dimension size, the code can be compatible with any NeRF-like model decoding network.</p>
 <p>This flexibility allows us to combine other NeRF models with Multi-Resolution Hash Encoding using this code easily.</p>
@@ -344,7 +341,3 @@ encodings = self.hash_enc(corners_all, weights_all)
 <li>Instant-NGP utilizes the <a href="https://github.com/NVlabs/tiny-cuda-nn">tcnn library</a> for the decoding network, further optimizing inference speed.</li>
 <li>There are additional implementation details, such as pruning hypercubes without opaque particles to improve inference efficiency.</li>
 </ol>
-<hr/>
-<p>
-    You may also like, 
-</p>

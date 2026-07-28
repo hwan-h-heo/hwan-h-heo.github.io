@@ -111,8 +111,6 @@ SDS loss로 3D 모델을 업데이트할 때, chain rule을 따라가 보면 tex
 
 ## 2. Pursue SOTA: 3D Sovereign AI 
 
-<br/>
-
 ### 2.1. Varco3D-alpha
 
 새로운 팀으로 옮긴 후 내가 수행한 첫 번째 업무는 CaPa 파이프라인을 확장하여 사내 3D 생성 서비스인 Varco3D-$\alpha$를 출시하는 것이었다. 모델 구조는 CaPa 를 계승한 전형적인 3D 생성 파이프라인을 따랐다.
@@ -122,7 +120,6 @@ SDS loss로 3D 모델을 업데이트할 때, chain rule을 따라가 보면 tex
 
 
 <iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/AtQNAuQY4-A?si=pQWlS8qawVOyFSqK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
 
 
 이 모델을 학습시키며 얻은 중요한 직관 중 하나는, 'Geometry VAE'를 학습시키는 데는 2D 생성 모델보다 훨씬 적은 데이터와 리소스가 필요하다는 점이었다. 이는 3D geometry의 distribution이 RGB images보다 단순하다는 가정 때문인데, 실제로 아티스트가 제작한 polygonal mesh는 RGB image와 달리 high-frequency detail의 변화나 복잡한 배경이 많지 않다.
@@ -203,8 +200,6 @@ Trellis model formulation 으로 이는 $32^3$ 의 dense voxel grid 에서 diffu
 
 ## 3. Back to the VecSet 
 
-<br/>
-
 ### 3.1. Lattice
 
 Sparse voxel 기반 방법론(Sparc3D 등)이 global shape과 local detail 생성을 분리하여 학습 효율과 품질을 비약적으로 높인 사실을 기억하는가? 
@@ -227,7 +222,7 @@ ${}$<img src='./assets/remote-11ecc1e8c03f.png' width=30%>
 
 이 논문의 아이디어는 VecSet decoding 가속화 연구인 [**FlashVDM**](https://github.com/Tencent-Hunyuan/FlashVDM)의 실험에서 파생된 것이라고 추측한다 (저자 또한 같다). FlashVDM은 SDF 추출에 **dense grid point query**가 필요했던 기존 VecSet decoding 단계에 **octree-decoding (Hierarchical Decoding)** 을 제안하여 수십배로 decoding 시간을 단축한 연구이다. 
 
-![](./assets/remote-d05de1f944fa.png)
+![](/blogs/posts/260727_sparse_3d/assets/sparse-pipeline.png)
 
 - ***Visualization of FlashVDM.*** *Right* 의 mesh 를 VAE decoder 를 통해 복원할 때, FlashVDM 은 *Left* 의 좌->우 처럼 coarse resolution 에서 먼저 active voxel 식별 후 이 active voxel 범위에서만 resolution 을 늘려가면서 고해상도의 SDF 를 복원한다. 
 <img src='./assets/remote-361723135c58.png' width=50%>
@@ -349,14 +344,3 @@ Sovereign AI 라는 거창한 구호 아래 자체 모델을 고집하는 이유
 <iframe src="https://3d.varco.ai/test-embed/02072a988541af639c393f1d4c45f2ef.glb" width="100%" height="500px" title="설명" style="border: none;"></iframe>
 
 - Varco3D 1.0
-
----
-
-
-You may also like
-
-- [An Era of 3D Generative Models](/blogs/posts/?id=250302_3d_latent_diffusion)
-- [Building Large 3D Generative Models (1) - 3D Data Pre-processing](/blogs/posts/?id=250702_building_large_3d_1)
-- [Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D](/blogs/posts/?id=250710_building_large_3d_2)
-
-<br/>

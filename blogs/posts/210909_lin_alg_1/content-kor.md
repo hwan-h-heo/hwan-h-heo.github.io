@@ -60,7 +60,6 @@ $$
     
     기존 벡터들의 Span에 포함되지 않는, 즉 **선형 독립인 새로운 벡터를 basis에 추가하면** Span의 차원이 확장되므로 **Rank가 늘어잉다.** 반대로, 기존 벡터들의 Span에 이미 포함되어 있는, 즉 **선형 종속인 벡터를 추가하면** Span에 변화가 없으므로 **Rank는 변하지 않는다.**
     
-
 ## 2. Linear Transformation
 
 **Definition:** $L(ax+by) = a\ L(x) +b\ L(y)$
@@ -107,7 +106,6 @@ $$
     
     행렬 $M$ 을 통해서 변화된 공간을 $M'$ 이라 할 때,  $rank(M') \le rank(M)$ 이 항상 성립한다. Span의 dimension은 유지하거나 줄어들기 때문.
     
-
 ### 2.2. **Non-square matrix case**
 
 **2.2.1.**  
@@ -167,7 +165,6 @@ $$
     
 
  
-
 ### 2.4. **Determinant**
 
 - 위에서 잠시 얘기했지만, 단순히 determinant 가 0인 경우를 제외하고, determinant 가 무엇을 의미하는지 생각해볼 필요가 있다. 간단한 예제를 통해서 살펴보자.

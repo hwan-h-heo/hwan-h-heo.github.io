@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Hwan Heo's Blog</title>
+    <link>https://hwan-h-heo.github.io/blogs/</link>
+    <description>Technical articles on sparse 3D generation, neural rendering, mesh processing, CUDA kernels, and production inference optimization.</description>
+    <language>en</language>
+    <item>
+      <title>What the Compiler Missed in Sparse 3D Inference</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference/</guid>
+      <pubDate>Mon, 27 Jul 2026 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0</description>
+    </item>
+    <item>
+      <title>Varco3D: A Year in Review — 2025 Retrospective</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective/</guid>
+      <pubDate>Thu, 15 Jan 2026 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>A technical retrospective on recent 3D generative AI systems</description>
+    </item>
+    <item>
+      <title>SDF and Eikonal Equation</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/sdf-and-eikonal-equation/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/sdf-and-eikonal-equation/</guid>
+      <pubDate>Sat, 23 Aug 2025 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Why signed distance field induces eikonal equation</description>
+    </item>
+    <item>
+      <title>From Flow Matching to Optimal Transport: A Physics-based View of Generative Models</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/</guid>
+      <pubDate>Sun, 10 Aug 2025 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow</description>
+    </item>
+    <item>
+      <title>Generalized Winding Number</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/generalized-winding-number/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/generalized-winding-number/</guid>
+      <pubDate>Sat, 09 Aug 2025 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>How to make a robust SDF using GWN from Mesh</description>
+    </item>
+    <item>
+      <title>Building Large 3D Generative Model (2) VAE and DiT Deep Dive</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/</guid>
+      <pubDate>Thu, 10 Jul 2025 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>VAE and DiT Architecture for Vecset vs. Sparse-Voxel</description>
+    </item>
+    <item>
+      <title>Building Large 3D Generative Model (1) Data pre-processing</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/</guid>
+      <pubDate>Wed, 02 Jul 2025 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Watertight Mesh Conversion and Salient Edge Sampling</description>
+    </item>
+    <item>
+      <title>3D Model Viewer in Web</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/3d-model-viewer-in-web/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/3d-model-viewer-in-web/</guid>
+      <pubDate>Mon, 10 Mar 2025 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Custom Threejs 3D Model Viewer</description>
+    </item>
+    <item>
+      <title>An Era of 3D Generation</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation/</guid>
+      <pubDate>Sun, 02 Mar 2025 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>From ShapeVAE to Trellis and Hunyuan3D</description>
+    </item>
+    <item>
+      <title>Neural Rendering Beyond Photography</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/neural-rendering-beyond-photography/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/neural-rendering-beyond-photography/</guid>
+      <pubDate>Mon, 06 Jan 2025 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>NeRF for Tomography &amp; Tip for NeRF Viewer</description>
+    </item>
+    <item>
+      <title>Add Gaussian Splatting to Your Website</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/add-gaussian-splatting-to-your-website/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/add-gaussian-splatting-to-your-website/</guid>
+      <pubDate>Tue, 17 Sep 2024 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Tutorial for GS Scene w/ Three-js</description>
+    </item>
+    <item>
+      <title>Don&#39;t Rasterize, But Ray Trace 3D Gaussian</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian/</guid>
+      <pubDate>Fri, 23 Aug 2024 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>In-Depth Review of 3D Gaussian Ray Tracing by NVIDIA</description>
+    </item>
+    <item>
+      <title>A Comprehensive Analysis of Gaussian Splatting Rasterization</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/</guid>
+      <pubDate>Mon, 05 Aug 2024 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Understanding 3D GS&#39;s Rasterization Algorithm</description>
+    </item>
+    <item>
+      <title>Radiance Fields from Deep-based Structure-from-Motion</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/radiance-fields-from-deep-based-structure-from-motion/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/radiance-fields-from-deep-based-structure-from-motion/</guid>
+      <pubDate>Sun, 21 Jul 2024 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Comparison of VGGSfM &amp; MAsT3R</description>
+    </item>
+    <item>
+      <title>Under the 3D: Geometrically Accurate 2D Gaussian Splatting</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting/</guid>
+      <pubDate>Sun, 02 Jun 2024 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Understanding 2D GS&#39;s Algorithm</description>
+    </item>
+    <item>
+      <title>Is Diffusion&#39;s Estimated Depth Really Good?</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/is-diffusions-estimated-depth-really-good/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/is-diffusions-estimated-depth-really-good/</guid>
+      <pubDate>Fri, 26 Apr 2024 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Making Mesh from Estimated Depth Map by Diffusion</description>
+    </item>
+    <item>
+      <title>Can Sora Understand 3D?</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/can-sora-understand-3d/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/can-sora-understand-3d/</guid>
+      <pubDate>Mon, 26 Feb 2024 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Radiance Fields Reconstruction from Video Generative AI</description>
+    </item>
+    <item>
+      <title>Can NeRF be used in Game?</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/can-nerf-be-used-in-game/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/can-nerf-be-used-in-game/</guid>
+      <pubDate>Thu, 30 Nov 2023 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Explore Limitations of NeRF</description>
+    </item>
+    <item>
+      <title>Instant-NGP Review &amp; Re-Implementation</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/instant-ngp-review-re-implementation/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/instant-ngp-review-re-implementation/</guid>
+      <pubDate>Thu, 02 Feb 2023 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Review of Instant-NGP and PyTorch Re-Implementation</description>
+    </item>
+    <item>
+      <title>Why Positional Encoding Makes NeRF more Powerful</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/</guid>
+      <pubDate>Sun, 28 Nov 2021 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Review of Fourier Features Let Networks Learn High-Frequency Functions</description>
+    </item>
+    <item>
+      <title>Change of Basis</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/change-of-basis/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/change-of-basis/</guid>
+      <pubDate>Fri, 10 Sep 2021 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)</description>
+    </item>
+    <item>
+      <title>Linear System</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/linear-system/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/linear-system/</guid>
+      <pubDate>Thu, 09 Sep 2021 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Linear System, Linear Transformation, and its Intuitions</description>
+    </item>
+    <item>
+      <title>3D Stereo Vision and Epipolar Geometry</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/3d-stereo-vision-and-epipolar-geometry/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/3d-stereo-vision-and-epipolar-geometry/</guid>
+      <pubDate>Wed, 02 Jun 2021 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Camera Projection, Stereo, and Epipolar Geometry</description>
+    </item>
+    <item>
+      <title>Homography and Image Alignment</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/homography-and-image-alignment/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/homography-and-image-alignment/</guid>
+      <pubDate>Sun, 02 May 2021 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Image Transformation, Homography, and Correspondence Matching</description>
+    </item>
+    <item>
+      <title>Feature Extraction and Detection</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/feature-extraction-and-detection/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/feature-extraction-and-detection/</guid>
+      <pubDate>Fri, 02 Apr 2021 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Image Gradient, Sobel Filter, LoG, and Detection</description>
+    </item>
+    <item>
+      <title>Image Filter and Morphology</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/image-filter-and-morphology/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/image-filter-and-morphology/</guid>
+      <pubDate>Tue, 02 Mar 2021 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Various Image Filters and Morphology (Erosion &amp; Dilation)</description>
+    </item>
+  </channel>
+</rss>
