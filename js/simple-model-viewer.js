@@ -2,7446 +2,3983 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
+import { STLLoader } from 'three/addons/loaders/STLLoader.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+import { EXRLoader } from 'three/addons/loaders/EXRLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-import { TransformControls } from 'three/addons/controls/TransformControls.js';
 
 const ENVIRONMENT_URLS = {
     env1: '/assets/viewer/spruit-sunrise.hdr',
     env2: '/assets/viewer/aircraft-workshop.hdr',
-    env3: '/assets/viewer/lebombo.hdr',
+    env3: '/assets/viewer/lebombo.hdr'
 };
 
-const TEXTURE_INPUT_IDS = {
-    map: 'diffuseMapInput',
-    roughnessMap: 'roughnessMapInput',
-    metalnessMap: 'metalnessMapInput',
-    normalMap: 'normalMapInput',
-    aoMap: 'aoMapInput',
-    emissiveMap: 'emissiveMapInput',
+const DEFAULT_ENVIRONMENT_PRESET = 'forest';
+const ENVIRONMENT_PRESETS = {
+    studio: {
+        id: 'studio',
+        label: 'Studio',
+        url: '/assets/viewer/blender-studio-lights/studio.exr',
+        environmentIntensity: 1,
+        backgroundIntensity: 0.82,
+        rotation: 0
+    },
+    interior: {
+        id: 'interior',
+        label: 'Interior',
+        url: '/assets/viewer/blender-studio-lights/interior.exr',
+        environmentIntensity: 1.08,
+        backgroundIntensity: 0.84,
+        rotation: 0.15
+    },
+    city: {
+        id: 'city',
+        label: 'City',
+        url: '/assets/viewer/blender-studio-lights/city.exr',
+        environmentIntensity: 0.92,
+        backgroundIntensity: 0.78,
+        rotation: -0.3
+    },
+    sunrise: {
+        id: 'sunrise',
+        label: 'Sunrise',
+        url: '/assets/viewer/blender-studio-lights/sunrise.exr',
+        environmentIntensity: 0.96,
+        backgroundIntensity: 0.78,
+        rotation: 0.05
+    },
+    forest: {
+        id: 'forest',
+        label: 'Forest',
+        url: '/assets/viewer/blender-studio-lights/forest.exr',
+        environmentIntensity: 1.04,
+        backgroundIntensity: 0.82,
+        rotation: -0.2
+    },
+    courtyard: {
+        id: 'courtyard',
+        label: 'Courtyard',
+        url: '/assets/viewer/blender-studio-lights/courtyard.exr',
+        environmentIntensity: 1,
+        backgroundIntensity: 0.8,
+        rotation: 0.22
+    },
+    env1: {
+        id: 'env1',
+        label: 'Sunrise HDR',
+        url: ENVIRONMENT_URLS.env1,
+        environmentIntensity: 1,
+        backgroundIntensity: 0.9,
+        rotation: 0
+    },
+    env2: {
+        id: 'env2',
+        label: 'Workshop HDR',
+        url: ENVIRONMENT_URLS.env2,
+        environmentIntensity: 0.95,
+        backgroundIntensity: 0.88,
+        rotation: 0
+    },
+    env3: {
+        id: 'env3',
+        label: 'Lebombo HDR',
+        url: ENVIRONMENT_URLS.env3,
+        environmentIntensity: 1,
+        backgroundIntensity: 0.9,
+        rotation: 0
+    }
 };
 
-const PREVIEW_TEXT_STYLE = {
-    lineHeight: '1.4',
-    textAlign: 'center',
-};
-
-const DEFAULT_BACKGROUND_COLOR = '#eeeeee';
-const DEFAULT_EXPOSURE = 1;
-const DEFAULT_ENVIRONMENT_INTENSITY = 1;
-const DEFAULT_ENVIRONMENT_ROTATION = 0;
-const DEFAULT_ENVIRONMENT_BACKGROUND_VISIBLE = true;
-const DEFAULT_SELECTION_MODE = 'scene-graph';
-const DEFAULT_PERFORMANCE_MODE = 'default';
-const DEFAULT_CAMERA_DISTANCE = 10;
-const DEFAULT_ANIMATION_SPEED = 1;
-const DEFAULT_ANIMATION_LOOP = 'repeat';
-const DEFAULT_RECORDING_DURATION = 5;
-const CUSTOM_ENVIRONMENT_ID = 'custom';
-const POINTER_DRAG_THRESHOLD = 6;
-const STATE_SCHEMA_VERSION = 'simple-model-viewer-state/v1';
-const VALID_SELECTION_MODES = new Set(['scene-graph', 'canvas', 'all', 'none']);
-const VALID_PERFORMANCE_MODES = new Set(['default', 'performance', 'quality']);
-const VALID_ANIMATION_LOOP_MODES = new Set(['repeat', 'once', 'ping-pong']);
-const ANIMATION_CROSS_FADE_DURATION = 0.2;
-const SUPPORTED_MODEL_EXTENSIONS = new Set(['glb', 'gltf', 'obj', 'fbx', 'ply']);
-
-const DISPOSABLE_TEXTURE_KEYS = [
-    'alphaMap',
-    'aoMap',
-    'bumpMap',
-    'displacementMap',
-    'emissiveMap',
-    'envMap',
-    'lightMap',
-    'map',
-    'metalnessMap',
-    'normalMap',
-    'roughnessMap',
-    'specularMap',
+const SUPPORTED_MODEL_EXTENSIONS = new Set(['glb', 'gltf', 'obj', 'fbx', 'ply', 'stl']);
+const COMPANION_EXTENSIONS = new Set([
+    'mtl',
+    'bin',
+    'png',
+    'jpg',
+    'jpeg',
+    'webp',
+    'avif',
+    'bmp',
+    'gif',
+    'hdr',
+    'exr',
+    'tga',
+    'ktx2'
+]);
+const TEXTURE_PROPERTIES = [
+    ['map', 'Base color'],
+    ['normalMap', 'Normal'],
+    ['roughnessMap', 'Roughness'],
+    ['metalnessMap', 'Metalness'],
+    ['aoMap', 'AO'],
+    ['emissiveMap', 'Emissive'],
+    ['alphaMap', 'Alpha'],
+    ['bumpMap', 'Bump'],
+    ['displacementMap', 'Displace']
 ];
+const HISTORY_DB_NAME = 'simple-model-viewer-history';
+const HISTORY_DB_VERSION = 1;
+const HISTORY_STORE_NAME = 'records';
+const HISTORY_LIMIT = 5;
+const HISTORY_BYTE_LIMIT = 100 * 1024 * 1024;
+const DEFAULT_BACKGROUND_COLOR = '#070707';
+const DEFAULT_CAMERA_DISTANCE = 3.5;
+const DEFAULT_WIREFRAME_COLOR = 0x111111;
+const MAX_TEXTURE_ANISOTROPY_CAP = 8;
+const PBR_DISPLAY_LOOK_SATURATION = 1.02;
+const PBR_DISPLAY_LOOK_CONTRAST = 1.01;
+const PBR_DISPLAY_LOOK_PIVOT = 0.5;
+const QUAD_EDGE_NORMAL_DOT = Math.cos(THREE.MathUtils.degToRad(3));
+const QUAD_EDGE_LENGTH_RATIO = 0.98;
 
-function getEditableMaterial(mesh) {
-    if (!mesh || !mesh.material) {
-        return null;
-    }
-
-    return Array.isArray(mesh.material) ? mesh.material[0] : mesh.material;
+function extensionFromPath(path) {
+    const clean = String(path || '').split(/[?#]/)[0];
+    const match = clean.match(/\.([a-z0-9]+)$/i);
+    return (match?.[1] || '').toLowerCase();
 }
 
-function getMaterialCount(mesh) {
-    if (!mesh?.material) {
-        return 0;
-    }
-
-    return Array.isArray(mesh.material) ? mesh.material.length : 1;
-}
-
-function cloneTexture(texture) {
-    return texture && texture.clone ? texture.clone() : texture || null;
-}
-
-function getMaterialArray(material) {
-    if (!material) {
-        return [];
-    }
-
-    return Array.isArray(material) ? material : [material];
-}
-
-function getMaterialEntryAt(materialEntry, index = 0) {
-    if (Array.isArray(materialEntry)) {
-        return materialEntry[index] || materialEntry[0] || null;
-    }
-
-    return materialEntry || null;
-}
-
-function cloneMaterialEntry(materialEntry) {
-    if (Array.isArray(materialEntry)) {
-        return materialEntry.map((material) => material?.clone ? material.clone() : material || null);
-    }
-
-    return materialEntry?.clone ? materialEntry.clone() : materialEntry || null;
-}
-
-function getTextureSource(texture) {
-    if (!texture?.image) {
-        return null;
-    }
-
-    return texture.image.currentSrc
-        || texture.image.src
-        || texture.source?.data?.currentSrc
-        || texture.source?.data?.src
-        || null;
-}
-
-function createStandardMaterialFromMaterial(material) {
-    if (material instanceof THREE.MeshStandardMaterial) {
-        return material;
-    }
-
-    const standardMaterial = new THREE.MeshStandardMaterial({
-        color: material?.color?.clone ? material.color.clone() : new THREE.Color(0xffffff),
-        map: material?.map || null,
-        alphaMap: material?.alphaMap || null,
-        aoMap: material?.aoMap || null,
-        bumpMap: material?.bumpMap || null,
-        displacementMap: material?.displacementMap || null,
-        emissive: material?.emissive?.clone ? material.emissive.clone() : new THREE.Color(0x000000),
-        emissiveIntensity: material?.emissiveIntensity ?? 1,
-        emissiveMap: material?.emissiveMap || null,
-        envMapIntensity: material?.envMapIntensity ?? 1,
-        lightMap: material?.lightMap || null,
-        metalness: material?.metalness ?? 0.5,
-        metalnessMap: material?.metalnessMap || null,
-        normalMap: material?.normalMap || null,
-        opacity: material?.opacity ?? 1,
-        roughness: material?.roughness ?? 0.5,
-        roughnessMap: material?.roughnessMap || null,
-        side: material?.side ?? THREE.FrontSide,
-        transparent: material?.transparent ?? false,
-        vertexColors: !!material?.vertexColors,
+function normalizePath(path) {
+    const parts = String(path || '')
+        .replaceAll('\\', '/')
+        .split('/')
+        .filter((part) => part && part !== '.');
+    const normalized = [];
+    parts.forEach((part) => {
+        if (part === '..') {
+            normalized.pop();
+        } else {
+            normalized.push(part);
+        }
     });
-
-    if (material?.name) {
-        standardMaterial.name = material.name;
-    }
-
-    if (material?.normalScale?.clone) {
-        standardMaterial.normalScale.copy(material.normalScale);
-    }
-
-    if (material?.userData) {
-        standardMaterial.userData = {
-            ...material.userData,
-        };
-    }
-
-    return standardMaterial;
+    return normalized.join('/');
 }
 
-function parseVector3String(value) {
-    if (value instanceof THREE.Vector3) {
-        return value.clone();
-    }
-
-    if (typeof value !== 'string') {
-        return null;
-    }
-
-    const [x, y, z] = value.trim().split(/\s+/).map(parseFloat);
-    if ([x, y, z].some((entry) => Number.isNaN(entry))) {
-        return null;
-    }
-
-    return new THREE.Vector3(x, y, z);
+function dirname(path) {
+    const normalized = normalizePath(path);
+    const slash = normalized.lastIndexOf('/');
+    return slash >= 0 ? normalized.slice(0, slash) : '';
 }
 
-function formatVector3String(vector, precision = 4) {
-    return [vector.x, vector.y, vector.z]
-        .map((value) => Number(value.toFixed(precision)))
-        .join(' ');
+function basename(path) {
+    const normalized = normalizePath(path);
+    const slash = normalized.lastIndexOf('/');
+    return slash >= 0 ? normalized.slice(slash + 1) : normalized;
 }
 
-function isTextEntryElement(element) {
-    if (!(element instanceof Element)) {
-        return false;
-    }
-
-    const tagName = element.tagName;
-    return tagName === 'INPUT'
-        || tagName === 'TEXTAREA'
-        || tagName === 'SELECT'
-        || element.isContentEditable;
+function joinPath(base, path) {
+    return normalizePath(base ? `${base}/${path}` : path);
 }
 
-function sanitizeFilenameSegment(value, fallback = 'capture') {
-    const normalized = `${value || ''}`
+function pathWithoutSearch(path) {
+    return String(path || '').split(/[?#]/)[0];
+}
+
+function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, (character) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    })[character]);
+}
+
+function sanitizeFilenameSegment(value, fallback = 'model') {
+    const normalized = String(value || '')
         .trim()
         .replace(/\.[a-z0-9]+$/i, '')
         .replace(/[^a-z0-9-_]+/gi, '-')
         .replace(/^-+|-+$/g, '')
         .toLowerCase();
-
     return normalized || fallback;
 }
 
-function formatTimestampForFilename(date = new Date()) {
-    const pad = (value) => `${value}`.padStart(2, '0');
-    return [
-        date.getFullYear(),
-        pad(date.getMonth() + 1),
-        pad(date.getDate()),
-    ].join('') + '-' + [
-        pad(date.getHours()),
-        pad(date.getMinutes()),
-        pad(date.getSeconds()),
-    ].join('');
+function formatBytes(value) {
+    const bytes = Number(value);
+    if (!Number.isFinite(bytes) || bytes < 0) return '0 B';
+    if (bytes < 1024) return `${bytes} B`;
+    const units = ['KB', 'MB', 'GB', 'TB'];
+    let size = bytes / 1024;
+    let unit = units.shift();
+    while (size >= 1024 && units.length) {
+        size /= 1024;
+        unit = units.shift();
+    }
+    return `${size >= 10 ? size.toFixed(0) : size.toFixed(1)} ${unit}`;
 }
 
-function getFileExtension(name = '') {
-    return `${name}`.split('.').pop().toLowerCase();
+function formatCount(value) {
+    const count = Number(value);
+    if (!Number.isFinite(count) || count <= 0) return '0';
+    if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`;
+    if (count >= 1000) return `${(count / 1000).toFixed(1)}k`;
+    return String(Math.round(count));
 }
 
-function isSupportedModelFileName(name = '') {
-    return SUPPORTED_MODEL_EXTENSIONS.has(getFileExtension(name));
+function environmentRotationShift(rotationRadians, width) {
+    if (!width) return 0;
+    const turns = ((rotationRadians / (Math.PI * 2)) % 1 + 1) % 1;
+    return Math.round(turns * width) % width;
 }
+
+function environmentTextureChannelCount(texture) {
+    if (texture?.format === THREE.RedFormat) return 1;
+    if (texture?.format === THREE.RGFormat) return 2;
+    if (texture?.format === THREE.RGBFormat) return 3;
+    return 4;
+}
+
+function createRotatedEnvironmentTexture(texture, rotationRadians) {
+    const image = texture?.image;
+    const data = image?.data;
+    const width = image?.width || 0;
+    const height = image?.height || 0;
+    const shift = environmentRotationShift(rotationRadians, width);
+    if (!data || !width || !height || shift === 0) return texture;
+    const channels = environmentTextureChannelCount(texture);
+    const rotatedData = new data.constructor(data.length);
+    const rowStride = width * channels;
+    const shiftStride = shift * channels;
+    for (let y = 0; y < height; y += 1) {
+        const rowOffset = y * rowStride;
+        for (let x = 0; x < width; x += 1) {
+            const sourceOffset = rowOffset + ((x * channels + shiftStride) % rowStride);
+            const targetOffset = rowOffset + x * channels;
+            for (let channel = 0; channel < channels; channel += 1) {
+                rotatedData[targetOffset + channel] = data[sourceOffset + channel];
+            }
+        }
+    }
+    const rotated = new THREE.DataTexture(rotatedData, width, height, texture.format, texture.type);
+    rotated.mapping = THREE.EquirectangularReflectionMapping;
+    rotated.colorSpace = texture.colorSpace;
+    rotated.flipY = texture.flipY;
+    rotated.generateMipmaps = texture.generateMipmaps;
+    rotated.magFilter = texture.magFilter;
+    rotated.minFilter = texture.minFilter;
+    rotated.wrapS = texture.wrapS;
+    rotated.wrapT = texture.wrapT;
+    rotated.userData.smvRotatedEnvironment = true;
+    rotated.needsUpdate = true;
+    return rotated;
+}
+
+function previewColorFromEnvironment(texture, u, v) {
+    const image = texture?.image;
+    const data = image?.data;
+    const width = image?.width || 0;
+    const height = image?.height || 0;
+    if (!data || !width || !height) return [0.05, 0.05, 0.05];
+    const x = Math.max(0, Math.min(width - 1, Math.floor(((u % 1 + 1) % 1) * width)));
+    const y = Math.max(0, Math.min(height - 1, Math.floor(THREE.MathUtils.clamp(v, 0, 1) * height)));
+    const channels = environmentTextureChannelCount(texture);
+    const offset = (y * width + x) * channels;
+    const read = (channel) => {
+        const value = data[offset + Math.min(channel, channels - 1)] || 0;
+        if (texture.type === THREE.HalfFloatType || data instanceof Uint16Array) {
+            return THREE.DataUtils.fromHalfFloat(value);
+        }
+        return value;
+    };
+    const r = read(0);
+    const g = channels > 1 ? read(1) : r;
+    const b = channels > 2 ? read(2) : r;
+    return [r, g, b];
+}
+
+function previewDisplayValue(linearValue) {
+    const mapped = 1 - Math.exp(-Math.max(0, linearValue) * 0.85);
+    return Math.round(Math.pow(THREE.MathUtils.clamp(mapped, 0, 1), 1 / 2.2) * 255);
+}
+
+function drawEnvironmentPreviewCanvas(canvas, texture, preset, degrees = 0) {
+    if (!canvas || !texture) return;
+    const size = Math.max(24, Math.floor(canvas.width || canvas.clientWidth || 56));
+    if (canvas.width !== size || canvas.height !== size) {
+        canvas.width = size;
+        canvas.height = size;
+    }
+    const context = canvas.getContext('2d');
+    if (!context) return;
+    const imageData = context.createImageData(size, size);
+    const target = imageData.data;
+    const center = (size - 1) / 2;
+    const radius = size * 0.46;
+    const rotation = THREE.MathUtils.degToRad(degrees) + Number(preset.rotation || 0);
+    const cos = Math.cos(rotation);
+    const sin = Math.sin(rotation);
+    for (let py = 0; py < size; py += 1) {
+        for (let px = 0; px < size; px += 1) {
+            const dx = (px - center) / radius;
+            const dy = (py - center) / radius;
+            const distanceSq = dx * dx + dy * dy;
+            const offset = (py * size + px) * 4;
+            if (distanceSq > 1) {
+                target[offset + 3] = 0;
+                continue;
+            }
+            const z = Math.sqrt(Math.max(0, 1 - distanceSq));
+            const dirX = dx * cos + z * sin;
+            const dirY = -dy;
+            const dirZ = z * cos - dx * sin;
+            const u = Math.atan2(dirX, dirZ) / (Math.PI * 2) + 0.5;
+            const v = Math.acos(THREE.MathUtils.clamp(dirY, -1, 1)) / Math.PI;
+            const shade = 0.62 + 0.38 * Math.max(0, z);
+            const [r, g, b] = previewColorFromEnvironment(texture, u, v);
+            target[offset] = previewDisplayValue(r * shade);
+            target[offset + 1] = previewDisplayValue(g * shade);
+            target[offset + 2] = previewDisplayValue(b * shade);
+            target[offset + 3] = 255;
+        }
+    }
+    context.putImageData(imageData, 0, 0);
+}
+
+function materialArray(material) {
+    if (!material) return [];
+    return Array.isArray(material) ? material.filter(Boolean) : [material];
+}
+
+function isTextEntryElement(element) {
+    if (!(element instanceof Element)) return false;
+    return ['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName) || element.isContentEditable;
+}
+
+function isExternalUrl(value) {
+    return /^(?:https?:)?\/\//i.test(String(value || '')) || /^(?:blob|data):/i.test(String(value || ''));
+}
+
+function filePathFor(file) {
+    return normalizePath(file.webkitRelativePath || file.relativePath || file.name || 'model');
+}
+
+function createHistoryId() {
+    return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 9)}`;
+}
+
+function requestToPromise(request) {
+    return new Promise((resolve, reject) => {
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error || new Error('IndexedDB request failed'));
+    });
+}
+
+function openHistoryDatabase() {
+    if (!('indexedDB' in window)) return Promise.resolve(null);
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(HISTORY_DB_NAME, HISTORY_DB_VERSION);
+        request.onupgradeneeded = () => {
+            const database = request.result;
+            if (!database.objectStoreNames.contains(HISTORY_STORE_NAME)) {
+                database.createObjectStore(HISTORY_STORE_NAME, { keyPath: 'id' });
+            }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error || new Error('Could not open viewer history'));
+    });
+}
+
+async function readHistoryRecords() {
+    const database = await openHistoryDatabase();
+    if (!database) return [];
+    const transaction = database.transaction(HISTORY_STORE_NAME, 'readonly');
+    const records = await requestToPromise(transaction.objectStore(HISTORY_STORE_NAME).getAll());
+    return (records || []).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+}
+
+async function writeHistoryRecords(records) {
+    const database = await openHistoryDatabase();
+    if (!database) return;
+    await new Promise((resolve, reject) => {
+        const transaction = database.transaction(HISTORY_STORE_NAME, 'readwrite');
+        const store = transaction.objectStore(HISTORY_STORE_NAME);
+        store.clear();
+        records.forEach((record) => store.put(record));
+        transaction.oncomplete = () => resolve();
+        transaction.onerror = () => reject(transaction.error || new Error('Could not write viewer history'));
+        transaction.onabort = () => reject(transaction.error || new Error('Viewer history write was aborted'));
+    });
+}
+
+function getTextureSource(texture) {
+    const image = texture?.source?.data || texture?.image || null;
+    return image?.currentSrc || image?.src || texture?.userData?.source || '';
+}
+
+function isDrawableTextureImage(image) {
+    return Boolean(image && (
+        (typeof HTMLImageElement !== 'undefined' && image instanceof HTMLImageElement)
+        || (typeof HTMLCanvasElement !== 'undefined' && image instanceof HTMLCanvasElement)
+        || (typeof HTMLVideoElement !== 'undefined' && image instanceof HTMLVideoElement)
+        || (typeof ImageBitmap !== 'undefined' && image instanceof ImageBitmap)
+        || (typeof OffscreenCanvas !== 'undefined' && image instanceof OffscreenCanvas)
+    ));
+}
+
+function drawFallbackTexture(canvas, entry, size = 96) {
+    canvas.width = size;
+    canvas.height = size;
+    const context = canvas.getContext('2d');
+    const tile = Math.max(8, Math.round(size / 8));
+    for (let y = 0; y < size; y += tile) {
+        for (let x = 0; x < size; x += tile) {
+            context.fillStyle = ((x / tile + y / tile) % 2) ? '#171817' : '#2b2d2b';
+            context.fillRect(x, y, tile, tile);
+        }
+    }
+    context.fillStyle = 'rgba(250, 249, 245, 0.86)';
+    context.font = `700 ${Math.max(10, Math.round(size / 10))}px Inter, sans-serif`;
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+    context.fillText(entry.compressed ? 'KTX2' : entry.label, size / 2, size / 2);
+}
+
+function drawTextureMap(canvas, entry, maxSize = 96, square = false) {
+    const image = entry.image || entry.texture?.source?.data || entry.texture?.image || null;
+    const width = Number(image?.width || image?.naturalWidth || entry.width) || maxSize;
+    const height = Number(image?.height || image?.naturalHeight || entry.height) || maxSize;
+    const scale = Math.min(1, maxSize / Math.max(width, height));
+    const drawWidth = Math.max(1, Math.round(width * scale));
+    const drawHeight = Math.max(1, Math.round(height * scale));
+    const canvasWidth = square ? maxSize : drawWidth;
+    const canvasHeight = square ? maxSize : drawHeight;
+    if (!isDrawableTextureImage(image)) {
+        drawFallbackTexture(canvas, entry, maxSize);
+        return false;
+    }
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    const context = canvas.getContext('2d');
+    context.fillStyle = '#0f0f0e';
+    context.fillRect(0, 0, canvasWidth, canvasHeight);
+    context.drawImage(
+        image,
+        Math.round((canvasWidth - drawWidth) / 2),
+        Math.round((canvasHeight - drawHeight) / 2),
+        drawWidth,
+        drawHeight
+    );
+    return true;
+}
+
+function setTextureColorSpace(texture, color = false) {
+    if (!texture) return;
+    if ('colorSpace' in texture) {
+        texture.colorSpace = color ? THREE.SRGBColorSpace : THREE.NoColorSpace;
+    } else if ('encoding' in texture) {
+        texture.encoding = color ? THREE.sRGBEncoding : THREE.LinearEncoding;
+    }
+    texture.needsUpdate = true;
+}
+
+function setTextureSampling(texture, maxAnisotropy) {
+    if (!texture?.isTexture) return;
+    let changed = false;
+    if (Number.isFinite(maxAnisotropy) && maxAnisotropy > 1 && texture.anisotropy !== maxAnisotropy) {
+        texture.anisotropy = maxAnisotropy;
+        changed = true;
+    }
+    if (texture.magFilter !== THREE.LinearFilter) {
+        texture.magFilter = THREE.LinearFilter;
+        changed = true;
+    }
+    if (texture.minFilter !== THREE.LinearMipmapLinearFilter) {
+        texture.minFilter = THREE.LinearMipmapLinearFilter;
+        changed = true;
+    }
+    if (changed) texture.needsUpdate = true;
+}
+
+function applyPbrDisplayLook(material) {
+    if (!material || material.userData?.smvPbrDisplayLook === true) return;
+    if (!material.isMeshStandardMaterial && !material.isMeshPhysicalMaterial) return;
+    const originalOnBeforeCompile = material.onBeforeCompile;
+    const originalCustomProgramCacheKey = material.customProgramCacheKey;
+    material.onBeforeCompile = function smvPbrDisplayLook(shader, renderer) {
+        originalOnBeforeCompile.call(this, shader, renderer);
+        shader.fragmentShader = shader.fragmentShader.replace(
+            '#include <dithering_fragment>',
+            [
+                'vec3 smvLookLumaWeights = vec3(0.2126, 0.7152, 0.0722);',
+                'float smvLookLuma = dot(gl_FragColor.rgb, smvLookLumaWeights);',
+                `gl_FragColor.rgb = mix(vec3(smvLookLuma), gl_FragColor.rgb, ${PBR_DISPLAY_LOOK_SATURATION.toFixed(3)});`,
+                `gl_FragColor.rgb = (gl_FragColor.rgb - vec3(${PBR_DISPLAY_LOOK_PIVOT.toFixed(3)})) * ${PBR_DISPLAY_LOOK_CONTRAST.toFixed(3)} + vec3(${PBR_DISPLAY_LOOK_PIVOT.toFixed(3)});`,
+                'gl_FragColor.rgb = max(gl_FragColor.rgb, vec3(0.0));',
+                '#include <dithering_fragment>'
+            ].join('\n')
+        );
+    };
+    material.customProgramCacheKey = function smvPbrDisplayLookCacheKey() {
+        return `${originalCustomProgramCacheKey.call(this)}|smv-pbr-display-look`;
+    };
+    material.userData.smvPbrDisplayLook = true;
+    material.needsUpdate = true;
+}
+
+function mapMaterialEntry(materialEntry, fn) {
+    return Array.isArray(materialEntry)
+        ? materialEntry.map((material) => fn(material))
+        : fn(materialEntry);
+}
+
+function parseBooleanAttribute(value, fallback = false) {
+    if (value === null || value === undefined) return fallback;
+    const normalized = String(value).trim().toLowerCase();
+    if (!normalized || normalized === 'true' || normalized === '1' || normalized === 'yes') return true;
+    if (normalized === 'false' || normalized === '0' || normalized === 'no') return false;
+    return fallback;
+}
+
+function parseNumber(value, fallback) {
+    if (value === null || value === undefined || String(value).trim() === '') return fallback;
+    const number = Number(value);
+    return Number.isFinite(number) ? number : fallback;
+}
+
+function normalizeViewMode(mode) {
+    const normalized = String(mode || '').trim().toLowerCase();
+    if (['geometry', 'mesh', 'clay'].includes(normalized)) return 'geometry';
+    if (['normal', 'normals'].includes(normalized)) return 'normal';
+    if (['albedo', 'base', 'basecolor', 'base-color'].includes(normalized)) return 'albedo';
+    if (['rough', 'roughness'].includes(normalized)) return 'roughness';
+    if (['metal', 'metallic', 'metalness'].includes(normalized)) return 'metalness';
+    if (['diffuse', 'texture', 'textured', 'pbr', 'default', ''].includes(normalized)) return 'pbr';
+    return 'pbr';
+}
+
+const VIEW_MODE_LABELS = {
+    pbr: 'PBR',
+    albedo: 'Albedo',
+    roughness: 'Rough',
+    metalness: 'Metal',
+    geometry: 'Geo',
+    normal: 'Normal'
+};
+
+function viewModeLabel(mode) {
+    return VIEW_MODE_LABELS[normalizeViewMode(mode)] || VIEW_MODE_LABELS.pbr;
+}
+
+function normalizeWireframeMode(mode) {
+    const normalized = String(mode || '').trim().toLowerCase();
+    return ['tri', 'triangle', 'triangles'].includes(normalized) ? 'tri' : 'quad';
+}
+
+function environmentPresetFor(id) {
+    return ENVIRONMENT_PRESETS[id] || ENVIRONMENT_PRESETS[DEFAULT_ENVIRONMENT_PRESET];
+}
+
+function makeButtonIcon(pathData) {
+    return `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${pathData}"></path></svg>`;
+}
+
+const ICONS = {
+    open: makeButtonIcon('M12 16V4m0 0L7 9m5-5 5 5M5 14v5h14v-5'),
+    fit: makeButtonIcon('M8 3H3v5M3 3l6 6M16 3h5v5m0-5-6 6M8 21H3v-5m0 5 6-6m7 6h5v-5m0 5-6-6'),
+    reset: makeButtonIcon('M4 4v6h6M20 20v-6h-6M5.6 14A7 7 0 0 0 18 17.4M18.4 10A7 7 0 0 0 6 6.6'),
+    rotate: makeButtonIcon('M17 2l4 4-4 4M3 11a7 7 0 0 1 14-5h4M7 22l-4-4 4-4M21 13a7 7 0 0 1-14 5H3'),
+    grid: makeButtonIcon('M4 4h16v16H4zM4 9h16M4 15h16M9 4v16M15 4v16'),
+    wire: makeButtonIcon('M12 3 20 7.5v9L12 21 4 16.5v-9L12 3ZM4 7.5l8 4.5 8-4.5M12 12v9'),
+    clip: makeButtonIcon('M4 5h16M7 5v14m10-14v14M4 19h16'),
+    shot: makeButtonIcon('M7 7h2l1.5-2h3L15 7h2a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-6a3 3 0 0 1 3-3ZM12 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z'),
+    full: makeButtonIcon('M8 3H3v5M3 3l6 6M16 3h5v5m0-5-6 6M8 21H3v-5m0 5 6-6m7 6h5v-5m0 5-6-6'),
+    close: makeButtonIcon('M6 6l12 12M18 6 6 18'),
+    play: makeButtonIcon('M8 5v14l11-7z'),
+    pause: makeButtonIcon('M7 5h4v14H7zM13 5h4v14h-4z')
+};
 
 class SimpleModelViewer extends HTMLElement {
+    static get observedAttributes() {
+        return [
+            'src',
+            'camera-orbit',
+            'camera-target',
+            'camera-up',
+            'background-color',
+            'view-mode',
+            'wireframe-mode',
+            'auto-rotate',
+            'angle-per-second',
+            'environment',
+            'environment-url',
+            'environment-intensity',
+            'environment-background',
+            'environment-rotation',
+            'exposure',
+            'selection-mode',
+            'performance-mode',
+            'animation',
+            'animation-speed',
+            'animation-loop'
+        ];
+    }
+
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
-        this.shadowRoot.innerHTML = /*html*/`
+        this.shadowRoot.innerHTML = this.renderTemplate();
+
+        this.rootEl = this.shadowRoot.querySelector('#viewerRoot');
+        this.canvasContainer = this.shadowRoot.querySelector('#canvasContainer');
+        this.fileInputContainer = this.shadowRoot.querySelector('#fileInputContainer');
+        this.fileInput = this.shadowRoot.querySelector('#fileInput');
+        this.folderInput = this.shadowRoot.querySelector('#folderInput');
+        this.relinkInput = this.shadowRoot.querySelector('#relinkInput');
+        this.statusEl = this.shadowRoot.querySelector('#status');
+        this.entriesEl = this.shadowRoot.querySelector('#entries');
+        this.preflightEl = this.shadowRoot.querySelector('#preflight');
+        this.preflightFactsEl = this.shadowRoot.querySelector('#preflightFacts');
+        this.preflightResourcesEl = this.shadowRoot.querySelector('#preflightResources');
+        this.loadingEl = this.shadowRoot.querySelector('#loading');
+        this.loadingLabelEl = this.shadowRoot.querySelector('#loadingLabel');
+        this.loadingValueEl = this.shadowRoot.querySelector('#loadingValue');
+        this.loadingBarEl = this.shadowRoot.querySelector('#loadingBar');
+        this.statsEl = this.shadowRoot.querySelector('#stats');
+        this.textureMapsEl = this.shadowRoot.querySelector('#textureMaps');
+        this.textureStripEl = this.shadowRoot.querySelector('#textureStrip');
+        this.textureCountEl = this.shadowRoot.querySelector('#textureCount');
+        this.textureToggleBtn = this.shadowRoot.querySelector('#textureToggleBtn');
+        this.textureDialog = this.shadowRoot.querySelector('#textureDialog');
+        this.textureDialogCanvas = this.shadowRoot.querySelector('#textureDialogCanvas');
+        this.textureDialogCaption = this.shadowRoot.querySelector('#textureDialogCaption');
+        this.environmentControls = this.shadowRoot.querySelector('#environmentControls');
+        this.environmentMenu = this.shadowRoot.querySelector('#environmentMenu');
+        this.environmentToggle = this.shadowRoot.querySelector('#environmentToggle');
+        this.environmentDial = this.shadowRoot.querySelector('#environmentDial');
+        this.modeToggleBtn = this.shadowRoot.querySelector('#modeToggleBtn');
+        this.modeMenu = this.shadowRoot.querySelector('#modeMenu');
+        this.historySelect = this.shadowRoot.querySelector('#historySelect');
+        this.sectionControls = this.shadowRoot.querySelector('#sectionControls');
+
+        this.scene = new THREE.Scene();
+        this.camera = new THREE.PerspectiveCamera(45, 1, 0.01, 10000);
+        this.camera.position.set(0, 0, DEFAULT_CAMERA_DISTANCE);
+        this.renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: true,
+            preserveDrawingBuffer: true
+        });
+        if ('outputColorSpace' in this.renderer) {
+            this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+        } else {
+            this.renderer.outputEncoding = THREE.sRGBEncoding;
+        }
+        this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        this.renderer.toneMappingExposure = 1;
+        this.renderer.localClippingEnabled = false;
+        this.renderer.setClearColor(0x000000, 0);
+        this.renderer.domElement.setAttribute('aria-label', '3D model viewer canvas');
+        this.canvasContainer.appendChild(this.renderer.domElement);
+
+        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        this.controls.enableDamping = true;
+        this.controls.dampingFactor = 0.08;
+        this.controls.screenSpacePanning = true;
+
+        this.pmremGenerator = new THREE.PMREMGenerator(this.renderer);
+        this.rgbeLoader = new RGBELoader();
+        this.exrLoader = new EXRLoader();
+        this.textureLoader = new THREE.TextureLoader();
+        this.raycaster = new THREE.Raycaster();
+        this.pointer = new THREE.Vector2();
+        this.pointerStart = new THREE.Vector2();
+
+        this.ambientLight = new THREE.HemisphereLight(0xffffff, 0x59616d, 0.65);
+        this.keyLight = new THREE.DirectionalLight(0xffffff, 1.55);
+        this.fillLight = new THREE.DirectionalLight(0xd6e4ff, 0.42);
+        this.rimLight = new THREE.DirectionalLight(0xffffff, 0.72);
+        this.keyLight.position.set(4.5, 5.2, 4.0);
+        this.fillLight.position.set(-3.5, 2.4, -3.0);
+        this.rimLight.position.set(-2.4, 4.8, 3.4);
+        this.scene.add(this.ambientLight, this.keyLight, this.fillLight, this.rimLight);
+
+        this.grid = new THREE.GridHelper(2, 20, 0x9aa3af, 0xc5cad3);
+        this.grid.material.transparent = true;
+        this.grid.material.opacity = 0.38;
+        this.grid.visible = false;
+        this.scene.add(this.grid);
+
+        this.placeholderMaterial = this.createGeometryMaterial();
+        this.geometryMaterial = this.createGeometryMaterial();
+        this.normalMaterial = new THREE.MeshNormalMaterial({ side: THREE.DoubleSide });
+        this.wireframeMaterial = new THREE.LineBasicMaterial({
+            color: DEFAULT_WIREFRAME_COLOR,
+            transparent: true,
+            opacity: 0.62,
+            depthTest: true,
+            depthWrite: false
+        });
+        this.selectionHelper = new THREE.BoxHelper(new THREE.Object3D(), 0x41c7ff);
+        this.selectionHelper.visible = false;
+        this.scene.add(this.selectionHelper);
+
+        this.placeholder = this.createPlaceholder();
+        this.scene.add(this.placeholder);
+
+        this.state = {
+            viewMode: normalizeViewMode(this.getAttribute('view-mode')),
+            wireframe: false,
+            wireframeMode: normalizeWireframeMode(this.getAttribute('wireframe-mode')),
+            autoRotate: this.hasAttribute('auto-rotate'),
+            anglePerSecond: parseNumber(this.getAttribute('angle-per-second'), 30),
+            grid: false,
+            section: {
+                enabled: false,
+                axis: 'x',
+                value: 0,
+                flipped: false
+            },
+            backgroundColor: this.getAttribute('background-color') || DEFAULT_BACKGROUND_COLOR,
+            environment: this.getAttribute('environment') || DEFAULT_ENVIRONMENT_PRESET,
+            environmentUrl: this.getAttribute('environment-url') || '',
+            environmentIntensity: parseNumber(this.getAttribute('environment-intensity'), 1),
+            environmentBackground: parseBooleanAttribute(this.getAttribute('environment-background'), false),
+            environmentRotation: parseNumber(this.getAttribute('environment-rotation'), 0),
+            selectionMode: this.getAttribute('selection-mode') || 'all',
+            performanceMode: this.getAttribute('performance-mode') || 'default',
+            animationSpeed: parseNumber(this.getAttribute('animation-speed'), 1),
+            animationLoop: this.getAttribute('animation-loop') || 'repeat'
+        };
+
+        this.model = null;
+        this.modelBounds = new THREE.Box3();
+        this.modelCenter = new THREE.Vector3();
+        this.modelSize = new THREE.Vector3(1, 1, 1);
+        this.modelRadius = 1;
+        this.meshParts = [];
+        this.selectedMesh = null;
+        this.animations = [];
+        this.mixer = null;
+        this.currentAction = null;
+        this.isAnimationPlaying = true;
+        this.historyRecords = [];
+        this.texturePanelOpen = false;
+        this.pendingBundle = null;
+        this.pendingMainEntry = null;
+        this.objectUrls = new Set();
+        this.currentSource = null;
+        this.currentFileName = '';
+        this.loadToken = 0;
+        this.frameRequest = null;
+        this.lastFrameTime = performance.now();
+        this.connected = false;
+        this.initialCameraOrbit = null;
+        this.cameraTransitionDefault = null;
+        this.environmentSourceTexture = null;
+        this.environmentTexture = null;
+        this.environmentRenderTarget = null;
+        this.environmentRotationKey = '';
+        this.environmentPreviewTextures = new Map();
+        this.environmentPreviewPromises = new Map();
+        this.environmentUrl = '';
+        this.draggingPointer = false;
+
+        this.sectionPlane = new THREE.Plane(new THREE.Vector3(1, 0, 0), 0);
+        this.resizeObserver = new ResizeObserver(() => this.resizeRenderer());
+
+        this.boundHandleKeyDown = (event) => this.handleKeyDown(event);
+        this.boundPointerDown = (event) => this.handlePointerDown(event);
+        this.boundPointerUp = (event) => this.handlePointerUp(event);
+        this.boundPointerMove = (event) => this.handlePointerMove(event);
+    }
+
+    renderTemplate() {
+        return /*html*/`
             <style>
                 :host {
-                    --viewer-bg: linear-gradient(145deg, rgba(247, 248, 251, 0.95), rgba(222, 228, 236, 0.82));
-                    --panel-bg: rgba(255, 255, 255, 0.72);
-                    --panel-border: rgba(58, 72, 89, 0.12);
-                    --panel-shadow: 0 20px 45px rgba(43, 58, 79, 0.16);
-                    --button-bg: rgba(46, 57, 72, 0.88);
-                    --button-hover: rgba(31, 112, 93, 0.92);
-                    --button-active: rgba(18, 145, 116, 0.95);
-                    --text-main: #1f2937;
-                    --text-muted: #5f6b7a;
                     display: block;
-                    border-radius: 18px;
-                    min-height: 300px;
-                    background: var(--viewer-bg);
-                    font-family: "Inter", "Noto Sans KR", system-ui, -apple-system, "Segoe UI", sans-serif;
-                    position: relative; /* Required for absolute positioning of panels */
-                    overflow: hidden;
+                    min-height: 360px;
+                    color: #f1ede2;
+                    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                    --viewer-panel: rgba(8, 8, 7, 0.62);
+                    --viewer-panel-strong: rgba(8, 8, 7, 0.84);
+                    --viewer-ink: #f1ede2;
+                    --viewer-muted: rgba(241, 237, 226, 0.6);
+                    --viewer-line: rgba(241, 237, 226, 0.14);
+                    --viewer-accent: #5db8a6;
+                    --viewer-accent-2: #f3b35b;
                 }
 
                 *, *::before, *::after {
                     box-sizing: border-box;
                 }
 
-                button,
-                input,
-                select,
-                textarea {
-                    font-family: inherit;
-                }
-
-                #loadingProgressBar {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 0%;
-                    height: 5px;
-                    background-color: #4CAF50;
-                    z-index: 1;
-                    display: none;
-                }
-
-                #canvas-container {
-                    width: 100%;
-                    height: auto;
+                #viewerRoot {
                     position: relative;
+                    width: 100%;
+                    height: 100%;
+                    min-height: inherit;
+                    overflow: hidden;
+                    background:
+                        radial-gradient(ellipse at 50% 68%, rgba(86, 86, 82, 0.34) 0%, rgba(38, 38, 36, 0.18) 29%, rgba(15, 15, 14, 0) 58%),
+                        radial-gradient(ellipse at 50% 52%, rgba(48, 48, 45, 0.2) 0%, rgba(15, 15, 14, 0) 54%),
+                        linear-gradient(180deg, #111110 0%, #0d0d0c 48%, var(--viewer-bg-color, #070707) 100%);
                 }
 
-                label {
-                    font-size: 0.7rem;
+                #viewerRoot.upload-open::after {
+                    position: absolute;
+                    inset: 0;
+                    z-index: 8;
+                    background: rgba(2, 3, 3, 0.34);
+                    content: "";
+                    pointer-events: none;
                 }
 
-                canvas {
+                #canvasContainer,
+                #canvasContainer > canvas {
+                    position: absolute;
+                    inset: 0;
                     width: 100%;
                     height: 100%;
                 }
 
-                input {
-                    font-size: 0.7rem;
+                canvas {
+                    display: block;
                 }
 
-                .controls {
-                    margin: 0;
-                    position: absolute; /* Make controls container positioned relative to :host */
-                    top: 1rem;
-                    right: 1rem;
-                    z-index: 1000; /* Ensure it's above canvas */
+                #canvasContainer > canvas {
+                    outline: none;
+                    touch-action: none;
+                }
+
+                button,
+                select,
+                input {
+                    font: inherit;
                 }
 
                 button {
-                    background: linear-gradient(180deg, rgba(60, 72, 88, 0.96), rgba(36, 45, 57, 0.94));
-                    border: 1px solid rgba(255, 255, 255, 0.14);
-                    color: white;
-                    padding: 6px 10px;
-                    border-radius: 10px;
+                    border: 1px solid var(--viewer-line);
+                    background: rgba(255, 255, 255, 0.045);
+                    color: var(--viewer-ink);
                     cursor: pointer;
-                    text-align: center;
-                    text-decoration: none;
-                    display: inline-block;
-                    font-size: 0.8rem;
-                    font-weight: 600;
-                    letter-spacing: 0.01em;
-                    z-index: 1001;
-                    margin-right: 0px;
-                    margin-top: 0.1rem;
-                    margin-bottom: 0.1rem;
-                    min-width: 4rem;
-                    width: 32.5%;
-                    box-shadow: 0 10px 24px rgba(31, 41, 55, 0.18);
-                    transition: transform 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease;
-                }
-
-                button:hover {
-                    background: linear-gradient(180deg, rgba(34, 126, 104, 0.96), rgba(24, 103, 84, 0.94));
-                    transform: translateY(-1px);
                 }
 
                 button:disabled {
-                    opacity: 0.45;
-                    cursor: not-allowed;
-                    transform: none;
-                    box-shadow: none;
+                    cursor: default;
+                    opacity: 0.42;
                 }
 
-                button:disabled:hover {
-                    background: linear-gradient(180deg, rgba(60, 72, 88, 0.96), rgba(36, 45, 57, 0.94));
+                button:hover:not(:disabled),
+                button:focus-visible,
+                select:focus-visible,
+                input:focus-visible {
+                    border-color: rgba(93, 184, 166, 0.56);
+                    outline: 2px solid rgba(93, 184, 166, 0.2);
+                    outline-offset: 1px;
                 }
 
-                button.toggled-off {
-                    background: linear-gradient(180deg, rgba(20, 157, 125, 0.98), rgba(15, 121, 97, 0.96));
-                    box-shadow: 0 12px 28px rgba(16, 124, 98, 0.28);
+                svg {
+                    width: 1rem;
+                    height: 1rem;
+                    fill: none;
+                    stroke: currentColor;
+                    stroke-linecap: round;
+                    stroke-linejoin: round;
+                    stroke-width: 1.8;
                 }
 
-                #fileInputContainer {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    text-align: center;
-                }
-
-                #fileInput {
-                    font-size: 1rem;
-                    padding: 10px;
-                }
-
-                .transform-buttons {
-                    display: flex;
-                    margin-top: 0.5rem;
-                    gap: 5px; /* 버튼 사이 간격 */
-                }
-
-                .transform-button {
-                    background: linear-gradient(180deg, rgba(60, 72, 88, 0.96), rgba(36, 45, 57, 0.94));
-                    border: 1px solid rgba(255, 255, 255, 0.14);
-                    color: white;
-                    padding: 5px 10px;
-                    border-radius: 10px;
-                    cursor: pointer;
-                    text-align: center;
-                    text-decoration: none;
-                    display: inline-block;
-                    font-size: 0.8rem;
-                    z-index: 1001;
-                    min-width: 4rem;
-                    width: 49%;
-                }
-
-                .transform-button.active {
-                    background: linear-gradient(180deg, rgba(20, 157, 125, 0.98), rgba(15, 121, 97, 0.96));
-                }
-
-                .transform-button:hover {
-                    background: linear-gradient(180deg, rgba(34, 126, 104, 0.96), rgba(24, 103, 84, 0.94));
-                }
-
-                .right-ui-panel { /* Renamed and unified panel */
-                    position: absolute;
-                    top: 0;
-                    right: 0; /* Positioned to the right */
-                    font-size: 0.7rem;
-                    color: var(--text-main);
-                    background: var(--panel-bg);
-                    backdrop-filter: blur(16px);
-                    -webkit-backdrop-filter: blur(16px);
-                    border: 1px solid var(--panel-border);
-                    padding: 0.6rem;
-                    border-radius: 18px;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 0.35rem;
-                    z-index: 1000;
-                    width: min(25rem, calc(100vw - 2rem));
-                    max-width: 25rem;
-                    max-height: calc(100vh - 2rem);
-                    box-shadow: var(--panel-shadow);
-                    overflow: hidden;
-                }
-
-                #panelContent {
-                    max-height: calc(100vh - 7rem);
-                    overflow-y: auto;
-                    overflow-x: hidden;
-                    padding-right: 0.15rem;
-                }
-
-                #panelContent::-webkit-scrollbar {
-                    width: 8px;
-                }
-
-                #panelContent::-webkit-scrollbar-thumb {
-                    border-radius: 999px;
-                    background: rgba(95, 107, 122, 0.3);
-                }
-
-                .right-ui-panel label {
-                    display: flex;
-                    justify-content: space-between;
+                .icon-button {
+                    display: inline-flex;
                     align-items: center;
-                    color: var(--text-muted);
+                    justify-content: center;
+                    width: 2.05rem;
+                    height: 2.05rem;
+                    border-radius: 7px;
+                    padding: 0;
                 }
 
-                .right-ui-panel input {
-                    width: 3rem;
+                .text-button {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    min-height: 2.05rem;
+                    border-radius: 7px;
+                    padding: 0 0.72rem;
+                    font-size: 0.78rem;
+                    font-weight: 700;
+                    white-space: nowrap;
                 }
 
-                select,
-                input[type="number"],
-                input[type="text"],
-                input[type="color"] {
+                .primary {
+                    border-color: rgba(93, 184, 166, 0.36);
+                    background: rgba(93, 184, 166, 0.22);
+                    color: #dffcf7;
+                }
+
+                .secondary {
+                    background: rgba(255, 255, 255, 0.06);
+                }
+
+                .active,
+                .icon-button[aria-pressed="true"],
+                .text-button[aria-pressed="true"] {
+                    border-color: rgba(93, 184, 166, 0.58);
+                    background: rgba(93, 184, 166, 0.15);
+                    color: #bcfff3;
+                }
+
+                #toolbar {
+                    position: absolute;
+                    z-index: 8;
+                    top: 0.75rem;
+                    left: 0.75rem;
+                    right: 0.75rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.45rem;
+                    pointer-events: none;
+                }
+
+                #toolbar > * {
+                    pointer-events: auto;
+                }
+
+                .tool-group,
+                .mode-segment {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.25rem;
+                    min-width: 0;
+                    padding: 0.25rem;
+                    border: 1px solid var(--viewer-line);
                     border-radius: 8px;
-                    border: 1px solid rgba(95, 107, 122, 0.25);
-                    background: rgba(255, 255, 255, 0.9);
-                    color: var(--text-main);
-                    padding: 0.2rem 0.4rem;
+                    background: var(--viewer-panel);
+                    box-shadow: 0 12px 34px rgba(17, 24, 39, 0.12);
+                    backdrop-filter: blur(14px);
                 }
 
-                .material-toggle {
-                    margin-top: 5px;
+                .mode-segment {
+                    position: relative;
+                    overflow: visible;
                 }
 
-                .material-toggle label {
+                .toolbar-spacer {
+                    flex: 1;
+                }
+
+                #modeToggleBtn,
+                #modeMenu .mode-button {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    min-height: 1.78rem;
+                    border-radius: 6px;
+                    padding: 0 0.48rem;
+                    font-size: 0.68rem;
+                    font-weight: 800;
+                    letter-spacing: 0;
+                    text-transform: uppercase;
+                }
+
+                #modeToggleBtn {
+                    min-width: 4.25rem;
+                    gap: 0.42rem;
+                }
+
+                #modeToggleBtn::after {
+                    width: 0;
+                    height: 0;
+                    border-left: 0.22rem solid transparent;
+                    border-right: 0.22rem solid transparent;
+                    border-top: 0.3rem solid currentColor;
+                    content: "";
+                    opacity: 0.72;
+                }
+
+                #modeMenu {
+                    position: absolute;
+                    z-index: 14;
+                    top: calc(100% + 0.35rem);
+                    left: 0.25rem;
+                    display: grid;
+                    gap: 0.25rem;
+                    min-width: 7.1rem;
+                    padding: 0.35rem;
+                    border: 1px solid var(--viewer-line);
+                    border-radius: 8px;
+                    background: var(--viewer-panel-strong);
+                    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.32);
+                    backdrop-filter: blur(16px);
+                }
+
+                #modeMenu[hidden] {
+                    display: none;
+                }
+
+                #modeMenu .mode-button {
+                    justify-content: flex-start;
+                    width: 100%;
+                    min-width: 0;
+                }
+
+                #modeMenu .mode-button:not(.active) {
+                    border-color: transparent;
+                    background: transparent;
+                    color: rgba(241, 237, 226, 0.62);
+                }
+
+                #wireModeSelect,
+                #sectionAxis {
+                    width: 4.3rem;
+                    min-height: 2.05rem;
+                    border: 1px solid var(--viewer-line);
+                    border-radius: 7px;
+                    background: rgba(255, 255, 255, 0.06);
+                    color: var(--viewer-ink);
+                    font-size: 0.74rem;
+                    font-weight: 700;
+                    padding: 0 0.45rem;
+                }
+
+                #stats {
+                    position: absolute;
+                    z-index: 7;
+                    left: 0.75rem;
+                    bottom: 0.75rem;
+                    max-width: calc(100% - 1.5rem);
+                    border: 1px solid var(--viewer-line);
+                    border-radius: 8px;
+                    background: rgba(8, 8, 7, 0.58);
+                    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+                    padding: 0.46rem 0.62rem;
+                    color: rgba(241, 237, 226, 0.78);
+                    font-size: 0.74rem;
+                    font-weight: 700;
+                    backdrop-filter: blur(14px);
+                }
+
+                #textureMaps {
+                    position: absolute;
+                    z-index: 7;
+                    right: 0.75rem;
+                    bottom: 5.25rem;
+                    width: min(380px, calc(100% - 1.5rem));
+                    border: 1px solid var(--viewer-line);
+                    border-radius: 8px;
+                    background: rgba(8, 8, 7, 0.72);
+                    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+                    padding: 0.48rem;
+                    backdrop-filter: blur(14px);
+                }
+
+                #textureMaps.collapsed {
+                    width: auto;
+                    min-width: 0;
+                    border-color: transparent;
+                    background: transparent;
+                    box-shadow: none;
+                    padding: 0;
+                    backdrop-filter: none;
+                }
+
+                #environmentControls {
+                    position: absolute;
+                    right: 0.75rem;
+                    bottom: 0.75rem;
+                    z-index: 8;
+                    pointer-events: none;
+                }
+
+                .pbr-light-control {
+                    position: relative;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    width: 190px;
+                    min-height: 4rem;
+                    padding: 0.38rem 0.5rem;
+                    border: 1px solid var(--viewer-line);
+                    border-radius: 8px;
+                    background: rgba(15, 15, 14, 0.72);
+                    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.34);
+                    backdrop-filter: blur(14px);
+                    pointer-events: auto;
+                }
+
+                .pbr-env-picker {
+                    position: relative;
+                    flex: 0 0 auto;
+                }
+
+                .pbr-env-toggle {
+                    display: grid;
+                    align-content: center;
+                    gap: 0.12rem;
+                    min-width: 4.85rem;
+                    min-height: 2.75rem;
+                    border-radius: 8px;
+                    padding: 0.32rem 0.5rem;
+                    background: rgba(8, 8, 7, 0.52);
+                    color: var(--viewer-ink);
+                    font-size: 0.68rem;
+                    font-weight: 900;
+                    line-height: 1;
+                    text-align: left;
+                }
+
+                .pbr-env-toggle:hover,
+                .pbr-env-toggle:focus-visible,
+                .pbr-env-toggle[aria-expanded="true"] {
+                    border-color: rgba(243, 179, 91, 0.72);
+                    background: rgba(243, 179, 91, 0.14);
+                    color: var(--viewer-accent-2);
+                }
+
+                .pbr-env-active-label {
+                    max-width: 4.25rem;
+                    overflow: hidden;
+                    color: var(--viewer-muted);
+                    font-size: 0.56rem;
+                    font-weight: 800;
+                    text-overflow: ellipsis;
+                    text-transform: uppercase;
+                    white-space: nowrap;
+                }
+
+                .pbr-env-menu {
+                    position: absolute;
+                    left: 0;
+                    bottom: calc(100% + 0.5rem);
+                    z-index: 9;
+                    display: grid;
+                    gap: 0.32rem;
+                    width: 5.9rem;
+                    max-height: min(390px, calc(100vh - 160px));
+                    overflow-y: auto;
+                    padding: 0.44rem;
+                    border: 1px solid var(--viewer-line);
+                    border-radius: 8px;
+                    background: rgba(10, 10, 9, 0.92);
+                    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.42);
+                    backdrop-filter: blur(12px);
+                }
+
+                .pbr-env-menu button {
+                    display: grid;
+                    justify-items: center;
+                    gap: 0.25rem;
+                    min-width: 0;
+                    min-height: 4.9rem;
+                    border: 1px solid rgba(241, 237, 226, 0.16);
+                    border-radius: 8px;
+                    padding: 0.36rem 0.25rem;
+                    background: rgba(8, 8, 7, 0.46);
+                    color: var(--viewer-muted);
+                    font-size: 0.62rem;
+                    font-weight: 900;
+                    line-height: 1;
+                }
+
+                .pbr-env-menu .pbr-env-background-toggle {
+                    grid-template-columns: minmax(0, 1fr) auto;
+                    align-items: center;
+                    justify-items: stretch;
+                    min-height: 1.75rem;
+                    padding: 0.32rem 0.38rem;
+                    text-align: left;
+                }
+
+                .pbr-env-background-toggle span:first-child {
+                    overflow: hidden;
+                    font-size: 0.5rem;
+                    text-overflow: ellipsis;
+                    text-transform: uppercase;
+                    white-space: nowrap;
+                }
+
+                .pbr-env-background-switch {
+                    position: relative;
+                    width: 1.5rem;
+                    height: 0.88rem;
+                    border-radius: 999px;
+                    background: rgba(241, 237, 226, 0.16);
+                    box-shadow: inset 0 0 0 1px rgba(241, 237, 226, 0.18);
+                }
+
+                .pbr-env-background-switch::after {
+                    position: absolute;
+                    top: 0.19rem;
+                    left: 0.19rem;
+                    width: 0.5rem;
+                    height: 0.5rem;
+                    border-radius: 50%;
+                    background: var(--viewer-muted);
+                    content: "";
+                    transition: transform 120ms ease, background 120ms ease;
+                }
+
+                .pbr-env-background-toggle.active .pbr-env-background-switch {
+                    background: rgba(243, 179, 91, 0.32);
+                    box-shadow: inset 0 0 0 1px rgba(243, 179, 91, 0.48);
+                }
+
+                .pbr-env-background-toggle.active .pbr-env-background-switch::after {
+                    transform: translateX(0.62rem);
+                    background: var(--viewer-accent-2);
+                }
+
+                .pbr-env-menu button:hover,
+                .pbr-env-menu button:focus-visible,
+                .pbr-env-menu button.active {
+                    border-color: rgba(243, 179, 91, 0.72);
+                    color: var(--viewer-accent-2);
+                    background: rgba(243, 179, 91, 0.14);
+                }
+
+                .pbr-env-preview {
+                    width: 3rem;
+                    height: 3rem;
+                    border-radius: 50%;
+                    background: rgba(0, 0, 0, 0.28);
+                    box-shadow:
+                        inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+                        0 4px 10px rgba(0, 0, 0, 0.28);
+                }
+
+                .pbr-light-dial {
+                    position: relative;
+                    flex: 0 0 3.5rem;
+                    width: 3.5rem;
+                    height: 3.5rem;
+                    overflow: hidden;
+                    border: 1px solid rgba(243, 179, 91, 0.72);
+                    border-radius: 50%;
+                    padding: 0;
+                    background: rgba(243, 179, 91, 0.08);
+                    color: var(--viewer-accent-2);
+                    cursor: grab;
+                    touch-action: none;
+                }
+
+                .pbr-light-dial:active {
+                    cursor: grabbing;
+                }
+
+                .pbr-light-env-preview {
+                    position: absolute;
+                    inset: 0;
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 50%;
+                }
+
+                .pbr-light-dial-ring {
+                    position: absolute;
+                    inset: 0.25rem;
+                    border: 1px solid rgba(250, 249, 245, 0.42);
+                    border-radius: 50%;
+                    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.45);
+                }
+
+                .pbr-light-dial-hand {
+                    position: absolute;
+                    left: 50%;
+                    top: 0.32rem;
+                    width: 2px;
+                    height: 1.45rem;
+                    margin-left: -1px;
+                    border-radius: 999px;
+                    background: currentColor;
+                    transform-origin: 50% 1.45rem;
+                    box-shadow:
+                        0 0 0 1px rgba(0, 0, 0, 0.3),
+                        0 0 8px rgba(243, 179, 91, 0.48);
+                }
+
+                .pbr-light-copy {
+                    display: grid;
+                    min-width: 1.5rem;
+                    justify-items: end;
+                }
+
+                .pbr-light-value {
+                    color: var(--viewer-accent-2);
+                    font-size: 0.68rem;
+                    font-weight: 800;
+                    line-height: 1.1;
+                }
+
+                .texture-head {
                     display: flex;
                     align-items: center;
-                    gap: 5px;
+                    justify-content: space-between;
+                    gap: 0.65rem;
+                    margin-bottom: 0.38rem;
+                    color: rgba(241, 237, 226, 0.78);
+                    font-size: 0.74rem;
+                    font-weight: 800;
                 }
 
-                input[type="range"] {
-                    -webkit-appearance: none; /*  (Chrome, Safari) */
-                    -moz-appearance: none;    /*  (Firefox) */
-                    appearance: none;
-                    background-color: transparent; /*  */
-                    height: 8px; /*  */
-                    cursor: pointer;
+                #textureMaps.collapsed .texture-head {
+                    margin-bottom: 0;
                 }
 
-                input[type="range"]::-webkit-slider-runnable-track {
-                    background-color: rgba(63, 78, 94, 0.82);
-                    height: 5px;
-                    border-radius: 4px;
-                }
-
-                input[type="range"]::-moz-range-track {
-                    background-color: rgba(63, 78, 94, 0.82);
-                    height: 5px;
-                    border-radius: 4px;
-                }
-
-                input[type="range"]::-webkit-slider-thumb {
-                    -webkit-appearance: none;
-                    appearance: none;
-                    background-color: rgba(20, 157, 125, 0.95);
-                    border: none;
-                    height: 16px;
-                    width: 16px;
-                    border-radius: 50%;
-                    margin-top: -5.5px;
-                }
-
-                input[type="range"]::-moz-range-thumb {
-                    -moz-appearance: none;
-                    appearance: none;
-                    background-color: rgba(20, 157, 125, 0.95);
-                    border: none;
-                    height: 16px;
-                    width: 16px;
-                    border-radius: 50%;
-                }
-
-                input[type="range"]:focus {
-                    outline: none;
-                }
-
-                input[type="range"]:focus::-webkit-slider-runnable-track {
-                    background-color: #666666;
-                }
-
-                input[type="range"]:focus::-moz-range-track {
-                    background-color: #666666;
-                }
-
-                input[type="range"]::-webkit-slider-thumb:active {
-                    background-color: #666666;
-                }
-
-                input[type="range"]::-moz-range-thumb:active {
-                    background-color: #666666;
-                }
-
-                input[type="range"]:disabled {
-                    cursor: not-allowed;
-                    opacity: 0.7;
-                }
-
-                input[type="range"]:disabled::-webkit-slider-runnable-track {
-                    background-color: #aaaaaa;
-                }
-
-                input[type="range"]:disabled::-moz-range-track {
-                    background-color: #aaaaaa;
-                }
-
-                input[type="range"]:disabled::-webkit-slider-thumb {
-                    background-color: #aaaaaa;
-                }
-
-                input[type="range"]:disabled::-moz-range-thumb {
-                    background-color: #aaaaaa;
-                }
-
-                input[type="checkbox"] {
-                    -webkit-appearance: none;
-                    -moz-appearance: none;
-                    appearance: none;
-                    width: 16px;
-                    height: 16px;
-                    border: 2px solid #444444;
-                    border-radius: 3px;
-                    background-color: transparent;
-                    cursor: pointer;
-                    top: 0;
-                    position: relative;
-                }
-
-                input[type="checkbox"]:checked {
-                    background-color: transparent;
-                }
-
-
-                input[type="checkbox"]:checked::before {
-                    content: '';
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    width: 10px;
-                    height: 10px;
-                    background-color: #444444;
-                    border-radius: 2px;
-                }
-
-                input[type="checkbox"]:focus {
-                    outline: 1px solid #444444;
-                }
-
-                .texture-map-controls {
-                    display: grid;
-                    grid-template-columns: auto auto; /* Label and Controls */
-                    gap: 5px;
+                #textureToggleBtn {
+                    display: inline-flex;
                     align-items: center;
-                    margin-bottom: 5px;
+                    justify-content: center;
+                    width: auto;
+                    min-width: 4rem;
+                    min-height: 1.9rem;
+                    gap: 0.38rem;
+                    border-color: rgba(241, 237, 226, 0.16);
+                    border-radius: 999px;
+                    background: rgba(8, 8, 7, 0.58);
+                    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.055);
+                    color: rgba(241, 237, 226, 0.76);
+                    font-size: 0.62rem;
+                    font-weight: 900;
+                    letter-spacing: 0;
+                    line-height: 1;
+                    padding: 0 0.62rem;
+                    text-transform: uppercase;
+                }
+
+                #textureToggleBtn:hover,
+                #textureToggleBtn:focus-visible,
+                #textureToggleBtn[aria-expanded="true"] {
+                    border-color: rgba(93, 184, 166, 0.58);
+                    background: rgba(93, 184, 166, 0.13);
+                    color: #bcfff3;
+                }
+
+                #textureCount {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    min-width: 1.05rem;
+                    height: 1.05rem;
+                    border-radius: 999px;
+                    background: rgba(241, 237, 226, 0.12);
+                    color: rgba(241, 237, 226, 0.68);
+                    font-size: 0.56rem;
+                    font-weight: 900;
+                    line-height: 1;
+                    padding: 0 0.2rem;
+                }
+
+                #textureToggleBtn[aria-expanded="true"] #textureCount {
+                    background: rgba(93, 184, 166, 0.22);
+                    color: #d9fff8;
+                }
+
+                #textureStrip {
+                    display: grid;
+                    grid-auto-flow: column;
+                    grid-auto-columns: 4.85rem;
+                    gap: 0.48rem;
+                    overflow-x: auto;
+                    padding-bottom: 0.05rem;
+                }
+
+                #textureMaps.collapsed #textureStrip {
+                    display: none;
+                }
+
+                .texture-card {
+                    display: grid;
+                    grid-template-rows: 4.15rem auto;
+                    gap: 0.32rem;
+                    border: 1px solid rgba(241, 237, 226, 0.12);
+                    border-radius: 7px;
+                    background: rgba(255, 255, 255, 0.055);
+                    padding: 0.3rem;
+                    color: rgba(241, 237, 226, 0.8);
+                    text-align: left;
+                    min-width: 0;
+                }
+
+                .texture-card span {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    font-size: 0.64rem;
+                    font-weight: 800;
                 }
 
                 .texture-preview {
-                    width: min(100%, 18rem);
-                    aspect-ratio: 1;
-                    min-height: 12rem;
-                    border: 1px solid #ccc;
-                    border-radius: 12px;
-                    background-color: #eee;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
+                    display: grid;
+                    place-items: center;
+                    min-width: 0;
+                    min-height: 0;
+                    border-radius: 5px;
+                    background:
+                        linear-gradient(45deg, rgba(241, 237, 226, 0.16) 25%, transparent 25%),
+                        linear-gradient(-45deg, rgba(241, 237, 226, 0.16) 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, rgba(241, 237, 226, 0.16) 75%),
+                        linear-gradient(-45deg, transparent 75%, rgba(241, 237, 226, 0.16) 75%),
+                        rgba(0, 0, 0, 0.34);
+                    background-size: 14px 14px;
+                    background-position: 0 0, 0 7px, 7px -7px, -7px 0;
                     overflow: hidden;
-                    transform-origin: 100% 0%;
-                }
-
-                .texture-preview:hover{
-                    transform: scale(1.08);
-                    border: 1px solid #666666;
-                    z-index: 10;
-                    cursor: cell;
                 }
 
                 .texture-preview img,
                 .texture-preview canvas {
-                    max-width: 100%;
-                    max-height: 100%;
-                    width: auto;
-                    height: auto;
-                    display: block;
+                    width: 100%;
+                    height: 100%;
                     object-fit: contain;
                 }
 
-                #videoModal {
-                    /* Styles already defined inline, but you can move them here */
-                    /* display: none; */ /* Controlled by JS */
-                    /* position: fixed; */
-                    /* ... etc ... */
+                #fileInputContainer {
+                    position: absolute;
+                    z-index: 9;
+                    left: 50%;
+                    top: 50%;
+                    width: min(640px, calc(100% - 2.5rem));
+                    max-height: min(78vh, 700px);
+                    overflow: auto;
+                    transform: translate(-50%, -50%);
+                    border: 1px solid var(--viewer-line);
+                    border-radius: 14px;
+                    background: var(--viewer-panel-strong);
+                    box-shadow: 0 24px 72px rgba(0, 0, 0, 0.54);
+                    padding: 1.05rem;
+                    backdrop-filter: blur(18px);
                 }
 
-                #videoModal > div {
-                    /* background-color: white; */
-                    /* padding: 20px; */
-                    /* border-radius: 5px; */
-                    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                .panel-head {
+                    display: flex;
+                    align-items: start;
+                    justify-content: space-between;
+                    gap: 0.75rem;
+                    margin-bottom: 0.65rem;
                 }
 
-                #videoPreview {
-                    border: 1px solid #ccc;
+                .panel-head p {
+                    margin: 0;
+                    color: var(--viewer-accent);
+                    font-size: 0.7rem;
+                    font-weight: 800;
+                    text-transform: uppercase;
                 }
 
-                #recordBtn {
-                    background-color: #d9534f; /* Red */
-                    color: white;
-                    border-color: #d43f3a;
-                }
-                #recordBtn:hover {
-                    background-color: #c9302c;
-                }
-
-                #stopBtn {
-                    background-color: #5bc0de; /* Blue */
-                    color: white;
-                    border-color: #46b8da;
-                }
-                #stopBtn:hover {
-                    background-color: #31b0d5;
+                .panel-head h2 {
+                    margin: 0.12rem 0 0;
+                    color: var(--viewer-ink);
+                    font-size: 1.05rem;
+                    line-height: 1.1;
+                    letter-spacing: 0;
                 }
 
-                #downloadBtn {
-                    background-color: #5cb85c; /* Green */
-                    color: white;
-                    border-color: #4cae4c;
-                }
-                #downloadBtn:hover {
-                    background-color: #449d44;
+                #dropZone {
+                    display: grid;
+                    gap: 0.3rem;
+                    place-items: center;
+                    min-height: 11rem;
+                    border: 1px dashed rgba(93, 184, 166, 0.46);
+                    border-radius: 12px;
+                    background:
+                        radial-gradient(circle at 50% 12%, rgba(93, 184, 166, 0.12), transparent 52%),
+                        rgba(93, 184, 166, 0.035);
+                    padding: 0.85rem;
+                    text-align: center;
+                    color: rgba(241, 237, 226, 0.82);
                 }
 
-                ul {
-                    left: 0;
-                    padding-inline-start: 0.75rem;
-                    font-size: 0.65rem;
+                #dropZone svg {
+                    width: 1.7rem;
+                    height: 1.7rem;
+                    color: var(--viewer-accent);
                 }
 
-                .texture-button-group {
+                #dropZone strong {
+                    font-size: 0.88rem;
+                    line-height: 1.2;
+                }
+
+                #dropZone span,
+                #status,
+                .storage-row,
+                .preflight-resources {
+                    color: var(--viewer-muted);
+                    font-size: 0.72rem;
+                    line-height: 1.35;
+                }
+
+                #viewerRoot.dragging #dropZone {
+                    border-color: rgba(93, 184, 166, 0.94);
+                    background:
+                        radial-gradient(circle at 50% 12%, rgba(93, 184, 166, 0.22), transparent 56%),
+                        rgba(93, 184, 166, 0.08);
+                }
+
+                .upload-actions,
+                .history-row,
+                .storage-row,
+                .preflight-actions {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.45rem;
+                    flex-wrap: wrap;
+                    margin-top: 0.62rem;
+                }
+
+                .history-row select {
+                    flex: 1;
+                    min-width: 11rem;
+                    min-height: 2.05rem;
+                    border: 1px solid var(--viewer-line);
+                    border-radius: 7px;
+                    background: rgba(255, 255, 255, 0.06);
+                    color: var(--viewer-ink);
+                    padding: 0 0.5rem;
+                    font-size: 0.76rem;
+                    font-weight: 700;
+                }
+
+                #entries {
+                    display: grid;
+                    gap: 0.35rem;
+                    max-height: 8.5rem;
+                    overflow: auto;
+                    margin-top: 0.6rem;
+                }
+
+                .entry-button {
+                    display: grid;
+                    grid-template-columns: 1fr auto;
+                    gap: 0.5rem;
+                    width: 100%;
+                    min-height: 2.3rem;
+                    border-radius: 7px;
+                    padding: 0.45rem 0.55rem;
+                    text-align: left;
+                }
+
+                .entry-button strong,
+                .entry-button span {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                .entry-button strong {
+                    color: var(--viewer-ink);
+                    font-size: 0.76rem;
+                }
+
+                .entry-button span {
+                    color: rgba(241, 237, 226, 0.54);
+                    font-size: 0.68rem;
+                }
+
+                #preflight {
+                    margin-top: 0.7rem;
+                    border-top: 1px solid var(--viewer-line);
+                    padding-top: 0.65rem;
+                }
+
+                #preflightFacts {
                     display: grid;
                     grid-template-columns: repeat(2, minmax(0, 1fr));
-                    gap: 5px;
-                    align-items: stretch;
-                    flex: 1 1 12rem;
-                }
-
-                .texture-button-group button {
-                    padding: 3px 6px;
-                    font-size: 0.7rem;
+                    gap: 0.35rem;
                     margin: 0;
                 }
 
-                .texture-section {
-                    margin-top: 10px;
-                    padding-top: 10px;
-                    border-top: 1px solid #ddd;
+                #preflightFacts div {
+                    min-width: 0;
+                    border: 1px solid rgba(241, 237, 226, 0.1);
+                    border-radius: 7px;
+                    background: rgba(255, 255, 255, 0.055);
+                    padding: 0.43rem 0.48rem;
                 }
 
-                .material-editor-grid {
+                #preflightFacts dt,
+                #preflightFacts dd {
+                    margin: 0;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                #preflightFacts dt {
+                    color: rgba(241, 237, 226, 0.54);
+                    font-size: 0.62rem;
+                    font-weight: 800;
+                    text-transform: uppercase;
+                }
+
+                #preflightFacts dd {
+                    color: var(--viewer-ink);
+                    font-size: 0.76rem;
+                    font-weight: 800;
+                }
+
+                #sectionControls {
+                    position: absolute;
+                    z-index: 8;
+                    top: 4.15rem;
+                    right: 0.75rem;
+                    width: min(320px, calc(100% - 1.5rem));
+                    border: 1px solid var(--viewer-line);
+                    border-radius: 8px;
+                    background: var(--viewer-panel);
+                    box-shadow: 0 12px 34px rgba(17, 24, 39, 0.12);
+                    padding: 0.55rem;
+                    backdrop-filter: blur(14px);
+                }
+
+                .section-grid {
                     display: grid;
-                    grid-template-columns: repeat(2, minmax(0, 1fr));
-                    gap: 0.35rem 0.5rem;
+                    grid-template-columns: auto 1fr auto;
+                    gap: 0.45rem;
+                    align-items: center;
+                }
+
+                #sectionSlider {
+                    width: 100%;
+                    accent-color: var(--viewer-accent);
+                }
+
+                #sectionValue {
+                    min-width: 3.4rem;
+                    color: rgba(241, 237, 226, 0.8);
+                    font-size: 0.72rem;
+                    font-weight: 800;
+                    text-align: right;
+                }
+
+                #loading {
+                    position: absolute;
+                    z-index: 10;
+                    left: 50%;
+                    bottom: 1rem;
+                    width: min(340px, calc(100% - 2rem));
+                    transform: translateX(-50%);
+                    border: 1px solid var(--viewer-line);
+                    border-radius: 8px;
+                    background: rgba(8, 8, 7, 0.86);
+                    box-shadow: 0 14px 42px rgba(0, 0, 0, 0.34);
+                    padding: 0.65rem 0.75rem;
+                    backdrop-filter: blur(14px);
+                }
+
+                .loading-head {
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 0.75rem;
+                    color: rgba(241, 237, 226, 0.82);
+                    font-size: 0.76rem;
+                    font-weight: 800;
                     margin-bottom: 0.45rem;
                 }
 
-                .material-editor-grid label {
-                    gap: 0.5rem;
+                .loading-track {
+                    height: 0.42rem;
+                    overflow: hidden;
+                    border-radius: 999px;
+                    background: rgba(93, 184, 166, 0.16);
                 }
 
-                .material-editor-grid input[type="number"],
-                .material-editor-grid input[type="color"],
-                .material-editor-grid select {
-                    width: 6rem;
+                .loading-track span {
+                    display: block;
+                    width: 0%;
+                    height: 100%;
+                    border-radius: inherit;
+                    background: linear-gradient(90deg, var(--viewer-accent), var(--viewer-accent-2));
+                    transition: width 160ms ease;
                 }
 
-                .material-editor-grid input[type="checkbox"] {
-                    margin-left: auto;
-                }
-
-                .material-meta {
-                    font-size: 0.7rem;
-                    line-height: 1.4;
-                    color: var(--text-muted);
-                    min-height: 2.6rem;
-                    margin: 0.35rem 0;
-                    white-space: pre-line;
-                }
-
-                .texture-toolbar {
-                    display: flex;
-                    flex-wrap: wrap;
-                    align-items: center;
-                    gap: 0.5rem;
-                    margin-bottom: 0.35rem;
-                }
-
-                .texture-preview-row {
-                    display: flex;
-                    flex-wrap: wrap;
-                    align-items: flex-start;
-                    gap: 0.75rem;
-                }
-
-                .hidden {
-                    display: none !important;
-                }
-
-                .scene-graph-tree ul {
-                    list-style: none;
-                    padding-left: 1px;
-                    margin: 0;
-                }
-
-                .scene-graph-tree li {
-                    margin-bottom: 2px;
-                }
-
-                .scene-graph-tree label {
-                    display: flex;
-                    align-items: center;
-                    gap: 5px;
-                    cursor: pointer;
-                    padding: 2px 5px;
-                    border-radius: 3px;
-                }
-
-                .scene-graph-tree label:hover,
-                .scene-graph-tree label.selected {
-                    background-color: rgba(0, 120, 215, 0.2);
-                }
-
-                .scene-graph-tree label.selected {
-                    font-weight: bold; /* Bold font for selected item */
-                }
-
-                /* Tab Styles */
-                .tab-buttons {
-                    display: flex;
-                    margin-bottom: 0.5rem;
-                    gap: 0.35rem;
-                }
-
-                .tab-button {
-                    background: rgba(214, 220, 228, 0.86);
-                    border: 1px solid rgba(95, 107, 122, 0.14);
-                    padding: 8px 16px;
-                    cursor: pointer;
-                    border-radius: 12px;
-                    font-size: 0.8rem;
-                    margin-right: 0;
-                    color: var(--text-main);
-                    flex: 1 1 0;
-                    min-width: 0;
-                    width: auto;
-                    box-shadow: none;
-                }
-
-                .tab-button.active {
-                    background: rgba(255, 255, 255, 0.96);
-                    border-color: rgba(20, 157, 125, 0.2);
-                    color: #0f5c4c;
-                }
-
-                .tab-button:hover {
-                    background: rgba(255, 255, 255, 0.94);
-                }
-
-                .tab-content {
-                    padding: 0.5rem;
-                    border-radius: 0 0 5px 5px;
-                    /* background-color: rgba(200, 200, 200, 0.5); Already set in .right-ui-panel */
-                }
-
-                fieldset {
-                    max-width: 23rem;
-                    border: 1px solid rgba(95, 107, 122, 0.16);
-                    border-radius: 14px;
-                    background: rgba(255, 255, 255, 0.48);
-                    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
-                }
-
-                .stack-row {
-                    display: flex;
-                    gap: 0.35rem;
-                    align-items: center;
-                    flex-wrap: wrap;
-                }
-
-                .stack-row > * {
-                    flex: 1 1 auto;
-                }
-
-                .compact-input {
-                    width: 100%;
-                    box-sizing: border-box;
-                }
-
-                .section-toggle {
-                    width: 100%;
-                    margin: 0 0 0.45rem;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    gap: 0.5rem;
-                }
-
-                .section-toggle .section-toggle-icon {
-                    font-size: 0.95rem;
-                    line-height: 1;
-                }
-
-                .collapsible-content[hidden] {
-                    display: none !important;
-                }
-
-                .utility-grid {
-                    display: grid;
-                    grid-template-columns: repeat(3, minmax(0, 1fr));
-                    gap: 0.35rem;
-                    margin-bottom: 0.35rem;
-                }
-
-                .utility-grid > button,
-                .utility-grid > select,
-                .utility-grid > div {
-                    width: 100%;
-                    min-width: 0;
-                    margin: 0;
-                }
-
-                .utility-record-stack {
-                    display: grid;
-                }
-
-                .utility-record-stack > button {
-                    width: 100%;
-                }
-
-                .utility-input-group {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.35rem;
+                #textureDialog {
+                    width: min(88vmin, 960px);
+                    height: min(88vmin, 960px);
+                    max-width: calc(100vw - 2rem);
+                    max-height: calc(100vh - 2rem);
+                    border: 1px solid rgba(241, 237, 226, 0.16);
                     border-radius: 10px;
-                    border: 1px solid rgba(95, 107, 122, 0.18);
-                    background: rgba(255, 255, 255, 0.68);
-                    padding: 0.25rem 0.4rem;
-                    min-height: 2.3rem;
-                    box-sizing: border-box;
+                    background: rgba(8, 8, 7, 0.96);
+                    padding: 0;
+                    color: var(--viewer-ink);
+                    overflow: hidden;
                 }
 
-                .utility-input-group input {
+                #textureDialog::backdrop {
+                    background: rgba(0, 0, 0, 0.68);
+                    backdrop-filter: blur(2px);
+                }
+
+                #textureDialogCanvas {
                     width: 100%;
-                    min-width: 0;
+                    height: 100%;
+                    object-fit: contain;
+                    background:
+                        linear-gradient(45deg, rgba(241, 237, 226, 0.12) 25%, transparent 25%),
+                        linear-gradient(-45deg, rgba(241, 237, 226, 0.12) 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, rgba(241, 237, 226, 0.12) 75%),
+                        linear-gradient(-45deg, transparent 75%, rgba(241, 237, 226, 0.12) 75%),
+                        rgba(0, 0, 0, 0.42);
+                    background-size: 24px 24px;
+                    background-position: 0 0, 0 12px, 12px -12px, -12px 0;
                 }
 
-                .small-text {
-                    font-size: 0.7rem;
-                    color: var(--text-muted);
-                }
-
-                #viewerStatus {
+                #textureDialogCaption {
                     position: absolute;
-                    left: 1rem;
-                    bottom: 1rem;
-                    max-width: min(28rem, calc(100% - 2rem));
-                    padding: 0.55rem 0.75rem;
-                    border-radius: 12px;
+                    left: 0.75rem;
+                    right: 0.75rem;
+                    bottom: 0.75rem;
+                    margin: 0;
+                    border: 1px solid rgba(241, 237, 226, 0.14);
+                    border-radius: 7px;
+                    background: rgba(0, 0, 0, 0.46);
+                    padding: 0.45rem 0.55rem;
+                    color: rgba(241, 237, 226, 0.82);
                     font-size: 0.78rem;
-                    line-height: 1.45;
-                    box-shadow: 0 10px 24px rgba(31, 41, 55, 0.14);
-                    background: rgba(255, 255, 255, 0.94);
-                    color: var(--text-main);
-                    border: 1px solid rgba(95, 107, 122, 0.18);
-                    z-index: 5;
-                    display: none;
-                    white-space: pre-line;
+                    font-weight: 700;
                 }
 
-                #viewerStatus[data-type="error"] {
-                    background: rgba(254, 242, 242, 0.96);
-                    color: #991b1b;
-                    border-color: rgba(220, 38, 38, 0.22);
-                }
-
-                #viewerStatus[data-type="success"] {
-                    background: rgba(240, 253, 244, 0.96);
-                    color: #166534;
-                    border-color: rgba(22, 163, 74, 0.22);
-                }
-
-                #dropHint {
+                #textureDialogClose {
                     position: absolute;
-                    inset: 1rem;
-                    display: none;
-                    align-items: center;
-                    justify-content: center;
-                    border: 2px dashed rgba(20, 157, 125, 0.6);
-                    border-radius: 18px;
-                    background: rgba(255, 255, 255, 0.62);
-                    color: #0f5c4c;
-                    font-size: 0.95rem;
-                    font-weight: 600;
-                    letter-spacing: 0.01em;
-                    z-index: 4;
-                    pointer-events: none;
+                    top: 0.75rem;
+                    right: 0.75rem;
+                    z-index: 1;
+                    background: rgba(0, 0, 0, 0.52);
                 }
 
-                #dropHint.active {
-                    display: flex;
+                .visually-hidden {
+                    position: absolute;
+                    width: 1px;
+                    height: 1px;
+                    overflow: hidden;
+                    clip: rect(0 0 0 0);
+                    white-space: nowrap;
+                    clip-path: inset(50%);
                 }
 
-                @media (max-width: 480px) {
-                    .controls {
-                        top: 0.5rem;
-                        right: 0.5rem;
-                        left: 0.5rem;
+                [hidden] {
+                    display: none !important;
+                }
+
+                @media (max-width: 760px) {
+                    #toolbar {
+                        align-items: start;
+                        flex-wrap: wrap;
                     }
 
-                    .right-ui-panel {
-                        max-width: none;
-                        max-height: calc(100vh - 1rem);
+                    .toolbar-spacer {
+                        display: none;
                     }
 
-                    #panelContent {
-                        max-height: calc(100vh - 6rem);
+                    #modeMenu {
+                        left: 0.25rem;
                     }
 
-                    .tab-button {
-                        padding-inline: 0.35rem;
+                    #fileInputContainer {
+                        width: calc(100% - 1.5rem);
+                        max-height: calc(100% - 7.5rem);
+                    }
+
+                    #textureMaps {
+                        left: 0.75rem;
+                        right: auto;
+                        bottom: 5.25rem;
+                        width: min(320px, calc(100% - 1.5rem));
+                    }
+
+                    #textureMaps.collapsed {
+                        width: auto;
+                    }
+
+                    #stats {
+                        display: none;
+                    }
+
+                    #sectionControls {
+                        top: auto;
+                        right: 0.75rem;
+                        bottom: 0.75rem;
                     }
                 }
             </style>
-            <div class="controls">
-                <div class="right-ui-panel">
-                    <button id="togglePanelBtn" type="button" aria-label="Expand controls" style="width:100%">&gt;</button>
-                    <div id="panelContent" style="display: none;">
-                        <div class="tab-buttons">
-                            <button class="tab-button active" data-tab="render"><strong>Render</strong></button>
-                            <button class="tab-button" data-tab="control"><strong>Control</strong></button>
-                            <button class="tab-button" data-tab="edit"><strong>Edit</strong></button>
-                        </div>
 
-                        <div id="render-tab-content" class="tab-content" style="display: block;">
-                            <div id='meta'>
-                                <div id="modelInfo" style='padding-left: 0.1rem; font-size:0.8rem; margin-bottom: 0.5rem;'><strong>[Model Info]</strong> loading...</div>
-                                <hr/>
-                                <fieldset style="margin-top: 0.5rem;">
-                                    <legend style="font-size: 0.8rem;"><strong>Scene</strong></legend>
-                                    <label for="bgColorPicker">Background: <input type="color" id="bgColorPicker" value="#eeeeee"></label>
-                                    <label> Toggle Grid Helper: <button type="button" id="toggleGridBtn">Show Grid</button></label>
-                                </fieldset>
+            <div id="viewerRoot">
+                <div id="canvasContainer"></div>
 
-
-                                <fieldset style="margin-top: 0.5rem;">
-                                    <legend style="font-size: 0.8rem;"><strong>Rendering</strong></legend>
-                                    <button id="textureBtn" style=" width: 49%">Diffuse</button>
-                                    <button id="meshBtn" style=" width: 49%">Geometry</button>
-                                    <button id="normalBtn" style=" width: 49%">Normal</button>
-                                    <button id="wireframeBtn" style=" width: 49%">Wireframe</button>
-                                    <button id="toonShadingBtn" style="display: none;">Toon Shading</button>
-                                </fieldset>
-
-                                <fieldset style="margin-top: 0.5rem;">
-                                    <legend style="font-size: 0.8rem;"><strong>Environment</strong></legend>
-                                    <button id="toggleEnvironmentSectionBtn" class="section-toggle" type="button" aria-expanded="false" data-open-label="Hide controls" data-closed-label="Show controls">
-                                        <span class="section-toggle-label">Show controls</span>
-                                        <span class="section-toggle-icon">+</span>
-                                    </button>
-                                    <div id="environmentControlsBody" class="collapsible-content" hidden>
-                                        <div class="stack-row" style="margin-bottom: 0.35rem;">
-                                            <button id="setBgBtn1" type="button">Env1</button>
-                                            <button id="setBgBtn2" type="button">Env2</button>
-                                            <button id="setBgBtn3" type="button">Env3</button>
-                                            <button id="clearEnvBtn" type="button">Clear</button>
-                                        </div>
-                                        <label style="display: block; margin-bottom: 0.35rem;">
-                                            HDR URL
-                                            <div class="stack-row">
-                                                <input type="text" id="environmentUrlInput" class="compact-input" placeholder="https://.../studio.hdr">
-                                                <button id="loadEnvironmentUrlBtn" type="button">Load HDR</button>
-                                            </div>
-                                        </label>
-                                        <div class="stack-row" style="margin-bottom: 0.35rem;">
-                                            <button id="uploadEnvironmentBtn" type="button">Upload HDR</button>
-                                            <label style="display: flex; align-items: center; gap: 0.35rem; margin: 0;">
-                                                <input type="checkbox" id="environmentBackgroundToggle" checked>
-                                                Show HDR background
-                                            </label>
-                                        </div>
-                                        <label style="display: block; margin-bottom: 0.2rem;">
-                                            Environment Intensity
-                                            <input type="range" id="environmentIntensityInput" style="width: 100%;" min="0" max="4" step="0.1" value="1">
-                                        </label>
-                                        <div id="environmentIntensityValue" class="small-text" style="margin-bottom: 0.35rem;">1.0x</div>
-                                        <label style="display: block; margin-bottom: 0.2rem;">
-                                            Exposure
-                                            <input type="range" id="exposureInput" style="width: 100%;" min="0.1" max="3" step="0.1" value="1">
-                                        </label>
-                                        <div id="exposureValue" class="small-text" style="margin-bottom: 0.35rem;">1.0</div>
-                                        <label style="display: block; margin-bottom: 0.2rem;">
-                                            Rotation
-                                            <input type="range" id="environmentRotationInput" style="width: 100%;" min="0" max="360" step="1" value="0">
-                                        </label>
-                                        <div id="environmentRotationValue" class="small-text">0deg</div>
-                                    </div>
-                                </fieldset>
-
-                                <fieldset style="margin-top: 0.5rem;">
-                                    <legend style="font-size: 0.8rem;"><strong>Util</strong></legend>
-                                    <div class="utility-grid">
-                                        <button id="autoRotateBtn" type="button">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z"/>
-                                            <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466"/>
-                                        </svg>
-                                        </button>
-                                        <button id="screenshotBtn" type="button">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera-fill" viewBox="0 0 16 16">
-                                            <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-                                            <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0"/>
-                                        </svg>
-                                        </button>
-                                        <button id="downloadScreenshotBtn" type="button">PNG</button>
-                                    </div>
-                                    <div class="utility-grid">
-                                        <div class="utility-record-stack">
-                                            <button id="recordBtn" type="button">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-record-circle" viewBox="0 0 16 16">
-                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                                                <path d="M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                                            </svg>
-                                            </button>
-                                            <button id="stopBtn" type="button" style="display: none;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stop-circle" viewBox="0 0 16 16">
-                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                                                <path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5z"/>
-                                            </svg>
-                                            </button>
-                                        </div>
-                                        <div class="utility-input-group">
-                                            <input type="number" id="recordDurationInput" min="1" max="30" step="1" value="5" aria-label="Record duration in seconds">
-                                            <span class="small-text">sec</span>
-                                        </div>
-                                        <button id="quickRecordBtn" type="button">Turntable</button>
-                                    </div>
-                                    <div id="recordingStatus" class="small-text" style="margin-bottom: 0.35rem;">Idle</div>
-                                    <div class="utility-grid">
-                                        <button id="copyStateBtn" type="button">Copy Config</button>
-                                        <button id="applyStateBtn" type="button">Apply Config</button>
-                                        <select id="performanceModeSelect" style="font-size: 0.8rem;">
-                                            <option value="default">Default</option>
-                                            <option value="performance">Performance</option>
-                                            <option value="quality">Quality</option>
-                                        </select>
-                                    </div>
-                                    <textarea id="stateConfigInput" rows="3" class="compact-input" style="font-size: 0.72rem; resize: vertical;" placeholder="State JSON from exportState()"></textarea>
-                                    <div class="small-text" style="margin: 0.35rem 0;">Shortcuts: <code>F</code> fit, <code>R</code> reset, <code>Esc</code> clear selection, <code>Space</code> play/pause.</div>
-                                    <button id="runAnimationBtn" type="button" style="display: none; background-color: #149ddd">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
-                                            <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
-                                        </svg>
-                                    </button>
-                                    <button id="pauseAnimationBtn" type="button" style="display: none; background-color: #777777">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16">
-                                            <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5m5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5"/>
-                                        </svg>
-                                    </button>
-                                    <div id="anim_description" style="display: none; margin-bottom: 0.5rem;">
-                                        <strong>Actions:</strong>
-                                    </div>
-                                    <div id="animationControls" style="display: none; margin-top: 0.5rem;">
-                                        <label style="display: block; margin-bottom: 0.35rem;">
-                                            Clip:
-                                            <select id="animationSelector" style="width: 100%; font-size: 0.8rem;">
-                                                <option value="none">None</option>
-                                            </select>
-                                        </label>
-                                        <label style="display: block; margin-bottom: 0.35rem;">
-                                            Speed:
-                                            <input type="range" id="animationSpeed" style="width: 100%;" min="0.1" max="3" step="0.05" value="1">
-                                        </label>
-                                        <div id="animationSpeedValue" style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.35rem;">1.00x</div>
-                                        <label style="display: block; margin-bottom: 0.35rem;">
-                                            Loop:
-                                            <select id="animationLoopMode" style="width: 100%; font-size: 0.8rem;">
-                                                <option value="repeat">Repeat</option>
-                                                <option value="once">Once</option>
-                                                <option value="ping-pong">Ping-Pong</option>
-                                            </select>
-                                        </label>
-                                        <label style="display: block; margin-bottom: 0.2rem;">
-                                            Timeline:
-                                            <input type="range" id="animationTimeline" style="width: 100%;" min="0" max="0" step="0.001" value="0">
-                                        </label>
-                                        <div id="animationTimeDisplay" style="font-size: 0.75rem; color: var(--text-muted);">0:00 / 0:00</div>
-                                    </div>
-                                </fieldset>
-                                <button id="discardModelBtn" style="background-color: red; width: 100%">Discard Model</button>
-                            </div>
-                        </div>
-
-                        <div id="control-tab-content" class="tab-content" style="display: none;">
-                            <div id="transformControls">
-                                <div id="lightControls">
-                                    <button type="button" id="toggleLightsBtn" style=" width: 49%">Lights Off</button>
-                                    <button type="button" id="toggleLightHelpersBtn" style=" width: 49%;">Hide Light Helpers</button>
-
-                                    <fieldset style="margin-top: 0.5rem;">
-                                        <legend style="font-size: 0.8rem;"><strong>Ambient Light</strong></legend>
-                                        <label>Color: <input type="color" id="ambientColorPicker" value="#404040"></label>
-                                        <label>Intensity: <input type="number" id="ambientIntensity" step="0.5" value="3"></label>
-                                    </fieldset>
-
-                                    <fieldset style="margin-top: 0.5rem;">
-                                        <legend style="font-size: 0.8rem;"><strong>Directional Light</strong></legend>
-                                        <div style="margin-bottom: 0.3rem;">
-                                            <select id="directionalLightList" style="width: 100%; font-size: 0.8rem;"></select>
-                                        </div>
-                                        <label>Color: <input type="color" id="directColorPicker" value="#ffffff"></label>
-                                        <label>Position X: <input type="number" id="directPosX" step="0.1" value="5"></label>
-                                        <label>Position Y: <input type="number" id="directPosY" step="0.1" value="7.5"></label>
-                                        <label>Position Z: <input type="number" id="directPosZ" step="0.1" value="7.5"></label>
-                                        <label>Intensity: <input type="number" id="directIntensity" step="0.1" value="3"></label>
-
-                                        <button type="button" id="addLightBtn" style="margin-top: 0.5rem; width: 49%;">Add Light</button>
-                                        <button type="button" id="removeLightBtn" style="margin-top: 0.5rem; width: 49%; background-color: red">Remove Light</button>
-                                    </fieldset>
-                                </div>
-
-                                <fieldset style="margin-top: 0.5rem;">
-                                    <legend style="font-size: 0.8rem;"><strong>Camera Setting</strong></legend>
-                                    <button id="toggleCameraSectionBtn" class="section-toggle" type="button" aria-expanded="false" data-open-label="Hide controls" data-closed-label="Show controls">
-                                        <span class="section-toggle-label">Show controls</span>
-                                        <span class="section-toggle-icon">+</span>
-                                    </button>
-                                    <div id="cameraControlsBody" class="collapsible-content" hidden>
-                                        <label>FOV: <input type="number" id="cameraFov" step="1" value="50"></label>
-                                        <label>Near: <input type="number" id="cameraNear" step="0.1" value="0.1"></label>
-                                        <label>Far: <input type="number" id="cameraFar" step="100" value="1000"></label>
-                                        <div class="transform-buttons">
-                                            <button class="transform-button" id="resetViewBtn" type="button">Reset View</button>
-                                            <button class="transform-button" id="fitModelBtn" type="button">Fit Model</button>
-                                        </div>
-                                        <button id="frameSelectedBtn" type="button" style="width: 100%;">Frame Selected</button>
-                                    </div>
-                                </fieldset>
-
-                                <fieldset style="margin-top: 0.5rem; ">
-                                    <legend style="font-size: 0.8rem;"><strong>Model Transform</strong></legend>
-                                    <div class="transform-buttons">
-                                        <button class="transform-button" id="translateBtn">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-move" viewBox="0 0 16 16">
-                                                <path fill-rule="evenodd" d="M7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708zM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10M.146 8.354a.5.5 0 0 1 0-.708l2-2a.5.5 0 1 1 .708.708L1.707 7.5H5.5a.5.5 0 0 1 0 1H1.707l1.147 1.146a.5.5 0 0 1-.708.708zM10 8a.5.5 0 0 1 .5-.5h3.793l-1.147-1.146a.5.5 0 0 1 .708-.708l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L14.293 8.5H10.5A.5.5 0 0 1 10 8"/>
-                                            </svg>
-                                        </button>
-                                        <button class="transform-button" id="rotateBtn">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
-                                                <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41m-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9"/>
-                                                <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5 5 0 0 0 8 3M3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9z"/>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <label style="display:none;">Position X: <input type="number" id="posX" step="0.1" value="0"></label>
-                                    <label style="display:none;">Position Y: <input type="number" id="posY" step="0.1" value="0"></label>
-                                    <label style="display:none;">Position Z: <input type="number" id="posZ" step="0.1" value="0"></label>
-                                    <label style="display:none;">Rotation X (deg): <input type="number" id="rotX" step="1" value="0"></label>
-                                    <label style="display:none;">Rotation Y (deg): <input type="number" id="rotY" step="1" value="0"></label>
-                                    <label style="display:none;">Rotation Z (deg): <input type="number" id="rotZ" step="1" value="0"></label>
-                                    <div style="display: none;">Scale: <input type="range" id="scale" style="width: 17rem; background-color: #d3d9de; color: #d3d9de;" min="0.1" max="20" step="0.1" value="1"></div>
-                                </fieldset>
-                            </div>
-                        </div>
-
-                        <div id="edit-tab-content" class="tab-content" style="display: none;">
-                            <div id="sceneGraphControls">
-                                <fieldset>
-                                    <legend style="font-size: 0.8rem;"><strong>Scene Graph</strong></legend>
-                                    <div id="sceneGraphTree" style="max-height: 200px; overflow-y: auto;">
-                                        <div class="material-toggle" id="materialToggles"></div>
-                                    </div>
-                                </fieldset>
-
-                                <fieldset style="margin-top: 0.5rem; ">
-                                    <legend style="font-size: 0.8rem;"><strong>Material</strong></legend>
-                                    <div class="material-editor-grid">
-                                        <label>Part
-                                            <select id="texturePartSelector" style="font-size: 0.8rem;">
-                                                <!-- Part options will be populated here -->
-                                            </select>
-                                        </label>
-                                        <label>Slot
-                                            <select id="materialSlotSelector" style="font-size: 0.8rem;"></select>
-                                        </label>
-                                        <label>Base Color
-                                            <input type="color" id="baseColorInput" value="#ffffff">
-                                        </label>
-                                        <label>Emissive
-                                            <input type="color" id="emissiveColorInput" value="#000000">
-                                        </label>
-                                        <label>Emissive Int.
-                                            <input type="number" id="emissiveIntensityInput" min="0" step="0.1" value="1">
-                                        </label>
-                                        <label>Opacity
-                                            <input type="number" id="opacityInput" min="0" max="1" step="0.05" value="1">
-                                        </label>
-                                        <label>Transparent
-                                            <input type="checkbox" id="transparentToggle">
-                                        </label>
-                                        <label>Double Sided
-                                            <input type="checkbox" id="doubleSidedToggle">
-                                        </label>
-                                        <label>Roughness
-                                            <input type="range" id="roughness" min="0" max="1" step="0.01" value="0.5">
-                                        </label>
-                                        <label>Metalness
-                                            <input type="range" id="metalness" min="0" max="1" step="0.01" value="0.5">
-                                        </label>
-                                        <label>Normal X
-                                            <input type="number" id="normalScaleXInput" step="0.1" value="1">
-                                        </label>
-                                        <label>Normal Y
-                                            <input type="number" id="normalScaleYInput" step="0.1" value="1">
-                                        </label>
-                                        <label>Env Int.
-                                            <input type="number" id="envMapIntensityInput" min="0" step="0.1" value="1">
-                                        </label>
-                                        <label>UV Rot.
-                                            <input type="number" id="uvRotationInput" step="0.01" value="0">
-                                        </label>
-                                        <label>Repeat X
-                                            <input type="number" id="uvRepeatXInput" step="0.1" value="1">
-                                        </label>
-                                        <label>Repeat Y
-                                            <input type="number" id="uvRepeatYInput" step="0.1" value="1">
-                                        </label>
-                                        <label>Offset X
-                                            <input type="number" id="uvOffsetXInput" step="0.01" value="0">
-                                        </label>
-                                        <label>Offset Y
-                                            <input type="number" id="uvOffsetYInput" step="0.01" value="0">
-                                        </label>
-                                    </div>
-                                    <hr/>
-                                    <div class="texture-toolbar">
-                                        <label for="textureTypeSelector" style="font-size: 0.8rem;">Texture</label>
-                                        <select id="textureTypeSelector" style="font-size: 0.8rem; max-width: 9rem;">
-                                            <option value="map">Diffuse</option>
-                                            <option value="roughnessMap">Roughness</option>
-                                            <option value="metalnessMap">Metalness</option>
-                                            <option value="normalMap">Normal</option>
-                                            <option value="aoMap">AO</option>
-                                            <option value="emissiveMap">Emissive</option>
-                                        </select>
-                                        <label for="textureHistorySelector" style="font-size: 0.8rem;">History</label>
-                                        <select id="textureHistorySelector" style="font-size: 0.8rem; max-width: 9rem;">
-                                            <option value="-1">Current</option>
-                                        </select>
-                                    </div>
-                                    <div class="texture-preview-row">
-                                        <div id="texturePreview" class="texture-preview"></div>
-                                        <div class="texture-button-group">
-                                            <button id="replaceTextureBtn" type="button">Replace</button>
-                                            <button id="removeTextureBtn" type="button">Remove</button>
-                                            <button id="resetTextureBtn" type="button">Reset</button>
-                                            <button id="copyTextureSourceBtn" type="button">Copy Source</button>
-                                        </div>
-                                    </div>
-                                    <div id="textureMetaInfo" class="material-meta">No texture selected</div>
-                                </fieldset>
-                            </div>
+                <div id="toolbar" aria-label="Viewer controls">
+                    <div class="tool-group">
+                        <button id="openPanelBtn" class="icon-button" type="button" title="Open files" aria-label="Open files">${ICONS.open}</button>
+                        <button id="fitBtn" class="icon-button" type="button" title="Fit" aria-label="Fit model">${ICONS.fit}</button>
+                        <button id="resetBtn" class="icon-button" type="button" title="Reset view" aria-label="Reset view">${ICONS.reset}</button>
+                    </div>
+                    <div class="mode-segment" aria-label="View mode">
+                        <button id="modeToggleBtn" type="button" aria-haspopup="menu" aria-expanded="false">PBR</button>
+                        <div id="modeMenu" role="menu" hidden>
+                            <button class="mode-button" role="menuitemradio" type="button" data-mode="pbr">PBR</button>
+                            <button class="mode-button" role="menuitemradio" type="button" data-mode="albedo">Albedo</button>
+                            <button class="mode-button" role="menuitemradio" type="button" data-mode="roughness">Rough</button>
+                            <button class="mode-button" role="menuitemradio" type="button" data-mode="metalness">Metal</button>
+                            <button class="mode-button" role="menuitemradio" type="button" data-mode="geometry">Geo</button>
+                            <button class="mode-button" role="menuitemradio" type="button" data-mode="normal">Normal</button>
                         </div>
                     </div>
+                    <div class="tool-group">
+                        <button id="wireBtn" class="icon-button" type="button" title="Wireframe" aria-label="Wireframe" aria-pressed="false">${ICONS.wire}</button>
+                        <select id="wireModeSelect" title="Wireframe mode" aria-label="Wireframe mode">
+                            <option value="quad">Quad</option>
+                            <option value="tri">Tri</option>
+                        </select>
+                        <button id="sectionBtn" class="icon-button" type="button" title="Section" aria-label="Section" aria-pressed="false">${ICONS.clip}</button>
+                    </div>
+                    <div class="toolbar-spacer"></div>
+                    <div class="tool-group">
+                        <button id="rotateBtn" class="icon-button" type="button" title="Auto rotate" aria-label="Auto rotate" aria-pressed="false">${ICONS.rotate}</button>
+                        <button id="gridBtn" class="icon-button" type="button" title="Grid" aria-label="Grid" aria-pressed="false">${ICONS.grid}</button>
+                        <button id="playBtn" class="icon-button" type="button" title="Play animation" aria-label="Play animation" disabled>${ICONS.play}</button>
+                        <button id="snapshotBtn" class="icon-button" type="button" title="Snapshot" aria-label="Snapshot">${ICONS.shot}</button>
+                        <button id="fullscreenBtn" class="icon-button" type="button" title="Fullscreen" aria-label="Fullscreen">${ICONS.full}</button>
+                    </div>
                 </div>
-            </div>
-            <div id="canvas-container" style='text-align: center'>
-                <div id="loadingProgressBar"></div>
-                <div id="dropHint">Drop a .glb, .gltf, .obj, .fbx, or .ply file here</div>
-                <div id="viewerStatus" role="status" aria-live="polite"></div>
-                <div id="fileInputContainer" style="display: none;">
-                    <input type="file" id="fileInput" accept=".glb,.gltf, .obj,.fbx,.ply">
-                    <p style="font-size: 0.8rem; margin-top: 5px;"><strong>Select a GLB/OBJ/FBX/PLY file</strong></p>
-                    <hr/>
-                    <p style="font-size: 0.8rem; margin-top: 5px;"><strong> or </strong></p>
-                    <input type="text" id="urlInput" style="width: 12rem; height: 1.1rem; font-size: 0.8rem;" placeholder="Enter model URL">
-                    <button id="loadUrlButton">Load URL</button>
-                    <p style="font-size: 0.8rem; margin-top: 5px;"><em> https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/fox_quad.glb </em></p>
-                </div>
-            </div>
-            <div id="videoModal" style="display: none; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center;">
-                <div style="background-color: white; padding: 20px; border-radius: 5px; text-align: center;">
-                    <h4>Video Preview</h4>
-                    <video id="videoPreview" controls style="max-width: 80vw; max-height: 60vh; display: block; margin: 10px auto;"></video>
-                    <button id="downloadBtn">Download Video</button>
-                    <button id="closeModalBtn" style="margin-left: 10px;">Close</button>
-                </div>
-            </div>
 
-            <!-- Hidden file inputs for texture replacement -->
-            <input type="file" id="diffuseMapInput" style="display: none;" accept="image/*">
-            <input type="file" id="roughnessMapInput" style="display: none;" accept="image/*">
-            <input type="file" id="metalnessMapInput" style="display: none;" accept="image/*">
-            <input type="file" id="normalMapInput" style="display: none;" accept="image/*">
-            <input type="file" id="aoMapInput" style="display: none;" accept="image/*">
-            <input type="file" id="emissiveMapInput" style="display: none;" accept="image/*">
-            <input type="file" id="environmentFileInput" style="display: none;" accept=".hdr">
+                <div id="environmentControls" aria-label="Environment controls">
+                    <div class="pbr-light-control">
+                        <div class="pbr-env-picker">
+                            <button id="environmentToggle" class="pbr-env-toggle" type="button" aria-expanded="false">
+                                <span>Env maps</span>
+                                <span id="environmentActiveLabel" class="pbr-env-active-label">Forest</span>
+                            </button>
+                            <div id="environmentMenu" class="pbr-env-menu" hidden>
+                                <button id="environmentBgBtn" class="pbr-env-background-toggle" type="button" aria-pressed="false" title="Show HDRI background">
+                                    <span>Background</span>
+                                    <span class="pbr-env-background-switch" aria-hidden="true"></span>
+                                </button>
+                                ${Object.values(ENVIRONMENT_PRESETS)
+                                    .filter((preset) => extensionFromPath(preset.url) === 'exr')
+                                    .map((preset) => `
+                                        <button type="button" data-environment-preset="${preset.id}" aria-pressed="false">
+                                            <canvas class="pbr-env-preview" width="56" height="56" data-environment-preview="${preset.id}" aria-hidden="true"></canvas>
+                                            <span>${preset.label}</span>
+                                        </button>
+                                    `).join('')}
+                            </div>
+                        </div>
+                        <button id="environmentDial" class="pbr-light-dial" type="button" role="slider" aria-label="Environment rotation" aria-valuemin="0" aria-valuemax="360" aria-valuenow="0">
+                            <canvas id="environmentDialPreview" class="pbr-light-env-preview" width="56" height="56" aria-hidden="true"></canvas>
+                            <span class="pbr-light-dial-ring"></span>
+                            <span id="environmentDialHand" class="pbr-light-dial-hand"></span>
+                        </button>
+                        <span class="pbr-light-copy"><span id="environmentRotationValue" class="pbr-light-value">0deg</span></span>
+                    </div>
+                </div>
+
+                <section id="sectionControls" aria-label="Section controls" hidden>
+                    <div class="section-grid">
+                        <select id="sectionAxis" aria-label="Section axis">
+                            <option value="x">X</option>
+                            <option value="y">Y</option>
+                            <option value="z">Z</option>
+                        </select>
+                        <input id="sectionSlider" type="range" min="-100" max="100" step="1" value="0" aria-label="Section position">
+                        <span id="sectionValue">0%</span>
+                    </div>
+                </section>
+
+                <section id="fileInputContainer" aria-label="Open 3D model">
+                    <div class="panel-head">
+                        <div>
+                            <p>Local mesh</p>
+                            <h2>Open 3D model</h2>
+                        </div>
+                        <button id="closePanelBtn" class="icon-button" type="button" title="Close" aria-label="Close panel">${ICONS.close}</button>
+                    </div>
+
+                    <div id="dropZone" tabindex="0">
+                        ${ICONS.open}
+                        <strong>Drop mesh files</strong>
+                        <span>GLB, GLTF, OBJ, FBX, PLY, STL with companion textures or MTL</span>
+                    </div>
+
+                    <div class="upload-actions">
+                        <button id="chooseFilesBtn" class="text-button primary" type="button">Choose files</button>
+                        <button id="chooseFolderBtn" class="text-button secondary" type="button">Choose folder</button>
+                    </div>
+
+                    <div class="history-row">
+                        <select id="historySelect" aria-label="Recent local meshes">
+                            <option value="">No saved meshes</option>
+                        </select>
+                        <button id="clearHistoryBtn" class="text-button secondary" type="button" disabled>Clear</button>
+                    </div>
+                    <div id="historyUsage" class="storage-row">Saved 0 B / 100 MB</div>
+
+                    <p id="status">Files stay in this browser.</p>
+                    <div id="entries" hidden></div>
+
+                    <section id="preflight" hidden>
+                        <dl id="preflightFacts"></dl>
+                        <div id="preflightResources" class="preflight-resources"></div>
+                        <div class="preflight-actions">
+                            <button id="relinkBtn" class="text-button secondary" type="button">Add files</button>
+                            <button id="loadBtn" class="text-button primary" type="button">Load mesh</button>
+                        </div>
+                    </section>
+                </section>
+
+                <div id="stats" hidden></div>
+
+                <aside id="textureMaps" aria-label="Texture maps" hidden>
+                    <div class="texture-head">
+                        <button id="textureToggleBtn" type="button" title="Texture maps" aria-label="Toggle texture map previews" aria-expanded="false">
+                            <span>TEX</span>
+                            <span id="textureCount"></span>
+                        </button>
+                    </div>
+                    <div id="textureStrip"></div>
+                </aside>
+
+                <div id="loading" role="status" aria-live="polite" hidden>
+                    <div class="loading-head">
+                        <strong id="loadingLabel">Loading mesh</strong>
+                        <span id="loadingValue">0%</span>
+                    </div>
+                    <div class="loading-track" aria-hidden="true"><span id="loadingBar"></span></div>
+                </div>
+
+                <dialog id="textureDialog">
+                    <button id="textureDialogClose" class="text-button secondary" type="button">Close</button>
+                    <canvas id="textureDialogCanvas"></canvas>
+                    <p id="textureDialogCaption"></p>
+                </dialog>
+
+                <input id="fileInput" class="visually-hidden" type="file" accept=".glb,.gltf,.obj,.fbx,.ply,.stl,.mtl,.bin,.png,.jpg,.jpeg,.webp,.avif,.bmp,.gif,.hdr,.exr,.tga,.ktx2" multiple>
+                <input id="folderInput" class="visually-hidden" type="file" webkitdirectory directory multiple>
+                <input id="relinkInput" class="visually-hidden" type="file" multiple>
+            </div>
         `;
-
-        this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
-        this.camera.position.set(0, 0, DEFAULT_CAMERA_DISTANCE);
-        this.renderer = new THREE.WebGLRenderer({
-            antialias: true,
-            alpha: true,
-            preserveDrawingBuffer: true // screenshot
-        });
-        this.renderer.setPixelRatio(window.devicePixelRatio);
-        this.renderer.outputEncoding = THREE.sRGBEncoding;
-        this.renderer.setClearColor(DEFAULT_BACKGROUND_COLOR, 1); // (light gray)
-        this.renderer.shadowMap.enabled = true;
-        this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        this.renderer.toneMappingExposure = DEFAULT_EXPOSURE;
-
-        this.animationGeometry = null;
-        this.animationMesh = null;
-        this.tweenGroup = null;
-        this.isIdleAnimationRunning = false;
-
-        this.gridHelper = new THREE.GridHelper(10, 10, 0x888888, 0x444444);
-        this.gridHelper.visible = false;
-        this.scene.add(this.gridHelper);
-
-        this.shadowRoot.querySelector('#canvas-container').appendChild(this.renderer.domElement);
-        this.renderer.domElement.tabIndex = 0;
-        this.renderer.domElement.setAttribute('aria-label', '3D model viewer canvas');
-        this.renderer.domElement.style.outline = 'none';
-
-        this.state = {
-            lightsOn: true,
-            viewMode: 'default', // 'default', 'diffuse', 'geometry', 'normal'
-            wireframeInitialized: false,
-            isWireframeOn: false,
-            environment: null, // null, 'env1', 'env2', 'env3'
-            environmentUrl: null,
-            environmentIntensity: DEFAULT_ENVIRONMENT_INTENSITY,
-            environmentRotation: DEFAULT_ENVIRONMENT_ROTATION,
-            environmentBackgroundVisible: DEFAULT_ENVIRONMENT_BACKGROUND_VISIBLE,
-            isAnimationPlaying: false,
-            animationSelection: 'none',
-            animationSpeed: DEFAULT_ANIMATION_SPEED,
-            animationLoopMode: DEFAULT_ANIMATION_LOOP,
-            transformMode: 'none',
-            backgroundColor: DEFAULT_BACKGROUND_COLOR,
-            exposure: DEFAULT_EXPOSURE,
-            selectionMode: DEFAULT_SELECTION_MODE,
-            performanceMode: DEFAULT_PERFORMANCE_MODE,
-        };
-
-        this.mixer = null;
-        this.animationActions = [];
-        this.currentAction = null;
-        this.isScrubbingAnimationTimeline = false;
-
-        const ambientLightAttr = this.getAttribute('ambient-light');
-        if (ambientLightAttr) {
-            this.setAmbientLight(ambientLightAttr);
-        } else {
-            this.ambientLight = new THREE.AmbientLight(0x404040, 3);
-            this.scene.add(this.ambientLight);
-        }
-
-        const directLightAttr = this.getAttribute('direct-light');
-        if (directLightAttr) {
-            this.setDirectLight(directLightAttr);
-        } else {
-            this.directionalLights = []; // Directional Lights array init
-            this.directionalLightHelpers = []; // DirectionalLightHelper array init
-            this.addDirectionalLight(); // Basic Directional Light
-            this.selectedDirectionalLightIndex = 0; // first light selected
-        }
-
-        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-        this.controls.enableDamping = true;
-        this.controls.dampingFactor = 0.05;
-        this.controls.target.set(0, 0, 0);
-        this.controls.addEventListener('change', () => {
-            this.updateControlPanel();
-            if (!this.isApplyingCameraState) {
-                this.emitCameraChange('controls');
-            }
-        });
-
-        this.textureLoader = new THREE.TextureLoader();
-        this.whiteTexture = this.textureLoader.load('/assets/viewer/white.jpg');
-        this.whiteTexture.mapping = THREE.EquirectangularReflectionMapping;
-
-        this.gradTexture = this.textureLoader.load('/assets/viewer/gradient.jpg');
-        this.gradTexture.mapping = THREE.EquirectangularReflectionMapping;
-
-        this.dracoLoader = new DRACOLoader();
-        this.objLoader = new OBJLoader();
-        this.dracoLoader.setDecoderPath('/vendor/three/examples/jsm/libs/draco/gltf/');
-        this.gltfLoader = new GLTFLoader();
-        this.fbxLoader = new FBXLoader(); 
-        this.plyLoader = new PLYLoader();
-        this.gltfLoader.setDRACOLoader(this.dracoLoader);
-        this.model = null;
-        this.originalMaterials = {};
-        this.initialMaterials = {};
-        this.wireframeMeshes = [];
-        this.modelSize = 8;
-        this.autoRotate = false;
-        this.anglePerSecond = 30;
-        this.lastTime = 0;
-        this.toonEnabled = false;
-        this.noPBR = false;
-        this.ambientLight.visible = this.state.lightsOn;
-        this.directionalLights.forEach(light => {
-            light.visible = this.state.lightsOn;
-        });
-
-        this.toonMaterial = null;
-        this.toonMaterialBackups = new Map();
-        this.standardMaterials = [];
-
-        this.showLightHelpers = false; // Light Helper visiblity - default true, changed to true initially for better UX
-        this.canAdjustRoughnessMetalness = false;
-        this.meshParts = [];
-        this.meshPartTextureInfo = [];
-        this.textureHistory = new Map();
-        this.currentEnvironmentTexture = null;
-        this.environmentLoadToken = 0;
-        this.cameraTransitionFrame = null;
-        this.currentModelSource = null;
-        this.currentModelFileName = null;
-        this.isReflectingAttributes = false;
-        this.isApplyingCameraState = false;
-        this.modelDefaultCameraState = null;
-        this.raycaster = new THREE.Raycaster();
-        this.pointerNdc = new THREE.Vector2();
-
-        this.sceneGraphLabelByMeshUuid = new Map();
-        this.selectedSceneGraphLabel = null;
-        this.selectedMeshPart = null;
-        this.selectedMeshPartIndex = -1;
-        this.selectedMaterialIndex = 0;
-        this.hoveredMeshPart = null;
-        this.canvasPointerDown = null;
-        this.selectionOutline = new THREE.Box3Helper(new THREE.Box3(), 0x18a957);
-        this.selectionOutline.visible = false;
-        this.scene.add(this.selectionOutline);
-        this.hoverOutline = new THREE.Box3Helper(new THREE.Box3(), 0x2563eb);
-        this.hoverOutline.visible = false;
-        this.scene.add(this.hoverOutline);
-
-        // --- State Variables for Recording ---
-        this.mediaRecorder = null;
-        this.recordedChunks = [];
-        this.videoBlob = null; // To store the final blob
-        this.stream = null;    // To store the canvas stream
-        this.recordingProgressTimer = null;
-        this.quickRecordingTimeout = null;
-        this.quickRecordingStartedAt = 0;
-        this.quickRecordingDuration = DEFAULT_RECORDING_DURATION;
-        this.quickRecordingPreviousAutoRotate = null;
-
-        // --- State Variables for Explode Effect ---
-        this.modelCenter = null;
-        this.modelMaxDim = 0;
-        this.resizeObserver = null;
-        this.isConnectedToDom = false;
-        this.statusTimeout = null;
-        this.dropHoverDepth = 0;
-        this.handleAnimationMixerFinished = (event) => {
-            if (event?.action !== this.currentAction) {
-                return;
-            }
-
-            this.state.isAnimationPlaying = false;
-            this.refreshUiFromState({ syncTextureUi: false });
-            this.emitAnimationChange('mixer', 'finished');
-        };
-
-        this.startRecording = this.startRecording.bind(this);
-        this.stopRecording = this.stopRecording.bind(this);
-        this.downloadVideo = this.downloadVideo.bind(this);
-        this.closeModal = this.closeModal.bind(this);
-        this.handleResize = this.resizeRenderer.bind(this);
-        this.handleDragEnter = this.handleDragEnter.bind(this);
-        this.handleDragOver = this.handleDragOver.bind(this);
-        this.handleDragLeave = this.handleDragLeave.bind(this);
-        this.handleDrop = this.handleDrop.bind(this);
-
-        // TransformControls instance generation
-        this.transformControls = new TransformControls(this.camera, this.renderer.domElement);
-        this.transformControls.addEventListener('change', () => {
-            this.refreshUiFromState({ syncTextureUi: false });
-            this.emitCameraChange('transform-controls');
-            this.requestRender();
-        });
-        this.transformControls.visible = false; // init invisible
-        this.scene.add(this.transformControls);
-
-        this.initEventListeners();
-        this.initLightUIValues(); // Light UI init
-        this.initCameraUIValues(); // Camera UI init
-        this.updateDirectionalLightHelpersVisibility(); // Initial helper visibility setup
-        this.initDiscardButton();
-        this.initTextureMapUI();
-        this.initTabSwitching(); // Initialize tab switching functionality
-        this.defaultCameraState = this.getCameraStateSnapshot();
-        this.updateCameraActionButtons();
-        this.updateRecordingStatus('Idle');
-        this.refreshUiFromState();
     }
-
-    initIdleAnimation() {
-        if (typeof TWEEN === 'undefined') {
-            console.error('TWEEN is not defined. Ensure Tween.js is loaded before simple-model-viewer.js.');
-            return;
-        }
-
-        const vertexCount = 20; // max vertices num
-        this.animationGeometry = new THREE.BufferGeometry();
-        const material = new THREE.PointsMaterial({ color: 0x777777, size: 0.8 });
-        this.pointColor = new THREE.Color();
-
-        // const material = new THREE.PointsMaterial({
-        //     color: this.pointColor, 
-        //     size: 0.6, 
-        //     blending: THREE.AdditiveBlending, 
-        //     transparent: true, 
-        //     opacity: 0.8, 
-        // });
-
-        this.animationMesh = new THREE.Points(this.animationGeometry, material);
-        this.scene.add(this.animationMesh);
-
-        this.tweenGroup = new TWEEN.Group();
-
-        const initialPositions = new Float32Array(vertexCount * 3).fill(0);
-        this.animationGeometry.setAttribute('position', new THREE.BufferAttribute(initialPositions, 3));
-    
-        this.setupAnimationSteps(vertexCount);
-    
-        this.isIdleAnimationRunning = true;
-    }
-    
-    setupAnimationSteps(vertexCount) {
-        const positions = this.animationGeometry.attributes.position.array;
-    
-        const hexagonPositions = [];
-        const hexagonVertices = this.getHexagonVertices(6); 
-        for (let i = 0; i < vertexCount; i++) {
-            hexagonPositions.push(...hexagonVertices[i % hexagonVertices.length]); 
-        }
-    
-        const tweenToHexagon = new TWEEN.Tween(positions, this.tweenGroup)
-            .to(hexagonPositions, 1000)
-            .easing(TWEEN.Easing.Quadratic.InOut)
-            .onUpdate(() => {
-                this.animationGeometry.attributes.position.needsUpdate = true;
-                // const hue = (performance.now() / 5000) % 1; 
-                // this.pointColor.setHSL(hue, 1, 0.5); 
-                // this.animationMesh.material.color = this.pointColor;
-            });
-    
-        const dodecahedronPositions = [];
-        const dodecahedronVertices = this.getDodecahedronVertices(4); 
-        for (let i = 0; i < vertexCount; i++) {
-            dodecahedronPositions.push(...dodecahedronVertices[i % dodecahedronVertices.length]); 
-        }
-    
-        const tweenToDodecahedron = new TWEEN.Tween(positions, this.tweenGroup)
-            .to(dodecahedronPositions, 2000)
-            .easing(TWEEN.Easing.Quadratic.InOut)
-            .onUpdate(() => {
-                this.animationGeometry.attributes.position.needsUpdate = true;
-                // const hue = (performance.now() / 5000) % 1; 
-                // this.pointColor.setHSL(hue, 1, 0.5); 
-                // this.animationMesh.material.color = this.pointColor;
-            });
-    
-        const icosahedronPositions = [];
-        const icosahedronVertices = this.getIcosahedronVertices(3); 
-        for (let i = 0; i < vertexCount; i++) {
-            icosahedronPositions.push(...icosahedronVertices[i % icosahedronVertices.length]); 
-        }
-    
-        const tweenToIcosahedron = new TWEEN.Tween(positions, this.tweenGroup)
-            .to(icosahedronPositions, 2000)
-            .easing(TWEEN.Easing.Quadratic.InOut)
-            .onUpdate(() => {
-                this.animationGeometry.attributes.position.needsUpdate = true;
-                // const hue = (performance.now() / 5000) % 1; 
-                // this.pointColor.setHSL(hue, 1, 0.5); 
-                // this.animationMesh.material.color = this.pointColor;
-            });
-    
-        // all vertices to origin
-        const backToPointPositions = new Array(vertexCount * 3).fill(0);
-    
-        const backToPoint = new TWEEN.Tween(positions, this.tweenGroup)
-            .to(backToPointPositions, 2000)
-            .easing(TWEEN.Easing.Quadratic.InOut)
-            .onUpdate(() => {
-                this.animationGeometry.attributes.position.needsUpdate = true;
-                // const hue = (performance.now() / 5000) % 1; 
-                // this.pointColor.setHSL(hue, 1, 0.5); 
-                // this.animationMesh.material.color = this.pointColor;
-            })
-            .onComplete(() => {
-                tweenToHexagon.start(); // loop
-            });
-
-        tweenToHexagon.chain(tweenToIcosahedron);
-        tweenToIcosahedron.chain(tweenToDodecahedron);
-        tweenToDodecahedron.chain(backToPoint);
-    
-        tweenToHexagon.start(); // animation
-    }
-    
-    // Hexagon index generator
-    getHexagonVertices(radius) {
-        const vertices = [];
-        for (let i = 0; i < 6; i++) {
-            const angle = (Math.PI / 3) * i;
-            const x = radius * Math.cos(angle);
-            const y = radius * Math.sin(angle);
-            vertices.push([x, y, 0]);
-        }
-        return vertices;
-    }
-    
-    // Dodecahedron index generator
-    getDodecahedronVertices(radius) {
-        const phi = (1 + Math.sqrt(5)) / 2; // golden ratio
-        const vertices = [
-            [-1, -1, -1], [-1, -1, 1], [-1, 1, -1], [-1, 1, 1],
-            [1, -1, -1], [1, -1, 1], [1, 1, -1], [1, 1, 1],
-            [0, -1 / phi, -phi], [0, -1 / phi, phi], [0, 1 / phi, -phi], [0, 1 / phi, phi],
-            [-1 / phi, -phi, 0], [-1 / phi, phi, 0], [1 / phi, -phi, 0], [1 / phi, phi, 0],
-            [-phi, 0, -1 / phi], [-phi, 0, 1 / phi], [phi, 0, -1 / phi], [phi, 0, 1 / phi]
-        ].map(v => v.map(coord => coord * radius)); // 
-        return vertices;
-    }
-    
-    // Icosahedron index generator
-    getIcosahedronVertices(radius) {
-        const phi = (1 + Math.sqrt(5)) / 2; // golden ratio
-        const vertices = [
-            [0, 1, phi], [0, 1, -phi], [0, -1, phi], [0, -1, -phi],
-            [1, phi, 0], [1, -phi, 0], [-1, phi, 0], [-1, -phi, 0],
-            [phi, 0, 1], [phi, 0, -1], [-phi, 0, 1], [-phi, 0, -1]
-        ].map(v => v.map(coord => coord * radius)); // 
-        return vertices;
-    }
-
-    initTabSwitching() {
-        const tabButtons = this.shadowRoot.querySelectorAll('.tab-button');
-        const tabContents = this.shadowRoot.querySelectorAll('.tab-content');
-
-        tabButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const tabName = button.dataset.tab;
-
-                // Deactivate all tabs and hide all content
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                tabContents.forEach(content => content.style.display = 'none');
-
-                // Activate the clicked tab and show its content
-                button.classList.add('active');
-                this.shadowRoot.querySelector(`#${tabName}-tab-content`).style.display = 'block';
-            });
-        });
-    }
-
-
-    initCameraUIValues() {
-        // Camera Settings UI init
-        this.shadowRoot.querySelector('#cameraFov').value = this.camera.fov;
-        this.shadowRoot.querySelector('#cameraNear').value = this.camera.near;
-        this.shadowRoot.querySelector('#cameraFar').value = this.camera.far;
-    }
-
-    formatAnimationTime(seconds) {
-        const safeSeconds = Number.isFinite(seconds) ? Math.max(0, seconds) : 0;
-        const minutes = Math.floor(safeSeconds / 60);
-        const remainder = safeSeconds - (minutes * 60);
-        const wholeSeconds = Math.floor(remainder);
-        const tenths = Math.floor((remainder - wholeSeconds) * 10);
-        const paddedSeconds = `${wholeSeconds}`.padStart(2, '0');
-
-        if (safeSeconds >= 10) {
-            return `${minutes}:${paddedSeconds}`;
-        }
-
-        return `${minutes}:${paddedSeconds}.${tenths}`;
-    }
-
-    getAnimationDuration(action = this.currentAction) {
-        return action?.getClip?.()?.duration || 0;
-    }
-
-    getAnimationStateSnapshot() {
-        const clip = this.currentAction?.getClip?.() || null;
-        const clipIndex = clip
-            ? this.animationActions.findIndex((animationAction) => animationAction.getClip() === clip)
-            : -1;
-        const duration = this.getAnimationDuration();
-
-        return {
-            index: clipIndex,
-            name: clip?.name || null,
-            selected: this.state.animationSelection,
-            isPlaying: this.state.isAnimationPlaying,
-            speed: this.state.animationSpeed,
-            loopMode: this.state.animationLoopMode,
-            time: this.currentAction ? Math.min(this.currentAction.time, duration || this.currentAction.time) : 0,
-            duration,
-            clipCount: this.animationActions.length,
-        };
-    }
-
-    getAnimationLoopSettings(loopMode = this.state.animationLoopMode) {
-        switch (loopMode) {
-            case 'once':
-                return {
-                    loop: THREE.LoopOnce,
-                    repetitions: 0,
-                    clampWhenFinished: true,
-                };
-            case 'ping-pong':
-                return {
-                    loop: THREE.LoopPingPong,
-                    repetitions: Infinity,
-                    clampWhenFinished: false,
-                };
-            case 'repeat':
-            default:
-                return {
-                    loop: THREE.LoopRepeat,
-                    repetitions: Infinity,
-                    clampWhenFinished: false,
-                };
-        }
-    }
-
-    configureAnimationAction(action) {
-        if (!action) {
-            return;
-        }
-
-        const { loop, repetitions, clampWhenFinished } = this.getAnimationLoopSettings();
-        action.setLoop(loop, repetitions);
-        action.clampWhenFinished = clampWhenFinished;
-        action.setEffectiveTimeScale(this.state.animationSpeed);
-        action.enabled = true;
-    }
-
-    populateAnimationSelector() {
-        const animationSelector = this.shadowRoot.querySelector('#animationSelector');
-        if (!animationSelector) {
-            return;
-        }
-
-        animationSelector.innerHTML = '';
-
-        const noneOption = document.createElement('option');
-        noneOption.value = 'none';
-        noneOption.textContent = 'None';
-        animationSelector.appendChild(noneOption);
-
-        this.animationActions.forEach((action, index) => {
-            const option = document.createElement('option');
-            option.value = `${index}`;
-            option.textContent = action.getClip()?.name || `Animation ${index + 1}`;
-            animationSelector.appendChild(option);
-        });
-    }
-
-    updateAnimationUi() {
-        const hasAnimations = this.animationActions.length > 0;
-        const animationControls = this.shadowRoot.querySelector('#animationControls');
-        const animationSelector = this.shadowRoot.querySelector('#animationSelector');
-        const animationSpeed = this.shadowRoot.querySelector('#animationSpeed');
-        const animationSpeedValue = this.shadowRoot.querySelector('#animationSpeedValue');
-        const animationLoopMode = this.shadowRoot.querySelector('#animationLoopMode');
-        const animationTimeline = this.shadowRoot.querySelector('#animationTimeline');
-        const animationTimeDisplay = this.shadowRoot.querySelector('#animationTimeDisplay');
-        const runButton = this.shadowRoot.querySelector('#runAnimationBtn');
-        const pauseButton = this.shadowRoot.querySelector('#pauseAnimationBtn');
-        const description = this.shadowRoot.querySelector('#anim_description');
-        const animationState = this.getAnimationStateSnapshot();
-        const duration = animationState.duration;
-        const hasCurrentAction = !!this.currentAction;
-
-        if (description) {
-            description.style.display = hasAnimations ? 'block' : 'none';
-        }
-
-        if (animationControls) {
-            animationControls.style.display = hasAnimations ? 'block' : 'none';
-        }
-
-        if (animationSelector) {
-            const selectedValue = animationState.index >= 0 ? `${animationState.index}` : 'none';
-            if (animationSelector.value !== selectedValue) {
-                animationSelector.value = selectedValue;
-            }
-            animationSelector.disabled = !hasAnimations;
-        }
-
-        if (animationSpeed) {
-            animationSpeed.value = `${this.state.animationSpeed}`;
-            animationSpeed.disabled = !hasAnimations;
-        }
-
-        if (animationSpeedValue) {
-            animationSpeedValue.textContent = `${this.state.animationSpeed.toFixed(2)}x`;
-        }
-
-        if (animationLoopMode) {
-            animationLoopMode.value = this.state.animationLoopMode;
-            animationLoopMode.disabled = !hasAnimations;
-        }
-
-        if (animationTimeline) {
-            animationTimeline.disabled = !hasCurrentAction;
-            animationTimeline.max = `${duration || 0}`;
-            if (!this.isScrubbingAnimationTimeline) {
-                animationTimeline.value = `${hasCurrentAction ? Math.min(this.currentAction.time, duration || this.currentAction.time) : 0}`;
-            }
-        }
-
-        if (animationTimeDisplay) {
-            animationTimeDisplay.textContent = `${this.formatAnimationTime(animationState.time)} / ${this.formatAnimationTime(duration)}`;
-        }
-
-        if (hasCurrentAction) {
-            runButton.style.display = this.state.isAnimationPlaying ? 'none' : 'inline-block';
-            pauseButton.style.display = this.state.isAnimationPlaying ? 'inline-block' : 'none';
-        } else {
-            runButton.style.display = 'none';
-            pauseButton.style.display = 'none';
-        }
-    }
-
-
-    initLightUIValues() {
-        // Ambient Light UI init
-        this.shadowRoot.querySelector('#ambientColorPicker').value = `#${this.ambientLight.color.getHexString()}`;
-        this.shadowRoot.querySelector('#ambientIntensity').value = this.ambientLight.intensity;
-
-        // Directional Light UI init
-        if (this.directionalLights.length > 0) {
-            this.populateDirectionalLightList(); // Directional Light List UI
-            this.updateDirectionalLightUIValues(); // Directional Light UI init
-        }
-    }
-
 
     connectedCallback() {
-        this.isConnectedToDom = true;
-        this.resizeRenderer();
-        if (!this.resizeObserver) {
-            this.resizeObserver = new ResizeObserver(() => this.resizeRenderer());
-        }
+        if (this.connected) return;
+        this.connected = true;
+        this.initEventListeners();
         this.resizeObserver.observe(this);
-        this.renderer.setAnimationLoop((time) => this.animate(time));
-        if (!this.getAttribute('src')) {
-            const fileInputContainer = this.shadowRoot.querySelector('#fileInputContainer');
-            fileInputContainer.style.display = 'block';
+        document.addEventListener('keydown', this.boundHandleKeyDown);
+        this.applyAttributes();
+        this.resizeRenderer();
+        this.animate();
+        this.loadHistory().catch((error) => {
+            this.showStatus(`History unavailable: ${error.message}`, 'warning');
+        });
+        const source = this.getAttribute('src');
+        if (source) {
+            this.setPanelOpen(false, { forceClose: true });
+            void this.loadModelFromUrl(source, basename(pathWithoutSearch(source)));
+        } else {
+            this.setEmptyState(true);
         }
     }
 
     disconnectedCallback() {
-        this.isConnectedToDom = false;
-        if (this.resizeObserver) {
-            this.resizeObserver.disconnect();
-        }
-        this.stopCameraTransition();
-        this.renderer.setAnimationLoop(null);
-        this.stopRecording();
-        this.clearQuickRecordingTimers();
-        if (this.statusTimeout) {
-            clearTimeout(this.statusTimeout);
-            this.statusTimeout = null;
-        }
+        this.connected = false;
+        cancelAnimationFrame(this.frameRequest);
+        this.resizeObserver.disconnect();
+        document.removeEventListener('keydown', this.boundHandleKeyDown);
+        this.renderer.domElement.removeEventListener('pointerdown', this.boundPointerDown);
+        this.renderer.domElement.removeEventListener('pointerup', this.boundPointerUp);
+        this.renderer.domElement.removeEventListener('pointermove', this.boundPointerMove);
+        this.controls.dispose();
+        this.clearModel();
+        this.disposeObject(this.placeholder);
+        this.revokeObjectUrls();
+        this.disposeEnvironmentResources();
+        this.environmentPreviewTextures.forEach((texture) => {
+            if (texture !== this.environmentSourceTexture) texture.dispose();
+        });
+        this.environmentPreviewTextures.clear();
+        this.environmentPreviewPromises.clear();
+        this.geometryMaterial.dispose();
+        this.normalMaterial.dispose();
+        this.wireframeMaterial.dispose();
+        this.placeholderMaterial.dispose();
+        this.grid.geometry.dispose();
+        this.grid.material.dispose();
+        this.pmremGenerator.dispose();
+        this.renderer.dispose();
     }
 
-    requestRender() {
-        if (!this.renderer) {
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue === newValue) return;
+        if (!this.shadowRoot) return;
+        if (name === 'src' && this.connected && newValue) {
+            void this.loadModelFromUrl(newValue, basename(pathWithoutSearch(newValue)));
             return;
         }
-
-        this.renderer.render(this.scene, this.camera);
+        this.applyAttributes();
     }
 
-    emitEvent(name, detail = {}) {
-        this.dispatchEvent(new CustomEvent(name, {
-            detail,
-            bubbles: true,
-            composed: true,
-        }));
-    }
+    initEventListeners() {
+        this.shadowRoot.querySelector('#openPanelBtn').addEventListener('click', () => this.setPanelOpen(true));
+        this.shadowRoot.querySelector('#closePanelBtn').addEventListener('click', () => this.setPanelOpen(false, { forceClose: true }));
+        this.shadowRoot.querySelector('#chooseFilesBtn').addEventListener('click', () => this.fileInput.click());
+        this.shadowRoot.querySelector('#chooseFolderBtn').addEventListener('click', () => this.folderInput.click());
+        this.shadowRoot.querySelector('#loadBtn').addEventListener('click', () => {
+            if (this.pendingBundle && this.pendingMainEntry) {
+                void this.loadBundle(this.pendingBundle, this.pendingMainEntry, { saveHistory: true });
+            }
+        });
+        this.shadowRoot.querySelector('#relinkBtn').addEventListener('click', () => this.relinkInput.click());
+        this.shadowRoot.querySelector('#clearHistoryBtn').addEventListener('click', () => {
+            void this.clearHistory();
+        });
+        this.historySelect.addEventListener('change', () => {
+            const record = this.historyRecords.find((entry) => entry.id === this.historySelect.value);
+            if (record) void this.loadHistoryRecord(record);
+        });
+        this.fileInput.addEventListener('change', (event) => {
+            void this.handleFileSelection(event.target.files);
+            event.target.value = '';
+        });
+        this.folderInput.addEventListener('change', (event) => {
+            void this.handleFileSelection(event.target.files);
+            event.target.value = '';
+        });
+        this.relinkInput.addEventListener('change', (event) => {
+            this.mergePendingFiles(event.target.files);
+            event.target.value = '';
+        });
 
-    emitViewerError(action, error, extra = {}) {
-        const message = error instanceof Error ? error.message : String(error);
-        this.showStatus(message, 'error', 5000);
-        this.emitEvent('viewer-error', {
-            action,
-            message,
-            error,
-            ...extra,
+        const dropZone = this.shadowRoot.querySelector('#dropZone');
+        ['dragenter', 'dragover'].forEach((type) => {
+            this.rootEl.addEventListener(type, (event) => {
+                event.preventDefault();
+                this.rootEl.classList.add('dragging');
+            });
+        });
+        ['dragleave', 'drop'].forEach((type) => {
+            this.rootEl.addEventListener(type, (event) => {
+                event.preventDefault();
+                if (type === 'drop' && event.dataTransfer?.files?.length) {
+                    void this.handleFileSelection(event.dataTransfer.files);
+                }
+                this.rootEl.classList.remove('dragging');
+            });
+        });
+        dropZone.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                this.fileInput.click();
+            }
+        });
+
+        this.modeToggleBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            this.setModeMenuOpen(this.modeMenu.hidden);
+        });
+        this.modeMenu.addEventListener('click', (event) => {
+            event.stopPropagation();
+        });
+        this.shadowRoot.querySelectorAll('#modeMenu .mode-button').forEach((button) => {
+            button.addEventListener('click', () => {
+                this.setViewMode(button.dataset.mode);
+                this.setModeMenuOpen(false);
+            });
+        });
+        this.rootEl.addEventListener('pointerdown', (event) => {
+            if (this.modeMenu.hidden) return;
+            const path = event.composedPath();
+            if (!path.includes(this.modeMenu) && !path.includes(this.modeToggleBtn)) {
+                this.setModeMenuOpen(false);
+            }
+        });
+        this.textureToggleBtn.addEventListener('click', () => {
+            this.setTexturePanelOpen(!this.texturePanelOpen);
+        });
+        this.shadowRoot.querySelector('#wireBtn').addEventListener('click', () => {
+            this.setWireframeEnabled(!this.state.wireframe);
+        });
+        this.shadowRoot.querySelector('#wireModeSelect').addEventListener('change', (event) => {
+            this.state.wireframeMode = normalizeWireframeMode(event.target.value);
+            this.setAttribute('wireframe-mode', this.state.wireframeMode);
+            if (this.state.wireframe) this.rebuildWireframeOverlay();
+        });
+        this.shadowRoot.querySelector('#sectionBtn').addEventListener('click', () => {
+            this.state.section.enabled = !this.state.section.enabled;
+            this.syncSectionUi();
+            this.syncSectionClip();
+        });
+        this.environmentToggle.addEventListener('click', (event) => {
+            event.preventDefault();
+            this.setEnvironmentMenuOpen(this.environmentMenu.hidden);
+        });
+        this.shadowRoot.querySelectorAll('[data-environment-preset]').forEach((button) => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                this.setEnvironmentMenuOpen(false);
+                void this.setEnvironment(button.dataset.environmentPreset);
+            });
+        });
+        this.shadowRoot.querySelector('#environmentBgBtn').addEventListener('click', () => {
+            this.setEnvironmentBackgroundVisible(!this.state.environmentBackground);
+        });
+        const degreesFromDialPointer = (event) => {
+            const rect = this.environmentDial.getBoundingClientRect();
+            const x = event.clientX - rect.left - rect.width / 2;
+            const y = event.clientY - rect.top - rect.height / 2;
+            return (THREE.MathUtils.radToDeg(Math.atan2(x, -y)) + 360) % 360;
+        };
+        const applyDialPointer = (event) => {
+            event.preventDefault();
+            this.setEnvironmentRotationDegrees(degreesFromDialPointer(event));
+        };
+        this.environmentDial.addEventListener('pointerdown', (event) => {
+            this.environmentDial.setPointerCapture(event.pointerId);
+            applyDialPointer(event);
+        });
+        this.environmentDial.addEventListener('pointermove', (event) => {
+            if (!this.environmentDial.hasPointerCapture(event.pointerId)) return;
+            applyDialPointer(event);
+        });
+        this.environmentDial.addEventListener('keydown', (event) => {
+            const step = event.shiftKey ? 15 : 5;
+            const current = THREE.MathUtils.radToDeg(this.state.environmentRotation || 0);
+            if (event.key === 'ArrowRight' || event.key === 'ArrowUp') {
+                event.preventDefault();
+                this.setEnvironmentRotationDegrees(current + step);
+            } else if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') {
+                event.preventDefault();
+                this.setEnvironmentRotationDegrees(current - step);
+            } else if (event.key === 'Home') {
+                event.preventDefault();
+                this.setEnvironmentRotationDegrees(0);
+            } else if (event.key === 'End') {
+                event.preventDefault();
+                this.setEnvironmentRotationDegrees(359);
+            }
+        });
+        this.shadowRoot.querySelector('#sectionAxis').addEventListener('change', (event) => {
+            this.state.section.axis = event.target.value;
+            this.syncSectionClip();
+        });
+        this.shadowRoot.querySelector('#sectionSlider').addEventListener('input', (event) => {
+            this.state.section.value = Number(event.target.value) / 100;
+            this.syncSectionUi();
+            this.syncSectionClip();
+        });
+        this.shadowRoot.querySelector('#fitBtn').addEventListener('click', () => this.fitCameraToModel({ animate: false }));
+        this.shadowRoot.querySelector('#resetBtn').addEventListener('click', () => this.resetView());
+        this.shadowRoot.querySelector('#rotateBtn').addEventListener('click', () => {
+            this.state.autoRotate = !this.state.autoRotate;
+            this.reflectBooleanAttribute('auto-rotate', this.state.autoRotate);
+            this.syncToolbar();
+        });
+        this.shadowRoot.querySelector('#gridBtn').addEventListener('click', () => {
+            this.state.grid = !this.state.grid;
+            this.grid.visible = this.state.grid;
+            this.syncToolbar();
+        });
+        this.shadowRoot.querySelector('#playBtn').addEventListener('click', () => {
+            this.setAnimationPlaying(!this.isAnimationPlaying);
+        });
+        this.shadowRoot.querySelector('#snapshotBtn').addEventListener('click', () => {
+            void this.captureScreenshot({ download: true });
+        });
+        this.shadowRoot.querySelector('#fullscreenBtn').addEventListener('click', () => {
+            void this.toggleFullscreen();
+        });
+        this.shadowRoot.querySelector('#textureDialogClose').addEventListener('click', () => {
+            this.textureDialog.close();
+        });
+
+        this.renderer.domElement.addEventListener('pointerdown', this.boundPointerDown);
+        this.renderer.domElement.addEventListener('pointerup', this.boundPointerUp);
+        this.renderer.domElement.addEventListener('pointermove', this.boundPointerMove);
+        this.controls.addEventListener('change', () => {
+            this.emitEvent('viewer-camera-change', this.getCameraStateSnapshot());
         });
     }
 
-    showStatus(message, type = 'info', timeout = 0) {
-        const statusElement = this.shadowRoot.querySelector('#viewerStatus');
-        if (!statusElement) {
-            return;
-        }
-
-        if (this.statusTimeout) {
-            clearTimeout(this.statusTimeout);
-            this.statusTimeout = null;
-        }
-
-        if (!message) {
-            statusElement.style.display = 'none';
-            statusElement.textContent = '';
-            statusElement.dataset.type = '';
-            return;
-        }
-
-        statusElement.textContent = message;
-        statusElement.dataset.type = type;
-        statusElement.style.display = 'block';
-
-        if (timeout > 0) {
-            this.statusTimeout = window.setTimeout(() => {
-                this.showStatus('');
-            }, timeout);
-        }
+    applyAttributes() {
+        this.state.viewMode = normalizeViewMode(this.getAttribute('view-mode') || this.state.viewMode);
+        this.state.wireframeMode = normalizeWireframeMode(this.getAttribute('wireframe-mode') || this.state.wireframeMode);
+        this.state.autoRotate = this.hasAttribute('auto-rotate');
+        this.state.anglePerSecond = parseNumber(this.getAttribute('angle-per-second'), this.state.anglePerSecond);
+        this.state.backgroundColor = this.getAttribute('background-color') || this.state.backgroundColor || DEFAULT_BACKGROUND_COLOR;
+        this.state.environment = this.getAttribute('environment') || this.state.environment || DEFAULT_ENVIRONMENT_PRESET;
+        this.state.environmentUrl = this.getAttribute('environment-url') || '';
+        const preset = environmentPresetFor(this.state.environment);
+        this.state.environmentIntensity = parseNumber(this.getAttribute('environment-intensity'), this.state.environmentIntensity || preset.environmentIntensity);
+        this.state.environmentBackground = parseBooleanAttribute(
+            this.getAttribute('environment-background'),
+            this.state.environmentBackground
+        );
+        this.state.environmentRotation = this.hasAttribute('environment-rotation')
+            ? parseNumber(this.getAttribute('environment-rotation'), this.state.environmentRotation || 0)
+            : (this.state.environmentRotation || 0);
+        this.state.selectionMode = this.getAttribute('selection-mode') || this.state.selectionMode;
+        this.state.performanceMode = this.getAttribute('performance-mode') || this.state.performanceMode;
+        this.state.animationSpeed = parseNumber(this.getAttribute('animation-speed'), this.state.animationSpeed);
+        this.state.animationLoop = this.getAttribute('animation-loop') || this.state.animationLoop;
+        this.renderer.toneMappingExposure = parseNumber(this.getAttribute('exposure'), this.renderer.toneMappingExposure || 1);
+        this.initialCameraOrbit = this.parseCameraOrbit(this.getAttribute('camera-orbit'));
+        this.camera.up.copy(this.parseVector3Attribute('camera-up') || new THREE.Vector3(0, 1, 0));
+        this.rootEl?.style.setProperty('--viewer-bg-color', this.state.backgroundColor || DEFAULT_BACKGROUND_COLOR);
+        this.rebuildEnvironmentTexture();
+        this.applyEnvironmentPresentation();
+        this.applyViewMode();
+        this.syncToolbar();
+        this.syncSectionUi();
+        void this.loadEnvironment();
     }
 
-    setDropHintVisible(visible) {
-        const hint = this.shadowRoot.querySelector('#dropHint');
-        if (!hint) {
-            return;
-        }
-
-        hint.classList.toggle('active', !!visible);
+    parseVector3Attribute(name) {
+        const value = this.getAttribute(name);
+        if (!value) return null;
+        const entries = value.trim().split(/\s+/).map((part) => Number(part));
+        if (entries.length < 3 || entries.some((entry) => !Number.isFinite(entry))) return null;
+        return new THREE.Vector3(entries[0], entries[1], entries[2]);
     }
 
-    getSuggestedBaseFileName(fallback = 'model') {
-        return sanitizeFilenameSegment(
-            this.currentModelFileName
-            || this.getAttribute('src')
-            || fallback,
-            fallback
+    parseCameraOrbit(value) {
+        if (!value) return null;
+        const tokens = value.trim().split(/\s+/);
+        if (tokens.length < 3) return null;
+        const hasUnits = /deg|rad|m/i.test(value);
+        const numeric = tokens.slice(0, 3).map((token) => Number(String(token).replace(/(?:deg|rad|m)$/gi, '')));
+        if (numeric.some((entry) => !Number.isFinite(entry))) return null;
+        if (!hasUnits) return new THREE.Vector3(numeric[0], numeric[1], numeric[2]);
+        const theta = /rad/i.test(tokens[0]) ? numeric[0] : THREE.MathUtils.degToRad(numeric[0]);
+        const phi = /rad/i.test(tokens[1]) ? numeric[1] : THREE.MathUtils.degToRad(numeric[1]);
+        const radius = Math.max(0.01, numeric[2]);
+        return new THREE.Vector3(
+            radius * Math.sin(phi) * Math.sin(theta),
+            radius * Math.cos(phi),
+            radius * Math.sin(phi) * Math.cos(theta)
         );
     }
 
-    createExportFileName(kind, extension) {
-        return `${this.getSuggestedBaseFileName(kind)}-${kind}-${formatTimestampForFilename()}.${extension}`;
-    }
-
-    downloadBlob(blob, filename) {
-        const url = URL.createObjectURL(blob);
-        const anchor = document.createElement('a');
-        anchor.style.display = 'none';
-        anchor.href = url;
-        anchor.download = filename;
-        document.body.appendChild(anchor);
-        anchor.click();
-        document.body.removeChild(anchor);
-        URL.revokeObjectURL(url);
-    }
-
-    loadModelFromFile(file) {
-        if (!file) {
-            return Promise.reject(new Error('A model file is required.'));
-        }
-
-        if (!isSupportedModelFileName(file.name)) {
-            return Promise.reject(new Error(`Unsupported file format: .${getFileExtension(file.name)}`));
-        }
-
-        return this.loadModel(URL.createObjectURL(file), file.name);
-    }
-
-    reflectAttribute(name, value) {
-        this.isReflectingAttributes = true;
-        try {
-            if (value === null || value === undefined || value === '') {
-                this.removeAttribute(name);
-                return;
-            }
-
-            this.setAttribute(name, `${value}`);
-        } finally {
-            this.isReflectingAttributes = false;
-        }
-    }
-
     reflectBooleanAttribute(name, enabled) {
-        this.isReflectingAttributes = true;
-        try {
-            if (enabled) {
-                this.setAttribute(name, '');
-            } else {
-                this.removeAttribute(name);
-            }
-        } finally {
-            this.isReflectingAttributes = false;
+        if (enabled) {
+            if (!this.hasAttribute(name)) this.setAttribute(name, '');
+        } else if (this.hasAttribute(name)) {
+            this.removeAttribute(name);
         }
     }
 
-    getCameraStateSnapshot() {
-        return {
-            position: {
-                x: this.camera.position.x,
-                y: this.camera.position.y,
-                z: this.camera.position.z,
+    createGeometryMaterial() {
+        return new THREE.ShaderMaterial({
+            uniforms: {
+                baseColor: { value: new THREE.Color(0xd8d0c7) },
+                rimColor: { value: new THREE.Color(0x5db8a6) }
             },
-            target: {
-                x: this.controls.target.x,
-                y: this.controls.target.y,
-                z: this.controls.target.z,
-            },
-            up: {
-                x: this.camera.up.x,
-                y: this.camera.up.y,
-                z: this.camera.up.z,
-            },
-            fov: this.camera.fov,
-            near: this.camera.near,
-            far: this.camera.far,
-        };
-    }
+            vertexShader: /*glsl*/`
+                varying vec3 vViewNormal;
+                varying vec3 vViewPosition;
 
-    cloneCameraState(snapshot) {
-        if (!snapshot) {
-            return null;
-        }
-
-        return {
-            position: { ...snapshot.position },
-            target: { ...snapshot.target },
-            up: { ...snapshot.up },
-            fov: snapshot.fov,
-            near: snapshot.near,
-            far: snapshot.far,
-        };
-    }
-
-    captureCurrentCameraStateAsDefault(options = {}) {
-        const { scope = this.model ? 'model' : 'viewer' } = options;
-        const snapshot = this.cloneCameraState(this.getCameraStateSnapshot());
-
-        if (scope === 'model' && this.model) {
-            this.modelDefaultCameraState = snapshot;
-        } else {
-            this.defaultCameraState = snapshot;
-        }
-
-        return snapshot;
-    }
-
-    syncCameraAttributes() {
-        this.reflectAttribute('camera-orbit', formatVector3String(this.camera.position));
-        this.reflectAttribute('camera-target', formatVector3String(this.controls.target));
-        this.reflectAttribute('camera-up', formatVector3String(this.camera.up));
-    }
-
-    stopCameraTransition() {
-        if (this.cameraTransitionFrame !== null) {
-            cancelAnimationFrame(this.cameraTransitionFrame);
-            this.cameraTransitionFrame = null;
-        }
-    }
-
-    setCameraStateSnapshot(snapshot) {
-        if (!snapshot) {
-            return false;
-        }
-
-        this.isApplyingCameraState = true;
-        try {
-            this.camera.position.set(snapshot.position.x, snapshot.position.y, snapshot.position.z);
-            this.controls.target.set(snapshot.target.x, snapshot.target.y, snapshot.target.z);
-            this.camera.up.set(snapshot.up.x, snapshot.up.y, snapshot.up.z);
-            this.camera.fov = snapshot.fov;
-            this.camera.near = snapshot.near;
-            this.camera.far = snapshot.far;
-            this.camera.lookAt(this.controls.target);
-            this.camera.updateProjectionMatrix();
-            this.controls.update();
-            this.initCameraUIValues();
-            this.requestRender();
-        } finally {
-            this.isApplyingCameraState = false;
-        }
-        return true;
-    }
-
-    interpolateCameraState(start, end, t) {
-        const lerp = THREE.MathUtils.lerp;
-        return {
-            position: {
-                x: lerp(start.position.x, end.position.x, t),
-                y: lerp(start.position.y, end.position.y, t),
-                z: lerp(start.position.z, end.position.z, t),
-            },
-            target: {
-                x: lerp(start.target.x, end.target.x, t),
-                y: lerp(start.target.y, end.target.y, t),
-                z: lerp(start.target.z, end.target.z, t),
-            },
-            up: {
-                x: lerp(start.up.x, end.up.x, t),
-                y: lerp(start.up.y, end.up.y, t),
-                z: lerp(start.up.z, end.up.z, t),
-            },
-            fov: lerp(start.fov, end.fov, t),
-            near: lerp(start.near, end.near, t),
-            far: lerp(start.far, end.far, t),
-        };
-    }
-
-    applyCameraStateSnapshot(snapshot, options = {}) {
-        const {
-            source = 'api',
-            emitEvent = true,
-            syncAttribute = false,
-            saveAsDefault = false,
-            transitionDuration = 0,
-        } = options;
-        const targetSnapshot = this.cloneCameraState(snapshot);
-
-        if (!targetSnapshot) {
-            return false;
-        }
-
-        const finalize = () => {
-            this.setCameraStateSnapshot(targetSnapshot);
-
-            if (syncAttribute) {
-                this.syncCameraAttributes();
-            }
-
-            if (saveAsDefault) {
-                this.captureCurrentCameraStateAsDefault();
-            }
-
-            if (emitEvent) {
-                this.emitCameraChange(source);
-            }
-        };
-
-        this.stopCameraTransition();
-
-        if (transitionDuration > 0) {
-            const startSnapshot = this.cloneCameraState(this.getCameraStateSnapshot());
-            const startTime = performance.now();
-            const step = (timestamp) => {
-                const progress = Math.min(1, (timestamp - startTime) / transitionDuration);
-                const eased = 1 - ((1 - progress) * (1 - progress));
-                this.setCameraStateSnapshot(this.interpolateCameraState(startSnapshot, targetSnapshot, eased));
-
-                if (progress < 1) {
-                    this.cameraTransitionFrame = requestAnimationFrame(step);
-                    return;
+                void main() {
+                    vec4 viewPosition = modelViewMatrix * vec4(position, 1.0);
+                    vViewPosition = -viewPosition.xyz;
+                    vViewNormal = normalize(normalMatrix * normal);
+                    gl_Position = projectionMatrix * viewPosition;
                 }
+            `,
+            fragmentShader: /*glsl*/`
+                uniform vec3 baseColor;
+                uniform vec3 rimColor;
+                varying vec3 vViewNormal;
+                varying vec3 vViewPosition;
 
-                this.cameraTransitionFrame = null;
-                finalize();
-            };
+                void main() {
+                    vec3 normal = normalize(vViewNormal);
+                    vec3 viewDir = normalize(vViewPosition);
+                    vec3 keyDir = normalize(vec3(-0.38, 0.58, 0.72));
+                    vec3 fillDir = normalize(vec3(0.72, 0.18, 0.42));
+                    float key = max(dot(normal, keyDir), 0.0);
+                    float fill = max(dot(normal, fillDir), 0.0);
+                    float fresnel = pow(1.0 - max(dot(normal, viewDir), 0.0), 2.35);
+                    float shade = 0.28 + key * 0.62 + fill * 0.22;
+                    vec3 color = baseColor * shade + rimColor * fresnel * 0.28;
+                    gl_FragColor = vec4(color, 1.0);
+                }
+            `,
+            side: THREE.DoubleSide,
+            toneMapped: false
+        });
+    }
 
-            this.cameraTransitionFrame = requestAnimationFrame(step);
-            return true;
+    createAlbedoMaterialEntry(materialEntry) {
+        return mapMaterialEntry(materialEntry, (material) => {
+            const color = material?.color?.clone ? material.color.clone() : new THREE.Color(0xffffff);
+            const preview = new THREE.MeshBasicMaterial({
+                color,
+                map: material?.map || null,
+                alphaMap: material?.alphaMap || null,
+                vertexColors: material?.vertexColors === true,
+                transparent: material?.transparent === true || Number(material?.opacity) < 1 || Boolean(material?.alphaMap),
+                opacity: Number.isFinite(material?.opacity) ? material.opacity : 1,
+                side: material?.side ?? THREE.FrontSide,
+                toneMapped: false
+            });
+            preview.name = material?.name ? `${material.name} Albedo` : 'Albedo Preview';
+            return preview;
+        });
+    }
+
+    createScalarPreviewMaterialEntry(materialEntry, property, scalarProperty, channelIndex, label) {
+        return mapMaterialEntry(materialEntry, (material) => {
+            const texture = material?.[property] || null;
+            const scalar = Number.isFinite(material?.[scalarProperty]) ? material[scalarProperty] : 1;
+            const preview = new THREE.ShaderMaterial({
+                uniforms: {
+                    mapTexture: { value: texture },
+                    scalarValue: { value: scalar },
+                    channelIndex: { value: channelIndex },
+                    hasMap: { value: texture?.isTexture === true ? 1 : 0 }
+                },
+                vertexShader: /*glsl*/`
+                    varying vec2 vUv;
+                    void main() {
+                        vUv = uv;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: /*glsl*/`
+                    uniform sampler2D mapTexture;
+                    uniform float scalarValue;
+                    uniform int channelIndex;
+                    uniform int hasMap;
+                    varying vec2 vUv;
+
+                    void main() {
+                        float value = scalarValue;
+                        if (hasMap == 1) {
+                            vec4 texel = texture2D(mapTexture, vUv);
+                            if (channelIndex == 0) value = texel.r;
+                            else if (channelIndex == 1) value = texel.g;
+                            else if (channelIndex == 2) value = texel.b;
+                            else value = texel.a;
+                        }
+                        gl_FragColor = vec4(vec3(value), 1.0);
+                    }
+                `,
+                side: material?.side ?? THREE.FrontSide,
+                toneMapped: false
+            });
+            preview.name = material?.name ? `${material.name} ${label}` : `${label} Preview`;
+            return preview;
+        });
+    }
+
+    createPlaceholder() {
+        const group = new THREE.Group();
+        const sphere = new THREE.Mesh(
+            new THREE.IcosahedronGeometry(0.72, 2),
+            this.placeholderMaterial
+        );
+        const wire = new THREE.LineSegments(
+            new THREE.WireframeGeometry(sphere.geometry),
+            new THREE.LineBasicMaterial({
+                color: 0x64748b,
+                transparent: true,
+                opacity: 0.3
+            })
+        );
+        wire.renderOrder = 2;
+        sphere.add(wire);
+        group.add(sphere);
+        return group;
+    }
+
+    async loadEnvironment() {
+        const preset = environmentPresetFor(this.state.environment);
+        const url = this.state.environmentUrl || preset.url || ENVIRONMENT_URLS[this.state.environment] || '';
+        if (!url) {
+            this.disposeEnvironmentResources();
+            this.environmentUrl = '';
+            this.applyEnvironmentPresentation();
+            return;
         }
-
-        finalize();
-        return true;
+        if (this.environmentUrl === url && this.environmentSourceTexture) {
+            this.rebuildEnvironmentTexture();
+            this.applyEnvironmentPresentation();
+            return;
+        }
+        try {
+            const loader = extensionFromPath(url) === 'exr' ? this.exrLoader : this.rgbeLoader;
+            const texture = await new Promise((resolve, reject) => {
+                loader.load(url, resolve, undefined, reject);
+            });
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+            texture.userData.url = url;
+            this.disposeEnvironmentResources();
+            this.environmentSourceTexture = texture;
+            this.environmentUrl = url;
+            this.rebuildEnvironmentTexture();
+            this.applyEnvironmentPresentation();
+        } catch (error) {
+            this.scene.environment = null;
+            this.scene.background = null;
+            console.warn('Environment load failed:', error);
+        }
     }
 
-    emitCameraChange(source = 'api') {
-        this.emitEvent('viewer-camera-change', {
-            source,
-            camera: this.getCameraStateSnapshot(),
-        });
+    disposeEnvironmentResources() {
+        if (this.environmentRenderTarget) {
+            this.environmentRenderTarget.dispose();
+            this.environmentRenderTarget = null;
+        }
+        if (
+            this.environmentTexture
+            && this.environmentTexture !== this.environmentSourceTexture
+            && this.environmentTexture.userData?.smvRotatedEnvironment
+        ) {
+            this.environmentTexture.dispose();
+        }
+        this.environmentTexture = null;
+        if (this.environmentSourceTexture) {
+            this.environmentSourceTexture.dispose();
+            this.environmentSourceTexture = null;
+        }
+        this.environmentRotationKey = '';
     }
 
-    emitSelectionChange(source = 'api') {
-        const selection = this.selectedMeshPart ? {
-            index: this.selectedMeshPartIndex,
-            name: this.selectedMeshPart.name || null,
-            uuid: this.selectedMeshPart.uuid,
-            materialIndex: this.selectedMaterialIndex,
-            materialCount: getMaterialCount(this.selectedMeshPart),
-            isMultiMaterial: getMaterialCount(this.selectedMeshPart) > 1,
-            visible: this.isObjectEffectivelyVisible(this.selectedMeshPart),
-        } : null;
-
-        this.emitEvent('viewer-selection-change', {
-            source,
-            selectionMode: this.state.selectionMode,
-            selection,
-        });
+    environmentRotationRadians() {
+        const preset = environmentPresetFor(this.state.environment);
+        return Number(this.state.environmentRotation || 0) + Number(preset.rotation || 0);
     }
 
-    emitAnimationChange(source = 'api', action = 'update') {
-        this.emitEvent('viewer-animation-change', {
-            source,
-            action,
-            animation: this.getAnimationStateSnapshot(),
-        });
-    }
-
-    emitEnvironmentChange(source = 'api', action = 'update') {
-        this.emitEvent('viewer-environment-change', {
-            source,
-            action,
-            environment: {
-                preset: this.state.environment === CUSTOM_ENVIRONMENT_ID ? null : this.state.environment,
-                url: this.state.environmentUrl,
-                intensity: this.state.environmentIntensity,
-                rotation: this.state.environmentRotation,
-                backgroundVisible: this.state.environmentBackgroundVisible,
-                backgroundColor: this.state.backgroundColor,
-                exposure: this.state.exposure,
-            },
-        });
-    }
-
-    getEffectiveEnvironmentIntensity(materialIntensity = 1) {
-        return (materialIntensity ?? 1) * this.state.environmentIntensity;
+    rebuildEnvironmentTexture() {
+        if (!this.environmentSourceTexture) return;
+        const rotation = this.environmentRotationRadians();
+        const width = this.environmentSourceTexture.image?.width || 0;
+        const rotationKey = `${this.environmentUrl}:${environmentRotationShift(rotation, width)}`;
+        if (rotationKey === this.environmentRotationKey && this.environmentTexture && this.environmentRenderTarget) return;
+        if (this.environmentRenderTarget) {
+            this.environmentRenderTarget.dispose();
+            this.environmentRenderTarget = null;
+        }
+        if (
+            this.environmentTexture
+            && this.environmentTexture !== this.environmentSourceTexture
+            && this.environmentTexture.userData?.smvRotatedEnvironment
+        ) {
+            this.environmentTexture.dispose();
+        }
+        this.environmentTexture = createRotatedEnvironmentTexture(this.environmentSourceTexture, rotation);
+        this.environmentRenderTarget = this.pmremGenerator.fromEquirectangular(this.environmentTexture);
+        this.environmentRotationKey = rotationKey;
     }
 
     applyEnvironmentPresentation() {
-        const texture = this.currentEnvironmentTexture || null;
+        if (!this.scene) return;
+        const preset = environmentPresetFor(this.state?.environment);
+        const texture = this.environmentRenderTarget?.texture || null;
         this.scene.environment = texture;
-        this.scene.background = texture && this.state.environmentBackgroundVisible ? texture : null;
-
-        if ('environmentIntensity' in this.scene) {
-            this.scene.environmentIntensity = this.state.environmentIntensity;
+        this.scene.background = this.state.environmentBackground && this.environmentTexture ? this.environmentTexture : null;
+        if (this.scene.environmentIntensity !== undefined) {
+            this.scene.environmentIntensity = this.state.environmentIntensity || preset.environmentIntensity || 1;
         }
-
-        if ('backgroundIntensity' in this.scene) {
-            this.scene.backgroundIntensity = this.state.environmentBackgroundVisible ? 1 : 0;
+        if (this.scene.backgroundIntensity !== undefined) {
+            this.scene.backgroundIntensity = preset.backgroundIntensity || 1;
         }
-
-        const rotationRadians = THREE.MathUtils.degToRad(this.state.environmentRotation);
-        if (this.scene.environmentRotation?.set) {
-            this.scene.environmentRotation.set(0, rotationRadians, 0);
+        if (this.scene.backgroundBlurriness !== undefined) {
+            this.scene.backgroundBlurriness = preset.backgroundBlurriness || 0;
         }
-        if (this.scene.backgroundRotation?.set) {
-            this.scene.backgroundRotation.set(0, rotationRadians, 0);
+        this.applyEnvironmentIntensity();
+        this.syncToolbar();
+    }
+
+    async loadEnvironmentPreviewTexture(presetId) {
+        const preset = environmentPresetFor(presetId);
+        if (this.environmentUrl === preset.url && this.environmentSourceTexture) {
+            return this.environmentSourceTexture;
+        }
+        if (this.environmentPreviewTextures.has(preset.id)) {
+            return this.environmentPreviewTextures.get(preset.id);
+        }
+        if (!this.environmentPreviewPromises.has(preset.id)) {
+            const loader = extensionFromPath(preset.url) === 'exr' ? this.exrLoader : this.rgbeLoader;
+            this.environmentPreviewPromises.set(
+                preset.id,
+                new Promise((resolve, reject) => {
+                    loader.load(preset.url, resolve, undefined, reject);
+                }).then((texture) => {
+                    texture.mapping = THREE.EquirectangularReflectionMapping;
+                    this.environmentPreviewTextures.set(preset.id, texture);
+                    return texture;
+                })
+            );
+        }
+        return this.environmentPreviewPromises.get(preset.id);
+    }
+
+    renderEnvironmentPreview(canvas, presetId, degrees = this.environmentRotationDegrees()) {
+        if (!canvas) return;
+        const preset = environmentPresetFor(presetId);
+        const token = `${preset.id}:${Math.round(degrees)}`;
+        if (canvas.dataset.envPreviewToken === token) return;
+        canvas.dataset.envPreviewToken = token;
+        this.loadEnvironmentPreviewTexture(preset.id)
+            .then((texture) => {
+                if (canvas.dataset.envPreviewToken !== token) return;
+                drawEnvironmentPreviewCanvas(canvas, texture, preset, degrees);
+            })
+            .catch((error) => {
+                console.warn('HDR environment preview failed:', error);
+            });
+    }
+
+    applyEnvironmentIntensity() {
+        if (!this.model) return;
+        this.model.traverse((node) => {
+            if (!node.isMesh) return;
+            const original = node.userData.smvOriginalMaterial || node.material;
+            materialArray(original).forEach((material) => {
+                if ('envMapIntensity' in material) {
+                    material.envMapIntensity = this.state.environmentIntensity;
+                    material.needsUpdate = true;
+                }
+            });
+        });
+    }
+
+    async handleFileSelection(fileList) {
+        const files = Array.from(fileList || []);
+        if (!files.length) return;
+        const bundle = this.createFileBundle(files);
+        if (!bundle.mainEntries.length) {
+            this.pendingBundle = null;
+            this.pendingMainEntry = null;
+            this.entriesEl.hidden = true;
+            this.preflightEl.hidden = true;
+            this.showStatus('No supported mesh file found.', 'error');
+            return;
+        }
+        this.pendingBundle = bundle;
+        this.pendingMainEntry = bundle.mainEntries[0];
+        this.renderEntries(bundle);
+        await this.renderPreflight();
+        this.setPanelOpen(true);
+        this.showStatus(`${bundle.mainEntries.length} mesh ${bundle.mainEntries.length === 1 ? 'entry' : 'entries'} ready.`, 'ready');
+    }
+
+    mergePendingFiles(fileList) {
+        const files = Array.from(fileList || []);
+        if (!files.length) return;
+        const nextEntries = this.pendingBundle ? [...this.pendingBundle.entries] : [];
+        const byPath = new Map(nextEntries.map((entry) => [entry.path.toLowerCase(), entry]));
+        files.forEach((file) => {
+            const entry = this.createBundleEntry(file);
+            byPath.set(entry.path.toLowerCase(), entry);
+        });
+        const bundle = this.createFileBundle([...byPath.values()].map((entry) => entry.file));
+        bundle.entries = [...byPath.values()].sort((a, b) => a.path.localeCompare(b.path));
+        bundle.mainEntries = bundle.entries.filter((entry) => SUPPORTED_MODEL_EXTENSIONS.has(entry.extension));
+        bundle.bytes = bundle.entries.reduce((sum, entry) => sum + entry.file.size, 0);
+        this.pendingBundle = bundle;
+        if (!this.pendingMainEntry || !bundle.entries.includes(this.pendingMainEntry)) {
+            this.pendingMainEntry = bundle.mainEntries[0] || null;
+        }
+        this.renderEntries(bundle);
+        void this.renderPreflight();
+    }
+
+    createBundleEntry(file) {
+        const path = filePathFor(file);
+        return {
+            file,
+            path,
+            name: basename(path),
+            extension: extensionFromPath(path),
+            size: Number(file.size) || 0
+        };
+    }
+
+    createFileBundle(files) {
+        const entries = files.map((file) => this.createBundleEntry(file))
+            .filter((entry) => SUPPORTED_MODEL_EXTENSIONS.has(entry.extension) || COMPANION_EXTENSIONS.has(entry.extension))
+            .sort((a, b) => a.path.localeCompare(b.path));
+        return {
+            entries,
+            mainEntries: entries.filter((entry) => SUPPORTED_MODEL_EXTENSIONS.has(entry.extension)),
+            bytes: entries.reduce((sum, entry) => sum + entry.size, 0)
+        };
+    }
+
+    renderEntries(bundle) {
+        const entries = bundle.mainEntries || [];
+        this.entriesEl.hidden = entries.length <= 1;
+        this.entriesEl.innerHTML = entries.map((entry) => {
+            const active = entry === this.pendingMainEntry ? ' active' : '';
+            return `
+                <button class="entry-button${active}" type="button" data-path="${escapeHtml(entry.path)}">
+                    <strong>${escapeHtml(entry.name)}</strong>
+                    <span>${escapeHtml(entry.extension.toUpperCase())} ${formatBytes(entry.size)}</span>
+                </button>
+            `;
+        }).join('');
+        this.entriesEl.querySelectorAll('.entry-button').forEach((button) => {
+            button.addEventListener('click', () => {
+                const path = button.dataset.path;
+                this.pendingMainEntry = entries.find((entry) => entry.path === path) || entries[0];
+                this.renderEntries(bundle);
+                void this.renderPreflight();
+            });
+        });
+    }
+
+    async renderPreflight() {
+        if (!this.pendingBundle || !this.pendingMainEntry) {
+            this.preflightEl.hidden = true;
+            return;
+        }
+        const entry = this.pendingMainEntry;
+        const references = await this.inspectReferences(this.pendingBundle, entry);
+        const presentCount = references.filter((reference) => reference.present).length;
+        const missingCount = references.filter((reference) => !reference.present).length;
+        this.preflightFactsEl.innerHTML = `
+            <div><dt>Format</dt><dd>${escapeHtml(entry.extension.toUpperCase())}</dd></div>
+            <div><dt>Mesh</dt><dd>${escapeHtml(entry.name)}</dd></div>
+            <div><dt>Bundle</dt><dd>${formatBytes(this.pendingBundle.bytes)}</dd></div>
+            <div><dt>Files</dt><dd>${this.pendingBundle.entries.length}</dd></div>
+        `;
+        if (references.length) {
+            const state = missingCount ? `${missingCount} missing, ${presentCount} linked` : `${presentCount} linked`;
+            this.preflightResourcesEl.textContent = `References: ${state}`;
+            this.preflightResourcesEl.dataset.state = missingCount ? 'warning' : 'ready';
+        } else {
+            this.preflightResourcesEl.textContent = 'References: none detected';
+            this.preflightResourcesEl.dataset.state = 'ready';
+        }
+        this.preflightEl.hidden = false;
+    }
+
+    async inspectReferences(bundle, mainEntry) {
+        const lowerPaths = new Set(bundle.entries.map((entry) => entry.path.toLowerCase()));
+        const lowerNames = new Set(bundle.entries.map((entry) => entry.name.toLowerCase()));
+        const resolvePresent = (reference) => {
+            const clean = normalizePath(reference);
+            return lowerPaths.has(joinPath(dirname(mainEntry.path), clean).toLowerCase())
+                || lowerPaths.has(clean.toLowerCase())
+                || lowerNames.has(basename(clean).toLowerCase());
+        };
+        try {
+            if (mainEntry.extension === 'gltf') {
+                const json = JSON.parse(await mainEntry.file.text());
+                const refs = [];
+                (json.buffers || []).forEach((buffer) => {
+                    if (buffer.uri && !isExternalUrl(buffer.uri)) refs.push(buffer.uri);
+                });
+                (json.images || []).forEach((image) => {
+                    if (image.uri && !isExternalUrl(image.uri)) refs.push(image.uri);
+                });
+                return refs.map((reference) => ({ reference, present: resolvePresent(reference) }));
+            }
+            if (mainEntry.extension === 'obj') {
+                const text = await mainEntry.file.text();
+                const refs = [];
+                text.split(/\r?\n/).forEach((line) => {
+                    const trimmed = line.trim();
+                    if (/^mtllib\s+/i.test(trimmed)) {
+                        refs.push(trimmed.replace(/^mtllib\s+/i, '').trim());
+                    }
+                });
+                const mtlEntries = refs
+                    .map((reference) => this.findEntryForReference(bundle, dirname(mainEntry.path), reference))
+                    .filter(Boolean);
+                for (const mtlEntry of mtlEntries) {
+                    const mtlText = await mtlEntry.file.text();
+                    mtlText.split(/\r?\n/).forEach((line) => {
+                        const trimmed = line.trim();
+                        if (/^map_/i.test(trimmed) || /^bump\s+/i.test(trimmed) || /^disp\s+/i.test(trimmed) || /^decal\s+/i.test(trimmed)) {
+                            const parts = trimmed.split(/\s+/);
+                            const reference = parts[parts.length - 1];
+                            if (reference && !reference.startsWith('-')) refs.push(joinPath(dirname(mtlEntry.path), reference));
+                        }
+                    });
+                }
+                return refs.map((reference) => ({ reference, present: resolvePresent(reference) }));
+            }
+        } catch (error) {
+            console.warn('Preflight inspection failed:', error);
+        }
+        return [];
+    }
+
+    findEntryForReference(bundle, baseDir, reference) {
+        const candidates = [
+            normalizePath(reference).toLowerCase(),
+            joinPath(baseDir, reference).toLowerCase(),
+            basename(reference).toLowerCase()
+        ];
+        return bundle.entries.find((entry) => {
+            const path = entry.path.toLowerCase();
+            const name = entry.name.toLowerCase();
+            return candidates.includes(path) || candidates.includes(name);
+        }) || null;
+    }
+
+    async loadBundle(bundle, mainEntry, options = {}) {
+        if (!bundle || !mainEntry) return;
+        const token = ++this.loadToken;
+        this.setLoading(true, 0, `Loading ${mainEntry.name}`);
+        try {
+            const resolver = this.createBundleResolver(bundle, mainEntry);
+            const scene = await this.parseSceneFromEntry(mainEntry, resolver);
+            if (token !== this.loadToken) {
+                this.disposeObject(scene);
+                return;
+            }
+            await this.setModel(scene, {
+                source: resolver.mainUrl,
+                fileName: mainEntry.name,
+                format: mainEntry.extension,
+                animations: scene.userData.smvAnimations || [],
+                keepObjectUrls: true
+            });
+            this.currentSource = null;
+            if (options.saveHistory !== false) {
+                void this.saveBundleToHistory(bundle, mainEntry);
+            }
+            this.setPanelOpen(false);
+            this.showStatus(`Loaded ${mainEntry.name}`, 'ready');
+        } catch (error) {
+            this.emitViewerError('load-file-bundle', error, { fileName: mainEntry.name });
+            this.showStatus(error.message || 'Mesh load failed.', 'error');
+        } finally {
+            if (token === this.loadToken) this.setLoading(false);
         }
     }
 
-    applyEnvironmentMaterialSettings() {
-        if (!this.model) {
-            return;
-        }
+    createBundleResolver(bundle, mainEntry) {
+        this.revokeObjectUrls();
+        const urlByPath = new Map();
+        const urlByName = new Map();
+        bundle.entries.forEach((entry) => {
+            const url = URL.createObjectURL(entry.file);
+            this.objectUrls.add(url);
+            urlByPath.set(entry.path.toLowerCase(), url);
+            if (!urlByName.has(entry.name.toLowerCase())) {
+                urlByName.set(entry.name.toLowerCase(), url);
+            }
+        });
+        const baseDir = dirname(mainEntry.path);
+        const manager = new THREE.LoadingManager();
+        manager.setURLModifier((url) => {
+            if (isExternalUrl(url)) return url;
+            const clean = normalizePath(decodeURIComponent(pathWithoutSearch(url)));
+            const candidates = [
+                clean.toLowerCase(),
+                joinPath(baseDir, clean).toLowerCase(),
+                basename(clean).toLowerCase()
+            ];
+            for (const candidate of candidates) {
+                if (urlByPath.has(candidate)) return urlByPath.get(candidate);
+                if (urlByName.has(candidate)) return urlByName.get(candidate);
+            }
+            return url;
+        });
+        return {
+            bundle,
+            manager,
+            baseDir,
+            baseUrl: baseDir ? `${baseDir}/` : '',
+            mainUrl: urlByPath.get(mainEntry.path.toLowerCase())
+        };
+    }
 
-        this.model.traverse((child) => {
-            if (!child.isMesh) {
+    async parseSceneFromEntry(entry, resolver) {
+        const format = entry.extension;
+        const buffer = await entry.file.arrayBuffer();
+        if (format === 'glb' || format === 'gltf') {
+            const loader = this.createGltfLoader(resolver.manager);
+            const gltf = await new Promise((resolve, reject) => {
+                loader.parse(buffer, resolver.baseUrl, resolve, reject);
+            });
+            gltf.scene.userData.smvAnimations = gltf.animations || [];
+            return gltf.scene;
+        }
+        if (format === 'obj') {
+            const text = new TextDecoder('utf-8').decode(buffer);
+            const loader = new OBJLoader(resolver.manager);
+            const mtlReference = this.extractMtlReference(text);
+            const mtlEntry = mtlReference
+                ? this.findEntryForReference(resolver.bundle, resolver.baseDir, mtlReference)
+                : null;
+            if (mtlEntry) {
+                const materials = new MTLLoader(resolver.manager).parse(await mtlEntry.file.text(), dirname(mtlEntry.path) ? `${dirname(mtlEntry.path)}/` : '');
+                materials.preload();
+                loader.setMaterials(materials);
+            }
+            return loader.parse(text);
+        }
+        if (format === 'fbx') {
+            const object = new FBXLoader(resolver.manager).parse(buffer, resolver.baseUrl);
+            object.userData.smvAnimations = object.animations || [];
+            return object;
+        }
+        if (format === 'ply') {
+            return this.geometryAsScene(new PLYLoader(resolver.manager).parse(buffer), entry.name);
+        }
+        if (format === 'stl') {
+            return this.geometryAsScene(new STLLoader(resolver.manager).parse(buffer), entry.name);
+        }
+        throw new Error(`Unsupported mesh format: ${format}`);
+    }
+
+    extractMtlReference(objText) {
+        const line = objText.split(/\r?\n/).find((entry) => /^mtllib\s+/i.test(entry.trim()));
+        return line ? line.trim().replace(/^mtllib\s+/i, '').trim() : '';
+    }
+
+    geometryAsScene(geometry, name = 'mesh') {
+        if (!geometry.attributes.normal) geometry.computeVertexNormals();
+        const material = new THREE.MeshStandardMaterial({
+            color: 0xd8d0c7,
+            roughness: 0.76,
+            metalness: 0.02,
+            vertexColors: geometry.hasAttribute('color')
+        });
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.name = name;
+        const group = new THREE.Group();
+        group.name = sanitizeFilenameSegment(name, 'mesh');
+        group.add(mesh);
+        return group;
+    }
+
+    async loadModelFromFile(file) {
+        const bundle = this.createFileBundle([file]);
+        const entry = bundle.mainEntries[0];
+        if (!entry) throw new Error('Unsupported model file');
+        await this.loadBundle(bundle, entry, { saveHistory: true });
+    }
+
+    async loadModelFromUrl(url, fileName = basename(pathWithoutSearch(url))) {
+        if (!url) return;
+        const token = ++this.loadToken;
+        this.setPanelOpen(false, { forceClose: true });
+        this.setLoading(true, 0, `Loading ${fileName || 'mesh'}`);
+        try {
+            this.revokeObjectUrls();
+            const format = extensionFromPath(fileName || url) || 'glb';
+            const scene = await this.loadSceneFromUrl(url, format);
+            if (token !== this.loadToken) {
+                this.disposeObject(scene);
                 return;
             }
+            await this.setModel(scene, {
+                source: url,
+                fileName: fileName || basename(pathWithoutSearch(url)),
+                format,
+                animations: scene.userData.smvAnimations || [],
+                keepObjectUrls: false
+            });
+            this.currentSource = url;
+            this.setPanelOpen(false, { forceClose: true });
+            this.showStatus(`Loaded ${fileName || 'model'}`, 'ready');
+        } catch (error) {
+            this.emitViewerError('load-url', error, { source: url });
+            this.showStatus(error.message || 'Mesh load failed.', 'error');
+            if (!this.model) this.setEmptyState(true);
+        } finally {
+            if (token === this.loadToken) this.setLoading(false);
+        }
+    }
 
-            const storedMaterialEntry = this.getMaterialStoreEntry(child, this.originalMaterials);
-            const liveMaterials = getMaterialArray(child.material);
-            const storedMaterials = getMaterialArray(storedMaterialEntry);
+    async loadSceneFromUrl(url, format) {
+        if (format === 'glb' || format === 'gltf') {
+            const loader = this.createGltfLoader();
+            const gltf = await this.loaderLoad(loader, url);
+            gltf.scene.userData.smvAnimations = gltf.animations || [];
+            return gltf.scene;
+        }
+        if (format === 'obj') {
+            return this.loadRemoteObj(url);
+        }
+        if (format === 'fbx') {
+            const object = await this.loaderLoad(new FBXLoader(), url);
+            object.userData.smvAnimations = object.animations || [];
+            return object;
+        }
+        if (format === 'ply') {
+            const geometry = await this.loaderLoad(new PLYLoader(), url);
+            return this.geometryAsScene(geometry, basename(pathWithoutSearch(url)));
+        }
+        if (format === 'stl') {
+            const geometry = await this.loaderLoad(new STLLoader(), url);
+            return this.geometryAsScene(geometry, basename(pathWithoutSearch(url)));
+        }
+        throw new Error(`Unsupported mesh format: ${format}`);
+    }
 
-            liveMaterials.forEach((material, index) => {
-                const storedMaterial = storedMaterials[index] || storedMaterials[0] || null;
-                if (!material || !storedMaterial || !('envMapIntensity' in material)) {
-                    return;
-                }
+    createGltfLoader(manager = undefined) {
+        const loader = new GLTFLoader(manager);
+        const dracoLoader = new DRACOLoader(manager);
+        dracoLoader.setDecoderPath('/vendor/three/examples/jsm/libs/draco/gltf/');
+        loader.setDRACOLoader(dracoLoader);
+        return loader;
+    }
 
-                material.envMapIntensity = this.getEffectiveEnvironmentIntensity(storedMaterial.envMapIntensity ?? 1);
+    loaderLoad(loader, url) {
+        return new Promise((resolve, reject) => {
+            loader.load(
+                url,
+                resolve,
+                (event) => {
+                    if (event.lengthComputable && event.total) {
+                        this.setLoading(true, event.loaded / event.total, 'Loading mesh');
+                    }
+                },
+                reject
+            );
+        });
+    }
+
+    async loadRemoteObj(url) {
+        const objText = await this.fetchText(url);
+        const loader = new OBJLoader();
+        const mtlReference = this.extractMtlReference(objText);
+        if (mtlReference) {
+            try {
+                const mtlUrl = new URL(mtlReference, url).href;
+                const mtlText = await this.fetchText(mtlUrl);
+                const materials = new MTLLoader().parse(mtlText, new URL('.', mtlUrl).href);
+                materials.preload();
+                loader.setMaterials(materials);
+            } catch (error) {
+                console.warn('MTL load failed:', error);
+            }
+        }
+        return loader.parse(objText);
+    }
+
+    async fetchText(url) {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+        return response.text();
+    }
+
+    async setModel(scene, options = {}) {
+        this.clearModel({ keepObjectUrls: options.keepObjectUrls === true });
+        this.model = scene;
+        this.currentFileName = options.fileName || 'model';
+        this.animations = options.animations || [];
+        this.prepareModel(scene);
+        this.scene.add(scene);
+        this.placeholder.visible = false;
+        this.setEmptyState(false);
+        this.applyEnvironmentIntensity();
+        this.applyViewMode();
+        this.setWireframeEnabled(this.state.wireframe, { rebuild: true });
+        this.syncSectionClip();
+        this.fitCameraToModel({ animate: false, useInitialOrbit: true });
+        this.setupAnimations();
+        this.updateStats();
+        this.texturePanelOpen = false;
+        this.updateTextureMaps();
+        this.emitEvent('viewer-load', {
+            source: options.source || null,
+            fileName: this.currentFileName,
+            format: options.format || extensionFromPath(this.currentFileName),
+            meshCount: this.meshParts.length,
+            ...this.getStats()
+        });
+    }
+
+    prepareModel(model) {
+        this.meshParts = [];
+        model.traverse((node) => {
+            if (!node.isMesh || !node.geometry) return;
+            if (!node.geometry.attributes.normal) node.geometry.computeVertexNormals();
+            if (node.geometry.attributes.uv && !node.geometry.attributes.uv2) {
+                node.geometry.setAttribute('uv2', node.geometry.attributes.uv);
+            }
+            node.castShadow = true;
+            node.receiveShadow = true;
+            node.userData.smvOriginalMaterial = node.material;
+            materialArray(node.material).forEach((material) => this.prepareMaterial(material));
+            node.userData.smvAlbedoMaterial = this.createAlbedoMaterialEntry(node.material);
+            node.userData.smvRoughnessMaterial = this.createScalarPreviewMaterialEntry(node.material, 'roughnessMap', 'roughness', 1, 'Roughness');
+            node.userData.smvMetalnessMaterial = this.createScalarPreviewMaterialEntry(node.material, 'metalnessMap', 'metalness', 2, 'Metalness');
+            this.meshParts.push(node);
+        });
+    }
+
+    prepareMaterial(material) {
+        if (!material) return;
+        const maxAnisotropy = Math.min(
+            this.renderer?.capabilities?.getMaxAnisotropy?.() || 1,
+            MAX_TEXTURE_ANISOTROPY_CAP
+        );
+        setTextureColorSpace(material.map, true);
+        setTextureColorSpace(material.emissiveMap, true);
+        ['roughnessMap', 'metalnessMap', 'normalMap', 'aoMap', 'alphaMap', 'bumpMap', 'displacementMap'].forEach((key) => {
+            setTextureColorSpace(material[key], false);
+            setTextureSampling(material[key], maxAnisotropy);
+        });
+        setTextureSampling(material.map, maxAnisotropy);
+        setTextureSampling(material.emissiveMap, maxAnisotropy);
+        if ('envMapIntensity' in material) material.envMapIntensity = this.state.environmentIntensity;
+        applyPbrDisplayLook(material);
+        material.needsUpdate = true;
+    }
+
+    setupAnimations() {
+        if (this.mixer) {
+            this.mixer.stopAllAction();
+            this.mixer = null;
+            this.currentAction = null;
+        }
+        const playButton = this.shadowRoot.querySelector('#playBtn');
+        playButton.disabled = !this.animations.length;
+        if (!this.model || !this.animations.length) {
+            playButton.innerHTML = ICONS.play;
+            return;
+        }
+        this.mixer = new THREE.AnimationMixer(this.model);
+        const requested = this.getAttribute('animation');
+        const clip = this.resolveAnimationClip(requested) || this.animations[0];
+        this.currentAction = this.mixer.clipAction(clip);
+        this.configureAnimationAction(this.currentAction);
+        if (this.isAnimationPlaying) this.currentAction.play();
+        playButton.innerHTML = this.isAnimationPlaying ? ICONS.pause : ICONS.play;
+    }
+
+    resolveAnimationClip(selection) {
+        if (!selection || !this.animations.length) return null;
+        if (/^\d+$/.test(selection)) return this.animations[Number(selection)] || null;
+        const normalized = selection.toLowerCase();
+        return this.animations.find((clip) => clip.name === selection || clip.name.toLowerCase() === normalized) || null;
+    }
+
+    configureAnimationAction(action) {
+        if (!action) return;
+        action.setEffectiveTimeScale(this.state.animationSpeed);
+        if (this.state.animationLoop === 'once') {
+            action.setLoop(THREE.LoopOnce, 1);
+            action.clampWhenFinished = true;
+        } else if (this.state.animationLoop === 'ping-pong') {
+            action.setLoop(THREE.LoopPingPong, Infinity);
+        } else {
+            action.setLoop(THREE.LoopRepeat, Infinity);
+        }
+    }
+
+    setAnimationPlaying(enabled) {
+        this.isAnimationPlaying = enabled === true;
+        if (this.currentAction) {
+            this.currentAction.paused = !this.isAnimationPlaying;
+            if (this.isAnimationPlaying && !this.currentAction.isRunning()) this.currentAction.play();
+        }
+        this.shadowRoot.querySelector('#playBtn').innerHTML = this.isAnimationPlaying ? ICONS.pause : ICONS.play;
+        this.emitEvent('viewer-animation-change', {
+            playing: this.isAnimationPlaying,
+            animation: this.currentAction?._clip?.name || null
+        });
+    }
+
+    clearModel(options = {}) {
+        this.selectionHelper.visible = false;
+        this.selectedMesh = null;
+        if (this.mixer) {
+            this.mixer.stopAllAction();
+            this.mixer = null;
+            this.currentAction = null;
+        }
+        if (this.model) {
+            this.clearWireframeOverlay();
+            this.scene.remove(this.model);
+            this.disposeObject(this.model);
+            this.model = null;
+        }
+        this.meshParts = [];
+        this.animations = [];
+        this.updateStats();
+        this.updateTextureMaps();
+        if (!options.keepObjectUrls) this.revokeObjectUrls();
+        this.placeholder.visible = true;
+        this.setEmptyState(true);
+    }
+
+    discardModel() {
+        this.loadToken += 1;
+        this.clearModel();
+        this.currentSource = null;
+        this.currentFileName = '';
+        this.showStatus('Model cleared.', 'info');
+    }
+
+    disposeObject(object) {
+        const geometries = new Set();
+        const materials = new Set();
+        const textures = new Set();
+        object.traverse((node) => {
+            if (node.geometry && !node.userData.smvWireframeOverlay) geometries.add(node.geometry);
+            [
+                node.material,
+                node.userData?.smvOriginalMaterial,
+                node.userData?.smvAlbedoMaterial,
+                node.userData?.smvRoughnessMaterial,
+                node.userData?.smvMetalnessMaterial
+            ].forEach((entry) => {
+                materialArray(entry).forEach((material) => {
+                    if (
+                        material
+                        && material !== this.geometryMaterial
+                        && material !== this.normalMaterial
+                        && material !== this.wireframeMaterial
+                    ) {
+                        materials.add(material);
+                    }
+                });
+            });
+        });
+        geometries.forEach((geometry) => geometry.dispose());
+        materials.forEach((material) => {
+            Object.keys(material).forEach((key) => {
+                const value = material[key];
+                if (value?.isTexture) textures.add(value);
+            });
+            material.dispose();
+        });
+        textures.forEach((texture) => texture.dispose());
+    }
+
+    revokeObjectUrls() {
+        this.objectUrls.forEach((url) => URL.revokeObjectURL(url));
+        this.objectUrls.clear();
+    }
+
+    setModeMenuOpen(open) {
+        this.modeMenu.hidden = !open;
+        this.modeToggleBtn.setAttribute('aria-expanded', String(open));
+    }
+
+    setViewMode(mode) {
+        this.state.viewMode = normalizeViewMode(mode);
+        this.setAttribute('view-mode', this.state.viewMode);
+        this.applyViewMode();
+        this.syncToolbar();
+    }
+
+    setFinalViewMode(mode) {
+        this.setViewMode(mode);
+    }
+
+    renderMode() {
+        this.applyViewMode();
+    }
+
+    applyViewMode() {
+        if (!this.model) {
+            this.syncToolbar();
+            return;
+        }
+        this.model.traverse((node) => {
+            if (!node.isMesh || node.userData.smvWireframeOverlay) return;
+            if (this.state.viewMode === 'normal') {
+                node.material = this.normalMaterial;
+            } else if (this.state.viewMode === 'geometry') {
+                node.material = this.geometryMaterial;
+            } else if (this.state.viewMode === 'albedo') {
+                node.material = node.userData.smvAlbedoMaterial || node.userData.smvOriginalMaterial || node.material;
+            } else if (this.state.viewMode === 'roughness') {
+                node.material = node.userData.smvRoughnessMaterial || node.userData.smvOriginalMaterial || node.material;
+            } else if (this.state.viewMode === 'metalness') {
+                node.material = node.userData.smvMetalnessMaterial || node.userData.smvOriginalMaterial || node.material;
+            } else {
+                node.material = node.userData.smvOriginalMaterial || node.material;
+            }
+        });
+        this.syncSectionClip();
+        this.syncToolbar();
+    }
+
+    setWireframeEnabled(enabled, options = {}) {
+        this.state.wireframe = enabled === true;
+        if (!this.model) {
+            this.syncToolbar();
+            return;
+        }
+        if (this.state.wireframe) {
+            if (options.rebuild) this.clearWireframeOverlay();
+            this.rebuildWireframeOverlay();
+        } else {
+            this.setWireframeOverlayVisible(false);
+        }
+        this.syncToolbar();
+    }
+
+    showWireframe() {
+        this.setWireframeEnabled(!this.state.wireframe);
+    }
+
+    rebuildWireframeOverlay() {
+        if (!this.model) return;
+        this.clearWireframeOverlay();
+        this.meshParts.forEach((mesh) => {
+            const geometry = this.state.wireframeMode === 'tri'
+                ? this.createTriangleWireframeGeometry(mesh.geometry)
+                : this.createQuadAwareWireframeGeometry(mesh.geometry);
+            if (!geometry.attributes.position || geometry.attributes.position.count === 0) {
+                geometry.dispose();
+                return;
+            }
+            const wire = new THREE.LineSegments(geometry, this.wireframeMaterial);
+            wire.renderOrder = 20;
+            wire.frustumCulled = false;
+            wire.userData.smvWireframeOverlay = true;
+            mesh.add(wire);
+        });
+        this.syncSectionClip();
+    }
+
+    clearWireframeOverlay() {
+        if (!this.model) return;
+        const overlays = [];
+        this.model.traverse((node) => {
+            if (node.userData.smvWireframeOverlay) overlays.push(node);
+        });
+        overlays.forEach((overlay) => {
+            overlay.parent?.remove(overlay);
+            overlay.geometry?.dispose();
+        });
+    }
+
+    setWireframeOverlayVisible(visible) {
+        if (!this.model) return 0;
+        let count = 0;
+        this.model.traverse((node) => {
+            if (!node.userData.smvWireframeOverlay) return;
+            node.visible = visible;
+            count += 1;
+        });
+        return count;
+    }
+
+    createTriangleWireframeGeometry(sourceGeometry) {
+        const position = sourceGeometry.attributes.position;
+        if (!position || position.count < 3) return new THREE.BufferGeometry();
+        const index = sourceGeometry.index?.array || null;
+        const indexCount = sourceGeometry.index ? sourceGeometry.index.count : position.count;
+        const linePositions = [];
+        const pushEdge = (a, b) => {
+            linePositions.push(
+                position.getX(a), position.getY(a), position.getZ(a),
+                position.getX(b), position.getY(b), position.getZ(b)
+            );
+        };
+        for (let cursor = 0; cursor + 2 < indexCount; cursor += 3) {
+            const a = index ? index[cursor] : cursor;
+            const b = index ? index[cursor + 1] : cursor + 1;
+            const c = index ? index[cursor + 2] : cursor + 2;
+            pushEdge(a, b);
+            pushEdge(b, c);
+            pushEdge(c, a);
+        }
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+        return geometry;
+    }
+
+    createQuadAwareWireframeGeometry(sourceGeometry) {
+        const position = sourceGeometry.attributes.position;
+        if (!position || position.count < 3) return new THREE.BufferGeometry();
+        const index = sourceGeometry.index?.array || null;
+        const indexCount = sourceGeometry.index ? sourceGeometry.index.count : position.count;
+        const edgeMap = new Map();
+        const va = new THREE.Vector3();
+        const vb = new THREE.Vector3();
+        const vc = new THREE.Vector3();
+        const normal = new THREE.Vector3();
+
+        const vertexKey = (vertexIndex) => [
+            Math.round(position.getX(vertexIndex) * 1000000),
+            Math.round(position.getY(vertexIndex) * 1000000),
+            Math.round(position.getZ(vertexIndex) * 1000000)
+        ].join(',');
+        const addEdge = (a, b, opposite, faceNormal) => {
+            const keyA = vertexKey(a);
+            const keyB = vertexKey(b);
+            const key = keyA < keyB ? `${keyA}|${keyB}` : `${keyB}|${keyA}`;
+            if (!edgeMap.has(key)) edgeMap.set(key, []);
+            edgeMap.get(key).push({ a, b, opposite, normal: faceNormal.clone() });
+        };
+
+        for (let cursor = 0; cursor + 2 < indexCount; cursor += 3) {
+            const a = index ? index[cursor] : cursor;
+            const b = index ? index[cursor + 1] : cursor + 1;
+            const c = index ? index[cursor + 2] : cursor + 2;
+            va.fromBufferAttribute(position, a);
+            vb.fromBufferAttribute(position, b);
+            vc.fromBufferAttribute(position, c);
+            normal.subVectors(vb, va).cross(vc.clone().sub(va));
+            if (normal.lengthSq() < 1e-20) continue;
+            normal.normalize();
+            addEdge(a, b, c, normal);
+            addEdge(b, c, a, normal);
+            addEdge(c, a, b, normal);
+        }
+
+        const linePositions = [];
+        const pushEdge = (a, b) => {
+            linePositions.push(
+                position.getX(a), position.getY(a), position.getZ(a),
+                position.getX(b), position.getY(b), position.getZ(b)
+            );
+        };
+        edgeMap.forEach((entries) => {
+            if (entries.length !== 2 || !this.shouldSuppressQuadDiagonal(position, entries[0], entries[1])) {
+                pushEdge(entries[0].a, entries[0].b);
+            }
+        });
+
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+        return geometry;
+    }
+
+    shouldSuppressQuadDiagonal(position, first, second) {
+        if (first.normal.dot(second.normal) < QUAD_EDGE_NORMAL_DOT) return false;
+        const a = new THREE.Vector3().fromBufferAttribute(position, first.a);
+        const b = new THREE.Vector3().fromBufferAttribute(position, first.b);
+        const c = new THREE.Vector3().fromBufferAttribute(position, first.opposite);
+        const d = new THREE.Vector3().fromBufferAttribute(position, second.opposite);
+        const ab = b.clone().sub(a);
+        const ac = c.clone().sub(a);
+        const ad = d.clone().sub(a);
+        const sideC = ab.clone().cross(ac).dot(first.normal);
+        const sideD = ab.clone().cross(ad).dot(first.normal);
+        if (Math.abs(sideC) < 1e-10 || Math.abs(sideD) < 1e-10 || sideC * sideD >= 0) return false;
+
+        const sharedLength = a.distanceTo(b);
+        const perimeterLengths = [
+            a.distanceTo(c),
+            c.distanceTo(b),
+            b.distanceTo(d),
+            d.distanceTo(a)
+        ];
+        const longestPerimeter = Math.max(...perimeterLengths);
+        return sharedLength >= longestPerimeter * QUAD_EDGE_LENGTH_RATIO;
+    }
+
+    syncSectionUi() {
+        const sectionButton = this.shadowRoot.querySelector('#sectionBtn');
+        const sectionSlider = this.shadowRoot.querySelector('#sectionSlider');
+        const sectionAxis = this.shadowRoot.querySelector('#sectionAxis');
+        const sectionValue = this.shadowRoot.querySelector('#sectionValue');
+        sectionButton.setAttribute('aria-pressed', String(this.state.section.enabled));
+        this.sectionControls.hidden = !this.state.section.enabled;
+        sectionSlider.value = String(Math.round(this.state.section.value * 100));
+        sectionAxis.value = this.state.section.axis;
+        sectionValue.textContent = `${Math.round(this.state.section.value * 100)}%`;
+    }
+
+    syncSectionClip() {
+        const enabled = this.state.section.enabled && Boolean(this.model);
+        this.renderer.localClippingEnabled = enabled;
+        if (!this.model) return;
+        const axis = this.state.section.axis;
+        const normal = {
+            x: new THREE.Vector3(1, 0, 0),
+            y: new THREE.Vector3(0, 1, 0),
+            z: new THREE.Vector3(0, 0, 1)
+        }[axis] || new THREE.Vector3(1, 0, 0);
+        if (this.state.section.flipped) normal.multiplyScalar(-1);
+        const min = this.modelBounds.min[axis];
+        const max = this.modelBounds.max[axis];
+        const coordinate = THREE.MathUtils.lerp(min, max, (this.state.section.value + 1) / 2);
+        this.sectionPlane.normal.copy(normal);
+        this.sectionPlane.constant = this.state.section.flipped ? coordinate : -coordinate;
+        this.model.traverse((node) => {
+            if (!node.isMesh && !node.isLine) return;
+            materialArray(node.material).forEach((material) => {
+                material.clippingPlanes = enabled ? [this.sectionPlane] : null;
                 material.needsUpdate = true;
             });
         });
     }
 
-    updateEnvironmentControls() {
-        const environmentUrlInput = this.shadowRoot.querySelector('#environmentUrlInput');
-        const environmentIntensityInput = this.shadowRoot.querySelector('#environmentIntensityInput');
-        const environmentIntensityValue = this.shadowRoot.querySelector('#environmentIntensityValue');
-        const exposureInput = this.shadowRoot.querySelector('#exposureInput');
-        const exposureValue = this.shadowRoot.querySelector('#exposureValue');
-        const environmentRotationInput = this.shadowRoot.querySelector('#environmentRotationInput');
-        const environmentRotationValue = this.shadowRoot.querySelector('#environmentRotationValue');
-        const environmentBackgroundToggle = this.shadowRoot.querySelector('#environmentBackgroundToggle');
-        const performanceModeSelect = this.shadowRoot.querySelector('#performanceModeSelect');
-        const clearEnvBtn = this.shadowRoot.querySelector('#clearEnvBtn');
-
-        if (environmentUrlInput) {
-            environmentUrlInput.value = this.state.environmentUrl || '';
-        }
-        if (environmentIntensityInput) {
-            environmentIntensityInput.value = `${this.state.environmentIntensity}`;
-        }
-        if (environmentIntensityValue) {
-            environmentIntensityValue.textContent = `${this.state.environmentIntensity.toFixed(1)}x`;
-        }
-        if (exposureInput) {
-            exposureInput.value = `${this.state.exposure}`;
-        }
-        if (exposureValue) {
-            exposureValue.textContent = `${this.state.exposure.toFixed(1)}`;
-        }
-        if (environmentRotationInput) {
-            environmentRotationInput.value = `${this.state.environmentRotation}`;
-        }
-        if (environmentRotationValue) {
-            environmentRotationValue.textContent = `${Math.round(this.state.environmentRotation)}deg`;
-        }
-        if (environmentBackgroundToggle) {
-            environmentBackgroundToggle.checked = !!this.state.environmentBackgroundVisible;
-        }
-        if (performanceModeSelect) {
-            performanceModeSelect.value = this.state.performanceMode;
-        }
-        if (clearEnvBtn) {
-            clearEnvBtn.disabled = !this.currentEnvironmentTexture;
-        }
-    }
-
-    updateDiscardButtonVisibility() {
-        const discardButton = this.shadowRoot.querySelector('#discardModelBtn');
-        if (discardButton) {
-            discardButton.style.display = this.model ? 'inline-block' : 'none';
-        }
-    }
-
-    getMaterialStoreEntry(mesh, store = this.originalMaterials) {
-        return mesh ? store[mesh.uuid] || null : null;
-    }
-
-    getMaterialStoreMaterial(mesh, materialIndex = 0, store = this.originalMaterials) {
-        return getMaterialEntryAt(this.getMaterialStoreEntry(mesh, store), materialIndex);
-    }
-
-    getMaterialSlotCountForMesh(mesh) {
-        return getMaterialCount(mesh);
-    }
-
-    getTextureHistoryKey(mesh, materialIndex = 0) {
-        return mesh ? `${mesh.uuid}:${materialIndex}` : '';
-    }
-
-    getSceneGraphLabelForMesh(mesh) {
-        return mesh ? this.sceneGraphLabelByMeshUuid.get(mesh.uuid) || null : null;
-    }
-
-    setSelectedSceneGraphLabel(labelElement) {
-        if (this.selectedSceneGraphLabel === labelElement) {
-            return;
-        }
-
-        if (this.selectedSceneGraphLabel) {
-            this.selectedSceneGraphLabel.classList.remove('selected');
-        }
-
-        this.selectedSceneGraphLabel = labelElement || null;
-
-        if (this.selectedSceneGraphLabel) {
-            this.selectedSceneGraphLabel.classList.add('selected');
-        }
-    }
-
-    isSelectionChannelEnabled(channel) {
-        const mode = this.state.selectionMode;
-        if (mode === 'none') {
-            return false;
-        }
-
-        if (mode === 'scene-graph' || mode === 'all') {
-            return channel === 'scene-graph' || channel === 'canvas';
-        }
-
-        return mode === channel;
-    }
-
-    isObjectEffectivelyVisible(object) {
-        let current = object;
-
-        while (current) {
-            if (current.visible === false) {
-                return false;
-            }
-            current = current.parent;
-        }
-
-        return true;
-    }
-
-    isSelectableMesh(mesh) {
-        return !!(
-            mesh
-            && mesh.isMesh
-            && getEditableMaterial(mesh)
-            && this.meshParts.includes(mesh)
-            && this.isObjectEffectivelyVisible(mesh)
-        );
-    }
-
-    updateOutlineHelper(helper, object) {
-        if (!helper) {
-            return;
-        }
-
-        if (!object || !this.isObjectEffectivelyVisible(object)) {
-            helper.visible = false;
-            return;
-        }
-
-        helper.box.setFromObject(object);
-        helper.visible = !helper.box.isEmpty();
-    }
-
-    updateSelectionHelpers() {
-        this.updateOutlineHelper(this.selectionOutline, this.selectedMeshPart);
-        this.updateOutlineHelper(
-            this.hoverOutline,
-            this.hoveredMeshPart && this.hoveredMeshPart !== this.selectedMeshPart
-                ? this.hoveredMeshPart
-                : null
-        );
-    }
-
-    setHoveredMeshPart(mesh) {
-        const nextMesh = this.isSelectableMesh(mesh) ? mesh : null;
-        if (this.hoveredMeshPart === nextMesh) {
-            return;
-        }
-
-        this.hoveredMeshPart = nextMesh;
-        this.renderer.domElement.style.cursor = nextMesh ? 'pointer' : 'default';
-        this.updateSelectionHelpers();
-        this.requestRender();
-    }
-
-    clearHoverState() {
-        this.setHoveredMeshPart(null);
-    }
-
-    updateTransformButtons() {
-        const translateBtn = this.shadowRoot.querySelector('#translateBtn');
-        const rotateBtn = this.shadowRoot.querySelector('#rotateBtn');
-
-        if (!translateBtn || !rotateBtn) {
-            return;
-        }
-
-        translateBtn.classList.toggle('active', this.state.transformMode === 'translate');
-        rotateBtn.classList.toggle('active', this.state.transformMode === 'rotate');
-    }
-
-    updateCameraActionButtons() {
-        const fitModelBtn = this.shadowRoot.querySelector('#fitModelBtn');
-        const frameSelectedBtn = this.shadowRoot.querySelector('#frameSelectedBtn');
-
-        if (fitModelBtn) {
-            fitModelBtn.disabled = !this.model;
-        }
-
-        if (frameSelectedBtn) {
-            frameSelectedBtn.disabled = !this.selectedMeshPart;
-        }
-    }
-
-    refreshUiFromState(options = {}) {
-        const { syncTextureUi = true } = options;
-
-        this.updateControlPanel();
-        this.updateLightsButtonUI();
-        this.updateViewModeButtons();
-        this.updateEnvButtons();
-        this.updateEnvironmentControls();
-        this.updateAnimationUi();
-        this.updateDirectionalLightHelpersVisibility();
-        this.updateTransformButtons();
-        this.updateCameraActionButtons();
-        this.syncWireframeButton();
-        this.updateDiscardButtonVisibility();
-
-        if (syncTextureUi) {
-            this.syncMaterialEditorControls();
-        }
-    }
-
-    disposeTextureResource(texture, disposedTextures = new Set()) {
-        if (!texture || typeof texture.dispose !== 'function' || disposedTextures.has(texture)) {
-            return;
-        }
-
-        if (
-            texture === this.whiteTexture
-            || texture === this.gradTexture
-            || texture === this.currentEnvironmentTexture
-            || texture === this.scene.environment
-            || texture === this.scene.background
-        ) {
-            return;
-        }
-
-        disposedTextures.add(texture);
-        texture.dispose();
-    }
-
-    disposeMaterialResources(material, disposedTextures = new Set()) {
-        if (!material) {
-            return;
-        }
-
-        if (Array.isArray(material)) {
-            material.forEach((entry) => this.disposeMaterialResources(entry, disposedTextures));
-            return;
-        }
-
-        DISPOSABLE_TEXTURE_KEYS.forEach((key) => {
-            this.disposeTextureResource(material[key], disposedTextures);
-        });
-
-        if (typeof material.dispose === 'function') {
-            material.dispose();
-        }
-    }
-
-    disposeMaterialSnapshotStore(materialStore) {
-        const disposedTextures = new Set();
-        Object.values(materialStore).forEach((material) => {
-            this.disposeMaterialResources(material, disposedTextures);
-        });
-    }
-
-    disposeTextureHistory() {
-        const disposedTextures = new Set();
-
-        this.textureHistory.forEach((typeHistory) => {
-            typeHistory.forEach((historyEntries) => {
-                historyEntries.forEach((texture) => {
-                    this.disposeTextureResource(texture, disposedTextures);
-                });
-            });
-        });
-    }
-
-    disposeEnvironmentTexture() {
-        if (!this.currentEnvironmentTexture) {
-            return;
-        }
-
-        this.currentEnvironmentTexture.dispose();
-        this.currentEnvironmentTexture = null;
-    }
-
-    resetTransformState() {
-        this.state.transformMode = 'none';
-        this.transformControls.detach();
-        this.transformControls.visible = false;
-        this.controls.enabled = true;
-        this.updateTransformButtons();
-    }
-
-    clearModelResources() {
-        this.stopCameraTransition();
-        this.disposeCurrentModel();
-        this.disposeMaterialSnapshotStore(this.originalMaterials);
-        this.disposeMaterialSnapshotStore(this.initialMaterials);
-        this.disposeTextureHistory();
-
-        this.originalMaterials = {};
-        this.initialMaterials = {};
-        this.standardMaterials = [];
-        this.meshParts = [];
-        this.meshPartTextureInfo = [];
-        this.textureHistory = new Map();
-        this.modelCenter = null;
-        this.modelMaxDim = 0;
-        this.modelSize = 1;
-        this.canAdjustRoughnessMetalness = false;
-        this.currentModelSource = null;
-        this.currentModelFileName = null;
-        this.modelDefaultCameraState = null;
-        this.selectedMaterialIndex = 0;
-        this.toonMaterialBackups.clear();
-    }
-
-    resetModelSession({ showLoading = true } = {}) {
-        this.resetAnimationState();
-        this.clearSelectionState();
-        this.resetWireframeState();
-        this.resetTransformState();
-        this.clearModelResources();
-        this.resetModelUiState(showLoading);
-        this.refreshUiFromState();
-    }
-
-    updateLightsButtonUI() {
-        const lightsButton = this.shadowRoot.querySelector('#toggleLightsBtn');
-        if (!lightsButton) return;
-
-        lightsButton.textContent = this.state.lightsOn ? 'Lights Off' : 'Lights On';
-        if (this.state.lightsOn) {
-            lightsButton.classList.add('toggled-off');
-        } else {
-            lightsButton.classList.remove('toggled-off');
-        }
-    }
-
-    initCollapsibleSection(toggleSelector, contentSelector) {
-        const toggle = this.shadowRoot.querySelector(toggleSelector);
-        const content = this.shadowRoot.querySelector(contentSelector);
-        if (!toggle || !content) {
-            return;
-        }
-
-        const label = toggle.querySelector('.section-toggle-label');
-        const icon = toggle.querySelector('.section-toggle-icon');
-        const openLabel = toggle.dataset.openLabel || 'Hide controls';
-        const closedLabel = toggle.dataset.closedLabel || 'Show controls';
-
-        const syncState = () => {
-            const isExpanded = !content.hidden;
-            toggle.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
-            if (label) {
-                label.textContent = isExpanded ? openLabel : closedLabel;
-            }
-            if (icon) {
-                icon.textContent = isExpanded ? '-' : '+';
-            }
-        };
-
-        toggle.addEventListener('click', () => {
-            content.hidden = !content.hidden;
-            syncState();
-        });
-
-        syncState();
-    }
-
-    static get observedAttributes() {
-        return [
-            'src', // source for mesh file
-            'auto-rotate', // auto-rotate option
-            'angle-per-second', // animation angle per sec
-            'camera-orbit',  // init camera orbit
-            'hide-control-ui', // hide ui
-            'ui', // show ui
-            'light-off', // turn off basic light
-            'no-pbr', // turn off light, default as diffuse mode
-            'view-mode', // 'default', 'diffuse', 'geometry', 'normal'
-            'ambient-light', // 0x color, intensity
-            'direct-light', // x,y,z,intensity
-            'environment',
-            'environment-url',
-            'environment-intensity',
-            'environment-rotation',
-            'environment-background',
-            'background-color',
-            'camera-target',
-            'camera-up',
-            'exposure',
-            'animation',
-            'animation-speed',
-            'animation-loop',
-            'autoplay',
-            'selection-mode',
-            'performance-mode',
-        ];
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (oldValue === newValue || this.isReflectingAttributes) {
-            return;
-        }
-
-        if (name === 'src' && newValue) {
-            const fileName = newValue.split('/').pop()?.split('?')[0] || newValue;
-            void this.loadModel(newValue, fileName).catch(() => {});
-            const fileInputContainer = this.shadowRoot.querySelector('#fileInputContainer');
-            if (fileInputContainer) {
-                fileInputContainer.style.display = 'none';
-            }
-        } else if (name === 'src' && !newValue) {
-            this.discardModel();
-        } else if (name === 'auto-rotate') {
-            this.autoRotate = newValue !== null;
-        } else if (name === 'angle-per-second') {
-            this.anglePerSecond = parseFloat(newValue) || 30;
-        } else if (name === 'camera-orbit') {
-            this.setCameraOrbit(newValue, {
-                source: 'attribute',
-                syncAttribute: false,
-                saveAsDefault: true,
-            });
-        } else if (name === 'hide-control-ui') {
-            const controlsDiv = this.shadowRoot.querySelector('.controls');
-            if (newValue !== null) {
-                controlsDiv.style.display = 'none';
-            } else {
-                controlsDiv.style.display = 'block';
-            }
-        } else if (name === 'ui'){
-            const content = this.shadowRoot.querySelector('#panelContent');
-            const button = this.shadowRoot.querySelector('#togglePanelBtn');
-            content.style.display = 'block';
-            button.textContent = '<';
-            button.setAttribute('aria-label', 'Collapse controls');
-        } else if (name === 'light-off') {
-            this.state.lightsOn = !(newValue !== null);
-            this.ambientLight.visible = this.state.lightsOn;
-            this.directionalLights.forEach(light => {
-                light.visible = this.state.lightsOn;
-            });
-            this.updateDirectionalLightHelpersVisibility(); // Update helper visibility when lights are toggled
-        } else if (name === 'no-pbr') {
-            this.state.lightsOn = !(newValue !== null);
-            this.ambientLight.visible = this.state.lightsOn;
-            this.directionalLights.forEach(light => {
-                light.visible = this.state.lightsOn;
-            });
-            const light_controls = this.shadowRoot.querySelector('#lightControls')
-            light_controls.style.display = 'none';
-            this.updateDirectionalLightHelpersVisibility(); // Update helper visibility when lights are toggled
-            this.noPBR = true;
-            const light_btn = this.shadowRoot.querySelector('#toggleLightsBtn')
-            light_btn.style.display = 'none';
-            const diffuse_btn = this.shadowRoot.querySelector('#textureBtn')
-            diffuse_btn.style.display = 'none';
-            this.state.viewMode = 'diffuse';
-            this.renderMode();
-        } else if (name === 'view-mode') {
-            this.state.viewMode = newValue;
-            this.renderMode();
-        } else if (name === 'environment' || name === 'environment-url') {
-            this.applyEnvironmentAttributes({ source: 'attribute' });
-        } else if (name === 'environment-intensity') {
-            this.setEnvironmentIntensity(parseFloat(newValue), {
-                source: 'attribute',
-                syncAttribute: false,
-            });
-        } else if (name === 'environment-rotation') {
-            this.setEnvironmentRotation(parseFloat(newValue), {
-                source: 'attribute',
-                syncAttribute: false,
-            });
-        } else if (name === 'environment-background') {
-            this.setEnvironmentBackgroundVisible(newValue !== 'false', {
-                source: 'attribute',
-                syncAttribute: false,
-            });
-        } else if (name === 'background-color') {
-            this.setBackgroundColor(newValue || DEFAULT_BACKGROUND_COLOR, {
-                source: 'attribute',
-                syncAttribute: false,
-            });
-        } else if (name === 'camera-target') {
-            this.setCameraTarget(newValue || '0 0 0', {
-                source: 'attribute',
-                syncAttribute: false,
-                saveAsDefault: true,
-            });
-        } else if (name === 'camera-up') {
-            this.setCameraUp(newValue || '0 1 0', {
-                source: 'attribute',
-                syncAttribute: false,
-                saveAsDefault: true,
-            });
-        } else if (name === 'exposure') {
-            this.setExposure(parseFloat(newValue), {
-                source: 'attribute',
-                syncAttribute: false,
-            });
-        } else if (name === 'animation') {
-            this.applyAnimationSelection(newValue || 'none', {
-                autoplay: this.hasAttribute('autoplay'),
-                source: 'attribute',
-                syncAttribute: false,
-            });
-        } else if (name === 'animation-speed') {
-            this.setAnimationSpeed(parseFloat(newValue), {
-                source: 'attribute',
-                syncAttribute: false,
-            });
-        } else if (name === 'animation-loop') {
-            this.setAnimationLoopMode(newValue || DEFAULT_ANIMATION_LOOP, {
-                source: 'attribute',
-                syncAttribute: false,
-            });
-        } else if (name === 'autoplay') {
-            this.applyAutoplayState(newValue !== null, {
-                source: 'attribute',
-            });
-        } else if (name === 'selection-mode') {
-            this.applySelectionMode(newValue || DEFAULT_SELECTION_MODE, {
-                source: 'attribute',
-                syncAttribute: false,
-            });
-        } else if (name === 'performance-mode') {
-            this.applyPerformanceMode(newValue || DEFAULT_PERFORMANCE_MODE, {
-                source: 'attribute',
-                syncAttribute: false,
-            });
-        }
-    }
-
-    renderMode() {
-        if (this.state.viewMode === 'diffuse') {
-            this.showTexture();
-            this.ambientLight.visible = false;
-            this.directionalLights.forEach(light => {
-                light.visible = false;
-            });
-            this.updateDirectionalLightHelpersVisibility(); // Hide helpers in diffuse mode
-        } else if (this.state.viewMode === 'geometry') {
-            this.showMesh();
-            this.ambientLight.visible = false;
-            this.directionalLights.forEach(light => {
-                light.visible = false;
-            });
-            this.updateDirectionalLightHelpersVisibility(); // Hide helpers in geometry mode
-        } else if (this.state.viewMode === 'normal') {
-            this.showNormal();
-            this.ambientLight.visible = false;
-            this.directionalLights.forEach(light => {
-                light.visible = false;
-            });
-            this.updateDirectionalLightHelpersVisibility(); // Hide helpers in normal mode
-        } else { // default view mode
-            this.updateDirectionalLightHelpersVisibility(); // Ensure helpers visibility based on toggle and lights on/off state
-        }
-        this.refreshUiFromState({ syncTextureUi: false });
-        this.requestRender();
-    }
-
-
-    setAmbientLight(value) {
-        const [color, intensity] = value.split(' ');
-        const colorValue = parseInt(color, 16);
-        const intensityValue = parseFloat(intensity);
-        if (!isNaN(colorValue) && !isNaN(intensityValue)) {
-            if (this.ambientLight) {
-                this.scene.remove(this.ambientLight);
-            }
-            this.ambientLight = new THREE.AmbientLight(colorValue, intensityValue);
-            this.scene.add(this.ambientLight);
-        }
-    }
-
-    setDirectLight(value) {
-        const [x, y, z, intensity] = value.split(' ').map(parseFloat);
-        if (!isNaN(x) && !isNaN(y) && !isNaN(z) && !isNaN(intensity)) {
-            // Remove old directional lights if any from attribute change.
-            this.directionalLights.forEach(light => this.scene.remove(light));
-            this.directionalLightHelpers.forEach(helper => this.scene.remove(helper));
-            this.directionalLights = [];
-            this.directionalLightHelpers = [];
-
-            let newLight = new THREE.DirectionalLight(0xffffff, intensity);
-            newLight.position.set(x, y, z);
-            this.directionalLights.push(newLight);
-            this.scene.add(newLight);
-
-            let helper = new THREE.DirectionalLightHelper(newLight, 1, 0xaaaaaa);
-            helper.visible = this.showLightHelpers && this.state.lightsOn; // Helpers visible by default and lights are on
-            this.directionalLightHelpers.push(helper);
-            this.scene.add(helper);
-
-            this.selectedDirectionalLightIndex = 0;
-            this.populateDirectionalLightList();
-            this.updateDirectionalLightUIValues();
-            this.updateDirectionalLightHelpersVisibility(); // Ensure helper visibility is updated
-        }
-    }
-
-    setLight(temp_light_state){
-        if (!temp_light_state){
-            this.ambientLight.visible = temp_light_state;
-            this.directionalLights.forEach(light => {
-                light.visible = temp_light_state;
-            });
-        } else{
-            this.ambientLight.visible = this.state.lightsOn;
-            this.directionalLights.forEach(light => {
-                light.visible = this.state.lightsOn;
-            });
-        }
-        this.updateDirectionalLightHelpersVisibility();
-    }
-
-    initEventListeners() {
-        this.shadowRoot.querySelector('#translateBtn').addEventListener('click', () => {
-            this.setTransformMode('translate');
-        });
-
-        this.shadowRoot.querySelector('#rotateBtn').addEventListener('click', () => {
-            this.setTransformMode('rotate');
-        });
-
-        this.shadowRoot.querySelector('#runAnimationBtn').addEventListener('click', () => this.runAnimation());
-        this.shadowRoot.querySelector('#pauseAnimationBtn').addEventListener('click', () => this.pauseAnimation());
-        this.shadowRoot.querySelector('#animationSelector').addEventListener('change', (event) => {
-            this.setAnimation(event.target.value, {
-                autoplay: event.target.value !== 'none',
-                source: 'ui',
-                syncAttribute: true,
-            });
-        });
-        this.shadowRoot.querySelector('#animationSpeed').addEventListener('input', (event) => {
-            this.setAnimationSpeed(parseFloat(event.target.value), {
-                source: 'ui',
-                syncAttribute: true,
-            });
-        });
-        this.shadowRoot.querySelector('#animationLoopMode').addEventListener('change', (event) => {
-            this.setAnimationLoopMode(event.target.value, {
-                source: 'ui',
-                syncAttribute: true,
-            });
-        });
-        this.shadowRoot.querySelector('#animationTimeline').addEventListener('pointerdown', () => {
-            this.isScrubbingAnimationTimeline = true;
-        });
-        this.shadowRoot.querySelector('#animationTimeline').addEventListener('pointerup', () => {
-            this.isScrubbingAnimationTimeline = false;
-        });
-        this.shadowRoot.querySelector('#animationTimeline').addEventListener('pointercancel', () => {
-            this.isScrubbingAnimationTimeline = false;
-        });
-        this.shadowRoot.querySelector('#animationTimeline').addEventListener('change', () => {
-            this.isScrubbingAnimationTimeline = false;
-        });
-        this.shadowRoot.querySelector('#animationTimeline').addEventListener('input', (event) => {
-            this.setAnimationTime(parseFloat(event.target.value), {
-                source: 'ui',
-            });
-        });
-
-        this.shadowRoot.querySelector('#toggleLightsBtn').addEventListener('click', () => {
-            this.state.lightsOn = !this.state.lightsOn;
-            this.ambientLight.visible = this.state.lightsOn;
-            this.directionalLights.forEach(light => {
-                light.visible = this.state.lightsOn;
-            });
-            this.updateDirectionalLightHelpersVisibility(); // Update helper visibility when lights are toggled
-
-            this.updateLightsButtonUI();
-        });
-
-        this.shadowRoot.querySelector('#textureBtn').addEventListener('click', () => {
-            if (this.state.viewMode !== 'diffuse') {
-                this.showTexture();
-                this.state.viewMode = 'diffuse';
-            } else {
-                this.setDefaultMat();
-                this.state.viewMode = 'default';
-                this.setLight(this.state.lightsOn);
-            }
-            this.updateViewModeButtons();
-        });
-
-        // Geometry
-        this.shadowRoot.querySelector('#meshBtn').addEventListener('click', () => {
-            if (this.state.viewMode !== 'geometry') {
-                this.showMesh();
-                this.state.viewMode = 'geometry';
-                this.setLight(false);
-            } else {
-                this.setDefaultMat();
-                this.state.viewMode = 'default';
-                this.setLight(this.state.lightsOn);
-            }
-            this.updateViewModeButtons();
-        });
-
-        // Normal
-        this.shadowRoot.querySelector('#normalBtn').addEventListener('click', () => {
-            if (this.state.viewMode !== 'normal') {
-                this.showNormal();
-                this.state.viewMode = 'normal';
-                this.setLight(false);
-            } else {
-                this.setDefaultMat();
-                this.state.viewMode = 'default';
-                this.setLight(this.state.lightsOn);
-            }
-            this.updateViewModeButtons();
-        });
-
-        this.shadowRoot.querySelector('#wireframeBtn').addEventListener('click', () => this.showWireframe());
-
-        this.shadowRoot.querySelector('#setBgBtn1').addEventListener('click', () => {
-            if (this.state.environment !== 'env1') {
-                this.setEnvironment('env1', {
-                    source: 'ui',
-                    syncAttribute: true,
-                });
-            } else {
-                this.clearEnvironment({
-                    source: 'ui',
-                    syncAttribute: true,
-                });
-            }
-        });
-
-        this.shadowRoot.querySelector('#setBgBtn2').addEventListener('click', () => {
-            if (this.state.environment !== 'env2') {
-                this.setEnvironment('env2', {
-                    source: 'ui',
-                    syncAttribute: true,
-                });
-            } else {
-                this.clearEnvironment({
-                    source: 'ui',
-                    syncAttribute: true,
-                });
-            }
-        });
-
-        this.shadowRoot.querySelector('#setBgBtn3').addEventListener('click', () => {
-            if (this.state.environment !== 'env3') {
-                this.setEnvironment('env3', {
-                    source: 'ui',
-                    syncAttribute: true,
-                });
-            } else {
-                this.clearEnvironment({
-                    source: 'ui',
-                    syncAttribute: true,
-                });
-            }
-        });
-        this.shadowRoot.querySelector('#clearEnvBtn').addEventListener('click', () => {
-            this.clearEnvironment({
-                source: 'ui',
-                syncAttribute: true,
-            });
-        });
-        this.shadowRoot.querySelector('#loadEnvironmentUrlBtn').addEventListener('click', () => {
-            const url = this.shadowRoot.querySelector('#environmentUrlInput').value.trim();
-            if (!url) {
-                return;
-            }
-
-            void this.setEnvironment(url, {
-                source: 'ui',
-                syncAttribute: true,
-            }).then(() => {
-                this.showStatus('Environment HDR loaded.', 'success', 2500);
-            }).catch(() => {});
-        });
-        this.shadowRoot.querySelector('#uploadEnvironmentBtn').addEventListener('click', () => {
-            const environmentFileInput = this.shadowRoot.querySelector('#environmentFileInput');
-            environmentFileInput.value = '';
-            environmentFileInput.click();
-        });
-        this.shadowRoot.querySelector('#environmentFileInput').addEventListener('change', (event) => {
-            const file = event.target.files?.[0];
-            if (!file) {
-                return;
-            }
-
-            const objectUrl = URL.createObjectURL(file);
-            void this.loadEnvironmentTexture(objectUrl, {
-                environmentId: CUSTOM_ENVIRONMENT_ID,
-                source: 'ui',
-                syncAttribute: true,
-                revokeObjectUrl: true,
-            }).then(() => {
-                this.showStatus(`Environment loaded from ${file.name}.`, 'success', 2500);
-            }).catch(() => {});
-        });
-        this.shadowRoot.querySelector('#environmentIntensityInput').addEventListener('input', (event) => {
-            this.setEnvironmentIntensity(parseFloat(event.target.value), {
-                source: 'ui',
-                syncAttribute: true,
-            });
-        });
-        this.shadowRoot.querySelector('#environmentRotationInput').addEventListener('input', (event) => {
-            this.setEnvironmentRotation(parseFloat(event.target.value), {
-                source: 'ui',
-                syncAttribute: true,
-            });
-        });
-        this.shadowRoot.querySelector('#environmentBackgroundToggle').addEventListener('change', (event) => {
-            this.setEnvironmentBackgroundVisible(event.target.checked, {
-                source: 'ui',
-                syncAttribute: true,
-            });
-        });
-        this.shadowRoot.querySelector('#exposureInput').addEventListener('input', (event) => {
-            this.setExposure(parseFloat(event.target.value), {
-                source: 'ui',
-                syncAttribute: true,
-            });
-        });
-
-        this.shadowRoot.querySelector('#posX').addEventListener('input', () => this.updateModelTransform());
-        this.shadowRoot.querySelector('#posY').addEventListener('input', () => this.updateModelTransform());
-        this.shadowRoot.querySelector('#posZ').addEventListener('input', () => this.updateModelTransform());
-        this.shadowRoot.querySelector('#rotX').addEventListener('input', () => this.updateModelTransform());
-        this.shadowRoot.querySelector('#rotY').addEventListener('input', () => this.updateModelTransform());
-        this.shadowRoot.querySelector('#rotZ').addEventListener('input', () => this.updateModelTransform());
-
-        this.shadowRoot.querySelector('#roughness').disabled = true;
-        this.shadowRoot.querySelector('#metalness').disabled = true;
-
-        this.shadowRoot.querySelector('#scale').addEventListener('input', (e) => {
-            this.modelSize = parseFloat(e.target.value);
-            if (this.model) this.model.scale.set(this.modelSize, this.modelSize, this.modelSize);
-        });
-
-        this.shadowRoot.querySelector('#autoRotateBtn').addEventListener('click', () => {
-            this.autoRotate = !this.autoRotate;
-
-            const rotateButton = this.shadowRoot.querySelector('#autoRotateBtn');
-            // rotateButton.textContent = this.autoRotate ? 'Auto-Rotate Off' : 'Auto-Rotate';
-            if (this.autoRotate) {
-                rotateButton.classList.add('toggled-off');
-            } else {
-                rotateButton.classList.remove('toggled-off');
-            }
-        });
-
-        this.shadowRoot.querySelector('#togglePanelBtn').addEventListener('click', () => {
-            const controls = this.shadowRoot.querySelector('.right-ui-panel');
-            const content = this.shadowRoot.querySelector('#panelContent');
-            const button = this.shadowRoot.querySelector('#togglePanelBtn');
-            if (content.style.display === 'none') {
-                controls.style.width = 'min(25rem, calc(100vw - 2rem))';
-                content.style.display = `block`;
-                button.textContent = '<';
-                button.setAttribute('aria-label', 'Collapse controls');
-            } else {
-                button.textContent = '>';
-                button.setAttribute('aria-label', 'Expand controls');
-                controls.style.width = '4rem';
-                content.style.display = `none`;
-            }
-        });
-
-        this.initCollapsibleSection('#toggleEnvironmentSectionBtn', '#environmentControlsBody');
-        this.initCollapsibleSection('#toggleCameraSectionBtn', '#cameraControlsBody');
-
-
-        this.shadowRoot.querySelector('#toonShadingBtn').addEventListener('click', () => {
-            this.toonEnabled = !this.toonEnabled;
-            if (this.toonEnabled) {
-                this.enableToonShading();
-                this.shadowRoot.querySelector('#toonShadingBtn').textContent = 'Toon Shading Off';
-            } else {
-                this.disableToonShading();
-                this.shadowRoot.querySelector('#toonShadingBtn').textContent = 'Toon Shading On';
-            }
-        });
-
-        const fileInput = this.shadowRoot.querySelector('#fileInput');
-        const urlInput = this.shadowRoot.querySelector('#urlInput');
-        const loadUrlButton = this.shadowRoot.querySelector('#loadUrlButton');
-        const fileInputContainer = this.shadowRoot.querySelector('#fileInputContainer');
-
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                void this.loadModelFromFile(file)
-                    .then(() => {
-                        this.showStatus(`Loaded ${file.name}.`, 'success', 2500);
-                    })
-                    .catch((error) => this.emitViewerError('load-model', error, { fileName: file.name }));
-                fileInputContainer.style.display = 'none';
-            }
-        });
-
-        loadUrlButton.addEventListener('click', () => {
-            const url = urlInput.value.trim();
-            if (url) {
-                void this.loadModelFromUrl(url)
-                    .then(() => {
-                        this.showStatus('Model URL loaded.', 'success', 2500);
-                    })
-                    .catch(() => {});
-                fileInputContainer.style.display = 'none';
-                urlInput.value = ''; 
-            }
-        });
-        
-        // with enter button
-        urlInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                loadUrlButton.click();
-            }
-        });
-
-
-        if (this.canAdjustRoughnessMetalness) {
-            this.shadowRoot.querySelector('#roughness').addEventListener('input', () => this.updateMaterialProperties());
-            this.shadowRoot.querySelector('#metalness').addEventListener('input', () => this.updateMaterialProperties());
-        }
-
-        // Light Helpers
-        this.shadowRoot.querySelector('#toggleLightHelpersBtn').addEventListener('click', () => {
-            this.showLightHelpers = !this.showLightHelpers;
-            this.updateDirectionalLightHelpersVisibility();
-            this.shadowRoot.querySelector('#toggleLightHelpersBtn').textContent = this.showLightHelpers ? 'Hide Light Helpers' : 'Show Light Helpers';
-        });
-
-        // Add Light Button
-        this.shadowRoot.querySelector('#addLightBtn').addEventListener('click', () => {
-            this.addDirectionalLight();
-            this.populateDirectionalLightList(); // Light List UI update
-        });
-
-        // Remove Light Button
-        this.shadowRoot.querySelector('#removeLightBtn').addEventListener('click', () => {
-            this.removeDirectionalLight();
-            this.populateDirectionalLightList();
-        });
-
-        // Directional Light List
-        this.shadowRoot.querySelector('#directionalLightList').addEventListener('change', (event) => {
-            this.selectedDirectionalLightIndex = parseInt(event.target.value);
-            this.updateDirectionalLightUIValues();
-        });
-
-
-        this.shadowRoot.querySelector('#bgColorPicker').addEventListener('input', (event) => {
-            this.setBackgroundColor(event.target.value, {
-                source: 'ui',
-                syncAttribute: true,
-            });
-        });
-
-        this.shadowRoot.querySelector('#screenshotBtn').addEventListener('click', () => {
-            this.takeScreenshotToClipboard();
-        });
-        this.shadowRoot.querySelector('#downloadScreenshotBtn').addEventListener('click', () => {
-            this.captureScreenshot({
-                download: true,
-                filename: this.createExportFileName('screenshot', 'png'),
-            }).then(() => {
-                this.showStatus('Screenshot download started.', 'success', 2500);
-            }).catch((error) => {
-                this.emitViewerError('download-screenshot', error);
-            });
-        });
-
-        this.shadowRoot.querySelector('#discardModelBtn').addEventListener('click', () => {
-            this.discardModel();
-        });
-
-        this.shadowRoot.querySelector('#toggleGridBtn').addEventListener('click', () => {
-            this.toggleGrid();
-        });
-
-        this.shadowRoot.querySelector('#ambientColorPicker').addEventListener('input', (event) => this.updateAmbientLightColor(event.target.value));
-        this.shadowRoot.querySelector('#ambientIntensity').addEventListener('input', (event) => this.updateAmbientLightIntensity(parseFloat(event.target.value)));
-
-
-        this.shadowRoot.querySelector('#directColorPicker').addEventListener('input', (event) => {
-            if (this.directionalLights.length > 0 && this.directionalLights[this.selectedDirectionalLightIndex]) {
-                this.updateDirectLightColor(event.target.value, this.selectedDirectionalLightIndex);
-            }
-        });
-        this.shadowRoot.querySelector('#directPosX').addEventListener('input', (event) => {
-            if (this.directionalLights.length > 0 && this.directionalLights[this.selectedDirectionalLightIndex]) {
-                this.updateDirectLightPosition(parseFloat(event.target.value), null, null, this.selectedDirectionalLightIndex);
-            }
-        });
-        this.shadowRoot.querySelector('#directPosY').addEventListener('input', (event) => {
-            if (this.directionalLights.length > 0 && this.directionalLights[this.selectedDirectionalLightIndex]) {
-                this.updateDirectLightPosition(null, parseFloat(event.target.value), null, this.selectedDirectionalLightIndex);
-            }
-        });
-        this.shadowRoot.querySelector('#directPosZ').addEventListener('input', (event) => {
-            if (this.directionalLights.length > 0 && this.directionalLights[this.selectedDirectionalLightIndex]) {
-                this.updateDirectLightPosition(null, null, parseFloat(event.target.value), this.selectedDirectionalLightIndex);
-            }
-        });
-        this.shadowRoot.querySelector('#directIntensity').addEventListener('input', (event) => {
-            if (this.directionalLights.length > 0 && this.directionalLights[this.selectedDirectionalLightIndex]) {
-                this.updateDirectLightIntensity(parseFloat(event.target.value), this.selectedDirectionalLightIndex);
-            }
-        });
-
-        this.shadowRoot.querySelector('#cameraFov').addEventListener('input', (event) => this.updateCameraFov(parseFloat(event.target.value)));
-        this.shadowRoot.querySelector('#cameraNear').addEventListener('input', (event) => this.updateCameraNear(parseFloat(event.target.value)));
-        this.shadowRoot.querySelector('#cameraFar').addEventListener('input', (event) => this.updateCameraFar(parseFloat(event.target.value)));
-        this.shadowRoot.querySelector('#resetViewBtn').addEventListener('click', () => {
-            this.resetView({
-                source: 'ui',
-                syncAttribute: true,
-            });
-        });
-        this.shadowRoot.querySelector('#fitModelBtn').addEventListener('click', () => {
-            this.fitCameraToModel({
-                source: 'ui',
-                syncAttribute: true,
-            });
-        });
-        this.shadowRoot.querySelector('#frameSelectedBtn').addEventListener('click', () => {
-            this.frameSelected({
-                source: 'ui',
-                syncAttribute: true,
-            });
-        });
-        this.renderer.domElement.addEventListener('pointerdown', (event) => this.handleCanvasPointerDown(event));
-        this.renderer.domElement.addEventListener('pointermove', (event) => this.handleCanvasPointerMove(event));
-        this.renderer.domElement.addEventListener('pointerleave', () => this.handleCanvasPointerLeave());
-        this.renderer.domElement.addEventListener('click', (event) => this.handleCanvasClick(event));
-        this.renderer.domElement.addEventListener('dblclick', (event) => this.handleCanvasDoubleClick(event));
-        this.shadowRoot.addEventListener('keydown', (event) => this.handleComponentKeyDown(event));
-        this.shadowRoot.querySelector('#copyStateBtn').addEventListener('click', async () => {
-            const serialized = JSON.stringify(this.exportState(), null, 2);
-            this.shadowRoot.querySelector('#stateConfigInput').value = serialized;
-            try {
-                if (navigator.clipboard?.writeText) {
-                    await navigator.clipboard.writeText(serialized);
-                    this.showStatus('Viewer state copied to clipboard.', 'success', 2500);
-                } else {
-                    this.showStatus('Clipboard unavailable. State JSON is in the text box.', 'info', 3000);
-                }
-            } catch (error) {
-                this.showStatus('Clipboard copy failed. State JSON is in the text box.', 'info', 3000);
-            }
-        });
-        this.shadowRoot.querySelector('#applyStateBtn').addEventListener('click', async () => {
-            const rawState = this.shadowRoot.querySelector('#stateConfigInput').value.trim();
-            if (!rawState) {
-                this.showStatus('Paste a state JSON payload first.', 'error', 3000);
-                return;
-            }
-
-            try {
-                const parsedState = JSON.parse(rawState);
-                await this.importState(parsedState);
-                this.showStatus('Viewer state imported.', 'success', 2500);
-            } catch (error) {
-                this.emitViewerError('import-state', error);
-            }
-        });
-        this.shadowRoot.querySelector('#performanceModeSelect').addEventListener('change', (event) => {
-            this.applyPerformanceMode(event.target.value, {
-                source: 'ui',
-                syncAttribute: true,
-            });
-        });
-
-        this.recordBtn = this.shadowRoot.querySelector('#recordBtn');
-        this.stopBtn = this.shadowRoot.querySelector('#stopBtn');
-        this.videoModal = this.shadowRoot.querySelector('#videoModal');
-        this.videoPreview = this.shadowRoot.querySelector('#videoPreview');
-        this.downloadBtn = this.shadowRoot.querySelector('#downloadBtn');
-        this.closeModalBtn = this.shadowRoot.querySelector('#closeModalBtn');
-        this.quickRecordBtn = this.shadowRoot.querySelector('#quickRecordBtn');
-        this.closeModal(); // Ensure modal is hidden initially
-
-        if (this.recordBtn) this.recordBtn.addEventListener('click', this.startRecording); // No ()
-        if (this.stopBtn) this.stopBtn.addEventListener('click', this.stopRecording);     // No ()
-        if (this.downloadBtn) this.downloadBtn.addEventListener('click', this.downloadVideo); // No ()
-        if (this.closeModalBtn) this.closeModalBtn.addEventListener('click', this.closeModal);   // No ()
-        if (this.quickRecordBtn) this.quickRecordBtn.addEventListener('click', () => this.startQuickTurntableRecording());
-
-        if (this.videoModal) {
-            this.videoModal.addEventListener('click', (event) => {
-                if (event.target === this.videoModal) {
-                    this.closeModal();
-                }
-            });
-        }
-
-        const canvasContainer = this.shadowRoot.querySelector('#canvas-container');
-        canvasContainer.addEventListener('dragenter', this.handleDragEnter);
-        canvasContainer.addEventListener('dragover', this.handleDragOver);
-        canvasContainer.addEventListener('dragleave', this.handleDragLeave);
-        canvasContainer.addEventListener('drop', this.handleDrop);
-    }
-
-    // --- Video Recording Functions ---
-
-    updateRecordingStatus(message) {
-        const statusElement = this.shadowRoot.querySelector('#recordingStatus');
-        if (statusElement) {
-            statusElement.textContent = message;
-        }
-    }
-
-    clearQuickRecordingTimers() {
-        if (this.recordingProgressTimer) {
-            clearInterval(this.recordingProgressTimer);
-            this.recordingProgressTimer = null;
-        }
-        if (this.quickRecordingTimeout) {
-            clearTimeout(this.quickRecordingTimeout);
-            this.quickRecordingTimeout = null;
-        }
-        this.quickRecordingStartedAt = 0;
-        this.quickRecordingPreviousAutoRotate = null;
-    }
-
-    startQuickTurntableRecording() {
+    updateStats() {
         if (!this.model) {
-            this.showStatus('Load a model before starting a turntable recording.', 'error', 3000);
+            this.statsEl.hidden = true;
             return;
         }
-
-        if (this.mediaRecorder?.state === 'recording') {
-            this.showStatus('A recording is already in progress.', 'info', 2500);
-            return;
-        }
-
-        const durationInput = this.shadowRoot.querySelector('#recordDurationInput');
-        const duration = THREE.MathUtils.clamp(parseInt(durationInput?.value || DEFAULT_RECORDING_DURATION, 10) || DEFAULT_RECORDING_DURATION, 1, 30);
-        this.quickRecordingDuration = duration;
-        const previousAutoRotate = this.autoRotate;
-        this.quickRecordingPreviousAutoRotate = previousAutoRotate;
-        this.autoRotate = true;
-        this.shadowRoot.querySelector('#autoRotateBtn').classList.add('toggled-off');
-
-        this.startRecording();
-        if (!this.mediaRecorder || this.mediaRecorder.state !== 'recording') {
-            this.autoRotate = previousAutoRotate;
-            return;
-        }
-
-        this.quickRecordingStartedAt = performance.now();
-        this.updateRecordingStatus(`Turntable recording... ${duration.toFixed(0)}s`);
-        this.recordingProgressTimer = window.setInterval(() => {
-            const elapsedSeconds = (performance.now() - this.quickRecordingStartedAt) / 1000;
-            const remainingSeconds = Math.max(0, duration - elapsedSeconds);
-            this.updateRecordingStatus(`Turntable recording... ${remainingSeconds.toFixed(1)}s left`);
-        }, 100);
-        this.quickRecordingTimeout = window.setTimeout(() => {
-            this.stopRecording();
-            this.updateRecordingStatus('Turntable recording complete.');
-        }, duration * 1000);
+        const stats = this.getStats();
+        this.statsEl.textContent = `${formatCount(stats.vertices)} verts / ${formatCount(stats.triangles)} tris / ${stats.materials} mats`;
+        this.statsEl.hidden = false;
     }
 
-    startRecording() {
-        if (!this.renderer) {
-            this.showStatus('Renderer not ready.', 'error', 3000);
-            return;
-        }
+    getStats() {
+        const materials = new Set();
+        let vertices = 0;
+        let triangles = 0;
+        this.meshParts.forEach((mesh) => {
+            const position = mesh.geometry?.attributes?.position;
+            if (position) vertices += position.count;
+            if (mesh.geometry?.index) triangles += Math.floor(mesh.geometry.index.count / 3);
+            else if (position) triangles += Math.floor(position.count / 3);
+            materialArray(mesh.userData.smvOriginalMaterial || mesh.material).forEach((material) => materials.add(material));
+        });
+        return { vertices, triangles, materials: materials.size };
+    }
 
-        if (!this.model){
-            this.showStatus('Load a model before recording.', 'error', 3000);
-            return;
-        }
-
-        if (!window.MediaRecorder) {
-            this.showStatus('MediaRecorder API is not supported in this browser.', 'error', 3500);
-            return;
-        }
-
-        const canvas = this.renderer.domElement;
-        if (!canvas.captureStream) {
-             this.showStatus('Canvas captureStream is not supported in this browser.', 'error', 3500);
-             return;
-        }
-
-        console.log("Starting recording...");
-        this.recordedChunks = []; // Reset chunks
-        this.videoBlob = null; // Reset final blob
-
-        // Get stream from canvas (e.g., at 30fps)
-        this.stream = canvas.captureStream(30); // Adjust frame rate as needed
-
-        // --- Choose a MIME type ---
-        // Prefer webm with vp9 or vp8, fallback to default
-        const options = { mimeType: 'video/webm;codecs=vp9' };
-        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-            console.warn(`${options.mimeType} not supported, trying vp8`);
-            options.mimeType = 'video/webm;codecs=vp8';
-            if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-                 console.warn(`${options.mimeType} not supported, trying default`);
-                 options.mimeType = 'video/webm'; // Or even '' to let browser decide
-                 if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-                     console.error("No suitable video/webm MIME type supported");
-                      // Clean up stream if necessary
-                      this.stream.getTracks().forEach(track => track.stop());
-                      this.stream = null;
-                     this.showStatus('Could not find a supported video format for recording.', 'error', 4000);
-                     return;
-                 }
-            }
-        }
-        console.log("Using MIME type:", options.mimeType);
-
-        try {
-            this.mediaRecorder = new MediaRecorder(this.stream, options);
-
-            this.mediaRecorder.ondataavailable = (event) => {
-                if (event.data.size > 0) {
-                    this.recordedChunks.push(event.data);
-                    // console.log("Received data chunk:", event.data.size);
-                }
+    getTextureMaps() {
+        const maps = new Map();
+        this.meshParts.forEach((mesh) => {
+            materialArray(mesh.userData.smvOriginalMaterial || mesh.material).forEach((material) => {
+                TEXTURE_PROPERTIES.forEach(([property, label]) => {
+                    const texture = material?.[property];
+                    if (!texture?.isTexture) return;
+                    const id = texture.uuid || `${property}:${maps.size}`;
+                    if (!maps.has(id)) {
+                        const image = texture.source?.data || texture.image || null;
+                        maps.set(id, {
+                            id,
+                            texture,
+                            image,
+                            labels: new Set([label]),
+                            materialNames: new Set(material.name ? [material.name] : []),
+                            name: texture.name || material.name || label,
+                            width: Number(image?.width || texture.image?.width) || 0,
+                            height: Number(image?.height || texture.image?.height) || 0,
+                            compressed: texture.isCompressedTexture === true
+                        });
+                    } else {
+                        const entry = maps.get(id);
+                        entry.labels.add(label);
+                        if (material.name) entry.materialNames.add(material.name);
+                    }
+                });
+            });
+        });
+        return [...maps.values()].map((entry) => {
+            const labels = [...entry.labels];
+            const isOrm = ['AO', 'Roughness', 'Metalness'].every((label) => entry.labels.has(label));
+            return {
+                ...entry,
+                label: isOrm ? 'ORM' : labels.join(' + '),
+                slots: labels,
+                name: entry.texture.name || [...entry.materialNames][0] || labels.join(' + ')
             };
-
-            this.mediaRecorder.onstop = () => {
-                console.log("Recording stopped. Processing chunks...");
-                if (this.recordedChunks.length === 0) {
-                    console.warn("No data recorded.");
-                     this.showStatus('Recording failed: no video data captured.', 'error', 3500);
-                     // No need to show modal if nothing was recorded
-                    this.closeModal(); // Ensure it's hidden
-                    return;
-                }
-                // Combine chunks into a single Blob
-                this.videoBlob = new Blob(this.recordedChunks, {
-                    type: options.mimeType // Use the determined MIME type
-                });
-                console.log("Video blob created:", this.videoBlob);
-
-                // Create object URL for preview
-                const videoUrl = URL.createObjectURL(this.videoBlob);
-
-                // Set preview source and show modal
-                this.videoPreview.src = videoUrl;
-                // this.videoPreview.load(); // Usually not needed with createObjectURL
-                this.videoModal.style.display = 'flex'; // Show modal
-                this.showStatus('Recording ready for preview/download.', 'success', 3000);
-            };
-
-             this.mediaRecorder.onerror = (event) => {
-                 console.error("MediaRecorder error:", event.error);
-                 this.showStatus(`Recording failed: ${event.error.name} - ${event.error.message}`, 'error', 5000);
-                 this.stopRecording(); // Attempt cleanup
-             };
-
-            // Start recording
-            this.mediaRecorder.start();
-
-            // Update UI
-            this.recordBtn.style.display = 'none';
-            this.stopBtn.style.display = 'inline-block'; // Or 'block'
-            this.updateRecordingStatus('Recording in progress...');
-
-        } catch (err) {
-            console.error("Failed to create MediaRecorder:", err);
-            this.showStatus('Failed to initialize video recorder.', 'error', 3500);
-             // Clean up stream if necessary
-             if (this.stream) {
-                 this.stream.getTracks().forEach(track => track.stop());
-                 this.stream = null;
-             }
-        }
-    }
-
-    stopRecording() {
-        console.log("Stopping recording...");
-        const previousAutoRotate = this.quickRecordingPreviousAutoRotate;
-        this.clearQuickRecordingTimers();
-        if (this.mediaRecorder && this.mediaRecorder.state === "recording") {
-            this.mediaRecorder.stop(); // This triggers the 'onstop' event handler
-            // Stop the stream tracks *after* recorder has fully stopped (in onstop is safer, but here is common)
-            if (this.stream) {
-                this.stream.getTracks().forEach(track => track.stop());
-                this.stream = null; // Release the stream
-            }
-        }
-
-        // Update UI immediately
-        if (this.stopBtn) {
-            this.stopBtn.style.display = 'none';
-        }
-        if (this.recordBtn) {
-            this.recordBtn.style.display = 'inline-block'; // Or 'block'
-        }
-        if (previousAutoRotate !== null) {
-            this.autoRotate = previousAutoRotate;
-            this.shadowRoot.querySelector('#autoRotateBtn').classList.toggle('toggled-off', this.autoRotate);
-        }
-        this.updateRecordingStatus('Idle');
-    }
-
-    downloadVideo() {
-        if (!this.videoBlob) {
-            console.error("No video blob available to download.");
-            alert("No recording available to download.");
-            return;
-        }
-
-        // Create a temporary URL for the blob
-        const url = URL.createObjectURL(this.videoBlob);
-
-        // Create a temporary anchor element
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        // Suggest a filename (e.g., recording.webm)
-        const extension = this.videoBlob.type.split('/')[1].split(';')[0]; // Get 'webm' etc.
-        a.download = this.createExportFileName('recording', extension);
-
-        // Append to body, click, and remove
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-
-        // Revoke the object URL to free up memory
-        URL.revokeObjectURL(url);
-
-        console.log("Download initiated.");
-        this.showStatus('Recording download started.', 'success', 2500);
-        // Optional: Close modal after download starts
-        // this.closeModal();
-    }
-
-    closeModal() {
-        console.log("Closing modal.");
-        this.videoModal.style.display = 'none';
-        // Clean up video preview source to release blob memory sooner
-        if (this.videoPreview.src) {
-             URL.revokeObjectURL(this.videoPreview.src); // Revoke if it's an object URL
-             this.videoPreview.src = ''; // Clear src
-             this.videoPreview.removeAttribute('src'); // Remove attribute
-             this.videoPreview.load(); // Ask video element to release file
-        }
-        // Reset state if needed (optional, depends on desired flow)
-        // this.videoBlob = null;
-        // this.recordedChunks = [];
-    }
-
-    setTransformMode(mode) {
-        if (this.model){
-            if (this.state.transformMode === mode) {
-                this.resetTransformState();
-            } else {
-                this.state.transformMode = mode;
-                this.transformControls.setMode(mode);
-                this.transformControls.attach(this.model);
-                this.transformControls.visible = true;
-                this.controls.enabled = false;
-            }
-
-            this.updateTransformButtons();
-            this.requestRender();
-        }
-    }
-
-    initGridButton() {
-        this.shadowRoot.querySelector('#toggleGridBtn').textContent = this.gridHelper.visible ? 'Hide Grid' : 'Show Grid';
-    }
-
-    toggleGrid() {
-        this.gridHelper.visible = !this.gridHelper.visible;
-        this.shadowRoot.querySelector('#toggleGridBtn').textContent = this.gridHelper.visible ? 'Hide Grid' : 'Show Grid';
-        if (this.gridHelper.visible) {
-            this.shadowRoot.querySelector('#toggleGridBtn').classList.add('toggled-off');
-        } else {
-            this.shadowRoot.querySelector('#toggleGridBtn').classList.remove('toggled-off');
-        }
-        this.requestRender();
-    }
-
-    initDiscardButton() {
-        const discardButton = this.shadowRoot.querySelector('#discardModelBtn');
-        discardButton.style.display = 'none';
-    }
-
-
-    updateCameraFov(fov, options = {}) {
-        const { source = 'ui', emitEvent = true } = options;
-        this.camera.fov = fov;
-        this.camera.updateProjectionMatrix();
-        this.shadowRoot.querySelector('#cameraFov').value = this.camera.fov;
-        this.requestRender();
-        if (emitEvent) {
-            this.emitCameraChange(source);
-        }
-    }
-
-    updateCameraNear(near, options = {}) {
-        const { source = 'ui', emitEvent = true } = options;
-        this.camera.near = near;
-        this.camera.updateProjectionMatrix();
-        this.shadowRoot.querySelector('#cameraNear').value = this.camera.near;
-        this.requestRender();
-        if (emitEvent) {
-            this.emitCameraChange(source);
-        }
-    }
-
-    updateCameraFar(far, options = {}) {
-        const { source = 'ui', emitEvent = true } = options;
-        this.camera.far = far;
-        this.camera.updateProjectionMatrix();
-        this.shadowRoot.querySelector('#cameraFar').value = this.camera.far;
-        this.requestRender();
-        if (emitEvent) {
-            this.emitCameraChange(source);
-        }
-    }
-
-    updateDirectionalLightHelpersVisibility() {
-        const toggleHelpersBtn = this.shadowRoot.querySelector('#toggleLightHelpersBtn');
-        if (!this.state.lightsOn) {
-            this.showLightHelpers = false; // force hide if lights are off
-            // if (toggleHelpersBtn) toggleHelpersBtn.style.display = 'none'; // Hide the toggle button if lights are off
-        } else {
-            // if (toggleHelpersBtn) toggleHelpersBtn.style.display = 'inline-block'; // Show toggle button if lights are on
-        }
-
-        this.directionalLightHelpers.forEach(helper => {
-            helper.visible = this.showLightHelpers && this.state.lightsOn; // Consider both toggle and lights on/off state
-        });
-        if (toggleHelpersBtn) {
-            toggleHelpersBtn.textContent = this.showLightHelpers ? 'Hide Light Helpers' : 'Show Light Helpers';
-        }
-    }
-
-    addDirectionalLight() {
-        const newLight = new THREE.DirectionalLight(0xffffff, 3);
-        newLight.position.set(5, 5, 5);
-        this.directionalLights.push(newLight);
-        this.scene.add(newLight);
-
-        const helper = new THREE.DirectionalLightHelper(newLight, 1, 0xff0f00);
-        helper.visible = this.showLightHelpers && this.state.lightsOn; // Helpers visible by default and lights are on
-        this.scene.add(helper);
-        this.directionalLightHelpers.push(helper);
-
-        this.selectedDirectionalLightIndex = this.directionalLights.length - 1;
-        this.updateDirectionalLightUIValues();
-        this.updateDirectionalLightHelpersVisibility(); // Update helper visibility when a new light is added
-    }
-
-    removeDirectionalLight() {
-        if (this.directionalLights.length === 0) {
-            return;
-        }
-
-        const lightToRemove = this.directionalLights[this.selectedDirectionalLightIndex];
-        const helperToRemove = this.directionalLightHelpers[this.selectedDirectionalLightIndex];
-
-        this.scene.remove(lightToRemove);
-        this.scene.remove(helperToRemove);
-
-        this.directionalLights.splice(this.selectedDirectionalLightIndex, 1);
-        this.directionalLightHelpers.splice(this.selectedDirectionalLightIndex, 1);
-
-        this.selectedDirectionalLightIndex = Math.max(0, this.selectedDirectionalLightIndex - 1);
-        this.updateDirectionalLightUIValues();
-        this.populateDirectionalLightList(); // Update the list after removal
-        this.updateDirectionalLightHelpersVisibility();
-    }
-
-    populateDirectionalLightList() {
-        const lightList = this.shadowRoot.querySelector('#directionalLightList');
-        lightList.innerHTML = '';
-
-        if (this.directionalLights.length === 0) {
-            return;
-        }
-
-        this.directionalLights.forEach((light, index) => {
-            const option = document.createElement('option');
-            option.value = index;
-            option.textContent = `Light ${index + 1}`;
-            lightList.appendChild(option);
-        });
-
-        lightList.value = this.selectedDirectionalLightIndex;
-    }
-
-    updateDirectionalLightUIValues() {
-        if (this.directionalLights.length === 0) return;
-        const currentLight = this.directionalLights[this.selectedDirectionalLightIndex];
-
-        this.shadowRoot.querySelector('#directColorPicker').value = `#${currentLight.color.getHexString()}`;
-        this.shadowRoot.querySelector('#directPosX').value = currentLight.position.x;
-        this.shadowRoot.querySelector('#directPosY').value = currentLight.position.y;
-        this.shadowRoot.querySelector('#directPosZ').value = currentLight.position.z;
-        this.shadowRoot.querySelector('#directIntensity').value = currentLight.intensity;
-    }
-
-
-    updateAmbientLightColor(color) {
-        this.ambientLight.color.set(color);
-        this.shadowRoot.querySelector('#ambientColorPicker').value = color;
-    }
-
-    updateAmbientLightIntensity(intensity) {
-        this.ambientLight.intensity = intensity;
-        this.shadowRoot.querySelector('#ambientIntensity').value = this.ambientLight.intensity;
-    }
-
-    updateDirectLightColor(color, lightIndex) {
-        this.directionalLights[lightIndex].color.set(color);
-        this.directionalLightHelpers[lightIndex].update(); // Helper update
-        this.shadowRoot.querySelector('#directColorPicker').value = color;
-    }
-
-    updateDirectLightPosition(x = null, y = null, z = null, lightIndex) {
-        const currentLight = this.directionalLights[lightIndex];
-        if (!currentLight) return;
-
-        if (x !== null) currentLight.position.x = x;
-        if (y !== null) currentLight.position.y = y;
-        if (z !== null) currentLight.position.z = z;
-
-        this.shadowRoot.querySelector('#directPosX').value = currentLight.position.x;
-        this.shadowRoot.querySelector('#directPosY').value = currentLight.position.y;
-        this.shadowRoot.querySelector('#directPosZ').value = currentLight.position.z;
-
-        // Helper update
-        if (this.directionalLightHelpers[lightIndex]) {
-            this.directionalLightHelpers[lightIndex].update();
-        }
-    }
-
-
-    updateDirectLightIntensity(intensity, lightIndex) {
-        this.directionalLights[lightIndex].intensity = intensity;
-        this.directionalLightHelpers[lightIndex].update(); // Helper update
-        this.shadowRoot.querySelector('#directIntensity').value = intensity;
-    }
-
-
-    setBackgroundColor(color, options = {}) {
-        const {
-            source = 'api',
-            syncAttribute = false,
-            emitEvent = true,
-        } = options;
-
-        this.state.backgroundColor = color || DEFAULT_BACKGROUND_COLOR;
-        this.renderer.setClearColor(this.state.backgroundColor, 1);
-        this.shadowRoot.querySelector('#bgColorPicker').value = this.state.backgroundColor;
-        this.requestRender();
-
-        if (syncAttribute) {
-            this.reflectAttribute('background-color', this.state.backgroundColor);
-        }
-
-        if (emitEvent) {
-            this.emitEnvironmentChange(source, 'background-color');
-        }
-    }
-
-    takeScreenshotToClipboard() {
-        this.captureScreenshot({
-            toClipboard: true,
-            downloadFallback: true,
-            filename: this.createExportFileName('screenshot', 'png'),
-        })
-            .then((result) => {
-                this.showStatus(
-                    result?.downloaded
-                        ? 'Clipboard unavailable. Saved a PNG download instead.'
-                        : 'Screenshot copied to clipboard.',
-                    'success',
-                    3200
-                );
-            })
-            .catch((err) => {
-                console.error('Failed to copy to clipboard:', err);
-                this.emitViewerError('capture-screenshot', err);
-            });
-    }
-
-    captureScreenshot(options = {}) {
-        const {
-            type = 'image/png',
-            quality = 1,
-            toClipboard = false,
-            download = false,
-            downloadFallback = false,
-            transparentBackground = false,
-            filename = this.createExportFileName('screenshot', 'png'),
-        } = options;
-
-        return new Promise((resolve, reject) => {
-            const canvas = this.renderer?.domElement;
-            if (!canvas) {
-                reject(new Error('Renderer not ready.'));
-                return;
-            }
-
-            const previousBackground = this.scene.background;
-            const previousAlpha = this.renderer.getClearAlpha ? this.renderer.getClearAlpha() : 1;
-            if (transparentBackground) {
-                this.scene.background = null;
-                if (this.renderer.setClearAlpha) {
-                    this.renderer.setClearAlpha(0);
-                }
-                this.requestRender();
-            }
-
-            canvas.toBlob(async (blob) => {
-                if (transparentBackground) {
-                    this.scene.background = previousBackground;
-                    if (this.renderer.setClearAlpha) {
-                        this.renderer.setClearAlpha(previousAlpha);
-                    }
-                    this.requestRender();
-                }
-
-                if (!blob) {
-                    reject(new Error('Failed to create blob from canvas.'));
-                    return;
-                }
-
-                try {
-                    const shouldDownload = download || (toClipboard && downloadFallback && (!navigator.clipboard || typeof ClipboardItem === 'undefined'));
-                    if (toClipboard) {
-                        if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
-                            if (!downloadFallback) {
-                                reject(new Error('Clipboard API not supported.'));
-                                return;
-                            }
-                        } else {
-                            await navigator.clipboard.write([
-                                new ClipboardItem({
-                                    [blob.type]: blob
-                                })
-                            ]);
-                        }
-                    }
-
-                    if (shouldDownload) {
-                        this.downloadBlob(blob, filename);
-                    }
-                } catch (error) {
-                    if (downloadFallback) {
-                        this.downloadBlob(blob, filename);
-                        resolve({
-                            blob,
-                            downloaded: true,
-                        });
-                        return;
-                    }
-                    reject(error);
-                    return;
-                }
-
-                resolve({
-                    blob,
-                    downloaded: download || (toClipboard && downloadFallback && (!navigator.clipboard || typeof ClipboardItem === 'undefined')),
-                });
-            }, type, quality);
         });
     }
 
-    setExposure(exposure, options = {}) {
-        const {
-            source = 'api',
-            syncAttribute = false,
-            emitEvent = true,
-        } = options;
-        const normalizedExposure = Number.isFinite(exposure) && exposure > 0 ? exposure : DEFAULT_EXPOSURE;
-
-        this.renderer.toneMappingExposure = normalizedExposure;
-        this.state.exposure = normalizedExposure;
-        this.requestRender();
-
-        if (syncAttribute) {
-            this.reflectAttribute('exposure', normalizedExposure);
-        }
-
-        if (emitEvent) {
-            this.emitEnvironmentChange(source, 'exposure');
-        }
-    }
-
-    setEnvironmentIntensity(intensity, options = {}) {
-        const {
-            source = 'api',
-            syncAttribute = false,
-            emitEvent = true,
-        } = options;
-        const normalizedIntensity = Number.isFinite(intensity)
-            ? THREE.MathUtils.clamp(intensity, 0, 4)
-            : DEFAULT_ENVIRONMENT_INTENSITY;
-
-        this.state.environmentIntensity = normalizedIntensity;
-        this.applyEnvironmentPresentation();
-        this.applyEnvironmentMaterialSettings();
-        this.refreshUiFromState({ syncTextureUi: false });
-        this.requestRender();
-
-        if (syncAttribute) {
-            this.reflectAttribute('environment-intensity', normalizedIntensity);
-        }
-
-        if (emitEvent) {
-            this.emitEnvironmentChange(source, 'intensity');
-        }
-
-        return true;
-    }
-
-    setEnvironmentRotation(rotation, options = {}) {
-        const {
-            source = 'api',
-            syncAttribute = false,
-            emitEvent = true,
-        } = options;
-        const normalizedRotation = Number.isFinite(rotation)
-            ? ((rotation % 360) + 360) % 360
-            : DEFAULT_ENVIRONMENT_ROTATION;
-
-        this.state.environmentRotation = normalizedRotation;
-        this.applyEnvironmentPresentation();
-        this.refreshUiFromState({ syncTextureUi: false });
-        this.requestRender();
-
-        if (syncAttribute) {
-            this.reflectAttribute('environment-rotation', normalizedRotation);
-        }
-
-        if (emitEvent) {
-            this.emitEnvironmentChange(source, 'rotation');
-        }
-
-        return true;
-    }
-
-    setEnvironmentBackgroundVisible(visible, options = {}) {
-        const {
-            source = 'api',
-            syncAttribute = false,
-            emitEvent = true,
-        } = options;
-
-        this.state.environmentBackgroundVisible = visible !== false;
-        this.applyEnvironmentPresentation();
-        this.refreshUiFromState({ syncTextureUi: false });
-        this.requestRender();
-
-        if (syncAttribute) {
-            this.reflectAttribute('environment-background', this.state.environmentBackgroundVisible ? 'true' : 'false');
-        }
-
-        if (emitEvent) {
-            this.emitEnvironmentChange(source, 'background-visible');
-        }
-
-        return true;
-    }
-
-    applySelectionMode(mode, options = {}) {
-        const {
-            source = 'api',
-            syncAttribute = false,
-        } = options;
-        const normalizedMode = VALID_SELECTION_MODES.has(mode) ? mode : DEFAULT_SELECTION_MODE;
-        this.state.selectionMode = normalizedMode;
-
-        if (normalizedMode === 'none') {
-            this.clearSelectionState({
-                source,
-                emitEvent: true,
-            });
-            this.clearHoverState();
-        }
-
-        this.requestRender();
-
-        if (syncAttribute) {
-            this.reflectAttribute('selection-mode', normalizedMode);
-        }
-    }
-
-    applyPerformanceMode(mode, options = {}) {
-        const {
-            syncAttribute = false,
-        } = options;
-        const normalizedMode = VALID_PERFORMANCE_MODES.has(mode) ? mode : DEFAULT_PERFORMANCE_MODE;
-        const devicePixelRatio = window.devicePixelRatio || 1;
-        const pixelRatio = normalizedMode === 'performance'
-            ? 1
-            : normalizedMode === 'quality'
-                ? devicePixelRatio
-                : Math.min(devicePixelRatio, 2);
-
-        this.state.performanceMode = normalizedMode;
-        this.renderer.setPixelRatio(pixelRatio);
-        this.renderer.shadowMap.enabled = normalizedMode !== 'performance';
-        this.resizeRenderer();
-        this.requestRender();
-
-        if (syncAttribute) {
-            this.reflectAttribute('performance-mode', normalizedMode);
-        }
-    }
-
-
-    updateViewModeButtons() {
-        // this.shadowRoot.querySelector('#textureBtn').textContent = this.state.viewMode === 'diffuse' ? 'Diffuse Off' : 'Diffuse';
-        // this.shadowRoot.querySelector('#meshBtn').textContent = this.state.viewMode === 'geometry' ? 'Geometry Off' : 'Geometry';
-        // this.shadowRoot.querySelector('#normalBtn').textContent = this.state.viewMode === 'normal' ? 'Normal Off' : 'Normal';
-
-        if (this.state.viewMode === 'diffuse') {
-            this.shadowRoot.querySelector('#textureBtn').classList.add('toggled-off');
-        } else {
-            this.shadowRoot.querySelector('#textureBtn').classList.remove('toggled-off');
-        }
-
-        if (this.state.viewMode === 'geometry') {
-            this.shadowRoot.querySelector('#meshBtn').classList.add('toggled-off');
-        } else {
-            this.shadowRoot.querySelector('#meshBtn').classList.remove('toggled-off');
-        }
-
-        if (this.state.viewMode === 'normal') {
-            this.shadowRoot.querySelector('#normalBtn').classList.add('toggled-off');
-        } else {
-            this.shadowRoot.querySelector('#normalBtn').classList.remove('toggled-off');
-        }
-    }
-
-    updateEnvButtons() {
-        // this.shadowRoot.querySelector('#setBgBtn1').textContent = this.state.environment === 'env1' ? 'Env1 Off' : 'Env1';
-        // this.shadowRoot.querySelector('#setBgBtn2').textContent = this.state.environment === 'env2' ? 'Env2 Off' : 'Env2';
-        // this.shadowRoot.querySelector('#setBgBtn3').textContent = this.state.environment === 'env3' ? 'Env3 Off' : 'Env3';
-
-        if (this.state.environment === 'env1') {
-            this.shadowRoot.querySelector('#setBgBtn1').classList.add('toggled-off');
-        } else {
-            this.shadowRoot.querySelector('#setBgBtn1').classList.remove('toggled-off');
-        }
-
-        if (this.state.environment === 'env2') {
-            this.shadowRoot.querySelector('#setBgBtn2').classList.add('toggled-off');
-        } else {
-            this.shadowRoot.querySelector('#setBgBtn2').classList.remove('toggled-off');
-        }
-
-        if (this.state.environment === 'env3') {
-            this.shadowRoot.querySelector('#setBgBtn3').classList.add('toggled-off');
-        } else {
-            this.shadowRoot.querySelector('#setBgBtn3').classList.remove('toggled-off');
-        }
-
-    }
-
-    updateControlPanel() {
-        if (this.model) {
-            this.shadowRoot.querySelector('#posX').value = this.model.position.x.toFixed(1);
-            this.shadowRoot.querySelector('#posY').value = this.model.position.y.toFixed(1);
-            this.shadowRoot.querySelector('#posZ').value = this.model.position.z.toFixed(1);
-
-            this.shadowRoot.querySelector('#rotX').value = THREE.MathUtils.radToDeg(this.model.rotation.x).toFixed(0);
-            this.shadowRoot.querySelector('#rotY').value = THREE.MathUtils.radToDeg(this.model.rotation.y).toFixed(0);
-            this.shadowRoot.querySelector('#rotZ').value = THREE.MathUtils.radToDeg(this.model.rotation.z).toFixed(0);
-        }
-    }
-
-    updateModelTransform() {
-        if (this.model) {
-            const posX = parseFloat(this.shadowRoot.querySelector('#posX').value);
-            const posY = parseFloat(this.shadowRoot.querySelector('#posY').value);
-            const posZ = parseFloat(this.shadowRoot.querySelector('#posZ').value);
-            this.model.position.set(posX, posY, posZ);
-
-            const rotX = THREE.MathUtils.degToRad(parseFloat(this.shadowRoot.querySelector('#rotX').value));
-            const rotY = THREE.MathUtils.degToRad(parseFloat(this.shadowRoot.querySelector('#rotY').value));
-            const rotZ = THREE.MathUtils.degToRad(parseFloat(this.shadowRoot.querySelector('#rotZ').value));
-            this.model.rotation.set(rotX, rotY, rotZ);
-            this.requestRender();
-        }
-    }
-
-    syncWireframeButton() {
-        const wireframeBtn = this.shadowRoot.querySelector('#wireframeBtn');
-        wireframeBtn.classList.toggle('toggled-off', this.state.isWireframeOn);
-    }
-
-    disableWireframe() {
-        this.state.isWireframeOn = false;
-
-        if (this.model) {
-            this.model.traverse((child) => {
-                if (child.isMesh) {
-                    getMaterialArray(child.material).forEach((material) => {
-                        if (material?.userData?.shader?.uniforms?.uWireframe) {
-                            material.userData.shader.uniforms.uWireframe.value = false;
-                            material.needsUpdate = true;
-                        }
-                    });
-                }
-            });
-        }
-
-        this.syncWireframeButton();
-    }
-
-    resetWireframeState() {
-        this.state.wireframeInitialized = false;
-        this.disableWireframe();
-    }
-
-    showTexture() {
-        this.disableWireframe();
-        if (this.model) {
-            this.model.traverse((child) => {
-                if (child.isMesh) {
-                    const originalMaterialEntry = this.getMaterialStoreEntry(child, this.originalMaterials);
-                    const nextMaterialEntry = getMaterialArray(originalMaterialEntry).map((materialSnapshot) => {
-                        const nextMaterial = new THREE.MeshBasicMaterial({
-                            map: materialSnapshot?.map || null,
-                            color: materialSnapshot?.color?.clone ? materialSnapshot.color.clone() : undefined,
-                            opacity: materialSnapshot?.opacity ?? 1,
-                            transparent: materialSnapshot?.transparent ?? false,
-                            side: materialSnapshot?.side ?? THREE.FrontSide,
-                        });
-                        nextMaterial.needsUpdate = true;
-                        return nextMaterial;
-                    });
-
-                    child.material = Array.isArray(originalMaterialEntry) ? nextMaterialEntry : nextMaterialEntry[0];
-                    this.applyWireframeSupportToMaterialEntry(child.material);
-                }
-            });
-            this.requestRender();
-        }
-    }
-
-    showMesh() {
-        this.disableWireframe();
-        if (this.model) {
-            this.model.traverse((child) => {
-                if (child.isMesh) {
-                    const originalMaterialEntry = this.getMaterialStoreEntry(child, this.originalMaterials);
-                    const nextMaterialEntry = getMaterialArray(originalMaterialEntry).map((originalMaterial) => {
-                        const newMaterialProps = {
-                            color: 0xffffff,
-                            map: null,
-                            envMap: this.gradTexture,
-                            envMapIntensity: originalMaterial?.envMapIntensity ?? 1.0,
-                            roughness: 1,
-                            metalness: 1,
-                        };
-
-                        if (originalMaterial?.vertexColors) {
-                            newMaterialProps.vertexColors = true;
-                        }
-
-                        const material = new THREE.MeshStandardMaterial(newMaterialProps);
-                        material.needsUpdate = true;
-                        return material;
-                    });
-
-                    child.material = Array.isArray(originalMaterialEntry) ? nextMaterialEntry : nextMaterialEntry[0];
-                    this.applyWireframeSupportToMaterialEntry(child.material);
-                }
-            });
-            this.requestRender();
-        }
-    }
-
-    /**
-     * Adds barycentric coordinates to a BufferGeometry if not already present.
-     * @param {THREE.BufferGeometry} geometry - The geometry to modify.
-     */
-    addBarycentricCoordinates(geometry) {
-        if (geometry.attributes.barycentric) return;
-
-        const position = geometry.attributes.position;
-        const count = position.count;
-        const barycentric = new Float32Array(count * 3);
-
-        if (geometry.index) {
-            const index = geometry.index;
-            for (let i = 0; i < index.count; i += 3) {
-                const a = index.array[i];
-                const b = index.array[i + 1];
-                const c = index.array[i + 2];
-                barycentric[a * 3] = 1; barycentric[a * 3 + 1] = 0; barycentric[a * 3 + 2] = 0;
-                barycentric[b * 3] = 0; barycentric[b * 3 + 1] = 1; barycentric[b * 3 + 2] = 0;
-                barycentric[c * 3] = 0; barycentric[c * 3 + 1] = 0; barycentric[c * 3 + 2] = 1;
-            }
-        } else {
-            for (let i = 0; i < count; i += 3) {
-                barycentric[i * 3] = 1; barycentric[i * 3 + 1] = 0; barycentric[i * 3 + 2] = 0;
-                barycentric[(i + 1) * 3] = 0; barycentric[(i + 1) * 3 + 1] = 1; barycentric[(i + 1) * 3 + 2] = 0;
-                barycentric[(i + 2) * 3] = 0; barycentric[(i + 2) * 3 + 1] = 0; barycentric[(i + 2) * 3 + 2] = 1;
-            }
-        }
-
-        geometry.setAttribute('barycentric', new THREE.BufferAttribute(barycentric, 3));
-    }
-
-    /**
-     * Modifies a material to support wireframe overlay using barycentric coordinates.
-     * @param {THREE.Material} material - The material to modify.
-     */
-    modifyMaterialForWireframe(material) {
-        if (!material || material.userData.hasWireframeShader) {
-            return;
-        }
-
-        material.onBeforeCompile = (shader) => {
-            shader.uniforms.uWireframe = { value: this.state.isWireframeOn };
-
-            shader.vertexShader = `
-                attribute vec3 barycentric;
-                varying vec3 vBarycentric;
-                ${shader.vertexShader}
-            `.replace(
-                '#include <begin_vertex>',
-                `
-                #include <begin_vertex>
-                vBarycentric = barycentric;
-                `
-            );
-
-            let fragmentShader = `
-                uniform bool uWireframe;
-                varying vec3 vBarycentric;
-                ${shader.fragmentShader}
-            `;
-
-            const wireframeInjection = `
-                if (uWireframe) {
-                    vec3 bary = vBarycentric;
-                    vec3 d = fwidth(bary);
-                    vec3 a3 = smoothstep(vec3(0.0), d * 0.5, bary);
-                    float edgeFactor = min(min(a3.x, a3.y), a3.z);
-                    float wireframeAlpha = 1.0 - edgeFactor;
-                    vec4 wireframeColor = vec4(0.08, 0.1, 0.14, 0.85);
-                    gl_FragColor.rgb = mix(gl_FragColor.rgb, wireframeColor.rgb, wireframeAlpha);
-                    gl_FragColor.a = mix(gl_FragColor.a, wireframeColor.a, wireframeAlpha);
-                }
-            `;
-
-            const fragmentAnchors = [
-                '#include <dithering_fragment>',
-                '#include <opaque_fragment>',
-                '#include <output_fragment>',
-            ];
-
-            let injected = false;
-            for (const anchor of fragmentAnchors) {
-                if (fragmentShader.includes(anchor)) {
-                    fragmentShader = fragmentShader.replace(
-                        anchor,
-                        `
-                        ${anchor}
-                        ${wireframeInjection}
-                        `
-                    );
-                    injected = true;
-                    break;
-                }
-            }
-
-            if (!injected) {
-                fragmentShader = fragmentShader.replace(
-                    /}\s*$/,
-                    `
-                    ${wireframeInjection}
-                    }
-                    `
-                );
-            }
-
-            shader.fragmentShader = fragmentShader;
-
-            material.userData.shader = shader;
-        };
-        material.userData.hasWireframeShader = true;
-        material.needsUpdate = true;
-    }
-
-    showWireframe() {
-        if (!this.model) return;
-
-        this.model.traverse((child) => {
-            if (child.isMesh) {
-                if (!this.state.wireframeInitialized && child.geometry.index && !child.geometry.userData.isNonIndexed) {
-                    child.geometry = child.geometry.toNonIndexed();
-                    child.geometry.userData.isNonIndexed = true;
-                }
-                if (!this.state.wireframeInitialized) {
-                    this.addBarycentricCoordinates(child.geometry);
-                }
-                this.applyWireframeSupportToMaterialEntry(child.material);
-                getMaterialArray(child.material).forEach((material) => {
-                    material.needsUpdate = true;
-                });
-            }
-        });
-
-        this.state.wireframeInitialized = true;
-        this.state.isWireframeOn = !this.state.isWireframeOn;
-
-        this.model.traverse((child) => {
-            if (child.isMesh) {
-                getMaterialArray(child.material).forEach((material) => {
-                    if (material?.userData?.shader?.uniforms?.uWireframe) {
-                        material.userData.shader.uniforms.uWireframe.value = this.state.isWireframeOn;
-                        material.needsUpdate = true;
-                    }
-                });
-            }
-        });
-
-        this.syncWireframeButton();
-        this.requestRender();
-    }
-
-    showNormal() {
-        this.disableWireframe();
-        if (this.model) {
-            this.model.traverse((child) => {
-                if (child.isMesh) {
-                    const originalMaterialEntry = this.getMaterialStoreEntry(child, this.originalMaterials);
-                    const nextMaterialEntry = getMaterialArray(originalMaterialEntry).map(() => {
-                        const material = new THREE.MeshNormalMaterial();
-                        material.needsUpdate = true;
-                        return material;
-                    });
-
-                    child.material = Array.isArray(originalMaterialEntry) ? nextMaterialEntry : nextMaterialEntry[0];
-                    this.applyWireframeSupportToMaterialEntry(child.material);
-                }
-            });
-            this.requestRender();
-        }
-    }
-
-    applyEnvironmentAttributes(options = {}) {
-        const environmentUrl = this.getAttribute('environment-url');
-        const environment = this.getAttribute('environment');
-
-        if (environmentUrl) {
-            return this.setEnvironment(environmentUrl, {
-                ...options,
-                syncAttribute: false,
-            });
-        }
-
-        if (environment === CUSTOM_ENVIRONMENT_ID) {
-            return this.clearEnvironment({
-                ...options,
-                syncAttribute: false,
-            });
-        }
-
-        if (environment && environment !== 'none') {
-            return this.setEnvironment(environment, {
-                ...options,
-                syncAttribute: false,
-            });
-        }
-
-        return this.clearEnvironment({
-            ...options,
-            syncAttribute: false,
+    updateTextureMaps() {
+        const maps = this.getTextureMaps();
+        if (!maps.length) this.texturePanelOpen = false;
+        this.textureMapsEl.hidden = maps.length === 0;
+        this.textureCountEl.textContent = maps.length ? `${maps.length}` : '';
+        this.textureMapsEl.classList.toggle('collapsed', !this.texturePanelOpen);
+        this.textureToggleBtn.setAttribute('aria-expanded', String(this.texturePanelOpen));
+        this.textureStripEl.innerHTML = '';
+        maps.forEach((entry, index) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'texture-card';
+            button.title = `${entry.label}: ${entry.name || ''}`;
+            const preview = document.createElement('div');
+            preview.className = 'texture-preview';
+            const label = document.createElement('span');
+            label.textContent = entry.label;
+            this.renderTexturePreview(entry, preview);
+            button.append(preview, label);
+            button.addEventListener('click', () => this.openTextureDialog(entry, index));
+            this.textureStripEl.appendChild(button);
         });
     }
 
-    loadEnvironmentTexture(url, options = {}) {
-        const {
-            environmentId = CUSTOM_ENVIRONMENT_ID,
-            source = 'api',
-            syncAttribute = false,
-            emitEvent = true,
-            revokeObjectUrl = false,
-        } = options;
-
-        this.disableWireframe();
-        const loadToken = ++this.environmentLoadToken;
-        const rgbeLoader = new RGBELoader();
-        this.state.viewMode = 'default';
-        this.refreshUiFromState({ syncTextureUi: false });
-
-        return new Promise((resolve, reject) => {
-            rgbeLoader.load(url, (texture) => {
-            if (loadToken !== this.environmentLoadToken) {
-                texture.dispose();
-                if (revokeObjectUrl) {
-                    URL.revokeObjectURL(url);
-                }
-                resolve(null);
-                return;
-            }
-
-            texture.minFilter = THREE.LinearFilter;
-            texture.magFilter = THREE.LinearFilter;
-            texture.mapping = THREE.EquirectangularReflectionMapping;
-            this.disposeEnvironmentTexture();
-            this.currentEnvironmentTexture = texture;
-            this.applyEnvironmentPresentation();
-
-            if (this.model) {
-                this.model.traverse((child) => {
-                    if (child.isMesh) {
-                        const originalMaterialEntry = this.getMaterialStoreEntry(child, this.originalMaterials);
-                        const nextMaterialEntry = getMaterialArray(originalMaterialEntry).map((originalMaterial) => {
-                            const isStandardMaterial = originalMaterial instanceof THREE.MeshStandardMaterial;
-                            const newMaterialProps = {
-                                color: originalMaterial?.color?.clone ? originalMaterial.color.clone() : new THREE.Color(0xffffff),
-                                map: originalMaterial?.map || null,
-                                emissive: originalMaterial?.emissive?.clone ? originalMaterial.emissive.clone() : new THREE.Color(0x000000),
-                                emissiveIntensity: originalMaterial?.emissiveIntensity ?? 1,
-                                emissiveMap: originalMaterial?.emissiveMap || null,
-                                envMap: texture,
-                                envMapIntensity: this.getEffectiveEnvironmentIntensity(originalMaterial?.envMapIntensity ?? 1.0),
-                                roughness: isStandardMaterial && originalMaterial.roughness !== undefined ? originalMaterial.roughness : 0.5,
-                                metalness: isStandardMaterial && originalMaterial.metalness !== undefined ? originalMaterial.metalness : 0.5,
-                                roughnessMap: isStandardMaterial ? originalMaterial.roughnessMap : null,
-                                metalnessMap: isStandardMaterial ? originalMaterial.metalnessMap : null,
-                                normalMap: originalMaterial?.normalMap || null,
-                                normalScale: originalMaterial?.normalScale?.clone ? originalMaterial.normalScale.clone() : new THREE.Vector2(1, 1),
-                                aoMap: originalMaterial?.aoMap || null,
-                                opacity: originalMaterial?.opacity ?? 1,
-                                side: originalMaterial?.side ?? THREE.FrontSide,
-                                transparent: originalMaterial?.transparent ?? false,
-                                vertexColors: !!originalMaterial?.vertexColors,
-                            };
-
-                            const material = new THREE.MeshStandardMaterial(newMaterialProps);
-                            if (material.map) {
-                                material.map.encoding = THREE.sRGBEncoding;
-                            }
-                            if (material.emissiveMap) {
-                                material.emissiveMap.encoding = THREE.sRGBEncoding;
-                            }
-                            material.needsUpdate = true;
-                            return material;
-                        });
-
-                        child.material = Array.isArray(originalMaterialEntry) ? nextMaterialEntry : nextMaterialEntry[0];
-                        this.applyWireframeSupportToMaterialEntry(child.material);
-                    }
-                });
-            }
-            this.state.environment = environmentId;
-            this.state.environmentUrl = environmentId === CUSTOM_ENVIRONMENT_ID && !revokeObjectUrl ? url : null;
-            this.setLight(false);
-            this.updateEnvButtons();
-
-            if (syncAttribute) {
-                this.reflectAttribute('environment', environmentId);
-                this.reflectAttribute('environment-url', environmentId === CUSTOM_ENVIRONMENT_ID && !revokeObjectUrl ? url : null);
-            }
-
-            this.requestRender();
-            if (revokeObjectUrl) {
-                URL.revokeObjectURL(url);
-            }
-            if (emitEvent) {
-                this.emitEnvironmentChange(source, 'set');
-            }
-            resolve(texture);
-        }, undefined, (err) => {
-            console.error('Skybox err:', err);
-            if (revokeObjectUrl) {
-                URL.revokeObjectURL(url);
-            }
-            this.emitViewerError('set-environment', err, { url });
-            reject(err);
-        });
-        });
+    setTexturePanelOpen(open) {
+        this.texturePanelOpen = open === true;
+        this.textureMapsEl.classList.toggle('collapsed', !this.texturePanelOpen);
+        this.textureToggleBtn.setAttribute('aria-expanded', String(this.texturePanelOpen));
     }
 
-    setBackground1() {
-        return this.setEnvironment('env1');
+    renderTexturePreview(entry, container) {
+        const canvas = document.createElement('canvas');
+        drawTextureMap(canvas, entry, 128, true);
+        container.appendChild(canvas);
     }
 
-    setBackground2() {
-        return this.setEnvironment('env2');
-    }
-
-    setBackground3() {
-        return this.setEnvironment('env3');
-    }
-
-    clearEnvironment(options = {}) {
-        const {
-            source = 'api',
-            syncAttribute = false,
-            emitEvent = true,
-        } = options;
-
-        this.environmentLoadToken += 1;
-        this.disposeEnvironmentTexture();
-        this.applyEnvironmentPresentation();
-        this.state.environment = null;
-        this.state.environmentUrl = null;
-        this.state.viewMode = 'default';
-        this.setDefaultMat();
-        this.setLight(this.state.lightsOn);
-        this.refreshUiFromState({ syncTextureUi: false });
-
-        if (syncAttribute) {
-            this.reflectAttribute('environment', null);
-            this.reflectAttribute('environment-url', null);
-        }
-
-        if (emitEvent) {
-            this.emitEnvironmentChange(source, 'clear');
-        }
-
-        this.requestRender();
-    }
-
-    setDefaultEnv() {
-        return this.clearEnvironment({
-            source: 'internal',
-            syncAttribute: false,
-            emitEvent: false,
-        });
-    }
-
-    setDefaultMat() {
-        this.disableWireframe();
-        if (this.model) {
-            this.model.traverse((child) => {
-                if (child.isMesh) {
-                    const originalMaterialEntry = this.getMaterialStoreEntry(child, this.originalMaterials);
-                    const nextMaterialEntry = getMaterialArray(originalMaterialEntry).map((materialSnapshot) => {
-                        const material = this.createDisplayMaterialFromSnapshot(materialSnapshot);
-                        material.needsUpdate = true;
-                        return material;
-                    });
-
-                    child.material = Array.isArray(originalMaterialEntry) ? nextMaterialEntry : nextMaterialEntry[0];
-                    this.applyWireframeSupportToMaterialEntry(child.material);
-                }
-            });
-            this.syncMaterialEditorControls();
-            this.requestRender();
-        }
-    }
-
-    setEnvironment(urlOrPreset, options = {}) {
-        const normalizedValue = typeof urlOrPreset === 'string' ? urlOrPreset.trim() : '';
-
-        if (!normalizedValue || normalizedValue === 'none') {
-            return this.clearEnvironment(options);
-        }
-
-        if (ENVIRONMENT_URLS[normalizedValue]) {
-            return this.loadEnvironmentTexture(ENVIRONMENT_URLS[normalizedValue], {
-                ...options,
-                environmentId: normalizedValue,
-            });
-        }
-
-        return this.loadEnvironmentTexture(normalizedValue, {
-            ...options,
-            environmentId: CUSTOM_ENVIRONMENT_ID,
-        });
-    }
-
-    getMeshIntersectionFromEvent(event) {
-        if (!this.model || !this.meshParts.length || this.transformControls?.dragging) {
-            return null;
-        }
-
-        const bounds = this.renderer.domElement.getBoundingClientRect();
-        if (!bounds.width || !bounds.height) {
-            return null;
-        }
-
-        this.pointerNdc.x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1;
-        this.pointerNdc.y = -(((event.clientY - bounds.top) / bounds.height) * 2 - 1);
-        this.raycaster.setFromCamera(this.pointerNdc, this.camera);
-
-        const intersections = this.raycaster.intersectObjects(
-            this.meshParts.filter((mesh) => this.isObjectEffectivelyVisible(mesh)),
-            false
-        );
-
-        return intersections.find((entry) => this.isSelectableMesh(entry.object)) || null;
-    }
-
-    handleCanvasPointerDown(event) {
-        if (event.button !== 0) {
-            return;
-        }
-
-        this.renderer.domElement.focus();
-        this.canvasPointerDown = {
-            x: event.clientX,
-            y: event.clientY,
-        };
-    }
-
-    handleCanvasPointerMove(event) {
-        if (!this.isSelectionChannelEnabled('canvas')) {
-            this.clearHoverState();
-            return;
-        }
-
-        if (this.transformControls?.dragging) {
-            this.clearHoverState();
-            return;
-        }
-
-        if (this.canvasPointerDown) {
-            const movedX = Math.abs(event.clientX - this.canvasPointerDown.x);
-            const movedY = Math.abs(event.clientY - this.canvasPointerDown.y);
-            if (movedX > POINTER_DRAG_THRESHOLD || movedY > POINTER_DRAG_THRESHOLD) {
-                this.clearHoverState();
-                return;
-            }
-        }
-
-        const intersection = this.getMeshIntersectionFromEvent(event);
-        this.setHoveredMeshPart(intersection?.object || null);
-    }
-
-    handleCanvasPointerLeave() {
-        this.canvasPointerDown = null;
-        this.clearHoverState();
-    }
-
-    handleCanvasClick(event) {
-        if (event.button !== 0 || !this.isSelectionChannelEnabled('canvas')) {
-            return;
-        }
-
-        if (this.transformControls?.dragging) {
-            this.canvasPointerDown = null;
-            return;
-        }
-
-        if (this.canvasPointerDown) {
-            const movedX = Math.abs(event.clientX - this.canvasPointerDown.x);
-            const movedY = Math.abs(event.clientY - this.canvasPointerDown.y);
-            this.canvasPointerDown = null;
-
-            if (movedX > POINTER_DRAG_THRESHOLD || movedY > POINTER_DRAG_THRESHOLD) {
-                return;
-            }
-        }
-
-        const intersection = this.getMeshIntersectionFromEvent(event);
-        if (!intersection?.object) {
-            this.clearSelection({
-                source: 'canvas-clear',
-            });
-            return;
-        }
-
-        this.selectMeshPartInSceneGraph(intersection.object, null, {
-            source: 'canvas',
-            channel: 'canvas',
-        });
-    }
-
-    handleDragEnter(event) {
-        event.preventDefault();
-        this.dropHoverDepth += 1;
-        this.setDropHintVisible(true);
-    }
-
-    handleDragOver(event) {
-        event.preventDefault();
-        this.setDropHintVisible(true);
-    }
-
-    handleDragLeave(event) {
-        event.preventDefault();
-        this.dropHoverDepth = Math.max(0, this.dropHoverDepth - 1);
-        if (this.dropHoverDepth === 0) {
-            this.setDropHintVisible(false);
-        }
-    }
-
-    handleDrop(event) {
-        event.preventDefault();
-        this.dropHoverDepth = 0;
-        this.setDropHintVisible(false);
-
-        const files = Array.from(event.dataTransfer?.files || []);
-        const modelFile = files.find((file) => isSupportedModelFileName(file.name));
-        if (!modelFile) {
-            this.showStatus('Drop a supported model file: .glb, .gltf, .obj, .fbx, or .ply.', 'error', 3500);
-            return;
-        }
-
-        void this.loadModelFromFile(modelFile)
-            .then(() => {
-                this.shadowRoot.querySelector('#fileInputContainer').style.display = 'none';
-                this.showStatus(`Loaded ${modelFile.name} from drag-and-drop.`, 'success', 2500);
-            })
-            .catch((error) => {
-                this.emitViewerError('load-model', error, { fileName: modelFile.name });
-            });
-    }
-
-    handleComponentKeyDown(event) {
-        if (isTextEntryElement(event.target)) {
-            return;
-        }
-
-        if (event.key === 'Escape') {
-            if (!this.selectedMeshPart) {
-                return;
-            }
-
-            event.preventDefault();
-            event.stopPropagation();
-            this.clearSelection({
-                source: 'keyboard',
-            });
-            return;
-        }
-
-        if (event.code === 'KeyF') {
-            event.preventDefault();
-            this.fitCameraToModel({
-                source: 'keyboard',
-                syncAttribute: true,
-            });
-            return;
-        }
-
-        if (event.code === 'KeyR') {
-            event.preventDefault();
-            this.resetView({
-                source: 'keyboard',
-                syncAttribute: true,
-            });
-            return;
-        }
-
-        if (event.code === 'Space' && this.animationActions.length > 0) {
-            event.preventDefault();
-            if (this.state.isAnimationPlaying) {
-                this.pauseAnimation();
-            } else {
-                this.runAnimation();
-            }
-        }
-    }
-
-    handleCanvasDoubleClick(event) {
-        if (event.button !== 0) {
-            return;
-        }
-
-        const intersection = this.getMeshIntersectionFromEvent(event);
-        if (!intersection?.object) {
-            return;
-        }
-
-        this.frameObject(intersection.object, {
-            source: 'double-click',
-            syncAttribute: true,
-        });
-    }
-
-    setCameraOrbit(value, options = {}) {
-        const {
-            source = 'api',
-            syncAttribute = false,
-            emitEvent = true,
-            saveAsDefault = false,
-        } = options;
-        const position = parseVector3String(value);
-        if (!position) {
-            return false;
-        }
-
-        this.camera.position.copy(position);
-        this.camera.lookAt(this.controls.target);
-        this.isApplyingCameraState = true;
-        try {
-            this.controls.update();
-            this.requestRender();
-        } finally {
-            this.isApplyingCameraState = false;
-        }
-
-        if (syncAttribute) {
-            this.syncCameraAttributes();
-        }
-
-        if (saveAsDefault) {
-            this.captureCurrentCameraStateAsDefault();
-        }
-
-        if (emitEvent) {
-            this.emitCameraChange(source);
-        }
-
-        return true;
-    }
-
-    setCameraTarget(value, options = {}) {
-        const {
-            source = 'api',
-            syncAttribute = false,
-            emitEvent = true,
-            saveAsDefault = false,
-        } = options;
-        const target = parseVector3String(value);
-        if (!target) {
-            return false;
-        }
-
-        this.controls.target.copy(target);
-        this.camera.lookAt(target);
-        this.isApplyingCameraState = true;
-        try {
-            this.controls.update();
-            this.requestRender();
-        } finally {
-            this.isApplyingCameraState = false;
-        }
-
-        if (syncAttribute) {
-            this.syncCameraAttributes();
-        }
-
-        if (saveAsDefault) {
-            this.captureCurrentCameraStateAsDefault();
-        }
-
-        if (emitEvent) {
-            this.emitCameraChange(source);
-        }
-
-        return true;
-    }
-
-    setCameraUp(value, options = {}) {
-        const {
-            source = 'api',
-            syncAttribute = false,
-            emitEvent = true,
-            saveAsDefault = false,
-        } = options;
-        const up = parseVector3String(value);
-        if (!up) {
-            return false;
-        }
-
-        this.camera.up.copy(up.normalize());
-        this.camera.lookAt(this.controls.target);
-        this.isApplyingCameraState = true;
-        try {
-            this.controls.update();
-            this.requestRender();
-        } finally {
-            this.isApplyingCameraState = false;
-        }
-
-        if (syncAttribute) {
-            this.syncCameraAttributes();
-        }
-
-        if (saveAsDefault) {
-            this.captureCurrentCameraStateAsDefault();
-        }
-
-        if (emitEvent) {
-            this.emitCameraChange(source);
-        }
-
-        return true;
-    }
-
-    frameObject(object, options = {}) {
-        const {
-            padding = 1.5,
-            source = 'api',
-            emitEvent = true,
-            syncAttribute = false,
-            transitionDuration = 260,
-        } = options;
-
-        if (!object) {
-            return null;
-        }
-
-        const box = new THREE.Box3().setFromObject(object);
-        if (box.isEmpty()) {
-            return null;
-        }
-
-        const size = box.getSize(new THREE.Vector3());
-        const center = box.getCenter(new THREE.Vector3());
-        const maxDim = Math.max(size.x, size.y, size.z, 1);
-        const fov = THREE.MathUtils.degToRad(this.camera.fov);
-        const distance = ((maxDim / 2) / Math.tan(fov / 2)) * padding;
-
-        const direction = this.camera.position.clone().sub(this.controls.target);
-        if (direction.lengthSq() === 0) {
-            direction.set(0, 0, 1);
-        }
-
-        direction.normalize().multiplyScalar(distance);
-        const targetSnapshot = this.cloneCameraState(this.getCameraStateSnapshot());
-        targetSnapshot.target = {
-            x: center.x,
-            y: center.y,
-            z: center.z,
-        };
-        targetSnapshot.position = {
-            x: center.x + direction.x,
-            y: center.y + direction.y,
-            z: center.z + direction.z,
-        };
-        targetSnapshot.near = Math.max(0.01, maxDim / 100);
-        targetSnapshot.far = Math.max(1000, distance * 10);
-
-        this.applyCameraStateSnapshot(targetSnapshot, {
-            source,
-            emitEvent,
-            syncAttribute,
-            transitionDuration,
-        });
-
-        return {
-            center,
-            size,
-            maxDim,
-            distance,
-        };
+    openTextureDialog(entry) {
+        const canvas = this.textureDialogCanvas;
+        drawTextureMap(canvas, entry, 1024, false);
+        const dimensions = entry.width && entry.height ? ` - ${entry.width}x${entry.height}` : '';
+        this.textureDialogCaption.textContent = `${entry.label}${dimensions}${entry.name ? ` - ${entry.name}` : ''}`;
+        this.textureDialog.showModal();
     }
 
     fitCameraToModel(options = {}) {
-        return this.frameObject(this.model, options);
+        const targetObject = this.model || this.placeholder;
+        const bounds = new THREE.Box3().setFromObject(targetObject);
+        if (bounds.isEmpty()) return;
+        bounds.getCenter(this.modelCenter);
+        bounds.getSize(this.modelSize);
+        this.modelBounds.copy(bounds);
+        this.modelRadius = Math.max(this.modelSize.length() * 0.5, 0.01);
+        this.controls.target.copy(this.parseVector3Attribute('camera-target') || this.modelCenter);
+        const distance = this.modelRadius / Math.sin(THREE.MathUtils.degToRad(this.camera.fov * 0.5));
+        const offset = options.useInitialOrbit && this.initialCameraOrbit
+            ? this.initialCameraOrbit.clone()
+            : new THREE.Vector3(0.55, 0.32, 1).normalize().multiplyScalar(distance * 1.35);
+        if (offset.length() < this.modelRadius * 0.5) {
+            offset.normalize().multiplyScalar(distance * 1.35);
+        }
+        this.camera.position.copy(this.controls.target).add(offset);
+        this.camera.near = Math.max(0.001, this.modelRadius / 100);
+        this.camera.far = Math.max(1000, this.modelRadius * 100);
+        this.camera.updateProjectionMatrix();
+        this.controls.update();
+        this.updateGridScale();
+        this.cameraTransitionDefault = this.getCameraStateSnapshot();
     }
 
-    frameSelected(options = {}) {
-        if (!this.selectedMeshPart) {
-            return null;
+    resetView() {
+        if (this.cameraTransitionDefault) {
+            this.setCameraStateSnapshot(this.cameraTransitionDefault);
+        } else {
+            this.fitCameraToModel({ animate: false, useInitialOrbit: true });
         }
-
-        return this.frameObject(this.selectedMeshPart, options);
     }
 
-    resetView(options = {}) {
-        const {
-            source = 'api',
-            emitEvent = true,
-            syncAttribute = false,
-            transitionDuration = 260,
-        } = options;
-        const targetState = this.model && this.modelDefaultCameraState
-            ? this.modelDefaultCameraState
-            : this.defaultCameraState;
-
-        return this.applyCameraStateSnapshot(targetState, {
-            source,
-            emitEvent,
-            syncAttribute,
-            transitionDuration,
-        });
-    }
-
-    getSelectedMaterialIndex(mesh = this.selectedMeshPart) {
-        const materialSlotSelector = this.shadowRoot.querySelector('#materialSlotSelector');
-        const parsedIndex = parseInt(materialSlotSelector?.value ?? `${this.selectedMaterialIndex}`, 10);
-        const maxIndex = Math.max(0, this.getMaterialSlotCountForMesh(mesh) - 1);
-
-        if (!Number.isFinite(parsedIndex)) {
-            return 0;
-        }
-
-        return THREE.MathUtils.clamp(parsedIndex, 0, maxIndex);
-    }
-
-    getMaterialSelection() {
-        const partSelector = this.shadowRoot.querySelector('#texturePartSelector');
-        const typeSelector = this.shadowRoot.querySelector('#textureTypeSelector');
-        const selectedPartIndex = parseInt(partSelector.value, 10);
-
-        if (isNaN(selectedPartIndex) || selectedPartIndex < 0 || selectedPartIndex >= this.meshParts.length) {
-            return null;
-        }
-
-        const mesh = this.meshParts[selectedPartIndex];
-        const materialIndex = this.getSelectedMaterialIndex(mesh);
-        const material = getMaterialEntryAt(mesh.material, materialIndex);
-        const storedMaterial = this.getMaterialStoreMaterial(mesh, materialIndex, this.originalMaterials);
-        const initialMaterial = this.getMaterialStoreMaterial(mesh, materialIndex, this.initialMaterials);
-
-        if (!mesh || !material || !storedMaterial) {
-            return null;
-        }
-
+    getCameraStateSnapshot() {
         return {
-            mesh,
-            material,
-            storedMaterial,
-            initialMaterial,
-            materialIndex,
-            mapType: typeSelector.value,
-            selectedPartIndex,
+            position: this.camera.position.toArray(),
+            target: this.controls.target.toArray(),
+            up: this.camera.up.toArray(),
+            fov: this.camera.fov
         };
     }
 
-    getTextureSelection() {
-        return this.getMaterialSelection();
-    }
-
-    getTextureForPreview(selection) {
-        if (!selection) {
-            return null;
+    setCameraStateSnapshot(snapshot) {
+        if (!snapshot) return;
+        if (Array.isArray(snapshot.position)) this.camera.position.fromArray(snapshot.position);
+        if (Array.isArray(snapshot.target)) this.controls.target.fromArray(snapshot.target);
+        if (Array.isArray(snapshot.up)) this.camera.up.fromArray(snapshot.up);
+        if (Number.isFinite(snapshot.fov)) {
+            this.camera.fov = snapshot.fov;
+            this.camera.updateProjectionMatrix();
         }
-
-        return selection.storedMaterial[selection.mapType]
-            || selection.material[selection.mapType]
-            || selection.initialMaterial?.[selection.mapType]
-            || null;
+        this.controls.update();
     }
 
-    setMeshMaterialAt(mesh, materialIndex, nextMaterial) {
-        if (!mesh || !nextMaterial) {
+    updateGridScale() {
+        const size = Math.max(this.modelSize.x, this.modelSize.y, this.modelSize.z, 1);
+        this.grid.scale.setScalar(size);
+        this.grid.position.copy(this.modelCenter);
+        this.grid.position.y = this.modelBounds.min.y;
+    }
+
+    handlePointerDown(event) {
+        this.pointerStart.set(event.clientX, event.clientY);
+        this.draggingPointer = false;
+    }
+
+    handlePointerMove(event) {
+        if (this.pointerStart.distanceTo(new THREE.Vector2(event.clientX, event.clientY)) > 4) {
+            this.draggingPointer = true;
+        }
+    }
+
+    handlePointerUp(event) {
+        if (this.draggingPointer || this.state.selectionMode === 'none' || !this.model) return;
+        const rect = this.renderer.domElement.getBoundingClientRect();
+        this.pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        this.pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        this.raycaster.setFromCamera(this.pointer, this.camera);
+        const hits = this.raycaster.intersectObjects(this.meshParts, false);
+        if (!hits.length) {
+            this.clearSelection();
             return;
         }
+        this.selectMeshPart(hits[0].object);
+    }
 
-        if (Array.isArray(mesh.material)) {
-            mesh.material[materialIndex] = nextMaterial;
+    selectMeshPart(mesh) {
+        this.selectedMesh = mesh || null;
+        if (this.selectedMesh) {
+            this.selectionHelper.setFromObject(this.selectedMesh);
+            this.selectionHelper.visible = true;
         } else {
-            mesh.material = nextMaterial;
+            this.selectionHelper.visible = false;
         }
-    }
-
-    createDisplayMaterialFromSnapshot(materialSnapshot) {
-        if (this.noPBR) {
-            return new THREE.MeshBasicMaterial({
-                map: materialSnapshot?.map || null,
-                color: materialSnapshot?.color?.clone ? materialSnapshot.color.clone() : undefined,
-                opacity: materialSnapshot?.opacity ?? 1,
-                transparent: materialSnapshot?.transparent ?? false,
-                side: materialSnapshot?.side ?? THREE.FrontSide,
-            });
-        }
-
-        const material = materialSnapshot.clone();
-        if ('envMapIntensity' in material) {
-            material.envMapIntensity = this.getEffectiveEnvironmentIntensity(materialSnapshot?.envMapIntensity ?? 1);
-        }
-        if (this.currentEnvironmentTexture) {
-            material.envMap = this.currentEnvironmentTexture;
-        }
-        return material;
-    }
-
-    applyWireframeSupportToMaterialEntry(materialEntry) {
-        if (Array.isArray(materialEntry)) {
-            materialEntry.forEach((material) => this.modifyMaterialForWireframe(material));
-            return;
-        }
-
-        this.modifyMaterialForWireframe(materialEntry);
-    }
-
-    applyTextureEncoding(texture, mapType) {
-        if (!texture) {
-            return;
-        }
-
-        texture.flipY = false;
-        texture.encoding = mapType === 'map' || mapType === 'emissiveMap'
-            ? THREE.sRGBEncoding
-            : THREE.LinearEncoding;
-    }
-
-    normalizeMeshMaterial(mesh) {
-        const materials = getMaterialArray(mesh?.material);
-        if (!materials.length) {
-            return null;
-        }
-
-        const normalizedMaterials = materials.map((material) => createStandardMaterialFromMaterial(material));
-        normalizedMaterials.forEach((normalizedMaterial) => {
-            if (normalizedMaterial.map) {
-                normalizedMaterial.map.encoding = THREE.sRGBEncoding;
-            }
-            if (normalizedMaterial.emissiveMap) {
-                normalizedMaterial.emissiveMap.encoding = THREE.sRGBEncoding;
-            }
-            if (normalizedMaterial.normalMap) {
-                normalizedMaterial.normalMap.encoding = THREE.LinearEncoding;
-            }
-            if (normalizedMaterial.aoMap) {
-                normalizedMaterial.aoMap.encoding = THREE.LinearEncoding;
-                if (mesh.geometry.attributes.uv && !mesh.geometry.attributes.uv2) {
-                    mesh.geometry.setAttribute('uv2', mesh.geometry.attributes.uv);
-                }
-            }
-            normalizedMaterial.needsUpdate = true;
-        });
-
-        mesh.material = Array.isArray(mesh.material) ? normalizedMaterials : normalizedMaterials[0];
-
-        return mesh.material;
-    }
-
-    resetAnimationState(options = {}) {
-        const { emitEvent = true, source = 'reset' } = options;
-        const hadAnimationState = this.currentAction || this.animationActions.length > 0 || this.state.animationSelection !== 'none';
-
-        if (this.mixer) {
-            this.mixer.removeEventListener('finished', this.handleAnimationMixerFinished);
-            this.mixer.stopAllAction();
-            this.mixer = null;
-        }
-
-        if (this.animationActions) {
-            this.animationActions.forEach(action => action.stop());
-        }
-
-        if (this.currentAction) {
-            this.currentAction.stop();
-        }
-
-        this.animationActions = [];
-        this.currentAction = null;
-        this.state.isAnimationPlaying = false;
-        this.state.animationSelection = 'none';
-        this.state.animationSpeed = DEFAULT_ANIMATION_SPEED;
-        this.state.animationLoopMode = DEFAULT_ANIMATION_LOOP;
-        this.isScrubbingAnimationTimeline = false;
-        this.populateAnimationSelector();
-        this.refreshUiFromState({ syncTextureUi: false });
-
-        if (emitEvent && hadAnimationState) {
-            this.emitAnimationChange(source, 'reset');
-        }
-    }
-
-    clearSelectionState(options = {}) {
-        const { emitEvent = true, source = 'reset' } = options;
-        const hadSelection = !!this.selectedMeshPart;
-
-        if (this.selectedSceneGraphLabel) {
-            this.selectedSceneGraphLabel.classList.remove('selected');
-        }
-
-        this.selectedSceneGraphLabel = null;
-        this.selectedMeshPart = null;
-        this.selectedMeshPartIndex = -1;
-        this.selectedMaterialIndex = 0;
-        this.syncMaterialEditorControls();
-        this.updateCameraActionButtons();
-        this.updateSelectionHelpers();
-        this.requestRender();
-
-        if (emitEvent && hadSelection) {
-            this.emitSelectionChange(source);
-        }
-    }
-
-    disposeCurrentModel() {
-        if (!this.model) {
-            return;
-        }
-
-        this.scene.remove(this.model);
-        const disposedTextures = new Set();
-
-        this.model.traverse((child) => {
-            if (!child.isMesh) {
-                return;
-            }
-
-            if (child.geometry) {
-                child.geometry.dispose();
-            }
-
-            this.disposeMaterialResources(child.material, disposedTextures);
-        });
-
-        this.transformControls.detach();
-        this.model = null;
-    }
-
-    resetModelUiState(showLoading = true) {
-        this.shadowRoot.querySelector('#modelInfo').innerHTML = showLoading
-            ? '<strong>[Model Info]</strong> loading...'
-            : '<strong>[Model Info]</strong> No model loaded';
-        this.shadowRoot.querySelector('#posX').value = 0;
-        this.shadowRoot.querySelector('#posY').value = 0;
-        this.shadowRoot.querySelector('#posZ').value = 0;
-        this.shadowRoot.querySelector('#rotX').value = 0;
-        this.shadowRoot.querySelector('#rotY').value = 0;
-        this.shadowRoot.querySelector('#rotZ').value = 0;
-        this.shadowRoot.querySelector('#scale').value = 1;
-        this.shadowRoot.querySelector('#baseColorInput').value = '#ffffff';
-        this.shadowRoot.querySelector('#emissiveColorInput').value = '#000000';
-        this.shadowRoot.querySelector('#emissiveIntensityInput').value = 1;
-        this.shadowRoot.querySelector('#opacityInput').value = 1;
-        this.shadowRoot.querySelector('#transparentToggle').checked = false;
-        this.shadowRoot.querySelector('#doubleSidedToggle').checked = false;
-        this.shadowRoot.querySelector('#roughness').value = 0.5;
-        this.shadowRoot.querySelector('#metalness').value = 0.5;
-        this.shadowRoot.querySelector('#normalScaleXInput').value = 1;
-        this.shadowRoot.querySelector('#normalScaleYInput').value = 1;
-        this.shadowRoot.querySelector('#envMapIntensityInput').value = 1;
-        this.shadowRoot.querySelector('#environmentUrlInput').value = '';
-        this.shadowRoot.querySelector('#environmentIntensityInput').value = DEFAULT_ENVIRONMENT_INTENSITY;
-        this.shadowRoot.querySelector('#environmentRotationInput').value = DEFAULT_ENVIRONMENT_ROTATION;
-        this.shadowRoot.querySelector('#environmentBackgroundToggle').checked = DEFAULT_ENVIRONMENT_BACKGROUND_VISIBLE;
-        this.shadowRoot.querySelector('#exposureInput').value = this.state.exposure;
-        this.shadowRoot.querySelector('#uvRepeatXInput').value = 1;
-        this.shadowRoot.querySelector('#uvRepeatYInput').value = 1;
-        this.shadowRoot.querySelector('#uvOffsetXInput').value = 0;
-        this.shadowRoot.querySelector('#uvOffsetYInput').value = 0;
-        this.shadowRoot.querySelector('#uvRotationInput').value = 0;
-        this.shadowRoot.querySelector('#sceneGraphTree').innerHTML = '';
-        this.sceneGraphLabelByMeshUuid.clear();
-        this.shadowRoot.querySelector('#texturePartSelector').innerHTML = '';
-        this.shadowRoot.querySelector('#materialSlotSelector').innerHTML = '';
-        this.shadowRoot.querySelector('#texturePreview').innerHTML = '';
-        this.shadowRoot.querySelector('#texturePreview').textContent = 'None';
-        Object.assign(this.shadowRoot.querySelector('#texturePreview').style, PREVIEW_TEXT_STYLE);
-        this.shadowRoot.querySelector('#textureMetaInfo').textContent = 'No texture selected';
-
-        const historySelector = this.shadowRoot.querySelector('#textureHistorySelector');
-        if (historySelector) {
-            historySelector.innerHTML = '<option value="-1">Current</option>';
-        }
-
-        const explodeFieldset = this.shadowRoot.querySelector('#explode-fieldset');
-        if (explodeFieldset) {
-            explodeFieldset.remove();
-        }
-
-        this.shadowRoot.querySelector('#anim_description').style.display = 'none';
-        this.updateRecordingStatus('Idle');
-        this.setMaterialEditorControlsEnabled(false);
-        this.clearHoverState();
-    }
-
-    discardModel() {
-        if (this.model || Object.keys(this.originalMaterials).length > 0) {
-            this.resetModelSession({ showLoading: false });
-            this.reflectAttribute('src', null);
-
-            const fileInputContainer = this.shadowRoot.querySelector('#fileInputContainer');
-            fileInputContainer.style.display = 'block';
-
-            this.requestRender();
-        }
-    }
-
-    loadModelFromUrl(url) {
-        if (!url) {
-            return Promise.reject(new Error('A model URL is required.'));
-        }
-
-        const fileName = url.split('/').pop()?.split('?')[0] || 'model';
-        this.reflectAttribute('src', url);
-        return this.loadModel(url, fileName);
-    }
-
-    loadModel(url, fileName) {
-        return new Promise((resolve, reject) => {
-        const progressBar = this.shadowRoot.querySelector('#loadingProgressBar');
-        progressBar.style.display = 'block';
-        progressBar.style.width = '0%';
-        const shouldRevokeObjectUrl = typeof url === 'string' && url.startsWith('blob:');
-        this.resetModelSession({ showLoading: true });
-        this.showStatus(`Loading ${fileName}...`, 'info');
-
-        const fileExtension = fileName.split('.').pop().toLowerCase();
-        switch (fileExtension) {
-            case 'gltf':
-            case 'glb':
-                this.loader = this.gltfLoader;
-                break;
-            case 'obj':
-                this.loader = this.objLoader;
-                break;
-            case 'fbx':
-                this.loader = this.fbxLoader;
-                break;
-            case 'ply':
-                this.loader = this.plyLoader;
-                break;
-            default:
-                const unsupportedFormatError = new Error(`Unsupported file format: ${fileExtension}`);
-                console.error('Unsupported file format:', fileExtension);
-                progressBar.style.display = 'none';
-                if (shouldRevokeObjectUrl) {
-                    URL.revokeObjectURL(url);
-                }
-                this.emitViewerError('load-model', unsupportedFormatError, { src: url, fileName });
-                reject(unsupportedFormatError);
-                return;
-        }
-
-        this.loader.load(url, (object) => {
-            switch (fileExtension) {
-                case 'gltf':
-                case 'glb':
-                    this.model = object.scene;
-                    break;
-                case 'fbx':
-                case 'obj':
-                    this.model = object;
-                    break;
-                case 'ply':
-                    // PLYLoader는 BufferGeometry를 반환.
-                    const geometry = object;
-                    // 정점 노멀이 없는 경우 계산.
-                    if (!geometry.attributes.normal) {
-                        geometry.computeVertexNormals();
-                    }
-                    // 정점 색상 정보가 있는지 확인하여 재질을 설정.
-                    const material = new THREE.MeshStandardMaterial({ vertexColors: geometry.hasAttribute('color') });
-                    this.model = new THREE.Mesh(geometry, material);
-                    break;
-            }
-
-            const box = new THREE.Box3().setFromObject(this.model);
-            const size = box.getSize(new THREE.Vector3());
-            const maxDim = Math.max(size.x, size.y, size.z);
-            let scaleFactor = 1;
-            
-            this.modelMaxDim = maxDim;
-
-            if (maxDim > 0) {
-                const targetSize = 10;
-                scaleFactor = targetSize / maxDim;
-            }
-
-            this.model.scale.set(scaleFactor, scaleFactor, scaleFactor);
-            this.modelSize = scaleFactor;
-            this.shadowRoot.querySelector('#scale').value = this.modelSize;
-
-            const updatedBox  = new THREE.Box3().setFromObject(this.model);
-            const center = updatedBox.getCenter(new THREE.Vector3());
-            this.model.position.sub(center);
-
-            if (object.animations && object.animations.length > 0) {
-                this.mixer = new THREE.AnimationMixer(this.model);
-                this.mixer.addEventListener('finished', this.handleAnimationMixerFinished);
-                this.animationActions = object.animations.map(clip => this.mixer.clipAction(clip));
-                this.animationActions.forEach((action) => this.configureAnimationAction(action));
-
-                this.currentAction = null;
-                this.populateAnimationSelector();
-                this.refreshUiFromState({ syncTextureUi: false });
-            }
-
-            const updatedsize = updatedBox.getSize(new THREE.Vector3());
-            const updatedMaxDim = Math.max(updatedsize.x, updatedsize.y, updatedsize.z);
-            const fov = this.camera.fov * (Math.PI / 180);
-            let cameraZ = Math.abs(updatedMaxDim / 2 / Math.tan(fov / 2));
-
-            this.gridHelper.position.set(center.x, - (updatedsize.y/2), center.z);
-
-            const cameraOrbit = this.getAttribute('camera-orbit');
-            if (cameraOrbit) {
-                this.setCameraOrbit(cameraOrbit, {
-                    source: 'attribute',
-                    emitEvent: false,
-                    saveAsDefault: true,
-                });
-            } else {
-                this.camera.position.set(0, 0, cameraZ * 1.5);
-                this.controls.target.set(0, 0, 0);
-                this.camera.lookAt(this.controls.target);
-            }
-
-            const sceneGraphTreeUI = this.shadowRoot.querySelector('#sceneGraphTree');
-            sceneGraphTreeUI.innerHTML = ''; // Clear the scene graph tree
-            this.sceneGraphLabelByMeshUuid.clear();
-            this.generateSceneGraphTree(this.model, sceneGraphTreeUI);
-
-            let vertexCount = 0, faceCount = 0;
-            this.standardMaterials = [];
-            this.meshParts = [];
-            this.meshPartTextureInfo = [];
-
-            const modelBbox = new THREE.Box3().setFromObject(this.model);
-            this.modelCenter = modelBbox.getCenter(new THREE.Vector3());
-
-
-            // Mesh Parts and Textures
-            this.model.traverse((child) => {
-                if (child.isMesh && child.geometry) {
-                    // for no-normal geometry
-                    if (!child.geometry.attributes.normal) {
-                        child.geometry.computeVertexNormals();
-                    }
-                    
-                    vertexCount += child.geometry.attributes.position.count;
-                    faceCount += child.geometry.index ? child.geometry.index.count / 3 : child.geometry.attributes.position.count / 3;
-
-                    child.userData.originalPosition = child.position.clone();
-                    this.meshParts.push(child);
-                    const materialEntry = this.normalizeMeshMaterial(child);
-                    if (!materialEntry) {
-                        return;
-                    }
-
-                    this.applyWireframeSupportToMaterialEntry(materialEntry);
-                    this.originalMaterials[child.uuid] = cloneMaterialEntry(materialEntry);
-                    this.initialMaterials[child.uuid] = cloneMaterialEntry(materialEntry);
-                    this.standardMaterials.push(...getMaterialArray(materialEntry));
-                }
-            });
-
-            this.populateTextureMapSelector();
-            this.canAdjustRoughnessMetalness = this.standardMaterials.length > 0;
-
-            this.meshParts.forEach((mesh, index) => {
-                const firstMaterial = getMaterialEntryAt(mesh.material, 0);
-                const partTextureInfo = {
-                    meshPartIndex: index,
-                    diffuseMap: firstMaterial?.map || null,
-                    roughnessMap: firstMaterial?.roughnessMap || null,
-                    metalnessMap: firstMaterial?.metalnessMap || null,
-                    normalMap: firstMaterial?.normalMap || null,
-                    aoMap: firstMaterial?.aoMap || null,
-                    emissiveMap: firstMaterial?.emissiveMap || null,
-                };
-                this.meshPartTextureInfo.push(partTextureInfo);
-            });
-
-            this.shadowRoot.querySelector('#modelInfo').innerHTML = `<strong>[Model Info]</strong> Vertices: ${vertexCount}, Faces: ${faceCount}`;
-            this.scene.add(this.model);
-            this.currentModelSource = shouldRevokeObjectUrl ? null : url;
-            this.currentModelFileName = fileName;
-
-            this.createExplodeSlider();
-
-            this.renderMode();
-            this.refreshUiFromState();
-            this.updateSelectionHelpers();
-            if (this.getAttribute('camera-target')) {
-                this.setCameraTarget(this.getAttribute('camera-target'), {
-                    source: 'attribute',
-                    emitEvent: false,
-                    saveAsDefault: true,
-                });
-            }
-            if (this.getAttribute('camera-up')) {
-                this.setCameraUp(this.getAttribute('camera-up'), {
-                    source: 'attribute',
-                    emitEvent: false,
-                    saveAsDefault: true,
-                });
-            }
-            const animationAttribute = this.getAttribute('animation');
-            if (animationAttribute) {
-                this.applyAnimationSelection(animationAttribute, {
-                    autoplay: this.hasAttribute('autoplay'),
-                    source: 'attribute',
-                    syncAttribute: false,
-                    emitEvent: false,
-                });
-            } else if (this.hasAttribute('autoplay') && this.animationActions.length > 0) {
-                this.applyAnimationSelection('0', {
-                    autoplay: true,
-                    source: 'attribute',
-                    syncAttribute: false,
-                    emitEvent: false,
-                });
-            }
-            if (this.hasAttribute('animation-speed')) {
-                this.setAnimationSpeed(parseFloat(this.getAttribute('animation-speed')), {
-                    source: 'attribute',
-                    syncAttribute: false,
-                    emitEvent: false,
-                });
-            }
-            if (this.hasAttribute('animation-loop')) {
-                this.setAnimationLoopMode(this.getAttribute('animation-loop'), {
-                    source: 'attribute',
-                    syncAttribute: false,
-                    emitEvent: false,
-                });
-            }
-            this.captureCurrentCameraStateAsDefault({ scope: 'model' });
-            progressBar.style.display = 'none';
-            this.updateDiscardButtonVisibility();
-            if (shouldRevokeObjectUrl) {
-                URL.revokeObjectURL(url);
-            }
-            const loadDetail = {
-                src: this.currentModelSource,
-                fileName,
-                format: fileExtension,
-                meshCount: this.meshParts.length,
-                animationCount: this.animationActions.length,
-                vertexCount,
-                faceCount,
-            };
-            this.emitEvent('viewer-load', loadDetail);
-            this.showStatus(`Loaded ${fileName}.`, 'success', 2500);
-            resolve(loadDetail);
-        }, (xhr) => {
-            if (xhr.lengthComputable) {
-                const percentComplete = xhr.loaded / xhr.total * 100;
-                progressBar.style.width = `${percentComplete}%`;
-            }
-        }, (error) => {
-            console.error('Loading Error:', error);
-            progressBar.style.display = 'none';
-            if (shouldRevokeObjectUrl) {
-                URL.revokeObjectURL(url);
-            }
-            this.emitViewerError('load-model', error, { src: url, fileName });
-            reject(error);
-        });
+        this.emitEvent('viewer-selection-change', {
+            name: this.selectedMesh?.name || null,
+            index: this.selectedMesh ? this.meshParts.indexOf(this.selectedMesh) : -1
         });
     }
 
-    runAnimation() {
-        if (!this.currentAction && this.animationActions.length > 0) {
-            this.applyAnimationSelection(this.getAttribute('animation') || this.state.animationSelection || '0', {
-                autoplay: true,
-                source: 'ui',
-                syncAttribute: true,
-            });
-            return;
-        }
+    selectMeshByName(name) {
+        const normalized = String(name || '').toLowerCase();
+        const mesh = this.meshParts.find((entry) => (entry.name || '').toLowerCase() === normalized)
+            || this.meshParts.find((entry) => (entry.name || '').toLowerCase().includes(normalized));
+        this.selectMeshPart(mesh || null);
+        return Boolean(mesh);
+    }
 
-        if (this.currentAction) {
-            const duration = this.getAnimationDuration();
-            if (duration > 0 && this.currentAction.time >= duration - 0.001) {
-                this.currentAction.reset();
+    selectMeshByIndex(index) {
+        const mesh = this.meshParts[Number(index)] || null;
+        this.selectMeshPart(mesh);
+        return Boolean(mesh);
+    }
+
+    clearSelection() {
+        this.selectMeshPart(null);
+    }
+
+    handleKeyDown(event) {
+        if (isTextEntryElement(event.target)) return;
+        if (event.key === 'Escape') {
+            this.setModeMenuOpen(false);
+            this.clearSelection();
+            this.setPanelOpen(false);
+        } else if (event.key.toLowerCase() === 'f') {
+            this.fitCameraToModel({ animate: false });
+        } else if (event.key.toLowerCase() === 'r') {
+            this.resetView();
+        } else if (event.key === ' ') {
+            if (this.animations.length) {
+                event.preventDefault();
+                this.setAnimationPlaying(!this.isAnimationPlaying);
             }
-            this.configureAnimationAction(this.currentAction);
-            this.currentAction.play();
-            this.currentAction.paused = false;
-            this.state.isAnimationPlaying = true;
-            this.refreshUiFromState({ syncTextureUi: false });
-            this.emitAnimationChange('ui', 'play');
         }
     }
 
-    pauseAnimation() {
-        if (this.currentAction) {
-            this.currentAction.paused = true;
-            this.state.isAnimationPlaying = false;
-            this.refreshUiFromState({ syncTextureUi: false });
-            this.emitAnimationChange('ui', 'pause');
-        }
-    }
-
-    setAnimation(selection, options = {}) {
-        return this.applyAnimationSelection(selection, options);
-    }
-
-    playAnimation() {
-        this.runAnimation();
-    }
-
-    setAnimationSpeed(speed, options = {}) {
-        const {
-            source = 'api',
-            syncAttribute = false,
-            emitEvent = true,
-        } = options;
-        const normalizedSpeed = Number.isFinite(speed)
-            ? THREE.MathUtils.clamp(speed, 0.1, 3)
-            : DEFAULT_ANIMATION_SPEED;
-
-        this.state.animationSpeed = normalizedSpeed;
-        this.animationActions.forEach((action) => {
-            action.setEffectiveTimeScale(normalizedSpeed);
+    async captureScreenshot(options = {}) {
+        this.renderer.render(this.scene, this.camera);
+        const blob = await new Promise((resolve, reject) => {
+            this.renderer.domElement.toBlob((result) => {
+                if (result) resolve(result);
+                else reject(new Error('Screenshot capture failed'));
+            }, 'image/png');
         });
-
-        if (syncAttribute) {
-            this.reflectAttribute('animation-speed', normalizedSpeed);
+        if (options.download) {
+            const url = URL.createObjectURL(blob);
+            const anchor = document.createElement('a');
+            anchor.href = url;
+            anchor.download = `${sanitizeFilenameSegment(this.currentFileName, 'viewer')}-snapshot.png`;
+            document.body.appendChild(anchor);
+            anchor.click();
+            anchor.remove();
+            window.setTimeout(() => URL.revokeObjectURL(url), 2000);
         }
-
-        this.refreshUiFromState({ syncTextureUi: false });
-        this.requestRender();
-
-        if (emitEvent) {
-            this.emitAnimationChange(source, 'speed');
-        }
-
-        return true;
+        return blob;
     }
 
-    setAnimationLoopMode(loopMode, options = {}) {
-        const {
-            source = 'api',
-            syncAttribute = false,
-            emitEvent = true,
-        } = options;
-        const normalizedLoopMode = VALID_ANIMATION_LOOP_MODES.has(loopMode)
-            ? loopMode
-            : DEFAULT_ANIMATION_LOOP;
-
-        this.state.animationLoopMode = normalizedLoopMode;
-        this.animationActions.forEach((action) => this.configureAnimationAction(action));
-
-        if (syncAttribute) {
-            this.reflectAttribute('animation-loop', normalizedLoopMode);
-        }
-
-        this.refreshUiFromState({ syncTextureUi: false });
-        this.requestRender();
-
-        if (emitEvent) {
-            this.emitAnimationChange(source, 'loop');
-        }
-
-        return true;
-    }
-
-    setAnimationTime(time, options = {}) {
-        const {
-            source = 'api',
-            emitEvent = true,
-        } = options;
-
-        if (!this.currentAction && this.animationActions.length > 0) {
-            this.applyAnimationSelection(this.state.animationSelection !== 'none' ? this.state.animationSelection : '0', {
-                autoplay: false,
-                source,
-                syncAttribute: true,
-                emitEvent: false,
-            });
-        }
-
-        if (!this.currentAction || !this.mixer) {
-            return false;
-        }
-
-        const duration = this.getAnimationDuration();
-        const targetTime = THREE.MathUtils.clamp(Number.isFinite(time) ? time : 0, 0, duration || 0);
-        this.currentAction.time = targetTime;
-        this.mixer.setTime(targetTime);
-        this.refreshUiFromState({ syncTextureUi: false });
-        this.requestRender();
-
-        if (emitEvent) {
-            this.emitAnimationChange(source, 'scrub');
-        }
-
-        return true;
-    }
-
-    resolveAnimationSelection(selection) {
-        if (!this.animationActions.length) {
-            return null;
-        }
-
-        const normalizedValue = selection === null || selection === undefined
-            ? 'none'
-            : `${selection}`.trim();
-
-        if (!normalizedValue || normalizedValue === 'none') {
-            return {
-                index: -1,
-                value: 'none',
-                clip: null,
-            };
-        }
-
-        if (/^\d+$/.test(normalizedValue)) {
-            const index = parseInt(normalizedValue, 10);
-            const action = this.animationActions[index];
-            if (action) {
-                return {
-                    index,
-                    value: `${index}`,
-                    clip: action.getClip(),
-                };
-            }
-        }
-
-        const normalizedName = normalizedValue.toLowerCase();
-        const matchedIndex = this.animationActions.findIndex((action) => {
-            const clipName = action.getClip()?.name || '';
-            return clipName === normalizedValue || clipName.toLowerCase() === normalizedName;
-        });
-
-        if (matchedIndex === -1) {
-            return null;
-        }
-
-        return {
-            index: matchedIndex,
-            value: `${matchedIndex}`,
-            clip: this.animationActions[matchedIndex].getClip(),
-        };
-    }
-
-    applyAnimationSelection(selection, options = {}) {
-        const {
-            autoplay = this.hasAttribute('autoplay'),
-            source = 'api',
-            syncAttribute = false,
-            emitEvent = true,
-        } = options;
-        const selectionValue = selection === null || selection === undefined ? 'none' : `${selection}`.trim();
-        const previousSelectionValue = this.state.animationSelection;
-        this.state.animationSelection = selectionValue || 'none';
-
-        if (!this.animationActions.length) {
-            this.refreshUiFromState({ syncTextureUi: false });
-            return false;
-        }
-
-        const resolvedSelection = this.resolveAnimationSelection(selectionValue);
-        if (!resolvedSelection) {
-            this.state.animationSelection = previousSelectionValue;
-            this.emitViewerError('set-animation', new Error(`Unknown animation selection: ${selectionValue}`), {
-                selection: selectionValue,
-            });
-            return false;
-        }
-
-        const previousAction = this.currentAction;
-
-        if (resolvedSelection.index === -1) {
-            if (previousAction) {
-                previousAction.stop();
-            }
-            this.currentAction = null;
-            this.state.isAnimationPlaying = false;
-            this.state.animationSelection = 'none';
+    async toggleFullscreen() {
+        if (document.fullscreenElement === this) {
+            await document.exitFullscreen();
         } else {
-            this.currentAction = this.animationActions[resolvedSelection.index];
-            const isChangingClip = previousAction && previousAction !== this.currentAction;
-
-            if (isChangingClip && !autoplay) {
-                previousAction.stop();
-            }
-
-            this.configureAnimationAction(this.currentAction);
-            this.currentAction.reset();
-            this.currentAction.setEffectiveWeight(1);
-            if (autoplay) {
-                if (isChangingClip) {
-                    previousAction.paused = false;
-                    previousAction.enabled = true;
-                    previousAction.play();
-                }
-                this.currentAction.play();
-                if (isChangingClip) {
-                    this.currentAction.crossFadeFrom(previousAction, ANIMATION_CROSS_FADE_DURATION, true);
-                }
-                this.currentAction.paused = false;
-            } else {
-                this.currentAction.play();
-                this.currentAction.paused = true;
-            }
-            this.state.isAnimationPlaying = autoplay;
-            this.state.animationSelection = resolvedSelection.clip?.name || resolvedSelection.value;
+            await this.requestFullscreen();
         }
-
-        if (syncAttribute) {
-            this.reflectAttribute('animation', this.state.animationSelection === 'none' ? null : this.state.animationSelection);
-        }
-
-        this.refreshUiFromState({ syncTextureUi: false });
-        this.requestRender();
-
-        if (emitEvent) {
-            this.emitAnimationChange(source, 'select');
-        }
-
-        return true;
+        window.setTimeout(() => this.resizeRenderer(), 60);
     }
 
-    applyAutoplayState(enabled, options = {}) {
-        const { source = 'api' } = options;
-        if (!this.animationActions.length) {
-            return false;
-        }
-
-        if (this.currentAction) {
-            if (enabled) {
-                this.currentAction.play();
-                this.currentAction.paused = false;
-                this.state.isAnimationPlaying = true;
-            } else {
-                this.currentAction.paused = true;
-                this.state.isAnimationPlaying = false;
-            }
-            this.refreshUiFromState({ syncTextureUi: false });
-            this.emitAnimationChange(source, 'autoplay');
-            return true;
-        }
-
-        if (!enabled && this.state.animationSelection === 'none') {
-            return false;
-        }
-
-        const selection = this.state.animationSelection !== 'none'
-            ? this.state.animationSelection
-            : '0';
-        return this.applyAnimationSelection(selection, {
-            autoplay: enabled,
-            source,
-            syncAttribute: false,
-            emitEvent: true,
-        });
+    setEnvironmentMenuOpen(open) {
+        const nextOpen = open === true;
+        this.environmentMenu.hidden = !nextOpen;
+        this.environmentToggle.setAttribute('aria-expanded', String(nextOpen));
+        if (nextOpen) this.syncEnvironmentControls();
     }
 
-    setMaterialEditorControlsEnabled(enabled) {
-        [
-            '#texturePartSelector',
-            '#materialSlotSelector',
-            '#baseColorInput',
-            '#emissiveColorInput',
-            '#emissiveIntensityInput',
-            '#opacityInput',
-            '#transparentToggle',
-            '#doubleSidedToggle',
-            '#roughness',
-            '#metalness',
-            '#normalScaleXInput',
-            '#normalScaleYInput',
-            '#envMapIntensityInput',
-            '#uvRotationInput',
-            '#uvRepeatXInput',
-            '#uvRepeatYInput',
-            '#uvOffsetXInput',
-            '#uvOffsetYInput',
-            '#textureTypeSelector',
-            '#textureHistorySelector',
-            '#replaceTextureBtn',
-            '#removeTextureBtn',
-            '#resetTextureBtn',
-            '#copyTextureSourceBtn',
-        ].forEach((selector) => {
-            const element = this.shadowRoot.querySelector(selector);
-            if (element) {
-                element.disabled = !enabled;
-            }
-        });
-    }
-
-    populateMaterialSlotSelector(mesh, preferredIndex = 0) {
-        const materialSlotSelector = this.shadowRoot.querySelector('#materialSlotSelector');
-        const slotCount = this.getMaterialSlotCountForMesh(mesh);
-
-        materialSlotSelector.innerHTML = '';
-        for (let index = 0; index < slotCount; index += 1) {
-            const option = document.createElement('option');
-            option.value = index;
-            option.textContent = slotCount > 1 ? `Material ${index + 1}` : 'Material 1';
-            materialSlotSelector.appendChild(option);
-        }
-
-        if (!slotCount) {
-            this.selectedMaterialIndex = 0;
-            return;
-        }
-
-        this.selectedMaterialIndex = THREE.MathUtils.clamp(preferredIndex, 0, slotCount - 1);
-        materialSlotSelector.value = `${this.selectedMaterialIndex}`;
-    }
-
-    updateTextureMetaInfo(texture) {
-        const metaElement = this.shadowRoot.querySelector('#textureMetaInfo');
-        const copySourceButton = this.shadowRoot.querySelector('#copyTextureSourceBtn');
-
-        if (!metaElement) {
-            return;
-        }
-
-        if (!texture) {
-            metaElement.textContent = 'No texture assigned';
-            if (copySourceButton) {
-                copySourceButton.disabled = true;
-            }
-            return;
-        }
-
-        const source = getTextureSource(texture);
-        const image = texture.image || texture.source?.data || null;
-        const width = image?.width || image?.videoWidth || image?.naturalWidth || null;
-        const height = image?.height || image?.videoHeight || image?.naturalHeight || null;
-        const details = [
-            source ? `Source: ${source}` : 'Source: embedded or unavailable',
-            width && height ? `Size: ${width} x ${height}` : null,
-            texture.name ? `Name: ${texture.name}` : null,
-        ].filter(Boolean);
-
-        metaElement.textContent = details.join('\n');
-        if (copySourceButton) {
-            copySourceButton.disabled = !source || !navigator.clipboard?.writeText;
-        }
-    }
-
-    syncMaterialEditorControls() {
-        const selection = this.getMaterialSelection();
-        const previewElement = this.shadowRoot.querySelector('#texturePreview');
-
-        if (!selection) {
-            this.selectedMaterialIndex = 0;
-            this.populateMaterialSlotSelector(null);
-            this.setMaterialEditorControlsEnabled(false);
-            this.updateTextureMetaInfo(null);
-            if (previewElement) {
-                previewElement.innerHTML = '';
-                previewElement.textContent = this.meshParts.length === 0 ? 'None' : 'Select';
-                Object.assign(previewElement.style, PREVIEW_TEXT_STYLE);
-            }
-            return;
-        }
-
-        const { storedMaterial, materialIndex } = selection;
-        this.selectedMaterialIndex = materialIndex;
-        this.populateMaterialSlotSelector(selection.mesh, materialIndex);
-        this.setMaterialEditorControlsEnabled(true);
-
-        this.shadowRoot.querySelector('#baseColorInput').value = `#${storedMaterial.color.getHexString()}`;
-        this.shadowRoot.querySelector('#emissiveColorInput').value = `#${storedMaterial.emissive.getHexString()}`;
-        this.shadowRoot.querySelector('#emissiveIntensityInput').value = storedMaterial.emissiveIntensity ?? 1;
-        this.shadowRoot.querySelector('#opacityInput').value = storedMaterial.opacity ?? 1;
-        this.shadowRoot.querySelector('#transparentToggle').checked = !!storedMaterial.transparent;
-        this.shadowRoot.querySelector('#doubleSidedToggle').checked = storedMaterial.side === THREE.DoubleSide;
-        this.shadowRoot.querySelector('#roughness').value = storedMaterial.roughness ?? 0.5;
-        this.shadowRoot.querySelector('#metalness').value = storedMaterial.metalness ?? 0.5;
-        this.shadowRoot.querySelector('#normalScaleXInput').value = storedMaterial.normalScale?.x ?? 1;
-        this.shadowRoot.querySelector('#normalScaleYInput').value = storedMaterial.normalScale?.y ?? 1;
-        this.shadowRoot.querySelector('#envMapIntensityInput').value = storedMaterial.envMapIntensity ?? 1;
-
-        const selectedTexture = this.getTextureForPreview(selection);
-        const uvTexture = selectedTexture
-            || storedMaterial.map
-            || storedMaterial.emissiveMap
-            || storedMaterial.normalMap
-            || storedMaterial.roughnessMap
-            || storedMaterial.metalnessMap
-            || storedMaterial.aoMap
-            || null;
-        this.shadowRoot.querySelector('#uvRepeatXInput').value = uvTexture?.repeat?.x ?? 1;
-        this.shadowRoot.querySelector('#uvRepeatYInput').value = uvTexture?.repeat?.y ?? 1;
-        this.shadowRoot.querySelector('#uvOffsetXInput').value = uvTexture?.offset?.x ?? 0;
-        this.shadowRoot.querySelector('#uvOffsetYInput').value = uvTexture?.offset?.y ?? 0;
-        this.shadowRoot.querySelector('#uvRotationInput').value = uvTexture?.rotation ?? 0;
-
-        this.updateTextureMapDisplay();
-        this.updateHistorySelector();
-    }
-
-    refreshMaterialsAfterEdit(mapType = null) {
-        if (this.state.viewMode === 'default') {
-            this.setDefaultMat();
-            return;
-        }
-
-        if (this.state.viewMode === 'diffuse' && mapType === 'map') {
-            this.showTexture();
-            return;
-        }
-
-        this.requestRender();
-    }
-
-    emitMaterialEditEvent(action, selection, extra = {}) {
-        const materialSnapshot = selection?.storedMaterial || null;
-        this.emitEvent('viewer-material-change', {
-            source: extra.source || 'ui',
-            action,
-            material: {
-                meshName: selection?.mesh?.name || null,
-                meshIndex: selection?.selectedPartIndex ?? -1,
-                materialIndex: selection?.materialIndex ?? 0,
-                mapType: selection?.mapType || null,
-                roughness: materialSnapshot?.roughness ?? null,
-                metalness: materialSnapshot?.metalness ?? null,
-                opacity: materialSnapshot?.opacity ?? null,
-                transparent: materialSnapshot?.transparent ?? null,
-                doubleSided: materialSnapshot ? materialSnapshot.side === THREE.DoubleSide : null,
-                envMapIntensity: materialSnapshot?.envMapIntensity ?? null,
-                ...extra.material,
-            },
-        });
-    }
-
-    applyMaterialPropertiesFromEditor(options = {}) {
-        const selection = this.getMaterialSelection();
-        if (!selection) {
-            return false;
-        }
-
-        const {
-            storedMaterial,
-            mesh,
-            materialIndex,
-        } = selection;
-        const normalScaleX = parseFloat(this.shadowRoot.querySelector('#normalScaleXInput').value);
-        const normalScaleY = parseFloat(this.shadowRoot.querySelector('#normalScaleYInput').value);
-        const opacity = THREE.MathUtils.clamp(parseFloat(this.shadowRoot.querySelector('#opacityInput').value), 0, 1);
-        const transparentEnabled = this.shadowRoot.querySelector('#transparentToggle').checked || opacity < 1;
-
-        storedMaterial.color.set(this.shadowRoot.querySelector('#baseColorInput').value);
-        storedMaterial.emissive.set(this.shadowRoot.querySelector('#emissiveColorInput').value);
-        storedMaterial.emissiveIntensity = Math.max(0, parseFloat(this.shadowRoot.querySelector('#emissiveIntensityInput').value) || 0);
-        storedMaterial.opacity = Number.isFinite(opacity) ? opacity : 1;
-        storedMaterial.transparent = transparentEnabled;
-        storedMaterial.side = this.shadowRoot.querySelector('#doubleSidedToggle').checked ? THREE.DoubleSide : THREE.FrontSide;
-        storedMaterial.roughness = THREE.MathUtils.clamp(parseFloat(this.shadowRoot.querySelector('#roughness').value) || 0.5, 0, 1);
-        storedMaterial.metalness = THREE.MathUtils.clamp(parseFloat(this.shadowRoot.querySelector('#metalness').value) || 0.5, 0, 1);
-        storedMaterial.envMapIntensity = Math.max(0, parseFloat(this.shadowRoot.querySelector('#envMapIntensityInput').value) || 0);
-        storedMaterial.normalScale = storedMaterial.normalScale || new THREE.Vector2(1, 1);
-        storedMaterial.normalScale.set(
-            Number.isFinite(normalScaleX) ? normalScaleX : 1,
-            Number.isFinite(normalScaleY) ? normalScaleY : 1
-        );
-        storedMaterial.needsUpdate = true;
-
-        const currentMaterial = getMaterialEntryAt(mesh.material, materialIndex);
-        if (this.state.viewMode === 'default' && currentMaterial?.isMeshStandardMaterial) {
-            currentMaterial.color.copy(storedMaterial.color);
-            currentMaterial.emissive.copy(storedMaterial.emissive);
-            currentMaterial.emissiveIntensity = storedMaterial.emissiveIntensity;
-            currentMaterial.opacity = storedMaterial.opacity;
-            currentMaterial.transparent = storedMaterial.transparent;
-            currentMaterial.side = storedMaterial.side;
-            currentMaterial.roughness = storedMaterial.roughness;
-            currentMaterial.metalness = storedMaterial.metalness;
-            currentMaterial.envMapIntensity = this.getEffectiveEnvironmentIntensity(storedMaterial.envMapIntensity);
-            currentMaterial.normalScale.copy(storedMaterial.normalScale);
-            currentMaterial.needsUpdate = true;
-        }
-
-        this.refreshMaterialsAfterEdit();
-        this.emitMaterialEditEvent(options.action || 'update-material-properties', selection, {
-            source: options.source || 'ui',
-        });
-        this.syncMaterialEditorControls();
-        return true;
-    }
-
-    applyUvTransformFromEditor(options = {}) {
-        const selection = this.getMaterialSelection();
-        if (!selection) {
-            return false;
-        }
-
-        const texture = this.getTextureForPreview(selection);
-        if (!texture) {
-            this.updateTextureMetaInfo(null);
-            return false;
-        }
-
-        texture.repeat.set(
-            parseFloat(this.shadowRoot.querySelector('#uvRepeatXInput').value) || 1,
-            parseFloat(this.shadowRoot.querySelector('#uvRepeatYInput').value) || 1
-        );
-        texture.offset.set(
-            parseFloat(this.shadowRoot.querySelector('#uvOffsetXInput').value) || 0,
-            parseFloat(this.shadowRoot.querySelector('#uvOffsetYInput').value) || 0
-        );
-        texture.rotation = parseFloat(this.shadowRoot.querySelector('#uvRotationInput').value) || 0;
-        texture.needsUpdate = true;
-
-        this.refreshMaterialsAfterEdit(selection.mapType);
-        this.emitMaterialEditEvent(options.action || 'update-uv-transform', selection, {
-            source: options.source || 'ui',
-            material: {
-                uv: {
-                    repeat: { x: texture.repeat.x, y: texture.repeat.y },
-                    offset: { x: texture.offset.x, y: texture.offset.y },
-                    rotation: texture.rotation,
-                },
-            },
-        });
-        this.updateTextureMapDisplay();
-        return true;
-    }
-
-    initTextureMapUI() {
-        const partSelector = this.shadowRoot.querySelector('#texturePartSelector');
-        const materialSlotSelector = this.shadowRoot.querySelector('#materialSlotSelector');
-        const typeSelector = this.shadowRoot.querySelector('#textureTypeSelector');
-        const replaceTextureButton = this.shadowRoot.querySelector('#replaceTextureBtn');
-        const removeTextureButton = this.shadowRoot.querySelector('#removeTextureBtn');
-        const resetTextureButton = this.shadowRoot.querySelector('#resetTextureBtn');
-        const copyTextureSourceButton = this.shadowRoot.querySelector('#copyTextureSourceBtn');
-        const historySelector = this.shadowRoot.querySelector('#textureHistorySelector');
-
-        Object.entries(TEXTURE_INPUT_IDS).forEach(([mapType, inputId]) => {
-            this.shadowRoot.querySelector(`#${inputId}`).addEventListener('change', (event) => {
-                this.handleTextureFileChange(event, mapType);
-            });
-        });
-
-        partSelector.addEventListener('change', () => {
-            const selection = this.getTextureSelection();
-            if (selection) {
-                this.selectMeshPartInSceneGraph(selection.mesh, null, {
-                    force: true,
-                    source: 'ui',
-                });
-            }
-            this.syncMaterialEditorControls();
-        });
-
-        materialSlotSelector.addEventListener('change', () => {
-            this.selectedMaterialIndex = this.getSelectedMaterialIndex(this.meshParts[parseInt(partSelector.value, 10)]);
-            this.syncMaterialEditorControls();
-        });
-
-        typeSelector.addEventListener('change', () => {
-            this.syncMaterialEditorControls();
-        });
-
-        replaceTextureButton.addEventListener('click', () => {
-            const selection = this.getTextureSelection();
-            if (!selection) {
-                return;
-            }
-
-            const fileInputId = TEXTURE_INPUT_IDS[selection.mapType];
-            if (!fileInputId) {
-                return;
-            }
-
-            const fileInput = this.shadowRoot.querySelector(`#${fileInputId}`);
-            fileInput.dataset.meshPartIndex = selection.selectedPartIndex;
-            fileInput.dataset.materialIndex = selection.materialIndex;
-            fileInput.value = '';
-            fileInput.click();
-        });
-
-        historySelector.addEventListener('change', () => {
-            this.applyHistoryTexture();
-        });
-
-        removeTextureButton.addEventListener('click', () => {
-            this.removeTexture();
-        });
-
-        resetTextureButton.addEventListener('click', () => {
-            this.resetTextureToOriginal();
-        });
-
-        copyTextureSourceButton.addEventListener('click', async () => {
-            const selection = this.getTextureSelection();
-            const texture = this.getTextureForPreview(selection);
-            const source = getTextureSource(texture);
-            if (!source || !navigator.clipboard?.writeText) {
-                return;
-            }
-
-            try {
-                await navigator.clipboard.writeText(source);
-            } catch (error) {
-                console.warn('Failed to copy texture source.', error);
-            }
-        });
-
-        [
-            '#baseColorInput',
-            '#emissiveColorInput',
-            '#emissiveIntensityInput',
-            '#opacityInput',
-            '#transparentToggle',
-            '#doubleSidedToggle',
-            '#roughness',
-            '#metalness',
-            '#normalScaleXInput',
-            '#normalScaleYInput',
-            '#envMapIntensityInput',
-        ].forEach((selector) => {
-            this.shadowRoot.querySelector(selector).addEventListener('input', () => {
-                this.applyMaterialPropertiesFromEditor();
-            });
-        });
-
-        [
-            '#uvRepeatXInput',
-            '#uvRepeatYInput',
-            '#uvOffsetXInput',
-            '#uvOffsetYInput',
-            '#uvRotationInput',
-        ].forEach((selector) => {
-            this.shadowRoot.querySelector(selector).addEventListener('input', () => {
-                this.applyUvTransformFromEditor();
-            });
-        });
-
-        this.setMaterialEditorControlsEnabled(false);
-    }
-
-    handleTextureFileChange(event, mapType) {
-        if (!event.target) {
-            console.error('event.target is null');
-            return;
-        }
-
-        const fileInput = event.target;
-        const file = fileInput.files[0];
-        if (!file) return;
-
-        const textureURL = URL.createObjectURL(file);
-        const texture = this.textureLoader.load(textureURL, () => {
-            const selectedMeshPartIndex = parseInt(fileInput.dataset.meshPartIndex);
-            const materialIndex = parseInt(fileInput.dataset.materialIndex || '0', 10);
-            if (isNaN(selectedMeshPartIndex)) {
-                console.error("Mesh part index is not set on the file input.");
-                URL.revokeObjectURL(textureURL);
-                return;
-            }
-
-            const mesh = this.meshParts[selectedMeshPartIndex];
-            const material = this.getMaterialStoreMaterial(mesh, materialIndex, this.originalMaterials);
-            if (!mesh || !material) {
-                console.error("Mesh or material not found for index:", selectedMeshPartIndex);
-                URL.revokeObjectURL(textureURL);
-                return;
-            }
-
-            this.applyTextureEncoding(texture, mapType);
-            texture.name = file.name;
-            this.saveTextureToHistory(mesh, materialIndex, mapType, material[mapType]);
-
-            material[mapType] = texture;
-            material.needsUpdate = true;
-            this.refreshMaterialsAfterEdit(mapType);
-
-            this.emitMaterialEditEvent('replace-texture', {
-                mesh,
-                selectedPartIndex: selectedMeshPartIndex,
-                materialIndex,
-                mapType,
-                storedMaterial: material,
-            });
-            this.syncMaterialEditorControls();
-            URL.revokeObjectURL(textureURL);
-        }, undefined, (error) => {
-            console.error('Texture loading error:', error);
-            alert('Failed to load texture.');
-            URL.revokeObjectURL(textureURL);
-        });
-    }
-
-    saveTextureToHistory(mesh, materialIndex, mapType, texture) {
-        const historyKey = this.getTextureHistoryKey(mesh, materialIndex);
-        if (!this.textureHistory.has(historyKey)) {
-            this.textureHistory.set(historyKey, new Map());
-        }
-        const typeHistory = this.textureHistory.get(historyKey);
-        if (!typeHistory.has(mapType)) {
-            typeHistory.set(mapType, []);
-        }
-        const historyArray = typeHistory.get(mapType);
-        if (texture) {
-            historyArray.push(cloneTexture(texture));
-        }
-    }
-
-    populateTextureMapSelector() {
-        const partSelector = this.shadowRoot.querySelector('#texturePartSelector');
-        const historySelector = this.shadowRoot.querySelector('#textureHistorySelector');
-
-        partSelector.innerHTML = '';
-        this.meshParts.forEach((mesh, index) => {
-            const option = document.createElement('option');
-            option.value = index;
-            const materialCount = this.getMaterialSlotCountForMesh(mesh);
-            option.textContent = mesh.name || `Part ${index + 1}`;
-            if (materialCount > 1) {
-                option.textContent += ` (${materialCount} materials)`;
-            }
-            partSelector.appendChild(option);
-        });
-
-        partSelector.selectedIndex = this.meshParts.length > 0 ? 0 : -1;
-        this.selectedMaterialIndex = 0;
-        this.populateMaterialSlotSelector(this.meshParts[0] || null, 0);
-        historySelector.value = '-1';
-
-        this.syncMaterialEditorControls();
-    }
-
-    updateHistorySelector() {
-        const historySelector = this.shadowRoot.querySelector('#textureHistorySelector');
-        historySelector.innerHTML = '<option value="-1">Current</option>';
-        const selection = this.getTextureSelection();
-
-        if (!selection) {
-            return;
-        }
-
-        const historyKey = this.getTextureHistoryKey(selection.mesh, selection.materialIndex);
-        if (this.textureHistory.has(historyKey) && this.textureHistory.get(historyKey).has(selection.mapType)) {
-            const historyArray = this.textureHistory.get(historyKey).get(selection.mapType);
-            historyArray.forEach((texture, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = `History ${index + 1}`;
-                historySelector.appendChild(option);
-            });
-        }
-    }
-
-    applyHistoryTexture() {
-        const historySelector = this.shadowRoot.querySelector('#textureHistorySelector');
-        const selection = this.getTextureSelection();
-        const historyIndex = parseInt(historySelector.value, 10);
-
-        if (!selection) {
-            return;
-        }
-
-        const { mesh, storedMaterial, initialMaterial, mapType, materialIndex } = selection;
-        const historyKey = this.getTextureHistoryKey(mesh, materialIndex);
-        let selectedTexture = null;
-
-        if (historyIndex === -1) {
-            selectedTexture = storedMaterial[mapType] || initialMaterial?.[mapType] || null;
-        } else if (this.textureHistory.has(historyKey) && this.textureHistory.get(historyKey).has(mapType)) {
-            const historyArray = this.textureHistory.get(historyKey).get(mapType);
-            if (historyIndex >= 0 && historyIndex < historyArray.length) {
-                selectedTexture = historyArray[historyIndex];
-            }
-        }
-
-        if (!selectedTexture) {
-            this.syncMaterialEditorControls();
-            return;
-        }
-
-        storedMaterial[mapType] = cloneTexture(selectedTexture);
-        storedMaterial.needsUpdate = true;
-
-        this.refreshMaterialsAfterEdit(mapType);
-        this.emitMaterialEditEvent('apply-texture-history', selection, {
-            source: 'ui',
-            material: {
-                historyIndex,
-            },
-        });
-        this.syncMaterialEditorControls();
-    }
-
-    removeTexture() {
-        const selection = this.getTextureSelection();
-        if (!selection) {
-            return false;
-        }
-
-        const currentTexture = selection.storedMaterial[selection.mapType];
-        if (currentTexture) {
-            this.saveTextureToHistory(selection.mesh, selection.materialIndex, selection.mapType, currentTexture);
-        }
-
-        selection.storedMaterial[selection.mapType] = null;
-        selection.storedMaterial.needsUpdate = true;
-        this.refreshMaterialsAfterEdit(selection.mapType);
-        this.emitMaterialEditEvent('remove-texture', selection, {
-            source: 'ui',
-        });
-        this.syncMaterialEditorControls();
-        return true;
-    }
-
-    resetTextureToOriginal() {
-        const selection = this.getTextureSelection();
-        if (!selection) {
-            return false;
-        }
-
-        const currentTexture = selection.storedMaterial[selection.mapType];
-        if (currentTexture) {
-            this.saveTextureToHistory(selection.mesh, selection.materialIndex, selection.mapType, currentTexture);
-        }
-
-        selection.storedMaterial[selection.mapType] = cloneTexture(selection.initialMaterial?.[selection.mapType] || null);
-        selection.storedMaterial.needsUpdate = true;
-        this.refreshMaterialsAfterEdit(selection.mapType);
-        this.emitMaterialEditEvent('reset-texture', selection, {
-            source: 'ui',
-        });
-        this.syncMaterialEditorControls();
-        return true;
-    }
-
-    updateTextureMapDisplay() {
-        const previewElement = this.shadowRoot.querySelector('#texturePreview');
-        const selection = this.getTextureSelection();
-
-        if (!selection) {
-            previewElement.innerHTML = '';
-            previewElement.textContent = this.meshParts.length === 0 ? 'None' : 'Error';
-            Object.assign(previewElement.style, PREVIEW_TEXT_STYLE);
-            this.updateTextureMetaInfo(null);
-            return;
-        }
-
-        const selectedTexture = this.getTextureForPreview(selection);
-
-        this.drawPreview(selectedTexture, previewElement);
-        this.updateTextureMetaInfo(selectedTexture);
-    }
-
-    drawPreview(selectedTexture, previewElement){
-        previewElement.innerHTML = '';
-        if (selectedTexture) {
-            if (selectedTexture.image instanceof ImageBitmap) {
-                this.setImageBitmapPreview(selectedTexture.image, previewElement);
-            } else if (selectedTexture.image) {
-                const imageSource = selectedTexture.image.currentSrc || selectedTexture.image.src;
-                const img = document.createElement('img');
-                img.src = imageSource;
-                img.alt = 'Texture preview';
-                previewElement.textContent = '';
-                previewElement.appendChild(img);
-            } else {
-                previewElement.textContent = 'Preview Unavailable';
-                Object.assign(previewElement.style, PREVIEW_TEXT_STYLE);
-            }
+    setEnvironment(environment) {
+        if (!environment) return;
+        if (ENVIRONMENT_PRESETS[environment]) {
+            this.state.environment = environment;
+            this.state.environmentIntensity = parseNumber(this.getAttribute('environment-intensity'), ENVIRONMENT_PRESETS[environment].environmentIntensity);
+            this.state.environmentUrl = '';
+            this.setAttribute('environment', environment);
+            this.removeAttribute('environment-url');
         } else {
-            previewElement.textContent = 'None';
-            Object.assign(previewElement.style, PREVIEW_TEXT_STYLE);
+            this.state.environmentUrl = environment;
+            this.setAttribute('environment-url', environment);
         }
+        return this.loadEnvironment();
     }
 
-    setImageBitmapPreview(imageBitmap, previewElement) {
-        const canvas = document.createElement('canvas');
-        canvas.width = imageBitmap.width;
-        canvas.height = imageBitmap.height;
-        const ctx = canvas.getContext('2d');
-
-        if (!ctx) {
-            previewElement.textContent = 'Cannot Preview';
-            previewElement.style.lineHeight = '1.4';
-            previewElement.style.textAlign = 'center';
-            console.error('Canvas context is null, cannot generate ImageBitmap preview.');
-            return;
-        }
-
-        try {
-            ctx.drawImage(imageBitmap, 0, 0, imageBitmap.width, imageBitmap.height);
-            previewElement.innerHTML = '';
-            previewElement.appendChild(canvas);
-
-        } catch (error) {
-            console.error('Error drawing ImageBitmap on canvas:', error);
-            previewElement.textContent = 'Preview Error';
-            previewElement.style.lineHeight = '1.4';
-            previewElement.style.textAlign = 'center';
-        }
+    environmentRotationDegrees() {
+        return ((THREE.MathUtils.radToDeg(this.state.environmentRotation || 0) % 360) + 360) % 360;
     }
 
-    updateMaterialProperties() {
-        return this.applyMaterialPropertiesFromEditor({
-            source: 'ui',
-            action: 'update-surface',
+    setEnvironmentRotationDegrees(degrees) {
+        const normalized = ((Number(degrees || 0) % 360) + 360) % 360;
+        this.state.environmentRotation = THREE.MathUtils.degToRad(normalized);
+        this.rebuildEnvironmentTexture();
+        this.applyEnvironmentPresentation();
+        this.emitEvent('viewer-environment-change', {
+            environment: this.state.environment,
+            background: this.state.environmentBackground,
+            rotationDegrees: normalized,
+            source: this.environmentUrl || this.state.environmentUrl
         });
     }
 
-    serializeState() {
-        const selection = this.selectedMeshPart ? {
-            index: this.selectedMeshPartIndex,
-            name: this.selectedMeshPart.name || null,
-            uuid: this.selectedMeshPart.uuid,
-        } : null;
-
-        return {
-            schemaVersion: STATE_SCHEMA_VERSION,
-            src: this.currentModelSource || this.getAttribute('src') || null,
-            fileName: this.currentModelFileName,
-            viewMode: this.state.viewMode,
-            environment: this.state.environment === CUSTOM_ENVIRONMENT_ID ? null : this.state.environment,
-            environmentUrl: this.state.environmentUrl,
-            environmentState: {
-                preset: this.state.environment === CUSTOM_ENVIRONMENT_ID ? null : this.state.environment,
-                url: this.state.environmentUrl,
-                intensity: this.state.environmentIntensity,
-                rotation: this.state.environmentRotation,
-                backgroundVisible: this.state.environmentBackgroundVisible,
-            },
-            backgroundColor: this.state.backgroundColor,
-            exposure: this.state.exposure,
-            autoRotate: this.autoRotate,
-            anglePerSecond: this.anglePerSecond,
-            animation: this.state.animationSelection,
-            isAnimationPlaying: this.state.isAnimationPlaying,
-            animationState: this.getAnimationStateSnapshot(),
-            selectionMode: this.state.selectionMode,
-            performanceMode: this.state.performanceMode,
-            selection,
-            camera: this.getCameraStateSnapshot(),
-            materialOverrides: this.serializeMaterialOverrides(),
-            modelTransform: this.model ? {
-                position: {
-                    x: this.model.position.x,
-                    y: this.model.position.y,
-                    z: this.model.position.z,
-                },
-                rotation: {
-                    x: this.model.rotation.x,
-                    y: this.model.rotation.y,
-                    z: this.model.rotation.z,
-                },
-                scale: {
-                    x: this.model.scale.x,
-                    y: this.model.scale.y,
-                    z: this.model.scale.z,
-                },
-            } : null,
-        };
+    setEnvironmentBackgroundVisible(visible) {
+        this.state.environmentBackground = visible === true;
+        this.setAttribute('environment-background', String(this.state.environmentBackground));
+        this.applyEnvironmentPresentation();
+        this.emitEvent('viewer-environment-change', {
+            environment: this.state.environment,
+            background: this.state.environmentBackground,
+            source: this.environmentUrl || this.state.environmentUrl
+        });
     }
 
     exportState() {
-        const state = this.serializeState();
-        this.emitEvent('viewer-state-export', {
-            source: 'api',
-            state,
-        });
+        const state = {
+            schema: 'simple-model-viewer-state/v2',
+            src: this.currentSource,
+            fileName: this.currentFileName,
+            viewMode: this.state.viewMode,
+            wireframe: this.state.wireframe,
+            wireframeMode: this.state.wireframeMode,
+            autoRotate: this.state.autoRotate,
+            anglePerSecond: this.state.anglePerSecond,
+            environment: this.state.environment,
+            environmentUrl: this.state.environmentUrl,
+            environmentBackground: this.state.environmentBackground,
+            environmentRotation: this.state.environmentRotation,
+            camera: this.getCameraStateSnapshot()
+        };
+        this.emitEvent('viewer-state-export', state);
         return state;
     }
 
-    serializeTextureOverride(texture) {
-        if (!texture) {
-            return null;
-        }
-
-        return {
-            hasTexture: true,
-            source: getTextureSource(texture) || null,
-            name: texture.name || null,
-            repeat: texture.repeat ? { x: texture.repeat.x, y: texture.repeat.y } : null,
-            offset: texture.offset ? { x: texture.offset.x, y: texture.offset.y } : null,
-            rotation: texture.rotation ?? 0,
-        };
-    }
-
-    serializeMaterialOverrides() {
-        return this.meshParts.map((mesh, meshIndex) => {
-            const materialEntry = this.getMaterialStoreEntry(mesh, this.originalMaterials);
-            return getMaterialArray(materialEntry).map((material, materialIndex) => ({
-                meshIndex,
-                meshName: mesh.name || null,
-                materialIndex,
-                color: material?.color ? `#${material.color.getHexString()}` : null,
-                emissive: material?.emissive ? `#${material.emissive.getHexString()}` : null,
-                emissiveIntensity: material?.emissiveIntensity ?? 1,
-                opacity: material?.opacity ?? 1,
-                transparent: !!material?.transparent,
-                side: material?.side === THREE.DoubleSide ? 'double' : 'front',
-                roughness: material?.roughness ?? 0.5,
-                metalness: material?.metalness ?? 0.5,
-                envMapIntensity: material?.envMapIntensity ?? 1,
-                normalScale: material?.normalScale ? { x: material.normalScale.x, y: material.normalScale.y } : null,
-                textures: Object.fromEntries(
-                    Object.keys(TEXTURE_INPUT_IDS).map((mapType) => [mapType, this.serializeTextureOverride(material?.[mapType] || null)])
-                ),
-            }));
-        }).flat();
-    }
-
-    async loadTextureOverride(textureState, mapType) {
-        if (!textureState?.source) {
-            return null;
-        }
-
-        return new Promise((resolve, reject) => {
-            this.textureLoader.load(textureState.source, (texture) => {
-                this.applyTextureEncoding(texture, mapType);
-                texture.name = textureState.name || '';
-                if (textureState.repeat) {
-                    texture.repeat.set(textureState.repeat.x, textureState.repeat.y);
-                }
-                if (textureState.offset) {
-                    texture.offset.set(textureState.offset.x, textureState.offset.y);
-                }
-                texture.rotation = textureState.rotation ?? 0;
-                texture.needsUpdate = true;
-                resolve(texture);
-            }, undefined, reject);
-        });
-    }
-
-    async applyMaterialOverrides(overrides = []) {
-        if (!Array.isArray(overrides) || !this.model) {
-            return false;
-        }
-
-        const textureLoads = [];
-        overrides.forEach((override) => {
-            const mesh = this.meshParts[override.meshIndex]
-                || this.meshParts.find((candidate) => candidate.name && candidate.name === override.meshName)
-                || null;
-            const storedMaterial = this.getMaterialStoreMaterial(mesh, override.materialIndex, this.originalMaterials);
-            if (!mesh || !storedMaterial) {
-                return;
-            }
-
-            if (override.color) {
-                storedMaterial.color.set(override.color);
-            }
-            if (override.emissive) {
-                storedMaterial.emissive.set(override.emissive);
-            }
-            storedMaterial.emissiveIntensity = override.emissiveIntensity ?? storedMaterial.emissiveIntensity;
-            storedMaterial.opacity = override.opacity ?? storedMaterial.opacity;
-            storedMaterial.transparent = override.transparent ?? storedMaterial.transparent;
-            storedMaterial.side = override.side === 'double' ? THREE.DoubleSide : THREE.FrontSide;
-            storedMaterial.roughness = override.roughness ?? storedMaterial.roughness;
-            storedMaterial.metalness = override.metalness ?? storedMaterial.metalness;
-            storedMaterial.envMapIntensity = override.envMapIntensity ?? storedMaterial.envMapIntensity;
-            if (override.normalScale) {
-                storedMaterial.normalScale = storedMaterial.normalScale || new THREE.Vector2(1, 1);
-                storedMaterial.normalScale.set(override.normalScale.x, override.normalScale.y);
-            }
-
-            Object.entries(override.textures || {}).forEach(([mapType, textureState]) => {
-                if (textureState === null) {
-                    storedMaterial[mapType] = null;
-                    return;
-                }
-
-                if (!textureState?.hasTexture) {
-                    return;
-                }
-
-                if (textureState.source) {
-                    textureLoads.push(
-                        this.loadTextureOverride(textureState, mapType)
-                            .then((texture) => {
-                                storedMaterial[mapType] = texture;
-                            })
-                            .catch((error) => {
-                                this.emitViewerError('import-texture-override', error, {
-                                    mapType,
-                                    source: textureState.source,
-                                });
-                            })
-                    );
-                    return;
-                }
-
-                const existingTexture = storedMaterial[mapType];
-                if (existingTexture) {
-                    if (textureState.repeat) {
-                        existingTexture.repeat.set(textureState.repeat.x, textureState.repeat.y);
-                    }
-                    if (textureState.offset) {
-                        existingTexture.offset.set(textureState.offset.x, textureState.offset.y);
-                    }
-                    existingTexture.rotation = textureState.rotation ?? existingTexture.rotation ?? 0;
-                    existingTexture.needsUpdate = true;
-                }
-            });
-
-            storedMaterial.needsUpdate = true;
-        });
-
-        await Promise.all(textureLoads);
-        this.renderMode();
-        this.syncMaterialEditorControls();
-        this.requestRender();
-        return true;
-    }
-
     async importState(state) {
-        if (!state || typeof state !== 'object') {
-            return false;
-        }
-
-        if (state.src) {
-            await this.loadModelFromUrl(state.src);
-        }
-
-        if (state.backgroundColor) {
-            this.setBackgroundColor(state.backgroundColor, {
-                source: 'import',
-                syncAttribute: true,
-            });
-        }
-
-        if (state.exposure !== undefined) {
-            this.setExposure(state.exposure, {
-                source: 'import',
-                syncAttribute: true,
-            });
-        }
-
-        if (state.environmentState?.intensity !== undefined) {
-            this.setEnvironmentIntensity(state.environmentState.intensity, {
-                source: 'import',
-                syncAttribute: true,
-                emitEvent: false,
-            });
-        }
-
-        if (state.environmentState?.rotation !== undefined) {
-            this.setEnvironmentRotation(state.environmentState.rotation, {
-                source: 'import',
-                syncAttribute: true,
-                emitEvent: false,
-            });
-        }
-
-        if (state.environmentState?.backgroundVisible !== undefined) {
-            this.setEnvironmentBackgroundVisible(state.environmentState.backgroundVisible, {
-                source: 'import',
-                syncAttribute: true,
-                emitEvent: false,
-            });
-        }
-
-        if (state.selectionMode) {
-            this.applySelectionMode(state.selectionMode, {
-                source: 'import',
-                syncAttribute: true,
-            });
-        }
-
-        if (state.performanceMode) {
-            this.applyPerformanceMode(state.performanceMode, {
-                source: 'import',
-                syncAttribute: true,
-            });
-        }
-
-        if (state.environmentUrl) {
-            await this.setEnvironment(state.environmentUrl, {
-                source: 'import',
-                syncAttribute: true,
-            });
-        } else if (state.environment) {
-            await this.setEnvironment(state.environment, {
-                source: 'import',
-                syncAttribute: true,
-            });
-        } else {
-            this.clearEnvironment({
-                source: 'import',
-                syncAttribute: true,
-            });
-        }
-
-        if (state.camera?.target) {
-            this.setCameraTarget(new THREE.Vector3(
-                state.camera.target.x,
-                state.camera.target.y,
-                state.camera.target.z
-            ), {
-                source: 'import',
-                syncAttribute: true,
-                emitEvent: false,
-            });
-        }
-
-        if (state.camera?.up) {
-            this.setCameraUp(new THREE.Vector3(
-                state.camera.up.x,
-                state.camera.up.y,
-                state.camera.up.z
-            ), {
-                source: 'import',
-                syncAttribute: true,
-                emitEvent: false,
-            });
-        }
-
-        if (state.camera?.position) {
-            this.setCameraOrbit(new THREE.Vector3(
-                state.camera.position.x,
-                state.camera.position.y,
-                state.camera.position.z
-            ), {
-                source: 'import',
-                syncAttribute: true,
-                emitEvent: false,
-            });
-        }
-
-        if (state.camera?.fov !== undefined) {
-            this.updateCameraFov(state.camera.fov, {
-                source: 'import',
-                emitEvent: false,
-            });
-        }
-
-        if (state.camera?.near !== undefined) {
-            this.updateCameraNear(state.camera.near, {
-                source: 'import',
-                emitEvent: false,
-            });
-        }
-
-        if (state.camera?.far !== undefined) {
-            this.updateCameraFar(state.camera.far, {
-                source: 'import',
-                emitEvent: false,
-            });
-        }
-
-        if (state.viewMode) {
-            this.state.viewMode = state.viewMode;
-            this.renderMode();
-        }
-
-        if (state.autoRotate !== undefined) {
-            this.autoRotate = !!state.autoRotate;
-            this.reflectBooleanAttribute('auto-rotate', this.autoRotate);
-        }
-
-        if (state.anglePerSecond !== undefined) {
-            this.anglePerSecond = state.anglePerSecond;
-            this.reflectAttribute('angle-per-second', state.anglePerSecond);
-        }
-
-        if (state.animationState?.speed !== undefined) {
-            this.setAnimationSpeed(state.animationState.speed, {
-                source: 'import',
-                syncAttribute: true,
-                emitEvent: false,
-            });
-        }
-
-        if (state.animationState?.loopMode) {
-            this.setAnimationLoopMode(state.animationState.loopMode, {
-                source: 'import',
-                syncAttribute: true,
-                emitEvent: false,
-            });
-        }
-
-        if (state.modelTransform && this.model) {
-            this.model.position.set(
-                state.modelTransform.position.x,
-                state.modelTransform.position.y,
-                state.modelTransform.position.z
-            );
-            this.model.rotation.set(
-                state.modelTransform.rotation.x,
-                state.modelTransform.rotation.y,
-                state.modelTransform.rotation.z
-            );
-            this.model.scale.set(
-                state.modelTransform.scale.x,
-                state.modelTransform.scale.y,
-                state.modelTransform.scale.z
-            );
-            this.updateControlPanel();
-            this.requestRender();
-        }
-
-        if (state.materialOverrides) {
-            await this.applyMaterialOverrides(state.materialOverrides);
-        }
-
-        const importedAnimationSelection = state.animationState?.selected ?? state.animation;
-        const importedAnimationPlaying = state.animationState?.isPlaying ?? state.isAnimationPlaying;
-        if (importedAnimationSelection && importedAnimationSelection !== 'none') {
-            this.applyAnimationSelection(importedAnimationSelection, {
-                autoplay: !!importedAnimationPlaying,
-                source: 'import',
-                syncAttribute: true,
-            });
-            if (state.animationState?.time !== undefined) {
-                this.setAnimationTime(state.animationState.time, {
-                    source: 'import',
-                    emitEvent: false,
-                });
-            }
-        } else if (importedAnimationPlaying === false) {
-            this.applyAnimationSelection('none', {
-                autoplay: false,
-                source: 'import',
-                syncAttribute: true,
-            });
-        }
-
-        if (state.selection?.name) {
-            this.selectMeshByName(state.selection.name);
-        } else if (typeof state.selection?.index === 'number') {
-            this.selectMeshByIndex(state.selection.index);
-        }
-
-        this.captureCurrentCameraStateAsDefault();
-        this.emitCameraChange('import');
-        return true;
+        if (!state) return;
+        if (state.src) await this.loadModelFromUrl(state.src, state.fileName || basename(pathWithoutSearch(state.src)));
+        this.state.viewMode = normalizeViewMode(state.viewMode);
+        this.state.wireframe = state.wireframe === true;
+        this.state.wireframeMode = normalizeWireframeMode(state.wireframeMode);
+        this.state.autoRotate = state.autoRotate === true;
+        this.state.anglePerSecond = parseNumber(state.anglePerSecond, this.state.anglePerSecond);
+        this.state.environment = state.environment || this.state.environment;
+        this.state.environmentUrl = state.environmentUrl || '';
+        this.state.environmentBackground = state.environmentBackground === true;
+        this.state.environmentRotation = parseNumber(state.environmentRotation, this.state.environmentRotation);
+        await this.loadEnvironment();
+        this.applyViewMode();
+        this.setWireframeEnabled(this.state.wireframe, { rebuild: true });
+        if (state.camera) this.setCameraStateSnapshot(state.camera);
+        this.syncToolbar();
     }
 
-    generateSceneGraphTree(object, parentElement) {
-        const ul = document.createElement('ul');
-
-        object.children.forEach(child => {
-            const li = document.createElement('li');
-            const label = document.createElement('label');
-            const toggleId = `material-toggle-${child.uuid}`;
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.id = toggleId;
-            checkbox.checked = child.visible;
-
-            if (child.isMesh) {
-                this.sceneGraphLabelByMeshUuid.set(child.uuid, label);
-            }
-
-            checkbox.addEventListener('change', (e) => {
-                child.visible = e.target.checked;
-                if (!this.isObjectEffectivelyVisible(child)) {
-                    if (this.selectedMeshPart === child) {
-                        this.clearSelectionState({
-                            source: 'visibility-change',
-                            emitEvent: true,
-                        });
-                    }
-                    if (this.hoveredMeshPart === child) {
-                        this.clearHoverState();
-                    }
-                }
-                this.requestRender();
-            });
-
-
-            let name = child.name || child.type;
-            if (name === '') name = 'unnamed';
-            const nameSpan = document.createElement('span');
-            nameSpan.textContent = name;
-            label.appendChild(nameSpan);
-            label.appendChild(checkbox);
-
-            label.addEventListener('click', (event) => {
-                event.stopPropagation();
-                this.selectMeshPartInSceneGraph(child, label, {
-                    source: 'ui',
-                    channel: 'scene-graph',
+    async saveBundleToHistory(bundle, mainEntry) {
+        if (!bundle?.entries?.length || bundle.bytes > HISTORY_BYTE_LIMIT) return;
+        try {
+            const files = [];
+            for (const entry of bundle.entries) {
+                files.push({
+                    path: entry.path,
+                    name: entry.name,
+                    type: entry.file.type || '',
+                    size: entry.size,
+                    lastModified: entry.file.lastModified || Date.now(),
+                    data: await entry.file.arrayBuffer()
                 });
-            });
-
-            li.appendChild(label);
-            ul.appendChild(li);
-
-            if (child.children.length > 0) {
-                this.generateSceneGraphTree(child, li);
             }
+            const signature = files.map((file) => `${file.path}:${file.size}`).join('|');
+            const record = {
+                id: createHistoryId(),
+                name: mainEntry.name,
+                mainPath: mainEntry.path,
+                bytes: bundle.bytes,
+                createdAt: Date.now(),
+                signature,
+                files
+            };
+            const records = [record, ...this.historyRecords.filter((entry) => entry.signature !== signature)];
+            let total = 0;
+            const pruned = [];
+            for (const entry of records) {
+                if (pruned.length >= HISTORY_LIMIT) continue;
+                if (total + entry.bytes > HISTORY_BYTE_LIMIT) continue;
+                total += entry.bytes;
+                pruned.push(entry);
+            }
+            await writeHistoryRecords(pruned);
+            this.historyRecords = pruned;
+            this.renderHistory();
+        } catch (error) {
+            console.warn('History save failed:', error);
+        }
+    }
+
+    async loadHistory() {
+        this.historyRecords = await readHistoryRecords();
+        this.renderHistory();
+    }
+
+    renderHistory() {
+        const total = this.historyRecords.reduce((sum, record) => sum + (record.bytes || 0), 0);
+        this.shadowRoot.querySelector('#historyUsage').textContent = `Saved ${formatBytes(total)} / 100 MB`;
+        this.shadowRoot.querySelector('#clearHistoryBtn').disabled = this.historyRecords.length === 0;
+        this.historySelect.innerHTML = this.historyRecords.length
+            ? '<option value="">Recent meshes</option>'
+            : '<option value="">No saved meshes</option>';
+        this.historyRecords.forEach((record) => {
+            const option = document.createElement('option');
+            option.value = record.id;
+            option.textContent = `${record.name} - ${formatBytes(record.bytes)}`;
+            this.historySelect.appendChild(option);
         });
-        parentElement.appendChild(ul);
     }
 
-    animate(time) {
-        if (!this.isConnectedToDom) {
-            return;
+    async clearHistory() {
+        this.historyRecords = [];
+        await writeHistoryRecords([]);
+        this.renderHistory();
+        this.showStatus('History cleared.', 'info');
+    }
+
+    async loadHistoryRecord(record) {
+        const entries = record.files.map((entry) => {
+            const path = normalizePath(entry.path);
+            const file = new File([entry.data], basename(path), {
+                type: entry.type || '',
+                lastModified: entry.lastModified || Date.now()
+            });
+            return {
+                file,
+                path,
+                name: basename(path),
+                extension: extensionFromPath(path),
+                size: Number(entry.size || file.size) || 0
+            };
+        }).filter((entry) => SUPPORTED_MODEL_EXTENSIONS.has(entry.extension) || COMPANION_EXTENSIONS.has(entry.extension));
+        const bundle = {
+            entries,
+            mainEntries: entries.filter((entry) => SUPPORTED_MODEL_EXTENSIONS.has(entry.extension)),
+            bytes: entries.reduce((sum, entry) => sum + entry.size, 0)
+        };
+        bundle.mainEntries = bundle.entries.filter((entry) => SUPPORTED_MODEL_EXTENSIONS.has(entry.extension));
+        const mainEntry = bundle.entries.find((entry) => entry.path === record.mainPath) || bundle.mainEntries[0];
+        await this.loadBundle(bundle, mainEntry, { saveHistory: false });
+        this.historySelect.value = '';
+    }
+
+    setPanelOpen(open, options = {}) {
+        const shouldOpen = open || (!this.model && !options.forceClose);
+        this.fileInputContainer.hidden = !shouldOpen;
+        this.rootEl.classList.toggle('upload-open', shouldOpen);
+    }
+
+    setEmptyState(empty) {
+        this.rootEl.classList.toggle('has-model', !empty);
+        this.placeholder.visible = empty;
+        if (empty) {
+            this.fileInputContainer.hidden = false;
+            this.rootEl.classList.add('upload-open');
+        } else {
+            this.fileInputContainer.hidden = true;
+            this.rootEl.classList.remove('upload-open');
         }
+    }
 
-        if (!this.lastTime) this.lastTime = 0;
-        const deltaTime = (time - this.lastTime) / 1000;
-        this.lastTime = time;
+    setLoading(visible, progress = 0, label = 'Loading mesh') {
+        this.loadingEl.hidden = !visible;
+        if (!visible) return;
+        const percent = Number.isFinite(progress) && progress > 0
+            ? Math.round(THREE.MathUtils.clamp(progress, 0, 1) * 100)
+            : 0;
+        this.loadingLabelEl.textContent = label;
+        this.loadingValueEl.textContent = percent ? `${percent}%` : '';
+        this.loadingBarEl.style.width = `${percent || 8}%`;
+    }
 
-        if (this.autoRotate && this.model) {
-            const rotationSpeed = THREE.MathUtils.degToRad(this.anglePerSecond);
-            this.model.rotation.y += rotationSpeed * deltaTime;
-        }
+    showStatus(message, type = 'info') {
+        this.statusEl.textContent = message;
+        this.statusEl.dataset.state = type;
+    }
 
-        if (this.mixer) {
-            this.mixer.update(deltaTime);
-        }
+    syncToolbar() {
+        const modeLabel = viewModeLabel(this.state.viewMode);
+        this.modeToggleBtn.textContent = modeLabel;
+        this.modeToggleBtn.setAttribute('aria-label', `View mode: ${modeLabel}`);
+        this.shadowRoot.querySelectorAll('#modeMenu .mode-button').forEach((button) => {
+            const active = button.dataset.mode === this.state.viewMode;
+            button.classList.toggle('active', active);
+            button.setAttribute('aria-checked', String(active));
+        });
+        this.shadowRoot.querySelector('#wireBtn').setAttribute('aria-pressed', String(this.state.wireframe));
+        this.shadowRoot.querySelector('#wireModeSelect').value = this.state.wireframeMode;
+        this.shadowRoot.querySelector('#rotateBtn').setAttribute('aria-pressed', String(this.state.autoRotate));
+        this.shadowRoot.querySelector('#gridBtn').setAttribute('aria-pressed', String(this.state.grid));
+        this.syncEnvironmentControls();
+    }
 
-        // idle animation for no model
-        if (!this.model) {
-            if (!this.isIdleAnimationRunning) {
-                this.initIdleAnimation();
-                if (typeof TWEEN !== 'undefined') {
-                    TWEEN.update();
-                }
-            }
-            if (this.tweenGroup) {
-                this.tweenGroup.update(time);
-            }
-            if (this.animationMesh && this.isIdleAnimationRunning) {
-                const rotationSpeedy = Math.PI / 6; // 30 deg
-                const rotationSpeedz = Math.PI / 3; // 60 deg
-                const rotationSpeedx = Math.PI / 9;
-                this.animationMesh.rotation.y += rotationSpeedy * deltaTime;
-                this.animationMesh.rotation.z += rotationSpeedz * deltaTime;
-                this.animationMesh.rotation.x += rotationSpeedx * deltaTime;
-            }
+    syncEnvironmentControls() {
+        const preset = environmentPresetFor(this.state.environment);
+        const degrees = this.environmentRotationDegrees();
+        this.shadowRoot.querySelector('#environmentActiveLabel').textContent = preset.label;
+        this.environmentToggle.setAttribute('title', `Environment: ${preset.label}`);
+        this.shadowRoot.querySelectorAll('[data-environment-preset]').forEach((button) => {
+            const active = button.dataset.environmentPreset === preset.id;
+            button.classList.toggle('active', active);
+            button.setAttribute('aria-pressed', String(active));
+        });
+        const backgroundButton = this.shadowRoot.querySelector('#environmentBgBtn');
+        backgroundButton?.setAttribute('aria-pressed', String(this.state.environmentBackground));
+        backgroundButton?.classList.toggle('active', this.state.environmentBackground);
+        const dialHand = this.shadowRoot.querySelector('#environmentDialHand');
+        if (dialHand) dialHand.style.transform = `rotate(${degrees}deg)`;
+        this.environmentDial.setAttribute('aria-valuenow', String(Math.round(degrees)));
+        this.environmentDial.setAttribute('aria-valuetext', `${Math.round(degrees)} degrees`);
+        this.shadowRoot.querySelector('#environmentRotationValue').textContent = `${Math.round(degrees)}deg`;
+        this.renderEnvironmentPreview(this.shadowRoot.querySelector('#environmentDialPreview'), preset.id, degrees);
+        this.shadowRoot.querySelectorAll('[data-environment-preview]').forEach((canvas) => {
+            this.renderEnvironmentPreview(canvas, canvas.dataset.environmentPreview, degrees);
+        });
+    }
 
-        } else if (this.isIdleAnimationRunning) {
-            this.scene.remove(this.animationMesh);
-            if (this.animationGeometry) {
-                this.animationGeometry.dispose();
-            }
-            this.animationMesh = null;
-            this.tweenGroup = null;
-            this.isIdleAnimationRunning = false;
-        }
+    emitEvent(name, detail = {}) {
+        this.dispatchEvent(new CustomEvent(name, {
+            bubbles: true,
+            composed: true,
+            detail
+        }));
+    }
 
-        this.controls.update();
-        this.updateAnimationUi();
-        this.updateSelectionHelpers();
-        this.renderer.render(this.scene, this.camera);
+    emitViewerError(action, error, extra = {}) {
+        console.error(`Viewer ${action} failed:`, error);
+        this.emitEvent('viewer-error', {
+            action,
+            message: error?.message || String(error),
+            error,
+            ...extra
+        });
     }
 
     resizeRenderer() {
-        const host = this.shadowRoot.host;
-        const width = host.clientWidth;
-        const height = host.clientHeight || Math.max(320, Math.round(width * 0.6));
-
-        if (!width || !height) {
-            return;
-        }
-
-        this.renderer.setSize(width, height);
+        const rect = this.getBoundingClientRect();
+        const width = Math.max(1, Math.floor(rect.width || this.clientWidth || 1));
+        const height = Math.max(1, Math.floor(rect.height || this.clientHeight || 1));
+        const pixelRatioLimit = this.state.performanceMode === 'quality' ? 2 : this.state.performanceMode === 'performance' ? 1.25 : 1.6;
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, pixelRatioLimit));
+        this.renderer.setSize(width, height, false);
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
     }
 
-    createToonMaterial(originalTexture = null) {
-        const toonMaterial = new THREE.ShaderMaterial({
-            uniforms: {
-                lightDirection: { value: new THREE.Vector3(0.5, 0.5, 1).normalize() },
-                outlineColor: { value: new THREE.Color(0x000000) },
-                toonColors: { value: [new THREE.Color(0xffffff), new THREE.Color(0xc0c0c0), new THREE.Color(0x808080)] },
-                toonSteps: { value: [0.8, 0.5] },
-                originalTexture: { value: originalTexture },
-                textureBlendFactor: { value: 0.8 },
-                outlineThickness: { value: 0.05 },
-                rimColor: { value: new THREE.Color(0xaaaaaa) },
-                rimPower: { value: 2.0 }
-            },
-            vertexShader: /*glsl*/`
-            varying vec3 vNormal;
-            varying vec3 vWorldPosition;
-            varying vec2 vUv;
-
-            void main() {
-                vNormal = normalize(normalMatrix * normal);
-                vec4 worldPosition = modelMatrix * vec4(position, 1.0);
-                vWorldPosition = worldPosition.xyz;
-                vUv = uv;
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            }
-        `,
-            fragmentShader: /*glsl*/`
-            uniform vec3 lightDirection;
-            uniform vec3 outlineColor;
-            uniform vec3 toonColors[3];
-            uniform float toonSteps[2];
-            uniform sampler2D originalTexture;
-            uniform float textureBlendFactor;
-            uniform float outlineThickness;
-
-            varying vec3 vNormal;
-            varying vec3 vWorldPosition;
-            varying vec2 vUv;
-
-            uniform vec3 rimColor;
-            uniform float rimPower;
-
-            void main() {
-                float diffuseIntensity = max(0.0, dot(vNormal, lightDirection));
-                vec3 toonColor = toonColors[0];
-                if (diffuseIntensity < toonSteps[0]) toonColor = toonColors[1];
-                if (diffuseIntensity < toonSteps[1]) toonColor = toonColors[2];
-
-                vec3 viewDir = normalize(cameraPosition - vWorldPosition);
-                float outlineFactor = 1.0 - max(0.0, dot(vNormal, viewDir));
-                float outlineThreshold = 0.7;
-                float outlineMix = smoothstep(outlineThreshold - outlineThickness, outlineThreshold + outlineThickness, outlineFactor);
-
-                vec3 finalToonColor = mix(toonColor, outlineColor, outlineMix);
-                vec4 originalTexColor = texture2D(originalTexture, vUv);
-
-                float rimFactor = 1.0 - max(0.0, dot(vNormal, viewDir));
-                rimFactor = pow(rimFactor, rimPower); // curvature effect
-                vec3 rimLighting = rimColor * rimFactor;
-
-                vec3 finalColor = mix(finalToonColor, originalTexColor.rgb, textureBlendFactor) + rimLighting;
-                gl_FragColor = vec4(finalColor, 1.0);
-            }
-        `
-        });
-        if (originalTexture) {
-            originalTexture.encoding = THREE.sRGBEncoding;
+    animate(time = performance.now()) {
+        this.frameRequest = requestAnimationFrame((nextTime) => this.animate(nextTime));
+        const delta = Math.min(0.1, Math.max(0, (time - this.lastFrameTime) / 1000));
+        this.lastFrameTime = time;
+        if (this.mixer && this.isAnimationPlaying) {
+            this.mixer.update(delta * this.state.animationSpeed);
         }
-        return toonMaterial;
-    }
-
-    enableToonShading() {
-        if (!this.model) return;
-        this.toonMaterial = this.toonMaterial || this.createToonMaterial();
-        this.model.traverse((child) => {
-            if (child.isMesh) {
-                this.toonMaterialBackups.set(child.uuid, child.material);
-                child.material = this.toonMaterial;
-                const backupMaterial = this.toonMaterialBackups.get(child.uuid);
-                const sourceMaterial = getMaterialEntryAt(backupMaterial, 0);
-                if (sourceMaterial?.map) {
-                    this.toonMaterial.uniforms.originalTexture.value = sourceMaterial.map;
-                    this.toonMaterial.uniforms.originalTexture.needsUpdate = true; // Texture uniform update
-                } else {
-                    this.toonMaterial.uniforms.originalTexture.value = this.whiteTexture; // White texture as default
-                    this.toonMaterial.uniforms.originalTexture.needsUpdate = true;
-                }
-            }
-        });
-    }
-
-    disableToonShading() {
-        if (!this.model) return;
-        this.model.traverse((child) => {
-            if (child.isMesh && this.toonMaterialBackups.has(child.uuid)) {
-                child.material = this.toonMaterialBackups.get(child.uuid);
-            }
-        });
-        this.toonMaterialBackups.clear();
-    }
-
-    createGlowMaterial() {
-        return new THREE.ShaderMaterial({
-            uniforms: {
-                glowColor: { value: new THREE.Color(0x00ff00) },
-                glowIntensity: { value: 1.5 },
-                baseOpacity: { value: 0.2 }
-            },
-            vertexShader: /*glsl*/`
-                varying vec3 vNormal;
-                varying vec3 vWorldPosition;
-                void main() {
-                    vNormal = normalize(normalMatrix * normal);
-                    vWorldPosition = (modelMatrix * vec4(position, 1.0)).xyz;
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                }
-            `,
-            fragmentShader: /*glsl*/`
-                uniform vec3 glowColor;
-                uniform float glowIntensity;
-                uniform float baseOpacity;
-
-                varying vec3 vNormal;
-                varying vec3 vWorldPosition;
-
-                void main() {
-                    vec3 viewDir = normalize(cameraPosition - vWorldPosition);
-                    float edgeFactor = 1.0 - abs(dot(vNormal, viewDir));
-                    float glow = pow(edgeFactor, 2.0) * glowIntensity;
-                    vec3 finalColor = glowColor * glow;
-                    gl_FragColor = vec4(finalColor, baseOpacity + glow);
-                }
-            `,
-            transparent: true
-        });
-    }
-
-
-    selectMeshByName(name) {
-        if (!name) {
-            return null;
+        if (this.model && this.state.autoRotate) {
+            this.model.rotation.y += THREE.MathUtils.degToRad(this.state.anglePerSecond) * delta;
+            if (this.selectedMesh) this.selectionHelper.setFromObject(this.selectedMesh);
         }
-
-        const exactMatch = this.meshParts.find((mesh) => mesh.name === name);
-        const normalizedName = `${name}`.toLowerCase();
-        const mesh = exactMatch || this.meshParts.find((entry) => (entry.name || '').toLowerCase() === normalizedName);
-
-        if (!mesh) {
-            return null;
-        }
-
-        this.selectMeshPartInSceneGraph(mesh, null, {
-            force: true,
-            source: 'api',
-        });
-        return mesh;
-    }
-
-    selectMeshByIndex(index) {
-        const mesh = this.meshParts[index];
-        if (!mesh) {
-            return null;
-        }
-
-        this.selectMeshPartInSceneGraph(mesh, null, {
-            force: true,
-            source: 'api',
-        });
-        return mesh;
-    }
-
-    clearSelection(options = {}) {
-        const { source = 'api', emitEvent = true } = options;
-        this.clearSelectionState({
-            source,
-            emitEvent,
-        });
-    }
-
-    selectMeshPartInSceneGraph(mesh, labelElement, options = {}) {
-        const {
-            force = false,
-            source = 'ui',
-            channel = 'scene-graph',
-        } = options;
-        if (!this.isSelectableMesh(mesh)) {
-            return null;
-        }
-
-        if (!force && !this.isSelectionChannelEnabled(channel)) {
-            return null;
-        }
-
-        const nextLabel = labelElement || this.getSceneGraphLabelForMesh(mesh);
-        if (this.selectedMeshPart === mesh) {
-            this.setSelectedSceneGraphLabel(nextLabel);
-            this.updateSelectionHelpers();
-            this.requestRender();
-            return mesh;
-        }
-
-        this.selectedMeshPart = mesh;
-        this.selectedMeshPartIndex = this.meshParts.indexOf(mesh);
-        const partSelector = this.shadowRoot.querySelector('#texturePartSelector');
-        if (this.selectedMeshPartIndex >= 0 && partSelector.value !== `${this.selectedMeshPartIndex}`) {
-            partSelector.value = `${this.selectedMeshPartIndex}`;
-        }
-        this.populateMaterialSlotSelector(mesh, 0);
-
-        this.setSelectedSceneGraphLabel(nextLabel);
-
-        this.syncMaterialEditorControls();
-        this.updateCameraActionButtons();
-        this.updateSelectionHelpers();
-        this.requestRender();
-
-        this.emitSelectionChange(source);
-        return mesh;
-    }
-
-    createExplodeSlider() {
-        const editTabContent = this.shadowRoot.querySelector("#render-tab-content");
-        if (!editTabContent) {
-          console.warn("Could not find the 'Edit' tab to add the explode slider.");
-          return;
-        }
-    
-        // Prevent adding multiple sliders if a model is reloaded without discarding
-        if (this.shadowRoot.querySelector("#explode-fieldset")) {
-          return;
-        }
-    
-        const fieldset = document.createElement("fieldset");
-        fieldset.id = "explode-fieldset"; // For easy selection/removal later
-        fieldset.style.marginTop = "0.5rem";
-    
-        const legend = document.createElement("legend");
-        legend.style.fontSize = "0.8rem";
-        legend.innerHTML = "<strong>Explode</strong>";
-        fieldset.appendChild(legend);
-    
-        const sliderContainer = document.createElement("div");
-        sliderContainer.style.display = "flex";
-        sliderContainer.style.alignItems = "center";
-        sliderContainer.style.justifyContent = "center";
-        sliderContainer.style.margin = "5px 0";
-    
-        const label = document.createElement("span");
-        label.textContent = "Amount:";
-        label.style.marginRight = "10px";
-        label.style.fontWeight = "bold";
-    
-        const slider = document.createElement("input");
-        slider.type = "range";
-        slider.min = "0";
-        slider.max = "1";
-        slider.step = "0.01";
-        slider.value = "0";
-        slider.style.width = "100%";
-    
-        slider.oninput = (event) => {
-          const explodeAmount = parseFloat(event.target.value);
-          this.applyExplodeEffect(explodeAmount);
-        };
-    
-        sliderContainer.appendChild(label);
-        sliderContainer.appendChild(slider);
-        fieldset.appendChild(sliderContainer);
-    
-        // Add the new fieldset to the edit tab
-        editTabContent.appendChild(fieldset);
-    }
-    
-    applyExplodeEffect(explodeAmount) {
-        if (!this.model || !this.modelCenter) return;
-    
-        // A multiplier to make the explosion visually significant.
-        // Using half of the model's max dimension provides a good scale.
-        const explosionFactor = this.modelMaxDim * 1.5;
-    
-        this.model.traverse((part) => {
-          if (part.isMesh) {
-            // The original position should have been stored in loadModel.
-            if (!part.userData.originalPosition) {
-              console.warn("Original position not found for part:", part.name, "- Storing now.");
-              part.userData.originalPosition = part.position.clone();
-            }
-    
-            const bbox = new THREE.Box3().setFromObject(part);
-            const part_center = bbox.getCenter(new THREE.Vector3());
-            
-            // Direction is from the center of the whole model to the center of the part
-            const direction = part_center.clone().sub(this.modelCenter).normalize();
-            direction.x *= 2
-            direction.z *= 2
-    
-            const originalPosition = part.userData.originalPosition;
-            const offset = direction.multiplyScalar(explodeAmount * explosionFactor);
-            const newPosition = originalPosition.clone().add(offset);
-    
-            // Apply the new calculated position
-            part.position.copy(newPosition);
-          }
-        });
+        this.controls.update();
+        this.renderer.render(this.scene, this.camera);
     }
 }
 
-customElements.define('simple-model-viewer', SimpleModelViewer);
-export { SimpleModelViewer };
+if (!customElements.get('simple-model-viewer')) {
+    customElements.define('simple-model-viewer', SimpleModelViewer);
+}
+
+function initSimpleModelViewer() {
+    return SimpleModelViewer;
+}
+
+function initGaussianViewer() {
+    return initSimpleModelViewer();
+}
+
+export { SimpleModelViewer, initSimpleModelViewer, initGaussianViewer };
