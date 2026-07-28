@@ -20,6 +20,8 @@ Generated from current source metadata. Preserve these routes unless a documente
 
 | Post ID | Language | Route |
 | --- | --- | --- |
+| `260727_sparse_3d` | eng | `/blogs/posts/optimizing-sparse-3d-generation-inference/` |
+| `260727_sparse_3d` | kor | `/blogs/posts/optimizing-sparse-3d-generation-inference-kor/` |
 | `260115_Varco3D` | eng | `/blogs/posts/varco3d-a-year-in-review-2025-retrospective/` |
 | `260115_Varco3D` | kor | `/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/` |
 | `250823_sdf` | eng | `/blogs/posts/sdf-and-eikonal-equation/` |
@@ -66,6 +68,7 @@ Generated from current source metadata. Preserve these routes unless a documente
 
 | Legacy ID | Canonical English Route |
 | --- | --- |
+| `/blogs/posts/?id=260727_sparse_3d` | `/blogs/posts/optimizing-sparse-3d-generation-inference/` |
 | `/blogs/posts/?id=260115_Varco3D` | `/blogs/posts/varco3d-a-year-in-review-2025-retrospective/` |
 | `/blogs/posts/?id=250823_sdf` | `/blogs/posts/sdf-and-eikonal-equation/` |
 | `/blogs/posts/?id=250810_flow` | `/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/` |
@@ -91,6 +94,29 @@ Generated from current source metadata. Preserve these routes unless a documente
 | `/blogs/posts/?id=210502_cv3` | `/blogs/posts/homography-and-image-alignment/` |
 | `/blogs/posts/?id=210402_cv2` | `/blogs/posts/feature-extraction-and-detection/` |
 | `/blogs/posts/?id=210302_cv1` | `/blogs/posts/image-filter-and-morphology/` |
+
+## Blog Archive Routes
+
+### Series Archives
+
+- `/blogs/series/3d-generation/` (8 posts)
+- `/blogs/series/web-3d/` (2 posts)
+- `/blogs/series/computer-vision/` (4 posts)
+- `/blogs/series/graphics/` (2 posts)
+- `/blogs/series/linear-algebra/` (2 posts)
+- `/blogs/series/nerf-and-gs/` (8 posts)
+
+### Tag Archives
+
+- `/blogs/tags/3d-generation/` (8 posts)
+- `/blogs/tags/computer-vision/` (4 posts)
+- `/blogs/tags/gaussian-splatting/` (8 posts)
+- `/blogs/tags/generative-ai/` (8 posts)
+- `/blogs/tags/graphics/` (2 posts)
+- `/blogs/tags/linear-algebra/` (2 posts)
+- `/blogs/tags/neural-rendering/` (8 posts)
+- `/blogs/tags/three-js/` (2 posts)
+- `/blogs/tags/web-3d/` (2 posts)
 
 ## Project Routes
 

@@ -1,0 +1,14 @@
+name = "hwan-blog-legacy-redirects"
+main = "src/index.js"
+compatibility_date = "2026-07-28"
+workers_dev = false
+
+# Replace this with the custom domain route that fronts the site.
+# The raw hwan-h-heo.github.io hostname cannot be controlled by this Worker.
+routes = [
+  { pattern = "example.com/*", custom_domain = false }
+]
+
+[vars]
+GITHUB_PAGES_ORIGIN = "https://hwan-h-heo.github.io"
+CANONICAL_ORIGIN = "https://hwan-h-heo.github.io"

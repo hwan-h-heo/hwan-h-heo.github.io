@@ -1,48 +1,68 @@
 const { SITE_URL } = require('./site-config');
+const {
+    escapeHtml,
+    getAbsoluteUrl,
+    getPostAlternates,
+    getPostCanonicalUrl,
+    getPostDescription,
+    getPostLanguageRoute,
+    getPostTitle,
+    renderBreadcrumbs,
+    renderChronologicalPostNavigation,
+    renderRelatedPosts,
+    renderSeriesNavigation,
+    renderTags,
+    serializeStructuredData
+} = require('./seo-utils');
 
 function serializeForScript(value) {
     return JSON.stringify(value, null, 2).replace(/</g, '\\u003c');
 }
 
 function resolveOgImage(post, featuredPortfolioPosts) {
-    if (post.cover) {
-        if (/^https?:\/\//.test(post.cover)) {
-            return post.cover;
-        }
-
-        return `${SITE_URL}/${post.cover.replace(/^\/+/, '')}`;
+    const configuredImage = post.socialImage || post.cover || '';
+    if (configuredImage && !/\.svg(?:[?#]|$)/i.test(configuredImage)) {
+        return getAbsoluteUrl(configuredImage);
     }
 
     const featured = featuredPortfolioPosts.find((item) => item.id === post.id);
-    if (!featured || !featured.teaserImage) {
-        return `${SITE_URL}/assets/image_fx_.jpg`;
+    if (featured?.teaserImage && !/\.svg(?:[?#]|$)/i.test(featured.teaserImage)) {
+        return getAbsoluteUrl(featured.teaserImage);
     }
 
-    if (/^https?:\/\//.test(featured.teaserImage)) {
-        return featured.teaserImage;
-    }
-
-    return `${SITE_URL}/${featured.teaserImage.replace(/^\/+/, '')}`;
+    return `${SITE_URL}/assets/image_fx_.jpg`;
 }
 
 function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime, siteData }) {
-    const title = post[`title_${lang}`] || post.title_eng;
-    const subtitle = post[`description_${lang}`] || post[`subtitle_${lang}`] || post.description_eng || post.subtitle_eng || '';
+    const title = getPostTitle(post, lang);
+    const seoTitle = post[`seoTitle_${lang}`] || post.seoTitle || title;
+    const defaultEnglishSeoTitle = post.seoTitle_eng || post.seoTitle || post.title_eng;
+    const metadataTitle = lang !== 'eng' && seoTitle === defaultEnglishSeoTitle
+        ? `${seoTitle} (Korean)`
+        : seoTitle;
+    const pageTitle = `${metadataTitle} | Hwan Heo`;
     const date = new Date(post.date).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
     });
-    const isoDate = new Date(post.date).toISOString();
-    const updatedIsoDate = new Date(post.updated || post.date).toISOString();
+    const isoDate = `${post.date}T00:00:00.000Z`;
+    const updatedIsoDate = `${post.updated || post.date}T00:00:00.000Z`;
     const slug = lang === 'eng' ? post.slug : `${post.slug}-kor`;
-    const canonicalUrl = `${SITE_URL}/blogs/posts/${slug}/`;
+    const canonicalUrl = getPostCanonicalUrl(post, lang);
     const ogImage = resolveOgImage(post, siteData.featuredPortfolioPosts);
     const alternateLang = lang === 'eng' ? 'kor' : 'eng';
     const hasAlternateLang = post.languages.includes(alternateLang);
     const alternateHref = hasAlternateLang
-        ? `../${alternateLang === 'eng' ? post.slug : `${post.slug}-kor`}/`
+        ? getPostLanguageRoute(post, alternateLang)
         : null;
+    const alternateLinksHtml = getPostAlternates(post)
+        .map((alternate) => `    <link rel="alternate" hreflang="${alternate.hreflang}" href="${alternate.href}" />`)
+        .join('\n');
+    const breadcrumbsHtml = renderBreadcrumbs(siteData, post, lang);
+    const staticSeriesNavigation = renderSeriesNavigation(siteData, post, lang);
+    const staticPostNavigation = renderChronologicalPostNavigation(siteData, post, lang);
+    const relatedPostsHtml = renderRelatedPosts(siteData, post, lang);
 
     const keywords = [
         post.category || 'blog',
@@ -54,7 +74,7 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
     ].join(', ');
     const coverImage = post.cover || '/assets/image_fx_.jpg';
     const tagHtml = (post.tags || []).length
-        ? `<div class="post-tags">${post.tags.map((tag) => `<span>${tag}</span>`).join('')}</div>`
+        ? `<div class="post-tags">${renderTags(post, siteData)}</div>`
         : '';
 
     const structuredData = {
@@ -62,7 +82,9 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
         '@type': 'BlogPosting',
         headline: title,
         description: metaDescription,
-        image: ogImage,
+        url: canonicalUrl,
+        mainEntityOfPage: canonicalUrl,
+        image: [ogImage],
         author: {
             '@type': 'Person',
             name: 'Hwan Heo',
@@ -71,17 +93,9 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
         publisher: {
             '@type': 'Person',
             name: 'Hwan Heo',
-            logo: {
-                '@type': 'ImageObject',
-                url: `${SITE_URL}/assets/favicon.ico`
-            }
         },
-        datePublished: isoDate,
-        dateModified: updatedIsoDate,
-        mainEntityOfPage: {
-            '@type': 'WebPage',
-            '@id': canonicalUrl
-        },
+        datePublished: post.date,
+        dateModified: post.updated || post.date,
         inLanguage: lang === 'eng' ? 'en' : 'ko'
     };
 
@@ -112,14 +126,15 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="${metaDescription}" />
-    <meta name="keywords" content="${keywords}" />
+    <meta name="description" content="${escapeHtml(metaDescription)}" />
+    <meta name="keywords" content="${escapeHtml(keywords)}" />
     <meta name="author" content="Hwan Heo" />
     <link rel="canonical" href="${canonicalUrl}" />
+${alternateLinksHtml}
     <meta property="og:type" content="article" />
     <meta property="og:url" content="${canonicalUrl}" />
-    <meta property="og:title" content="${title}" />
-    <meta property="og:description" content="${subtitle}" />
+    <meta property="og:title" content="${escapeHtml(metadataTitle)}" />
+    <meta property="og:description" content="${escapeHtml(metaDescription)}" />
     <meta property="og:image" content="${ogImage}" />
     <meta property="og:site_name" content="HwanHeo's Blog" />
     <meta property="article:published_time" content="${isoDate}" />
@@ -127,14 +142,12 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
     <meta property="article:author" content="Hwan Heo" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="${canonicalUrl}" />
-    <meta name="twitter:title" content="${title}" />
-    <meta name="twitter:description" content="${subtitle}" />
+    <meta name="twitter:title" content="${escapeHtml(metadataTitle)}" />
+    <meta name="twitter:description" content="${escapeHtml(metaDescription)}" />
     <meta name="twitter:image" content="${ogImage}" />
-    <script type="application/ld+json">
-    ${JSON.stringify(structuredData, null, 2)}
-    </script>
+    <script type="application/ld+json">${serializeStructuredData(structuredData)}</script>
 
-    <title>${title} - HwanHeo's Blog</title>
+    <title>${escapeHtml(pageTitle)}</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
 
     <script type="importmap">
@@ -205,9 +218,9 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     <div class="post-heading">
                         <br/>
-                        <h2>${title}</h2>
+                        <h1>${escapeHtml(title)}</h1>
                         <span class="meta">
-                            Posted on ${date}
+                            Posted on <time datetime="${escapeHtml(post.date)}">${date}</time>
                             <span style="margin: 0 8px;">•</span>
                             <i class="bi bi-clock" style="margin-right: 4px;"></i>${readingTime.text}
                         </span>
@@ -223,13 +236,15 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
         <div class="container px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div id="series-container"></div>
+                    ${breadcrumbsHtml}
+                    <div id="series-container">${staticSeriesNavigation}</div>
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7 main-content">
                     ${contentHtml}
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div id="post-navigation" class="mt-4"></div>
+                    ${relatedPostsHtml}
+                    <div id="post-navigation" class="mt-4">${staticPostNavigation}</div>
                 </div>
             </div>
         </div>

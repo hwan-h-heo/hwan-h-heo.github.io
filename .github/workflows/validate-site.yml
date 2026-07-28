@@ -1,0 +1,42 @@
+name: Validate site
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install blog dependencies
+        run: npm --prefix blogs ci
+
+      - name: Check content metadata
+        run: npm run check:content
+
+      - name: Check local assets
+        run: npm run check:assets
+
+      - name: Build static site
+        run: npm run build
+
+      - name: Validate generated SEO output
+        run: npm run validate:seo
+
+      - name: Run tests if present
+        run: npm test --if-present

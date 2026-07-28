@@ -82,6 +82,19 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
 
+    function createArchiveSlug(value) {
+        return String(value || '')
+            .toLowerCase()
+            .replace(/&/g, 'and')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '');
+    }
+
+    function getSeriesRoute(seriesId) {
+        return `/blogs/series/${createArchiveSlug(seriesId)}/`;
+    }
+
     function getSeriesTitle(post, lang) {
         return siteData.series[post.series]?.[lang] || siteData.series[post.series]?.eng || 'Series';
     }
@@ -255,6 +268,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             .map(([seriesId, posts]) => {
                 const seriesTitle = siteData.series[seriesId]?.[lang] || siteData.series[seriesId]?.eng || 'Series';
                 const latestPost = posts[0];
+                const seriesRoute = getSeriesRoute(seriesId);
                 const itemsHtml = posts.map((post) => {
                     const title = getPostTitle(post, lang);
                     if (!title) {
@@ -274,11 +288,17 @@ document.addEventListener('DOMContentLoaded', async function() {
                         <div class="series-card-header">
                             <div>
                                 <span class="series-card-kicker">Series</span>
-                                <h3 class="series-title">${escapeHtml(seriesTitle)}</h3>
+                                <h3 class="series-title"><a href="${escapeHtml(seriesRoute)}">${escapeHtml(seriesTitle)}</a></h3>
                             </div>
-                            <div class="series-card-meta">
-                                <span>${posts.length} ${escapeHtml(copy(lang, 'items'))}</span>
-                                <span>${escapeHtml(copy(lang, 'latest'))} ${escapeHtml(formatShortDate(latestPost.date, lang))}</span>
+                            <div class="series-card-side">
+                                <div class="series-card-meta">
+                                    <span>${posts.length} ${escapeHtml(copy(lang, 'items'))}</span>
+                                    <span>${escapeHtml(copy(lang, 'latest'))} ${escapeHtml(formatShortDate(latestPost.date, lang))}</span>
+                                </div>
+                                <a class="series-card-action" href="${escapeHtml(seriesRoute)}" aria-label="View series: ${escapeHtml(seriesTitle)}">
+                                    <span>View series</span>
+                                    <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                                </a>
                             </div>
                         </div>
                         <ol class="series-post-list">

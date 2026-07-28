@@ -7,9 +7,19 @@ const { copyRecursiveSync, ensureDirSync } = require('./lib/fs-utils');
 const { loadSiteData } = require('./lib/site-data');
 const { SITE_URL } = require('./lib/site-config');
 const { renderPostPage } = require('./lib/render-post-page');
+const { renderStaticBlogIndex } = require('./lib/render-blog-index');
+const { renderArchivePage } = require('./lib/render-archive-page');
+const { loadLegacyRedirects, validateLegacyRedirects } = require('./lib/legacy-redirects');
 const { parseProjectMarkdown } = require('./lib/project-markdown');
 const { renderProjectPage } = require('./lib/render-project-page');
-const { buildSitemapEntries, getPostRoute, listProjectEntries } = require('./lib/site-routes');
+const {
+    buildSitemapEntries,
+    getPostRoute,
+    listProjectEntries,
+    listSeriesArchiveEntries,
+    listTagArchiveEntries
+} = require('./lib/site-routes');
+const { escapeXml, getPostAlternates, truncateText } = require('./lib/seo-utils');
 const { analyzeChangedFiles, getChangedFiles, serializeChangedFiles } = require('../scripts/lib/change-impact');
 const { renderBlock: renderPortfolioBlock } = require('../js/portfolio-blocks');
 const {
@@ -19,6 +29,7 @@ const {
 } = require('../js/portfolio-content');
 
 const siteData = loadSiteData();
+const legacyRedirects = loadLegacyRedirects();
 const distDir = path.join(__dirname, 'dist');
 const repoRoot = path.join(__dirname, '..');
 
@@ -401,15 +412,178 @@ function generateTOC(htmlContent, lang = 'eng') {
     return { tocHtml, contentHtml: modifiedContent };
 }
 
-function replaceLegacyPostLinks(htmlContent) {
-    return htmlContent.replace(/\/blogs\/posts\/\?id=([A-Za-z0-9_]+)\/?/g, (fullMatch, postId) => {
-        const slug = siteData.slugMapping[postId];
-        return slug ? `/blogs/posts/${slug}/` : fullMatch;
+function getLegacyPostTarget(postId, lang = 'eng', hash = '') {
+    const targetPost = siteData.postById[postId];
+    if (targetPost && lang === 'kor' && targetPost.languages.includes('kor')) {
+        return `${getPostRoute(targetPost, 'kor')}${hash || ''}`;
+    }
+    return legacyRedirects[postId] ? `${legacyRedirects[postId]}${hash || ''}` : '';
+}
+
+function deriveDescriptionFromHtml(htmlContent) {
+    const contentWithoutCode = String(htmlContent || '')
+        .replace(/<pre\b[^>]*>[\s\S]*?<\/pre>/gi, ' ')
+        .replace(/<code\b[^>]*>[\s\S]*?<\/code>/gi, ' ')
+        .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ' ')
+        .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, ' ')
+        .replace(/\$\$[\s\S]*?\$\$/g, ' ')
+        .replace(/\$[^$]*\$/g, ' ');
+    const paragraphMatches = contentWithoutCode.match(/<p\b[^>]*>[\s\S]*?<\/p>/gi) || [];
+
+    for (const paragraph of paragraphMatches) {
+        const text = stripHtml(paragraph);
+        if (text.length >= 60 && !/^Posted on\b/i.test(text)) {
+            return truncateText(text, 160);
+        }
+    }
+
+    return '';
+}
+
+function normalizeContentHeadingHierarchy(htmlContent) {
+    return String(htmlContent || '').replace(/<h1(\s[^>]*)?>([\s\S]*?)<\/h1>/gi, (fullMatch, attrs = '', text) => {
+        return `<h2${attrs}>${text}</h2>`;
+    });
+}
+
+function replaceLegacyPostLinks(htmlContent, lang = 'eng') {
+    let updatedHtmlContent = htmlContent.replace(/\/blogs\/posts\/(?:\?id=|id\?=)([A-Za-z0-9_]+)\/?(#[A-Za-z0-9_.-]+)?/g, (fullMatch, postId, hash = '') => {
+        return getLegacyPostTarget(postId, lang, hash) || fullMatch;
+    });
+
+    updatedHtmlContent = updatedHtmlContent.replace(/(href=["'])\.\/\?id=([A-Za-z0-9_]+)\/?(#[^"']*)?/g, (fullMatch, prefix, postId, hash = '') => {
+        const target = getLegacyPostTarget(postId, lang, hash);
+        return target ? `${prefix}${target}` : fullMatch;
+    });
+
+    updatedHtmlContent = updatedHtmlContent.replace(/(href=["'])\.\.\/([A-Za-z0-9_]+)\/?(#[^"']*)?/g, (fullMatch, prefix, postId, hash = '') => {
+        const target = getLegacyPostTarget(postId, lang, hash);
+        return target ? `${prefix}${target}` : fullMatch;
+    });
+
+    return updatedHtmlContent;
+}
+
+function generateBlogIndex() {
+    const sourcePath = path.join(__dirname, 'index.html');
+    const html = renderStaticBlogIndex(fs.readFileSync(sourcePath, 'utf8'), siteData);
+    fs.writeFileSync(path.join(distDir, 'blogs', 'index.html'), html);
+    console.log('Generated static blog index: /blogs/index.html');
+}
+
+function renderLegacyRedirectPage(redirects) {
+    const serializedRedirects = serializeStructuredData(redirects);
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, follow">
+    <link rel="canonical" href="${SITE_URL}/blogs/posts/">
+    <title>Legacy Blog URL Redirect | Hwan Heo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .message {
+            max-width: 38rem;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <main class="message">
+        <h1>Legacy blog URL</h1>
+        <p id="legacy-redirect-message">Checking the legacy post identifier...</p>
+        <p><a href="/blogs/">Return to the blog archive</a></p>
+    </main>
+
+    <script>
+        (function() {
+            const redirects = ${serializedRedirects};
+            const params = new URLSearchParams(window.location.search);
+            const legacyId = params.get('id') || '';
+            const target = redirects[legacyId];
+            const message = document.getElementById('legacy-redirect-message');
+
+            if (target) {
+                let canonical = document.querySelector('link[rel="canonical"]');
+                if (!canonical) {
+                    canonical = document.createElement('link');
+                    canonical.rel = 'canonical';
+                    document.head.appendChild(canonical);
+                }
+                canonical.href = new URL(target, window.location.origin).href;
+
+                const currentPath = window.location.pathname.replace(/\\/+$/, '/');
+                if (currentPath !== target) {
+                    window.location.replace(target);
+                    return;
+                }
+            }
+
+            if (message) {
+                message.textContent = legacyId
+                    ? 'No published post mapping exists for this legacy identifier.'
+                    : 'No legacy post identifier was provided.';
+            }
+        })();
+    </script>
+</body>
+</html>
+`;
+}
+
+function generateLegacyRedirectPages() {
+    const html = renderLegacyRedirectPage(legacyRedirects);
+    const postsDir = path.join(distDir, 'blogs', 'posts');
+    ensureDirSync(postsDir);
+    fs.writeFileSync(path.join(postsDir, 'index.html'), html);
+    fs.writeFileSync(path.join(distDir, 'blogs', 'redirect-legacy-posts.html'), html);
+    console.log('Generated legacy redirect fallback pages');
+}
+
+function writeHtmlRoute(routePath, html) {
+    const outputDir = path.join(distDir, routePath.replace(/^\/+|\/+$/g, ''));
+    ensureDirSync(outputDir);
+    fs.writeFileSync(path.join(outputDir, 'index.html'), html);
+}
+
+function generateArchivePages() {
+    listSeriesArchiveEntries(siteData).forEach((entry) => {
+        const description = `Articles in the ${entry.title} series by Hwan Heo.`;
+        writeHtmlRoute(entry.path, renderArchivePage({
+            title: `${entry.title} Series`,
+            description,
+            canonicalPath: entry.path,
+            posts: entry.posts,
+            siteData
+        }));
+        console.log(`Generated series archive: ${entry.path}`);
+    });
+
+    listTagArchiveEntries(siteData).forEach((entry) => {
+        const description = `Technical articles tagged ${entry.title}, covering implementation details and research notes by Hwan Heo.`;
+        writeHtmlRoute(entry.path, renderArchivePage({
+            title: `${entry.title} Articles`,
+            description,
+            canonicalPath: entry.path,
+            posts: entry.posts,
+            siteData
+        }));
+        console.log(`Generated tag archive: ${entry.path}`);
     });
 }
 
 function normalizePostContent(post, content, htmlContent, lang) {
-    let updatedHtmlContent = htmlContent;
+    let updatedHtmlContent = normalizeContentHeadingHierarchy(htmlContent);
     const shareLabels = lang === 'kor'
         ? {
             copied: '링크 복사됨',
@@ -468,7 +642,7 @@ function normalizePostContent(post, content, htmlContent, lang) {
         'src=$1/blogs/posts/$2/assets/'
     );
 
-    updatedHtmlContent = replaceLegacyPostLinks(updatedHtmlContent);
+    updatedHtmlContent = replaceLegacyPostLinks(updatedHtmlContent, lang);
     return updatedHtmlContent;
 }
 
@@ -484,7 +658,12 @@ function generatePostPage(post, lang) {
 
     const parsedHtml = parseMarkdownWithMath(content, (source) => marked.parse(source));
     const normalizedHtml = normalizePostContent(post, content, parsedHtml, lang);
-    const metaDescription = (post[`description_${lang}`] || post[`subtitle_${lang}`] || post.description_eng || post.subtitle_eng || '').substring(0, 160);
+    const explicitDescription = post[`description_${lang}`] || post[`subtitle_${lang}`] || post.description_eng || post.subtitle_eng || '';
+    const derivedDescription = deriveDescriptionFromHtml(normalizedHtml);
+    const descriptionSource = explicitDescription && explicitDescription.length < 50 && derivedDescription
+        ? `${explicitDescription}. ${derivedDescription}`
+        : explicitDescription || derivedDescription || post[`title_${lang}`] || post.title_eng;
+    const metaDescription = truncateText(descriptionSource, 160);
     const readingTime = calculateReadingTime(normalizedHtml);
     const html = renderPostPage({
         post,
@@ -629,12 +808,20 @@ function generateSitemap() {
         loc: `${SITE_URL}${entry.path}`
     }));
 
-    const lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'];
+    const lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'
+    ];
     urls.forEach((url) => {
         lines.push('  <url>');
-        lines.push(`    <loc>${url.loc}</loc>`);
+        lines.push(`    <loc>${escapeXml(url.loc)}</loc>`);
+        if (url.type === 'post' && url.id && siteData.postById[url.id]) {
+            getPostAlternates(siteData.postById[url.id]).forEach((alternate) => {
+                lines.push(`    <xhtml:link rel="alternate" hreflang="${alternate.hreflang}" href="${escapeXml(alternate.href)}" />`);
+            });
+        }
         if (url.lastmod) {
-            lines.push(`    <lastmod>${url.lastmod}</lastmod>`);
+            lines.push(`    <lastmod>${escapeXml(url.lastmod)}</lastmod>`);
         }
         lines.push(`    <changefreq>${url.changefreq}</changefreq>`);
         lines.push(`    <priority>${url.priority}</priority>`);
@@ -644,6 +831,46 @@ function generateSitemap() {
 
     fs.writeFileSync(path.join(distDir, 'sitemap.xml'), `${lines.join('\n')}\n`);
     console.log('Generated sitemap.xml');
+}
+
+function generateFeed() {
+    const feedItems = siteData.posts
+        .filter((post) => post.languages.includes('eng'))
+        .slice(0, 30)
+        .map((post) => {
+            const route = getPostRoute(post, 'eng');
+            const url = `${SITE_URL}${route}`;
+            const description = post.description_eng || post.subtitle_eng || post.title_eng;
+            const pubDate = new Date(`${post.date}T00:00:00Z`).toUTCString();
+            return [
+                '    <item>',
+                `      <title>${escapeXml(post.title_eng)}</title>`,
+                `      <link>${escapeXml(url)}</link>`,
+                `      <guid isPermaLink="true">${escapeXml(url)}</guid>`,
+                `      <pubDate>${escapeXml(pubDate)}</pubDate>`,
+                '      <language>en</language>',
+                `      <description>${escapeXml(description)}</description>`,
+                '    </item>'
+            ].join('\n');
+        }).join('\n');
+
+    const feed = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<rss version="2.0">',
+        '  <channel>',
+        "    <title>Hwan Heo's Blog</title>",
+        `    <link>${SITE_URL}/blogs/</link>`,
+        '    <description>Technical articles on sparse 3D generation, neural rendering, mesh processing, CUDA kernels, and production inference optimization.</description>',
+        '    <language>en</language>',
+        feedItems,
+        '  </channel>',
+        '</rss>'
+    ].join('\n');
+
+    const feedDir = path.join(distDir, 'blogs');
+    ensureDirSync(feedDir);
+    fs.writeFileSync(path.join(feedDir, 'feed.xml'), `${feed}\n`);
+    console.log('Generated RSS feed: /blogs/feed.xml');
 }
 
 function generateRobotsTxt() {
@@ -670,8 +897,13 @@ function buildSite() {
     generateProjectPages();
     copyStaticAssets();
     validateContentFiles();
+    validateLegacyRedirects(siteData, legacyRedirects);
+    generateBlogIndex();
+    generateLegacyRedirectPages();
+    generateArchivePages();
     generatePostPages();
     generateSitemap();
+    generateFeed();
     generateRobotsTxt();
     generateSupportFiles();
 
@@ -701,12 +933,17 @@ function buildIncremental(options = {}) {
     }
 
     validateContentFiles();
+    validateLegacyRedirects(siteData, legacyRedirects);
     copyIncrementalStaticFiles(impact.staticFiles || []);
     impact.postTargets.forEach((languages, postId) => {
         copyPostSource(postId);
     });
     const generatedRoutes = generatePostPages(impact.postTargets);
+    generateBlogIndex();
+    generateLegacyRedirectPages();
+    generateArchivePages();
     generateSitemap();
+    generateFeed();
     generateRobotsTxt();
     generateSupportFiles();
 

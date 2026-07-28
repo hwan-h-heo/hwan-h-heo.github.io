@@ -262,7 +262,7 @@ for l in range(self.n_levels):
 ```
 </li>
 <li>
-    <p>Otherwise, the index is calculated using the hash function defined in <a href="sec3.2"><strong>3.2</strong></a>.</p>
+    <p>Otherwise, the index is calculated using the hash function defined in <a href="#sec3.2"><strong>3.2</strong></a>.</p>
 
 ```python
 # cf. self.primes = [1, 2654435761, 805459861] 

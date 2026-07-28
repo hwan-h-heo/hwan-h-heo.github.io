@@ -2,7 +2,12 @@ const fs = require('fs');
 const path = require('path');
 
 const { loadSiteData } = require('../blogs/lib/site-data');
-const { getPostRoute, listProjectEntries } = require('../blogs/lib/site-routes');
+const {
+    getPostRoute,
+    listProjectEntries,
+    listSeriesArchiveEntries,
+    listTagArchiveEntries
+} = require('../blogs/lib/site-routes');
 
 const repoRoot = path.join(__dirname, '..');
 const outputPath = path.join(repoRoot, 'docs', 'public-route-compatibility.md');
@@ -43,6 +48,16 @@ function buildMarkdown() {
     lines.push('', '## Legacy Blog ID Routes', '', '| Legacy ID | Canonical English Route |', '| --- | --- |');
     siteData.posts.forEach((post) => {
         lines.push(`| \`/blogs/posts/?id=${post.id}\` | \`${getPostRoute(post, 'eng')}\` |`);
+    });
+
+    lines.push('', '## Blog Archive Routes', '');
+    lines.push('### Series Archives', '');
+    listSeriesArchiveEntries(siteData).forEach((entry) => {
+        lines.push(`- \`${entry.path}\` (${entry.posts.length} posts)`);
+    });
+    lines.push('', '### Tag Archives', '');
+    listTagArchiveEntries(siteData).forEach((entry) => {
+        lines.push(`- \`${entry.path}\` (${entry.posts.length} posts)`);
     });
 
     lines.push('', '## Project Routes', '');

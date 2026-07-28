@@ -65,7 +65,8 @@
   margin-right: 8px;
 }
 
-.header .logo h1 {
+.header .logo h1,
+.header .logo .sitename {
   font-family: var(--heading-font);
   font-size: 24px;
   margin: 0;
