@@ -161,7 +161,7 @@
     <section id="about" class="about section" data-portfolio-block="about" data-section-ready="false"></section><!-- /About Section -->
 
     <!-- Portfolio Section -->
-    <section id="portfolio" class="portfolio section light-background" data-section-ready="false" data-default-filter="*" data-layout="masonry" data-sort="original-order">
+    <section id="portfolio" class="portfolio section light-background" data-section-ready="false">
 
       <!-- Section Title -->
       <div class="container section-title portfolio-section-heading" data-aos="fade-up">
@@ -169,16 +169,14 @@
           <h2>Portfolio</h2>
           <p class="portfolio-credibility">Production 3D AI systems · 4 papers · 6 invited talks</p>
         </div>
-        <ul class="portfolio-filters isotope-filters" aria-label="Filter portfolio projects">
-          <li data-filter="*" class="filter-active">All</li>
-          <li data-filter=".filter-research">Research</li>
-          <li data-filter=".filter-app">Application</li>
-          <li data-filter=".filter-per">Personal</li>
+        <ul class="portfolio-filters portfolio-view-toggle" aria-label="Filter portfolio projects">
+          <li data-portfolio-view="selected" class="filter-active" role="button" tabindex="0" aria-pressed="true">Selected</li>
+          <li data-portfolio-view="all" role="button" tabindex="0" aria-pressed="false">All</li>
         </ul>
       </div><!-- End Section Title -->
 
       <div class="container portfolio-content">
-        <div class="row gy-4 isotope-container" id="portfolio-projects" data-aos="fade-up"><!-- portfolio-projects-static --></div>
+        <div class="portfolio-project-list" id="portfolio-projects" data-aos="fade-up"><!-- portfolio-projects-static --></div>
 
         <div class="portfolio-evidence" data-aos="fade-up">
           <details class="portfolio-disclosure">

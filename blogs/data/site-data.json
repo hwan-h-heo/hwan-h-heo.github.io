@@ -636,7 +636,7 @@
     {
       "id": "varco3d",
       "title": "VARCO 3D",
-      "summary": "Led geometry generation and inference, from sparse-voxel models to textured mesh delivery.",
+      "summary": "Built the production 3D generation stack: 1B+ native models, CUDA inference optimization, mesh cleanup, UV unwrap, and texture back-projection.",
       "url": "projects/varco3d/",
       "categories": [
         "app"
@@ -645,17 +645,6 @@
       "image": "assets/thumbnails/varco3d_thumbnail.png",
       "gif": "assets/varco3d_hero.webp",
       "alt": "VARCO 3D service teaser"
-    },
-    {
-      "id": "nerf-in-game",
-      "title": "Neural Rendering in Game Engine",
-      "summary": "Built a 360° capture-to-engine pipeline, optimizing neural rendering for Unity and Unreal.",
-      "url": "projects/nerf_in_game/",
-      "categories": [
-        "app"
-      ],
-      "image": "projects/nerf_in_game/teaser.jpg",
-      "alt": "NeRF game teaser"
     },
     {
       "id": "capa",
@@ -671,6 +660,33 @@
       "alt": "CaPa teaser"
     },
     {
+      "id": "deepsfm",
+      "title": "Deep SfM for Radiance Fields",
+      "summary": "Compared VGGSfM and MASt3R for camera recovery in Gaussian Splatting and radiance fields.",
+      "url": "projects/deepsfm/",
+      "categories": [
+        "per"
+      ],
+      "badge": "Featured on GitHub (230+ stars)",
+      "image": "assets/thumbnails/deepsfm_thumbnail.png",
+      "gif": "assets/sfm_teaser.webp",
+      "alt": "DeepSFM and NeRF face teaser"
+    },
+    {
+      "id": "2dgs-viewer",
+      "title": "2D GS Viewer",
+      "summary": "Built a browser viewer to inspect, edit, train, and export 2D Gaussian Splatting scenes.",
+      "url": "projects/2dgs_viewer/",
+      "categories": [
+        "per",
+        "app"
+      ],
+      "badge": "Featured on GitHub (160+ stars)",
+      "image": "assets/thumbnails/2dgs_viewer_thumbnail.png",
+      "gif": "assets/2dgs_viewer_teaser.webp",
+      "alt": "2D GS viewer teaser"
+    },
+    {
       "id": "instant-pose",
       "title": "Instant Pose",
       "summary": "Co-developed fast pose refinement for hash-grid NeRF reconstruction, published at ICML 2023.",
@@ -683,31 +699,15 @@
       "alt": "Instant Pose teaser"
     },
     {
-      "id": "2dgs-viewer",
-      "title": "2D GS Viewer",
-      "summary": "Built a browser viewer to inspect, edit, train, and export 2D Gaussian Splatting scenes.",
-      "url": "projects/2dgs_viewer/",
+      "id": "nerf-in-game",
+      "title": "Neural Rendering in Game Engine",
+      "summary": "Built a 360° capture-to-engine pipeline, optimizing neural rendering for Unity and Unreal.",
+      "url": "projects/nerf_in_game/",
       "categories": [
-        "per",
         "app"
       ],
-      "badge": "Featured on GitHub (150+ stars)",
-      "image": "assets/thumbnails/2dgs_viewer_thumbnail.png",
-      "gif": "assets/2dgs_viewer_teaser.webp",
-      "alt": "2D GS viewer teaser"
-    },
-    {
-      "id": "deepsfm",
-      "title": "Deep SfM for Radiance Fields",
-      "summary": "Compared VGGSfM and MASt3R for camera recovery in Gaussian Splatting and radiance fields.",
-      "url": "projects/deepsfm/",
-      "categories": [
-        "per"
-      ],
-      "badge": "Featured on GitHub (200+ stars)",
-      "image": "assets/thumbnails/deepsfm_thumbnail.png",
-      "gif": "assets/sfm_teaser.webp",
-      "alt": "DeepSFM and NeRF face teaser"
+      "image": "projects/nerf_in_game/teaser.jpg",
+      "alt": "NeRF game teaser"
     }
   ],
   "publications": [

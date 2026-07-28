@@ -376,6 +376,9 @@
         const getPortfolioBoundaryAction = (direction, deltaY) => {
             const endAnchor = getPortfolioEndAnchor();
             if (endAnchor === null || !blogSection || !direction) return null;
+            if (blogSection.offsetTop - root.innerHeight <= portfolioSection.offsetTop + 4) {
+                return null;
+            }
 
             const position = root.scrollY;
             const blogTop = blogSection.offsetTop;
