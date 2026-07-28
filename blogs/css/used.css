@@ -3567,6 +3567,24 @@ html {
     line-height: 1.56;
 }
 
+html[lang="ko"] .blog-home-hero .blog-home-kicker {
+    font-family: var(--blog-mono);
+    letter-spacing: 0.08em;
+    word-break: normal;
+}
+
+html[lang="ko"] .blog-home-hero h1 {
+    font-family: var(--blog-heading);
+    letter-spacing: 0;
+    word-break: normal;
+}
+
+html[lang="ko"] .blog-home-hero p {
+    font-family: var(--blog-sans, "Inter", system-ui, sans-serif);
+    letter-spacing: 0;
+    word-break: normal;
+}
+
 .blog-home-search {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 2.25rem;

@@ -32,8 +32,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         },
         kor: {
             heroKicker: "Hwan's Blog",
-            heroTitle: '3D AI 시스템을 만드는 과정의 기록',
-            heroIntro: '3D 생성, 컴퓨터 비전, 그래픽스, CUDA 추론, 그리고 보통 커밋 사이에 묻히는 구현 디테일을 정리합니다.',
+            heroTitle: 'Research notes for 3D AI systems',
+            heroIntro: '3D generation, computer vision, graphics, CUDA inference, and the implementation details that usually stay between commits.',
             searchPlaceholder: '검색...',
             archiveTitle: '글 목록',
             tabPosts: 'Posts',

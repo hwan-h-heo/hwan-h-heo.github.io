@@ -68,7 +68,7 @@
         const spinnerHtml = project.gif || project.video
             ? '<div class="loading-spinner" style="display: none;"></div>'
             : '';
-        const selectedLabel = selected ? '<span>Selected Work</span>' : '<span>Portfolio Archive</span>';
+        const selectedLabel = selected ? '<span>Selected Project</span>' : '<span>Project Archive</span>';
         const actionLabel = getProjectActionLabel(project);
         const hidden = selected ? '' : ' hidden';
 
