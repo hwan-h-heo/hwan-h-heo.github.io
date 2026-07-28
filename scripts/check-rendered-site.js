@@ -150,7 +150,7 @@ async function waitForDynamicContent(page, route) {
         portfolio: () => {
             return document.querySelectorAll('[data-portfolio-block] > *').length >= 3
                 && document.querySelectorAll('#portfolio-projects .portfolio-box').length > 0
-                && document.querySelectorAll('#portfolio-blog-posts .blog-preview-card').length > 0;
+                && document.querySelectorAll('#portfolio-blog-posts .blog-preview-card, #portfolio-blog-posts .portfolio-blog-preview-item').length > 0;
         },
         'blog-index': () => document.querySelectorAll('.post-preview').length > 0,
         'blog-search': () => document.querySelectorAll('.post-preview').length > 0,
@@ -339,6 +339,7 @@ async function inspectPreviewLayout(page) {
         const pairs = [
             ['#portfolio-projects .portfolio-box', '.aspect-ratio-box', '.polar_content'],
             ['#portfolio-blog-posts .blog-preview-card', '.aspect-ratio-box', '.polar_content'],
+            ['#portfolio-blog-posts .portfolio-blog-preview-item', '.portfolio-blog-preview-cover', '.portfolio-blog-preview-body'],
             ['.post-preview .post-card-link', '.post-card-cover', '.post-card-body']
         ];
 

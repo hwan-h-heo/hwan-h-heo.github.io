@@ -168,16 +168,16 @@ author: Hwan Heo
         <th>MASt3R</th>
     </tr>
     <tr>
-        <td><img class="img-fluid" src="./240721_sfm/assets/NLE_vggsfm_2dgs.gif" alt="NLE vggsfm"></td>
-        <td><img class="img-fluid" src="./240721_sfm/assets/NLE_mast3r_2dgs.gif" alt="NLE mast3r"></td>
+        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240721_sfm/assets/NLE_vggsfm_2dgs-poster.jpg" aria-label="NLE VGGSfM 2D Gaussian Splatting result" style="width: 100%"><source src="./240721_sfm/assets/NLE_vggsfm_2dgs.mp4" type="video/mp4"></video></td>
+        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240721_sfm/assets/NLE_mast3r_2dgs-poster.jpg" aria-label="NLE MASt3R 2D Gaussian Splatting result" style="width: 100%"><source src="./240721_sfm/assets/NLE_mast3r_2dgs.mp4" type="video/mp4"></video></td>
     </tr>
     <tr>
-        <td><img class="img-fluid" src="./240721_sfm/assets/pen_sparse_vggsfm_2dgs.gif" alt="pen vggsfm"></td>
-        <td><img class="img-fluid" src="./240721_sfm/assets/pen_sparse_mast3r_2dgs.gif" alt="pen mast3r"></td>
+        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240721_sfm/assets/pen_sparse_vggsfm_2dgs-poster.jpg" aria-label="Pen sparse VGGSfM 2D Gaussian Splatting result" style="width: 100%"><source src="./240721_sfm/assets/pen_sparse_vggsfm_2dgs.mp4" type="video/mp4"></video></td>
+        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240721_sfm/assets/pen_sparse_mast3r_2dgs-poster.jpg" aria-label="Pen sparse MASt3R 2D Gaussian Splatting result" style="width: 100%"><source src="./240721_sfm/assets/pen_sparse_mast3r_2dgs.mp4" type="video/mp4"></video></td>
     </tr>
     <tr>
-        <td><img class="img-fluid" src="./240721_sfm/assets/guitar_vggsfm_2dgs.gif" alt="guitar vggsfm"></td>
-        <td><img class="img-fluid" src="./240721_sfm/assets/guitar_mast3r_2dgs.gif" alt="guitar mast3r"></td>
+        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240721_sfm/assets/guitar_vggsfm_2dgs-poster.jpg" aria-label="Guitar VGGSfM 2D Gaussian Splatting result" style="width: 100%"><source src="./240721_sfm/assets/guitar_vggsfm_2dgs.mp4" type="video/mp4"></video></td>
+        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240721_sfm/assets/guitar_mast3r_2dgs-poster.jpg" aria-label="Guitar MASt3R 2D Gaussian Splatting result" style="width: 100%"><source src="./240721_sfm/assets/guitar_mast3r_2dgs.mp4" type="video/mp4"></video></td>
     </tr>
 </table>
 <br/>

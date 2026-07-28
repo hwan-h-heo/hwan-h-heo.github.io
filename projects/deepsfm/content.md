@@ -95,7 +95,7 @@ Key observations from the comparative study:
 </tr>
 <tr>
 <td><img src="assets/remote-1d89c78ffe52.png" alt="Pen Sparse MASt3R" style="max-width: 100%; height: auto;"/></td>
-<td><img src="assets/remote-bd0f5e98c13f.png" alt="Pen Sparse VGGSfM" style="max-width: 100%; height: auto;"/></td>
+<td><img src="/blogs/posts/240721_sfm/assets/pen_sparse_vggsfm.PNG" alt="Pen Sparse VGGSfM" style="max-width: 100%; height: auto;"/></td>
 </tr>
 </table>
 
@@ -107,8 +107,8 @@ Key observations from the comparative study:
 <th>VGGSfM</th>
 </tr>
 <tr>
-<td><img src="assets/remote-de64f4440a7f.gif" alt="Pen Sparse MASt3R 2DGS" style="max-width: 100%; height: auto;"/></td>
-<td><img src="assets/remote-45b882ad7784.gif" alt="Pen Sparse VGGSfM 2DGS" style="max-width: 100%; height: auto;"/></td>
+<td><video autoplay loop muted playsinline preload="metadata" poster="/blogs/posts/240721_sfm/assets/pen_sparse_mast3r_2dgs-poster.jpg" aria-label="Pen Sparse MASt3R 2DGS" style="max-width: 100%; height: auto;"><source src="/blogs/posts/240721_sfm/assets/pen_sparse_mast3r_2dgs.mp4" type="video/mp4"></video></td>
+<td><video autoplay loop muted playsinline preload="metadata" poster="/blogs/posts/240721_sfm/assets/pen_sparse_vggsfm_2dgs-poster.jpg" aria-label="Pen Sparse VGGSfM 2DGS" style="max-width: 100%; height: auto;"><source src="/blogs/posts/240721_sfm/assets/pen_sparse_vggsfm_2dgs.mp4" type="video/mp4"></video></td>
 </tr>
 </table>
 
@@ -116,7 +116,7 @@ Key observations from the comparative study:
 
 :::{.text-center}
 <video controls muted loop style="max-width: 70%;">
-<source src="vid_poseopt.mp4" type="video/mp4">
+<source src="/blogs/posts/240721_sfm/assets/further_pose_opt.mp4" type="video/mp4">
 Your browser does not support the video tag.
 </video>
 :::

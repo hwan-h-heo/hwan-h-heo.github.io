@@ -575,7 +575,7 @@ VA-VAE의 해결책은 simple yet effective 한데, VAE의 latent space 를 **Vi
 Vecset-based VAE는 Point Cloud 를 이용해 3D shape 의 reconstruction 에만 초점을 맞춘, VA-VAE 가 지적한 '_Reconstruction 특화_' VAE와 유사한 측면이 있다. 이는 DiT (Flow Model) 가 input condition (2D) 에 맞는 Shape 을 생성하기 위해, _**구조화되지 않은 넓은 latent space 을 비효율적으로 탐색해야 하므로 수렴이 느리며 성능이 제한될 수 있다는 가설**_ 로 이어진다.
 
 반면 Trellis는 이미 VA-VAE 와 유사한 아이디어를 **3D 에서 SLAT (Structured Latent)이라는 개념으로 구현**했다고 볼 수 있다. SLAT 은 DINO feature map 그 자체를 VAE 의 학습 목표로 삼아, 공간적 구조를 가진 의미론적 latent space 를 만든다. 즉, "**DINO가 이미 충분히 좋으니, 이를 그대로 3D 공간에 매핑해서 쓰자!**"는 접근인 셈. 
-<img src='./250710_building_large_3d_2/assets/image-14.png' width=70%>
+<img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-9.png' width=70%>
 
 하지만 이 방식은 VAE 의 latent space 를 사실상 두 개로 쪼개서 구성한다는 문제가 있다. 즉, ***'어디에 형태가 존재하는가?'*** 를 결정하는 **Structure** 와, ***'그곳에 무엇이 있는가?'*** 를 결정하는 **Feature** 로 구성된다는 것. 이로 인해 생성 과정은 복잡한 2-stage 파이프라인으로 분리된다.
 

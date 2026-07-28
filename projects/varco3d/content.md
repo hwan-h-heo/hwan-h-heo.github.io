@@ -81,14 +81,14 @@ To avoid the cost of generating high-resolution active voxels from scratch, I pr
 
 | Coarse Mesh | Voxelized Active Structure |
 | --- | --- |
-| ![Coarse mesh](assets/remote-06671f65972d.png) | ![Voxelized structure](assets/remote-82d7ccc46efd.png) |
+| ![Coarse mesh](assets/remote-06671f65972d.png) | ![Voxelized structure](/blogs/posts/260115_Varco3D/assets/remote-82d7ccc46efd.png) |
 
 For this stage, I implemented a CUDA kernel for parallel mesh-to-voxel distance computation.
 This reduced the pipeline from coarse mesh generation to active voxel generation to **under 5 seconds**, making the sparse voxel refinement direction more practical for service-oriented inference.
 
 The resulting sparse voxel-based model was presented internally as the VARCO 3D 1.0-preview direction.
 
-![VARCO 3D 1.0-preview result](assets/remote-dec1b1acbb14.png)
+![VARCO 3D 1.0-preview result](/blogs/posts/260115_Varco3D/assets/remote-dec1b1acbb14.png)
 
 ## VecSet-Lattice Refinement
 
@@ -104,7 +104,7 @@ In this setup:
 
 | Coarse Mesh | Voxel Query | Fine Mesh |
 | --- | --- | --- |
-| ![Coarse mesh](assets/remote-5cb2a959b9d1.png){.varco-lattice-img} | ![Voxel query](assets/remote-9ca32db34e84.png){.varco-lattice-img} | ![Fine mesh](assets/remote-2c37d81fd55d.png){.varco-lattice-img} |
+| ![Coarse mesh](/blogs/posts/260115_Varco3D/assets/remote-5cb2a959b9d1.png){.varco-lattice-img} | ![Voxel query](/blogs/posts/260115_Varco3D/assets/remote-9ca32db34e84.png){.varco-lattice-img} | ![Fine mesh](/blogs/posts/260115_Varco3D/assets/remote-2c37d81fd55d.png){.varco-lattice-img} |
 
 This refinement direction showed a major training-efficiency improvement.
 Where the earlier VecSet DiT setup took much longer to converge, the structure-aware DiT with voxel-query conditioning converged in roughly one day in the reported development setting.
@@ -113,7 +113,7 @@ Where the earlier VecSet DiT setup took much longer to converge, the structure-a
 
 The VecSet-Lattice direction showed detail comparable to or better than the sparse voxel preview while producing more robust mesh topology and fewer artifacts.
 
-![VARCO 3D sparse voxel vs VecSet-Lattice comparison](assets/remote-eb6322f90365.png){width=88%}
+![VARCO 3D sparse voxel vs VecSet-Lattice comparison](/blogs/posts/260115_Varco3D/assets/remote-eb6322f90365.png){width=88%}
 
 ## Result
 

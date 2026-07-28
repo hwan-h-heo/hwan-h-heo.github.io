@@ -217,7 +217,7 @@ ${}$<img src='./assets/remote-11ecc1e8c03f.png' width=30%>
 
 I speculate that the idea for this paper originated from experiments in [**FlashVDM**](https://github.com/Tencent-Hunyuan/FlashVDM), a study on accelerating VecSet decoding (the authors are also the same). FlashVDM proposed **octree-decoding (Hierarchical Decoding)** for the existing VecSet decoding stage, which required **dense grid point queries** for SDF extraction, reducing decoding time by tens of times.
 
-![](./assets/remote-d05de1f944fa.png)
+![](/blogs/posts/260727_sparse_3d/assets/sparse-pipeline.png)
 
 - ***Visualization of FlashVDM.*** When reconstructing the mesh on the *Right* through the VAE decoder, FlashVDM first identifies active voxels at a coarse resolution (Left → Right), then increases resolution only within the range of these active voxels to reconstruct high-resolution SDF.
 

@@ -190,14 +190,30 @@ function generatePortfolioIndex() {
 function copyRuntimeDependencies() {
     const threeRoot = path.join(__dirname, 'node_modules', 'three');
     const runtimePaths = [
-        ['build/three.module.js', 'vendor/three/build/three.module.js'],
-        ['examples/jsm', 'vendor/three/examples/jsm']
+        ['build/three.module.js', 'vendor/three/build/three.module.js']
+    ];
+    const threeExampleRuntimePaths = [
+        ['examples/jsm/controls', 'vendor/three/examples/jsm/controls'],
+        ['examples/jsm/loaders', 'vendor/three/examples/jsm/loaders'],
+        ['examples/jsm/curves/NURBSCurve.js', 'vendor/three/examples/jsm/curves/NURBSCurve.js'],
+        ['examples/jsm/curves/NURBSUtils.js', 'vendor/three/examples/jsm/curves/NURBSUtils.js'],
+        ['examples/jsm/libs/fflate.module.js', 'vendor/three/examples/jsm/libs/fflate.module.js'],
+        ['examples/jsm/libs/draco/gltf', 'vendor/three/examples/jsm/libs/draco/gltf'],
+        ['examples/jsm/utils/BufferGeometryUtils.js', 'vendor/three/examples/jsm/utils/BufferGeometryUtils.js']
     ];
 
     runtimePaths.forEach(([source, destination]) => {
         const sourcePath = path.join(threeRoot, source);
         if (!fs.existsSync(sourcePath)) {
             throw new Error(`Missing runtime dependency: ${sourcePath}. Run npm install first.`);
+        }
+        copyRecursiveSync(sourcePath, path.join(distDir, destination));
+    });
+
+    threeExampleRuntimePaths.forEach(([source, destination]) => {
+        const sourcePath = path.join(threeRoot, source);
+        if (!fs.existsSync(sourcePath)) {
+            throw new Error(`Missing Three.js example runtime dependency: ${sourcePath}. Run npm install first.`);
         }
         copyRecursiveSync(sourcePath, path.join(distDir, destination));
     });

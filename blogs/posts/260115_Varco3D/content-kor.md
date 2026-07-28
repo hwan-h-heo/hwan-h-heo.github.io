@@ -222,7 +222,7 @@ ${}$<img src='./assets/remote-11ecc1e8c03f.png' width=30%>
 
 이 논문의 아이디어는 VecSet decoding 가속화 연구인 [**FlashVDM**](https://github.com/Tencent-Hunyuan/FlashVDM)의 실험에서 파생된 것이라고 추측한다 (저자 또한 같다). FlashVDM은 SDF 추출에 **dense grid point query**가 필요했던 기존 VecSet decoding 단계에 **octree-decoding (Hierarchical Decoding)** 을 제안하여 수십배로 decoding 시간을 단축한 연구이다. 
 
-![](./assets/remote-d05de1f944fa.png)
+![](/blogs/posts/260727_sparse_3d/assets/sparse-pipeline.png)
 
 - ***Visualization of FlashVDM.*** *Right* 의 mesh 를 VAE decoder 를 통해 복원할 때, FlashVDM 은 *Left* 의 좌->우 처럼 coarse resolution 에서 먼저 active voxel 식별 후 이 active voxel 범위에서만 resolution 을 늘려가면서 고해상도의 SDF 를 복원한다. 
 <img src='./assets/remote-361723135c58.png' width=50%>
