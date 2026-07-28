@@ -598,6 +598,10 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   font-size: 0.72rem;
 }
 @media (max-width: 575px) {
+  .about .about-profile-image {
+    width: min(70vw, 250px);
+  }
+
   .about .about-contact-links {
     grid-template-columns: 1fr;
   }
