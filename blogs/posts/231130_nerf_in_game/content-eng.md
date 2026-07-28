@@ -43,7 +43,9 @@ author: Hwan Heo
 <h3 id="can-nerf-be-used-in-game-production-">Can NeRF be Used in Game Production?</h3>
 <p>As discussed in &quot;Creating Realistic 3D Models with NeRF,&quot; NeRF is a technique for reconstructing 3D models from a set of images taken from various angles. With the ability to easily obtain high-quality 3D models, NeRF appears to be a promising technology for game development. But are NeRF models ready to be integrated into game production?</p>
 <figure>
-    <img src="./231130_nerf_in_game/assets/diget.gif" alt="Gaussian RT" width="100%">
+    <video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./231130_nerf_in_game/assets/diget-poster.jpg" aria-label="Gaussian RT" style="width: 100%">
+        <source src="./231130_nerf_in_game/assets/diget.mp4" type="video/mp4">
+    </video>
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 1.</strong> NeRF Reconstruction of Cookie Box </figcaption>
 </figure>
 <p>Can we use the 3D model of a cookie box, as an object in a game? Unfortunately, the answer is still &#39;<strong><em>No</em></strong>&#39;. </p>
@@ -52,7 +54,9 @@ author: Hwan Heo
 <h2 id="main"> 2. NeRF & Illumination Control </h2>
 <h3 id="problem">NeRF&#39;s Inability to Separate Lighting Effects</h3>
 <figure>
-    <img src="./231130_nerf_in_game/assets/nerf.gif" alt="Gaussian RT" width="100%">
+    <video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./231130_nerf_in_game/assets/nerf-poster.jpg" aria-label="Gaussian RT" style="width: 100%">
+        <source src="./231130_nerf_in_game/assets/nerf.mp4" type="video/mp4">
+    </video>
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 2.</strong> NeRF reconstructed Objects </figcaption>
 </figure>
 <p>The image above shows a set of 3D objects generated with NeRF. While the models are of high quality, there is a significant limitation: <br/> <em> The shadows are fixed.</em> </p>
@@ -98,11 +102,9 @@ $$
         <th>Specular</th>
     </tr>
 </table>
-<div class="video-container" style="padding-top:2%; padding-bottom:28%">
-    <video controls style="width: 100%">
-        <source src="./231130_nerf_in_game/assets/VID_2_illumination_control_scene_watermark.mp4" type="video/mp4">
-    </video>
-</div>
+<video class="img-fluid" controls preload="metadata" playsinline style="width: 100%">
+    <source src="./231130_nerf_in_game/assets/VID_2_illumination_control_scene_watermark.mp4" type="video/mp4">
+</video>
 <table>
     <tr>
         <th>Full</th>
@@ -110,11 +112,9 @@ $$
         <th>Specular</th>
     </tr>
 </table>
-<div class="video-container" style="padding-top:2%; padding-bottom:28%">
-    <video controls style="width: 100%">
-        <source src="./231130_nerf_in_game/assets/VID_3_illumination_control_object_watermark.mp4" type="video/mp4">
-    </video>
-</div>
+<video class="img-fluid" controls preload="metadata" playsinline style="width: 100%">
+    <source src="./231130_nerf_in_game/assets/VID_3_illumination_control_object_watermark.mp4" type="video/mp4">
+</video>
 <p>While this does not achieve perfect diffuse-specular separation, it shows that the object&#39;s color can be modeled independently of the lighting effects to some extent, compared to the full NeRF model on the left. Using only the diffuse NeRF model in the middle allows for relighting to be applied.</p>
 <h2 id="challenges">3. Other Challenges and Solutions</h2>
 <h3 id="slow">Slow Rendering Speed</h3>
@@ -133,11 +133,9 @@ $$
 <h2 id="nerf_in_game">4. Neural Rendering in Game Engines</h2>
 <p>In the early stage of Neural Rendering, neural rendering technologies faced several limitations that hindered their use in-game production and other applications. </p>
 <p>However, as these challenges are gradually being resolved, novel methods are emerging that enable neural rendering technologies in commercial game engines. Technology startups focusing on this technology are also appearing.</p>
-<div class="video-container">
-    <video controls style="width: 100%">
-        <source src="./231130_nerf_in_game/assets/VID_4_NeRF_obeject_in_blender.mp4" type="video/mp4">
-    </video>
-</div>
+<video class="img-fluid" controls preload="metadata" playsinline poster="./231130_nerf_in_game/assets/VID_4_NeRF_obeject_in_blender-poster.jpg" style="width: 100%">
+    <source src="./231130_nerf_in_game/assets/VID_4_NeRF_obeject_in_blender.mp4" type="video/mp4">
+</video>
 <p>The video above demonstrates the use of NeRF-restored objects alongside other 3D objects in graphics software. In the video, the table is an object restored through NeRF, while the dinosaur and butterfly are predefined presets.</p>
 <p>Additionally, NeRF and neural rendering technologies can be used not only for restoring and utilizing individual objects but also for reconstructing large real-world spaces to serve as maps in games.</p>
 <figure>

@@ -528,7 +528,7 @@ author: Hwan Heo
     </p>
 </div>
 <h4 id="-github-project-link-https-github-com-hwanhuh-2d-gs-viser-viewer-tree-main-">⭐ <a href="https://github.com/hwanhuh/2D-GS-Viser-Viewer/tree/main">Github Project Link</a></h4>
-<p><img src="./240602_2dgs/assets/viser_train.gif" alt="" width="100%"></p>
+<p><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240602_2dgs/assets/viser_train-poster.jpg" aria-label="2D Gaussian Splatting training result" style="width: 100%"><source src="./240602_2dgs/assets/viser_train.mp4" type="video/mp4"></video></p>
 
 <h2 id="4-conclusion">4. Conclusion</h2>
 

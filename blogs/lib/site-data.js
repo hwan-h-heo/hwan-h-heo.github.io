@@ -28,6 +28,8 @@ const POST_ALLOWED_KEYS = new Set([
     'cover',
     'socialImage',
     'translationKey',
+    'dependencies',
+    'runtimeDependencies',
     'status',
     'updated'
 ]);
@@ -122,6 +124,21 @@ function validatePostShape(post, seriesMap, errors) {
             });
         }
     }
+
+    ['dependencies', 'runtimeDependencies'].forEach((key) => {
+        if (post[key] !== undefined) {
+            if (!Array.isArray(post[key])) {
+                errors.push(`"${key}" must be an array in post "${post.id}".`);
+                return;
+            }
+
+            post[key].forEach((dependency) => {
+                if (typeof dependency !== 'string' || !dependency.trim()) {
+                    errors.push(`Post "${post.id}" contains an invalid ${key} entry.`);
+                }
+            });
+        }
+    });
 
     const status = post.status || 'published';
     if (status === 'published') {

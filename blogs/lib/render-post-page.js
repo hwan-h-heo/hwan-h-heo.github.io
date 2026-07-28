@@ -33,7 +33,88 @@ function resolveOgImage(post, featuredPortfolioPosts) {
     return `${SITE_URL}/assets/image_fx_.jpg`;
 }
 
-function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime, siteData }) {
+function renderImportMap(runtimeFeatures) {
+    const entries = [];
+
+    if (runtimeFeatures.three) {
+        entries.push('                "three": "/vendor/three/build/three.module.js"');
+        entries.push('                "three/addons/": "/vendor/three/examples/jsm/"');
+    }
+
+    if (runtimeFeatures.gaussianSplats) {
+        entries.push('                "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"');
+    }
+
+    if (entries.length === 0) {
+        return '';
+    }
+
+    return `    <script type="importmap">
+        {
+            "imports": {
+${entries.join(',\n')}
+            }
+        }
+    </script>`;
+}
+
+function renderConditionalHeadAssets(runtimeFeatures) {
+    const assets = [];
+    const importMap = renderImportMap(runtimeFeatures);
+
+    if (importMap) {
+        assets.push(importMap);
+    }
+
+    if (runtimeFeatures.prism) {
+        assets.push('    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />');
+        assets.push('    <link href="/blogs/css/code-copy.css" rel="stylesheet" />');
+    }
+
+    if (runtimeFeatures.modelViewer) {
+        assets.push('    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>');
+    }
+
+    if (runtimeFeatures.katex) {
+        assets.push('    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">');
+        assets.push('    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>');
+        assets.push('    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>');
+    }
+
+    return assets.join('\n');
+}
+
+function renderConditionalBodyScripts(runtimeFeatures) {
+    const scripts = [];
+
+    if (runtimeFeatures.bootstrap) {
+        scripts.push('    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>');
+    }
+
+    if (runtimeFeatures.prism) {
+        scripts.push('    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>');
+        scripts.push('    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>');
+        scripts.push('    <script src="/blogs/js/code-copy.js"></script>');
+    }
+
+    if (runtimeFeatures.tween) {
+        scripts.push('    <script src="/vendor/tween/tween.umd.js"></script>');
+    }
+
+    return scripts.join('\n');
+}
+
+function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime, runtimeFeatures = {}, siteData }) {
+    const activeRuntimeFeatures = {
+        katex: Boolean(runtimeFeatures.katex),
+        prism: Boolean(runtimeFeatures.prism),
+        bootstrap: Boolean(runtimeFeatures.bootstrap),
+        modelViewer: Boolean(runtimeFeatures.modelViewer),
+        three: Boolean(runtimeFeatures.three),
+        tween: Boolean(runtimeFeatures.tween),
+        simpleModelViewer: Boolean(runtimeFeatures.simpleModelViewer),
+        gaussianSplats: Boolean(runtimeFeatures.gaussianSplats)
+    };
     const title = getPostTitle(post, lang);
     const seoTitle = post[`seoTitle_${lang}`] || post.seoTitle || title;
     const defaultEnglishSeoTitle = post.seoTitle_eng || post.seoTitle || post.title_eng;
@@ -149,30 +230,13 @@ ${alternateLinksHtml}
 
     <title>${escapeHtml(pageTitle)}</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
-
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "/vendor/three/build/three.module.js",
-                "three/addons/": "/vendor/three/examples/jsm/",
-                "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
-            }
-        }
-    </script>
-
-    <script src="/vendor/tween/tween.umd.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
     <link href="/blogs/css/used.css" rel="stylesheet" />
     <link href="/blogs/css/typography.css" rel="stylesheet" />
     <link href="/blogs/css/blog_post_specific.css" rel="stylesheet" />
-    <link href="/blogs/css/code-copy.css" rel="stylesheet" />
     <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
     <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+${renderConditionalHeadAssets(activeRuntimeFeatures)}
 
     <style>
         .post-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
@@ -200,7 +264,7 @@ ${alternateLinksHtml}
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
         <div class="container px-4 px-lg-5">
             <a class="navbar-brand" href="/blogs/">Hwan's Blog</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+            <button class="navbar-toggler" type="button" data-nav-toggle aria-controls="navbarResponsive" aria-expanded="false">
                 Menu <i class="bi bi-list"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
@@ -266,13 +330,11 @@ ${alternateLinksHtml}
             postId: post.id,
             lang,
             alternateLang,
-            alternateHref
+            alternateHref,
+            runtimeFeatures: activeRuntimeFeatures
         })};
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
-    <script src="/blogs/js/code-copy.js"></script>
+${renderConditionalBodyScripts(activeRuntimeFeatures)}
     <script src="/blogs/js/theme-toggle.js"></script>
     <script src="/blogs/js/scroll-progress.js"></script>
     <script src="/blogs/js/post-page.js"></script>

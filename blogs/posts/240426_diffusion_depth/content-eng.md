@@ -231,19 +231,19 @@ def make_textured_mesh(outname, scale=None):
 <table>
     <tr>
         <th>Scene #1</th>
-        <td><img class="img-fluid" src="./240426_diffusion_depth/assets/res1.gif" alt="Scene 1"></td>
+        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240426_diffusion_depth/assets/res1-poster.jpg" aria-label="Scene 1"><source src="./240426_diffusion_depth/assets/res1.mp4" type="video/mp4"></video></td>
     </tr>
     <tr>
         <th>Scene #2</th>
-        <td><img class="img-fluid" src="./240426_diffusion_depth/assets/res2.gif" alt="Scene 2"></td>
+        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240426_diffusion_depth/assets/res2-poster.jpg" aria-label="Scene 2"><source src="./240426_diffusion_depth/assets/res2.mp4" type="video/mp4"></video></td>
     </tr>
     <tr>
         <th>Scene #3</th>
-        <td><img class="img-fluid" src="./240426_diffusion_depth/assets/res3.gif" alt="Scene 1"></td>
+        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240426_diffusion_depth/assets/res3-poster.jpg" aria-label="Scene 3"><source src="./240426_diffusion_depth/assets/res3.mp4" type="video/mp4"></video></td>
     </tr>
     <tr>
         <th>Scene #4</th>
-        <td><img class="img-fluid" src="./240426_diffusion_depth/assets/res4.gif" alt="Scene 2"></td>
+        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240426_diffusion_depth/assets/res4-poster.jpg" aria-label="Scene 4"><source src="./240426_diffusion_depth/assets/res4.mp4" type="video/mp4"></video></td>
     </tr>
 </table>
 

@@ -10,6 +10,10 @@ const { renderPostPage } = require('./lib/render-post-page');
 const { renderStaticBlogIndex } = require('./lib/render-blog-index');
 const { renderArchivePage } = require('./lib/render-archive-page');
 const { loadLegacyRedirects, validateLegacyRedirects } = require('./lib/legacy-redirects');
+const {
+    inferPostRuntimeFeatures,
+    parsePostMarkdownSource
+} = require('./lib/post-runtime-dependencies');
 const { parseProjectMarkdown } = require('./lib/project-markdown');
 const { renderProjectPage } = require('./lib/render-project-page');
 const {
@@ -653,11 +657,16 @@ function generatePostPage(post, lang) {
     }
 
     const mdContent = fs.readFileSync(mdPath, 'utf8');
-    const parts = mdContent.split('--- 여기부터 실제 콘텐츠 ---');
-    const content = parts.length > 1 ? parts[1].trim() : mdContent;
+    const { content, frontmatter } = parsePostMarkdownSource(mdContent);
 
     const parsedHtml = parseMarkdownWithMath(content, (source) => marked.parse(source));
     const normalizedHtml = normalizePostContent(post, content, parsedHtml, lang);
+    const runtimeFeatures = inferPostRuntimeFeatures({
+        post,
+        contentSource: content,
+        contentHtml: normalizedHtml,
+        frontmatter
+    });
     const explicitDescription = post[`description_${lang}`] || post[`subtitle_${lang}`] || post.description_eng || post.subtitle_eng || '';
     const derivedDescription = deriveDescriptionFromHtml(normalizedHtml);
     const descriptionSource = explicitDescription && explicitDescription.length < 50 && derivedDescription
@@ -671,6 +680,7 @@ function generatePostPage(post, lang) {
         contentHtml: normalizedHtml,
         metaDescription,
         readingTime,
+        runtimeFeatures,
         siteData
     });
 
