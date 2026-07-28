@@ -804,11 +804,11 @@ to
 
 > What computation in the current forward path does not actually need to run, and where is the memory path being interrupted unnecessarily?
 
-As a result, VARCO3D 2.0's 15-step denoise latency was reduced by `25.66%` on an equal-weighted per-asset average, without an observed output-quality regression.
+As a result, VARCO3D 2.0's 15-step denoise latency was reduced by `25.66%` on an equal-weighted per-asset average, without an observed quality drop.
 
 From the perspective of a CUDA kernel specialist, the process of finding the `M=256` canonical cache or redesigning the GELU candidate may look somewhat indirect. I also learned through this work, by trial and error, that the essence of fusion is not simply reducing the number of kernels, but eliminating real global-memory round trips and intermediate materialization.
 
-But the significance of this work is not that I solved the problem like a CUDA expert from the start. A researcher who understands the model's conditioning semantics and forward equation can identify unnecessary computation mathematically, then use an Agent as the executor for repository exploration, implementation, benchmarking, and regression tests. In that setup, the engineering boundary one person can work across becomes wider.
+But the significance of this work is not that I solved the problem like a CUDA expert from the start. It is that a researcher who understands the model's conditioning semantics and forward equation can identify unnecessary computation mathematically, then use an Agent as the executor for repository exploration, implementation, benchmarking, and regression tests. In that setup, the engineering boundary one person can work across becomes wider.
 
 This is less a case of an AI Agent replacing CUDA expertise than of a domain-aware researcher pulling an unfamiliar implementation area into a shorter iteration loop.
 

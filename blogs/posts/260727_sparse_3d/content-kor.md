@@ -806,11 +806,11 @@ Custom extension은 serving worker에서 JIT compile하지 않고 production env
 
 로 질문을 바꿨다.
 
-결과적으로 VARCO3D 2.0의 15-step denoise latency를 asset별 동일 가중 평균 기준, 출력 품질 회귀 없이 `25.66%` 줄일 수 있었다.
+결과적으로 VARCO3D 2.0의 15-step denoise latency를 asset별 동일 가중 평균 기준, 출력 품질 하락 없이 `25.66%` 줄일 수 있었다.
 
 CUDA 커널 전문 엔지니어의 관점에서 보면 `M=256` canonical cache를 찾은 과정이나 GELU candidate를 다시 설계한 과정은 다소 우회적으로 보일 수 있다. 나 역시 이번 작업을 통해 fusion의 핵심이 단순히 kernel 수를 줄이는 데 있는 것이 아니라, 실제 global-memory round trip과 intermediate materialization을 제거하는 데 있다는 점을 시행착오로 배웠다.
 
-하지만 이 작업의 의미는 처음부터 CUDA 전문가처럼 문제를 풀었다는 데 있지 않다. 모델의 conditioning semantics와 forward equation을 이해하는 리서처가 불필요한 계산을 수식으로 특정하고, Agent를 repository 탐색, 구현, benchmark와 regression test의 실행자로 활용했다.
+하지만 이 작업의 의미는 처음부터 CUDA 전문가처럼 문제를 풀었다는 데 있지 않다. 모델의 conditioning semantics와 forward equation을 이해하는 리서처가 불필요한 계산을 수식으로 특정하고, Agent를 repository 탐색, 구현, benchmark와 regression test의 실행자로 활용했다는 데 있다.
 
 이 작업은 AI Agent가 CUDA 전문성을 대체하는 방식이라기보다, 도메인 지식을 가진 리서처가 자신이 직접 다룰 수 있는 engineering boundary를 넓히는 방식에 가까웠다.
 
