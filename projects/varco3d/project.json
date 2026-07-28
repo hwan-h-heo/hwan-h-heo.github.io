@@ -2,9 +2,63 @@
   "title": "VARCO 3D: Production 3D Generative AI",
   "heroTitle": "VARCO 3D: Production 3D Generative AI",
   "subtitles": [
-    "NC AI / Production 3D Generation"
+    "NC AI",
+    "Production 3D Generation"
   ],
-  "description": "Portfolio page for VARCO 3D, summarizing 1B+ in-house 3D generative model development, CUDA inference optimization, mesh post-processing, UV unwrapping, and texture back-projection.",
+  "layout": "case-study",
+  "overview": [
+    "VARCO 3D is NC AI's production 3D generative AI service for creating textured meshes from native 3D generation models and GPU-first geometry processing.",
+    "My work spans the full generation stack: mesh pre- and post-processing, designing and training 1B+ parameter in-house 3D generative models from scratch, and moving research-grade inference paths into production service."
+  ],
+  "contributions": [
+    "Designed and trained in-house 3D generative models at 1B+ parameter scale, covering the transition from VARCO 3D 1.0 to 2.0.",
+    "Analyzed the production forward path, removed null-context attention arithmetic, and fused memory-bound paths with custom CUDA kernels and cuBLASLt epilogues.",
+    "Implemented CUDA-based solid correction, QEM decimation, topology cleaning, and large-mesh UV unwrapping paths for production outputs.",
+    "Built a CUDA rasterizer based texture back-projection pipeline that maps multi-view generated images into UV texture space."
+  ],
+  "details": [
+    {
+      "label": "Role",
+      "value": "3D Model and Production Pipeline R&D"
+    },
+    {
+      "label": "Organization",
+      "value": "NC AI"
+    },
+    {
+      "label": "Category",
+      "value": "Commercial AI Service, 3D Generation"
+    },
+    {
+      "label": "Model Scale",
+      "value": "1B+ parameter in-house models"
+    },
+    {
+      "label": "Technology",
+      "value": "ShapeVAE, DiT, Sparse 3D, CUDA, cuBLASLt, QEM, UV Unwrapping"
+    },
+    {
+      "label": "Service",
+      "value": "VARCO 3D",
+      "url": "https://3d.varco.ai/"
+    },
+    {
+      "label": "Technical Writing",
+      "value": "Sparse 3D Inference Optimization",
+      "url": "/blogs/posts/optimizing-sparse-3d-generation-inference/"
+    },
+    {
+      "label": "Retrospective",
+      "value": "VARCO 3D: A Year in Review",
+      "url": "/blogs/posts/varco3d-a-year-in-review-2025-retrospective/"
+    },
+    {
+      "label": "Related Project",
+      "value": "CaPa",
+      "url": "/projects/capa/"
+    }
+  ],
+  "description": "Case study of VARCO 3D, covering 1B+ native 3D model development, CUDA inference optimization, mesh processing, UV unwrapping, and texture delivery.",
   "keywords": "VARCO 3D, NC AI, 3D Generation, 3D Generative AI, VecSet-based ShapeVAE, Dense DiT Denoiser, Sparse DC VAE, Sparse DiT Denoiser, CUDA, cuBLASLt, QEM Decimation, UV Unwrapping, Texture Back Projection",
   "sourceBackup": ""
 }

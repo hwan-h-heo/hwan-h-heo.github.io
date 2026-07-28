@@ -1,11 +1,40 @@
 {
   "title": "Robust Camera Pose Refinement for Multi-Resolution Hash Encoding",
-  "heroTitle": "Robust Camera Pose Refinement <br/> for Multi-Resolution Hash Encoding",
+  "heroTitle": "Robust Camera Pose Refinement for Multi-Resolution Hash Encoding",
   "subtitles": [
-    "ICML 2023 <a href=\"https://dl.acm.org/doi/10.5555/3618408.3618936\" class=\"bi bi-link-45deg\"></a>",
-    "Naver AI Lab, Korea University"
+    "ICML 2023",
+    "NAVER AI Lab · Korea University"
   ],
-  "description": "Joint optimization of hash-grid NeRF and SE(3) camera poses",
+  "layout": "case-study",
+  "overview": [
+    "I led the research on jointly refining camera poses while training an Instant-NGP-style Radiance Field. Hash encoding accelerated neural rendering, but its coordinate gradients became unstable when the camera poses also had to move.",
+    "We traced the failure to interpolation across hash-grid cells and redesigned the backward path while preserving the fast forward behavior. The result jointly calibrated SE(3) poses and learned the scene at accelerated-NeRF speed."
+  ],
+  "contributions": [
+    "Identified oscillating coordinate gradients as the failure mode of hash-grid pose refinement.",
+    "Designed smooth backward interpolation with a straight-through trilinear forward path.",
+    "Added level-wise curriculum training for stable coarse-to-fine registration."
+  ],
+  "details": [
+    {
+      "label": "Role",
+      "value": "First Author, Research Lead"
+    },
+    {
+      "label": "Publication",
+      "value": "ICML 2023"
+    },
+    {
+      "label": "Organization",
+      "value": "NAVER AI Lab, Korea University"
+    },
+    {
+      "label": "Paper",
+      "value": "PMLR Proceedings",
+      "url": "https://proceedings.mlr.press/v202/heo23a.html"
+    }
+  ],
+  "description": "ICML 2023 case study on stabilizing camera-pose gradients while retaining the rapid convergence of hash-grid Neural Radiance Fields.",
   "keywords": "",
-  "sourceBackup": "backups/project-pages-html/html-20260508-142446/instant_pose/index.html"
+  "sourceBackup": ""
 }

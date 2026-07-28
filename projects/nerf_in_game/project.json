@@ -2,9 +2,39 @@
   "title": "Neural Rendering in Game Engine",
   "heroTitle": "Neural Rendering in Game Engine",
   "subtitles": [
-    "NC Research"
+    "NCSOFT Research",
+    "Real-time Neural Rendering"
   ],
-  "description": "Robust 360 videos to gaussian splatting and GS optimization for game engines",
+  "layout": "case-study",
+  "overview": [
+    "I led an applied research effort to move neural rendering from offline reconstruction into Unity and Unreal Engine. The pipeline covered 360-video capture, fisheye-aware Gaussian Splatting, scene optimization, and engine integration.",
+    "The core challenge was preserving quality while changing camera models, reducing millions of Gaussians, and fitting a research representation into real engine budgets."
+  ],
+  "contributions": [
+    "Built a 360-video capture-to-Gaussian-Splatting pipeline for large scenes.",
+    "Implemented a custom CUDA Gaussian rasterizer for native fisheye camera supervision.",
+    "Integrated Unity and Unreal Engine scenes with contribution-aware pruning for particle limits."
+  ],
+  "details": [
+    {
+      "label": "Role",
+      "value": "Research Lead, Real-time Neural Rendering"
+    },
+    {
+      "label": "Organization",
+      "value": "NCSOFT Research"
+    },
+    {
+      "label": "Output",
+      "value": "Interactive Unity and Unreal Engine scenes"
+    },
+    {
+      "label": "Related Writing",
+      "value": "Can NeRF be Used in Game?",
+      "url": "/blogs/posts/can-nerf-be-used-in-game/"
+    }
+  ],
+  "description": "Case study of a 360-video-to-Gaussian-Splatting pipeline with fisheye CUDA rasterization and Unity and Unreal Engine deployment.",
   "keywords": "",
-  "sourceBackup": "backups/project-pages-html/html-20260508-142446/nerf_in_game/index.html"
+  "sourceBackup": ""
 }

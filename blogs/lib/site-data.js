@@ -240,6 +240,18 @@ function validatePortfolioProjectShape(project, index, errors) {
         });
     }
 
+    if (project.tags !== undefined) {
+        if (!Array.isArray(project.tags)) {
+            errors.push(`"tags" must be an array in ${label}.`);
+        } else {
+            project.tags.forEach((tag) => {
+                if (typeof tag !== 'string' || !tag.trim()) {
+                    errors.push(`Invalid empty or non-string tag in ${label}.`);
+                }
+            });
+        }
+    }
+
     if (!project.image && !project.video) {
         errors.push(`"${label}" must define either image or video.`);
     }

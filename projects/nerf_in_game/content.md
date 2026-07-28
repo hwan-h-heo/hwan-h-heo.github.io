@@ -1,167 +1,97 @@
-:::{.container .portfolio-details-container .col-11}
-:::{.row .gy-4}
-:::{.col-lg-8}
-:::{.portfolio-description}
+## Neural Rendering with 360 Video
 
-## Project Overview
+<iframe width="720" height="405" src="https://www.youtube.com/embed/3OqbvUaoNFw?si=GxEnL9nG7fuVT0x0" title="Neural rendering game-engine pipeline overview" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-This project explores how **neural rendering assets** can move from offline reconstruction into interactive game-engine environments.
-The pipeline spans 360-camera capture, Gaussian Splatting-based scene reconstruction, custom camera modeling, asset optimization, and integration into Unity and Unreal Engine.
+### Capturing Large Scenes with a 360 Camera
 
-The key practical constraint is that detailed neural scenes are not automatically game-engine ready.
-They require camera-model-aware reconstruction, splat pruning, runtime-compatible rendering strategies, and careful conversion into engine-side representations.
-This project focuses on that deployment gap: making reconstructed neural scenes usable inside real-time graphics environments.
-
-:::{.video-container}
-<iframe width="720" height="405" src="https://www.youtube.com/embed/3OqbvUaoNFw?si=GxEnL9nG7fuVT0x0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-:::
-
-:::{.mt-4}
-**Key Contributions:**
-
-- Built a 360-camera-to-Gaussian-Splatting pipeline for large-scene neural reconstruction.
-- Developed fisheye/spherical camera handling for robust Gaussian Splatting reconstruction.
-- Optimized Gaussian Splatting scenes for Unity and Unreal Engine deployment.
-- Explored pruning and refinement strategies for particle-count constraints in Unreal Engine.
-
-:::
-:::
-:::
-
-:::{.col-lg-4}
-:::{.portfolio-info}
-
-### Project Details
-
-- **Role**: Research Lead, Real-time Neural Rendering
-- **Category**: Application, Neural Rendering, Game Engine Integration
-- **Organization**: NCSOFT Research
-- **Technology**: Gaussian Splatting, CUDA Rasterization, Unity, Unreal Engine, 360 Camera
-- **Related Blog**: [Can NeRF be Used in Game?](/blogs/posts/can-nerf-be-used-in-game/)
-
-:::
-:::
-:::
-:::
-
-:::{.row .gx-5 .justify-content-center}
-:::{.project-readable .portfolio-description}
-
-## Neural Rendering w/ 360 Videos
-
----
-
-### Using 360 Camera for Effective Large Scene Capturing
-
-To efficiently capture large scenes for 3D scene reconstruction, we utilize 360-degree videos as ground truth (GT) sources for novel view synthesis (NVS). Unlike standard cameras, 360 cameras are equipped with dual fisheye lenses positioned back-to-back, enabling them to capture a full spherical view of the environment in a single frame.
-This configuration provides a wider field of view than conventional cameras, allowing us to record large areas with fewer capture points.
+To capture large scenes efficiently, I used 360-degree video as the ground-truth source for novel-view synthesis.
+A consumer 360 camera has two fisheye lenses positioned back to back, capturing a full spherical view with fewer camera positions than a conventional narrow-FOV setup.
 
 <figure>
-<img class="img-fluid" src="assets/1_360_park_sample.jpg">
-<figcaption> a sample of captured 360 scene </figcaption>
+  <img src="assets/1_360_park_sample.jpg" alt="A frame captured with the 360-camera setup">
+  <figcaption>A sample frame from the large-scene 360-video capture.</figcaption>
 </figure>
 
-### Spherical 3D Gaussian Splatting
+### Fisheye-Aware Gaussian Splatting
 
-Initially, we trained the 3D Gaussian Splatting (GS) model using 360-degree equirectangular images.
-However, the results were suboptimal, primarily due to ***stitching errors***inherent in the process of combining fisheye images to create 360-degree panoramas.
-These errors introduced distortions and inconsistencies, which negatively impacted the quality of the reconstructed 3D scenes.
+The first reconstruction pipeline trained 3D Gaussian Splatting on stitched equirectangular images.
+The results were suboptimal because the stitching process introduced seams and geometric distortions, which then became incorrect supervision for the 3D scene.
 
-To overcome this limitation, we shifted to using the original fisheye images as our ground truth (GT) sources.
-By directly utilizing fisheye images, we avoided the stitching artifacts and preserved the integrity of the captured data.
-To further optimize this approach, we developed a ***custom CUDA-based Gaussian rasterization module*** tailored to the fisheye camera model.
-This module extended the capabilities of the original rasterization module, which lacked native support for fisheye projections, enabling more accurate and efficient processing of spherical scene data.
+I switched the training source to the original fisheye images.
+This avoided panorama stitching, but the standard Gaussian rasterizer assumed a pinhole camera and could not project splats into fisheye views.
+I therefore developed a **custom CUDA Gaussian rasterization module** for the fisheye camera model, extending the reconstruction pipeline to work directly with the original rays.
 
 <table>
-<tr>
-<th>Fisheye Camera Model</th>
-<th>Spherical Camera Model</th>
-</tr>
-<tr>
-<td><img class="img-fluid" src="assets/fisheye.jpg" alt="Fisheye Camera"></td>
-<td><img class="img-fluid" src="assets/spherical.jpg" alt="Spherical Camera"></td>
-</tr>
-<tr>
-<th colspan='2'> 3D GS Reconstruction </th>
-</tr>
-<tr>
-<td><img class="img-fluid" src="assets/3_comparison_01_final.jpg" alt="Comparison 01 Final"></td>
-<td><img class="img-fluid" src="assets/3_comparison_01_first.jpg" alt="Comparison 01 First"></td>
-</tr>
-<tr>
-<td><img class="img-fluid" src="assets/3_comparison_02_final.jpg" alt="Comparison 02 Final"></td>
-<td><img class="img-fluid" src="assets/3_comparison_02_first.jpg" alt="Comparison 02 First"></td>
-</tr>
+  <tr>
+    <th>Fisheye camera model</th>
+    <th>Spherical camera model</th>
+  </tr>
+  <tr>
+    <td><img src="assets/fisheye.jpg" alt="Fisheye camera projection"></td>
+    <td><img src="assets/spherical.jpg" alt="Spherical camera projection"></td>
+  </tr>
+  <tr>
+    <th colspan="2">Gaussian Splatting reconstruction</th>
+  </tr>
+  <tr>
+    <td><img src="assets/3_comparison_01_final.jpg" alt="Fisheye-supervised reconstruction result one"></td>
+    <td><img src="assets/3_comparison_01_first.jpg" alt="Spherical reconstruction result one"></td>
+  </tr>
+  <tr>
+    <td><img src="assets/3_comparison_02_final.jpg" alt="Fisheye-supervised reconstruction result two"></td>
+    <td><img src="assets/3_comparison_02_first.jpg" alt="Spherical reconstruction result two"></td>
+  </tr>
 </table>
 
-Here is the final reconstructed scene from 360 camera capture.
+The resulting scene was reconstructed directly from the dual-fisheye capture:
 
-:::{.video-container}
-<iframe width="720" height="405" src="https://www.youtube.com/embed/ISm-IL3HzmM?si=OyIAPB1Cgc70ADXU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-:::
+<iframe width="720" height="405" src="https://www.youtube.com/embed/ISm-IL3HzmM?si=OyIAPB1Cgc70ADXU" title="Gaussian Splatting scene reconstructed from 360-camera footage" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-## Gaussian Splatting w/ Game Engine
+## Gaussian Splatting in Game Engines
 
----
+With the reconstructed scene, I moved the representation into Unity and Unreal Engine, where it could be combined with normal engine controls and interactive content.
 
-With the reconstructed 3D neural rendering scene, we further integrate it into game engines
-such as Unity or Unreal, which provide mature tooling for interactive 3D environments.
+For Unity, I implemented the Gaussian rasterization path and reduced representation cost with vector quantization.
+The following virtual-world demo combines the reconstructed scene with a neural avatar, also produced with a Radiance Field technique.
 
-The integration of the Gaussian Splatting and Game Engine can be easily implemented using
-GS rasterization rule.
-We further optimize it using vector-quantization so that the Unity-GS can be rendered within its
-original rapid performance.
+<iframe width="720" height="405" src="https://www.youtube.com/embed/p5YXFOXWeW0?si=padif0-DUOVX4PHV" title="Interactive Gaussian Splatting and neural avatar scene in Unity" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-Below is the GS's virtual world experience which is fully interactive within the Unity engine,
-with our neural avatar also reconstructed by radiance fields technique.
+### Contribution-Based Pruning for Unreal Engine
 
-:::{.video-container}
-<iframe width="720" height="405" src="https://www.youtube.com/embed/p5YXFOXWeW0?si=padif0-DUOVX4PHV" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-:::
+The Unreal Engine path exposed a different limitation.
+The tested Niagara setup could render roughly two million particles effectively, while a complete reconstructed scene often contained more than six million Gaussians.
+Without optimization, the scene could not fit the engine's practical particle budget.
 
-In Unreal Engine (UE), Gaussian Splatting scenes can be constructed similarly.
-However, we've encountered a significant limitation:
-Unreal's Niagara system can effectively render only up to 2 million particles. Given that a fully reconstructed scene often consists of over 6 million particles, this limitation leads to suboptimal results without optimization.
-This issue has also been reported with the [XVERSE's UE GS plugin](https://github.com/xverse-engine/XV3DGS-UEPlugin/issues/6).
+I defined each Gaussian's **contribution** as its accumulated alpha-composited influence over all training images:
 
-To overcome this, it's necessary to prune the splats so that the particle count stays within UE's upper limit.
-We define the *contribution* of each splat as the sum of the intersected rays across all the training images.
-Mathematically, this can be expressed as:
-
-:::{.math-container}
-$$ C = \sum_{k=1}^{n} C_k, \quad
-C_k = \sum_{p \in \mathcal{P}_k} \alpha_i(p) \prod_{j=1}^{i(p)-1} (1 - \alpha_j)
 $$
-:::
+C = \sum_{k=1}^{n} C_k,
+\qquad
+C_k =
+\sum_{p \in \mathcal{P}_k}
+\alpha_i(p)
+\prod_{j=1}^{i(p)-1}(1-\alpha_j).
+$$
 
-We estimated the contribution of all trained splats and pruned the particles accordingly.
-The pruned GS scene was then aligned.
-This prune-and-refine process was iteratively optimized through only a few steps.
-Below is a comparison between the original GS scene and the pruned GS scene in UE.
+This score measures how much a splat actually contributes to rendered pixels rather than pruning only by opacity or geometric size.
+I removed the least-contributing Gaussians, briefly refined the retained scene, and repeated the prune-and-refine process for a small number of steps.
 
 <table>
-<tr>
-<th> Original GS in UE </th>
-<th> Pruned GS in UE</th>
-</tr>
-<tr>
-<td><img class="img-fluid" src="assets/UE_org.png" alt="Fisheye Camera"></td>
-<td><img class="img-fluid" src="assets/UE_pruned.png" alt="Spherical Camera"></td>
-</tr>
+  <tr>
+    <th>Original scene in Unreal Engine</th>
+    <th>Pruned and refined scene</th>
+  </tr>
+  <tr>
+    <td><img src="assets/UE_org.png" alt="Original Gaussian Splatting scene in Unreal Engine"></td>
+    <td><img src="assets/UE_pruned.png" alt="Pruned Gaussian Splatting scene in Unreal Engine"></td>
+  </tr>
 </table>
----
 
-Below is the result video that demonstrates the interactive experience achieved with our pipeline in Unreal Engine, showcasing the fidelity and performance of pruned Gaussian Splatting.
+## Result
 
-:::{.video-container}
-<iframe width="720" height="405" src="https://www.youtube.com/embed/FzoZVsvgVW0?si=GWOYlR0Ho8pgj2Cf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-:::
+The final demonstration runs the pruned Gaussian Splatting scene interactively inside Unreal Engine.
+The project established the practical boundaries of the complete pipeline: camera-model errors at capture time, representation cost at engine import, and the pruning signal required to preserve quality under a hard runtime budget.
 
-This pipeline demonstrates the potential of integrating advanced neural rendering techniques into interactive applications. Future work will explore further optimizations for real-time rendering and expanding the pipeline's scalability to larger scenes.
+<iframe width="720" height="405" src="https://www.youtube.com/embed/FzoZVsvgVW0?si=GWOYlR0Ho8pgj2Cf" title="Pruned Gaussian Splatting scene running in Unreal Engine" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
----
-
-For more insights, see my blog post discussing the practical challenges and solutions for using NeRF in game engines: [Can NeRF be Used in Game?](/blogs/posts/can-nerf-be-used-in-game/)
-
-:::
-:::
+For broader context, see [Can NeRF be Used in Game?](/blogs/posts/can-nerf-be-used-in-game/).

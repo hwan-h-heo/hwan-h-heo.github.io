@@ -2,9 +2,39 @@
   "title": "2D GS Viewer",
   "heroTitle": "2D Gaussian Splatting Viewer",
   "subtitles": [
-    "Personal Project"
+    "Open-source 3D Tooling",
+    "Released 2024"
   ],
-  "description": "Portfolio showcase of the 2D Gaussian Splatting Viewer project, highlighting development and contributions.",
+  "layout": "case-study",
+  "overview": [
+    "I built the 2D Gaussian Splatting Viewer to turn a research release into a workflow people could inspect, edit, and extend. The original implementation produced a new surface-oriented representation, but diagnosing a reconstruction still required separate scripts and one-off visualizations.",
+    "The Viser application brought training, renderer diagnostics, scene editing, transforms, camera paths, and mesh export into one interface. It grew from a personal debugging tool into a public utility for the 2DGS community."
+  ],
+  "contributions": [
+    "Built and maintained a broadly adopted public Viser workflow for 2DGS.",
+    "Connected live training with RGB, normal, depth, distortion, edge, and curvature diagnostics.",
+    "Implemented crop, edit/save, rigid transforms, camera-path preview, and mesh export."
+  ],
+  "details": [
+    {
+      "label": "Role",
+      "value": "Creator and Maintainer"
+    },
+    {
+      "label": "Community",
+      "value": "160+ GitHub stars"
+    },
+    {
+      "label": "Technology",
+      "value": "Python, Viser, CUDA rasterization, 2DGS"
+    },
+    {
+      "label": "Project",
+      "value": "GitHub Repository",
+      "url": "https://github.com/hwanhuh/2D-GS-Viser-Viewer"
+    }
+  ],
+  "description": "Case study of an open-source 2D Gaussian Splatting workspace for training, diagnostics, editing, transforms, camera paths, and mesh export.",
   "keywords": "2D Gaussian Splatting, Viewer, Visualization, Editing, Rendering, Viser, Portfolio",
-  "sourceBackup": "backups/project-pages-html/html-20260508-142446/2dgs_viewer/index.html"
+  "sourceBackup": ""
 }

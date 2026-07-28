@@ -1,10 +1,40 @@
 {
-  "title": "VGGSfM vs Mast3r Radiance Fields",
-  "heroTitle": "Radiance Fields from VGGSfM and Mast3r,<br/> and Their Comparison",
+  "title": "Deep SfM for Radiance Fields",
+  "heroTitle": "Deep SfM for Radiance Fields",
   "subtitles": [
-    "Personal Project"
+    "Independent Research",
+    "Released 2024"
   ],
-  "description": "Portfolio showcase comparing Radiance Fields from VGGSfM and Mast3r, highlighting methodologies and findings.",
+  "layout": "case-study",
+  "overview": [
+    "I compared VGGSfM and MASt3R as front ends for 2D Gaussian Splatting to test whether visually dense reconstruction also provides camera poses accurate enough for Radiance Fields.",
+    "Both outputs were converted into one COLMAP-compatible pipeline and evaluated with the same renderer. The key result was that reconstruction completeness and inverse-rendering accuracy are not the same."
+  ],
+  "contributions": [
+    "Built reproducible VGGSfM-to-2DGS and MASt3R-to-2DGS evaluation paths.",
+    "Implemented MASt3R-to-COLMAP conversion and a Viser reconstruction viewer.",
+    "Separated pose quality, point density, sparse-view robustness, and memory behavior."
+  ],
+  "details": [
+    {
+      "label": "Role",
+      "value": "Independent Research and Engineering"
+    },
+    {
+      "label": "Community",
+      "value": "230+ GitHub stars"
+    },
+    {
+      "label": "Technology",
+      "value": "VGGSfM, MASt3R, COLMAP, 2DGS"
+    },
+    {
+      "label": "Project",
+      "value": "GitHub Repository",
+      "url": "https://github.com/hwanhuh/Radiance-Fields-from-VGGSfM-Mast3r"
+    }
+  ],
+  "description": "Case study comparing VGGSfM and MASt3R camera reconstruction as front ends for 2D Gaussian Splatting.",
   "keywords": "Radiance Fields, Gaussian Splatting, VGGSfM, Mast3r, Structure from Motion, SfM, Comparison, Portfolio",
-  "sourceBackup": "backups/project-pages-html/html-20260508-142446/deepsfm/index.html"
+  "sourceBackup": ""
 }

@@ -94,6 +94,37 @@
         `;
     }
 
+    function renderAboutContacts(links) {
+        if (!Array.isArray(links) || !links.length) {
+            return '';
+        }
+
+        const linkHtml = links.map((link) => {
+            const externalAttrs = /^https?:\/\//i.test(link.url || '')
+                ? ' target="_blank" rel="noopener noreferrer"'
+                : '';
+            const icon = link.icon || 'bi bi-arrow-up-right';
+
+            return `
+                <a class="about-contact-link" href="${escapeHtml(link.url)}"${externalAttrs}>
+                    <i class="${escapeHtml(icon)}" aria-hidden="true"></i>
+                    <span>
+                        <strong>${escapeHtml(link.label)}</strong>
+                        <small>${escapeHtml(link.value)}</small>
+                    </span>
+                    <i class="bi bi-arrow-up-right about-contact-arrow" aria-hidden="true"></i>
+                </a>
+            `;
+        }).join('');
+
+        return `
+            <aside class="about-contact" aria-label="Contact">
+                <p class="about-contact-label">Contact</p>
+                <div class="about-contact-links">${linkHtml}</div>
+            </aside>
+        `;
+    }
+
     function renderAbout(block) {
         return `
             <div class="container section-title" data-aos="fade-up">
@@ -113,6 +144,7 @@
                         </div>
                         <p class="about-intro">${block.introHtml || ''}</p>
                         <p class="about-bio">${block.bodyHtml || ''}</p>
+                        ${renderAboutContacts(block.contactLinks)}
                     </div>
                 </div>
             </div>

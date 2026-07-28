@@ -641,6 +641,11 @@
       "categories": [
         "app"
       ],
+      "tags": [
+        "3D Generation",
+        "Generative AI",
+        "CUDA"
+      ],
       "badge": "Commercial AI Service",
       "image": "assets/thumbnails/varco3d_thumbnail.png",
       "gif": "assets/varco3d_hero.webp",
@@ -654,6 +659,11 @@
       "categories": [
         "research"
       ],
+      "tags": [
+        "3D Generation",
+        "Textured Mesh",
+        "Diffusion"
+      ],
       "badge": "Featured on Hugging Face",
       "image": "assets/thumbnails/capa_thumbnail.png",
       "gif": "assets/capa_teaser.webp",
@@ -666,6 +676,11 @@
       "url": "projects/deepsfm/",
       "categories": [
         "per"
+      ],
+      "tags": [
+        "Structure from Motion",
+        "3D Vision",
+        "Radiance Fields"
       ],
       "badge": "Featured on GitHub (230+ stars)",
       "image": "assets/thumbnails/deepsfm_thumbnail.png",
@@ -681,6 +696,11 @@
         "per",
         "app"
       ],
+      "tags": [
+        "Gaussian Splatting",
+        "WebGL",
+        "Three.js"
+      ],
       "badge": "Featured on GitHub (160+ stars)",
       "image": "assets/thumbnails/2dgs_viewer_thumbnail.png",
       "gif": "assets/2dgs_viewer_teaser.webp",
@@ -694,6 +714,11 @@
       "categories": [
         "research"
       ],
+      "tags": [
+        "NeRF",
+        "Camera Pose",
+        "ICML"
+      ],
       "badge": "ICML 2023",
       "image": "projects/instant_pose/assets/pose_fig2.jpg",
       "alt": "Instant Pose teaser"
@@ -705,6 +730,11 @@
       "url": "projects/nerf_in_game/",
       "categories": [
         "app"
+      ],
+      "tags": [
+        "Neural Rendering",
+        "Unity",
+        "Unreal Engine"
       ],
       "image": "projects/nerf_in_game/teaser.jpg",
       "alt": "NeRF game teaser"

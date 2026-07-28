@@ -402,7 +402,9 @@ function saveProjectPage(payload) {
     }
 
     const metadataInput = payload.metadata && typeof payload.metadata === 'object' ? payload.metadata : {};
+    const existingMetadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
     const metadata = {
+        ...existingMetadata,
         title: String(metadataInput.title || '').trim(),
         heroTitle: String(metadataInput.heroTitle || '').trim(),
         subtitles: Array.isArray(metadataInput.subtitles)
@@ -483,30 +485,32 @@ function createProjectPage(payload) {
         subtitles: [
             subtitle
         ],
+        layout: 'case-study',
+        overview: [
+            'Add a concise overview of the work, your role, and the problem it addressed.'
+        ],
+        contributions: [],
+        details: [
+            {
+                label: 'Role',
+                value: 'Add your role'
+            }
+        ],
         description: '',
         keywords: '',
         sourceBackup: ''
     };
-    const content = `:::{.container .portfolio-details-container .col-11}
-:::{.row .gy-4}
-:::{.col-lg-8}
-:::{.portfolio-description}
-## Project Overview
+    const content = `## Why It Mattered
 
-Start writing this project page here.
-:::
-:::
+Explain the context and why this work was important at the time.
 
-:::{.col-lg-4}
-:::{.portfolio-info}
-### Project Details
+## Technical Approach
 
-- **Category**: Project
-- **Skills Demonstrated**: Add skills here
-:::
-:::
-:::
-:::
+Describe the key decisions and implementation.
+
+## Outcome
+
+Summarize the result and impact.
 `;
 
     fs.writeFileSync(path.join(projectDir, 'project.json'), `${JSON.stringify(metadata, null, 2)}\n`, 'utf8');
@@ -626,6 +630,9 @@ function sanitizePortfolioBundle(payload) {
                 url: String(project.url || '').trim(),
                 categories: Array.isArray(project.categories)
                     ? [...new Set(project.categories.map((category) => String(category || '').trim()).filter(Boolean))]
+                    : [],
+                tags: Array.isArray(project.tags)
+                    ? [...new Set(project.tags.map((tag) => String(tag || '').trim()).filter(Boolean))]
                     : [],
                 external: Boolean(project.external)
             };
