@@ -456,14 +456,14 @@ This candidate had a smaller absolute effect than Q/K fusion, but it reduced lat
 
 The table below shows the leave-one-out results from disabling only one candidate while leaving all other adopted fusions enabled. A positive number means the run became slower when that candidate was disabled.
 
-| Candidate | Calls / iter | 10-asset avg | 30K | Decision |
-| --- | ---: | ---: | ---: | --- |
-| `qk_rms_norm_rope_qkv_inplace` | 60 | `+93.3ms` (`+6.43%`) | `+158.6ms` (`+4.13%`) | Adopted. Largest active-path contribution |
-| `sparse_layer_norm_affine` | 120 | `+25.4ms` (`+1.89%`) | `+34.9ms` (`+0.91%`) | Adopted. Consistent improvement across the entire token range |
-| `layer_norm` | 62 | `+15.6ms` (`+1.17%`) | `+14.0ms` (`+0.36%`) | Adopted. Small but stable improvement |
-| `sparse_batch_mul_add` | 120 | `+11.4ms` (`+0.88%`) | `+8.3ms` (`+0.21%`) | Adopted. Simplifies the repeated residual path |
-| `qk_rms_norm_cross_inplace` | 60 | `-1.3ms` (`≈0%`) | `-17.3ms` (`-0.45%`) | Neutral. Not treated as evidence for baseline performance |
-| `gelu_tanh` | 60 | `-14.0ms` (`-0.84%`) | `-37.2ms` (`-0.97%`) | **Rejected. The custom kernel was actually slower** |
+| Candidate | Calls / iter | 10-asset avg | Decision |
+| --- | ---: | ---: | --- |
+| `qk_rms_norm_rope_qkv_inplace` | 60 | `+93.3ms` (`+6.43%`) | Adopted. Largest active-path contribution |
+| `sparse_layer_norm_affine` | 120 | `+25.4ms` (`+1.89%`) | Adopted. Consistent improvement across the entire token range |
+| `layer_norm` | 62 | `+15.6ms` (`+1.17%`) | Adopted. Small but stable improvement |
+| `sparse_batch_mul_add` | 120 | `+11.4ms` (`+0.88%`) | Adopted. Simplifies the repeated residual path |
+| `qk_rms_norm_cross_inplace` | 60 | `-1.3ms` (`≈0%`) | Neutral. Not treated as evidence for baseline performance |
+| `gelu_tanh` | 60 | `-14.0ms` (`-0.84%`) | **Rejected. The custom kernel was actually slower** |
 
 The `layer_norm` candidate replaced independent normalization on the residual path with a dedicated kernel, and `sparse_batch_mul_add` simplified batch-indexed modulation and the residual affine chain into a single kernel. `qk_rms_norm_cross_inplace` reduced cross-attention preprocessing, but because the gain did not reproduce on larger payloads, I did not count it as evidence for the baseline speedup.
 
@@ -546,7 +546,7 @@ However, with the cuBLASLt epilogue, we cannot assume that the BF16 rounding bou
 
 ---
 
-## 6. Benchmarking Where Token Counts Actually Move
+## 6. Dynamic-token production benchmark
 
 ### 6.1. Denoise Latency on Real Payloads
 
@@ -804,27 +804,19 @@ to
 
 > What computation in the current forward path does not actually need to run, and where is the memory path being interrupted unnecessarily?
 
-With that shift, the key final production benchmark results were as follows.
-
-- `canonical_cache_combined` vs `pure_eager`: equal-weight per-asset latency `−25.66%`
-- Geometric-mean speedup: `1.348×`
-- Additional improvement from canonical cache: `1.78%` over the prior exact combined path
-- Largest-payload peak allocated in the previous four-way exact-path run: `4.954 GiB → 4.182 GiB`
-- Null-context fast path: raw BF16 bitwise exact in the configuration that passed startup qualification
-- cuBLASLt GELU path: managed separately as a bounded-error optimization, not a bitwise-exact one
+As a result, VARCO3D 2.0's 15-step denoise latency was reduced by `25.66%` on an equal-weighted per-asset average, without an observed output-quality regression.
 
 From the perspective of a CUDA kernel specialist, the process of finding the `M=256` canonical cache or redesigning the GELU candidate may look somewhat indirect. I also learned through this work, by trial and error, that the essence of fusion is not simply reducing the number of kernels, but eliminating real global-memory round trips and intermediate materialization.
 
+But the significance of this work is not that I solved the problem like a CUDA expert from the start. A researcher who understands the model's conditioning semantics and forward equation can identify unnecessary computation mathematically, then use an Agent as the executor for repository exploration, implementation, benchmarking, and regression tests. In that setup, the engineering boundary one person can work across becomes wider.
 
-But the significance of this work is not that I solved the problem like a CUDA expert from the start. A researcher who understands the model's conditioning semantics and forward equation identified unnecessary computation mathematically, and used the Agent as an executor for repository exploration, implementation, benchmarking, and regression tests. That was enough to reduce VARCO3D 2.0's 15-step denoise latency by `25.66%` within a short period. I also confirmed that the same null-context optimization applies to the public implementations of Hunyuan3D 2.1, Direct3D-S2, and TRELLIS.2.
-
-This is less a case of an AI Agent replacing CUDA expertise than of a domain-aware researcher expanding the engineering boundary they can work across directly. As the Agent lowers implementation cost, people can focus more on defining what computation is unnecessary, specifying what numerical contract is required, and deciding which results should be adopted in production.
+This is less a case of an AI Agent replacing CUDA expertise than of a domain-aware researcher pulling an unfamiliar implementation area into a shorter iteration loop.
 
 ---
 
 ![](./assets/varco3d2-result-a.png)
 
-This design did not end as a one-off experiment. The optimized kernel is being used in the actual VARCO3D 2.0 serving path, and the profiling, candidate selection, numerical qualification, and fallback principles organized through this process have been codified into the internal `worker-forward-optimize` skill and applied to other workers.
+This design did not remain a one-off experiment. The optimized kernel entered the VARCO3D 2.0 serving path, and the profiling, candidate selection, numerical qualification, and fallback principles from this work were organized into the internal `worker-forward-optimize` skill.
 
 ![](./assets/varco3d2-result-b.png)
 
@@ -832,9 +824,7 @@ This design did not end as a one-off experiment. The optimized kernel is being u
 
 In the age of AI agents, the range of work one person can cover clearly expands. An AI researcher can build a webapp tool, bring ML Engineering tasks directly into their own workflow, and, at times, even put a custom CUDA extension onto the production path.
 
-But that expansion does not mean "leaving all judgment to AI."
-
-As the Agent lowers implementation cost, the human role moves to a higher layer. In this work, the result that proved more reusable than the custom CUDA kernel itself was precisely that structure of judgment.
+But that expansion does not mean leaving judgment to AI. People still have to decide what computation is unnecessary, what numerical contract is required, and which result is safe enough to enter production.
 
 The era in which going further required knowing everything is gradually passing. Instead, what matters more is knowing what you do not know, deciding what must be verified, and judging how far you can take responsibility.
 
