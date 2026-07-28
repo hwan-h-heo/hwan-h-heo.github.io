@@ -455,22 +455,22 @@ section, .section { color: var(--default-color); background-color: var(--backgro
     padding-bottom: 34px;
   }
 }
-@media (min-width: 2200px) {
+@media (min-width: 2000px) {
   .index-page .main > section.section:not(#home) > .container {
     max-width: 1500px;
   }
 
   .index-page #about .about-copy {
-    padding-left: 3rem;
+    padding-left: 5rem;
   }
 }
-@media (min-width: 3200px) {
+@media (min-width: 2600px) {
   .index-page .main > section.section:not(#home) > .container {
     max-width: 1600px;
   }
 
   .index-page #about .about-copy {
-    padding-left: 4rem;
+    padding-left: 6rem;
   }
 }
 .section-title { padding-bottom: 40px; position: relative; }
@@ -1244,6 +1244,7 @@ a.testimonial-link:hover {
   align-items: center;
   gap: 0.35rem;
   color: rgba(255, 255, 255, 0.52);
+  text-decoration: none;
   white-space: nowrap;
 }
 
@@ -1757,7 +1758,10 @@ h6 {
   right: auto;
   bottom: 1.15rem;
   left: 50%;
-  gap: 0.2rem;
+  gap: 0;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
   transform: translateX(-50%);
   transition:
     opacity 1.1s ease,
@@ -1787,7 +1791,7 @@ h6 {
 }
 
 .scroll-down-arrow i {
-  font-size: 1.3rem;
+  font-size: 1.45rem;
 }
 
 .about .about-intro,
