@@ -21,18 +21,6 @@
             .replace(/'/g, '&#39;');
     }
 
-    function renderIconLinks(links) {
-        return (links || []).map((link) => {
-            const external = /^https?:\/\//.test(link.url || '');
-            const target = external ? ' target="_blank" rel="noopener noreferrer"' : '';
-            return `
-                <a aria-label="${escapeHtml(link.label)}" href="${escapeHtml(link.url)}"${target}>
-                    <i class="${escapeHtml(link.icon)}"></i>
-                </a>
-            `;
-        }).join('');
-    }
-
     function renderHeroActions(actions) {
         return (actions || []).map((action) => {
             const style = ['section', 'download'].includes(action.style)
@@ -89,9 +77,6 @@
                 <p class="lead">${renderHeroLead(block)}</p>
                 <div class="hero-actions">
                     ${renderHeroActions(block.actions)}
-                </div>
-                <div class="social-links">
-                    ${renderIconLinks(block.links)}
                 </div>
             </div>
             ${renderHeroScrollCue()}

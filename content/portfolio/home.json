@@ -13,20 +13,19 @@
       ],
       "actions": [
         {
-          "label": "Selected Work",
+          "label": "Project",
           "url": "#portfolio",
           "style": "section"
         },
         {
-          "label": "Technical Writing",
+          "label": "Blog",
           "url": "#blog",
           "style": "section"
         },
         {
-          "label": "Download CV",
-          "url": "/assets/Hwan_Heo_s_Curriculum_Vitae.pdf",
-          "style": "download",
-          "download": true
+          "label": "About",
+          "url": "#about",
+          "style": "section"
         }
       ],
       "links": [

@@ -639,7 +639,7 @@ function renderProjectPage({ project, contentHtml, legacyHtml, projectNav = null
         <li><a href="../../#home"><i class="bi bi-house navicon"></i>Home</a></li>
         <li><a href="../../#about"><i class="bi bi-person navicon"></i> About</a></li>
         <li><a href="../../#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
-        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Portfolio</a></li>
+        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Project</a></li>
 ${projectSidebarNav}
         <li><a href="../../blogs/"><i class="bi bi-keyboard navicon"></i> Blog <i class="bi bi-link-45deg"></i></a></li>
       </ul>

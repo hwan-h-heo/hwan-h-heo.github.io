@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         const getSeriesTitle = (post) => {
             const series = post.series && siteData.series?.[post.series];
-            return series?.eng || post.series || 'Writing';
+            return series?.eng || post.series || 'Blog';
         };
 
         const renderTags = (post) => (post.tags || [])
