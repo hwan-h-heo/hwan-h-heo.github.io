@@ -456,14 +456,14 @@ out = normalized * scale_token + shift_token
 
 아래 표는 다른 채택 fusion을 모두 켠 상태에서 candidate 하나만 비활성화한 leave-one-out 결과다. 양수는 해당 candidate를 끄면 느려졌다는 뜻이다.
 
-| Candidate | Calls / iter | 10-asset avg | 30K | 판단 |
-| --- | ---: | ---: | ---: | --- |
-| `qk_rms_norm_rope_qkv_inplace` | 60 | `+93.3ms` (`+6.43%`) | `+158.6ms` (`+4.13%`) | 채택. 가장 큰 active-path 기여 |
-| `sparse_layer_norm_affine` | 120 | `+25.4ms` (`+1.89%`) | `+34.9ms` (`+0.91%`) | 채택. 전 token 구간에서 일관된 개선 |
-| `layer_norm` | 62 | `+15.6ms` (`+1.17%`) | `+14.0ms` (`+0.36%`) | 채택. 작지만 안정적인 개선 |
-| `sparse_batch_mul_add` | 120 | `+11.4ms` (`+0.88%`) | `+8.3ms` (`+0.21%`) | 채택. 반복 residual path 단순화 |
-| `qk_rms_norm_cross_inplace` | 60 | `-1.3ms` (`≈0%`) | `-17.3ms` (`-0.45%`) | 중립. 기본 성능 근거로 보지 않음 |
-| `gelu_tanh` | 60 | `-14.0ms` (`-0.84%`) | `-37.2ms` (`-0.97%`) | **기각. Custom kernel이 오히려 느림** |
+| Candidate | Calls / iter | 10-asset avg | 판단 |
+| --- | ---: | ---: | --- |
+| `qk_rms_norm_rope_qkv_inplace` | 60 | `+93.3ms` (`+6.43%`) | 채택. 가장 큰 active-path 기여 |
+| `sparse_layer_norm_affine` | 120 | `+25.4ms` (`+1.89%`) | 채택. 전 token 구간에서 일관된 개선 |
+| `layer_norm` | 62 | `+15.6ms` (`+1.17%`) | 채택. 작지만 안정적인 개선 |
+| `sparse_batch_mul_add` | 120 | `+11.4ms` (`+0.88%`) | 채택. 반복 residual path 단순화 |
+| `qk_rms_norm_cross_inplace` | 60 | `-1.3ms` (`≈0%`) | 중립. 기본 성능 근거로 보지 않음 |
+| `gelu_tanh` | 60 | `-14.0ms` (`-0.84%`) | **기각. Custom kernel이 오히려 느림** |
 
 `layer_norm` candidate는 residual path의 독립 normalization을 전용 kernel로 치환했고, `sparse_batch_mul_add`는 batch-indexed modulation과 residual affine chain을 하나의 kernel로 단순화했다. `qk_rms_norm_cross_inplace`는 cross-attention preprocessing을 줄였지만 큰 payload에서 이득이 재현되지 않아 기본 성능 근거에서는 제외했다.
 
@@ -806,27 +806,19 @@ Custom extension은 serving worker에서 JIT compile하지 않고 production env
 
 로 질문을 바꿨다.
 
-이로 인해 달성할 수 있었던 최종 production benchmark의 핵심 결과는 다음과 같다.
-
-- `canonical_cache_combined` vs `pure_eager`: equal-weight per-asset latency `−25.66%`
-- Geometric-mean speedup: `1.348×`
-- Canonical cache의 추가 개선: prior exact combined 대비 `1.78%`
-- 이전 four-way exact-path run의 largest-payload peak allocated: `4.954 GiB → 4.182 GiB`
-- Null-context fast path: startup qualification을 통과한 configuration에서 raw BF16 bitwise exact
-- cuBLASLt GELU path: bitwise exact가 아닌 bounded-error optimization으로 별도 관리
+결과적으로 VARCO3D 2.0의 15-step denoise latency를 asset별 동일 가중 평균 기준, 출력 품질 회귀 없이 `25.66%` 줄일 수 있었다.
 
 CUDA 커널 전문 엔지니어의 관점에서 보면 `M=256` canonical cache를 찾은 과정이나 GELU candidate를 다시 설계한 과정은 다소 우회적으로 보일 수 있다. 나 역시 이번 작업을 통해 fusion의 핵심이 단순히 kernel 수를 줄이는 데 있는 것이 아니라, 실제 global-memory round trip과 intermediate materialization을 제거하는 데 있다는 점을 시행착오로 배웠다.
 
+하지만 이 작업의 의미는 처음부터 CUDA 전문가처럼 문제를 풀었다는 데 있지 않다. 모델의 conditioning semantics와 forward equation을 이해하는 리서처가 불필요한 계산을 수식으로 특정하고, Agent를 repository 탐색, 구현, benchmark와 regression test의 실행자로 활용했다.
 
-하지만 이 작업의 의미는 처음부터 CUDA 전문가처럼 문제를 풀었다는 데 있지 않다. 모델의 conditioning semantics와 forward equation을 이해하는 리서처가 불필요한 계산을 수식으로 특정하고, Agent를 repository 탐색, 구현, benchmark와 regression test의 실행자로 활용했을 때, 짧은 기간 안에 VARCO3D 2.0의 15-step denoise latency를 `25.66%` 줄일 수 있었다. 또한 같은 null-context 최적화가 Hunyuan3D 2.1, Direct3D-S2와 TRELLIS.2의 공개 구현에도 적용됨을 확인했다.
-
-이것은 AI Agent가 CUDA 전문성을 대체하는 방식이라기보다, 도메인 지식을 가진 리서처가 자신이 직접 다룰 수 있는 engineering boundary를 넓히는 방식에 가깝다. Agent가 구현 비용을 낮출수록 사람은 무엇이 불필요한 계산인지 정의하고, 어떤 numerical contract가 필요한지 정하며, 어떤 결과를 production에 채택할지 판단하는 데 더 집중할 수 있다.
+이 작업은 AI Agent가 CUDA 전문성을 대체하는 방식이라기보다, 도메인 지식을 가진 리서처가 자신이 직접 다룰 수 있는 engineering boundary를 넓히는 방식에 가까웠다.
 
 ---
 
 ![](./assets/varco3d2-result-a.png)
 
-이 설계는 일회성 실험으로 끝나지 않았다. 최적화된 kernel은 실제 VARCO3D 2.0 serving path에서 사용되고 있으며, 이 과정에서 정리한 profiling, candidate selection, numerical qualification과 fallback 원칙은 사내 `worker-forward-optimize` skill로 정리해 다른 worker에도 적용했다.
+이 설계는 일회성 실험으로 끝나지 않았다. 최적화된 kernel은 VARCO3D 2.0 serving path에 들어갔고, 이 과정에서 정리한 profiling, candidate selection, numerical qualification과 fallback 원칙은 사내 `worker-forward-optimize` skill로 정리했다.
 
 ![](./assets/varco3d2-result-b.png)
 
@@ -834,9 +826,7 @@ CUDA 커널 전문 엔지니어의 관점에서 보면 `M=256` canonical cache�
 
 AI Agent 시대에 개인의 작업 반경은 분명 넓어진다. AI Researcher가 webapp tool을 만들고, ML Engineering task를 직접 끌어오고, 때로는 custom CUDA extension까지 production path에 넣을 수 있다.
 
-하지만 그 확장은 'AI의 판단에 모든 것을 맡긴다'는 뜻이 아니다.
-
-Agent가 구현 비용을 낮출수록, 사람의 역할은 더 높은 층위로 이동한다. 이번 작업에서 custom CUDA kernel보다 더 재사용 가능했던 결과도 바로 그 판단 구조였다.
+하지만 그 확장은 'AI의 판단에 모든 것을 맡긴다'는 뜻이 아니다. 무엇이 불필요한 계산인지, 어떤 numerical contract가 필요한지, 어떤 결과를 production에 채택할 수 있는지는 여전히 사람이 정해야 한다.
 
 더 멀리 가기 위해 모든 것을 알아야 하는 시대는 조금씩 지나가고 있다. 대신 무엇을 모르는지 알고, 무엇을 검증해야 하는지 정하고, 어디까지 책임질 수 있는지 판단하는 능력이 더 중요해지고 있다.
 
