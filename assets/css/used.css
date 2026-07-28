@@ -496,7 +496,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   display: block;
   filter: brightness(0.99) contrast(1.06);
   margin-inline: auto;
-  max-width: 440px;
+  width: min(100%, 340px);
 }
 .about .content .about-name {
   font-size: 1.85rem;
@@ -1973,7 +1973,7 @@ h6 {
 .portfolio-project-body {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   max-width: 880px;
   min-width: 0;
 }

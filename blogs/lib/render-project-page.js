@@ -308,6 +308,13 @@ function getCommonProjectStyle() {
       height: min(500px, 70vh);
       width: 100%;
     }
+    .portfolio-details .varco-object-embed .varco-community-showcase {
+      border-radius: 0;
+      display: block;
+      height: auto;
+      margin: 0;
+      width: 100%;
+    }
     .portfolio-details p > img:only-child {
       display: block;
       margin: 1rem auto;
