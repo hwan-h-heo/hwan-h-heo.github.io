@@ -61,7 +61,6 @@ https://www.deeplearningbook.org/contents/linear_algebra.html -->
     이를 이용하여 $A^{-1}MA$  를 해석해보자면, $A$로 정의되는 span 에서 일반적으로 사용하는 x,y,z 좌표계로의 변환 이후, $M$ 이라는 선형변환이 이루어지고 이를 다시 $A$가 정의하는 span으로 바꾼 것이라고 해석할 수 있다. 
     즉 quadratic form $A^{-1}MA$ 는 $A$에서의 변환 $M$ 이라고 해석 가능하다. 
     
-
 ### 3.2. **Eigen-Decomposition**
 
 basis 의 변화라는 관점에서 eigendecomposition 을 살펴보자. 
@@ -139,7 +138,6 @@ $$
     
     $\lambda_i \neq \lambda _j$  이기 때문에 어떤 eigenvector 도 서로의 내적값이 0 이 됨을 알 수 있다. orthogonal matrix 로 matrix factorization 을 하면 eigen-decomposition 에 더해서 특이한 성질을 하나 발견할 수 있는데, basis 들끼리 서로 orthogonal 하므로 직교하는 축들의 모임이라고 해석할 수 있고, 즉 이 orthogonal column matrix 자체를 회전변환이라고 해석할 수 있다. (원래의 basis 들도 서로 orthogoanal 한 관계를 이루므로)
     
-
 ### 3.4. **Singular Value Decomposition**
 
 이제 단순히 eigen-decomposition 의 non-square matrix 으로 확장하는 대신, 위에서 상기한 orthogonal similar 개념을 통해서 SVD를 다시 생각해보자. 

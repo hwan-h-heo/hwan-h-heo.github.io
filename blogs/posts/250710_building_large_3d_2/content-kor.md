@@ -19,7 +19,6 @@ author: Hwan Heo
 
 ---
 
-
 ## Introduction 
 
 [지난 글](./?id=250702_building_large_3d_1) 에서는 Large 3D Generative Model 을 구축하기 위한 첫 단계로, 데이터셋을 준비하고 필수적인 데이터 전처리 과정에 대해서 수학적, 위상학적 원리부터 실제 알고리즘 구현까지 심도 깊게 다뤄보았다.
@@ -328,7 +327,6 @@ def pixel_shuffle_3d(x: torch.Tensor, scale_factor: int) -> torch.Tensor:
 
 ---
 
-
 ## D. DiT on Latent Space
 
 이제 VAE가 만들어낸 두 종류의 latent space 위에서, DiT 기반 생성 모델이 어떻게 다르게 설계되는지 살펴보자. 
@@ -427,7 +425,6 @@ class SparseStructureFlowModel(nn.Module):
         return h
 ```
 - 3D Voxel Grid x를 3D patch 로 나누고, 이를 token sequence 로 변환하여 Transformer에 입력한다. 
-
 
 
 **Trellis 의 patchfy 함수:**
@@ -633,15 +630,6 @@ _**Stay Tuned!**_
 
 --- 
 
-You may also like
-
-- [3D 생성에서 NeRF 와 SDS 는 도태될 수밖에 없는가? (kor)](https://velog.io/@gjghks950/3d)
-- [3D 생성 모델의 시대](/blogs/posts/?id=250302_3d_latent_diffusion)
-- [Building Large 3D Generative Models (1) - 3D Data Pre-processing](/blogs/posts/id?=250702_building_large_3d_1)
-- [From Flow Matching to Optimal Transport: A Physics-based View of Generative Models (kor)](/blogs/posts/?id=250810_flow)
-
----
-
 ### References
 
 Vecset-based VAE
@@ -665,5 +653,3 @@ Sparse-Voxel VAE (& its 3D Generation)
 - [SparseFlex](https://arxiv.org/abs/2503.21732) 
 - [Direct3D-S2](https://arxiv.org/abs/2505.17412) 
 - [Sparc3D](https://arxiv.org/abs/2505.14521) 
-
-<br/>

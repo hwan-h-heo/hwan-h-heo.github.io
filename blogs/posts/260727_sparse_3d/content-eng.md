@@ -573,7 +573,6 @@ The reductions below are not ratios of summed time. For each asset, we first com
 
 The final combined path reduced equal-weight average per-asset latency by `25.66%` relative to pure eager. The canonical cache itself also delivered additional improvement over the previous byte-exact null implementation: `0.53%` on the null-only path and `1.78%` when combined with fusion.
 
-
 ### 6.2. Two Kinds of Optimization the Profiler Reveals
 
 | Condition | CUDA launches | standalone `aten::gelu` | cuBLASLt `_addmm_activation` | FlashAttention kernel time |

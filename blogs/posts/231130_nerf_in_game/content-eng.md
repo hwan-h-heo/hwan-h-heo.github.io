@@ -30,7 +30,6 @@ author: Hwan Heo
     </ul>
 </nav>
 
-<br/>
 <h2 id="introduction">1. Introduction</h2>
 <p>In this article, we&#39;ll explore some of the limitations of using NeRF (Neural Radiance Fields) in game production and how to work around them.</p>
 <ul>
@@ -50,7 +49,7 @@ author: Hwan Heo
 <p>Can we use the 3D model of a cookie box, as an object in a game? Unfortunately, the answer is still &#39;<strong><em>No</em></strong>&#39;. </p>
 <p>Several limitations need to be addressed before NeRF can be used directly in commercial applications or game production. In this post, I&#39;ll outline the primary obstacles preventing NeRF&#39;s direct application in game development and the solutions being developed to overcome them.</p>
 
-<h2 id="main"> 2. NeRF & Illumination Control </h2><br/>
+<h2 id="main"> 2. NeRF & Illumination Control </h2>
 <h3 id="problem">NeRF&#39;s Inability to Separate Lighting Effects</h3>
 <figure>
     <img src="./231130_nerf_in_game/assets/nerf.gif" alt="Gaussian RT" width="100%">
@@ -117,8 +116,7 @@ $$
     </video>
 </div>
 <p>While this does not achieve perfect diffuse-specular separation, it shows that the object&#39;s color can be modeled independently of the lighting effects to some extent, compared to the full NeRF model on the left. Using only the diffuse NeRF model in the middle allows for relighting to be applied.</p>
-<br/>
-<h2 id="challenges">3. Other Challenges and Solutions</h2><br/>
+<h2 id="challenges">3. Other Challenges and Solutions</h2>
 <h3 id="slow">Slow Rendering Speed</h3>
 <p>
     NeRF stores information in a 3D space through a neural network, meaning that to retrieve scene information, we must pass it through the network. Regardless of how lightweight the network is, the speed difference between directly reading stored information and obtaining it through the network is significant. This results in slow rendering speeds, a major drawback of NeRF.
@@ -160,20 +158,3 @@ $$
 <p>
     If you are more interested, please refer to my project: <span style="text-decoration: underline;"><a href="../../../projects/nerf_in_game/">Neural Rendeing in Game Engine</a></span>
 </p>
-<hr/>
-<p>
-    You may also like, 
-</p>
-<ul>
-    <li>
-        <a href="/blogs/posts/?id=240805_gs">
-            <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
-        </a>
-    </li>
-    <li>
-        <a href="/blogs/posts/?id=240602_2dgs">
-            <span style="text-decoration: underline;">Under the 3D: Geometrically Accurate 2D Gaussian Splatting </span>
-        </a>
-    </li>
-</ul>
-<br/>

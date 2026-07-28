@@ -36,7 +36,6 @@ author: Hwan Heo
     </ul>
 </nav>
 
-<br/>
 <h3 id="tl-dr">TL;DR</h3>
 <p> In this article, we explore why positional encoding increases NeRF's high-fidelity reconstruction ability via exploring the paper: <em>Fourier Features Let Networks Learn High-Frequency Functions in Low-Dimensional Domains </em> </p>
 <p> By leveraging a Neural Tangent Kernel (NTK) theory, the authors demonstrate that Fourier features improve the convergence and performance of neural networks on these complex tasks.</p>
@@ -50,7 +49,7 @@ author: Hwan Heo
 <p>Building upon <strong>NTK theory</strong>, this article foucuses on the theoretical investigation of how neural networks process coordinate information through Fourier-featuring, 
     especially for the coordinate-based MLPs, which map dense, continuous low-dimensional input to the high-dimensional output (<em>e.g.,</em> NeRF). 
 </p>
-<h3 id="sec2">2. Background </h3><br/>
+<h3 id="sec2">2. Background </h3>
 <h3 id="sec2.1">2.1. Kernel Trick</h3>
 <figure class="justify-content-center">
     <img src="./211128_fourier/assets/kernel_trick.png" alt="Gaussian RT" width="80%">
@@ -77,7 +76,7 @@ $$</div>
 <div class="math-container">
     $$K(x, \ x') =  h_\text{NTK} = \{ \phi(x) , \ \phi (x') \} = \nabla _w f(w_0 , \ x) ^T \ \nabla _w f(w_0, \ x' )
     $$
-</div><br/>
+</div>
 
 <h3 id="2-2-2-gradient-based-training-kernel-regression"> Gradient-Based Training &amp; Kernel Regression</h3>
 <p>The NTK can be found through gradient descent in the neural network. For a timestep $t$, gradient descent is expressed as:</p>
@@ -107,7 +106,7 @@ $$</div>
 </div>
 <p>Let $u=y(w)-y$, then the output residual at training iteration $t$ can be written as:</p>
 <div class="math-container">$$ u(t) = u(0) \exp (-\eta h_{\text{NTK}} t )
-$$</div><br/>
+$$</div>
 
 <h3 id="sec2.3">2.3. Spectral Bias of DNNs</h3>
 <p>Based on the NTK approximation, the network&#39;s prediction after $t$ iterations for test data $\mathbf X_\text{test}$ is:</p>
@@ -171,7 +170,3 @@ $$</p>
 <li>A Neural Network, receiving Fourier-featured input, is equivalent to performing kernel regression by combining NTK and a stationary kernel.</strong></li>
 </ol>
 <video controls style="width: 100%;"><source src="https://bmild.github.io/fourfeat/img/lion_none_gauss_v1.mp4" type="video/mp4"></video>
-<hr/>
-<p>
-    You may also like, 
-</p>

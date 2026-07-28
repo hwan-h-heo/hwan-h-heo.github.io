@@ -59,7 +59,6 @@ author: Hwan Heo
     </ul>
 </nav>
 
-<br/>
 <h2 id="tl-dr">TL; DR</h2>
 <p class="lang kor" >3D Gaussian Splatting 은 강력하고 매력적인 기술이지만, rasterization 을 사용하기 때문에 생기는 여러 문제가 있다. 최근 공개된 3D Gaussian Ray Tracing (이하 3D GRT) 은 Ray Tracing 기술을 3D Gaussian 에 접목시켜 이러한 단점을 많이 해결한 모습을 보여주었다. 이 글을 통해 3D GRT 를 자세하게 알아보자! </p>
 <ul>
@@ -69,9 +68,8 @@ author: Hwan Heo
     <img src="./240823_grt/assets/teaser.gif" alt="Gaussian RT" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong></strong> 3D Gaussian Ray Tracing</figcaption>
 </figure>
-<br/>
 
-<h2 id="introduction"> 1. Introduction</h2><br/>
+<h2 id="introduction"> 1. Introduction</h2>
 <h3 id="challenges-in-3d-gaussian-splatting">Challenges in 3D Gaussian Splatting</h3>
 <p class="lang kor" >3D Gaussian Splatting 은 well-designed tile-based rasterizer 를 이용해 high-fidelity novel-view synthesis 와 real-time rendering 을 달성한 연구이다. </p>
 <p class="lang kor" >Next-photogramerry 로까지 불리며 각광받고 있는 연구분야지만, 아직 과도기이기 때문에 극복해야할 문제가 많이 남아있다. </p>
@@ -112,10 +110,8 @@ author: Hwan Heo
 </ol>
 <p class="lang kor" >1), 2) 등에 대해서는 RadSplat 에서 Zip-NeRF 로 Radiance Fields 를 먼저 학습한 후, NeRF scene 에서 perfect &amp; calibrated pinhole image 를 rendering 하여 3D GS 의 training data 로 사용하면서 우회한 바 있다. </p>
 <p class="lang kor" >하지만 이 학습 방법은 2-stage 기 때문에 효율적이지 못하며, 근본적으로 rasterization 이기 때문에 갖는 3) 은 여전히 challenge 로 남아있다. </p>
-<br/>
 
 <h2 id="preliminary"> 2. Background </h2>
-<br/>
 <h3 id="parameterization">2.1. Parameterization</h3>
 <p class="lang kor" >Primitive kernel 은 original 3D GS 와 같이 3D 공간에서 covariance matrix 를 통해 정의된다. </p>
 <div class="math-container">
@@ -171,7 +167,6 @@ rgb[idx * C + 2] = result.z;</code></pre>
 <p class="lang kor" >
     각 요소에 유의하며 3D GRT 설계를 따라가보자.
 </p>
-<br/>
 
 <h3 id="bounding-primitives"> 3.1. Bounding Primitives</h3>
 <p class="lang kor" >간략하게 BVH (<span style="text-decoration: underline;"><a href="https://en.wikipedia.org/wiki/Bounding_volume_hierarchy">Bounding Volume Hierarchy</a></span>) 부터 짚고 넘어가자. </p>
@@ -255,7 +250,6 @@ $$
     <img class="img-fluid" src="./240823_grt/assets/fig6.png" width="80%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 6. Next $k$ closest hit Ray Tracer:</strong> on each round of tracing, the next $k$ closest hit particles are collected and sorted into depth order along the ray, the radiance is computed in-order, and the ray is cast again to process the next chunk.  </figcaption>
 </figure>
-<br/>
 
 <h3 id="ray-gaussian-intersection"> 3.3. Ray-Gaussian Intersection</h3>
 
@@ -296,9 +290,8 @@ $$
     <p class="lang kor" >직관적으로 생각해도 자명한데, $\mathbf{o}_g, \ \mathbf{d}_g$ 가 3D Gaussian 이 정의하는 elliptical space 로 transform 되어 있으므로, ray direction 이 3D Gaussian origin 과 align 되어 있을 수록, 거리가 가까울 수록 높은 reponce 를 보이게 된다. </p>
     <p class="lang kor" >Ray tracing 은 proxy hit 순서로 진행되기 때문에 실제로 ray 에 대한 particle 들의 maximum responce 의 순서와는 약간 다를 수 있지만, 이 approximation 이 성능 저하를 초래하지 않았다고 한다. </p>
 </div>
-<br/>
 
-<h2 id="experiments"> 4. Experiments</h2><br/>
+<h2 id="experiments"> 4. Experiments</h2>
 <h3 id="quantitative-results"> 4.1. Quantitative Results</h3>
 
 <p class="lang kor" >정량적, 정성적 평가 모두 훌륭하게 제시되어 있다. (역시 갓비디아…) </p>
@@ -378,8 +371,6 @@ $$
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 11.</strong> Ray hit count for left: 3D G, right: GG  </figcaption>
 </figure>
 
-<br/>
-
 <h3 id="qualitative-results"> 4.2. Qualitative Results</h3>
 
 <p class="lang kor" >Qualitative Results 에서는 앞서 지적한 rasterization 의 한계점을 타파한 모습들을 보여준다. 다양한 camera model 에 대한 rendering 및 light effect 를 모델링하는 모습을 통해 3D GRT 가 효과적으로 구현되었음을 입증한다. </p>
@@ -391,7 +382,6 @@ $$
     <img class="img-fluid" src="./240823_grt/assets/fig11.png" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 13.</strong> 3D GRT's reconstruction capability for non-pinhole camera </figcaption>
 </figure>
-
 
 <h2 id="conclusion"> 5. Conclusion</h2>
 
@@ -406,21 +396,3 @@ $$
     <p>물론 논문에 언급된 바와 같이 최대한 효율적인 설계를 지향했음에도 rasterization 보다는 느린 속도를 보여준다. 하지만 게임 회사에 재직하면서 neural rendering 관련 연구를 진행하면서 느낀 점인데, 단순히 빠른 속도와 좋은 real world reconstruction 만을 보여주는 3D GS 자체는 사용처가 극히 떨어진다. </p>
     <p>따라서 neural rendering 기술을 game/graphics 엔진에서 활용하기에는 확장성이 높은 ray tracing 기반 접근법이 더 효용가치가 높을 것 같다.</p>
 </div>
-
-<hr/>
-<p>
-    You may also like, 
-</p>
-<ul>
-    <li>
-        <a href="/blogs/posts/?id=240805_gs">
-            <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
-        </a>
-    </li>
-    <li>
-        <a href="/blogs/posts/?id=240602_2dgs">
-            <span style="text-decoration: underline;">Under the 3D: Geometrically Accurate 2D Gaussian Splatting </span>
-        </a>
-    </li>
-</ul>
-<br/>

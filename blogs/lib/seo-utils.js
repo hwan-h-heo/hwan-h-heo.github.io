@@ -312,7 +312,7 @@ function getAdjacentLanguagePosts(siteData, post, lang) {
     };
 }
 
-function getRelatedPosts(siteData, post, lang = 'eng', limit = 4) {
+function getAutomaticRelatedItems(siteData, post, lang = 'eng', limit = 4) {
     return siteData.posts
         .filter((entry) => entry.id !== post.id && entry.languages.includes(lang))
         .map((entry) => {
@@ -325,7 +325,56 @@ function getRelatedPosts(siteData, post, lang = 'eng', limit = 4) {
         .filter((item) => item.score > 0)
         .sort((a, b) => b.score - a.score || new Date(b.entry.date) - new Date(a.entry.date))
         .slice(0, limit)
-        .map((item) => item.entry);
+        .map((item) => ({
+            type: 'post',
+            post: item.entry
+        }));
+}
+
+function getExplicitRelatedItems(siteData, post, lang = 'eng') {
+    const relatedItems = post.relatedByLanguage?.[lang] || post.relatedByLanguage?.eng || [];
+    const seenPostIds = new Set([post.id]);
+    const seenUrls = new Set();
+
+    return relatedItems
+        .map((item) => {
+            if (item.type === 'post') {
+                const relatedPost = siteData.postById[item.postId];
+                if (!relatedPost || seenPostIds.has(relatedPost.id)) {
+                    return null;
+                }
+                seenPostIds.add(relatedPost.id);
+                return {
+                    type: 'post',
+                    post: relatedPost
+                };
+            }
+
+            if (item.type === 'external' && item.url && item.title) {
+                const url = getAbsoluteUrl(item.url);
+                if (seenUrls.has(url)) {
+                    return null;
+                }
+                seenUrls.add(url);
+                return {
+                    type: 'external',
+                    title: item.title,
+                    url
+                };
+            }
+
+            return null;
+        })
+        .filter(Boolean);
+}
+
+function getRelatedItems(siteData, post, lang = 'eng', limit = 4) {
+    const explicitItems = getExplicitRelatedItems(siteData, post, lang);
+    if (explicitItems.length > 0) {
+        return explicitItems;
+    }
+
+    return getAutomaticRelatedItems(siteData, post, lang, limit);
 }
 
 function truncateNavTitle(title) {
@@ -468,12 +517,25 @@ function renderBreadcrumbs(siteData, post, lang = 'eng') {
 }
 
 function renderRelatedPosts(siteData, post, lang = 'eng') {
-    const relatedPosts = getRelatedPosts(siteData, post, lang, 4);
-    if (relatedPosts.length === 0) {
+    const relatedItems = getRelatedItems(siteData, post, lang, 4);
+    if (relatedItems.length === 0) {
         return '';
     }
 
-    const items = relatedPosts.map((entry) => {
+    const items = relatedItems.map((item) => {
+        if (item.type === 'external') {
+            const title = item.title;
+            return `
+                            <article class="related-post-card">
+                                <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(title)}">
+                                    <strong>${escapeHtml(title)}</strong>
+                                    <span>External</span>
+                                </a>
+                            </article>
+            `;
+        }
+
+        const entry = item.post;
         const title = getPostTitle(entry, lang);
         return `
                             <article class="related-post-card">

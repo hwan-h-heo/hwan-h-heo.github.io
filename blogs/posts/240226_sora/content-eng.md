@@ -43,8 +43,6 @@ author: Hwan Heo
     </ul>
 </nav>
 
-
-<br/>
 <h2 id="tl-dr">TL; DR</h2>
 <figure>
     <img src="./240226_sora/assets/image.gif" alt="Gaussian RT" width="100%">
@@ -72,9 +70,8 @@ author: Hwan Heo
 <li>Camera pose tracking (calibrating extrinsic and intrinsic parameters).</li>
 <li>NeRF Training for 3D reconstruction.</li>
 </ol>
-<br/>
 
-<h2 id="experiments">Experiments</h2><br/>
+<h2 id="experiments">Experiments</h2>
 <p>I selected four videos from Sora’s published examples as candidates for 3D reconstruction:</p>
 <table>
     <tr>
@@ -139,7 +136,6 @@ author: Hwan Heo
         </div>
     </li>
 </ol>
-<br/>
 
 <h3 id="gs"> 3D Gaussian Splatting Reconstruction</h3>
 <p>In addition to NeRF, I performed 3D reconstruction using 3D Gaussian Splatting (GS) based on the COLMAP sparse point cloud.</p>
@@ -182,20 +178,3 @@ author: Hwan Heo
 <li><strong>Future Potential</strong><br/>If video generation can consistently maintain content consistency, I believe geometric consistency will eventually be resolved. This is because real-world 3D shapes tend to be efficient and familiar.</li>
 </ol>
 <p>Given that this is just the first generation of Sora, its current performance is impressive. I am optimistic that within one or two more generations, models like Sora could generate videos that can be seamlessly reconstructed through neural rendering technologies for use in applications such as gaming. As a researcher, it is both exciting and humbling to witness such rapid progress, and I will be closely following OpenAI&#39;s advancements.</p>
-<hr/>
-<p>
-    You may also like, 
-</p>
-<ul>
-    <li>
-        <a href="/blogs/posts/?id=240805_gs">
-            <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
-        </a>
-    </li>
-    <li>
-        <a href="/blogs/posts/?id=240602_2dgs">
-            <span style="text-decoration: underline;">Under the 3D: Geometrically Accurate 2D Gaussian Splatting </span>
-        </a>
-    </li>
-</ul>
-<br/>

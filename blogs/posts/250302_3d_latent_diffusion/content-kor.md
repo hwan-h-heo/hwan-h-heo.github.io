@@ -33,7 +33,6 @@ author: Hwan Heo
 
 이번 글에서는 **3D Latent Diffusion** 의 개념과 그 핵심이 되는 **ShapeVAE** 를 분석하고, 기존의 Score Distillation Sampling (SDS) 이나 NeRF 기반 Large Reconstruction Model (LRM) 의 한계를 어떻게 극복하는지를 살펴본다. 또한, SOTA 3D 생성 모델인 Trellis와 Hunyuan3D 를 비교 분석하며, 최신 3D 생성 모델들의 설계 차이와 특장점을 깊이 있게 탐구해보자.
 
-
 ## Preliminary: What is Latent? 
 
 <table id="table-1">
@@ -147,7 +146,6 @@ $$
 - Figure: ShapeVAE pipeline (from 3DShape2vecset)
 
 
-
 Pipeline 에서 각 요소는 다음과 같은 세부사항을 갖는다. 
 
 - **Positional Encoding**: fourier featuring 으로 NeRF / Transformer 에서 쓰이는 sinusodal encoding 의 그것. PE 는 Cartessian Coordinates 를 high-dimensional, frequency domain 으로 mapping 시켜줄 뿐만 아니라 kernel regression 을 학습할 때 coordinates 간의 stationary 성질을 더해준다. 
@@ -158,8 +156,6 @@ Pipeline 에서 각 요소는 다음과 같은 세부사항을 갖는다.
     	- latent space 상에서 벡터 연산 (interpolation, extrapolation 등) 을 통해 shape variation 을 자연스럽게 제어할 수 있다. 
     - **Prevent Overfitting**: latent space를 prior distribution에 가깝게 제약함으로써, encoder가 학습 데이터의 분포를 더 일반적인 형태로 학습하도록 유도한다. 
     - **Sampling Ease**: 단순히 standard Gaussian distribution에서 랜덤 샘플링한 후 decoder에 입력하면 새로운 데이터를 생성할 수 있다. 
-
-
 
 
 > **Q. Why learnable query?**
@@ -212,13 +208,11 @@ Rodin 은 large DiT model (1.5B) 를 이용해 ShapeVAE 와 그 latent space 에
 
 를 해결하기 어려웠는데...
 
-
 ## 2. Trellis 
 
 Paper: [Trellis: Structured 3D Latents for Scalable and Versatile 3D Generation](https://trellis3d.github.io/) 
 
 Trellis 는 2024년 말 Microsoft 에서 발표한 SOTA 3D Latent Diffusion 모델이다. 안정성과 fidelity 측면에서 이전 ShapeVAE 기반 접근법들을 크게 상회하는 결과를 보여주었고, end2end 로 shape 뿐만 아니라 texture 를 같이 생성할 수 있다는 장점이 있다. 어떠한 설계를 통해 SOTA quality 를 달성했는지 분석해보자. 
-
 
 ### 2.1. Structured Latent Representation 
 
@@ -257,7 +251,6 @@ $$
 
 VAE 구조 자체는 original ShapeVAE 와 동일하며, latent space 가 잘 정의되어 있다면 Decoder 를 바꿔서 3D GS / Radiance Fields / Mesh 의 output 을 생성하도록 finetune 할 수 있기 때문에, Trellis 는 output 에 GSs, NeRF, Mesh 등 format-agnostic 하게 결과를 예측할 수 있다. (실제 inference branch 에서는 GS 와 Mesh branch 두 개를 사용함)
 
-
 ### 2.2. SLAT Generation  
 
 > Q. 그럼 3D Generation 자체도, ShapeVAE 에서처럼 latent space 에서 Standard Gaussian Distribution 의 random sample 을 넣으면 새로운 asset 이 생성되는가? 
@@ -265,7 +258,6 @@ VAE 구조 자체는 original ShapeVAE 와 동일하며, latent space 가 잘 �
 아쉽게도 그렇지 않은데, 우선 SLAT 은 ***‘structure’ (position index)*** 자체도 의미가 있기 때문에 structure, 즉 어떤 voxel 이 비었는지, 비지 않았는지부터 생성할 필요가 있다. 
 
 ![](./assets/remote-41593cd15010.png)
-
 
 
 이를 위해 Trellis 는 3D Generation 에서 2-stage 의 접근을 사용한다.
@@ -307,7 +299,6 @@ Mesh Decoder 가 있기 때문에 Mesh Output 은 Mesh Decoder Branch 의 output
 의 단계를 통해 최종 3D asset 을 생성하도록 되어 있다. 데모 페이지에서 다운 받을 수 있는 glb output 은 모두 이러한 pipeline 을 거쳐서 나온 결과이다. 
 
 - cf: [to_glb](https://github.com/microsoft/TRELLIS/blob/eeacb0bf6a7d25058232d746bef4e5e880b130ff/trellis/utils/postprocessing_utils.py#L399), [fill_holes](https://github.com/microsoft/TRELLIS/blob/eeacb0bf6a7d25058232d746bef4e5e880b130ff/trellis/utils/postprocessing_utils.py#L22)
-
 
 
 <img src='./assets/remote-4034215bd386.png'>
@@ -384,7 +375,6 @@ $$ \mathcal{L} = \mathbb{E}_{t, x_0, x_1} \left[ || u_\theta(x_t, c, t) - u_t ||
 $$
 
 언급된 학습 detail 중에 주목할만한 점으로, ViT 계열에서 주로 patch 단위에 positional embedding (PE) 을 더하는 것과 다르게 Hunyuan 은 PE 를 제거했다고 한다. 이는 Shape 생성 시 ‘fixed location’ 에 특정 latent 가 할당되는 것을 막기 위함이라고 한다.
-
 
 ### 3.3. Hunyuan3D-paint
 
@@ -483,9 +473,6 @@ Mesh Quality 의 경우 Trellis 보다 Hunyuan3D 의 topology 가 훨씬 좋다.
 ![](./assets/remote-bede410838ac.gif)
 
 
-
-
-
 ## Closing
 
 지금까지 ShapeVAE 의 기본 개념부터 Trellis / Hunyuan3D 에 이르는 SOTA 3D Latent Diffusion 의 발자취를 상세하게 분석해보았다. 
@@ -495,12 +482,3 @@ CLAY 등장 이후에도 한동안 opensource 진영에서 3D 분야의 괄목�
 특히 개인적으로는 Hunyuan 이 Flux, MV-Adapter 등에서 검증된 설계를 3D Generation scheme 에 적용한 것이 인상깊었다. 좋은 연구를 하고 싶다면 틈틈히 다른 분야의 연구 트렌드에 대한 following 도 놓지 않아야 한다는 것을 다시 한 번 느낀다.
 
 마지막으로 최근에는 MeshAnything 을 필두로 mesh face 를 auto-regressive 하게 생성하여 일명 'Artistic-Created Mesh' 로 만드는 연구도 주목받고 있지만 (이 연구들도 ShapeVAE latent space 를 이용한다) auto-regressive 방식이라 시간이 오래 걸리고 아직은 퀄리티가 안 좋아서 당분간은 주시하기만 해야할 것 같다. 
-
-
---- 
-
-You may also likes
-
-- [3D 생성에서 NeRF 와 SDS 는 도태될 수밖에 없는가? (velog)](https://velog.io/@gjghks950/3d)
-- [Building Large 3D Generative Models (1) - 3D Data Pre-processing](/blogs/posts/?id=250702_build_large_3d_1)
-- [Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D](/blogs/posts/?id=250710_build_large_3d_2)

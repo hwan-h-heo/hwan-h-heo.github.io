@@ -51,7 +51,6 @@ author: Hwan Heo
 
 ## 1. Normalizing Flow
 
-
 ### 1.1. What is Flow
 
 Flow 기반 모델의 아이디어는 단순하고 우아하다.
@@ -110,7 +109,6 @@ $$
 
 ## 2. Continuous Normalizing Flow
 
-
 ### 2.1. Continuous Flow
 
 이 문제를 해결하기 위해,
@@ -148,7 +146,6 @@ $$
 ---
 
 ### 2.2. Likelihood of CNF
-
 
 Continuous Flow 을 도입하면서 얻는 가장 극적인 이점은 **likelihood** 계산 방식의 근본적인 변화이다. 기존의 이산적 변환에서는 계산이 거의 불가능했던 **Jacobian determinant** 이, 연속적인 흐름에서는 훨씬 다루기 쉬운 **divergence 의 적분** 으로 대체된다. 
 
@@ -351,7 +348,6 @@ $$
 ---
 
 ### 3.1. Conditional Flow Matching
-
 
 이 막다른 길을 뚫기 위해 **Conditional Flow Matching, (CFM)** 라는 트릭이 등장한다. CFM 의 핵심 아이디어는 다음과 같이 요약된다.
 
@@ -566,7 +562,6 @@ $$
 
 '효율적'이라는 것은 총 이동 비용(Cost)을 최소화하는 것을 의미한다. 최적 수송은 바로 이 문제, 즉 한 확률 분포 (흙더미)를 다른 확률 분포 (구덩이)로 변환하는 데 필요한 **최소 비용의 Transport Plan**을 찾는 수학 이론이다.
 
-
 ### 4.2. Dynamic Optimal Port 
 
 전통적인 OT는 '어디의 흙을 어디로 보낼 것인가'라는 최종 매핑 (mapping)에 집중한다. 하지만 생성 모델에서는 샘플이 점차 변해가는 **경로 (path)** 자체가 더 중요하며, 이는 **동적 최적 수송 (Dynamic Optimal Transport)** 의 영역이다. Dynamic OT에서는 시간 $t$ 에 따른 분포의 변화 $p_t$ 와 그 경로를 만드는 **velocity field** $v_t$ 를 고려한다.
@@ -619,7 +614,6 @@ $$
 
 ---
 
-  
 ### 5.2. Euler-Lagrange Equation
 
 [Euler-Lagrange Equation](https://en.wikipedia.org/wiki/Euler%E2%80%93Lagrange_equation) 이란, action 을 최소화 (혹은 stationary 하게, 즉, 극값이나 saddle point!) 하게 만드는 조건에 대한 미분방정식이다. 
@@ -932,8 +926,6 @@ $$
 
 ## 7. Last Dicussion: Why Linear?
 
-<br/>
-
 #### Q. Rectified Flow의 미스터리: 왜 '틀린' 직선 경로가 작동하는가?
 
 
@@ -1001,14 +993,6 @@ Flow 는 최근 이미지, 비디오 뿐만 아니라 3D 생성에서도 Network
 감사합니다 :) 
 
 --- 
-
-You may also likes
-
-- [3D 생성에서 NeRF 와 SDS 는 도태될 수밖에 없는가?](https://velog.io/@gjghks950/3d)
-- [3D 생성 모델의 시대](/blogs/posts/?id=250302_3d_latent_diffusion)
-- [Building Large 3D Generative Models (1) - 3D Data Pre-processing](/blogs/posts/?id=250702_building_large_3d_1)
-- [Building Large 3D Generative Models (2) - Model Architecture Deep Dive: VAE and DiT for 3D](/blogs/posts/?id=250710_building_large_3d_2)
-
 **References**
 
 - [An Introduction to Flow Matching](https://mlg.eng.cam.ac.uk/blog/2024/01/20/flow-matching.html)
@@ -1018,5 +1002,3 @@ You may also likes
 - [Flow Matching Guide and Code](https://arxiv.org/abs/2412.06264)
 - [Flow Straight and Fast: Learning to Generate and Transfer Data with Rectified Flow](https://arxiv.org/abs/2209.03003)
 - [Rectified Flow: A Marginal Preserving Approach to Optimal Transport](https://arxiv.org/abs/2209.14577)
-
-<br/>

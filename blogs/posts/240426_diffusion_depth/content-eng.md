@@ -31,7 +31,6 @@ author: Hwan Heo
     </ul>
 </nav>
 
-<br/>
 <h2 id="sec1">1. Introduction </h2>
 <p class="lang eng">
     The success of 2D diffusion models has inspired researchers to explore the diffusion process of 
@@ -188,7 +187,6 @@ def get_mesh_from_depth(outname, scale=None):
     as it is currently executed in a non-parallelized manner using a <em>for</em> loop.
 </p>
 
-
 <h2 id="sec3">3. Texturing the Mesh from Depth Maps</h2>
 <p class="lang eng">
     Texturing is a critical aspect of 3D asset creation. For the task at hand, 
@@ -224,7 +222,6 @@ def make_textured_mesh(outname, scale=None):
     Additionally, applying Laplacian smoothing beyond three iterations is discouraged, 
     as it significantly increases the number of faces, particularly with FHD inputs.
 </p>
-
 
 <h2 id="sec4"> 4. Results & Analysis</h2>
 <p class="lang eng">
@@ -283,9 +280,3 @@ def make_textured_mesh(outname, scale=None):
     For example, DSINE, a model compared to Marigold, utilizes a geometry-aware method inspired by stereo vision, albeit with a lighter network and slightly lower performance. 
     We hypothesize that diffusion-based depth estimation could achieve improved accuracy if regularization terms are designed with stereo vision principles in mind.
 </p>
-
-<hr>
-<p>
-    You may like also,
-</p>
-<br/>

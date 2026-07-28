@@ -31,7 +31,6 @@ author: Hwan Heo
     </ul>
 </nav>
 
-<br/>
 <h2 id="tl-dr">TL; DR</h2>
 <p class="lang kor" >
     html 웹페이지에 학습시킨 3D Gaussian Splatting scene 을 띄우는 방법을 알아보자.
@@ -44,7 +43,6 @@ author: Hwan Heo
     Three-js 을 이용해 구현된 <span style="text-decoration: underline;"><a href="https://github.com/mkkellogg/GaussianSplats3D"> 3D Gaussian Splatting for Three.js </a></span> 을 이용할 것이다. 
     웹잘알이면 패키지 document 만 참고하면 될 듯 하다.
 </p>
-<br/>
 
 <h2 id="step">
     Step-by-Step
@@ -64,7 +62,7 @@ author: Hwan Heo
         "GaussianSplats3D": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.0/build/gaussian-splats-3d.module.js"
     }
 }
-&lt;/script&gt; </code></pre><br/>
+&lt;/script&gt; </code></pre>
 
 <h3 id="step2">Step 2: HTML Structure</h3>
 <p class="lang kor" >
@@ -166,7 +164,6 @@ function update() {
         CORS error 방지를 위해  <code>'sharedMemoryForWorkers': false</code> 로 설정하였다. 
     </li>
 </ul>
-<br/>
 <h3 id="step3">
     Example Result of Custom GS Scene
 </h3>
@@ -187,26 +184,3 @@ function update() {
     자기 pr 의 시대에 직접 학습시킨 gaussian splatting scene 을 개인 webpage 에 add 하는 방법 또한 누군가에게는 도움이 될 거라고 믿으며 글을 작성하였다.
     :)
 </p>
-
-<hr/>
-<p>
-    You may also like, 
-</p>
-<ul>
-    <li>
-        <a href="/blogs/posts/?id=240805_gs">
-            <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
-        </a>
-    </li>
-    <li>
-        <a href="/blogs/posts/?id=240823_grt">
-            <span style="text-decoration: underline;">Don't Rasterize But Ray Trace Gaussian</span>
-        </a>
-    </li>
-    <li>
-        <a href="/blogs/posts/?id=240602_2dgs">
-            <span style="text-decoration: underline;">Under the 3D: Geometrically Accurate 2D Gaussian Splatting </span>
-        </a>
-    </li>
-</ul>
-<br/>

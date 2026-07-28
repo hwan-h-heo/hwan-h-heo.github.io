@@ -22,7 +22,6 @@ author: Hwan Heo
 ### TL; DR
  
 Let's explore the definition of Winding Number and how its 3D extension, Generalized Winding Number, can be used in SDF calculation! 
-<br/>
 
 ## Introduction 
 
@@ -42,7 +41,6 @@ Although there are methods to determine inside/outside using the `flood fill` al
 In this post, we will explore the ***Generalized Winding Number***, which defines SDF elegantly and possesses the ability to repair issues like holes or self-intersections in broken meshes. 
 
 ## What is Winding Number?
-<br/>
 
 <figure id="figure-1" >
   <img src='./250809_gwn/assets/image.png' alt='img alt' style="width:70%;">
@@ -189,7 +187,6 @@ $$
 - ${1}/{4\pi}$: This is the normalization term, equal to the solid angle of the entire sphere, $4\pi$. 
 
 
-
 Similarly, if the surface is composed of a triangle mesh, it can be precisely discretized into the sum of the solid angles $\Omega_f$ created by each triangle.
 
 <p>
@@ -207,8 +204,6 @@ Here, $\Omega(p, T)$ denotes the solid angle subtended by triangle $T$ at point 
 ---
 
 ## GWN Field for SDF
-
-<br/>
 
 ### SDF from GWN
 

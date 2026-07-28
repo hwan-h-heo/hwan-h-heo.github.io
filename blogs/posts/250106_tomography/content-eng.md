@@ -54,7 +54,6 @@ author: Hwan Heo
 <p class="lang eng">In this post, I aim to elucidate the foundational intuitions behind Neural Rendering, NeRF, and GS through a personal review of SAX-NeRF. Additionally, I will offer insights into a technique for creating a simple web viewer using viser when an official viewer is unavailable.</p>
 <h2 id="tomography-vs-photography">1. Tomography vs. Photography</h2>
 <img class="img-fluid" src="./250106_tomography/assets/image1.png" width="100%" alt="Tomography vs Photography" />
-<br/> 
 <h3 id="photography">1.1. Photography</h3>
 <p class="lang eng">- What are the underlying physical principles of the act of <code>'seeing'</code>?</p>
 <p class="lang eng">'Seeing' physically denotes the process where light emitted from a source interacts with an object, causing the object's surface to absorb or reflect specific wavelengths (or energy) of light. The unabsorbed, reflected light then reaches the observer's eye (or detection device), leading to visual perception.</p>
@@ -72,7 +71,6 @@ author: Hwan Heo
 <img class="img-fluid" src="./250106_tomography/assets/image2.png" alt="NeRF Rendering Equation" />
 <p class="lang eng">Thus, NeRF's rendering equation mathematically formalizes the process of visual object perception. By integrating all elements of the physical light-object interaction (absorption, reflection, transparency, etc.), NeRF calculates the cumulative contribution of light along the ray path to ultimately generate an image.</p>
 <img class="img-fluid" src="./250106_tomography/assets/image3.png" alt="NeRF Image Generation" />
-<br/>
 
 <h3 id="tomography">1.2. Tomography</h3>
 <p class="lang eng">So, what considerations are necessary for applying Neural Rendering to domains outside the visible light spectrum?</p>
@@ -99,7 +97,6 @@ $$ I_{pred}(\mathbf{r}) = I_0 \cdot \exp\left(-\sum_{i=1}^{N} \rho_i \delta_i\ri
 $$
 </p>
 <img class="img-fluid" src="./250106_tomography/assets/image6.png" alt="Tomography Intensity Rendering" />
-<br/>
 
 <h2 id="modeling">2. Modeling</h2>
 <p class="lang eng">Returning our focus to NeRF, while variations such as Hash Grid NeRF and TensoRF exist, the fundamental principle of NeRF is to parameterize and represent a 3D scene.</p>
@@ -110,10 +107,8 @@ $$
 <p class="lang eng">Given that the rendering equation for Tomography, adapted based on the Beer-Lambert Law, exhibits sole dependency on radiodensity $\rho$, a Tomography-NeRF model can be architected to accept a 3D Cartesian Coordinate $(x,y,z)$ as input and exclusively generate $\rho$ as the output.</p>
 <img class="img-fluid" src="./250106_tomography/assets/image8.png" alt="Tomography NeRF Modeling" />
 <p class="lang eng">Subsequently, SAX-NeRF introduces an alternative design, favoring a Transformer architecture over an MLP to accommodate X-Ray specific attributes, and incorporating ray-wise locality inductive bias within the attention mechanism. However, considering this aspect to be of secondary importance to the central discussion, I will proceed without further elaboration. Readers seeking further details are encouraged to consult the original publication.</p>
-<br/>
 
 <h2 id="quick-viewer-development-tip">3. Quick Viewer Development Tip</h2>
-<br/>
 <h3 id="viser-viewer">3.1. Viser Viewer</h3>
 <p class="lang eng">While the code for SAX-NeRF is publicly available, it lacks an official viewer. Consequently, the basic visualization code provided is limited, necessitating the implementation of a viewer for more interactive exploration of the results.</p>
 <p class="lang eng"><em>To interactively visualize a NeRF/GS model, certain key elements are required:</em></p>
@@ -373,25 +368,3 @@ mesh.export("output.obj")
 <h2 id="concluding-remarks">Concluding Remarks</h2>
 <p class="lang eng">Through the exploration of SAX-NeRF, we've seen how the foundational principles of Neural Rendering can be adapted beyond the realm of traditional photography. By understanding the underlying physical phenomena, such as the Beer-Lambert Law in tomography, we can modify the rendering equation and model architecture to suit different imaging modalities. This adaptation underscores the abstract nature of Neural Rendering and its potential applicability across various scientific domains.</p>
 <p class="lang eng">Ultimately, the ability to apply Neural Rendering to diverse data types and the ease with which we can now visualize these results opens up exciting possibilities for future research and applications across various fields.</p>
-<hr/>
-<p>
-    You may also like, 
-</p>
-<ul>
-    <li>
-        <a href="/blogs/posts/?id=230202_ngp">
-            <span style="text-decoration: underline;">Instant-NGP Review & Re-Implementation</span>
-        </a>
-    </li>
-    <li>
-        <a href="/blogs/posts/?id=211128_fourier">
-            <span style="text-decoration: underline;">Why Positional Encoding Makes NeRF more Powerful</span>
-        </a>
-    </li>
-    <li>
-        <a href="/blogs/posts/?id=240805_gs">
-            <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
-        </a>
-    </li>
-</ul>
-<br/>

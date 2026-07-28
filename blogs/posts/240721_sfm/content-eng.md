@@ -38,9 +38,7 @@ author: Hwan Heo
     </ul>
 </nav>
 
-<br/>
 <h2 id="intro"> 1. Introduction</h2>
-<br/>
 <h3 id="sfm"> What is Structure-from-Motion? </h3>
 <figure>
     <img src="./240721_sfm/assets/sfm.jpg" alt="Structure-from-Motion" width="100%">
@@ -54,7 +52,6 @@ author: Hwan Heo
 </p>
 
 <h3 id="colmap">COLMAP: The Gold Standard in SfM</h3>
-<br/>
 <figure>
     <img src="./240721_sfm/assets/colmap.jpg" alt="colmap" width="100%">
     <br/>
@@ -91,7 +88,6 @@ author: Hwan Heo
     <li><strong>Time-Consuming:</strong> The reconstruction process, especially dense reconstruction, can be time-consuming, making it less suitable for real-time applications.</li>
 </ul>
 
-<br/>
 <h2 id="sec2">2. Deep Learning-Based Camera Pose Reconstruction</h2>
 <p>
     To overcome the limitations of traditional SfM methods like COLMAP, 
@@ -164,7 +160,6 @@ author: Hwan Heo
         <td><img class="img-fluid" src="./240721_sfm/assets/guitar_mast3r.jpg" alt="guitar mast3r"></td>
     </tr>
 </table>
-<br/>
 
 <h3 id="sec3.2"> Radiance Fields Reconstruction</h3>
 <table>
@@ -226,8 +221,3 @@ author: Hwan Heo
 <p>
     GitHub Repository: <span style="text-decoration: underline;"><a href="https://github.com/hwanhuh/Radiance-Fields-from-VGGSfM-Mast3r">[Link]</a></span>
 </p>
-<hr/>
-<p>
-    You may also like, 
-</p>
-<br/>

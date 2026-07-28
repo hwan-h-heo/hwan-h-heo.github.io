@@ -210,7 +210,6 @@ This shows that $f$ satisfies the Eikonal equation at all points where it is dif
 
 ## Discussion
 
-
 **Rigor and Assumptions**: Both proofs rely on the assumptions of **differentiability** of $f$ and the **uniqueness of the closest point**. In reality, an SDF is not differentiable at all points in space. The set of non-differentiable points is called the ['medial axis'](https://en.wikipedia.org/wiki/Medial_axis) or 'skeleton', which corresponds to the set of points that are equidistant to two or more points on $\partial\Omega$. However, since this set has a Lebesgue measure of 0, it is most accurate to state that an SDF satisfies the Eikonal equation ***almost everywhere***.
 
 The Eikonal loss plays a critical role by forcing the scalar field output by the network to be more than just an implicit function; it compels the field to represent a true physical 'distance' in space. This ensures that the level sets remain stable and allows for the direct and accurate calculation of the surface normal vectors via the gradient, which is essential for high-quality rendering and geometric analysis.

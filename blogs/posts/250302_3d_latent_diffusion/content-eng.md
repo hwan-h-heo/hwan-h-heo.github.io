@@ -417,7 +417,6 @@ $$</p>
 </tr>
 </tbody>
 </table>
-<br/>
 
 <h2 id="h2-6" > 4. Trellis vs Hunyuan? </h2>
 <table id="table-13"  class="table ">
@@ -464,29 +463,8 @@ $$</p>
 </figure>
 
 
-<br/>
-
 <h2 id="h2-5">Closing</h2>
 <p id="p-122">Thus far, I have provided a detailed analysis tracing the evolution of state-of-the-art 3D Latent Diffusion, from the fundamental concepts of ShapeVAE to Trellis and Hunyuan3D.</p>
 <p id="p-123">While the open-source community did not achieve remarkable progress in the 3D field for some time after the emergence of CLAY, recent studies have showcased innovative designs and reached state-of-the-art quality, further fueling anticipation for generative models in the 3D domain.</p>
 <p id="p-124">Personally, Hunyuan's application of proven designs from Flux, MV-Adapter, and other works to the 3D generation scheme is particularly impressive. It reinforces the notion that to conduct impactful research, one must remain attentive to research trends in other fields.</p>
 <p id="p-125">Finally, recent research, led by MeshAnything, is attracting attention by focusing on the auto-regressive generation of mesh faces to create what are termed "Artistic-Created Meshes" (these studies also utilize the ShapeVAE latent space). However, due to its auto-regressive nature, this approach is time-consuming, and the quality is not yet satisfactory; therefore, it seems prudent to observe its development for the time being.</p>
-
-
-<hr/>
-<p>
-    You may also like, 
-</p>
-<ul>
-    <li>
-        <a href="/blogs/posts/?id=240426_diffusion_depth">
-            <span style="text-decoration: underline;">Is Diffusion's Estimated Depth Really Good?</span>
-        </a>
-    </li>
-    <li>
-        <a href="/blogs/posts/?id=240805_gs">
-            <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
-        </a>
-    </li>
-</ul>
-<br/>

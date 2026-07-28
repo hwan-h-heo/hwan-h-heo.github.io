@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const SITE_DATA_PATH = path.join(__dirname, '..', 'data', 'site-data.json');
+const POST_RELATED_PATH = path.join(__dirname, '..', 'data', 'post-related.json');
 const REPO_ROOT = path.join(__dirname, '..', '..');
 const POST_CATEGORIES = ['post', 'note'];
 const POST_LANGUAGES = ['eng', 'kor'];
@@ -262,7 +263,29 @@ function validateTalkShape(talk, index, errors) {
     validateStringField(talk, 'titleHtml', errors, label, false);
 }
 
-function normalizeSiteData(rawSiteData) {
+function normalizeRelatedItem(item) {
+    if (typeof item === 'string') {
+        return {
+            type: 'post',
+            postId: item
+        };
+    }
+
+    return {
+        type: 'external',
+        title: item.title,
+        url: item.url
+    };
+}
+
+function normalizeRelatedByLanguage(relatedConfig = {}) {
+    return Object.fromEntries(Object.entries(relatedConfig).map(([language, items]) => [
+        language,
+        items.map(normalizeRelatedItem)
+    ]));
+}
+
+function normalizeSiteData(rawSiteData, relatedData = {}) {
     const posts = rawSiteData.posts
         .filter((post) => post.status !== 'draft')
         .map((post) => ({
@@ -276,7 +299,8 @@ function normalizeSiteData(rawSiteData) {
             socialImage: post.socialImage || '',
             translationKey: post.translationKey || post.id,
             updated: post.updated || post.date,
-            slug: post.slug || createSlug(post.title_eng || post.id)
+            slug: post.slug || createSlug(post.title_eng || post.id),
+            relatedByLanguage: normalizeRelatedByLanguage(relatedData[post.id])
         })).sort((a, b) => new Date(b.date) - new Date(a.date));
 
     const postById = Object.fromEntries(posts.map((post) => [post.id, post]));
@@ -379,14 +403,109 @@ function validateSiteData(rawSiteData) {
     }
 }
 
+function validatePostRelatedData(relatedData, rawSiteData) {
+    const errors = [];
+    const publishedPosts = (rawSiteData.posts || []).filter((post) => (post.status || 'published') === 'published');
+    const publishedPostById = Object.fromEntries(publishedPosts.map((post) => [post.id, post]));
+
+    if (!relatedData || typeof relatedData !== 'object' || Array.isArray(relatedData)) {
+        throw new Error('Post related data must be a JSON object.');
+    }
+
+    Object.entries(relatedData).forEach(([sourceId, languageConfig]) => {
+        const sourcePost = publishedPostById[sourceId];
+        if (!sourcePost) {
+            errors.push(`Related post source "${sourceId}" does not match a published post.`);
+            return;
+        }
+
+        if (!languageConfig || typeof languageConfig !== 'object' || Array.isArray(languageConfig)) {
+            errors.push(`Related post source "${sourceId}" must map to a language object.`);
+            return;
+        }
+
+        Object.entries(languageConfig).forEach(([language, items]) => {
+            if (!POST_LANGUAGES.includes(language)) {
+                errors.push(`Related post source "${sourceId}" uses invalid language "${language}".`);
+                return;
+            }
+            if (!sourcePost.languages.includes(language)) {
+                errors.push(`Related post source "${sourceId}" defines "${language}" recommendations but has no "${language}" content.`);
+            }
+            if (!Array.isArray(items)) {
+                errors.push(`Related post source "${sourceId}" language "${language}" must be an array.`);
+                return;
+            }
+
+            const seenItems = new Set();
+            items.forEach((item, index) => {
+                if (typeof item === 'string') {
+                    const itemKey = `post:${item}`;
+                    if (seenItems.has(itemKey)) {
+                        errors.push(`Related post source "${sourceId}" language "${language}" duplicates target "${item}".`);
+                    }
+                    seenItems.add(itemKey);
+
+                    if (item === sourceId) {
+                        errors.push(`Related post source "${sourceId}" language "${language}" links to itself.`);
+                    }
+                    if (!publishedPostById[item]) {
+                        errors.push(`Related post source "${sourceId}" language "${language}" references unknown post "${item}".`);
+                    }
+                    return;
+                }
+
+                const itemLabel = `related item ${index} for "${sourceId}" language "${language}"`;
+                if (!item || typeof item !== 'object' || Array.isArray(item)) {
+                    errors.push(`Invalid ${itemLabel}.`);
+                    return;
+                }
+
+                const allowedKeys = new Set(['title', 'url']);
+                Object.keys(item).forEach((key) => {
+                    if (!allowedKeys.has(key)) {
+                        errors.push(`Unexpected key "${key}" in ${itemLabel}.`);
+                    }
+                });
+
+                if (typeof item.title !== 'string' || !item.title.trim()) {
+                    errors.push(`Missing title in ${itemLabel}.`);
+                }
+                if (typeof item.url !== 'string' || !/^https?:\/\//i.test(item.url)) {
+                    errors.push(`External ${itemLabel} must use an absolute HTTP(S) URL.`);
+                }
+
+                const itemKey = `url:${item.url}`;
+                if (seenItems.has(itemKey)) {
+                    errors.push(`Related post source "${sourceId}" language "${language}" duplicates URL "${item.url}".`);
+                }
+                seenItems.add(itemKey);
+            });
+        });
+    });
+
+    if (errors.length > 0) {
+        throw new Error(errors.join('\n'));
+    }
+}
+
 function loadRawSiteData(filePath = SITE_DATA_PATH) {
     return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
-function loadSiteData(filePath = SITE_DATA_PATH) {
+function loadRawPostRelatedData(filePath = POST_RELATED_PATH) {
+    if (!fs.existsSync(filePath)) {
+        return {};
+    }
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+}
+
+function loadSiteData(filePath = SITE_DATA_PATH, relatedPath = POST_RELATED_PATH) {
     const rawSiteData = loadRawSiteData(filePath);
+    const relatedData = loadRawPostRelatedData(relatedPath);
     validateSiteData(rawSiteData);
-    return normalizeSiteData(rawSiteData);
+    validatePostRelatedData(relatedData, rawSiteData);
+    return normalizeSiteData(rawSiteData, relatedData);
 }
 
 function writeSiteData(rawSiteData, filePath = SITE_DATA_PATH) {
@@ -402,13 +521,16 @@ function writeSiteData(rawSiteData, filePath = SITE_DATA_PATH) {
 
 module.exports = {
     SITE_DATA_PATH,
+    POST_RELATED_PATH,
     POST_CATEGORIES,
     POST_LANGUAGES,
     PORTFOLIO_CATEGORIES,
     createSlug,
+    loadRawPostRelatedData,
     loadRawSiteData,
     loadSiteData,
     normalizeSiteData,
+    validatePostRelatedData,
     validateSiteData,
     writeSiteData
 };

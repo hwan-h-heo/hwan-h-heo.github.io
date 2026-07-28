@@ -42,7 +42,6 @@ author: Hwan Heo
 
 <!-- <img src='./250310_model_viewer/assets/image.gif' width=100%> -->
 
-
 <h2 id="h2-3" > Introduction </h2>
 <p id="p-1"  class="lang kor" >
     하는 일이 3D Domain 에 편중되어 있다보니, 사내에서 보고를 위한 간단한 데모를 제작할 때나, 혹은 논문 project page 를 만드는 등 web page 에서 3D Model 을 rendering 해서 보여줄 일이 가끔 있다.
@@ -58,7 +57,6 @@ author: Hwan Heo
     두 가지 정도가 있는데, 이 글에서는 개인적으로 느낀 각 방법의 사용법과 장단점에 대해 탐구해보고, custom 으로 제작한 Threejs 기반의 simple model viewer 에 대해서도 공유하는 시간을 갖도록 해보자.
     구현한 custom threejs model viewer 만 궁금한 경우에는 <a href="#h4-3">여기</a> 를 참조하면 된다!
 </p>
-
 
 
 <h2 id="h2-1" > Google Model Viewer </h2>
@@ -112,7 +110,6 @@ author: Hwan Heo
     rotation-per-second="60deg"
     skybox-image="https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/spruit_sunrise_1k_HDR.hdr" >
 </model-viewer>
-<br/>
 
 <h3 id="h3-2" > Geometry Rendering </h3>
 <p id="p-12"  class="lang kor" >
@@ -164,7 +161,6 @@ function show_geometry(){
 </model-viewer>
 
 
-
 <h2 id="h2-2" > Threejs-Based Custom Viewer </h2>
 <p id="p-16"  class="lang kor" >
     위에서 살펴본 model viewer 만으로 rendering 할 수 없는 normal, wireframe rendering 등을 구현하기 위해서는 threejs 를 사용해서 직접 model viewer class 를 구현해야 한다.
@@ -204,8 +200,6 @@ controls = new OrbitControls(this.camera, this.renderer.domElement);
 </p>
 <pre id="pre-5"><code style="font-size: 1rem"  class='language-javascript'>loader = new GLTFLoader();
 loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined, (error) => { console.error('Loading Error:', error); });</code></pre>
-<br/>
-
 
 <h3 id="h3-4">Custom Viewer Implementation</h3>
 <p id="p-21" class="lang kor" > Three.js를 사용한 커스텀 뷰어는 Google Model Viewer에 비해 훨씬 더 많은 유연성을 제공한다. 이를 통해 Diffuse, Mesh, Wireframe, Normal 등 다양한 렌더링 모드를 구현할 수 있다.  </p>
@@ -983,15 +977,12 @@ export { SimpleModelViewer };
 </simple-model-viewer>
 <p id="p-28"  class="lang kor" > <code>auto-rotate</code> 로 mesh 의 Y축 회전을 계속 진행하는 기본 동작을 추가할 수 있고, <code>angle-per-second</code> 로 속도를 조정할 수 있다. 초기 카메라 위치는 <code>camera-orbit</code> attribute 로 설정 가능하다. </p>
 <p id="p-29"  class="lang kor" > <code>Control Panel</code> 같은 기본 UI 도 toggle 가능하게 구성하여, model viewer 와 비슷한 사용성에 더 넓은 기능 범위를 더한 3D Model Viewer 로 만들었다.  </p>
-<br/>
 <h3 id="h3-5">Key Takeaways</h3>
-<br/>
 <ul class="lang kor" >
     <li><strong>Google Model Viewer</strong>: 빠르고 쉬운 설정이 장점이나, 렌더링 모드와 커스터마이징에 한계가 있다.</li>
     <li><strong>Three.js Custom Viewer</strong>: 유연성과 세밀한 제어가 강점이지만, 설정이 복잡하고 시간이 더 걸린다.</li> 
     <li>프로젝트 요구사항에 따라 간편함과 유연성 중 적절한 선택이 필요하다.</li> 
 </ul>
-<br/>
 <h2 id="conclusion">Conclusion</h2>
 
 <p id="p-30" class="lang kor" > 
@@ -1002,21 +993,3 @@ export { SimpleModelViewer };
     이를 통해 사용자는 모델을 유연하게 조작하며 다양한 시각적 효과를 탐구할 수 있다. 
 </p> 
 <p id="p-32" class="lang kor" > 앞으로 필요에 따라 기능을 확장할 수 있으며, 예를 들어 조명 설정, 카메라 뷰 저장 등을 추가할 수 있다. 이 글을 통해 3D 모델 뷰어의 구현 방법을 이해하고, 프로젝트에 맞는 최적의 방법을 선택하는 데 도움이 되길 바란다. </p>
-
-<hr/>
-<p>
-    You may also like, 
-</p>
-<ul>
-    <li>
-        <a href="/blogs/posts/?id=240917_3djs">
-            <span style="text-decoration: underline;">Add Gaussian Splatting to your Website</span>
-        </a>
-    </li>
-    <li>
-        <a href="/blogs/posts/?id=250302_3d_latent_diffusion">
-            <span style="text-decoration: underline;">A Deep Dive into 3D Latent Diffusion</span>
-        </a>
-    </li>
-</ul>
-<br/>

@@ -47,8 +47,6 @@ author: Hwan Heo
     </ul>
 </nav>
 
-
-<br/>
 <h2 id="intro">Introduction</h2>
 <figure>
     <img src="./240805_gs/assets/teaser.gif" alt="Gaussian Splatting Teaser by Luma AI" width="100%">
@@ -59,10 +57,8 @@ author: Hwan Heo
     This performance, faster than any other NeRF-based method, is achieved through a well-designed tile-based rasterization process. 
     This article aims to explore 3D Gaussian Splatting from the perspective of rasterization, providing an in-depth understanding of its underlying mechanisms.
 </p>
-<br/>
 
 <h2 id="sec1">1. 3D Gaussian as Primitive Kernel</h2>
-<br/>
 <figure>
     <img src="./240805_gs/assets/gs.jpg" alt="3D Gaussian as Primitive Kernel" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 2.</strong> NeRF vs 3D GS, source: <span style="text-decoration: underline;"><a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">Kate's medium</a></span></figcaption>
@@ -146,7 +142,6 @@ author: Hwan Heo
 </ul>
 
 
-
 ```cpp
 // compute 3D covariance matrix
 glm::mat3 S = glm::mat3(1.0f);
@@ -188,10 +183,7 @@ cov3D[5] = Sigma[2][2];
     <li> <em>cov3D</em>: Since the covariance matrix is symmetric, we only need to store the right upper triangle.</li>
 </ul>
 
-<br/>
-
 <h2 id="sec2">2. Splatting (Projection of Primitives)</h2>
-<br/>
 <h3 id="sec2.1">2.1. Projection</h3>
 <figure>
     <img src="./240805_gs/assets/splatting.jpg" alt="Splatting of primitives" style="width:55%">
@@ -293,7 +285,6 @@ glm::mat3 Vrk = glm::mat3(
 
 glm::mat3 cov = glm::transpose(T) * glm::transpose(Vrk) * T;
 ```
-<br/>
 
 <h3 id="sec2.2">2.2. Density of the Projected Gaussian </h3>
 <p class="lang eng">
@@ -430,7 +421,6 @@ float lambda2 = mid - sqrt(max(0.1f, mid * mid - det));
 
 float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));
 ```
-<br/>
 
 <h2 id="sec3">3. Parallel Rasterization </h2>
 <div class="lang eng">
@@ -537,9 +527,7 @@ __shared__ float4 collected_conic_opacity[BLOCK_SIZE];</code></pre>
     In other words, since NeRF samples rays, it queries the MLP for each different point sampled by $r(t)$ (3D), whereas 3D GS queries the MLP for the same point $x$ (2D).
 </p>
 
-<br/>
 <h2 id="sec4"> 4. Miscellaneous </h2>
-<br/>
 
 <h3 id="sec4.1"> 4.1. Camera Model </h3>
 <div class="lang eng">
@@ -584,7 +572,6 @@ glm::mat3 J = glm::mat3(
     </p>
 </div>
 
-
 <h3 id="sec4.2"> 4.2. Mimic Luma AI </h3>
 <div class="lang eng">
     <p>
@@ -609,8 +596,6 @@ glm::mat3 J = glm::mat3(
         <td><img class="img-fluid" src="./240805_gs/assets/garden.gif" alt="Scene 2"></td>
     </tr>
 </table>
-<br/>
-
 
 <h2 id="closing">Closing</h2>
 <div class="lang eng">
@@ -630,31 +615,3 @@ glm::mat3 J = glm::mat3(
         The backward is almost the inverse of the forward computation described above, computing the gradient while traversing back-to-front as opposed to front-to-back in the forward step.
     </p>
 </div>
-
-<hr/>
-<p>
-    You may also like, 
-</p>
-<ul>
-    <li>
-        <a href="/blogs/posts/?id=240823_grt">
-            <span style="text-decoration: underline;">Don't Rasterize But Ray Trace Gaussian</span>
-        </a>
-    </li>
-    <li>
-        <a href="/blogs/posts/?id=240602_2dgs">
-            <span style="text-decoration: underline;">Under the 3D: Geometrically Accurate 2D Gaussian Splatting </span>
-        </a>
-    </li>
-    <li>
-        <a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">
-            <span style="text-decoration: underline;">A Comprehensive Overview of Gaussian Splatting</span>
-        </a>
-    </li>
-    <li>
-        <a href="https://github.com/kwea123/gaussian_splatting_notes">
-            <span style="text-decoration: underline;">Gaussian Splatting Notes</span>
-        </a>
-    </li>
-</ul>
-<br/>

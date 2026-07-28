@@ -573,7 +573,6 @@ Active token 수가 `3,664–30,227`인 production asset 10개에 대해 같은 
 
 최종 combined path는 pure eager 대비 asset별 동일 가중 평균 latency를 `25.66%` 줄였다. Canonical cache 자체도 기존 byte-exact null implementation보다 null-only path에서 `0.53%`, fusion과 결합한 path에서 `1.78%` 추가 개선을 만들었다.
 
-
 ### 6.2. Profiler가 드러낸 두 종류의 최적화
 
 | Condition | CUDA launches | standalone `aten::gelu` | cuBLASLt `_addmm_activation` | FlashAttention kernel time |

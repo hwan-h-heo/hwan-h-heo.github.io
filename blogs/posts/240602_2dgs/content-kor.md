@@ -41,8 +41,6 @@ author: Hwan Heo
     </ul>
 </nav>
 
-
-<br/>
 <h2 id="intro"> Introduction </h2>
 
 <blockquote class="lang kor" >
@@ -59,8 +57,6 @@ author: Hwan Heo
     </figcaption>
 </figure>
 
-<br/>
-
 <h3 id="recap-radiance-fields-mesh-recon-" class="lang kor" > Recap. Radiance Fields 의 Mesh Recon 의 어려움</h3>
 <p class="lang kor" > 이전 블로그 글, </p>
 <ol class="lang kor" >
@@ -74,9 +70,8 @@ author: Hwan Heo
 </div>
 
 <hr/>
-<br/>
 
-<h2 id="1-preliminary">1. Background </h2> <br/>
+<h2 id="1-preliminary">1. Background </h2>
 <h3 id="1-1-3d-gaussian-splatting"> 1.1. 3D Gaussian Splatting</h3>
 <p><img src="./240602_2dgs/assets/image-7.png" alt="" width="100%"></p>
 
@@ -131,8 +126,6 @@ author: Hwan Heo
     </ol>
 </div>
 
-<br/>
-
 <h3 id="1-2-surface-reconstruction-problem-in-3d-gs"> 1.2. Surface Reconstruction Problem in 3D GS</h3>
 <div class="lang kor" >
     <p>
@@ -183,7 +176,6 @@ author: Hwan Heo
     </p>
 </div>
 
-
 <h3 id="1-3-sugar-surface-aligned-gaussian-splatting"> 1.3. SuGaR: Surface-Aligned Gaussian Splatting</h3>
 <div class="lang kor" >
     <p>
@@ -223,8 +215,7 @@ author: Hwan Heo
     </p>
 </div>
 
-
-<h2 id="2-2d-gaussian-splatting">2. 2D Gaussian Splatting</h2><br/>
+<h2 id="2-2d-gaussian-splatting">2. 2D Gaussian Splatting</h2>
 <h3 id="2-1-2d-gaussian-modeling-gaussian-surfels-"> 2.1. 2D Gaussian Modeling (Gaussian Surfels)</h3>
 <p><img src ='./240602_2dgs/assets/image-6.png' width=100%></p>
 
@@ -277,7 +268,7 @@ author: Hwan Heo
     opcaity $\alpha$ 와 Non-Lambertian color 에 대한 Spherical Harmonics coefficient $c$ 가 된다. 
 </p>
 
-<h3 id="2-2-splatting"> 2.2. Splatting </h3><br/>
+<h3 id="2-2-splatting"> 2.2. Splatting </h3>
 <h4 id="2-2-1-accurate-2d-to-2d-projection-in-homogeneous-coordinates"> 2D-to-2D Projection </h4>
 
 <div class="lang kor" >
@@ -369,9 +360,6 @@ author: Hwan Heo
 </div>
 
 <img src='./240602_2dgs/assets/image-2.jpeg' width="100%">
-<br/>
-<br/>
-
 
 <h3 id="2-3-training-2d-gs"> 2.3. Training 2D GS </h3>
 <p class="lang kor" >
@@ -506,9 +494,8 @@ author: Hwan Heo
     <img src="./240602_2dgs/assets/image-3.png" alt="alt description" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure:</strong> Normal vs Depth2Normal, captured in my custom viewer </figcaption>
 </figure>
-<br/>
 
-<h2 id="3-experimens-custom-viser-viewer">3. Experimens &amp; Custom Viewer</h2><br/>
+<h2 id="3-experimens-custom-viser-viewer">3. Experimens &amp; Custom Viewer</h2>
 <h3 id="3-1-qualitative-results-custom-object-reconstruction">3.1. Qualitative Results </h3>
 <p class="lang kor" >
     Novel view synthesis 에서의 quantitative results 가 이전 연구에 비해 뛰어나지 않기 때문에 와닿지 않을 수도 있지만, 
@@ -554,7 +541,6 @@ author: Hwan Heo
         </p>
     </blockquote>
 </div>
-
 
 
 <h3 id="3-2-custom-viser-viewer-for-2d-gaussian-splatting">3.2. Custom Viser Viewer for 2D Gaussian Splatting</h3>
@@ -605,7 +591,6 @@ author: Hwan Heo
 <ul class="lang kor" >
     <li>cf. <a href="https://velog.io/@gjghks950/Custom-Neural-Rendering-Viewer-%EA%B0%9C%EB%B0%9C%EA%B8%B0">Viewer 개발기</a></li>
 </ul>
-<br/>
 
 <h2 id="4-conclusion">4. Conclusion</h2>
 <div class="lang kor" >
@@ -614,21 +599,3 @@ author: Hwan Heo
     <p>2D GS 는 3D GS 가 가지는 explicit representation 의 장점을 그대로 계승하면서도, 3D GS 가 갖는 surface reconstruction 의 어려움, projection error 등을 해결한 진일보한 연구이다. </p>
     <p>또한 요새 연구들이 project page 만들기에 공을 들이는 것에 비해 실제 test 결과는 project page 결과를 따라가지 못할 때도 많은데, 실제 custom scene 에도 공개된 것 정도의 성능을 보여주는 것도 만족스러웠다.</p>
 </div>
-
-<hr/>
-<p>
-    You may also like, 
-</p>
-<ul>
-    <li>
-        <a href="/blogs/posts/?id=240805_gs">
-            <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
-        </a>
-    </li>
-    <li>
-        <a href="/blogs/posts/?id=240823_grt">
-            <span style="text-decoration: underline;">Don't Rasterize, But Ray Trace 3D Gaussian</span>
-        </a>
-    </li>
-</ul>
-<br/>

@@ -21,8 +21,6 @@ author: Hwan Heo
 
 ## 6. Geometric Transformations
 
-<br/>
-
 #### Parametric Transformations
 
 A parametric transformation is a global mapping from one 2D coordinate system to another, defined by a set of parameters. These transformations can be represented by matrices and applied to image coordinates.
@@ -178,7 +176,6 @@ The RANSAC procedure is as follows:
 RANSAC is very effective if the percentage of inliers is reasonably high (e.g., >50%). The number of required iterations depends on the probability of selecting an all-inlier sample.
 
 
-
 ---
 
 ### Opencv Example
@@ -243,5 +240,3 @@ plt.show()
 #### Result:
 
 <img src='./210302_cv1/assets/image-7.jpg' width=100%>
-
-<br/>

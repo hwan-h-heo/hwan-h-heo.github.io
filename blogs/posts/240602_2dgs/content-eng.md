@@ -41,8 +41,6 @@ author: Hwan Heo
     </ul>
 </nav>
 
-
-<br/>
 <h2 id="intro"> Introduction </h2>
 <blockquote class="lang eng">
     <p>
@@ -59,7 +57,6 @@ author: Hwan Heo
     </figcaption>
 </figure>
 
-<br/>
 <h3 id="recap-radiance-fields-mesh-recon-" class="lang eng"> Challenges in Mesh Reconstruction for Radiance Fields </h3>
 <p class="lang eng"> 
     In a previous discussion (<span style="text-decoration: underline;"><a href="https://ncsoft.github.io/ncresearch/b515d0241ebe9af4a549e991ae0efc4a90f0f65e">Can NeRF be used in game production? (kor)</a></span>), 
@@ -82,9 +79,8 @@ author: Hwan Heo
 </div>
 
 <hr/>
-<br/>
 
-<h2 id="1-preliminary">1. Background </h2> <br/>
+<h2 id="1-preliminary">1. Background </h2>
 <h3 id="1-1-3d-gaussian-splatting"> 1.1. 3D Gaussian Splatting</h3>
 <p><img src="./240602_2dgs/assets/image-7.png" alt="" width="100%"></p>
 
@@ -134,7 +130,6 @@ author: Hwan Heo
         </li>
     </ol>
 </div>
-<br/>
 
 <h3 id="1-2-surface-reconstruction-problem-in-3d-gs"> 1.2. Surface Reconstruction Problem in 3D GS</h3>
 
@@ -201,7 +196,7 @@ author: Hwan Heo
     contribute to surface reconstruction difficulties, often resulting in meshes with suboptimal geometry in custom scenes.
 </p>
 
-<h2 id="2-2d-gaussian-splatting">2. 2D Gaussian Splatting</h2><br/>
+<h2 id="2-2d-gaussian-splatting">2. 2D Gaussian Splatting</h2>
 <h3 id="2-1-2d-gaussian-modeling-gaussian-surfels-"> 2.1. 2D Gaussian Modeling (Gaussian Surfels)</h3>
 <p><img src ='./240602_2dgs/assets/image-6.png' width=100%></p>
 <div class="lang eng">
@@ -255,8 +250,7 @@ author: Hwan Heo
     and spherical harmonics coefficients for opacity and non-Lambertian color.
 </p>
 
-
-<h3 id="2-2-splatting"> 2.2. Splatting </h3><br/>
+<h3 id="2-2-splatting"> 2.2. Splatting </h3>
 <h4 id="2-2-1-accurate-2d-to-2d-projection-in-homogeneous-coordinates"> 2D-to-2D Projection </h4>
 
 <div class="lang eng">
@@ -338,9 +332,6 @@ author: Hwan Heo
     </p>
 </div>
 <img src='./240602_2dgs/assets/image-2.jpeg' width="100%">
-<br/>
-<br/>
-
 
 <h3 id="2-3-training-2d-gs"> 2.3. Training 2D GS </h3>
 <
@@ -471,9 +462,8 @@ author: Hwan Heo
     <img src="./240602_2dgs/assets/image-3.png" alt="alt description" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure:</strong> Normal vs Depth2Normal, captured in my custom viewer </figcaption>
 </figure>
-<br/>
 
-<h2 id="3-experimens-custom-viser-viewer">3. Experimens &amp; Custom Viewer</h2><br/>
+<h2 id="3-experimens-custom-viser-viewer">3. Experimens &amp; Custom Viewer</h2>
 <h3 id="3-1-qualitative-results-custom-object-reconstruction">3.1. Qualitative Results </h3>
 
 <p class="lang eng">
@@ -518,7 +508,6 @@ author: Hwan Heo
     </blockquote>
 </div>
 
-
 <h3 id="3-2-custom-viser-viewer-for-2d-gaussian-splatting">3.2. Custom Viser Viewer for 2D Gaussian Splatting</h3>
 
 <div class="lang eng">
@@ -541,8 +530,6 @@ author: Hwan Heo
 <h4 id="-github-project-link-https-github-com-hwanhuh-2d-gs-viser-viewer-tree-main-">⭐ <a href="https://github.com/hwanhuh/2D-GS-Viser-Viewer/tree/main">Github Project Link</a></h4>
 <p><img src="./240602_2dgs/assets/viser_train.gif" alt="" width="100%"></p>
 
-<br/>
-
 <h2 id="4-conclusion">4. Conclusion</h2>
 
 <div class="lang eng">
@@ -557,20 +544,3 @@ author: Hwan Heo
         and modeling.
     </p>
 </div>
-<hr/>
-<p>
-    You may also like, 
-</p>
-<ul>
-    <li>
-        <a href="/blogs/posts/?id=240805_gs">
-            <span style="text-decoration: underline;">A Comprehensive Analysis of Gaussian Splatting Rasterization</span>
-        </a>
-    </li>
-    <li>
-        <a href="/blogs/posts/?id=240823_grt/">
-            <span style="text-decoration: underline;">Don't Rasterize, But Ray Trace 3D Gaussian</span>
-        </a>
-    </li>
-</ul>
-<br/>

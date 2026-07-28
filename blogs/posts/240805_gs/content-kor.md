@@ -47,8 +47,6 @@ author: Hwan Heo
     </ul>
 </nav>
 
-
-<br/>
 <h2 id="intro">Introduction</h2>
 <figure>
     <img src="./240805_gs/assets/teaser.gif" alt="Gaussian Splatting Teaser by Luma AI" width="100%">
@@ -59,10 +57,8 @@ author: Hwan Heo
     그 어떤 NeRF-based method 보다도 빠른 이 속도는 잘 설계된 tile-based rasterization 덕분인데, 
     오늘은 이 rasterization 관점에서 3D Gaussin Splatting 을 (최대한) 완벽하게 이해해보는 시간을 갖도록 해보자.
 </p>
-<br/>
 
 <h2 id="sec1">1. 3D Gaussian as Primitive Kernel</h2>
-<br/>
 <figure>
     <img src="./240805_gs/assets/gs.jpg" alt="3D Gaussian as Primitive Kernel" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 2.</strong> NeRF vs 3D GS, source: <span style="text-decoration: underline;"><a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">Kate's medium</a></span></figcaption>
@@ -195,10 +191,8 @@ cov3D[5] = Sigma[2][2];
     </li>
     <li> <em>cov3D</em>: symmetric 이므로, right upper triangle 만 저장해도 된다. </li>
 </ul>
-<br/>
 
 <h2 id="sec2">2. Splatting (Projection of Primitives)</h2>
-<br/>
 <h3 id="sec2.1">2.1. Projection</h3>
 <figure>
     <img src="./240805_gs/assets/splatting.jpg" alt="Splatting of primitives" style="width:55%">
@@ -301,7 +295,6 @@ glm::mat3 Vrk = glm::mat3(
 
 glm::mat3 cov = glm::transpose(T) * glm::transpose(Vrk) * T;
 ```
-<br/>
 
 <h3 id="sec2.2">2.2. Density of the Projected Gaussian </h3>
 
@@ -437,8 +430,6 @@ float lambda2 = mid - sqrt(max(0.1f, mid * mid - det));
 
 float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));
 ```
-<br/>
-
 
 <h2 id="sec3">3. Parallel Rasterization </h2>
 
@@ -560,9 +551,7 @@ __shared__ float4 collected_conic_opacity[BLOCK_SIZE];</code></pre>
     즉 NeRF 에서는 ray 를 sampling 하기 때문에 $r(t)$ 로 sampling 된 각각 다른 point 를 MLP 에 query 하지만, 3D GS 는 모두 똑같은 점 $x$ 를 query 하는 것을 볼 수 있다.
 </p>
 
-<br/>
 <h2 id="sec4"> 4. Miscellaneous </h2>
-<br/>
 
 <h3 id="sec4.1"> 4.1. Camera Model </h3>
 
@@ -603,7 +592,6 @@ glm::mat3 J = glm::mat3(
     </p>
 </div>
 
-
 <h3 id="sec4.2"> 4.2. Mimic Luma AI </h3>
 
 <div class="lang kor" >
@@ -629,8 +617,6 @@ glm::mat3 J = glm::mat3(
         <td><img class="img-fluid" src="./240805_gs/assets/garden.gif" alt="Scene 2"></td>
     </tr>
 </table>
-<br/>
-
 
 <h2 id="closing">Closing</h2>
 
@@ -647,31 +633,3 @@ glm::mat3 J = glm::mat3(
         gradient 를 계산한다.
     </p>
 </div>
-
-<hr/>
-<p>
-    You may also like, 
-</p>
-<ul>
-    <li>
-        <a href="/blogs/posts/?id=240823_grt">
-            <span style="text-decoration: underline;">Don't Rasterize But Ray Trace Gaussian</span>
-        </a>
-    </li>
-    <li>
-        <a href="/blogs/posts/?id=240602_2dgs">
-            <span style="text-decoration: underline;">Under the 3D: Geometrically Accurate 2D Gaussian Splatting </span>
-        </a>
-    </li>
-    <li>
-        <a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">
-            <span style="text-decoration: underline;">A Comprehensive Overview of Gaussian Splatting</span>
-        </a>
-    </li>
-    <li>
-        <a href="https://github.com/kwea123/gaussian_splatting_notes">
-            <span style="text-decoration: underline;">Gaussian Splatting Notes</span>
-        </a>
-    </li>
-</ul>
-<br/>

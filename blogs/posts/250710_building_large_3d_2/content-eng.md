@@ -614,14 +614,6 @@ _**Stay Tuned!**_
 
 ---
 
-You may also like
-
-- [An Era of 3D Generative AI](/blogs/posts/?id=250302_3d_latent_diffusion)
-- [Building Large 3D Generative Models (1) - 3D Data Pre-processing](/blogs/posts/id?=250702_building_large_3d_1)
-- [From Flow Matching to Optimal Transport: A Physics-based View of Generative Models (kor)](/blogs/posts/?id=250810_flow)
-
----
-
 ### References
 
 Vecset-based VAE
@@ -645,5 +637,3 @@ Sparse-Voxel VAE (& its 3D Generation)
 - [SparseFlex](https://arxiv.org/abs/2503.21732) 
 - [Direct3D-S2](https://arxiv.org/abs/2505.17412) 
 - [Sparc3D](https://arxiv.org/abs/2505.14521) 
-
-<br/>
