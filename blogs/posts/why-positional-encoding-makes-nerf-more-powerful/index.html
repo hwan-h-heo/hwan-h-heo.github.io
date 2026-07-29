@@ -68,6 +68,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     
                 </ul>
@@ -102,7 +104,7 @@
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             <li><a href="/blogs/series/nerf-and-gs/">Radiance Fields &amp; Gaussian Splatting</a></li>
                             <li aria-current="page">Why Positional Encoding Makes NeRF more Powerful</li>
@@ -249,7 +251,7 @@
 <p>Fourier-featuring is a function that embeds a coordinate space point into frequency space.</p>
 <p>A prominent example in deep learning is <strong>&#39;Positional Encoding&#39;</strong>, which uses sinusoidal functions to embed coordinate space into frequency space, thereby incorporating positional information that Networks cannot capture.</p>
 <figure class="justify-content-center">
-    <img src="/blogs/posts/211128_fourier/assets/main.png" alt="Gaussian RT" width="100%">
+    <img src="/blogs/posts/211128_fourier/assets/main.png" alt="Gaussian RT" width="100%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"> <strong>Figure 1.</strong> Coordinate-Based MLPs </figcaption>
 </figure>
 <p>Building upon <strong>NTK theory</strong>, this article foucuses on the theoretical investigation of how neural networks process coordinate information through Fourier-featuring, 
@@ -258,7 +260,7 @@
 <h3 id="sec2">2. Background </h3>
 <h3 id="sec2.1">2.1. Kernel Trick</h3>
 <figure class="justify-content-center">
-    <img src="/blogs/posts/211128_fourier/assets/kernel_trick.png" alt="Gaussian RT" width="80%">
+    <img src="/blogs/posts/211128_fourier/assets/kernel_trick.png" alt="Gaussian RT" width="80%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"> <strong>Figure 2.</strong> illustration of Kernel-Trick </figcaption>
 </figure>
 <p>For a linearly inseparable data point $x$, let $\phi (x)$ be a non-linear mapping function that makes $\phi (x)$ linearly separable.</p>

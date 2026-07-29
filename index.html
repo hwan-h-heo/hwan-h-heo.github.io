@@ -49,8 +49,11 @@
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet">
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
 
+  <script src="js/sidebar-controller.js"></script>
+
   <!-- Main CSS File -->
   <link href="assets/css/portfolio.css" rel="stylesheet">
+  <link href="css/sidebar-nav.css" rel="stylesheet">
 
   <script>
     window.setTimeout(function releaseDelayedHero() {
@@ -81,16 +84,13 @@
 
 <body class="index-page">
 
-  <div class="mobile-topbar">
-    <i class="header-toggle d-xl-none bi bi-list"></i>
-  </div>
-  <header id="header" class="header hidden dark-background d-flex flex-column">
+  <header id="header" class="header sidebar-auto-hidden dark-background d-flex flex-column" data-sidebar-auto-hide="#home">
     <div class="profile-img">
-      <img src="assets/icon.webp" alt="icon image" class="img-fluid rounded-circle">
+      <img src="assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="img-fluid rounded-circle">
     </div>
 
     <a href="#home" class="logo d-flex align-items-center justify-content-center">
-      <h1 class="sitename">Hwan Heo</h1>
+      <span class="sitename">Hwan Heo</span>
     </a>
 
     <div class="social-links text-center">
@@ -638,6 +638,7 @@
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
   <script src="blogs/js/site-data-client.js"></script>
+  <script src="blogs/js/blog-cover-media.js"></script>
   <script src="js/portfolio-blocks.js"></script>
   <script src="js/portfolio-content.js"></script>
   <script src="js/portfolio-blog-preview.js"></script>

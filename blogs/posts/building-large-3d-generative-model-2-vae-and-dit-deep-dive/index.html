@@ -71,6 +71,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     <li class="nav-item"><a href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive-kor/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="kor" style="font-size:0.7rem">KOR</a></li>
                 </ul>
@@ -105,7 +107,7 @@
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             <li><a href="/blogs/series/3d-generation/">3D Generative AI</a></li>
                             <li aria-current="page">Building Large 3D Generative Model (2) VAE and DiT Deep Dive</li>
@@ -247,7 +249,7 @@
 <h3 id="toc-heading-2">C.1. VecSet VAE</h3>
 <p>TLDR: <em>From Mesh to an Unordered Set of Tokens</em></p>
 <p>As the name suggests, the vecset-based VAE treats a 3D mesh as a set of vectors, specifically a <strong>PointCloud</strong>. This method was devised to naturally handle the challenges of <em>1) the variable number of vertices</em> in a mesh and <em>2) the need for Rotation/Translation Invariance</em>.
-<img src='/blogs/posts/250710_building_large_3d_2/assets/image-13.png' width=70%></p>
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-13.png' width=70% alt="Building Large 3D Generative Model (2) VAE and DiT Deep Dive — C.1. VecSet VAE" loading="lazy" decoding="async"></p>
 <ul>
 <li>Figure: <a href="https://3d-models.hunyuan.tencent.com/">Hunyuan 3D 2.0&#39;s VAE</a>. This showcases a vecset-based VAE architecture where sampled point clouds undergo Fourier featuring and are then passed through a Transformer Encoder/Decoder to predict an isosurface (SDF).</li>
 </ul>
@@ -342,7 +344,7 @@ def query(self, query_points: torch.Tensor, hidden_states: torch.Tensor):
 <h3 id="toc-heading-3">C.2. Sparse Voxel VAE</h3>
 <p>TLDR: <em>3D as a Spatial Grid</em></p>
 <p>In contrast, the Sparse Voxel VAE treats 3D data as an extension of a 2D image, i.e., a <strong>3D spatial grid</strong>. This approach, used by models like Trellis, adopts a 3D Convolutional Network structure similar to a U-Net.</p>
-<img src='/blogs/posts/250710_building_large_3d_2/assets/image-6.png' width=100%>
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-6.png' width=100% alt="Building Large 3D Generative Model (2) VAE and DiT Deep Dive — C.2. Sparse Voxel VAE" loading="lazy" decoding="async">
 
 <p>The core of this approach lies in treating the 3D shape as a <em><strong>tensor with a clear spatial structure</strong></em>. Sparse-voxel based VAE models learn local features and hierarchical structures through Convolution operations instead of a Transformer.</p>
 <h4>1. Encoder</h4>
@@ -435,7 +437,7 @@ class SparseStructureDecoder(nn.Module):
 </code></pre>
 <p>When <code>scale_factor=2</code>, let&#39;s assume the initial shape of <code>x</code> is <code>[B, 8C&#39;, H, W, D]</code> (this is precisely why <code>out_channels*8</code> was used in <code>UpsampleBlock3d</code>).</p>
 <p>The <code>pixel_shuffle_3d</code> kernel performs the inverse operation of downsampling, reducing the channel dimension while doubling the spatial dimensions.</p>
-<img src='/blogs/posts/250710_building_large_3d_2/assets/image-8.png' width=70%>
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-8.png' width=70% alt="Building Large 3D Generative Model (2) VAE and DiT Deep Dive — 2. Decoder: Feature Upsampling" loading="lazy" decoding="async">
 
 <p>That is, through:</p>
 <ul>
@@ -480,7 +482,7 @@ class SparseStructureDecoder(nn.Module):
 <p>Now, let&#39;s examine how DiT-based generative models are designed differently on top of the two types of latent spaces created by the VAEs.</p>
 <h3 id="toc-heading-5">D.1. Diffusion Transformer</h3>
 <p>The innovation of DiT in 2D image generation began by adopting the methodology of the Vision Transformer (ViT). ViT divides an image into fixed-size <strong>patches</strong>, treats each patch as a single <strong>token</strong>, and uses them as the input sequence for a Transformer.
-<img src='/blogs/posts/250710_building_large_3d_2/assets/image-12.png' width=50%></p>
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-12.png' width=50% alt="Building Large 3D Generative Model (2) VAE and DiT Deep Dive — D.1. Diffusion Transformer" loading="lazy" decoding="async"></p>
 <p>This process is clearly visible when looking at the original 2D DiT code:</p>
 <pre><code class="language-python"># From Original DiT by Facebook Research
 class DiT(nn.Module):
@@ -577,7 +579,7 @@ class SparseStructureFlowModel(nn.Module):
 </code></pre>
 <p>The spatial information maintained at the VAE stage is converted into a sequence at the Transformer&#39;s input stage!
 This means that Trellis&#39;s DiT can be seen as a <strong>3D extension of the 2D DiT</strong>.
-<img src='/blogs/posts/250710_building_large_3d_2/assets/image-9.png' width=70%></p>
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-9.png' width=70% alt="Building Large 3D Generative Model (2) VAE and DiT Deep Dive — D.3. Sparse Voxel DiT" loading="lazy" decoding="async"></p>
 <ul>
 <li>Figure from <a href="https://arxiv.org/abs/2212.09748">Scalable Diffusion Models with Transformers</a></li>
 </ul>
@@ -585,7 +587,7 @@ This means that Trellis&#39;s DiT can be seen as a <strong>3D extension of the 2
 <h3 id="toc-heading-8">D.4. Training with Rectified Flow</h3>
 <p>Now let&#39;s explore how this DiT is trained.</p>
 <p>As mentioned in a previous post, the Shape generation models in the recent 3D Generative Pipeline operate on the <strong>Rectified Flow</strong> framework.
-<img src='/blogs/posts/250710_building_large_3d_2/assets/image-10.png' width=60%></p>
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-10.png' width=60% alt="Building Large 3D Generative Model (2) VAE and DiT Deep Dive — D.4. Training with Rectified Flow" loading="lazy" decoding="async"></p>
 <ul>
 <li><strong>Source ($z_0 \sim p_0$)</strong>: The source distribution (typically a standard normal distribution $\mathcal{N}(0, I)$).</li>
 <li><strong>Target ($z_1 \sim p_1$)</strong>: A target sample from the target distribution (the data&#39;s latent space distribution $q_{data}$).</li>
@@ -664,7 +666,7 @@ def training_step(self, data, iteration):
 </blockquote>
 <h3 id="toc-heading-10">E.1. Reconstruction vs. Generation Dilemma</h3>
 <p>A recent study in the 2D image generation field, <a href="https://arxiv.org/abs/2501.01423">VA-VAE (Vision-Aligned VAE)</a>, presents an important observation.</p>
-<img src='/blogs/posts/250710_building_large_3d_2/assets/image-15.png' width=100%>
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-15.png' width=100% alt="Building Large 3D Generative Model (2) VAE and DiT Deep Dive — E.1. Reconstruction vs. Generation Dilemma" loading="lazy" decoding="async">
 
 <ul>
 <li><em>As the VAE&#39;s latent space acquires a <strong>higher dimension</strong>, the original image <strong>reconstruction quality improves</strong>, but the performance of the <strong>generative model (DiT)</strong> that has to learn on this complex latent space actually <strong>degrades</strong>.</em></li>
@@ -683,7 +685,7 @@ In other words, the vectors in the latent space are scattered chaotically, makin
 <h3 id="toc-heading-11">E.2. VA-VAE and 3D Generation</h3>
 <p>The Vecset-based VAE, which uses Point Clouds and focuses solely on reconstructing 3D shapes, has aspects similar to the &#39;<em>reconstruction-specialized</em>&#39; VAE pointed out by VA-VAE. This leads to the <em><strong>hypothesis that since the DiT (Flow Model) must inefficiently search a vast, unstructured latent space to generate a shape matching the input condition (2D), its convergence may be slow and its performance limited.</strong></em></p>
 <p>On the other hand, Trellis can be seen as having already implemented an idea similar to VA-VAE in 3D with its concept of <strong>SLAT (Structured Latent)</strong>. SLAT uses the DINO feature map itself as the VAE&#39;s training target, creating a semantic latent space that possesses spatial structure. In essence, the approach is: &quot;<strong>DINO is already good enough, so let&#39;s just map it directly onto the 3D space!</strong>&quot;
-<img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-9.png' width=70%></p>
+<img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-9.png' width=70% alt="Building Large 3D Generative Model (2) VAE and DiT Deep Dive — E.2. VA-VAE and 3D Generation" loading="lazy" decoding="async"></p>
 <p>However, this method has the problem of effectively splitting the VAE&#39;s latent space in two. That is, it is composed of <strong>Structure</strong>, which determines <em><strong>&#39;where the shape exists?&#39;</strong></em>, and <strong>Feature</strong>, which determines <em><strong>&#39;what exists there?&#39;</strong></em>. This leads to a complex 2-stage generation pipeline.</p>
 <ul>
 <li><strong>1) Structure Generation</strong>: First, a model must generate the <strong>indices of the Sparse Structure</strong>, which determines which voxels are activated. Trellis trains a separate <strong>Conditional Flow Matching (CFM) model</strong> for this purpose.</li>
@@ -701,13 +703,13 @@ In other words, the vectors in the latent space are scattered chaotically, makin
 </tr>
 </thead>
 <tbody><tr>
-<td align="left"><img src='/blogs/posts/250710_building_large_3d_2/assets/image-5.png' width=100%></td>
+<td align="left"><img src='/blogs/posts/250710_building_large_3d_2/assets/image-5.png' width=100% alt="Building Large 3D Generative Model (2) VAE and DiT Deep Dive — E.3. Back to Spatial Fundamentals?" loading="lazy" decoding="async"></td>
 </tr>
 </tbody></table>
 <p>These models boldly discard Trellis&#39;s SLAT, i.e., the direct alignment with DINO, and instead <em>focus their technical efforts on increasing the resolution of the 3D latent grid (e.g., to 256^3) and more efficiently compressing 3D spatial relations</em>.</p>
 <p>This may be evidence that for 3D shape generation, <strong>capturing the part-whole relationships and topological structure of the 3D space itself at high resolution</strong> is more important than <strong>semantic alignment with a 2D Vision Foundation Model</strong>. The &#39;semantic&#39; information of a 2D image and the &#39;structure&#39; of a 3D shape are fundamentally different kinds of information, and the core of 3D shape generation lies in the latter.</p>
-<img src='/blogs/posts/250710_building_large_3d_2/assets/image-7.png' width=100%>
-<img src='/blogs/posts/250710_building_large_3d_2/assets/image-11.png' width=100%>
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-7.png' width=100% alt="Building Large 3D Generative Model (2) VAE and DiT Deep Dive — E.3. Back to Spatial Fundamentals?, figure 2" loading="lazy" decoding="async">
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-11.png' width=100% alt="Building Large 3D Generative Model (2) VAE and DiT Deep Dive — E.3. Back to Spatial Fundamentals?, figure 3" loading="lazy" decoding="async">
 
 <ul>
 <li>Figure: <a href="https://arxiv.org/abs/2505.14521">Sparc3D</a>&#39;s efficient Sparconv-VAE, which directly compresses Voxel indices and SDF values instead of DINO features.</li>

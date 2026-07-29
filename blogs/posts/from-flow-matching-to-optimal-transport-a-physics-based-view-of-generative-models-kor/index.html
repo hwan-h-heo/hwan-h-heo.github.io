@@ -69,6 +69,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     <li class="nav-item"><a href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="eng" style="font-size:0.7rem">ENG</a></li>
                 </ul>
@@ -103,7 +105,7 @@
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             <li><a href="/blogs/series/3d-generation/">3D 생성 AI</a></li>
                             <li aria-current="page">From Flow Matching to Optimal Transport: A Physics-based View of Generative Models</li>
@@ -225,11 +227,11 @@
 <h4>Introduction</h4>
 <p>최근 생성 모델의 흐름은 크게 두 가지 접근법으로 나눌 수 있다. </p>
 <p>하나는 노이즈에서부터 점차 이미지를 생성해나가는 <strong>Diffusion Model</strong> 이고, 다른 하나는 노이즈와 이미지를 직접적으로 잇는 <strong>Flow</strong> 기반 모델이다.</p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-37fd8aba8f3c.png'>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-37fd8aba8f3c.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — Introduction" loading="lazy" decoding="async">
 
 <p>특히 Diffusion Model 은 복잡한 <strong>Stochastic Differential Equation (SDE)</strong> 을 기반으로 한다. 이는 마치 입자가 무작위적인 힘에 의해 이리저리 흔들리며 움직이는 &#39;<a href="https://en.wikipedia.org/wiki/Brownian_motion">Brownina Motion</a>&#39; 처럼, 구불구불하고 예측 불가능한 경로를 통해 샘플을 생성하는 방식이다. 이는 뛰어난 성능을 보였지만, 본질적으로 수많은 단계를 거쳐야 하기 때문에 느린 생성 속도라는 단점을 안고 있었다.</p>
 <p>이러한 배경 속에서, &quot;더 빠르고, 더 효율적인 생성 방법은 없을까?&quot;라는 질문에 대한 대답으로 <strong>Ordinary Differential Equation (ODE)</strong> 기반의 framework 가 주목받기 시작했다. ODE 는 SDE 와 달리 무작위성 (stochastic) 이 배제된 <strong>deterministic path</strong> 를 따른다. 즉, 출발점과 도착점이 정해지면 그 사이의 경로는 단 하나로 명확하게 결정된다.</p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/img.gif'>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/img.gif' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — Introduction, figure 2" loading="lazy" decoding="async">
 
 <ul>
 <li><strong>Top</strong>: Diffusion &lt;-&gt; <strong>Middle &amp; Bottom</strong>: Flow-Matching. Stochastic 과 deterministic 의 차이를 잘 볼 수 있다.</li>
@@ -292,7 +294,7 @@ $$</p>
 <p>라는 아이디어가 등장했다.</p>
 <p>이는 변환 과정을 시간의 흐름에 따른 <strong><em>continuous trajectory</em></strong> 으로 모델링하는 것을 의미한다. </p>
 <p>이 trajectory 위에서 샘플 $x_0$ 은 시간 $t=0$ 에서의 위치이고, 우리가 원하는 데이터 $x_1$ 는 시간 $t=1$ 에서의 최종 위치가 된다.</p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-f8c5025b3c67.png'>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-f8c5025b3c67.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 2.1. Continuous Flow" loading="lazy" decoding="async">
 
 <p>즉, transformation $\phi$ 는 다음과 같이 multiple function 의 composition 으로 표현되고, 
 $$
@@ -488,7 +490,7 @@ $$
 <li><strong>$t=0$:</strong> $\mu_0(x_1) = 0, \sigma_0(x_1) = 1$</li>
 <li><strong>$t=1$:</strong> $\mu_1(x_1) = x_1, \sigma_1(x_1) = \sigma_{min} \approx 0$</li>
 </ul>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-58cb161215e2.gif'>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-58cb161215e2.gif' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.1.1. Conditional Probability Path" loading="lazy" decoding="async">
 
 <p>이는 diffusion 의 <strong>Forward Process $q(x_t|x_0)$</strong> 와 정확히 같은 개념적 구조를 가진다. DDPM 이 $x_0$ 에서 noise 로 가는 경로를 정의했다면, CFM 은 반대로 target $x_1$을 고정하고 그곳으로 향하는 가상의 경로를 정의하는 것이라고 해석할 수 있다. </p>
 <p>이제 우리는 직접 설계한 path $p_t(x|x_1)$ 으로부터, 이 path 를 생성하는 <strong>conditional vector fields $u_t(x|x_1)$</strong> 역시 <em>continuity equation</em> 을 통해 유도할 수 있다.</p>
@@ -508,8 +510,8 @@ $$</p>
 </tr>
 </thead>
 <tbody><tr>
-<td><img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-921b9ad95d66.png'></td>
-<td><img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-c74959385540.png'></td>
+<td><img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-921b9ad95d66.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.1.1. Conditional Probability Path, figure 2" loading="lazy" decoding="async"></td>
+<td><img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-c74959385540.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.1.1. Conditional Probability Path, figure 3" loading="lazy" decoding="async"></td>
 </tr>
 </tbody></table>
 <hr>
@@ -566,7 +568,7 @@ $$
 </p>
 
 <p>이는 알 수 없는 $u_t$에 대한 regression problem 을, 우리가 직접 설계하여 정답을 알고 있는 $u_t(\cdot|x_1)$에 대한 regression problem 로 완벽하게 대체할 수 있음을 의미한다.</p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-63e35c0aefb1.png'>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-63e35c0aefb1.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.1.2. Conditional Flow Matching" loading="lazy" decoding="async">
 
 
 <hr>
@@ -577,12 +579,12 @@ $$
 x_t = \phi_t(x_0|x_1) = \sigma_t(x_1)x_0 + \mu_t(x_1)
 $$</p>
 <p>이는 <em><strong>standard normal distribution (base distribution, $p_0$)에서 샘플링한 노이즈 $x_0$ 를 시간 $t$의 target distribution $p_t(x|x_1)$ 위의 한 점 $x_t$ 로 deterministic 하게 매핑하는 함수</strong></em>이다. </p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-d2c5fec78d21.png'>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-d2c5fec78d21.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.1.3. Sampling w/ Conditional Flow" loading="lazy" decoding="async">
 
 <p>이 덕분에 우리는 복잡한 분포에서 샘플링할 필요 없이, 간단한 덧셈과 곱셈만으로 학습에 필요한 데이터 $x_t$를 생성할 수 있다.</p>
 <hr>
 <h3 id="toc-heading-9">3.2. Final Training Algorithm</h3>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-eb0c00175b28.png'>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-eb0c00175b28.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.2. Final Training Algorithm" loading="lazy" decoding="async">
 
 
 <p>이 모든 과정을 종합하면, 최종 학습 알고리즘은 다음과 같이 단순해진다.</p>
@@ -598,7 +600,7 @@ $</li>
 </ol>
 <p>결론적으로 Flow Matching 은 학습 과정에서 ODE 를 풀 필요가 전혀 없으며, 두 점을 잇는 path 의 기울기를 예측하는 간단한 regression 문제로 변환된다. </p>
 <p>이 <strong><em>&#39;두 점을 잇는 deterministic path&#39;</em></strong> 라는 아이디어는 DDIM 의 핵심 통찰과도 맞닿아 있으며, Flow Matching 은 이를 학습 패러다임 자체에 녹여내어 생성 모델의 학습 효율성을 극적으로 끌어올렸다.</p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-50de32e5117c.png'>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-50de32e5117c.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.2. Final Training Algorithm, figure 2" loading="lazy" decoding="async">
 
 
 <hr>
@@ -629,7 +631,7 @@ $$
 <p>신경망은 중간 지점 $x_t$를 보고, 최종 목적지에서 출발지를 뺀 방향 벡터 ($x_1 - x_0$) 를 맞추는 <em><strong>아주 간단한 regression 문제</strong></em> 를 풀게 된다. 이 단순함이 비약적인 학습 속도와 안정성을 가져온다.</p>
 <p>마지막으로 Rectified Flow 은 또다른 장점이 존재한다. </p>
 <p>한 번의 학습으로 얻어진 coupling $(Z_0, Z_1)$ 은 초기 노이즈와 데이터의 독립적인 coupling $(X_0, X_1)$ 보다 이미 훨씬 정돈된 (less entangled) 상태이다. 만약 우리가 이 $(Z_0, Z_1)$ 을 새로운 &#39;데이터&#39;로 삼아 다시 한번 Rectified Flow 를 학습시키면 어떻게 될까? Rectified Flow 연구진은 이 <em><strong>&#39;Reflow&#39;</strong></em> 과정을 반복할수록 샘플들의 이동 경로가 기하급수적으로 직선에 가까워짐을 보였다.
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-8c73a4d78896.png'></p>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-8c73a4d78896.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.3. Rectified Flow" loading="lazy" decoding="async"></p>
 <p>이는 단 몇 번의 반복만으로도 거의 완벽한 직선 경로를 학습할 수 있다는 의미이며, 생성 과정에서 필요한 ODE 스텝 수를 획기적으로 줄여 (심지어 단 한 스텝으로도) 매우 빠른 샘플링을 가능하게 한다.</p>
 <p>이제 우리는 <em><strong>어떻게</strong></em> Flow Matching을 통해 직선 경로를 학습할 수 있는지 알게 되었다. 하지만 근본적인 질문이 남는다.</p>
 <blockquote>
@@ -643,7 +645,7 @@ $$
 <h2 id="toc-heading-12">4. Optimal Transport</h2>
 <h3 id="toc-heading-13">4.1. What is Optimal Transport</h3>
 <p>먼저 <a href="https://en.wikipedia.org/wiki/Transportation_theory_(mathematics)">optimal transport</a> 를 직관적으로 이해해보자. 여기 흙이 쌓여있는 언덕 ($X$, 소스 분포)이 있고, 이 흙을 모두 파내서 어딘가에 있는 구덩이 ($Y$, 타겟 분포)를 메워야 한다고 상상해보자.</p>
-<img style='width:100%' src="/blogs/posts/250810_flow/assets/remote-526387c8d0ca.png" width="100%">
+<img style='width:100%' src="/blogs/posts/250810_flow/assets/remote-526387c8d0ca.png" width="100%" alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 4.1. What is Optimal Transport" loading="lazy" decoding="async">
 
 <p>이때 &quot;가장 효율적으로&quot; 흙을 옮기려면 어떻게 해야 할까? </p>
 <p>&#39;효율적&#39;이라는 것은 총 이동 비용(Cost)을 최소화하는 것을 의미한다. 최적 수송은 바로 이 문제, 즉 한 확률 분포 (흙더미)를 다른 확률 분포 (구덩이)로 변환하는 데 필요한 <strong>최소 비용의 Transport Plan</strong>을 찾는 수학 이론이다.</p>
@@ -663,7 +665,7 @@ $$</p>
 L = T - V
 $$</p>
 <p>유튜브 veritasium 에 action 에 대해서 정말 훌륭하게 설명하는 영상이 있으므로 참고하길 바란다: <a href="https://www.youtube.com/watch?v=Q10_srZ-pbs&t=1658s">영상 link</a></p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-914bee69f2e3.png'>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-914bee69f2e3.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 5.1. What is Action" loading="lazy" decoding="async">
 
 <ul>
 <li><a href="https://en.wikipedia.org/wiki/Fermat%27s_principle">Fermat&#39;s Principle</a> 로 알려진 빛의 굴절 현상도 (거리가 아닌 시간 최소화) Least Action Principle 의 한 예이다.</li>
@@ -768,7 +770,7 @@ $$</p>
 $$
 {v_t(x) = -\nabla \phi(x, t)}
 $$</p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-2bbef7285be8.png'>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-2bbef7285be8.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 5.3.2. Constrained Euler-Lagrange Equation" loading="lazy" decoding="async">
 - Vector field (right) and corresponding scalar potential (left).
 
 <p><strong>Density $p$ 에 대한 functional derivative</strong></p>
@@ -820,7 +822,7 @@ $$</p>
 $$</p>
 <p>Action 을 최소화하고 continuity equation 을 만족하는 최적의 흐름을 따르는 모든 입자의 <strong>가속도는 0</strong> 이다. 이는 각 입자가 시작점 $z_0$에서 도착점 $z_1$까지 <strong>등속 직선 운동</strong>을 한다는 것을 수학적으로 증명한다.</p>
 <p>이것이 바로 Rectified Flow가 두 분포의 샘플 $z_0, z_1$을 뽑아 그 사이를 잇는 <strong>직선 경로</strong>를 학습의 목표로 삼는 강력한 이론적 배경이다. 모델이 학습하는 속도 벡터 $$v = z_1 - z_0$$는 이 최적 경로의 속도장에 해당한다.
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-40629d4b233a.png'></p>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-40629d4b233a.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 5.4. Why Recitifed-Flow is Linear?" loading="lazy" decoding="async"></p>
 <p>따라서 Rectified Flow가 채택한 &#39;직선 경로&#39; $z_t = (1-t)z_0 + t z_1$ 는 임의의 선택이 아니라, <strong>물리 법칙과 수학적 최적화에 근거한 가장 자연스럽고 효율적인 경로</strong>라고 해석할 수 있다.</p>
 <hr>
 <h2 id="toc-heading-20">6. Rectified Flow on Manifolf</h2>

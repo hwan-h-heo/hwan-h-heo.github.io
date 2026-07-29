@@ -78,7 +78,8 @@
                         
         <article class="post-preview" data-post-id="250310_model_viewer" data-post-category="post">
             <div class="post-card-link">
-                <a href="/blogs/posts/3d-model-viewer-in-web/" class="post-card-cover" aria-label="Read 3D Model Viewer in Web" style="background-image: url('/blogs/posts/250310_model_viewer/assets/image.png')">
+                <a href="/blogs/posts/3d-model-viewer-in-web/" class="post-card-cover" aria-label="Read 3D Model Viewer in Web">
+                    <img src="/assets/generated/blog-covers/250310_model_viewer.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/250310_model_viewer.webp" alt="3D Model Viewer in Web cover image" loading="lazy" decoding="async">
                 </a>
                 <div class="post-card-body">
                     <div class="post-card-eyebrow">
@@ -97,7 +98,8 @@
     
         <article class="post-preview" data-post-id="240917_3djs" data-post-category="post">
             <div class="post-card-link">
-                <a href="/blogs/posts/add-gaussian-splatting-to-your-website/" class="post-card-cover" aria-label="Read Add Gaussian Splatting to Your Website" style="background-image: url('/assets/guitar.jpeg')">
+                <a href="/blogs/posts/add-gaussian-splatting-to-your-website/" class="post-card-cover" aria-label="Read Add Gaussian Splatting to Your Website">
+                    <img src="/assets/generated/blog-covers/240917_3djs.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/240917_3djs.webp" alt="Add Gaussian Splatting to Your Website cover image" loading="lazy" decoding="async">
                 </a>
                 <div class="post-card-body">
                     <div class="post-card-eyebrow">
@@ -119,6 +121,7 @@
             </div>
         </main>
         <script src="/blogs/js/site-data-client.js"></script>
+        <script src="/blogs/js/blog-cover-media.js"></script>
         <script src="/blogs/js/blog-shell.js"></script>
         <script src="/blogs/js/theme-toggle.js"></script>
         <script>
@@ -161,6 +164,7 @@
                             const url = window.siteDataClient.getPostUrl(post, language);
                             const titleLink = card.querySelector('.post-title a');
                             const coverLink = card.querySelector('.post-card-cover');
+                            const coverImage = card.querySelector('img[data-blog-cover]');
                             const subtitle = card.querySelector('.post-subtitle');
 
                             if (titleLink) {
@@ -171,6 +175,10 @@
                             if (coverLink) {
                                 coverLink.href = url;
                                 coverLink.setAttribute('aria-label', 'Read ' + title);
+                            }
+
+                            if (coverImage) {
+                                coverImage.alt = title + ' cover image';
                             }
 
                             if (subtitle) {

@@ -71,6 +71,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     <li class="nav-item"><a href="/blogs/posts/is-diffusions-estimated-depth-really-good-kor/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="kor" style="font-size:0.7rem">KOR</a></li>
                 </ul>
@@ -105,7 +107,7 @@
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             <li><a href="/blogs/series/3d-generation/">3D Generative AI</a></li>
                             <li aria-current="page">Is Diffusion&#39;s Estimated Depth Really Good?</li>
@@ -264,7 +266,7 @@
     example below, the results may appear visually plausible, yet their geometric 
     precision warrants further scrutiny.
 </p>
-<img src="/blogs/posts/240426_diffusion_depth/assets/teaser.jpeg" alt="Marigold's teaser" width="100%">
+<img src="/blogs/posts/240426_diffusion_depth/assets/teaser.jpeg" alt="Marigold's teaser" width="100%" loading="lazy" decoding="async">
 <p><em>Figure credit: <a href="https://marigoldmonodepth.github.io/">Depth estimation result from Marigold<a></a></em></p>
 <p class="lang eng"> 
     In this article, we employ DepthMap to generate point clouds and meshes, 
@@ -460,7 +462,7 @@ def move_top_right(mask):
 </p>
 
 
-<img src="/blogs/posts/240426_diffusion_depth/assets/butterfly.jpg" alt="Marigold's teaser" width="100%">
+<img src="/blogs/posts/240426_diffusion_depth/assets/butterfly.jpg" alt="Marigold's teaser" width="100%" loading="lazy" decoding="async">
 <p><em>Left: front view / Right: side view of the mesh</em></p>
 
 <p class="lang eng">

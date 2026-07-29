@@ -69,6 +69,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     <li class="nav-item"><a href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models-kor/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="kor" style="font-size:0.7rem">KOR</a></li>
                 </ul>
@@ -103,7 +105,7 @@
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             <li><a href="/blogs/series/3d-generation/">3D Generative AI</a></li>
                             <li aria-current="page">From Flow Matching to Optimal Transport: A Physics-based View of Generative Models</li>
@@ -235,11 +237,11 @@
 <h4>Introduction</h4>
 <p>The recent landscape of generative models can be broadly divided into two main approaches.</p>
 <p>One is the <strong>Diffusion Model</strong>, which gradually generates an image from noise. The other is the <strong>Flow</strong>-based model, which directly connects noise and the image.</p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-37fd8aba8f3c.png'>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-37fd8aba8f3c.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — Introduction" loading="lazy" decoding="async">
 
 <p>Diffusion Models, in particular, are based on a complex <strong>Stochastic Differential Equation (SDE)</strong>. This method generates samples through a winding, unpredictable path, much like &#39;<a href="https://en.wikipedia.org/wiki/Brownian_motion">Brownian Motion</a>,&#39; where a particle moves about, buffeted by random forces. While this has shown outstanding performance, it inherently suffers from the drawback of slow generation speed due to the numerous steps required.</p>
 <p>Against this backdrop, frameworks based on <strong>Ordinary Differential Equations (ODE)</strong> began to attract attention as an answer to the question, &quot;Is there a faster, more efficient generation method?&quot; Unlike SDEs, ODEs follow a <strong>deterministic path</strong> devoid of stochasticity. That is, once a starting point and an endpoint are determined, the path between them is uniquely and clearly defined.</p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/img.gif'>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/img.gif' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — Introduction, figure 2" loading="lazy" decoding="async">
 
 <ul>
 <li><strong>Top</strong>: Diffusion &lt;-&gt; <strong>Middle &amp; Bottom</strong>: Flow-Matching. The difference between stochastic and deterministic paths is clearly visible.</li>
@@ -300,7 +302,7 @@ $$</p>
 </blockquote>
 <p>This means modeling the transformation process as a <strong><em>continuous trajectory</em></strong> over time.</p>
 <p>On this trajectory, the sample $x_0$ is the position at time $t=0$, and the desired data $x_1$ is the final position at time $t=1$.</p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-f8c5025b3c67.png'>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-f8c5025b3c67.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 2.1. Continuous Flow" loading="lazy" decoding="async">
 
 <p>That is, the transformation $\phi$ is expressed as a composition of multiple functions,
 $$
@@ -492,7 +494,7 @@ We can set the boundary conditions such that at time $t=0$, it is a standard nor
 <li><strong>$t=0$:</strong> $\mu_0(x_1) = 0, \sigma_0(x_1) = 1$</li>
 <li><strong>$t=1$:</strong> $\mu_1(x_1) = x_1, \sigma_1(x_1) = \sigma_{min} \approx 0$</li>
 </ul>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-58cb161215e2.gif'>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-58cb161215e2.gif' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.1.1. Conditional Probability Path" loading="lazy" decoding="async">
 
 <p>This has the exact same conceptual structure as the <strong>Forward Process $q(x_t|x_0)$</strong> in diffusion. While DDPM defined a path from $x_0$ to noise, CFM can be interpreted as fixing the target $x_1$ and defining a virtual path towards it.</p>
 <p>Now, from our self-designed path $p_t(x|x_1)$, we can also derive the <strong>conditional vector fields $u_t(x|x_1)$</strong> that generate this path, via the <em>continuity equation</em>.</p>
@@ -512,8 +514,8 @@ $$</p>
 </tr>
 </thead>
 <tbody><tr>
-<td><img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-921b9ad95d66.png'></td>
-<td><img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-c74959385540.png'></td>
+<td><img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-921b9ad95d66.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.1.1. Conditional Probability Path, figure 2" loading="lazy" decoding="async"></td>
+<td><img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-c74959385540.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.1.1. Conditional Probability Path, figure 3" loading="lazy" decoding="async"></td>
 </tr>
 </tbody></table>
 <hr>
@@ -569,7 +571,7 @@ $$
 </p>
 
 <p>This means we can perfectly replace the regression problem for the unknown $u_t$ with a regression problem for $u_t(\cdot|x_1)$, which we have designed and for which we know the answer.</p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-63e35c0aefb1.png'>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-63e35c0aefb1.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.1.2. Conditional Flow Matching" loading="lazy" decoding="async">
 
 <hr>
 <h4>3.1.3. Sampling w/ Conditional Flow</h4>
@@ -579,12 +581,12 @@ $$
 x_t = \phi_t(x_0|x_1) = \sigma_t(x_1)x_0 + \mu_t(x_1)
 $$</p>
 <p>This is a <em><strong>function that deterministically maps a noise sample $x_0$ from a standard normal distribution (base distribution, $p_0$) to a point $x_t$ on the target distribution $p_t(x|x_1)$ at time $t$</strong></em>.</p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-d2c5fec78d21.png'>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-d2c5fec78d21.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.1.3. Sampling w/ Conditional Flow" loading="lazy" decoding="async">
 
 <p>Thanks to this, we can generate the necessary training data $x_t$ with simple addition and multiplication, without needing to sample from complex distributions.</p>
 <hr>
 <h3 id="toc-heading-9">3.2. Final Training Algorithm</h3>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-eb0c00175b28.png'>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-eb0c00175b28.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.2. Final Training Algorithm" loading="lazy" decoding="async">
 
 <p>Combining all these processes, the final training algorithm becomes remarkably simple.</p>
 <ol>
@@ -599,7 +601,7 @@ $</li>
 </ol>
 <p>In conclusion, Flow Matching completely eliminates the need to solve ODEs during training and transforms the problem into a simple regression task of predicting the slope of the path connecting two points.</p>
 <p>This idea of a <strong><em>&#39;deterministic path connecting two points&#39;</em></strong> aligns with the core insight of DDIM, and Flow Matching incorporates this into the learning paradigm itself, dramatically increasing the training efficiency of generative models.</p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-50de32e5117c.png'>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-50de32e5117c.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.2. Final Training Algorithm, figure 2" loading="lazy" decoding="async">
 
 <hr>
 <h3 id="toc-heading-10">3.3. Rectified Flow</h3>
@@ -628,7 +630,7 @@ $$
 <p>The neural network learns to solve a <em><strong>very simple regression problem</strong></em>: given an intermediate point $x_t$, predict the direction vector from the start point to the destination ($x_1 - x_0$). This simplicity brings about dramatic improvements in training speed and stability.</p>
 <p>Finally, Rectified Flow has another advantage.</p>
 <p>The coupling $(Z_0, Z_1)$ obtained from a single training run is already in a much more ordered (less entangled) state than the initial independent coupling $(X_0, X_1)$. What if we use this $(Z_0, Z_1)$ as new &#39;data&#39; and train a Rectified Flow again? The Rectified Flow researchers showed that repeating this <em><strong>&#39;Reflow&#39;</strong></em> process makes the travel paths of the samples exponentially closer to straight lines.
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-8c73a4d78896.png'></p>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-8c73a4d78896.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.3. Rectified Flow" loading="lazy" decoding="async"></p>
 <p>This means that a nearly perfect straight-line path can be learned with just a few iterations, which revolutionizes the number of ODE steps required during the generation process (even down to a single step), enabling very fast sampling.</p>
 <p>Now we understand <em><strong>how</strong></em> we can learn a straight-line path through Flow Matching. But a fundamental question remains.</p>
 <blockquote>
@@ -642,7 +644,7 @@ $$
 <h2 id="toc-heading-12">4. Optimal Transport</h2>
 <h3 id="toc-heading-13">4.1. What is Optimal Transport</h3>
 <p>First, let&#39;s intuitively understand <a href="https://en.wikipedia.org/wiki/Transportation_theory_(mathematics)">optimal transport</a>. Imagine there&#39;s a hill of soil ($X$, the source distribution), and you need to dig up all this soil to fill a pit somewhere else ($Y$, the target distribution).</p>
-<img style='width:100%' src="/blogs/posts/250810_flow/assets/remote-526387c8d0ca.png" width="100%">
+<img style='width:100%' src="/blogs/posts/250810_flow/assets/remote-526387c8d0ca.png" width="100%" alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 4.1. What is Optimal Transport" loading="lazy" decoding="async">
 
 <p>How should you move the soil to be &quot;most efficient&quot;?</p>
 <p>&#39;Efficient&#39; means minimizing the total transportation cost. Optimal transport is the mathematical theory that finds this <strong>minimum-cost Transport Plan</strong> for converting one probability distribution (the pile of soil) into another (the pit).</p>
@@ -662,7 +664,7 @@ $$</p>
 L = T - V
 $$</p>
 <p>The YouTube channel Veritasium has an excellent video explaining action, which I highly recommend: <a href="https://www.youtube.com/watch?v=Q10_srZ-pbs&t=1658s">video link</a></p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-914bee69f2e3.png'>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-914bee69f2e3.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 5.1. What is Action" loading="lazy" decoding="async">
 
 <ul>
 <li>The phenomenon of light refraction, known as <a href="https://en.wikipedia.org/wiki/Fermat%27s_principle">Fermat&#39;s Principle</a> (minimizing time, not distance), is also an example of the Least Action Principle.</li>
@@ -768,7 +770,7 @@ $$</p>
 $$
 {v_t(x) = -\nabla \phi(x, t)}
 $$</p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-2bbef7285be8.png'>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-2bbef7285be8.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 5.3.2. Constrained Euler-Lagrange Equation" loading="lazy" decoding="async">
 - Vector field (right) and corresponding scalar potential (left).
 
 <p><strong>Functional derivative with respect to Density $p$</strong></p>
@@ -820,7 +822,7 @@ $$</p>
 $$</p>
 <p>The <strong>acceleration of all particles</strong> following the optimal flow that minimizes the action and satisfies the continuity equation is <strong>zero</strong>. This mathematically proves that each particle undergoes <strong>uniform linear motion</strong> from its starting point $z_0$ to its destination $z_1$.</p>
 <p>This is the strong theoretical background for why Rectified Flow takes the <strong>straight-line path</strong> connecting samples $z_0, z_1$ from two distributions as its learning target. The velocity vector $$v = z_1 - z_0$$ that the model learns corresponds to the velocity field of this optimal path.
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-40629d4b233a.png'></p>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-40629d4b233a.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 5.4. Why is Rectified Flow Linear?" loading="lazy" decoding="async"></p>
 <p>Therefore, the &#39;straight-line path&#39; $z_t = (1-t)z_0 + t z_1$ adopted by Rectified Flow is not an arbitrary choice but can be interpreted as the <strong>most natural and efficient path based on physical laws and mathematical optimization</strong>.</p>
 <hr>
 <h2 id="toc-heading-20">6. Rectified Flow on Manifold</h2>

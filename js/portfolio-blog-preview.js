@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     try {
         const { loadSiteData, getPostTitle, getPostDescription, getPostUrl } = window.siteDataClient;
+        const coverMedia = window.blogCoverMedia;
         const siteData = await loadSiteData();
 
         const escapeHtml = (value) => String(value || '')
@@ -56,12 +57,21 @@ document.addEventListener('DOMContentLoaded', async function() {
                 const date = formatDate(item.post.date);
                 const tagsHtml = renderTags(item.post);
                 const image = item.teaserImage || item.post.cover || '/assets/blog_bg.jpeg';
+                const keepAnimated = item.post.animatedPreview === true && coverMedia?.isAnimatedCover(image);
+                const preview = coverMedia?.getBlogCoverPreviewUrl(item.id, 'portfolio') || image;
+                const autoplaySource = keepAnimated
+                    ? ` data-autoplay-src="${escapeHtml(image)}"`
+                    : '';
+                const animatedSource = !keepAnimated && coverMedia?.isAnimatedCover(image)
+                    ? ` data-animated-src="${escapeHtml(image)}"`
+                    : '';
+                const imageAlt = item.teaserAlt || `${title} article preview`;
 
                 return `
             <article class="portfolio-blog-preview-item">
               <a href="${escapeHtml(getPostUrl(item.post, 'eng'))}" target="_blank" rel="noopener noreferrer" class="portfolio-blog-preview-link">
-                <span class="portfolio-blog-preview-cover" aria-hidden="true">
-                  <img src="${escapeHtml(image)}" alt="">
+                <span class="portfolio-blog-preview-cover">
+                  <img src="${escapeHtml(preview)}" data-blog-cover data-preview-src="${escapeHtml(preview)}"${autoplaySource}${animatedSource} alt="${escapeHtml(imageAlt)}" loading="lazy" decoding="async">
                 </span>
                 <span class="portfolio-blog-preview-body">
                   <span class="portfolio-blog-preview-eyebrow">
@@ -79,6 +89,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             }).join('');
 
         container.innerHTML = postsHtml;
+        coverMedia?.initializeBlogCoverMedia(container);
     } catch (error) {
         console.error(error);
     } finally {

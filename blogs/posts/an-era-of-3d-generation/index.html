@@ -69,6 +69,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     <li class="nav-item"><a href="/blogs/posts/an-era-of-3d-generation-kor/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="kor" style="font-size:0.7rem">KOR</a></li>
                 </ul>
@@ -103,7 +105,7 @@
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             <li><a href="/blogs/series/3d-generation/">3D Generative AI</a></li>
                             <li aria-current="page">An Era of 3D Generation</li>
@@ -251,8 +253,8 @@
 </tr>
 </thead>
 <tbody><tr>
-<td><img id="img-1" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-8.png" /></td>
-<td><img id="img-2" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-2.png" /></td>
+<td><img id="img-1" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-8.png" alt="An Era of 3D Generation — Preliminary: What is Latent?" loading="lazy" decoding="async"></td>
+<td><img id="img-2" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-2.png" alt="An Era of 3D Generation — Preliminary: What is Latent?, figure 2" loading="lazy" decoding="async"></td>
 </tr>
 </tbody></table>
 <p id="p-8">Consider classical machine learning concepts like Radial Basis Function (RBF) networks and Gaussian Mixture Models (GMMs).  The core idea of both is to approximate a data distribution (or function) by combining:</p>
@@ -268,7 +270,7 @@ $$
 </p>
 
 <p id="p-10">Equation: Radial Basis Function (RBF)</p>
-<img id="img-3" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-4.png" />
+<img id="img-3" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-4.png" alt="An Era of 3D Generation — Preliminary: What is Latent?, figure 3" loading="lazy" decoding="async">
 <p id="p-11">From a similar perspective, 3D Gaussian Splatting can also be interpreted as approximating data (multi-view observations of a 3D scene) through a combination of:</p>
 <ul id="ul-3">
 <li id="li-4">Multiple basis functions (3D Gaussian primitives), and</li>
@@ -296,7 +298,7 @@ $$</p>
 </ul>
 <p id="p-21">All of these share a similar pipeline design.  In essence, it's a standard AutoEncoder structure with the following characteristics:</p>
 <figure id="figure-2" >
-  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-24.png' alt='img alt' width='100%'>
+  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-24.png' alt="An Era of 3D Generation — 1. ShapeVAE: Representation Learning for 3D Shape" width='100%' loading="lazy" decoding="async">
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> ShapeVAE pipeline (from CraftsMan)</figcaption>
 </figure>
 
@@ -310,7 +312,7 @@ b. <strong id="strong-8">AutoEncoder</strong> (weights of the linear projection 
 <p id="p-23">Here, the learnable query acts as a kind of basis in a compressed, semantically meaningful space (the latent space) representing the data distribution (3D shapes).</p>
 
 <figure id="figure-3" >
-  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-25.png' alt='img alt' width='100%'>
+  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-25.png' alt="An Era of 3D Generation — 1. ShapeVAE: Representation Learning for 3D Shape, figure 2" width='100%' loading="lazy" decoding="async">
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Various <em>Latent</em> Type</figcaption>
 </figure>
 
@@ -331,14 +333,14 @@ $$</p>
 <p id="p-32">In other words, the ShapeVAE AutoEncoder uses a basis (the latent query, <strong id="strong-11">L</strong>) to encode and decode the relationship between the basis and each data instance (<strong id="strong-12">X</strong>).</p>
 
 <figure id="figure-4" >
-  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-26.png' alt='img alt' width='100%'>
+  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-26.png' alt="An Era of 3D Generation — 1. ShapeVAE: Representation Learning for 3D Shape, figure 3" width='100%' loading="lazy" decoding="async">
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> ShapeVAE pipeline (from 3DShape2vecset)</figcaption>
 </figure>
 
 <p id="p-34">It learns the <em id="em-8"><strong id="strong-13">latent space</strong></em> that best represents the shape, and the <em id="em-9"><strong id="strong-14">basis (learnable query)</strong></em> that best captures the information about that latent space.</p>
 <p id="p-35">The components of the pipeline have the following details:</p>
 <ul id="ul-7">
-<li id="li-14"><strong id="strong-15">Positional Encoding</strong>: Fourier features, similar to the sinusoidal encoding used in NeRF and Transformers. PE not only maps Cartesian coordinates to a high-dimensional, frequency domain, but also adds stationarity between coordinates when learning kernel regression.<img id="img-7" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-12.png" width="70%" /></li>
+<li id="li-14"><strong id="strong-15">Positional Encoding</strong>: Fourier features, similar to the sinusoidal encoding used in NeRF and Transformers. PE not only maps Cartesian coordinates to a high-dimensional, frequency domain, but also adds stationarity between coordinates when learning kernel regression.<img id="img-7" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-12.png" width="70%" alt="An Era of 3D Generation — 1. ShapeVAE: Representation Learning for 3D Shape, figure 4" loading="lazy" decoding="async"></li>
 <li id="li-15"><strong id="strong-16">KL regularization term</strong>: Encourages the latent distribution generated by the encoder to be close to the prior distribution (typically a standard Gaussian distribution, $N(0, 1)$). This provides several advantages:<ul id="ul-8">
 <li id="li-16"><strong id="strong-17">Continuous latent space</strong>: A latent space following a normal distribution is continuous and smooth, making interpolation and sampling in the latent space easier.<ul id="ul-9">
 <li id="li-17">Shape variations can be naturally controlled through vector operations (interpolation, extrapolation, etc.) in the latent space.</li>
@@ -373,12 +375,12 @@ DETR and Perceiver are fundamentally designed for tasks like detection and class
 <p id="p-43"><strong id="strong-25">CLAY-Rodin</strong> actively utilizes ShapeVAE in the geometry generation stage, greatly increasing model and data capacity, and uses a texture synthesis approach for texture generation.</p>
 
 <figure id="figure-5" >
-  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-27.png' alt='img alt' width='100%'>
+  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-27.png' alt="An Era of 3D Generation — Challenges for ShapeVAE" width='100%' loading="lazy" decoding="async">
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Rodin (CLAY)</figcaption>
 </figure>
 
 <p id="p-45">Rodin significantly improves the performance of ShapeVAE and shape generation in its latent space using a large DiT model (1.5B), and achieves results that surpass previous 3D generation quality by using a two-stage approach of generating a shape (mesh) and then generating texture on it using geometry-guided multi-view generation.</p>
-<p id="p-46"><img id="img-9" style="width: 100%" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-7.png" alt="" /></p>
+<p id="p-46"><img id="img-9" style="width: 100%" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-7.png" alt="An Era of 3D Generation — Challenges for ShapeVAE, figure 2" loading="lazy" decoding="async"></p>
 <ul id="ul-13">
 <li id="li-26"><a id="a-7" href="https://ncsoft.github.io/CaPa/">CaPa</a>, with a similar pipeline to Clay. It generates a mesh with a 3D LDM and then backprojects high-quality texture.</li>
 </ul>
@@ -399,7 +401,7 @@ $$</p>
 <p id="p-54">where $p_i$ is the voxel index and $(z_i)$ is the latent vector.  That is, each voxel grid has a latent vector assigned to it, and the latent vector set itself is <em id="em-15"><strong id="strong-28">structured (voxelized)</strong></em>, hence the name <em id="em-16"><strong id="strong-29">SLAT</strong></em>.</p>
 <p id="p-55">Due to the sparsity of 3D data, the number of activated grids is much smaller than the total size of the 3D grid $(L &amp;lt;&amp;lt; N^3)$, which means that relatively high-resolution outputs can be generated.  This approach is similar to voxel-grid NeRFs like Instant-NGP, but uses ShapeVAE to predict the featured voxel-grid.</p>
 <p id="p-56">While the definition itself might seem like simply mapping the learnable query used in ShapeVAE to a voxel grid, the core of SLAT is that it actively utilizes the <strong id="strong-30">DINOv2</strong> feature extractor during the learning process of this SLAT encoding.</p>
-<p id="p-57"><img id="img-10" style="width: 100%" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-9.png" alt="" /></p>
+<p id="p-57"><img id="img-10" style="width: 100%" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-9.png" alt="An Era of 3D Generation — 2.1. Structured Latent Representation" loading="lazy" decoding="async"></p>
 <p id="p-58">As shown in the figure above, SLAT calculates the encoding for 3D assets during the VAE training process by:</p>
 <ol id="ol-3">
 <li id="li-29">Multi-View Rendering.</li>
@@ -419,7 +421,7 @@ $$</p>
 
 
 <figure id="figure-6" >
-  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-28.png' alt='img alt' width='100%'>
+  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-28.png' alt="An Era of 3D Generation — 2.2. SLAT Generation" width='100%' loading="lazy" decoding="async">
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Trellis's 3D Asset Generation Pipeline</figcaption>
 </figure>
 
@@ -435,10 +437,10 @@ $$</li>
 <p id="p-68">Because $\mathbf{O}$ is a coarse shape, there is almost no loss during the compression process using 3D convolution, which also improves the efficiency of neural network training. Furthermore, the binary grid of $\mathbf{O}$ is converted to continuous values, making it suitable for Rectified Flow training.</p>
 <blockquote id="blockquote-5">
 <p id="p-69">The Rectified flow model employs linear interpolation (input → output) of the straight-line path from data → noise as the forward process in the diffusion process. Compared to inefficient steps in typical Neural ODE solvers, Rectified Flow can model the linear vector field from data → noise, enabling much faster and more accurate generation.</p>
-<p id="p-70"><img id="img-13" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-3.png" alt="" /></p>
+<p id="p-70"><img id="img-13" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-3.png" alt="An Era of 3D Generation — 2.2. SLAT Generation, figure 2" loading="lazy" decoding="async"></p>
 </blockquote>
 <p id="p-71">In this process, condition modeling is performed similarly to other Diffusion models, injecting into the KV of cross-attention. In other words, Sparse Structure Generation acts as a kind of <em id="em-21"><strong id="strong-34">Image/Text-to-3D Coarse Shape Generation</strong></em>.</p>
-<p id="p-72"><img id="img-14" style="width: 100%" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-1.png" alt="" /></p>
+<p id="p-72"><img id="img-14" style="width: 100%" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-1.png" alt="An Era of 3D Generation — 2.2. SLAT Generation, figure 3" loading="lazy" decoding="async"></p>
 <p id="p-73">Subsequently, model 2, which generates SLAT using the generated Sparse Structure, is also trained using Rectified Flow. The decoder of ShapeVAE is then used on the finally generated SLAT to produce GSs / Mesh outputs.</p>
 <p id="p-74">The final 3D asset output uses <em id="em-22">RGB representation</em> for GS generation results and <em id="em-23">geometry</em> for Mesh generation results, fitting the mesh texture to the GS rendering. This is likely a strategy employed because it is difficult to convert 3D GS into a clean mesh.</p>
 <p id="p-75">Specifically, the steps are:</p>
@@ -451,7 +453,7 @@ $$</li>
 <ul id="ul-15">
 <li id="li-38">cf: <a id="a-9" href="https://github.com/microsoft/TRELLIS/blob/eeacb0bf6a7d25058232d746bef4e5e880b130ff/trellis/utils/postprocessing_utils.py#L399">to_glb</a>, <a id="a-10" href="https://github.com/microsoft/TRELLIS/blob/eeacb0bf6a7d25058232d746bef4e5e880b130ff/trellis/utils/postprocessing_utils.py#L22">fill_holes</a></li>
 </ul>
-<img id="img-15" style="width: 100%" src="/blogs/posts/250302_3d_latent_diffusion/assets/x4-1.png" />
+<img id="img-15" style="width: 100%" src="/blogs/posts/250302_3d_latent_diffusion/assets/x4-1.png" alt="An Era of 3D Generation — 2.2. SLAT Generation, figure 4" loading="lazy" decoding="async">
 
 <p id="p-77">It demonstrates outputs of impressive quality.  On the <a id="a-11" href="https://trellis3d.github.io/">project page</a> and <a id="a-12" href="https://huggingface.co/spaces/JeffreyXiang/TRELLIS">Demo</a>, you can see results that are even better than the paper captures.</p>
 <p id="p-78">A drawback is that it doesn't yet completely follow instructions (input guidance) perfectly, and perhaps because the default branch of the decoder is GSs, the quality of the generated mesh isn't always excellent.</p>
@@ -464,16 +466,16 @@ $$</li>
 <p id="p-82">The design of Hunyuan's ShapeVAE is not very different from vanilla ShapeVAE, but there are some significant differences:</p>
 <ol id="ol-6">
 <li id="li-39"><p id="p-83"><strong id="strong-40">Point Sampling</strong>: When training ShapeVAE, point clouds are usually obtained from the ground truth mesh through uniform sampling. However, this often leads to the loss of fine details. Therefore, Hunyuan uses a point sampling strategy that focuses more on edges and corners, in addition to uniform sampling. This approach is similar to that of the recently proposed <a id="a-14" href="https://aruichen.github.io/Dora/">Dora</a>.</p>
-<p id="p-84"> <img id="img-16" style="width: 100%" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-15.png" alt="" /></p>
+<p id="p-84"> <img id="img-16" style="width: 100%" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-15.png" alt="An Era of 3D Generation — 3.1. Hunyuan-ShapeVAE" loading="lazy" decoding="async"></p>
 <p id="p-85"> Figure from Dora. Left: salient points ↔︎ Right: uniform</p>
 </li>
 <li id="li-40"><p id="p-86"><strong id="strong-41">SDF estimation</strong>: The VAE output is not a binary voxel grid but SDF values. Unlike the existing occupancy method, which requires predicting a binary grid, this allows the deep learning model to estimate continuous real SDF values, resulting in more stable outputs.</p>
 </li>
 <li id="li-41"><p id="p-87"><strong id="strong-42">Point Query</strong>: It does not use the strategy of learnably learning the basis of the latent space as a latent vector set. Instead, it uses salient/uniform sampled points, subsampled, as queries.</p>
-<img id="img-17" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-5.png" width="70%" /></li>
+<img id="img-17" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-5.png" width="70%" alt="An Era of 3D Generation — 3.1. Hunyuan-ShapeVAE, figure 2" loading="lazy" decoding="async"></li>
 </ol>
 <p id="p-88">It seems they have adopted a strategy of learning the latent space itself more precisely, rather than learning the basis of the latent space. This approach is likely possible because salient sampling sufficiently reflects the fine details of each 3D shape.</p>
-<p id="p-89"><img id="img-18" style="width: 100%" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-16.png" alt="" /></p>
+<p id="p-89"><img id="img-18" style="width: 100%" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-16.png" alt="An Era of 3D Generation — 3.1. Hunyuan-ShapeVAE, figure 3" loading="lazy" decoding="async"></p>
 <ul id="ul-16">
 <li id="li-42">Figure: Hunyuan-ShapeVAE</li>
 </ul>
@@ -493,12 +495,12 @@ $$</li>
 <tr>
 <td>
     <figure id="figure-7" >
-  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-29.png' alt='img alt' width='100%'>
+  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-29.png' alt="An Era of 3D Generation — 3.2. Hunyuan3D-DiT" width='100%' loading="lazy" decoding="async">
 </figure>
 </td>
 <td>
     <figure id="figure-8" >
-  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-30.png' alt='img alt' width='100%'>
+  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-30.png' alt="An Era of 3D Generation — 3.2. Hunyuan3D-DiT, figure 2" width='100%' loading="lazy" decoding="async">
 </figure>
 </td>
 </tr>
@@ -512,7 +514,7 @@ $$</li>
 </ul>
 
 <figure id="figure-7" >
-  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-31.png' alt='img alt' width='100%'>
+  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-31.png' alt="An Era of 3D Generation — 3.2. Hunyuan3D-DiT, figure 3" width='100%' loading="lazy" decoding="async">
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Illustration of Hunyuan3D-DiT</figcaption>
 </figure>
 
@@ -548,13 +550,13 @@ $$</p>
 </tr>
 </thead>
 <tbody><tr>
-<td><img id="img-20" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-10.png" width="300" /></td>
-<td><img id="img-21" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-11.png" width="300" /></td>
+<td><img id="img-20" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-10.png" width="300" alt="An Era of 3D Generation — 3.3. Hunyuan3D-paint" loading="lazy" decoding="async"></td>
+<td><img id="img-21" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-11.png" width="300" alt="An Era of 3D Generation — 3.3. Hunyuan3D-paint, figure 2" loading="lazy" decoding="async"></td>
 </tr>
 </tbody></table>
 
 <figure id="figure-9" >
-  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-32.png' alt='img alt' width='100%'>
+  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-32.png' alt="An Era of 3D Generation — 3.3. Hunyuan3D-paint, figure 3" width='100%' loading="lazy" decoding="async">
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Illustration of Hunyuan3D-Paint</figcaption>
 </figure>
 
@@ -583,7 +585,7 @@ $$</p>
 </ul>
 <blockquote id="blockquote-7">
 <p id="p-108">Both project onto a canonical system to provide geometry-invariant information. Using both coordinate and normal information maps both the spatial position and the relationships between positions. MetaTextureGen also uses the same guidance, reporting that the combination of point and normal is better than depth maps in terms of detail and global context.
-  <img id="img-23" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-13.png" width="70%" /></p>
+  <img id="img-23" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-13.png" width="70%" alt="An Era of 3D Generation — 3.3. Hunyuan3D-paint, figure 4" loading="lazy" decoding="async"></p>
 </blockquote>
 </li>
 </ul>
@@ -600,10 +602,10 @@ $$</p>
 </ul>
 <p id="p-114">The Multi-Task Attention mechanism is intended to mitigate the conflicts and resulting performance degradation that can arise from this multi-functionality.</p>
 <p id="p-115">A similar structural design has been demonstrated in <a id="a-17" href="https://huanngzh.github.io/MV-Adapter-Page/">MV-Adapter</a>. Both cases employ this design to achieve multi-view generation capabilities without sacrificing the performance of the original branch. In a sense, this approach is analogous to the double-stream architecture of the ShapeGen stage.</p>
-<p id="p-116"><img id="img-24" style="width: 100%" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-14.png" alt="" /></p>
+<p id="p-116"><img id="img-24" style="width: 100%" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-14.png" alt="An Era of 3D Generation — 3.3. Hunyuan3D-paint, figure 5" loading="lazy" decoding="async"></p>
 <p id="p-117">This architecture enables a diffusion model design that leverages the reference image as guidance while simultaneously ensuring multi-view consistency. In other words, it allows for the generation of natural images from various viewpoints while maintaining consistency with the reference image.</p>
 <p id="p-118">Tests have shown that this approach produces MVDiffusion outputs with quality significantly surpassing the fidelity of existing MVDiffusion methods. Furthermore, it exhibits higher multi-view consistency and fewer seams and artifacts compared to competitors that rely solely on normal or depth maps for guidance.</p>
-<img id="img-25" style="width: 100%" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-6.png" alt="" />
+<img id="img-25" style="width: 100%" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-6.png" alt="An Era of 3D Generation — 3.3. Hunyuan3D-paint, figure 6" loading="lazy" decoding="async">
 <ul id="ul-28">
 <li id="li-65">Figure from MV-Adapter. An ablation study demonstrating the effectiveness of the parallel structure.</li>
 </ul>
@@ -621,8 +623,8 @@ $$</p>
 </thead>
 <tbody>
 <tr>
-<td><img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-17.png' width=100%></td>
-<td><img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-18.png' width=100%></td>
+<td><img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-17.png' width=100% alt="An Era of 3D Generation — 3.3. Hunyuan3D-paint, figure 7" loading="lazy" decoding="async"></td>
+<td><img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-18.png' width=100% alt="An Era of 3D Generation — 3.3. Hunyuan3D-paint, figure 8" loading="lazy" decoding="async"></td>
 </tr>
 </tbody>
 </table>

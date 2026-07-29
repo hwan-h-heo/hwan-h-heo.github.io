@@ -71,6 +71,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     <li class="nav-item"><a href="/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="eng" style="font-size:0.7rem">ENG</a></li>
                 </ul>
@@ -105,7 +107,7 @@
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             <li><a href="/blogs/series/nerf-and-gs/">Radiance Fields &amp; Gaussian Splatting</a></li>
                             <li aria-current="page">2D Gaussian Splatting 톺아보기</li>
@@ -220,7 +222,7 @@
 </blockquote>
 
 <figure>
-    <img src="/blogs/posts/240602_2dgs/assets/teaser.gif" alt="teaser" width="100%">
+    <img src="/blogs/posts/240602_2dgs/assets/teaser.gif" alt="2D Gaussian Splatting 톺아보기 — Introduction" width="100%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;">
         TSDF reconstructed <strong>Mesh</strong> from 2D GS, made by hwan
     </figcaption>
@@ -242,7 +244,7 @@
 
 <h2 id="1-preliminary">1. Background </h2>
 <h3 id="1-1-3d-gaussian-splatting"> 1.1. 3D Gaussian Splatting</h3>
-<p><img src="/blogs/posts/240602_2dgs/assets/image-7.png" alt="" width="100%"></p>
+<p><img src="/blogs/posts/240602_2dgs/assets/image-7.png" alt="2D Gaussian Splatting 톺아보기 — 1.1. 3D Gaussian Splatting" width="100%" loading="lazy" decoding="async"></p>
 
 <div class="lang kor" >
     <p><a href="https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/"> 3D Gaussian Splatting</a> 이란 <em>anistropic &amp; explicit</em> 한 3D Gaussian 의 집합으로 3D Scene 을 reconstruction 하는 기술이다. </p>
@@ -322,7 +324,7 @@
             <p>
                 <strong>Multi-View Consistency 가 부족하다.</strong><br/>
                 3D GS 의 rasterization 은 각기 다른 viewpoint 에서 다양한 2D intersection surface 가 발생하는 문제가 생긴다. <em>i.e.,</em> Artifacts! 
-                <img src='/blogs/posts/240602_2dgs/assets/image-8.png' width=40%>
+                <img src='/blogs/posts/240602_2dgs/assets/image-8.png' width=40% alt="2D Gaussian Splatting 톺아보기 — 1.2. Surface Reconstruction Problem in 3D GS" loading="lazy" decoding="async">
             </p>
         </li>
         <li>
@@ -386,7 +388,7 @@
 
 <h2 id="2-2d-gaussian-splatting">2. 2D Gaussian Splatting</h2>
 <h3 id="2-1-2d-gaussian-modeling-gaussian-surfels-"> 2.1. 2D Gaussian Modeling (Gaussian Surfels)</h3>
-<p><img src ='/blogs/posts/240602_2dgs/assets/image-6.png' width=100%></p>
+<p><img src ='/blogs/posts/240602_2dgs/assets/image-6.png' width=100% alt="2D Gaussian Splatting 톺아보기 — 2.1. 2D Gaussian Modeling (Gaussian Surfels)" loading="lazy" decoding="async"></p>
 
 <div class="lang kor" >
     <p>
@@ -453,7 +455,7 @@
 </code></pre>
 </div>
 
-<p><img src="/blogs/posts/240602_2dgs/assets/image-5.png" alt="" width="90%"></li></p>
+<p><img src="/blogs/posts/240602_2dgs/assets/image-5.png" alt="2D Gaussian Splatting 톺아보기 — 2D-to-2D Projection" width="90%" loading="lazy" decoding="async"></li></p>
 <div class="lang kor" >
     <p>
         2D GS 의 저자들은 부정확한 3D GS 의 original projection 을 사용하는 대신, 2D Gaussians projection 으로 
@@ -528,7 +530,7 @@
     </p>
 </div>
 
-<img src='/blogs/posts/240602_2dgs/assets/image-2.jpeg' width="100%">
+<img src='/blogs/posts/240602_2dgs/assets/image-2.jpeg' width="100%" alt="2D Gaussian Splatting 톺아보기 — Ray-Splat Intersection w/ Homography" loading="lazy" decoding="async">
 
 <h3 id="2-3-training-2d-gs"> 2.3. Training 2D GS </h3>
 <p class="lang kor" >
@@ -660,7 +662,7 @@
 </p>
 
 <figure>
-    <img src="/blogs/posts/240602_2dgs/assets/image-3.png" alt="alt description" width="100%">
+    <img src="/blogs/posts/240602_2dgs/assets/image-3.png" alt="2D Gaussian Splatting 톺아보기 — Normal Consistency Regularization" width="100%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure:</strong> Normal vs Depth2Normal, captured in my custom viewer </figcaption>
 </figure>
 
@@ -671,7 +673,7 @@
     이 연구의 진가는 정성평가와 이 알고리즘을 실제로 테스트 해봤을 때 드러난다. 
 </p>
 
-<p><img src="/blogs/posts/240602_2dgs/assets/image.png" alt="" width="100%"></p>
+<p><img src="/blogs/posts/240602_2dgs/assets/image.png" alt="2D Gaussian Splatting 톺아보기 — 3.1. Qualitative Results" width="100%" loading="lazy" decoding="async"></p>
 
 <div class="lang kor" >
     <p>
@@ -685,10 +687,10 @@
 
 <ul>
     <li><p><strong>2D GS: guitar (mesh) </strong>
-    <img src="/blogs/posts/240602_2dgs/assets/image.gif" alt="" width="100%"></p>
+    <img src="/blogs/posts/240602_2dgs/assets/image.gif" alt="2D Gaussian Splatting 톺아보기 — 3.1. Qualitative Results, figure 2" width="100%" loading="lazy" decoding="async"></p>
     </li>
     <li><p><strong>2D GS: penguin (mesh) </strong>
-    <img src="/blogs/posts/240602_2dgs/assets/image-4.gif" alt="" width="100%"></p>
+    <img src="/blogs/posts/240602_2dgs/assets/image-4.gif" alt="2D Gaussian Splatting 톺아보기 — 3.1. Qualitative Results, figure 3" width="100%" loading="lazy" decoding="async"></p>
     </li>
 </ul>
 <div class="lang kor" >
@@ -751,7 +753,7 @@
     <li><p>Rendering camera path 를 생성하고 preview 를 제공한다 </p>
     </li>
     <li><p>Official repo 에서 언급되었다~ :)
-    <img src="/blogs/posts/240602_2dgs/assets/image.png" alt="" width="100%"></p>
+    <img src="/blogs/posts/240602_2dgs/assets/image.png" alt="2D Gaussian Splatting 톺아보기 — ⭐ Github Project Link" width="100%" loading="lazy" decoding="async"></p>
     </li>
 </ul>
 <p class="lang kor" >

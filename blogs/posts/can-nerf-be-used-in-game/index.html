@@ -68,6 +68,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     
                 </ul>
@@ -102,7 +104,7 @@
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             <li><a href="/blogs/series/nerf-and-gs/">Radiance Fields &amp; Gaussian Splatting</a></li>
                             <li aria-current="page">Can NeRF be used in Game?</li>
@@ -271,7 +273,7 @@
 <p>In other words, NeRF models cannot separate the reflections of the captured light from the object itself. This is a critical flaw, especially considering that Physics-Based Rendering (PBR), essential for creating realistic games, relies on realistic lighting effects.</p>
 <p>Even in Phong shading, one of the simplest forms of light shading, the reflection effects are handled by three components:</p>
 <figure>
-    <img src="/blogs/posts/231130_nerf_in_game/assets/IMG_2_Phong_reflection_model.jpg" alt="Gaussian RT" width="100%"> 
+    <img src="/blogs/posts/231130_nerf_in_game/assets/IMG_2_Phong_reflection_model.jpg" alt="Gaussian RT" width="100%" loading="lazy" decoding="async"> 
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 3.</strong> Phong reflection model, source: <span style="text-decoration: underline;"><a href="https://learnopengl.com/Lighting/Basic-Lighting">OpenGL</a></span> </figcaption>
 </figure>
 <ul>
@@ -285,13 +287,13 @@
 <p>So, how can we separate lighting effects in NeRF models? There are several methods, but one simple approach involves modifying the model architecture to output specular and diffuse components separately. </p>
 <p>Unlike the standard NeRF network structure, which takes coordinates $x$ (spatial location) and $d$ (direction) as inputs and outputs an RGB color $c$, a modified NeRF model outputs both specular color $c_s$ and diffuse color $c_d$.</p>
 <figure>
-    <img src="/blogs/posts/231130_nerf_in_game/assets/IMG_3_diffuse_specular_disentanglement_model.jpg" alt="Gaussian RT" width="100%"> 
+    <img src="/blogs/posts/231130_nerf_in_game/assets/IMG_3_diffuse_specular_disentanglement_model.jpg" alt="Gaussian RT" width="100%" loading="lazy" decoding="async"> 
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 4.</strong> NeRF MLP w/ Diffuse-Specular Disentanglement </figcaption>
 </figure>
 <p>In this structure, the Spatial MLP not only outputs the diffuse color $c_d$ but also the normal vector $n$ at that location. This normal vector is used to represent the reflected light more accurately through a technique called &#39;reflection reparameterization.&#39; Consequently, the reflected light parameter $w_r$ is input into the Directional MLP, which then outputs the specular color $c_s$.</p>
 <p>Understanding the reflection reparameterization formula might not be straightforward initially, but consider the following scenario to understand why we can represent reflected light $w_r$ through the normal vector and the observation direction.</p>
 <figure>
-    <img src="/blogs/posts/231130_nerf_in_game/assets/IMG_4_reflection_reparameterization.jpg" alt="Gaussian RT" width="100%"> 
+    <img src="/blogs/posts/231130_nerf_in_game/assets/IMG_4_reflection_reparameterization.jpg" alt="Gaussian RT" width="100%" loading="lazy" decoding="async"> 
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 5.</strong> Illustration of reflection parameterization </figcaption>
 </figure>
 <p>As illustrated above, the reflected light $w_r$ at a point on an object has the following relationship with the observer&#39;s direction $d$ and normal $n$:</p>
@@ -345,7 +347,7 @@ $$
 <p>The video above demonstrates the use of NeRF-restored objects alongside other 3D objects in graphics software. In the video, the table is an object restored through NeRF, while the dinosaur and butterfly are predefined presets.</p>
 <p>Additionally, NeRF and neural rendering technologies can be used not only for restoring and utilizing individual objects but also for reconstructing large real-world spaces to serve as maps in games.</p>
 <figure>
-    <img src="/blogs/posts/231130_nerf_in_game/assets/IMG_5_360_camera_capture.jpg" alt="Gaussian RT" width="100%"> 
+    <img src="/blogs/posts/231130_nerf_in_game/assets/IMG_5_360_camera_capture.jpg" alt="Gaussian RT" width="100%" loading="lazy" decoding="async"> 
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 6.</strong> 360 Camera Capture </figcaption>
 </figure>
 <div class="video-container">

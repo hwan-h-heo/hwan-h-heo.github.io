@@ -71,6 +71,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     <li class="nav-item"><a href="/blogs/posts/an-era-of-3d-generation/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="eng" style="font-size:0.7rem">ENG</a></li>
                 </ul>
@@ -105,7 +107,7 @@
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             <li><a href="/blogs/series/3d-generation/">3D 생성 AI</a></li>
                             <li aria-current="page">3D 생성 모델의 시대</li>
@@ -238,8 +240,8 @@
 </tr>
 </thead>
 <tbody><tr>
-<td><img id="img-1" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-8.png" /></td>
-<td><img id="img-2" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-2.png" /></td>
+<td><img id="img-1" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-8.png" alt="3D 생성 모델의 시대 — Preliminary: What is Latent?" loading="lazy" decoding="async"></td>
+<td><img id="img-2" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-2.png" alt="3D 생성 모델의 시대 — Preliminary: What is Latent?, figure 2" loading="lazy" decoding="async"></td>
 </tr>
 </tbody></table>
 
@@ -256,7 +258,7 @@ f(x) \approx \sum_{i=1}^{N} w_i \phi(||x - c_i||)
 $$</p>
 <pre><code>Equation: Radial Basis Function (RBF)
 </code></pre>
-<img id="img-3" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-4.png" />
+<img id="img-3" src="/blogs/posts/250302_3d_latent_diffusion/assets/image-4.png" alt="3D 생성 모델의 시대 — Preliminary: What is Latent?, figure 3" loading="lazy" decoding="async">
 
 <p>비슷한 관점으로 3D Gaussian Splatting 도 해석해볼 수 있는데, </p>
 <ul>
@@ -288,7 +290,7 @@ $$</p>
 <li><a href="https://craftsman3d.github.io/">Craftsman</a></li>
 </ul>
 <p>모두 비슷한 형태의 pipeline design 을 갖는다. 사실 특별할 것도 없는 AutoEncoder 구조이며, 다음과 같은 특징이 있다. </p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-24.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-24.png" alt="3D 생성 모델의 시대 — 1. ShapeVAE" loading="lazy" decoding="async"></p>
 <ul>
 <li>Figure: ShapeVAE pipeline (from CraftsMan)</li>
 </ul>
@@ -300,7 +302,7 @@ $$</p>
 <li><strong>Output</strong>: 3D shape, typically occupancy fields (binary voxel grid)</li>
 </ol>
 <p>여기서 learnable query 는 data distribution (3D shape) 에 대해서 semantically meaningfull, compressed 된 공간에서의 (latent space) 일종의 basis 로써, 즉 preliminaries 에서 살펴본 kernel basis 과 같은 역할을 한다. 아래 그림에서 서로 다른 basis 가 data point $x$ 에 대해 embedding 을 어떻게 적용하는지 볼 수 있다. </p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-17587cd471b3.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-17587cd471b3.png" alt="3D 생성 모델의 시대 — 1. ShapeVAE, figure 2" loading="lazy" decoding="async"></p>
 <p>ShapeVAE 에서는 위 그림에서의 (e) 처럼, query point $(x)$ 에 대해 learnable query (latent space 의 basis) 의 similarity 를 반영한 후, </p>
 <p>$$ \sum_{i=1}^{M} \mathbf{v}(\mathbf{f}_i) \cdot \frac{1}{Z(\mathbf{x}, \{\mathbf{f}_i\}_{i=1}^{M})} e^{\mathbf{q}(\mathbf{x})^{\mathsf{T}} \mathbf{k}(\mathbf{f}_i) / \sqrt{d}}
 $$</p>
@@ -315,14 +317,14 @@ $$</p>
 <p>$$ \text{Enc}_{\text{learnable}}(\mathbf{X}) = \text{CrossAttn}(\mathbf{L}, \text{PosEmb}(\mathbf{X})) \in \mathbb{R}^{C \times M}
 $$</p>
 <p>정리하자면 ShapeVAE AutoEncoder 는 basis (latent query, <strong>L</strong>) 를 이용해서, 각 data instance (<strong>X</strong>) 에 대해 basis 와 data 간의 관계를 encoding ↔︎ decoding 하는 구조를 학습한다. Shape 에 대한 representation 을 가장 잘 표현하는 <em><strong>latent space</strong></em> 와, 그 latent space 에 대한 정보를 가장 잘 담고 있는 <em><strong>basis (learnable query)</strong></em> 를 배우게 되는 것. </p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-26.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-26.png" alt="3D 생성 모델의 시대 — 1. ShapeVAE, figure 3" loading="lazy" decoding="async"></p>
 <ul>
 <li>Figure: ShapeVAE pipeline (from 3DShape2vecset)</li>
 </ul>
 <p>Pipeline 에서 각 요소는 다음과 같은 세부사항을 갖는다. </p>
 <ul>
 <li><p><strong>Positional Encoding</strong>: fourier featuring 으로 NeRF / Transformer 에서 쓰이는 sinusodal encoding 의 그것. PE 는 Cartessian Coordinates 를 high-dimensional, frequency domain 으로 mapping 시켜줄 뿐만 아니라 kernel regression 을 학습할 때 coordinates 간의 stationary 성질을 더해준다. </p>
-<img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-12.png' width=70% >
+<img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-12.png' width=70%  alt="3D 생성 모델의 시대 — 1. ShapeVAE, figure 4" loading="lazy" decoding="async">
 </li>
 <li><p><strong>KL reg term</strong>: Encoder가 생성하는 latent distribution 이 prior distribution (일반적으로 standard Gaussian distribution, $N(0, 1)$) 에 가깝도록 유도한다. 이는 다음과 같은 장점들이 있다.</p>
 <ul>
@@ -363,12 +365,12 @@ sparse 한 특징을 가지고, 3D shape 자체는 ‘2D image’ 의 texture, s
 <p>ShapeVAE 의 성능은 이 중에서도 <em>1) 데이터의 양과 다양성 문제와</em> 그 성능이 직결되었다. 초기 ShapeVAE 는 3D 생성 보다는 surface recosntruction 분야를 generative 하게 접근하는 쪽에 더 가까웠기 때문에 ShapeNet 등 제한적인 데이터셋에서만 학습되었으며, 데이터의 양을 늘려 학습한 경우에도 input image 나 text 를 충실하게 재현하지 못하는 성능을 보였다. </p>
 <p>또 한가지 ShapeVAE 의 문제점은 feature aggregation 을 <em>‘spatial location 에만 dependent 하게 추출&#39;</em> 한다는 점이다. 기본적으로 ShapeVAE 에서 point feature 는 ‘Positional Encoding’ 으로 들어가는데, Positional Encoding 만으로는 공간 상의 local structure (curvature, surface normal) 나 global shape context (connection relation between vertices &amp; faces) 와 같은 중요한 3D 정보를 충분히 포착하기 어렵다. </p>
 <p>이러한 ShapeVAE 를 Geometry Generation 단계에서 적극 활용해 Model / Data capacity 를 크게 늘리고 shape generation 과 texture generation 을 분리한 2-stage pipeline 을 처음 제시한게 바로 <strong>CLAY-Rodin</strong> 이다. </p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-27.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-27.png" alt="3D 생성 모델의 시대 — Challenges for ShapeVAE" loading="lazy" decoding="async"></p>
 <ul>
 <li>Figure: Rodin (paper: <a href="https://sites.google.com/view/clay-3dlm">CLAY</a>)</li>
 </ul>
 <p>Rodin 은 large DiT model (1.5B) 를 이용해 ShapeVAE 와 그 latent space 에서의 shape generation 성능을 크게 올리고, 생성된 shape (mesh) 위에 <em>geometry-guided multi-view generation</em> 을 이용한 texture synthesis 의 2-stage 를 사용하여 그전까지의 3D 생성 퀄리티를 압도하는 결과를 보여주었다. </p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-7.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-7.png" alt="3D 생성 모델의 시대 — Challenges for ShapeVAE, figure 2" loading="lazy" decoding="async"></p>
 <ul>
 <li>Clay 와 유사한 pipeline 을 가진 <a href="https://ncsoft.github.io/CaPa/">CaPa</a>. 3D LDM 으로 mesh 를 생성한 이후 high-quality texture 를 만들어 backprojecting 한다.</li>
 </ul>
@@ -389,7 +391,7 @@ $$</p>
 <p>여기서 $p_i$ 는 voxel index, $(z_i)$ 는 latent vector 이다. 즉 voxel grid 마다 latent vector 가 하나씩 할당되어 있는 구조이고, latent vector set 이 그 자체로 <em><strong>structured (voxelized)</strong></em> 되어 있기 때문에 <em><strong>SLAT</strong></em> 이라고 명명한 듯 하다. </p>
 <p>3D data의 sparsity 으로 인해, activated grid 의 개수는 3D grid 의 총 사이즈보다 매우 작고 $(L &lt;&lt; N^3)$, 이는 상대적으로 높은 해상도로 생성될 수 있음을 의미한다. Instant-NGP 등 voxel-grid NeRF 와도 비슷한 접근인데, ShapeVAE 를 이용해 featured grid 를 예측하는 설계인 셈. </p>
 <p>정의 자체는 ShapeVAE 에서 사용하는 learnable query 를 voxel grid 에 mapping 한 것에 불과할 수 있으나, SLAT 의 핵심은 이 SLAT encoding 을 배우는 과정에서 <strong>DINOv2</strong> feature extractor 를 적극 이용한다는 것이다. </p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-9.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-9.png" alt="3D 생성 모델의 시대 — 2.1. Structured Latent Representation" loading="lazy" decoding="async"></p>
 <p>위 그림과 같이, SLAT 은 VAE 를 학습하는 과정에서 3D assets 에 대한 encoding 을 </p>
 <ol>
 <li><p>Multi-View Rendering </p>
@@ -401,7 +403,7 @@ $$</p>
 </ol>
 <p>하여 계산한다. </p>
 <p>이는 Trellis 가 <em><strong>end2end 3D generation</strong></em> 을 표방하기 때문에 채택한 방법으로 보이는데, 단순 PE 만으로는 표현하기 힘든 color, texture 등 3D Assets 에 대한 정보를 <em><strong>pre-trained DINOv2 를 이용해 versatile 한 feature 를 얻은 것</strong></em> 이라고 생각한다. </p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-ac37e0360a18.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-ac37e0360a18.png" alt="3D 생성 모델의 시대 — 2.1. Structured Latent Representation, figure 2" loading="lazy" decoding="async"></p>
 <ul>
 <li>figure: SLAT representation learning</li>
 </ul>
@@ -411,7 +413,7 @@ $$</p>
 <p>Q. 그럼 3D Generation 자체도, ShapeVAE 에서처럼 latent space 에서 Standard Gaussian Distribution 의 random sample 을 넣으면 새로운 asset 이 생성되는가? </p>
 </blockquote>
 <p>아쉽게도 그렇지 않은데, 우선 SLAT 은 <em><strong>‘structure’ (position index)</strong></em> 자체도 의미가 있기 때문에 structure, 즉 어떤 voxel 이 비었는지, 비지 않았는지부터 생성할 필요가 있다. </p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-28.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-28.png" alt="3D 생성 모델의 시대 — 2.2. SLAT Generation" loading="lazy" decoding="async"></p>
 <p>이를 위해 Trellis 는 3D Generation 에서 2-stage 의 접근을 사용한다.</p>
 <ol>
 <li><p>Conditional Flow Matching 을 통해 Sparse Structure 생성: rectified flow model 을 이용. (model 1)</p>
@@ -428,10 +430,10 @@ $$
 <p>구체적으로는 GT dense binary grid $\mathbf{O} \in \{0, 1\}^{N \times N \times N}$ 를 3D convolution 을 이용해 low-resolution feature grid $\mathbf{S} \in \mathbb{R}^{D \times D \times D \times C_s}$ 으로 압축하여, 이를 예측하는 Flow Transformer 를 먼저 학습한다. $\mathbf{O}$ 가 coarse 한 형상이기 때문에 3D conv 를 이용한 압축 과정에서 손실이 거의 없고, NN 학습의 효율성을 향상시키는 장점도 있다. 또한, $\mathbf{O}$ 의 binary grid 를 continuous value 로 변환하여 Rectified Flow 학습에 적합하게 만든다.</p>
 <blockquote>
 <p><em><strong>Rectified flow</strong></em> 모델은 diffusion process 에서 data → noise 로 경로를 linear interpolation (input → output) 의 직선 경로를 forward process 로 사용하는 모델이다. 일반적인 Neural ODE solver 의 step 이 비효율적인데 비해 Rectified Flow 는 data → noise 의 linear 한 vector field 를 modeling 하기 때문에 훨씬 빠르고 정확하게 생성이 가능하다. 
-<img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-3.png" alt=""></p>
+<img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-3.png" alt="3D 생성 모델의 시대 — 2.2. SLAT Generation, figure 2" loading="lazy" decoding="async"></p>
 </blockquote>
 <p>이 과정에서 condition modeling 은 다른 Diffusion model 과 비슷하게 cross-attention 의 KV 에 inject 한다. 즉 Sparse Strucrue Gen 은 일종의 <em><strong>Image/Text-to-3D Coarse Shape Generation</strong></em> 으로 작동한다.</p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-37165534383d.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-37165534383d.png" alt="3D 생성 모델의 시대 — 2.2. SLAT Generation, figure 3" loading="lazy" decoding="async"></p>
 <p>이후 생성된 Sparse Structure 를 이용하여 SLAT 을 생성하는 model 2 를, 마찬가지로 Rectified Flow 를 이용하여 학습했다고 한다. 최종적으로 생성된 SLAT 에 ShapeVAE 의 decoder 를 사용하여 GSs / Mesh output 을 생성할 수 있다. </p>
 <p>Mesh Decoder 가 있기 때문에 Mesh Output 은 Mesh Decoder Branch 의 output 을 바로 사용하나 싶었지만, 실제로는 그렇지 않다는 것을 유의하자. 최종 3D asset output 은 GS 생성 결과물은 <em>RGB representation</em> 으로, Mesh 생성 결과물은 <em>geometry</em> 로 이용하여 mesh 의 texture 를 GS rendering 에 fitting 하도록 되어 있다. 이는 Mesh branch 의 생성 fidelity 가 상대적으로 떨어지고, mesh geometry 자체도 post-processing 이전엔 artifacts 가 은근히 보이는 편이기 때문에 채택한 듯 하다. </p>
 <p>구체적으로는,</p>
@@ -447,7 +449,7 @@ $$
 <ul>
 <li>cf: <a href="https://github.com/microsoft/TRELLIS/blob/eeacb0bf6a7d25058232d746bef4e5e880b130ff/trellis/utils/postprocessing_utils.py#L399">to_glb</a>, <a href="https://github.com/microsoft/TRELLIS/blob/eeacb0bf6a7d25058232d746bef4e5e880b130ff/trellis/utils/postprocessing_utils.py#L22">fill_holes</a></li>
 </ul>
-<img src='/blogs/posts/250302_3d_latent_diffusion/assets/x4-1.png'>
+<img src='/blogs/posts/250302_3d_latent_diffusion/assets/x4-1.png' alt="3D 생성 모델의 시대 — 2.2. SLAT Generation, figure 4" loading="lazy" decoding="async">
 
 <p>굉장한 퀄리티의 output 을 보여주는데, <a href="https://huggingface.co/spaces/JeffreyXiang/TRELLIS">Demo</a> 에서 모델을 돌려볼 수 있다. </p>
 <p>단점이라면 아직은 instruction (input guidance) 를 완전히 잘 따라가지는 못하고, 상기한대로 Mesh branch 의 output quality 가 떨어지기 때문에 GSs rendering 을 post-processed Mesh 에 baking 하는 복잡한 작업이 필요하다. 또한 이 texture baking 자체는 multi-view rendering 을 기반으로 하기 때문에, occlusion 에서 완벽하게 자유롭지는 못하다. </p>
@@ -461,16 +463,16 @@ $$
 <p>Hunyuan 의 ShapeVAE 설계도 vanilla ShapeVAE 와 많이 다르진 않지만, 몇 가지 주효한 차이점이 있다. </p>
 <ol>
 <li><p><strong>Point Sampling</strong>: ShapeVAE 학습할 시 대게는 GT mesh 로부터 point cloud 는 uniform sampling 을 통해 얻는다. 하지만 이렇게 되면 fine detail 을 잃는 경우가 다수이기 때문에, Hunyuan 은 uniform sampling 에 더불어 Edge / Corner 쪽에 더 집중된 point sampling 전략을 사용한다. 이는 최근 제시된 <a href="https://aruichen.github.io/Dora/">Dora</a> 와도 비슷한 접근법이다.
-<img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-15.png" alt=""></p>
+<img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-15.png" alt="3D 생성 모델의 시대 — 3.1. Hunyuan-ShapeVAE" loading="lazy" decoding="async"></p>
 <p> Figure from Dora. Left: salient points ↔︎  Right: uniform</p>
 </li>
 <li><p><strong>SDF estimation</strong>: VAE output 이 binary voxel grid 가 아니라 SDF value 이다. Binary grid 를 예측해야하는 기존 occupancy 방식과 다르게 이렇게 되면 continuous real value 인 SDF 값을 estimation 하므로 Deeplearning 이 더 안정적인 결과물을 estimation 할 수 있다.</p>
 </li>
 <li><p><strong>Point Query</strong>: Latent space 의 basis 를 latent vector set 으로 learnable 하게 배우는 전략을 사용하지 않는다. 대신에 앞서 설명한 salient/uniform sampled point 를 subsampling 하여 query 로 활용하게 된다. </p>
-<img src='/blogs/posts/250302_3d_latent_diffusion/assets/remote-c7879db1edc6.png' width=70%></li>
+<img src='/blogs/posts/250302_3d_latent_diffusion/assets/remote-c7879db1edc6.png' width=70% alt="3D 생성 모델의 시대 — 3.1. Hunyuan-ShapeVAE, figure 2" loading="lazy" decoding="async"></li>
 </ol>
 <p>latent space 의 basis 는 배우지 않고 latent space 자체를 더 정밀하게 배우는 전략을 채택한 것인데, salinet sampling 이 각 3D shape 의 fine detail 을 충분히 반영하기 때문에 해당 접근법을 채택한 것 같다. </p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-16.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-16.png" alt="3D 생성 모델의 시대 — 3.1. Hunyuan-ShapeVAE, figure 3" loading="lazy" decoding="async"></p>
 <ul>
 <li>Figure: Hunyuan-ShapeVAE</li>
 </ul>
@@ -485,8 +487,8 @@ $$
 </tr>
 </thead>
 <tbody><tr>
-<td><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-29.png" alt=""></td>
-<td><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-30.png" alt=""></td>
+<td><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-29.png" alt="3D 생성 모델의 시대 — 3.2. Hunyuan3D-DiT" loading="lazy" decoding="async"></td>
+<td><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-30.png" alt="3D 생성 모델의 시대 — 3.2. Hunyuan3D-DiT, figure 2" loading="lazy" decoding="async"></td>
 </tr>
 </tbody></table>
 <ul>
@@ -495,7 +497,7 @@ $$
 <li><p><strong>my opinion)</strong> Double stream 의 구조를 보면 <em><strong>ControlNet</strong></em> 의 reference net 방식과 유사한데, 아마 ControlNet 방식이 original modal 의 generation capability 를 해치지 않으면서 condition 을 잘 반영하는데서 착안한 구조가 아닐까 싶다.</p>
 </li>
 </ul>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-31.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-31.png" alt="3D 생성 모델의 시대 — 3.2. Hunyuan3D-DiT, figure 3" loading="lazy" decoding="async"></p>
 <ul>
 <li>Figure: Hunyuand3D-DiT</li>
 </ul>
@@ -531,11 +533,11 @@ $$</p>
 </tr>
 </thead>
 <tbody><tr>
-<td><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-10.png" width="300"></td>
-<td><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-2350cd172ffa.png" width="300"></td>
+<td><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-10.png" width="300" alt="3D 생성 모델의 시대 — 3.3. Hunyuan3D-paint" loading="lazy" decoding="async"></td>
+<td><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-2350cd172ffa.png" width="300" alt="3D 생성 모델의 시대 — 3.3. Hunyuan3D-paint, figure 2" loading="lazy" decoding="async"></td>
 </tr>
 </tbody></table>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-32.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-32.png" alt="3D 생성 모델의 시대 — 3.3. Hunyuan3D-paint, figure 3" loading="lazy" decoding="async"></p>
 <ul>
 <li>Architecture Design of Hunyuan3D-Paint</li>
 </ul>
@@ -563,7 +565,7 @@ $$</p>
 </ul>
 <blockquote>
 <p>둘 모두 canonical system 에 projection 하여 geometry-invariant 하게 정보를 주입한다. coordinate 와 normal 정보를 모두 사용하여 공간 상의 위치와 위치간의 관계를 모두 mapping 해주는 것. <a href="https://ai.meta.com/research/publications/meta-3d-texturegen-fast-and-consistent-texture-generation-for-3d-objects/">MetaTextureGen</a> 도 동일한 guide 를 사용하는데, detail / global 측면에서 point + normal 조합이 depth map 에 비해 좋다고 report 하고 있다. 
-<img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-13.png' width=70%></p>
+<img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-13.png' width=70% alt="3D 생성 모델의 시대 — 3.3. Hunyuan3D-paint, figure 4" loading="lazy" decoding="async"></p>
 </blockquote>
 </li>
 </ul>
@@ -580,9 +582,9 @@ $$ </p>
 </ul>
 <p>의 다른 역할을 수행하고, 여기서 야기되는 multi-functionality 때문에 발생하는 conflict → 성능 저하를 막고자 함이다. </p>
 <p>동일한 구조의 설계를 <a href="https://huanngzh.github.io/MV-Adapter-Page/">MV-Adapter</a> 에서도 보여준 바 있다. 둘 모두 original branch 의 성능을 잃지 않으면서 Multi-View Generation Capability 를 얻으려고 동일한 구조를 설계했음을 알 수 있다. 어찌 보면 ShapeGen-stage 의 double stream 과도 일맥상통하는 설계이다. </p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-adde6771d60d.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/remote-adde6771d60d.png" alt="3D 생성 모델의 시대 — 3.3. Hunyuan3D-paint, figure 5" loading="lazy" decoding="async"></p>
 <p>이를 이용해 reference image 를 guidance 로 활용하면서, 동시에 multi-view consistency 를 보장하는 diffusion model 설계. 즉, reference image 와 일관성을 유지하면서, 다양한 시점에서도 자연스러운 이미지를 생성할 수 있다. </p>
-<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-6.png" alt=""></p>
+<p><img src="/blogs/posts/250302_3d_latent_diffusion/assets/image-6.png" alt="3D 생성 모델의 시대 — 3.3. Hunyuan3D-paint, figure 6" loading="lazy" decoding="async"></p>
 <ul>
 <li>Figure from MV-Adapter. Parallel 구조의 유용성을 보여주는 ablation study. 우측의 parallel attention 이 reference image 의 특징을 훨씬 잘 반영하는 것을 볼 수 있다.</li>
 </ul>
@@ -594,10 +596,10 @@ $$ </p>
 </tr>
 </thead>
 <tbody><tr>
-<td><strong>Hunyuan</strong>  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-17.png'></td>
+<td><strong>Hunyuan</strong>  <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-17.png' alt="3D 생성 모델의 시대 — 3.3. Hunyuan3D-paint, figure 7" loading="lazy" decoding="async"></td>
 </tr>
 <tr>
-<td><strong>ImageDream</strong> <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-18.png'></td>
+<td><strong>ImageDream</strong> <img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-18.png' alt="3D 생성 모델의 시대 — 3.3. Hunyuan3D-paint, figure 8" loading="lazy" decoding="async"></td>
 </tr>
 </tbody></table>
 <hr>
@@ -623,7 +625,7 @@ $$ </p>
 
 <p>Velog 엔 직접적으로 3D model viewer 를 포팅할 방법이 없어 부득이하게 rendering 결과로 대체한다. </p>
 <p>생성의 input image 로는 하기 이미지를 사용했다. 
-<img src='/blogs/posts/250302_3d_latent_diffusion/assets/remote-705a50a95dbb.png' width=50%></p>
+<img src='/blogs/posts/250302_3d_latent_diffusion/assets/remote-705a50a95dbb.png' width=50% alt="3D 생성 모델의 시대 — 4. Trellis vs Hunyuan3D" loading="lazy" decoding="async"></p>
 <p>Mesh Quality 의 경우 Trellis 보다 Hunyuan3D 의 topology 가 훨씬 좋다. 또한 블로그에 싣진 않았지만 Trellis 의 경우 종종 input image guidance 와 상이한 결과를 예측하는 경우도 있는데 Hunyuan 은 충실히 instruction follow 하는 모습을 보여주었다. </p>
 <p>반면 Texture Quality 는 둘 모두 아직 그렇게 높지는 않다. Hunyuan 은 geometry-guided 로 6 view Multi View 를 생성하여 backprojecting 하는 식으로 texture 를 baking 하는데 이 때문에 occlusion 이 좀 있는 편이고, Trellis 는 상대적으로 Hunyuan 보단 occlusion 이 덜하지만 fidelity 가 더 안 좋은 모습이다. 또한 Hunyuan 의 경우 <em>완벽하게</em> geometry guide 와 align 되지는 않아서, 일부 seam 이나 artifacts 들이 trellis 보다 눈에 띄는 경우가 있었다. </p>
 <p>서로 end2end &lt;-&gt; 2-stage pipeline 이기 때문에 나타나는 장단점이 명확한 것 같다. 각자의 부분에서 quality 를 높여가면서 3D Latent Diffusion 후속 연구들이 등장할 것이라 예상되는 부분. </p>

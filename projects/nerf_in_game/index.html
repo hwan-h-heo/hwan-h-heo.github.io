@@ -18,6 +18,7 @@
   <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet">
 
+  <script src="../../js/sidebar-controller.js"></script>
   <link href="../../assets/css/portfolio.css" rel="stylesheet">
   <script src="../../js/mathjax-config.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -528,6 +529,7 @@
       }
     }
   </style>
+  <link href="../../css/sidebar-nav.css" rel="stylesheet">
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
   <script>
@@ -544,14 +546,12 @@
   </div>
 
   <header id="header" class="header dark-background d-flex flex-column">
-    <i class="header-toggle d-xl-none bi bi-list"></i>
-
     <div class="profile-img">
-      <img src="../../assets/icon.webp" alt="Hwan Heo icon" class="img-fluid rounded-circle">
+      <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="img-fluid rounded-circle">
     </div>
 
     <a href="../../" class="logo d-flex align-items-center justify-content-center">
-      <h1 class="sitename">Hwan Heo</h1>
+      <span class="sitename">Hwan Heo</span>
     </a>
 
     <div class="social-links text-center">
@@ -649,7 +649,7 @@
 <p>To capture large scenes efficiently, I used 360-degree video as the ground-truth source for novel-view synthesis.
 A consumer 360 camera has two fisheye lenses positioned back to back, capturing a full spherical view with fewer camera positions than a conventional narrow-FOV setup.</p>
 <figure>
-  <img src="assets/1_360_park_sample.jpg" alt="A frame captured with the 360-camera setup" class="img-fluid">
+  <img src="assets/1_360_park_sample.jpg" alt="A frame captured with the 360-camera setup" class="img-fluid" loading="lazy" decoding="async">
   <figcaption>A sample frame from the large-scene 360-video capture.</figcaption>
 </figure>
 
@@ -665,19 +665,19 @@ I therefore developed a <strong>custom CUDA Gaussian rasterization module</stron
     <th>Spherical camera model</th>
   </tr>
   <tr>
-    <td><img src="assets/fisheye.jpg" alt="Fisheye camera projection" class="img-fluid"></td>
-    <td><img src="assets/spherical.jpg" alt="Spherical camera projection" class="img-fluid"></td>
+    <td><img src="assets/fisheye.jpg" alt="Fisheye camera projection" class="img-fluid" loading="lazy" decoding="async"></td>
+    <td><img src="assets/spherical.jpg" alt="Spherical camera projection" class="img-fluid" loading="lazy" decoding="async"></td>
   </tr>
   <tr>
     <th colspan="2">Gaussian Splatting reconstruction</th>
   </tr>
   <tr>
-    <td><img src="assets/3_comparison_01_final.jpg" alt="Fisheye-supervised reconstruction result one" class="img-fluid"></td>
-    <td><img src="assets/3_comparison_01_first.jpg" alt="Spherical reconstruction result one" class="img-fluid"></td>
+    <td><img src="assets/3_comparison_01_final.jpg" alt="Fisheye-supervised reconstruction result one" class="img-fluid" loading="lazy" decoding="async"></td>
+    <td><img src="assets/3_comparison_01_first.jpg" alt="Spherical reconstruction result one" class="img-fluid" loading="lazy" decoding="async"></td>
   </tr>
   <tr>
-    <td><img src="assets/3_comparison_02_final.jpg" alt="Fisheye-supervised reconstruction result two" class="img-fluid"></td>
-    <td><img src="assets/3_comparison_02_first.jpg" alt="Spherical reconstruction result two" class="img-fluid"></td>
+    <td><img src="assets/3_comparison_02_final.jpg" alt="Fisheye-supervised reconstruction result two" class="img-fluid" loading="lazy" decoding="async"></td>
+    <td><img src="assets/3_comparison_02_first.jpg" alt="Spherical reconstruction result two" class="img-fluid" loading="lazy" decoding="async"></td>
   </tr>
 </table>
 
@@ -711,8 +711,8 @@ I removed the least-contributing Gaussians, briefly refined the retained scene, 
     <th>Pruned and refined scene</th>
   </tr>
   <tr>
-    <td><img src="assets/UE_org.png" alt="Original Gaussian Splatting scene in Unreal Engine" class="img-fluid"></td>
-    <td><img src="assets/UE_pruned.png" alt="Pruned Gaussian Splatting scene in Unreal Engine" class="img-fluid"></td>
+    <td><img src="assets/UE_org.png" alt="Original Gaussian Splatting scene in Unreal Engine" class="img-fluid" loading="lazy" decoding="async"></td>
+    <td><img src="assets/UE_pruned.png" alt="Pruned Gaussian Splatting scene in Unreal Engine" class="img-fluid" loading="lazy" decoding="async"></td>
   </tr>
 </table>
 

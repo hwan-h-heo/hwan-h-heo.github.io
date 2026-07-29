@@ -70,6 +70,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     
                 </ul>
@@ -104,7 +106,7 @@
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             <li><a href="/blogs/series/nerf-and-gs/">Radiance Fields &amp; Gaussian Splatting</a></li>
                             <li aria-current="page">Instant-NGP Review &amp; Re-Implementation</li>
@@ -246,7 +248,7 @@
     Let's delve into the Instant Neural Graphics Primitive with a Multi-Resolution Hash Encoding, and re-implement this with PyTorch!
 </p>
 <figure>
-    <img src="/blogs/posts/230202_ngp/assets/ngp_nerf.gif" alt="Gaussian RT" width="100%">
+    <img src="/blogs/posts/230202_ngp/assets/ngp_nerf.gif" alt="Gaussian RT" width="100%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"> <strong>Figure 1.</strong> NGP-NeRF </figcaption>
 </figure>
 
@@ -280,7 +282,7 @@ $$</p>
 <li>Using linear interpolation to approximate points between vertices, thereby improving speed (as shown in <span style="text-decoration: underline;"><a href="https://alexyu.net/plenoxels/">Plenoxels (CVPR 2022)</a></span>).</li>
 </ol>
 <figure>
-    <img src="/blogs/posts/230202_ngp/assets/plenoxel.png" alt="Gaussian RT" width="100%">
+    <img src="/blogs/posts/230202_ngp/assets/plenoxel.png" alt="Gaussian RT" width="100%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"> <strong>Figure 2.</strong> Voxel-Based NeRF, source: Plenoxels </figcaption>
 </figure>
 <p>However, voxel-based methods have the disadvantage of requiring significantly more memory compared to NeRF, and they often involve complex training processes, including various regularization techniques.</p>
@@ -294,7 +296,7 @@ $$</p>
 </ol>
 <p>The following figure visualizes the forward process of Multi-Resolution Hash Encoding:</p>
 <figure>
-    <img src="/blogs/posts/230202_ngp/assets/ngp.png" alt="Gaussian RT" width="100%">
+    <img src="/blogs/posts/230202_ngp/assets/ngp.png" alt="Gaussian RT" width="100%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"> <strong>Figure 3.</strong> Multi-Resolution Hash Encoding </figcaption>
 </figure>
 <ul>

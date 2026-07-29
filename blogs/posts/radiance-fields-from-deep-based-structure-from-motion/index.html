@@ -66,6 +66,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     
                 </ul>
@@ -100,7 +102,7 @@
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             <li><a href="/blogs/series/nerf-and-gs/">Radiance Fields &amp; Gaussian Splatting</a></li>
                             <li aria-current="page">Radiance Fields from Deep-based Structure-from-Motion</li>
@@ -245,7 +247,7 @@
 <h2 id="intro"> 1. Introduction</h2>
 <h3 id="sfm"> What is Structure-from-Motion? </h3>
 <figure>
-    <img src="/blogs/posts/240721_sfm/assets/sfm.jpg" alt="Structure-from-Motion" width="100%">
+    <img src="/blogs/posts/240721_sfm/assets/sfm.jpg" alt="Structure-from-Motion" width="100%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 1.</strong> Structure-from-Motion, source: Privacy Preserving Structure-from-Motion</figcaption>
 </figure>
 <p>
@@ -257,7 +259,7 @@
 
 <h3 id="colmap">COLMAP: The Gold Standard in SfM</h3>
 <figure>
-    <img src="/blogs/posts/240721_sfm/assets/colmap.jpg" alt="colmap" width="100%">
+    <img src="/blogs/posts/240721_sfm/assets/colmap.jpg" alt="colmap" width="100%" loading="lazy" decoding="async">
     <br/>
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 2.</strong> COLMAP, source: <span style="text-decoration: underline;"><a href="https://colmap.github.io/">COLMAP</a></span></figcaption>
 </figure>
@@ -272,7 +274,7 @@
 </p>
 <h4>How COLMAP Works</h4>
 <br/>
-<img src="/blogs/posts/240721_sfm/assets/colmap_pipe.jpg" alt="colmap pipeline" width="100%">
+<img src="/blogs/posts/240721_sfm/assets/colmap_pipe.jpg" alt="colmap pipeline" width="100%" loading="lazy" decoding="async">
 <br/>
 <br/>
 <ol>
@@ -306,7 +308,7 @@
     which relies on a sequential, non-differentiable process, VGGSfM employs an end-to-end differentiable pipeline. 
 </p>
 <figure>
-    <img src="/blogs/posts/240721_sfm/assets/vgg.jpg" alt="vggsfm overview" width="100%">
+    <img src="/blogs/posts/240721_sfm/assets/vgg.jpg" alt="vggsfm overview" width="100%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 3.</strong> Overview of VGGSfM</figcaption>
 </figure>
 <p>
@@ -325,7 +327,7 @@
     architecture by employing a shared Vision Transformer (ViT) encoder and cross-attention decoders to capture spatial relationships and 3D geometry between image pairs. 
 </p>
 <figure>
-    <img src="/blogs/posts/240721_sfm/assets/mast3r.jpg" alt="mast3r overview" width="100%" onclick="window.open(this.src)">
+    <img src="/blogs/posts/240721_sfm/assets/mast3r.jpg" alt="mast3r overview" width="100%" onclick="window.open(this.src)" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;">
         <strong>Figure 4.</strong> Overview of MASt3R. <br/> Compared to the DUSt3R
         framework, MASt3R's contributions are highlighted in <span style="color:blue">blue</span>.
@@ -352,16 +354,16 @@
         <th>MASt3R</th>
     </tr>
     <tr>
-        <td><img class="img-fluid" src="/blogs/posts/240721_sfm/assets/NLE_vggsfm.jpg" alt="NLE vggsfm"></td>
-        <td><img class="img-fluid" src="/blogs/posts/240721_sfm/assets/NLE_mast3r.jpg" alt="NLE mast3r"></td>
+        <td><img class="img-fluid" src="/blogs/posts/240721_sfm/assets/NLE_vggsfm.jpg" alt="NLE vggsfm" loading="lazy" decoding="async"></td>
+        <td><img class="img-fluid" src="/blogs/posts/240721_sfm/assets/NLE_mast3r.jpg" alt="NLE mast3r" loading="lazy" decoding="async"></td>
     </tr>
     <tr>
-        <td><img class="img-fluid" src="/blogs/posts/240721_sfm/assets/pen_sparse_vggsfm.jpg" alt="pen vggsfm"></td>
-        <td><img class="img-fluid" src="/blogs/posts/240721_sfm/assets/pen_sparse_mast3r.jpg" alt="pen mast3r"></td>
+        <td><img class="img-fluid" src="/blogs/posts/240721_sfm/assets/pen_sparse_vggsfm.jpg" alt="pen vggsfm" loading="lazy" decoding="async"></td>
+        <td><img class="img-fluid" src="/blogs/posts/240721_sfm/assets/pen_sparse_mast3r.jpg" alt="pen mast3r" loading="lazy" decoding="async"></td>
     </tr>
     <tr>
-        <td><img class="img-fluid" src="/blogs/posts/240721_sfm/assets/guitar_vggsfm.jpg" alt="guitar vggsfm"></td>
-        <td><img class="img-fluid" src="/blogs/posts/240721_sfm/assets/guitar_mast3r.jpg" alt="guitar mast3r"></td>
+        <td><img class="img-fluid" src="/blogs/posts/240721_sfm/assets/guitar_vggsfm.jpg" alt="guitar vggsfm" loading="lazy" decoding="async"></td>
+        <td><img class="img-fluid" src="/blogs/posts/240721_sfm/assets/guitar_mast3r.jpg" alt="guitar mast3r" loading="lazy" decoding="async"></td>
     </tr>
 </table>
 

@@ -69,6 +69,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     <li class="nav-item"><a href="/blogs/posts/generalized-winding-number/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="eng" style="font-size:0.7rem">ENG</a></li>
                 </ul>
@@ -103,7 +105,7 @@
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             <li><a href="/blogs/series/graphics/">Computer Graphics</a></li>
                             <li aria-current="page">Generalized Winding Number</li>
@@ -171,7 +173,7 @@
 <p>Graphics 에서 Signed Distance Field (SDF) 를 계산하는 것은 애니메이션, 충돌 처리, 물리학적 시뮬레이션 등을 위해 필수적이다. 
 SDF 는 그 이름과 같이, &#39;부호를 가진 거리 함수&#39; 인데, <em>어떤 점으로부터 물체까지의 가장 가까운 거리</em> 에, 물체의 외부라면 positive, 내부이면 negative 의 값을 내뱉는 함수이다. </p>
 <figure id="figure-2" >
-  <img src='/blogs/posts/250809_gwn/assets/image-3.png' alt='img alt' width='70%'>
+  <img src='/blogs/posts/250809_gwn/assets/image-3.png' alt="Generalized Winding Number — Introduction" width='70%' loading="lazy" decoding="async">
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Signed Distance Field</figcaption>
 </figure>
 
@@ -181,7 +183,7 @@ SDF 는 그 이름과 같이, &#39;부호를 가진 거리 함수&#39; 인데, <
 <p>이 글에서는 SDF 를 우아하게 정의하고, broken mesh 의 hole 이나 self intersction 등의 문제를 repair 하는 능력을 갖춘 <em><strong>Generalized Winding Number</strong></em> 를 알아볼 것이다.  </p>
 <h2 id="toc-heading-2">What is Winding Number?</h2>
 <figure id="figure-1" >
-  <img src='/blogs/posts/250809_gwn/assets/image.png' alt='img alt' width='70%'>
+  <img src='/blogs/posts/250809_gwn/assets/image.png' alt="Generalized Winding Number — What is Winding Number?" width='70%' loading="lazy" decoding="async">
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Winding Number</figcaption>
 </figure>
 
@@ -215,7 +217,7 @@ $$
 \log(w) = \ln|w| + i \arg(w)
 $$
  여기서 $ \arg(w) $는 복소수 $w$의 편각 (<a href="https://en.wikipedia.org/wiki/Argument_(complex_analysis)">argument</a>), 즉 원점으로부터의 각도를 의미한다. 
- <img src="/blogs/posts/250809_gwn/assets/image-2.png" alt="image.png"></p>
+ <img src="/blogs/posts/250809_gwn/assets/image-2.png" alt="Generalized Winding Number — 왜 코시 적분으로 와인딩 넘버를 정의할 수 있을까?" loading="lazy" decoding="async"></p>
 <p> 따라서 식 $$ \oint_\gamma \frac{1}{z-a} dz $$ 는, 경로 $\gamma$ 를 따라 $ \log(z-a) $ 의 변화량을 구하는 것과 같다. 경로가 닫혀 있으므로 $ \ln|z-a| $ 부분의 시작점과 끝점의 값은 같아져 적분 값에 영향을 주지 않는다 (<a href="https://en.wikipedia.org/wiki/Cauchy%27s_integral_theorem">Cauchy’s Integral Theorem</a>). 
  결국 이 적분은 경로 $\gamma$ 를 따라 점 $a$를 기준으로 한 각도, 즉 $ \arg(z-a) $ 의 총 변화량을 나타낸다.</p>
 </li>
@@ -250,7 +252,7 @@ $$
 <h3 id="toc-heading-7">2. Winding Number in 3D: Solid Angle</h3>
 <p>Winding Number 는 3차원으로 즉시 일반화될 수 있다. 이때 2D space 에서의 <strong>각도(angle)</strong> 는 3D의 <strong>입체각 (solid angle, $\Omega$)</strong> 으로 대체된다. 
 입체각은 한 점에서 표면을 바라볼 때 그 표면이 얼마나 큰 공간을 차지하는지를 나타내는 척도이다.</p>
-<img src='/blogs/posts/250809_gwn/assets/remote-74dfc1934801.png' width=40%>
+<img src='/blogs/posts/250809_gwn/assets/remote-74dfc1934801.png' width=40% alt="Generalized Winding Number — 2. Winding Number in 3D: Solid Angle" loading="lazy" decoding="async">
 
 <p>점 $p$ 에 대한 닫힌 서피스 $S$ 의 winding number 는 $p$ 에서 $S$ 가 만드는 총 solid angle 을 구 전체의 solid angle 인 $4\pi$로 나눈 값으로 정의된다.</p>
 <p>
@@ -315,7 +317,7 @@ $$
 <h3 id="toc-heading-9">SDF from GWN</h3>
 <p>GWN의 가장 큰 장점은 <strong>Robustness</strong> 이다. 전통적인 방법들은 메시가 &quot;깔끔할 것&quot;(e.g., no holes, no Self-intersections, normal-consistent, watertight manifold) 을 요구하지만, GWN 은 이러한 가정이 깨진 <strong>Broken Mesh</strong> 에서도 의미 있는 값을 계산할 수 있다.</p>
 <figure id="figure-2" >
-  <img src='/blogs/posts/250809_gwn/assets/image-5.png' alt='img alt' width='70%'>
+  <img src='/blogs/posts/250809_gwn/assets/image-5.png' alt="Generalized Winding Number — SDF from GWN" width='70%' loading="lazy" decoding="async">
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> GWN + UDF from Polygonal Mesh </figcaption>
 </figure>
 
@@ -360,7 +362,7 @@ $$
 </li>
 </ul>
 <figure id="figure-2" >
-  <img src='/blogs/posts/250809_gwn/assets/image-4.png' alt='img alt' width='70%'>
+  <img src='/blogs/posts/250809_gwn/assets/image-4.png' alt="Generalized Winding Number — Why GWN?" width='70%' loading="lazy" decoding="async">
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Mesh Repair with GWN</figcaption>
 </figure>
     

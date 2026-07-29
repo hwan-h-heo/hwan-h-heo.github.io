@@ -71,6 +71,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     <li class="nav-item"><a href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="eng" style="font-size:0.7rem">ENG</a></li>
                 </ul>
@@ -105,7 +107,7 @@
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             <li><a href="/blogs/series/3d-generation/">3D 생성 AI</a></li>
                             <li aria-current="page">Large 3D Generative Model 구축하기 (2) VAE and DiT 분석</li>
@@ -238,7 +240,7 @@
 <h3 id="toc-heading-2">C.1. VecSet VAE</h3>
 <p>TLDR: <em>From Mesh to an Unordered Set of Tokens</em></p>
 <p>이름에서 알 수 있듯, vecset-based VAE는 3D Mesh를 벡터의 집합 (Vector Set), 즉 <strong>PointCloud</strong> 형태로 다룬다. 이 방식은 Mesh가 가진 <em>1) 가변적인 꼭짓점 (vertex) 개수</em> 문제와 <em>2) Rotation/Translation Invariancy</em> 를 자연스럽게 처리하기 위해 고안되었다.
-<img src='/blogs/posts/250710_building_large_3d_2/assets/image-13.png' width=70%></p>
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-13.png' width=70% alt="Large 3D Generative Model 구축하기 (2) VAE and DiT 분석 — C.1. VecSet VAE" loading="lazy" decoding="async"></p>
 <ul>
 <li>Figure: <a href="https://3d-models.hunyuan.tencent.com/">Hunyuan 3D 2.0&#39;s VAE</a>. Sampling 된 pointcloud 이 fourier featuring 을 거쳐 Transformer Enc/Dec 를 통해 isosurface (SDF) 를 예측하도록 하는 vecset-based VAE architecture 를 보여준다.</li>
 </ul>
@@ -333,7 +335,7 @@ def query(self, query_points: torch.Tensor, hidden_states: torch.Tensor):
 <h3 id="toc-heading-3">C.2. Sparse Voxel VAE</h3>
 <p>TLDR: <em>3D as a Spatial Grid</em></p>
 <p>반면, Sparse Voxel VAE는 3D 데이터를 2D 이미지의 확장판, 즉 **3D 공간 그리드 (Grid)**로 취급한다. Trellis 와 같은 모델에서 사용하는 이 방식은 U-Net 과 비슷한 3D Convolutional Network 구조를 차용한다.</p>
-<img src='/blogs/posts/250710_building_large_3d_2/assets/image-6.png' width=100%>
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-6.png' width=100% alt="Large 3D Generative Model 구축하기 (2) VAE and DiT 분석 — C.2. Sparse Voxel VAE" loading="lazy" decoding="async">
 
 <p>이 접근법의 핵심은 3D 형태를 <em><strong>공간적 구조가 명확한 텐서</strong></em> 로 다루는 데 있다. Sparse-voxel 기반의 VAE 모델들은 Transformer 대신 Convolution 연산을 통해 local 특징과 hierarchical 구조를 학습하게 된다.</p>
 <h4>1. Encoder</h4>
@@ -426,7 +428,7 @@ class SparseStructureDecoder(nn.Module):
 </code></pre>
 <p><code>scale_factor=2</code> 일 때, <code>x</code>의 초기 shape이 <code>[B, 8C&#39;, H, W, D]</code> 라고 생각해보자 (<code>UpsampleBlock3d</code>에서 <code>out_channels*8</code>을 한 이유가 바로 이것).</p>
 <p><code>pixel_shuffle_3d</code> kernel 은 downsampling 과 반대로 channel dim 을 줄이면서, spatial dim 을 2배씩 늘리는 연산을 수행한다.</p>
-<img src='/blogs/posts/250710_building_large_3d_2/assets/image-8.png' width=70%>
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-8.png' width=70% alt="Large 3D Generative Model 구축하기 (2) VAE and DiT 분석 — 2. Decoder: Feature Upsampling" loading="lazy" decoding="async">
 
 <p>즉, </p>
 <ul>
@@ -471,7 +473,7 @@ class SparseStructureDecoder(nn.Module):
 <p>이제 VAE가 만들어낸 두 종류의 latent space 위에서, DiT 기반 생성 모델이 어떻게 다르게 설계되는지 살펴보자. </p>
 <h3 id="toc-heading-5">D.1. Diffusion Transformer</h3>
 <p>2D 이미지 생성에서 DiT의 혁신은 Vision Transformer(ViT)의 방법론을 차용한 것에서 시작한다. ViT는 이미지를 일정한 크기의 **패치(Patch)**로 자르고, 각 패치를 하나의 **토큰(Token)**으로 간주하여 Transformer의 입력 시퀀스로 사용한다.
-<img src='/blogs/posts/250710_building_large_3d_2/assets/image-12.png' width=50%></p>
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-12.png' width=50% alt="Large 3D Generative Model 구축하기 (2) VAE and DiT 분석 — D.1. Diffusion Transformer" loading="lazy" decoding="async"></p>
 <p>원본 2D DiT 코드를 살펴보면 이 과정이 명확하게 드러나는데,</p>
 <pre><code class="language-python"># From Original DiT by Facebook Research
 class DiT(nn.Module):
@@ -567,7 +569,7 @@ class SparseStructureFlowModel(nn.Module):
     return x
 </code></pre>
 <p>VAE 단에서 유지했던 공간 정보가 Transformer의 입력 단계에서 sequence 로 변환되는 것!
-즉 Trellis 의 DiT 는 <strong>2D DiT 의 3D 로의 확장 버젼</strong>이라고 볼 수 있다.<br><img src='/blogs/posts/250710_building_large_3d_2/assets/image-9.png' width=70%></p>
+즉 Trellis 의 DiT 는 <strong>2D DiT 의 3D 로의 확장 버젼</strong>이라고 볼 수 있다.<br><img src='/blogs/posts/250710_building_large_3d_2/assets/image-9.png' width=70% alt="Large 3D Generative Model 구축하기 (2) VAE and DiT 분석 — D.3. Sparse Voxel DiT" loading="lazy" decoding="async"></p>
 <ul>
 <li>Figure from <a href="https://arxiv.org/abs/2212.09748">Scalable Diffusion Models with Transformers</a></li>
 </ul>
@@ -575,7 +577,7 @@ class SparseStructureFlowModel(nn.Module):
 <h3 id="toc-heading-8">D.4. Training with Rectified Flow</h3>
 <p>이제 이 DiT를 어떻게 학습시키는지 알아보자.</p>
 <p>앞선 글에서 언급했듯, 최근 3D Generative Pipeline에서 이 Shape 생성 모델들은 <strong>Rectified Flow</strong> 프레임워크 위에서 동작한다. 
-<img src='/blogs/posts/250710_building_large_3d_2/assets/image-10.png' width=60%></p>
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-10.png' width=60% alt="Large 3D Generative Model 구축하기 (2) VAE and DiT 분석 — D.4. Training with Rectified Flow" loading="lazy" decoding="async"></p>
 <ul>
 <li><strong>Source ($z_0 \sim p_0$)</strong>: source distribution (일반적으로 standard normal distribution $\mathcal{N}(0, I)$)</li>
 <li><strong>Target ($z_1 \sim p_1$)</strong>: target distribution (데이터의 latent space distribution $q_{data}$) 의 target 샘플</li>
@@ -655,7 +657,7 @@ def training_step(self, data, iteration):
 </blockquote>
 <h3 id="toc-heading-10">E.1. Reconstruction vs. Generation Dilemma</h3>
 <p>최근 2D 이미지 생성 분야에서 발표된 <a href="https://arxiv.org/abs/2501.01423">VA-VAE (Vision-Aligned VAE)</a> 연구는 중요한 observation 을 제시한다.</p>
-<img src='/blogs/posts/250710_building_large_3d_2/assets/image-15.png' width=100%>
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-15.png' width=100% alt="Large 3D Generative Model 구축하기 (2) VAE and DiT 분석 — E.1. Reconstruction vs. Generation Dilemma" loading="lazy" decoding="async">
 
 
 <ul>
@@ -675,7 +677,7 @@ def training_step(self, data, iteration):
 <h3 id="toc-heading-11">E.2. VA-VAE and 3D Generation</h3>
 <p>Vecset-based VAE는 Point Cloud 를 이용해 3D shape 의 reconstruction 에만 초점을 맞춘, VA-VAE 가 지적한 &#39;<em>Reconstruction 특화</em>&#39; VAE와 유사한 측면이 있다. 이는 DiT (Flow Model) 가 input condition (2D) 에 맞는 Shape 을 생성하기 위해, <em><strong>구조화되지 않은 넓은 latent space 을 비효율적으로 탐색해야 하므로 수렴이 느리며 성능이 제한될 수 있다는 가설</strong></em> 로 이어진다.</p>
 <p>반면 Trellis는 이미 VA-VAE 와 유사한 아이디어를 <strong>3D 에서 SLAT (Structured Latent)이라는 개념으로 구현</strong>했다고 볼 수 있다. SLAT 은 DINO feature map 그 자체를 VAE 의 학습 목표로 삼아, 공간적 구조를 가진 의미론적 latent space 를 만든다. 즉, &quot;<strong>DINO가 이미 충분히 좋으니, 이를 그대로 3D 공간에 매핑해서 쓰자!</strong>&quot;는 접근인 셈. 
-<img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-9.png' width=70%></p>
+<img src='/blogs/posts/250302_3d_latent_diffusion/assets/image-9.png' width=70% alt="Large 3D Generative Model 구축하기 (2) VAE and DiT 분석 — E.2. VA-VAE and 3D Generation" loading="lazy" decoding="async"></p>
 <p>하지만 이 방식은 VAE 의 latent space 를 사실상 두 개로 쪼개서 구성한다는 문제가 있다. 즉, <em><strong>&#39;어디에 형태가 존재하는가?&#39;</strong></em> 를 결정하는 <strong>Structure</strong> 와, <em><strong>&#39;그곳에 무엇이 있는가?&#39;</strong></em> 를 결정하는 <strong>Feature</strong> 로 구성된다는 것. 이로 인해 생성 과정은 복잡한 2-stage 파이프라인으로 분리된다.</p>
 <ul>
 <li><strong>1) Structure Generation</strong>: 먼저, 어떤 복셀이 activated 를 결정하는, 즉 <strong>Sparse Structure 의 indices</strong> 생성해야 한다. Trellis는 이를 위해 별도의 <strong>Conditional Flow Matching (CFM) 모델</strong>을 학습시킨다.</li>
@@ -693,13 +695,13 @@ def training_step(self, data, iteration):
 </tr>
 </thead>
 <tbody><tr>
-<td><img src='/blogs/posts/250710_building_large_3d_2/assets/image-5.png' width=100%></td>
+<td><img src='/blogs/posts/250710_building_large_3d_2/assets/image-5.png' width=100% alt="Large 3D Generative Model 구축하기 (2) VAE and DiT 분석 — E.3. Back to Spatial Fundamentals?" loading="lazy" decoding="async"></td>
 </tr>
 </tbody></table>
 <p>이들은 Trellis의 SLAT, 즉 DINO와의 직접적인 정렬 방식을 과감히 폐기하고, <em>3D latent grid 의 resolution 을 높이고 (e.g., 256^3), 3D spatial relation 을 더 효율적으로 압축하는 데 기술적 역량을 집중</em> 한다.</p>
 <p>이는 어쩌면 3D Shape 생성에 있어서는, <strong>2D Vision Foundation Model 과의 의미론적 정렬</strong>보다 <strong>3D 공간 자체의 부분-전체 관계와 위상적 구조를 고해상도로 포착하는 것</strong>이 더 중요하다는 증거일 수 있다. 2D 이미지의 &#39;semantic&#39; 과 3D 형상의 &#39;structure&#39; 는 본질적으로 다른 종류의 정보이며, 3D Shape 생성의 핵심은 후자에 있다는 것.</p>
-<img src='/blogs/posts/250710_building_large_3d_2/assets/image-7.png' width=100%>
-<img src='/blogs/posts/250710_building_large_3d_2/assets/image-11.png' width=100%>
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-7.png' width=100% alt="Large 3D Generative Model 구축하기 (2) VAE and DiT 분석 — E.3. Back to Spatial Fundamentals?, figure 2" loading="lazy" decoding="async">
+<img src='/blogs/posts/250710_building_large_3d_2/assets/image-11.png' width=100% alt="Large 3D Generative Model 구축하기 (2) VAE and DiT 분석 — E.3. Back to Spatial Fundamentals?, figure 3" loading="lazy" decoding="async">
 
 
 <ul>

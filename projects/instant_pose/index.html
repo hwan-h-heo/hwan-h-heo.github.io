@@ -18,6 +18,7 @@
   <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet">
 
+  <script src="../../js/sidebar-controller.js"></script>
   <link href="../../assets/css/portfolio.css" rel="stylesheet">
   <script src="../../js/mathjax-config.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -528,6 +529,7 @@
       }
     }
   </style>
+  <link href="../../css/sidebar-nav.css" rel="stylesheet">
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
   <script>
@@ -544,14 +546,12 @@
   </div>
 
   <header id="header" class="header dark-background d-flex flex-column">
-    <i class="header-toggle d-xl-none bi bi-list"></i>
-
     <div class="profile-img">
-      <img src="../../assets/icon.webp" alt="Hwan Heo icon" class="img-fluid rounded-circle">
+      <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="img-fluid rounded-circle">
     </div>
 
     <a href="../../" class="logo d-flex align-items-center justify-content-center">
-      <h1 class="sitename">Hwan Heo</h1>
+      <span class="sitename">Hwan Heo</span>
     </a>
 
     <div class="social-links text-center">
@@ -643,7 +643,7 @@
         <article class="portfolio-description project-case-study-article">
 <h2>Method</h2>
 <h3>Multi-Resolution Hash Encoding</h3>
-<p><img src="assets/hash_grid.png" alt="Multi-resolution hash encoding" class="img-fluid"></p>
+<p><img src="assets/hash_grid.png" alt="Multi-resolution hash encoding" class="img-fluid" loading="lazy" decoding="async"></p>
 <ol>
 <li>Positional encoding uses hash tables to store multi-resolution features.</li>
 <li>Each feature is the trilinear interpolation of the eight corner entries in a grid cell, weighted by the sample position.</li>
@@ -652,7 +652,7 @@
 <p><strong>Advantage:</strong> fast convergence with strong reconstruction accuracy.</p>
 <p><strong>Problem:</strong> back-propagation through ray-sampled positions becomes unstable when the camera poses also have to move.</p>
 <h3>Smooth Gradients for Stable Back-Propagation</h3>
-<p><img src="assets/pose_fig2.png" alt="Oscillating and smoothed pose gradients" class="img-fluid"></p>
+<p><img src="assets/pose_fig2.png" alt="Oscillating and smoothed pose gradients" class="img-fluid" loading="lazy" decoding="async"></p>
 <p><strong>Derivative of Multi-Resolution Hash Encoding</strong></p>
 <p>The Jacobian of the encoded feature at level $l$ is</p>
 <p>$$
@@ -735,9 +735,9 @@ The two smooth terms cancel numerically in the forward pass, while the desired s
 <h2>Experiments</h2>
 <h3>Camera-Pose Refinement Progress</h3>
 <p>Red lines denote pose-error vectors between the ground-truth cameras and the optimized poses.</p>
-<p><img src="assets/vis_pose.png" alt="Camera-pose refinement progress" class="img-fluid"></p>
+<p><img src="assets/vis_pose.png" alt="Camera-pose refinement progress" class="img-fluid" loading="lazy" decoding="async"></p>
 <h3>Training Time per Iteration</h3>
-<img class="project-compact-result img-fluid" src="assets/training_time.png" alt="Training time per iteration">
+<img class="project-compact-result img-fluid" src="assets/training_time.png" alt="Training time per iteration" loading="lazy" decoding="async">
 
 <ul>
 <li>Retains Instant-NGP&#39;s fast convergence.</li>
@@ -745,7 +745,7 @@ The two smooth terms cancel numerically in the forward pass, while the desired s
 <li>Improves the stability of joint camera-pose refinement.</li>
 </ul>
 <h3>Quantitative Results</h3>
-<img class="project-compact-result img-fluid" src="assets/table.png" alt="Quantitative camera registration and rendering results">
+<img class="project-compact-result img-fluid" src="assets/table.png" alt="Quantitative camera registration and rendering results" loading="lazy" decoding="async">
 
 <p>Across synthetic and real novel-view-synthesis datasets, the method improved camera registration while retaining rapid neural-rendering convergence.
 The work was published at <strong>ICML 2023</strong>, where the paper reported state-of-the-art pose-refinement performance.</p>

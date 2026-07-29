@@ -71,6 +71,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     <li class="nav-item"><a href="/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="eng" style="font-size:0.7rem">ENG</a></li>
                 </ul>
@@ -105,7 +107,7 @@
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             <li><a href="/blogs/series/nerf-and-gs/">Radiance Fields &amp; Gaussian Splatting</a></li>
                             <li aria-current="page">Gaussian Splatting Rasterization 완벽 분석</li>
@@ -218,7 +220,7 @@
 
 <h2 id="intro">Introduction</h2>
 <figure>
-    <img src="/blogs/posts/240805_gs/assets/teaser.gif" alt="Gaussian Splatting Teaser by Luma AI" width="100%">
+    <img src="/blogs/posts/240805_gs/assets/teaser.gif" alt="Gaussian Splatting Teaser by Luma AI" width="100%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 1.</strong> 3D GS by Luma AI</figcaption>
 </figure>
 <p class="lang kor" >
@@ -229,7 +231,7 @@
 
 <h2 id="sec1">1. 3D Gaussian as Primitive Kernel</h2>
 <figure>
-    <img src="/blogs/posts/240805_gs/assets/gs.jpg" alt="3D Gaussian as Primitive Kernel" width="100%">
+    <img src="/blogs/posts/240805_gs/assets/gs.jpg" alt="3D Gaussian as Primitive Kernel" width="100%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 2.</strong> NeRF vs 3D GS, source: <span style="text-decoration: underline;"><a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">Kate's medium</a></span></figcaption>
 </figure>
 <p class="lang kor" >
@@ -362,7 +364,7 @@ cov3D[5] = Sigma[2][2];
 <h2 id="sec2">2. Splatting (Projection of Primitives)</h2>
 <h3 id="sec2.1">2.1. Projection</h3>
 <figure>
-    <img src="/blogs/posts/240805_gs/assets/splatting.jpg" alt="Splatting of primitives" style="width:55%">
+    <img src="/blogs/posts/240805_gs/assets/splatting.jpg" alt="Splatting of primitives" style="width:55%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 3.</strong> Projection of 3D Gaussian, <br/> source: <span style="text-decoration: underline;"><a href="https://dl.acm.org/doi/10.1145/3355089.3356513"><em>Differentiable Surface Splatting for Point-based Geometry Processing </em></a></span> </figcaption>
 </figure> 
 
@@ -418,7 +420,7 @@ cov3D[5] = Sigma[2][2];
         <p> 
             the image space pixel $(u,v)$ in a pinhole camera model,
             <figure>
-                <img src="/blogs/posts/240805_gs/assets/pinhole.jpg" width="60%" height="50%">
+                <img src="/blogs/posts/240805_gs/assets/pinhole.jpg" width="60%" height="50%" alt="Gaussian Splatting Rasterization 완벽 분석 — 2.1. Projection" loading="lazy" decoding="async">
                 <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 4.</strong> Pinhole camera model, by Fusion of Imaging and Inertial Sensors for Navigation</figcaption>
             </figure>
         </p>
@@ -552,7 +554,7 @@ float3 conic = { cov.z * det_inv, -cov.y * det_inv, cov.x * det_inv };
         <p class="lang kor" >
             또한 cov 의 inverse 를 conic 이라고 명명하고 있는데, 이는 아마 ellipsoid 등이 <a href="https://en.wikipedia.org/wiki/Conic_section">conic section</a> 으로 정의되기 때문인 것 같다.
         </p>
-        <img src="/blogs/posts/240805_gs/assets/conic.jpg" width="60%">
+        <img src="/blogs/posts/240805_gs/assets/conic.jpg" width="60%" alt="Gaussian Splatting Rasterization 완벽 분석 — 2.2. Density of the Projected Gaussian" loading="lazy" decoding="async">
     </li>
 </ul>
 <br/>
@@ -609,7 +611,7 @@ float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));
 </div>
 
 <figure>
-    <img src="/blogs/posts/240805_gs/assets/rasterization.jpg" width="100%">
+    <img src="/blogs/posts/240805_gs/assets/rasterization.jpg" width="100%" alt="Gaussian Splatting Rasterization 완벽 분석 — 3. Parallel Rasterization" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 5.</strong> An illustration of the forward process of 3D GS, <br/> source: <span style="text-decoration: underline;"><a href="https://arxiv.org/abs/2401.03890"><em>A Survey on 3D Gaussian Splatting </em></a></span> </figcaption>
 </figure>
 
@@ -624,7 +626,7 @@ float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));
         <p class="lang kor" >
             Frustum culling 으로 valid gaussian 만 남긴다. (See fig.)
         </p>
-        <img src="/blogs/posts/240805_gs/assets/culling.jpg" width="50%" height="40%" alt="Frustum Culling">
+        <img src="/blogs/posts/240805_gs/assets/culling.jpg" width="50%" height="40%" alt="Frustum Culling" loading="lazy" decoding="async">
     </li>
     <br/>
     <li>
@@ -659,7 +661,7 @@ float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));
             </li>
         </ul>
         <figure>
-            <img class="img-fluid" src="/blogs/posts/240805_gs/assets/presort.jpg" width="70%" height="60%" alt="Gaussian Accumulation">
+            <img class="img-fluid" src="/blogs/posts/240805_gs/assets/presort.jpg" width="70%" height="60%" alt="Gaussian Accumulation" loading="lazy" decoding="async">
             <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 6.</strong>  An illustration of the tile based parallel rendering, <br/> source: <span style="text-decoration: underline;"><a href="https://arxiv.org/abs/2401.03890"><em>A Survey on 3D Gaussian Splatting </em></a></span> </figcaption>
         </figure>
     </li>
@@ -703,7 +705,7 @@ __shared__ float4 collected_conic_opacity[BLOCK_SIZE];</code></pre>
     </li>
 </ul>
 <figure>
-    <img class="img-fluid" src="/blogs/posts/240805_gs/assets/nerf_vs_gs.jpg" width="70%">
+    <img class="img-fluid" src="/blogs/posts/240805_gs/assets/nerf_vs_gs.jpg" width="70%" alt="Gaussian Splatting Rasterization 완벽 분석 — 3. Parallel Rasterization, figure 2" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 7.</strong> NeRF vs 3D GS, source: <span style="text-decoration: underline;"><a href="https://arxiv.org/abs/2401.03890"><em>A Survey on 3D Gaussian Splatting </em></a></span> </figcaption>
 </figure>
 
@@ -740,8 +742,8 @@ glm::mat3 J = glm::mat3(
         <th> Rasterization </th>
     </tr>
     <tr>
-        <td><img src="/blogs/posts/240805_gs/assets/360img.jpg" alt="360 image" width="100%"></td>
-        <td><img src="/blogs/posts/240805_gs/assets/360ptc.jpg" alt="360 ptc" width="100%"></td>
+        <td><img src="/blogs/posts/240805_gs/assets/360img.jpg" alt="360 image" width="100%" loading="lazy" decoding="async"></td>
+        <td><img src="/blogs/posts/240805_gs/assets/360ptc.jpg" alt="360 ptc" width="100%" loading="lazy" decoding="async"></td>
     </tr>
 </table>
 
@@ -770,11 +772,11 @@ glm::mat3 J = glm::mat3(
 <table>
     <tr>
         <th>Scene #1</th>
-        <td><img class="img-fluid" src="/blogs/posts/240805_gs/assets/bicycle.gif" alt="Scene 1"></td>
+        <td><img class="img-fluid" src="/blogs/posts/240805_gs/assets/bicycle.gif" alt="Scene 1" loading="lazy" decoding="async"></td>
     </tr>
     <tr>
         <th>Scene #2</th>
-        <td><img class="img-fluid" src="/blogs/posts/240805_gs/assets/garden.gif" alt="Scene 2"></td>
+        <td><img class="img-fluid" src="/blogs/posts/240805_gs/assets/garden.gif" alt="Scene 2" loading="lazy" decoding="async"></td>
     </tr>
 </table>
 

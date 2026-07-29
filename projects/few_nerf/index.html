@@ -18,6 +18,7 @@
   <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet">
 
+  <script src="../../js/sidebar-controller.js"></script>
   <link href="../../assets/css/portfolio.css" rel="stylesheet">
   <script src="../../js/mathjax-config.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -528,6 +529,7 @@
       }
     }
   </style>
+  <link href="../../css/sidebar-nav.css" rel="stylesheet">
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
   <script>
@@ -544,14 +546,12 @@
   </div>
 
   <header id="header" class="header dark-background d-flex flex-column">
-    <i class="header-toggle d-xl-none bi bi-list"></i>
-
     <div class="profile-img">
-      <img src="../../assets/icon.webp" alt="Hwan Heo icon" class="img-fluid rounded-circle">
+      <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="img-fluid rounded-circle">
     </div>
 
     <a href="../../" class="logo d-flex align-items-center justify-content-center">
-      <h1 class="sitename">Hwan Heo</h1>
+      <span class="sitename">Hwan Heo</span>
     </a>
 
     <div class="social-links text-center">
@@ -661,7 +661,7 @@ $$</p>
 <p>The purpose of the embedding is to capture and represent the variations in appearance and lighting conditions across different images of the same scene.
 These variations can include changes in illumination, color tone, and other environmental factors that differ from image to image.</p>
 <h3>Dientangling Transients and Statics Using FilterNet</h3>
-<img src="assets/main.png" alt="Image" class="img-thumbnail img-fluid">
+<img src="assets/main.png" alt="Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild — Dientangling Transients and Statics Using FilterNet" class="img-thumbnail img-fluid" loading="lazy" decoding="async">
 
 <p>To achieve consistent scene decomposition, we use an additional MLP module, dubbed FilterNet.
 FilterNet receives feature maps $f_i(\mathbf{p})$ extracted from the input image by a pretrained <strong>DINO</strong> image encoder $E_\phi$.
@@ -704,11 +704,11 @@ The third term discourages \jaewon{FilterNet} from describing static phenomena.<
 <p>SF-NeRF significantly outperforms NeRF-W and Latent NeRF in novel view synthesis tasks, particularly in few-shot settings. Evaluations on the Phototourism dataset—featuring diverse and unconstrained photographs—demonstrate SF-NeRF&#39;s superior ability to handle transient occluders and achieve high-quality scene reconstructions with just 30 images per landmark.</p>
 
 <div class="text-center">
-<img src="assets/qual.png" alt="Image" class="img-thumbnail img-fluid">
+<img src="assets/qual.png" alt="Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild — Experiments" class="img-thumbnail img-fluid" loading="lazy" decoding="async">
 
 </div>
 <div class="text-center">
-<img src="assets/qual2.png" alt="Image" class="img-thumbnail img-fluid">
+<img src="assets/qual2.png" alt="Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild — Experiments, figure 2" class="img-thumbnail img-fluid" loading="lazy" decoding="async">
 
 </div>
         </article>

@@ -71,6 +71,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     <li class="nav-item"><a href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing-kor/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="kor" style="font-size:0.7rem">KOR</a></li>
                 </ul>
@@ -105,7 +107,7 @@
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             <li><a href="/blogs/series/3d-generation/">3D Generative AI</a></li>
                             <li aria-current="page">Building Large 3D Generative Model (1) Data pre-processing</li>
@@ -238,20 +240,20 @@
 <li><p><strong>Texture Generation</strong>: Shape-conditioned, multi-view consistent image generation (though some models employ slightly different designs for PBR textures, the fundamental framework is similar).</p>
 </li>
 </ul>
-<img src="/blogs/posts/250702_building_large_3d_1/assets/image-4.png" width=100%>
+<img src="/blogs/posts/250702_building_large_3d_1/assets/image-4.png" width=100% alt="Building Large 3D Generative Model (1) Data pre-processing — Introduction: Rise of 3D Generative AI" loading="lazy" decoding="async">
 
 <p>This can be interpreted as decoupling the 3D asset creation process into <strong>1) Shape Generation ↔︎ 2) Texturing</strong>, which allows for the application of the proven &#39;2D Generative Model&#39; methodology (Latent Generative Models).</p>
 <p>In other words, similar to 2D generative models, a 3D shape is created using a <strong>high-quality latent space</strong> (via a <em>VAE</em> to compress computational cost) and a <strong>generative model trained on this latent space</strong> (<em>Diffusion or Rectified Flow</em>). A texture is then generated using a multi-view consistent image generation model conditioned on the created shape. This approach has delivered tremendous fidelity improvements and has become the industry standard, replacing previous lifting-based methods and NeRF/GS-based reconstruction models (LRM, LGM). (cf: <a href="https://velog.io/@gjghks950/3d">Is the Era of NeRF and SDS in 3D Generation Coming to an End?</a>, <a href="/blogs/posts/an-era-of-3d-generation/">The Age of 3D Generative Models</a>)</p>
 <p>To build such a 3D Generative Foundation Model, one needs not only a fundamental understanding of generative modeling theory and coding skills but also a deep comprehension of the unique properties of 3D data and the ability to handle complex pre/post-processing workflows.</p>
 <p>The complexity of 3D data can be a significant moat for newcomers to the domain. Therefore, this article series aims to minimize that difficulty by providing a detailed, from-scratch guide on how to build a 3D generation scheme.</p>
 <p>As the first post in the series, today&#39;s article will focus on the pre-processing of 3D data.</p>
-<img src="/blogs/posts/250702_building_large_3d_1/assets/image-2.png" width=60%>
+<img src="/blogs/posts/250702_building_large_3d_1/assets/image-2.png" width=60% alt="Building Large 3D Generative Model (1) Data pre-processing — Introduction: Rise of 3D Generative AI, figure 2" loading="lazy" decoding="async">
 
 <hr>
 <h2 id="toc-heading-1">A. Dataset</h2>
 <p>A fundamental point to grasp is that 3D data is significantly more scarce than 2D images. The release of the <a href="https://objaverse.allenai.org/">Objaverse</a> dataset, which aggregates license-free assets from platforms like GitHub and Sketchfab, has been a game-changer. Most of the aforementioned methods use this dataset as their primary source for 3D generation.</p>
 <figure id="figure-1" >
-  <img src='/blogs/posts/250702_building_large_3d_1/assets/image-5.png' alt='img alt' width='100%'>
+  <img src='/blogs/posts/250702_building_large_3d_1/assets/image-5.png' alt="Building Large 3D Generative Model (1) Data pre-processing — A. Dataset" width='100%' loading="lazy" decoding="async">
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Objaverse</figcaption>
 </figure>
 
@@ -321,7 +323,7 @@ download(metadata)
 <h3 id="toc-heading-3">B.1. 3D Representation</h3>
 <p>Once the data is prepared, the most critical prerequisite for training a 3D Generative Model is to convert every 3D mesh into a <strong>Normalized, Watertight Mesh</strong>. To understand why all meshes must be made watertight, let&#39;s first examine the characteristics of 3D representations.</p>
 <p>3D representations can be broadly divided into two categories, each with distinct properties:</p>
-<img src='/blogs/posts/250702_building_large_3d_1/assets/image-6.png' width=100%>
+<img src='/blogs/posts/250702_building_large_3d_1/assets/image-6.png' width=100% alt="Building Large 3D Generative Model (1) Data pre-processing — B.1. 3D Representation" loading="lazy" decoding="async">
 
 <ul>
 <li><p><strong>Implicit</strong>: SDF (Signed Distance Field), UDF, <em>NeRF</em>, …</p>
@@ -352,7 +354,7 @@ download(metadata)
 <p>From this perspective, a 3D Mesh is not an ideal domain for a VAE to learn a latent space. VAEs, being neural networks, are optimized for fixed-size vectors or tensors. But what about meshes? The number of vertices ($V$), edges ($E$), and faces ($F$) varies from model to model, making it extremely difficult to define a stable input/output structure for a VAE.</p>
 <p>Furthermore, we must consider the inherent <em><strong>shift/rotation-invariance</strong></em> of a mesh. If you translate or rotate the vertices of a mesh, it is still the same object. This means the mesh&#39;s vertices are translation/rotation invariant, and using them directly as a learning objective would likely lead to highly unstable training.</p>
 <p>Therefore, vecset-based VAEs in 3D Generative Models adopt the following design (figure from 3DShape2vecset):</p>
-<img src='/blogs/posts/250702_building_large_3d_1/assets/image-7.png' width=100%>
+<img src='/blogs/posts/250702_building_large_3d_1/assets/image-7.png' width=100% alt="Building Large 3D Generative Model (1) Data pre-processing — B.2. VAE for 3D: The Vecset-based VAE" loading="lazy" decoding="async">
 
 <ul>
 <li><p><strong>Input</strong>: A <em><strong>point cloud</strong></em> sampled from the mesh&#39;s surface.</p>
@@ -375,7 +377,7 @@ download(metadata)
 <hr>
 <h3 id="toc-heading-5">B.3. Watertight Meshes in Mathematics</h3>
 <p>What if the training data, the meshes, have holes or torn faces? It becomes impossible to clearly define &#39;inside&#39; and &#39;outside&#39;. This means we cannot determine the sign of the SDF or the 0/1 value of the Occupancy field. A model cannot learn effectively from such ambiguous ground truth.</p>
-<img src="/blogs/posts/250702_building_large_3d_1/assets/image-1.png" width=50%>
+<img src="/blogs/posts/250702_building_large_3d_1/assets/image-1.png" width=50% alt="Building Large 3D Generative Model (1) Data pre-processing — B.3. Watertight Meshes in Mathematics" loading="lazy" decoding="async">
 
 <ul>
 <li>Fig. Non-Watertight / Watertight</li>
@@ -415,7 +417,7 @@ $$</p>
 <p>&#39;How do we make a non-watertight mesh watertight?&#39;</p>
 </blockquote>
 <p>A well-known implementation, as seen in Dora, uses an algorithm that effectively wraps the entire original mesh in a thin, closed shell. (cf: <a href="https://github.com/Seed3D/Dora/blob/main/sharp_edge_sampling/to_watertight_mesh.py">Dora&#39;s to watertightmesh.py</a>)</p>
-<img src="/blogs/posts/250702_building_large_3d_1/assets/image-3.png" width=50%>
+<img src="/blogs/posts/250702_building_large_3d_1/assets/image-3.png" width=50% alt="Building Large 3D Generative Model (1) Data pre-processing — B.4. How to Make it Watertight" loading="lazy" decoding="async">
 
 <pre><code class="language-python">diffdmc = DiffDMC(dtype=torch.float32).cuda()
 vertices, faces = diffdmc(grid_udf, isovalue=eps, normalize= False)
@@ -488,7 +490,7 @@ while (!query_stack.empty()) {
 <p>At the end of this stage, we have a 3D volume data—the UDF—that captures the shape of the original mesh. However, we still don&#39;t know which parts are &#39;inside&#39; and which are &#39;outside&#39;.</p>
 <h4>Step 2: Flood Fill</h4>
 <p>The Flood Fill algorithm is used to clearly delineate the interior and exterior.</p>
-<img src='/blogs/posts/250702_building_large_3d_1/assets/image.gif' width=30%>
+<img src='/blogs/posts/250702_building_large_3d_1/assets/image.gif' width=30% alt="Building Large 3D Generative Model (1) Data pre-processing — Step 2: Flood Fill" loading="lazy" decoding="async">
 
 <p>Python Code:</p>
 <pre><code class="language-python"># 1. Define the mesh &quot;shell&quot; or &quot;wall&quot;
@@ -547,7 +549,7 @@ sdf[inner_mask] *= -1
 <p>The result is a perfect Signed Distance Field where the interior is negative, the exterior is positive, and the surface is 0.</p>
 <h4>Step 4: Marching Cubes</h4>
 <p>Finally, we extract a new, watertight mesh from this perfect SDF volume.
-<img src='/blogs/posts/250702_building_large_3d_1/assets/image-8.png' width=100%></p>
+<img src='/blogs/posts/250702_building_large_3d_1/assets/image-8.png' width=100% alt="Building Large 3D Generative Model (1) Data pre-processing — Step 4: Marching Cubes" loading="lazy" decoding="async"></p>
 <p>Python Code:</p>
 <pre><code class="language-python"># 1. Extract the iso-surface where sdf = 0
 vertices, triangles = mcubes.marching_cubes(sdf, 0)
@@ -565,7 +567,7 @@ watertight_mesh.export(f&#39;{opt.workspace}/{name}.obj&#39;)
 <h3 id="toc-heading-7">B.5. Pointcloud Sampling</h3>
 <p>With watertight conversion complete, the final part of the mesh pre-processing stage is point cloud sampling. While uniform sampling from the mesh surface is not difficult, recent works like <a href="https://aruichen.github.io/Dora/">Dora</a>, <a href="https://github.com/Tencent-Hunyuan/Hunyuan3D-2">Hunyuan3D</a>, and <a href="https://yg256li.github.io/TripoSG-Page/">TripoSG</a> have reported that sampling more points from salient edges significantly improves VAE reconstruction performance.</p>
 <figure id="figure-2" >
-  <img src='/blogs/posts/250702_building_large_3d_1/assets/image-9.png' alt='img alt' width='100%'>
+  <img src='/blogs/posts/250702_building_large_3d_1/assets/image-9.png' alt="Building Large 3D Generative Model (1) Data pre-processing — B.5. Pointcloud Sampling" width='100%' loading="lazy" decoding="async">
   <figcaption style='text-align: center; font-size: 15px;'><strong>Fig. Left:</strong> Salient sampling, <strong>Right:</strong> Uniform Sampling</figcaption>
 </figure>
 
@@ -647,7 +649,7 @@ if total_edge_length &gt; 0:
 <ul>
 <li><strong>Result</strong> (Left: Input Mesh, Right: Output Salient Sampling Point Cloud)</li>
 </ul>
-<img src='/blogs/posts/250702_building_large_3d_1/assets/image-10.png' width=100%>
+<img src='/blogs/posts/250702_building_large_3d_1/assets/image-10.png' width=100% alt="Building Large 3D Generative Model (1) Data pre-processing — Final Step" loading="lazy" decoding="async">
 
 <p>While this is a functional conceptual implementation, the <a href="https://github.com/ashawkey/meshiki">meshiki</a> package provides a much faster implementation in C++. Using it, you can perform SES directly as follows:</p>
 <pre><code class="language-python"># pip install meshiki
@@ -667,7 +669,7 @@ salient_points = mesh.salient_point_sample(64000, thresh_bihedral=30)
 <p>While not on the scale of LLMs, training a 3D Generative Model is still a cost-consuming task, typically requiring a 1B to 3B parameter model, at least 64 GPUs with 80GB+ VRAM each, and over 20TB of NAS for handling the 3D data.</p>
 <p>However, excellent open-source models are continuously being released. To leverage these foundation models for tasks like fine-tuning or LoRA-Adapter Training while minimizing the use of the most expensive resource—GPUs—a solid command of 3D data pre-processing is absolutely essential.</p>
 <p>Since working on the CaPa Project last year, I have been training our own 3D generative model and developing a 3D generation service based on it. We plan to announce it publicly soon, and I hope to be able to introduce it then.</p>
-<p><a href="https://www.youtube.com/watch?v=AtQNAuQY4-A"><img src="/blogs/posts/250702_building_large_3d_1/assets/remote-cdf831714204.jpg" alt="IMAGE ALT TEXT HERE"></a></p>
+<p><a href="https://www.youtube.com/watch?v=AtQNAuQY4-A"><img src="/blogs/posts/250702_building_large_3d_1/assets/remote-cdf831714204.jpg" alt="IMAGE ALT TEXT HERE" loading="lazy" decoding="async"></a></p>
 <p>The next article in this series will delve into the architectures of ShapeVAE and Flow Models, as well as strategies for efficiently training 3D Generative Models by setting up a multi-node environment and using the sharding strategies of DeepSpeed v3 and FSDP.</p>
 <p><strong><em>Stay Tuned!</em></strong></p>
 

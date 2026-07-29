@@ -70,6 +70,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     
                 </ul>
@@ -104,7 +106,7 @@
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             <li><a href="/blogs/series/computer-vision/">Classical Computer Vision</a></li>
                             <li aria-current="page">Feature Extraction and Detection</li>
@@ -241,7 +243,7 @@ $$</p>
 <h4>Seam Carving for Content-Aware Resizing</h4>
 <p>Seam carving is an algorithm for content-aware image resizing that reduces image size by removing &quot;seams&quot; of low importance rather than by uniform scaling or cropping. A seam is a continuous path of pixels from one edge of the image to the other (e.g., top to bottom).</p>
 <p>The process involves:</p>
-<img src='/blogs/posts/210402_cv2/assets/svg1.svg' width=100%>
+<img src='/blogs/posts/210402_cv2/assets/svg1.svg' width=100% alt="Feature Extraction and Detection — Seam Carving for Content-Aware Resizing" loading="lazy" decoding="async">
 
 <ol>
 <li><p><strong>Energy Calculation</strong>: An &quot;energy function&quot; is defined to measure the importance of each pixel. A common choice is the gradient magnitude, as pixels with high gradients are part of edges and are perceptually important.
@@ -326,12 +328,12 @@ plt.show()
 <br/>
 
 <h4>Results:</h4>
-<img src='/blogs/posts/210302_cv1/assets/image-3.jpg' width=100%>
+<img src='/blogs/posts/210302_cv1/assets/image-3.jpg' width=100% alt="Feature Extraction and Detection — Results:" loading="lazy" decoding="async">
 
 <hr>
 <h2 id="toc-heading-2">4. Resampling and Resizing</h2>
 <h4>Aliasing and the Nyquist Theorem</h4>
-<img src='/blogs/posts/210402_cv2/assets/svg2.svg' width=100%>
+<img src='/blogs/posts/210402_cv2/assets/svg2.svg' width=100% alt="Feature Extraction and Detection — Aliasing and the Nyquist Theorem" loading="lazy" decoding="async">
 
 <p><strong>Aliasing</strong> is an effect that causes different signals to become indistinguishable when sampled. In images, it manifests as jagged edges, moiré patterns, or other artifacts when an image is downsampled without proper filtering.</p>
 <p>The <strong>Nyquist-Shannon sampling theorem</strong> states that to perfectly reconstruct a signal, the sampling rate must be at least twice the maximum frequency present in the signal ($f_{sample} \ge 2f_{max}$). To prevent aliasing when downsampling an image, we must first remove the high frequencies that would otherwise be misinterpreted. This is achieved by applying a <strong>low-pass filter</strong> (e.g., a Gaussian blur) before resampling the pixels.</p>
@@ -399,13 +401,13 @@ plt.show()
 <br/>
 
 <h4>Results:</h4>
-<img src='/blogs/posts/210302_cv1/assets/image-4.jpg' width=100%>
+<img src='/blogs/posts/210302_cv1/assets/image-4.jpg' width=100% alt="Feature Extraction and Detection — Results:, figure 2" loading="lazy" decoding="async">
 
 <hr>
 <h2 id="toc-heading-4">5. Corner Detection</h2>
 <h4>The Intuition Behind Corner Detection</h4>
 <p>Edges and corners are important features for tasks like matching and tracking. While an edge is characterized by a significant intensity change in one direction, a <strong>corner</strong> is a point where there is a significant change in all directions. A sliding window analysis reveals this:</p>
-<img src='/blogs/posts/210402_cv2/assets/svg3.svg' width=100%>
+<img src='/blogs/posts/210402_cv2/assets/svg3.svg' width=100% alt="Feature Extraction and Detection — The Intuition Behind Corner Detection" loading="lazy" decoding="async">
 
 <ul>
 <li><p><strong>Flat Region</strong>: No change when the window is shifted.</p>
@@ -493,7 +495,7 @@ plt.show()
 <br/>
 
 <h4>Results:</h4>
-<img src='/blogs/posts/210302_cv1/assets/image-5.jpg' width=100%>
+<img src='/blogs/posts/210302_cv1/assets/image-5.jpg' width=100% alt="Feature Extraction and Detection — Results:, figure 3" loading="lazy" decoding="async">
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     

@@ -69,6 +69,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     <li class="nav-item"><a href="/blogs/posts/linear-system-kor/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="kor" style="font-size:0.7rem">KOR</a></li>
                 </ul>
@@ -103,7 +105,7 @@
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             <li><a href="/blogs/series/linear-algebra/">Linear Algebra for Deep Learning</a></li>
                             <li aria-current="page">Linear System</li>
@@ -302,7 +304,7 @@ $$
 
 <p>The original unit square transforms into the red parallelogram shown in the image below. Based on the diagram, the area of this new region can be calculated as $(a+c)(b+d) - ab - cd - 2bc = ad - bc$.</p>
 <p>In other words, <strong>the computational meaning of the determinant is the factor by which the area of the original span changes.</strong></p>
-<img src='/blogs/posts/210909_lin_alg_1/assets/image.png'>
+<img src='/blogs/posts/210909_lin_alg_1/assets/image.png' alt="Linear System — 2.4. Determinant" loading="lazy" decoding="async">
 </li>
 <li><p>Therefore, a <strong>determinant of 0, where an inverse matrix does not exist, can also be interpreted as the transformation not preserving the area of the region</strong>. In dimensions higher than 3, it is similarly interpreted as a value that scales the volume of the region. A negative determinant value can be interpreted as a change in the orientation of the basis (i.e., a flip).</p>
 </li>
@@ -320,13 +322,13 @@ $$</p>
 <li><p><strong>$det(A) \neq 0$</strong>: This is a one-to-one transformation, and an inverse matrix exists, so a unique solution exists. The solution will be:
 $x = A^{-1}b$.
 Through the determinant, it&#39;s possible to geometrically interpret Cramer&#39;s rule, which can find the solution for a system of linear equations in the case of a square matrix. Let&#39;s look at the diagram below.</p>
-<img src='/blogs/posts/210909_lin_alg_1/assets/image-1.png'>
+<img src='/blogs/posts/210909_lin_alg_1/assets/image-1.png' alt="Linear System — 2.5. System of Linear Equations" loading="lazy" decoding="async">
 
 <p>Let&#39;s call the point above $(x,y)$. The areas corresponding to the values of x and y can be drawn as follows:</p>
-<img src='/blogs/posts/210909_lin_alg_1/assets/image-2.png'>
+<img src='/blogs/posts/210909_lin_alg_1/assets/image-2.png' alt="Linear System — 2.5. System of Linear Equations, figure 2" loading="lazy" decoding="async">
 
 <p>These are the region with area <em>y</em> formed by the vectors $(1,0)$ and $(x,y)$, and the region with area <em>x</em> formed by the vectors $(x,y)$ and $(0,1)$. If we apply a linear transformation through a matrix A to these regions, they will have new areas of $det(A) \cdot y$ and $det(A) \cdot x$ respectively (due to the property of the determinant). This corresponds to the area of the regions formed by $i&#39;$ and $(x&#39;,y&#39;)$ and by $(x&#39;,y&#39;)$ and $j&#39;$ respectively (see image below). Therefore, y and x represent the ratio of the areas when the transformed basis vectors $i&#39;$ and $j&#39;$ are replaced by the transformed vector for $(x,y)$.</p>
-<img src='/blogs/posts/210909_lin_alg_1/assets/image-3.png'>
+<img src='/blogs/posts/210909_lin_alg_1/assets/image-3.png' alt="Linear System — 2.5. System of Linear Equations, figure 3" loading="lazy" decoding="async">
 
 <p>For example, given the following system of linear equations for a 2x2 square matrix:</p>
 <p>

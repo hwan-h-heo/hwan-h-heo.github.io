@@ -69,6 +69,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     <li class="nav-item"><a href="/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting-kor/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="kor" style="font-size:0.7rem">KOR</a></li>
                 </ul>
@@ -103,7 +105,7 @@
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             <li><a href="/blogs/series/nerf-and-gs/">Radiance Fields &amp; Gaussian Splatting</a></li>
                             <li aria-current="page">Under the 3D: Geometrically Accurate 2D Gaussian Splatting</li>
@@ -258,7 +260,7 @@
 </blockquote>
 
 <figure>
-    <img src="/blogs/posts/240602_2dgs/assets/teaser.gif" alt="teaser" width="100%">
+    <img src="/blogs/posts/240602_2dgs/assets/teaser.gif" alt="Under the 3D: Geometrically Accurate 2D Gaussian Splatting — Introduction" width="100%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;">
         TSDF reconstructed <strong>Mesh</strong> from 2D GS, made by hwan
     </figcaption>
@@ -289,7 +291,7 @@
 
 <h2 id="1-preliminary">1. Background </h2>
 <h3 id="1-1-3d-gaussian-splatting"> 1.1. 3D Gaussian Splatting</h3>
-<p><img src="/blogs/posts/240602_2dgs/assets/image-7.png" alt="" width="100%"></p>
+<p><img src="/blogs/posts/240602_2dgs/assets/image-7.png" alt="Under the 3D: Geometrically Accurate 2D Gaussian Splatting — 1.1. 3D Gaussian Splatting" width="100%" loading="lazy" decoding="async"></p>
 
 <div class="lang eng">
     <p>
@@ -363,7 +365,7 @@
             <p>
                 <strong>Lack of Multi-View Consistency</strong><br/>
                 The rasterization process in 3D GS can lead to artifacts, as different viewpoints result in varying 2D intersection surfaces. <em>i.e.,</em> Artifacts! 
-                <img src='/blogs/posts/240602_2dgs/assets/image-8.png' width=40%>
+                <img src='/blogs/posts/240602_2dgs/assets/image-8.png' width=40% alt="Under the 3D: Geometrically Accurate 2D Gaussian Splatting — 1.2. Surface Reconstruction Problem in 3D GS" loading="lazy" decoding="async">
             </p>
         </li>
         <li>
@@ -405,7 +407,7 @@
 
 <h2 id="2-2d-gaussian-splatting">2. 2D Gaussian Splatting</h2>
 <h3 id="2-1-2d-gaussian-modeling-gaussian-surfels-"> 2.1. 2D Gaussian Modeling (Gaussian Surfels)</h3>
-<p><img src ='/blogs/posts/240602_2dgs/assets/image-6.png' width=100%></p>
+<p><img src ='/blogs/posts/240602_2dgs/assets/image-6.png' width=100% alt="Under the 3D: Geometrically Accurate 2D Gaussian Splatting — 2.1. 2D Gaussian Modeling (Gaussian Surfels)" loading="lazy" decoding="async"></p>
 <div class="lang eng">
     <p>
         The approach of 2D Gaussian Splatting (2D GS) essentially reverses the intuition behind SuGaR: 
@@ -470,7 +472,7 @@
         related discussion in official repo:
     </blockquote>
 </div>
-<img src="/blogs/posts/240602_2dgs/assets/image-5.png" alt="" width="90%"></li>
+<img src="/blogs/posts/240602_2dgs/assets/image-5.png" alt="Under the 3D: Geometrically Accurate 2D Gaussian Splatting — 2D-to-2D Projection" width="90%" loading="lazy" decoding="async"></li>
 
 <div class="lang eng">
     <p>
@@ -538,7 +540,7 @@
         homogeneous projection method in 2D GS is more accurate than the affine projection used in 3D GS.
     </p>
 </div>
-<img src='/blogs/posts/240602_2dgs/assets/image-2.jpeg' width="100%">
+<img src='/blogs/posts/240602_2dgs/assets/image-2.jpeg' width="100%" alt="Under the 3D: Geometrically Accurate 2D Gaussian Splatting — Ray-Splat Intersection w/ Homography" loading="lazy" decoding="async">
 
 <h3 id="2-3-training-2d-gs"> 2.3. Training 2D GS </h3>
 <
@@ -666,7 +668,7 @@
     ensuring consistency between the normal vector of splats and the normal vector estimated from the neighboring depth map.
 </p>
 <figure>
-    <img src="/blogs/posts/240602_2dgs/assets/image-3.png" alt="alt description" width="100%">
+    <img src="/blogs/posts/240602_2dgs/assets/image-3.png" alt="Under the 3D: Geometrically Accurate 2D Gaussian Splatting — Normal Consistency Regularization" width="100%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure:</strong> Normal vs Depth2Normal, captured in my custom viewer </figcaption>
 </figure>
 
@@ -678,7 +680,7 @@
     to previous studies, the true value of 2D GS lies in its qualitative evaluation and practical testing. 
     The performance of 2D GS in surface and mesh reconstruction surpasses that of any previous work.
 </p>
-<p><img src="/blogs/posts/240602_2dgs/assets/image.png" alt="" width="100%"></p>
+<p><img src="/blogs/posts/240602_2dgs/assets/image.png" alt="Under the 3D: Geometrically Accurate 2D Gaussian Splatting — 3.1. Qualitative Results" width="100%" loading="lazy" decoding="async"></p>
 
 <div class="lang eng">
     <p>
@@ -688,10 +690,10 @@
 </div>
 <ul>
     <li><p><strong>2D GS: guitar (mesh) </strong>
-    <img src="/blogs/posts/240602_2dgs/assets/image.gif" alt="" width="100%"></p>
+    <img src="/blogs/posts/240602_2dgs/assets/image.gif" alt="Under the 3D: Geometrically Accurate 2D Gaussian Splatting — 3.1. Qualitative Results, figure 2" width="100%" loading="lazy" decoding="async"></p>
     </li>
     <li><p><strong>2D GS: penguin (mesh) </strong>
-    <img src="/blogs/posts/240602_2dgs/assets/image-4.gif" alt="" width="100%"></p>
+    <img src="/blogs/posts/240602_2dgs/assets/image-4.gif" alt="Under the 3D: Geometrically Accurate 2D Gaussian Splatting — 3.1. Qualitative Results, figure 3" width="100%" loading="lazy" decoding="async"></p>
     </li>
 </ul>
 

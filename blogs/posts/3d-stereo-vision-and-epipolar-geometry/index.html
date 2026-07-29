@@ -70,6 +70,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     
                 </ul>
@@ -104,7 +106,7 @@
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             <li><a href="/blogs/series/computer-vision/">Classical Computer Vision</a></li>
                             <li aria-current="page">3D Stereo Vision and Epipolar Geometry</li>
@@ -304,7 +306,7 @@ plt.show()
 <br/>
 
 <h4>Result:</h4>
-<img src='/blogs/posts/210302_cv1/assets/image-8.jpg' width=100%>
+<img src='/blogs/posts/210302_cv1/assets/image-8.jpg' width=100% alt="3D Stereo Vision and Epipolar Geometry — Result:" loading="lazy" decoding="async">
 
 <hr>
 <h2 id="toc-heading-2">9. Panoramas</h2>
@@ -317,7 +319,7 @@ plt.show()
 <li><strong>Homography Estimation</strong>: For each pair of overlapping images, use a robust algorithm like RANSAC to compute the homography matrix <code>H</code> that aligns them.</li>
 <li><strong>Warping and Compositing</strong>: Warp all images into a common reference frame (e.g., the frame of the center image) using the computed homographies. Then, blend the overlapping regions to create a seamless final mosaic.</li>
 </ol>
-<img src='/blogs/posts/210602_cv4/assets/svg6.svg' width=100%>
+<img src='/blogs/posts/210602_cv4/assets/svg6.svg' width=100% alt="3D Stereo Vision and Epipolar Geometry — Creating Panoramas with Homographies" loading="lazy" decoding="async">
 
 <hr>
 <h3 id="toc-heading-3">Spherical Projection</h3>
@@ -356,7 +358,7 @@ plt.show()
 </li>
 </ul>
 <h4>Vanishing Points and Lines</h4>
-<img src='/blogs/posts/210602_cv4/assets/svg7.svg' width=100%>
+<img src='/blogs/posts/210602_cv4/assets/svg7.svg' width=100% alt="3D Stereo Vision and Epipolar Geometry — Vanishing Points and Lines" loading="lazy" decoding="async">
 
 <ul>
 <li><p><strong>Vanishing Point</strong>: The projection of a point at infinity onto the image plane. All parallel lines in 3D space appear to converge at a single vanishing point in the image. The vanishing point for a set of lines with direction <code>d</code> is given by $v = Pd$, where <code>P</code> is the camera matrix.</p>
@@ -495,7 +497,7 @@ plt.show()
 <br/>
 
 <h4>Result:</h4>
-<img src='/blogs/posts/210302_cv1/assets/image-9.jpg' width=100%>
+<img src='/blogs/posts/210302_cv1/assets/image-9.jpg' width=100% alt="3D Stereo Vision and Epipolar Geometry — Result:, figure 2" loading="lazy" decoding="async">
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     

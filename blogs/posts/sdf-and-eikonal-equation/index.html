@@ -69,6 +69,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     <li class="nav-item"><a href="/blogs/posts/sdf-and-eikonal-equation-kor/" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="kor" style="font-size:0.7rem">KOR</a></li>
                 </ul>
@@ -103,7 +105,7 @@
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             <li><a href="/blogs/series/graphics/">Computer Graphics</a></li>
                             <li aria-current="page">SDF and Eikonal Equation</li>
@@ -170,7 +172,7 @@
 While I&#39;ve written a similar post on velog before, this article aims to provide a more rigorous treatment of the subject.</p>
 <h2 id="toc-heading-0">Introduction</h2>
 <p>A <strong>SDF</strong> (Signed Distance Function) is a representation that, for each point in space, provides the shortest distance to a surface. The set of points where this distance value is zero—the zero-level set or isosurface—defines the actual surface.</p>
-<p><img src="/blogs/posts/250823_sdf/assets/remote-12d4629724c7.png" alt=""></p>
+<p><img src="/blogs/posts/250823_sdf/assets/remote-12d4629724c7.png" alt="SDF and Eikonal Equation — Introduction" loading="lazy" decoding="async"></p>
 <p>SDFs are critical not only in modern fields like 3D generative AI and neural surface reconstruction but also in classical computer graphics for tasks such as physical simulation, animation, and mesh repair for watertightness.</p>
 <p>When reading papers related to SDFs, one inevitably encounters the <a href="https://en.wikipedia.org/wiki/Eikonal_equation">Eikonal equation</a>:
 $$ \| \nabla f_\text{SDF} \| = 1 \\
