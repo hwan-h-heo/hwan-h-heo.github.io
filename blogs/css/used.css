@@ -3647,6 +3647,13 @@ html[lang="ko"] .blog-home-hero p {
     z-index: 5;
 }
 
+@media (min-width: 1200px) and (max-width: 1919px) {
+    .blog-home-page .blog-home-hero > .container,
+    .blog-home-page .blog-home-container {
+        max-width: 1040px;
+    }
+}
+
 .blog-home-feature {
     margin-bottom: 1.35rem;
 }

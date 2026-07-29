@@ -1,10 +1,3 @@
-## Why It Mattered
-
-3D generation quality is often judged at the model-output boundary, but a commercial service has to cross several additional boundaries: variable GPU workloads, damaged topology, excessive face counts, missing UVs, incomplete textures, and formats expected by normal content tools.
-VARCO 3D required those concerns to be designed as one system rather than repaired after the model was finished.
-
-> **The work turned an internal generation model into a dependable asset service.** Model architecture, serving latency, mesh validity, UV generation, and texture projection were optimized against the same outcome: a textured mesh that a creator could download and continue using.
-
 ## System Focus
 
 The practical target of VARCO 3D is not just to synthesize geometry.

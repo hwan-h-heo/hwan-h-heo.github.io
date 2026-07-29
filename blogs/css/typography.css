@@ -259,28 +259,14 @@ header.masthead .post-heading .meta {
 }
 
 .main-content blockquote {
-    position: relative;
     margin: 2rem 0;
-    padding: 1.05rem 1.18rem 1.05rem 1.35rem;
-    border: 1px solid rgba(21, 184, 134, 0.16);
-    border-left: 0;
-    border-radius: 14px;
-    background:
-        linear-gradient(135deg, rgba(21, 184, 134, 0.1), rgba(42, 127, 184, 0.055));
+    padding: 1.05rem 1.18rem 1.05rem 1.25rem;
+    border: 1px solid #dce3e8;
+    border-left: 3px solid #7c8a99;
+    border-radius: 8px;
+    background: #f7f9fb;
     color: #465867;
     font-weight: 400;
-    box-shadow: 0 12px 28px rgba(39, 49, 59, 0.055);
-}
-
-.main-content blockquote::before {
-    content: "";
-    position: absolute;
-    top: 0.85rem;
-    bottom: 0.85rem;
-    left: 0;
-    width: 4px;
-    border-radius: 999px;
-    background: linear-gradient(180deg, #15b886, #2a7fb8);
 }
 
 .main-content blockquote > :first-child {
@@ -590,11 +576,10 @@ html[data-theme="dark"] .main-content .token.variable {
 }
 
 html[data-theme="dark"] .main-content blockquote {
-    border-color: rgba(77, 215, 180, 0.2);
-    background:
-        linear-gradient(135deg, rgba(77, 215, 180, 0.12), rgba(79, 143, 205, 0.075));
+    border-color: #2b3541;
+    border-left-color: #68798a;
+    background: #151c24;
     color: #c8d3df;
-    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.18);
 }
 
 html[data-theme="dark"] .main-content blockquote strong {

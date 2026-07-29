@@ -67,7 +67,7 @@
       hero?.classList.add('hero-intro-visible', 'hero-cta-visible');
       hero?.style.removeProperty('--hero-reveal-opacity');
       document.dispatchEvent(new CustomEvent('portfolio:hero-cta-visible'));
-    }, window.matchMedia('(max-width: 767px)').matches ? 3200 : 4500);
+    }, window.matchMedia('(max-width: 767px)').matches ? 3000 : 3800);
   </script>
 
   <!-- Google tag (gtag.js) -->
@@ -228,6 +228,7 @@
 
   <footer id="footer" class="footer position-relative light-background">
     <div class="container">
+      <p class="footer-note text-center">This site is both a record of the systems I've helped ship and a notebook for the ideas I keep exploring.</p>
       <div class="copyright text-center ">
         <p>© <span>Copyright</span> <strong class="px-1 sitename"> Hwan Heo </strong> <span>All Rights Reserved</span></p>
       </div>

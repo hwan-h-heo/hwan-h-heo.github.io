@@ -492,7 +492,7 @@ html[lang="ko"] .series-summary-copy strong {
     position: absolute;
     top: 0.2rem;
     bottom: 0.2rem;
-    left: 0.24rem;
+    left: 0.42rem;
     width: 1px;
     background: linear-gradient(180deg, rgba(21, 184, 134, 0.32), rgba(42, 127, 184, 0.18));
 }
@@ -541,6 +541,13 @@ html[lang="ko"] .series-summary-copy strong {
     background: #c9d2da;
     transform: translate(-50%, -50%);
     transition: background-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+}
+
+.toc > ol > .toc-item::before,
+.toc > ol > li::before,
+.toc > ul > .toc-item::before,
+.toc > ul > li::before {
+    left: -0.53rem;
 }
 
 .toc a,
