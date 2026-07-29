@@ -686,6 +686,7 @@ function renderProjectPage({ project, contentHtml, projectNav = null }) {
   <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet">
 
+  <script src="../../js/sidebar-controller.js"></script>
   <link href="../../assets/css/portfolio.css" rel="stylesheet">
 ${mathRuntime}
 
@@ -699,6 +700,7 @@ ${mathRuntime}
     .gif-container img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
   </style>
   ${getCommonProjectStyle()}
+  <link href="../../css/sidebar-nav.css" rel="stylesheet">
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
   <script>
@@ -715,14 +717,12 @@ ${mathRuntime}
   </div>
 
   <header id="header" class="header dark-background d-flex flex-column">
-    <i class="header-toggle d-xl-none bi bi-list"></i>
-
     <div class="profile-img">
-      <img src="../../assets/icon.webp" alt="Hwan Heo icon" class="img-fluid rounded-circle">
+      <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="img-fluid rounded-circle">
     </div>
 
     <a href="../../" class="logo d-flex align-items-center justify-content-center">
-      <h1 class="sitename">Hwan Heo</h1>
+      <span class="sitename">Hwan Heo</span>
     </a>
 
     <div class="social-links text-center">

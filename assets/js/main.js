@@ -38,64 +38,6 @@
   window.setTimeout(reveal, 2200);
 })();
 
-document.addEventListener('DOMContentLoaded', () => {
-  const header = document.getElementById('header');
-  const hero = document.getElementById('home');
-  const headerToggleBtn = document.querySelector('.header-toggle');
-  let observer;
-
-  function headerToggle() {
-    header.classList.toggle('hidden');
-    headerToggleBtn.classList.toggle('bi-list');
-    headerToggleBtn.classList.toggle('bi-x');
-  }
-
-  function setupDesktopObserver() {
-    if (!hero) return;
-    observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          header.classList.add('hidden');
-        } else {
-          header.classList.remove('hidden');
-        }
-      });
-    }, { threshold: 0.2 });
-    observer.observe(hero);
-  }
-
-  function handleHeaderState() {
-    if (window.innerWidth >= 1200) {
-      headerToggleBtn.classList.remove('bi-x');
-      headerToggleBtn.classList.add('bi-list');
-      if (!observer) {
-        setupDesktopObserver();
-      }
-    } else {
-      if (observer) {
-        observer.disconnect();
-        observer = null; 
-      }
-      header.classList.add('hidden');
-      headerToggleBtn.classList.remove('bi-x');
-      headerToggleBtn.classList.add('bi-list');
-    }
-  }
-
-  headerToggleBtn.addEventListener('click', headerToggle);
-
-  document.querySelectorAll('#navmenu a').forEach(navmenu => {
-    navmenu.addEventListener('click', () => {
-      if (window.innerWidth < 1200 && !header.classList.contains('hidden')) {
-        headerToggle();
-      }
-    });
-  });
-
-  handleHeaderState();
-  window.addEventListener('resize', handleHeaderState);
-});
-
 (function() {
   "use strict";
   /**
@@ -189,16 +131,6 @@ document.addEventListener('DOMContentLoaded', () => {
    * Scroll top button
    */
   const scrollTop = document.querySelector('#scroll-top');
-  const headerToggleBtn = document.querySelector('.header-toggle');
-
-  if (headerToggleBtn) {
-    const toggleheaderToggleBtn = function() {
-      window.scrollY > 100 ? headerToggleBtn.classList.add('active') : headerToggleBtn.classList.remove('active');
-    }
-    window.addEventListener('load', toggleheaderToggleBtn);
-    document.addEventListener('scroll', toggleheaderToggleBtn);
-  }
-
   if (scrollTop) {
     const togglescrollTop = function() {
       window.scrollY > 100 ? scrollTop.classList.add('active') : scrollTop.classList.remove('active');

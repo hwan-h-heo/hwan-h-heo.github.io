@@ -5,6 +5,10 @@ const {
     getTagRoute,
     listTagArchiveEntries
 } = require('./site-routes');
+const {
+    getBlogCoverPreviewUrl,
+    isAnimatedCover
+} = require('../js/blog-cover-media');
 
 const LANGUAGE_META = {
     eng: {
@@ -160,6 +164,23 @@ function getFeaturedPost(siteData) {
     return siteData.posts.find((post) => post.category === 'post') || siteData.posts[0] || null;
 }
 
+function renderBlogCoverImage(post, title, options = {}) {
+    const source = post.cover || '/assets/blog_bg.jpeg';
+    const keepAnimated = post.animatedPreview === true && isAnimatedCover(source);
+    const preview = getBlogCoverPreviewUrl(post.id, options.variant);
+    const autoplaySource = keepAnimated
+        ? ` data-autoplay-src="${escapeHtml(source)}"`
+        : '';
+    const animatedSource = !keepAnimated && isAnimatedCover(source)
+        ? ` data-animated-src="${escapeHtml(source)}"`
+        : '';
+    const loading = options.eager ? 'eager' : 'lazy';
+    const fetchPriority = options.eager ? ' fetchpriority="high"' : '';
+    const alt = options.alt || `${title} cover image`;
+
+    return `<img src="${escapeHtml(preview)}" data-blog-cover data-preview-src="${escapeHtml(preview)}"${autoplaySource}${animatedSource} alt="${escapeHtml(alt)}" loading="${loading}" decoding="async"${fetchPriority}>`;
+}
+
 function renderPostPreview(post, lang, siteData) {
     const title = getPostTitle(post, lang);
     const description = getPostDescription(post, lang);
@@ -170,7 +191,8 @@ function renderPostPreview(post, lang, siteData) {
     return `
         <article class="post-preview" data-post-id="${escapeHtml(post.id)}" data-post-category="${escapeHtml(post.category)}">
             <div class="post-card-link">
-                <a href="${escapeHtml(url)}" class="post-card-cover" aria-label="Read ${escapeHtml(title)}" style="background-image: url('${escapeHtml(post.cover || '/assets/blog_bg.jpeg')}')">
+                <a href="${escapeHtml(url)}" class="post-card-cover" aria-label="Read ${escapeHtml(title)}">
+                    ${renderBlogCoverImage(post, title)}
                 </a>
                 <div class="post-card-body">
                     <div class="post-card-eyebrow">
@@ -207,7 +229,8 @@ function renderFeaturedPost(siteData, lang = 'eng') {
                     <span>Featured</span>
                     <span>Latest Post</span>
                 </div>
-                <a class="blog-feature-cover" href="${escapeHtml(url)}" role="img" aria-label="${escapeHtml(title)}" style="background-image: url('${escapeHtml(featuredPost.cover || '/assets/blog_bg.jpeg')}')">
+                <a class="blog-feature-cover" href="${escapeHtml(url)}" aria-label="Read ${escapeHtml(title)}">
+                    ${renderBlogCoverImage(featuredPost, title, { eager: true })}
                 </a>
                 <div class="blog-feature-copy">
                     <div class="blog-feature-meta">
@@ -507,7 +530,7 @@ function renderBreadcrumbs(siteData, post, lang = 'eng') {
     return `
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
-                            <li><a href="/">Home</a></li>
+                            <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
                             ${seriesLink}
                             <li aria-current="page">${escapeHtml(getPostTitle(post, lang))}</li>

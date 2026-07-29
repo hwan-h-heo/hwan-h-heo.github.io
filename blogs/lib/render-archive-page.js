@@ -105,6 +105,7 @@ function renderArchivePage({ title, description, canonicalPath, posts, siteData 
             </div>
         </main>
         <script src="/blogs/js/site-data-client.js"></script>
+        <script src="/blogs/js/blog-cover-media.js"></script>
         <script src="/blogs/js/blog-shell.js"></script>
         <script src="/blogs/js/theme-toggle.js"></script>
         <script>
@@ -147,6 +148,7 @@ function renderArchivePage({ title, description, canonicalPath, posts, siteData 
                             const url = window.siteDataClient.getPostUrl(post, language);
                             const titleLink = card.querySelector('.post-title a');
                             const coverLink = card.querySelector('.post-card-cover');
+                            const coverImage = card.querySelector('img[data-blog-cover]');
                             const subtitle = card.querySelector('.post-subtitle');
 
                             if (titleLink) {
@@ -157,6 +159,10 @@ function renderArchivePage({ title, description, canonicalPath, posts, siteData 
                             if (coverLink) {
                                 coverLink.href = url;
                                 coverLink.setAttribute('aria-label', 'Read ' + title);
+                            }
+
+                            if (coverImage) {
+                                coverImage.alt = title + ' cover image';
                             }
 
                             if (subtitle) {

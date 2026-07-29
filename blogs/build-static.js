@@ -4,6 +4,8 @@ const { marked } = require('marked');
 const { parseMarkdownWithMath } = require('./js/markdown-with-math');
 
 const { copyRecursiveSync, ensureDirSync } = require('./lib/fs-utils');
+const { generateBlogCoverPreviews } = require('./lib/blog-cover-assets');
+const { normalizeContentImageAccessibility } = require('./lib/content-image-accessibility');
 const { loadSiteData } = require('./lib/site-data');
 const { SITE_URL } = require('./lib/site-config');
 const { renderPostPage } = require('./lib/render-post-page');
@@ -604,6 +606,7 @@ function generateArchivePages() {
 
 function normalizePostContent(post, content, htmlContent, lang) {
     let updatedHtmlContent = normalizeContentHeadingHierarchy(htmlContent);
+    const postTitle = post[`title_${lang}`] || post.title_eng || post.id;
     const shareLabels = lang === 'kor'
         ? {
             copied: '링크 복사됨',
@@ -663,6 +666,9 @@ function normalizePostContent(post, content, htmlContent, lang) {
     );
 
     updatedHtmlContent = replaceLegacyPostLinks(updatedHtmlContent, lang);
+    updatedHtmlContent = normalizeContentImageAccessibility(updatedHtmlContent, {
+        title: postTitle
+    });
     return updatedHtmlContent;
 }
 
@@ -812,7 +818,9 @@ function generateProjectPages() {
             : parseProjectMarkdown(markdown, (source) => marked.parse(source));
         const html = renderProjectPage({
             project,
-            contentHtml,
+            contentHtml: normalizeContentImageAccessibility(contentHtml, {
+                title: project.title || slug
+            }),
             projectNav: getProjectNav(projectNavItems, slug)
         });
 
@@ -911,10 +919,11 @@ function generateSupportFiles() {
     fs.writeFileSync(path.join(distDir, '.nojekyll'), '');
 }
 
-function buildSite() {
+async function buildSite() {
     resetDistDir();
     generateProjectPages();
     copyStaticAssets();
+    await generateBlogCoverPreviews({ siteData, repoRoot, distDir });
     validateContentFiles();
     validateLegacyRedirects(siteData, legacyRedirects);
     generateBlogIndex();
@@ -931,7 +940,7 @@ function buildSite() {
     console.log(`Output directory: ${distDir}`);
 }
 
-function buildIncremental(options = {}) {
+async function buildIncremental(options = {}) {
     const changedFiles = getChangedFiles({
         changedFiles: options.changedFiles,
         repoRoot
@@ -940,14 +949,14 @@ function buildIncremental(options = {}) {
 
     if (!fs.existsSync(path.join(distDir, 'index.html'))) {
         console.log('Incremental build needs an existing blogs/dist. Running full build.');
-        buildSite();
+        await buildSite();
         return;
     }
 
     if (impact.strategy !== 'incremental') {
         console.log('Incremental build fell back to a full build.');
         impact.reasons.forEach((reason) => console.log(`- ${reason}`));
-        buildSite();
+        await buildSite();
         return;
     }
 
@@ -957,6 +966,7 @@ function buildIncremental(options = {}) {
     impact.postTargets.forEach((languages, postId) => {
         copyPostSource(postId);
     });
+    await generateBlogCoverPreviews({ siteData, repoRoot, distDir });
     const generatedRoutes = generatePostPages(impact.postTargets);
     generateBlogIndex();
     generateLegacyRedirectPages();
@@ -974,8 +984,11 @@ function buildIncremental(options = {}) {
 }
 
 const options = parseArguments(process.argv.slice(2));
-if (options.incremental) {
-    buildIncremental(options);
-} else {
-    buildSite();
-}
+const buildPromise = options.incremental
+    ? buildIncremental(options)
+    : buildSite();
+
+buildPromise.catch((error) => {
+    console.error(error);
+    process.exit(1);
+});

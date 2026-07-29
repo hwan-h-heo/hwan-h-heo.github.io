@@ -43,31 +43,31 @@
                 }
             }
         </style>
+        <script src="../../js/sidebar-controller.js"></script>
         <link href="../css/sidebar.css" rel="stylesheet">
+        <link href="../../css/sidebar-nav.css" rel="stylesheet">
         <link href="../css/typography.css" rel="stylesheet">
     </head>
     <body>
-        <header id="header" class="header dark-background d-flex flex-column">
-            <i class="header-toggle d-xl-none bi bi-list"></i>
-        
+        <header id="header" class="header blog-sidebar dark-background d-flex flex-column">
             <div class="profile-img">
-              <img src="../../assets/icon.webp" alt="" class="img-fluid rounded-circle">
+              <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="img-fluid rounded-circle">
             </div>
         
-            <a href="../../" class="logo d-flex align-items-center justify-content-center">
-              <h1 class="sitename">Hwan Heo</h1>
+            <a href="../" class="logo d-flex align-items-center justify-content-center">
+              <span class="sitename">Hwan's Blog</span>
             </a>
-        
+
             <div class="social-links text-center">
-              <a href="https://github.com/hwanhuh" class="github"><i class="bi bi-github"></i></a>
-              <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin"><i class="bi bi-linkedin"></i></a>
-              <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram"><i class="bi bi-mortarboard-fill"></i></a>
-              <a href="mailto:gjghks950@naver.com" class="google-plus"><i class="bi bi-envelope-fill"></i></a>
+              <a href="https://github.com/hwanhuh" class="github" aria-label="GitHub"><i class="bi bi-github" aria-hidden="true"></i></a>
+              <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin" aria-label="LinkedIn"><i class="bi bi-linkedin" aria-hidden="true"></i></a>
+              <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram" aria-label="Google Scholar"><i class="bi bi-mortarboard-fill" aria-hidden="true"></i></a>
+              <a href="mailto:gjghks950@naver.com" class="google-plus" aria-label="Email"><i class="bi bi-envelope-fill" aria-hidden="true"></i></a>
             </div>
         
             <nav id="navmenu" class="navmenu">
               <ul>
-                <li><a href="../../"><i class="bi bi-house navicon"></i>Portfolio</a></li>
+                <li><a href="../../"><i class="bi bi-briefcase navicon"></i>Portfolio</a></li>
                 <li><a href="../"><i class="bi bi-keyboard navicon"></i>Blog</a></li>
               </ul>
             </nav>
@@ -77,7 +77,7 @@
                 <summary>
                   <i class="bi bi-tools navicon" aria-hidden="true"></i>
                   <span>Labs</span>
-                  <i class="bi bi-chevron-up sidebar-labs-chevron" aria-hidden="true"></i>
+                  <i class="bi bi-chevron-down sidebar-labs-chevron" aria-hidden="true"></i>
                 </summary>
                 <div class="sidebar-labs-panel">
                   <a href="./" class="active"><i class="bi bi-box navicon" aria-hidden="true"></i><span>3D Viewer</span></a>
@@ -85,7 +85,7 @@
                 </div>
               </details>
             </div>
-        
+
         </header>
         <!-- <main class="main"> -->
         <simple-model-viewer

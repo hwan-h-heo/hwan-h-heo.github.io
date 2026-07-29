@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const langToggleButton = document.getElementById('lang-toggle-main');
 
     const { loadSiteData, getPostTitle, getPostDescription, getPostUrl } = window.siteDataClient;
+    const coverMedia = window.blogCoverMedia;
     const siteData = await loadSiteData();
     const sortedPosts = [...siteData.posts].sort((a, b) => new Date(b.date) - new Date(a.date));
 
@@ -109,6 +110,22 @@ document.addEventListener('DOMContentLoaded', async function() {
             .join('');
     }
 
+    function renderCoverImage(post, title, options = {}) {
+        const source = post.cover || '/assets/blog_bg.jpeg';
+        const keepAnimated = post.animatedPreview === true && coverMedia?.isAnimatedCover(source);
+        const preview = coverMedia?.getBlogCoverPreviewUrl(post.id) || source;
+        const autoplaySource = keepAnimated
+            ? ` data-autoplay-src="${escapeHtml(source)}"`
+            : '';
+        const animatedSource = !keepAnimated && coverMedia?.isAnimatedCover(source)
+            ? ` data-animated-src="${escapeHtml(source)}"`
+            : '';
+        const loading = options.eager ? 'eager' : 'lazy';
+        const fetchPriority = options.eager ? ' fetchpriority="high"' : '';
+
+        return `<img src="${escapeHtml(preview)}" data-blog-cover data-preview-src="${escapeHtml(preview)}"${autoplaySource}${animatedSource} alt="${escapeHtml(`${title} cover image`)}" loading="${loading}" decoding="async"${fetchPriority}>`;
+    }
+
     function setText(selector, value) {
         const element = document.querySelector(selector);
         if (element) {
@@ -160,7 +177,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         return `
         <article class="post-preview">
             <a href="${escapeHtml(getPostUrl(post, lang))}" class="post-card-link">
-                <div class="post-card-cover" role="img" aria-label="${escapeHtml(title)}" style="background-image: url('${escapeHtml(post.cover || '/assets/blog_bg.jpeg')}')">
+                <div class="post-card-cover">
+                    ${renderCoverImage(post, title)}
                 </div>
                 <div class="post-card-body">
                     <div class="post-card-eyebrow">
@@ -202,7 +220,8 @@ document.addEventListener('DOMContentLoaded', async function() {
                     <span>${escapeHtml(copy(lang, 'featuredLabel'))}</span>
                     <span>${escapeHtml(copy(lang, 'latestPost'))}</span>
                 </div>
-                <a class="blog-feature-cover" href="${escapeHtml(url)}" role="img" aria-label="${escapeHtml(title)}" style="background-image: url('${escapeHtml(featuredPost.cover || '/assets/blog_bg.jpeg')}')">
+                <a class="blog-feature-cover" href="${escapeHtml(url)}" aria-label="${escapeHtml(copy(lang, 'readPost'))}: ${escapeHtml(title)}">
+                    ${renderCoverImage(featuredPost, title, { eager: true })}
                 </a>
                 <div class="blog-feature-copy">
                     <div class="blog-feature-meta">
@@ -317,6 +336,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         renderAllPosts(lang);
         renderNotes(lang);
         renderSeries(lang);
+        coverMedia?.initializeBlogCoverMedia(document);
     }
 
     if (langToggleButton) {

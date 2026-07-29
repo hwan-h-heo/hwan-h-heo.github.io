@@ -391,3 +391,18 @@
 .sidebar-labs-panel a.active:focus {
   color: var(--nav-hover-color);
 }
+
+.blog-sidebar .navmenu {
+  flex: 0 0 auto;
+}
+
+.blog-sidebar .sidebar-labs {
+  margin-top: 0;
+  padding-bottom: 0;
+}
+
+.blog-sidebar .sidebar-labs-panel {
+  position: static;
+  margin: 0 10px 6px 27px;
+  padding: 3px 0 3px 8px;
+}

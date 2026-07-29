@@ -26,6 +26,7 @@ const POST_ALLOWED_KEYS = new Set([
     'seoTitle_kor',
     'tags',
     'cover',
+    'animatedPreview',
     'socialImage',
     'translationKey',
     'dependencies',
@@ -107,6 +108,14 @@ function validatePostShape(post, seriesMap, errors) {
 
     if (post.slug && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(post.slug)) {
         errors.push(`Invalid slug "${post.slug}" in post "${post.id}".`);
+    }
+
+    if (post.animatedPreview !== undefined && typeof post.animatedPreview !== 'boolean') {
+        errors.push(`"animatedPreview" must be a boolean in post "${post.id}".`);
+    }
+
+    if (post.animatedPreview && !/\.gif(?:[?#].*)?$/i.test(post.cover || '')) {
+        errors.push(`Post "${post.id}" can only enable "animatedPreview" for a GIF cover.`);
     }
 
     if (post.tags !== undefined) {

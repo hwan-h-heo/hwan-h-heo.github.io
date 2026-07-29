@@ -274,6 +274,8 @@ ${renderConditionalHeadAssets(activeRuntimeFeatures)}
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
+                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
                     <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
                     ${alternateHref ? `<li class="nav-item"><a href="${alternateHref}" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="${alternateLang}" style="font-size:0.7rem">${alternateLang === 'eng' ? 'ENG' : 'KOR'}</a></li>` : ''}
                 </ul>

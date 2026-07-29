@@ -1,30 +1,4 @@
 (function() {
-    function setupHeaderToggle() {
-        const header = document.getElementById('header');
-        const headerToggleBtn = document.querySelector('.header-toggle');
-
-        if (!header || !headerToggleBtn || headerToggleBtn.dataset.initialized === 'true') {
-            return;
-        }
-
-        function headerToggle() {
-            header.classList.toggle('header-show');
-            headerToggleBtn.classList.toggle('bi-list');
-            headerToggleBtn.classList.toggle('bi-x');
-        }
-
-        headerToggleBtn.addEventListener('click', headerToggle);
-        document.querySelectorAll('#navmenu a, .sidebar-labs-panel a').forEach((navmenu) => {
-            navmenu.addEventListener('click', () => {
-                if (document.querySelector('.header-show')) {
-                    headerToggle();
-                }
-            });
-        });
-
-        headerToggleBtn.dataset.initialized = 'true';
-    }
-
     function setupScrollTop() {
         const scrollTop = document.querySelector('.scroll-top');
 
@@ -73,7 +47,6 @@
 
     window.initBlogShell = function initBlogShell(options = {}) {
         const run = function() {
-            setupHeaderToggle();
             setupScrollTop();
 
             if (options.formSelector && options.inputSelector) {
@@ -88,4 +61,3 @@
         }
     };
 })();
-

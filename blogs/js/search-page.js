@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const searchInput = document.getElementById('search-input');
     const urlParams = new URLSearchParams(window.location.search);
     const searchTerm = urlParams.get('q')?.trim().toLowerCase() || '';
+    const coverMedia = window.blogCoverMedia;
 
     if (searchInput) {
         searchInput.value = urlParams.get('q') || '';
@@ -53,11 +54,22 @@ document.addEventListener('DOMContentLoaded', async function() {
             const subtitle = getPostDescription(post, currentLang);
             const seriesTitle = siteData.series[post.series]?.eng || 'Series';
             const tagsHtml = (post.tags || []).map((tag) => `<span class="post-tag">${tag}</span>`).join('');
+            const source = post.cover || '/assets/blog_bg.jpeg';
+            const keepAnimated = post.animatedPreview === true && coverMedia?.isAnimatedCover(source);
+            const preview = coverMedia?.getBlogCoverPreviewUrl(post.id) || source;
+            const autoplaySource = keepAnimated
+                ? ` data-autoplay-src="${source}"`
+                : '';
+            const animatedSource = !keepAnimated && coverMedia?.isAnimatedCover(source)
+                ? ` data-animated-src="${source}"`
+                : '';
 
             return `
                 <div class="post-preview">
                     <a href="${getPostUrl(post, currentLang)}" class="post-card-link">
-                        <div class="post-card-cover" style="background-image: url('${post.cover || '/assets/blog_bg.jpeg'}')"></div>
+                        <div class="post-card-cover">
+                            <img src="${preview}" data-blog-cover data-preview-src="${preview}"${autoplaySource}${animatedSource} alt="${title} cover image" loading="lazy" decoding="async">
+                        </div>
                         <div class="post-card-body">
                             <h3 class="post-title">${title}</h3>
                             ${subtitle ? `<h5 class="post-subtitle">${subtitle}</h5>` : ''}
@@ -73,6 +85,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }).join('');
 
         resultsContainer.innerHTML = resultsHtml;
+        coverMedia?.initializeBlogCoverMedia(resultsContainer);
     }
 
     await fetchAllPostContents();
