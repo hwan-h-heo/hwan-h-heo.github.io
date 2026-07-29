@@ -654,7 +654,7 @@
     {
       "id": "capa",
       "title": "CaPa",
-      "summary": "Developed a two-stage model that carves geometry, then paints high-resolution textures.",
+      "summary": "Designed Spatially Decoupled Attention to solve the Janus problem, enabling the first 4K-texture image-to-3D system and leading to VARCO 3D.",
       "url": "projects/capa/",
       "categories": [
         "research"
@@ -670,22 +670,21 @@
       "alt": "CaPa teaser"
     },
     {
-      "id": "deepsfm",
-      "title": "Deep SfM for Radiance Fields",
-      "summary": "Compared VGGSfM and MASt3R for camera recovery in Gaussian Splatting and radiance fields.",
-      "url": "projects/deepsfm/",
+      "id": "instant-pose",
+      "title": "Robust Camera Pose Refinement for Multi-Resolution Hash Encoding",
+      "summary": "Co-developed fast pose refinement for hash-grid NeRF reconstruction, published at ICML 2023.",
+      "url": "projects/instant_pose/",
       "categories": [
-        "per"
+        "research"
       ],
       "tags": [
-        "Structure from Motion",
-        "3D Vision",
-        "Radiance Fields"
+        "NeRF",
+        "Camera Pose",
+        "ICML"
       ],
-      "badge": "Featured on GitHub (230+ stars)",
-      "image": "assets/thumbnails/deepsfm_thumbnail.png",
-      "gif": "assets/sfm_teaser.webp",
-      "alt": "DeepSFM and NeRF face teaser"
+      "badge": "ICML 2023",
+      "image": "projects/instant_pose/assets/pose_fig2.jpg",
+      "alt": "Instant Pose teaser"
     },
     {
       "id": "2dgs-viewer",
@@ -707,21 +706,22 @@
       "alt": "2D GS viewer teaser"
     },
     {
-      "id": "instant-pose",
-      "title": "Instant Pose",
-      "summary": "Co-developed fast pose refinement for hash-grid NeRF reconstruction, published at ICML 2023.",
-      "url": "projects/instant_pose/",
+      "id": "deepsfm",
+      "title": "Deep SfM for Radiance Fields",
+      "summary": "Compared VGGSfM and MASt3R for camera recovery in Gaussian Splatting and radiance fields.",
+      "url": "projects/deepsfm/",
       "categories": [
-        "research"
+        "per"
       ],
       "tags": [
-        "NeRF",
-        "Camera Pose",
-        "ICML"
+        "Structure from Motion",
+        "3D Vision",
+        "Radiance Fields"
       ],
-      "badge": "ICML 2023",
-      "image": "projects/instant_pose/assets/pose_fig2.jpg",
-      "alt": "Instant Pose teaser"
+      "badge": "Featured on GitHub (230+ stars)",
+      "image": "assets/thumbnails/deepsfm_thumbnail.png",
+      "gif": "assets/sfm_teaser.webp",
+      "alt": "DeepSFM and NeRF face teaser"
     },
     {
       "id": "nerf-in-game",

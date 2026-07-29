@@ -508,6 +508,11 @@ function getCommonProjectStyle() {
       display: block;
       margin: 1rem auto;
     }
+    .portfolio-details .project-case-study-article .project-compact-result {
+      display: block;
+      margin: 1rem auto;
+      width: 70%;
+    }
     .portfolio-details img[width] {
       display: block;
       margin-left: auto;
@@ -630,6 +635,9 @@ function getCommonProjectStyle() {
       }
       .portfolio-details .project-hero-header h1 {
         font-size: clamp(1.8rem, 8.5vw, 2.45rem);
+      }
+      .portfolio-details .project-case-study-article .project-compact-result {
+        width: 100%;
       }
       .portfolio-details .project-page-nav {
         grid-template-columns: 1fr;

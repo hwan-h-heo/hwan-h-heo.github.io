@@ -105,10 +105,10 @@ $$
 =
 w_{i,l}
 +\lambda\delta(w_{i,l})
--\lambda\widetilde{\delta(w_{i,l})},
+-\lambda\tilde{\delta}(w_{i,l}),
 $$
 
-where $\widetilde{\delta(w_{i,l})}$ denotes a value detached from the computational graph.
+where $\tilde{\delta}(w_{i,l})$ denotes a value detached from the computational graph.
 The two smooth terms cancel numerically in the forward pass, while the desired smooth derivative remains during back-propagation.
 
 ## Experiments
@@ -121,7 +121,7 @@ Red lines denote pose-error vectors between the ground-truth cameras and the opt
 
 ### Training Time per Iteration
 
-![Training time per iteration](assets/training_time.png)
+<img class="project-compact-result" src="assets/training_time.png" alt="Training time per iteration">
 
 - Retains Instant-NGP's fast convergence.
 - Retains the reconstruction accuracy of multi-resolution hash encoding.
@@ -129,7 +129,7 @@ Red lines denote pose-error vectors between the ground-truth cameras and the opt
 
 ### Quantitative Results
 
-![Quantitative camera registration and rendering results](assets/table.png)
+<img class="project-compact-result" src="assets/table.png" alt="Quantitative camera registration and rendering results">
 
 Across synthetic and real novel-view-synthesis datasets, the method improved camera registration while retaining rapid neural-rendering convergence.
 The work was published at **ICML 2023**, where the paper reported state-of-the-art pose-refinement performance.
