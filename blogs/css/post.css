@@ -1,3 +1,10 @@
+/*
+ * Generated post-page components and rich-content helpers.
+ *
+ * Keep site-wide typography in typography.css and reusable blog chrome in
+ * blog.css. Rules here may depend on markup emitted from post Markdown.
+ */
+
 simple-model-viewer { 
     display: block; 
     background-color: #eeeeee;

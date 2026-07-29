@@ -484,11 +484,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://hwan-h-heo.github.io/projects/adv/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://hwan-h-heo.github.io/projects/capa/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -499,17 +494,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://hwan-h-heo.github.io/projects/face_nerf/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://hwan-h-heo.github.io/projects/few_nerf/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://hwan-h-heo.github.io/projects/hoi/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -520,11 +505,6 @@
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/projects/nerf_in_game/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://hwan-h-heo.github.io/projects/ref_nerf/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

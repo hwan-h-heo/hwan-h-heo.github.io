@@ -177,8 +177,7 @@
             }
             state.projectPageBundles[pagePath] = {
                 metadata: payload.metadata || {},
-                content: payload.content || '',
-                legacyHtml: payload.legacyHtml || ''
+                content: payload.content || ''
             };
             setStatus(state.projectPageDirty ? 'Unsaved page' : 'Loaded', false);
             renderForm();
@@ -664,8 +663,7 @@
                         };
                     }).filter((detail) => detail.label && detail.value),
                     description: getFieldValue('projectDescription'),
-                    keywords: getFieldValue('projectKeywords'),
-                    sourceBackup: bundle.metadata.sourceBackup || ''
+                    keywords: getFieldValue('projectKeywords')
                 };
                 bundle.content = contentField.value;
             }
@@ -815,14 +813,6 @@
                 ? parseProjectMarkdown(bundle.content || '', (source) => marked.parse(source))
                 : escapeHtml(bundle.content || '').replace(/\n/g, '<br>');
         const contentHtml = rewriteProjectRelativeUrls(parsedContentHtml, item.path);
-        if (bundle.legacyHtml) {
-            return `
-                <div class="project-page-preview is-frame">
-                    <iframe class="project-page-preview-frame" title="${escapeHtml(metadata.title || item.path)} preview" sandbox="allow-scripts allow-same-origin" srcdoc="${escapeHtml(renderLegacyProjectPreview(bundle.legacyHtml, metadata, contentHtml))}"></iframe>
-                </div>
-            `;
-        }
-
         return `
             <div class="project-page-preview">
                 <h1>${metadata.heroTitle || escapeHtml(metadata.title || item.title || item.path)}</h1>
@@ -830,33 +820,6 @@
                 <div class="project-preview-content">${contentHtml}</div>
             </div>
         `;
-    }
-
-    function renderLegacyProjectPreview(legacyHtml, metadata, contentHtml) {
-        const title = metadata.title || 'Project';
-        const heroTitle = metadata.heroTitle || title;
-        const subtitles = Array.isArray(metadata.subtitles) ? metadata.subtitles : [];
-        const detailsInner = `
-            <div class="row gx-5 justify-content-center">
-                <div class="text-center mb-5 col-11 col-lg-10 col-xl-8 col-xxl-7">
-                    <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline">${heroTitle}</span></h1>
-                    ${subtitles.map((subtitle) => `<div class="fs-3 fw-light text-muted">${subtitle}</div>`).join('')}
-                </div>
-            </div>
-
-            ${contentHtml}
-        `;
-
-        let html = legacyHtml
-            .replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(title)}</title>`)
-            .replace(/<li class=["']current["']>[\s\S]*?<\/li>/i, `<li class="current">${escapeHtml(title)}</li>`);
-
-        html = html.replace(
-            /(<section\s+id=["']portfolio-details["'][^>]*>)([\s\S]*?)(<\/section>\s*<!--\s*\/Portfolio Details Section\s*-->)/i,
-            (match, openTag, oldContent, closeTag) => `${openTag}${detailsInner}${closeTag}`
-        );
-
-        return html.replace(/(<head[^>]*>)/i, `$1<base href="/">`);
     }
 
     function renderProjectPreview(item) {
