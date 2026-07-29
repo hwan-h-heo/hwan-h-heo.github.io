@@ -132,7 +132,7 @@
             </div>
 
             <div class="container" data-aos="fade-up" data-aos-delay="100">
-                <div class="row gy-4 align-items-center justify-content-center">
+                <div class="row gy-4 about-layout justify-content-center">
                     <div class="col-lg-4" style="transition: 0.3s ease-in-out;">
                         <img src="${escapeHtml(block.image)}" class="img-fluid about-profile-image" alt="${escapeHtml(block.imageAlt)}">
                     </div>
