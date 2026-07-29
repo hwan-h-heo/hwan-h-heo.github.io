@@ -35,6 +35,5 @@
     }
   ],
   "description": "Case study of a 360-video-to-Gaussian-Splatting pipeline with fisheye CUDA rasterization and Unity and Unreal Engine deployment.",
-  "keywords": "",
-  "sourceBackup": ""
+  "keywords": ""
 }

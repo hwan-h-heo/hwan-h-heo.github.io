@@ -34,6 +34,5 @@
     }
   ],
   "description": "ICML 2023 case study on stabilizing camera-pose gradients while retaining the rapid convergence of hash-grid Neural Radiance Fields.",
-  "keywords": "",
-  "sourceBackup": ""
+  "keywords": ""
 }

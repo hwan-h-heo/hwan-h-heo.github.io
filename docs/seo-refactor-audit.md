@@ -123,7 +123,7 @@ For SEO, post navigation should be rendered at build time and deterministic. Ser
 
 ## Series and Notes Rendering
 
-Series metadata lives under `series` in `blogs/data/site-data.json`. Notes are ordinary posts with `category: "note"`. `blogs/js/main-list.js` renders notes and series only on the client. `blogs/posts/series.html` is archival/static and still points to old ID-like routes; it should not be treated as source of truth for new navigation.
+Series metadata lives under `series` in `blogs/data/site-data.json`. Notes are ordinary posts with `category: "note"`. `blogs/js/main-list.js` renders notes and series only on the client. The former archival `blogs/posts/series.html` list was removed; current series navigation is generated from site data.
 
 ## Deployment and GitHub Pages Constraints
 

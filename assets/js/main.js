@@ -102,7 +102,9 @@ document.addEventListener('DOMContentLoaded', () => {
    * Animation on scroll function and init
    */
   function aosInit() {
-    AOS.init({
+    if (!window.AOS || !document.querySelector('[data-aos]')) return;
+
+    window.AOS.init({
       duration: 600,
       easing: 'ease-in-out',
       once: true,
@@ -112,78 +114,8 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('load', aosInit);
 
   /**
-   * Initiate Pure Counter
+   * Lazy loading for project media
    */
-  new PureCounter();
-
-  /**
-   * Animate the skills items on reveal
-   */
-  let skillsAnimation = document.querySelectorAll('.skills-animation');
-  skillsAnimation.forEach((item) => {
-    new Waypoint({
-      element: item,
-      offset: '80%',
-      handler: function(direction) {
-        let progress = item.querySelectorAll('.progress .progress-bar');
-        progress.forEach(el => {
-          el.style.width = el.getAttribute('aria-valuenow') + '%';
-        });
-      }
-    });
-  });
-
-  /**
-   * Initiate glightbox
-   */
-  const glightbox = GLightbox({
-    selector: '.glightbox'
-  });
-
-  /**
-   * Init isotope layout and filters
-   */
-  const isotopeInstances = [];
-
-  document.querySelectorAll('.isotope-layout').forEach(function(isotopeItem) {
-    if (isotopeItem.dataset.dynamicSource) {
-      return;
-    }
-
-    let layout = isotopeItem.getAttribute('data-layout') ?? 'masonry';
-    let filter = isotopeItem.getAttribute('data-default-filter') ?? '*';
-    let sort = isotopeItem.getAttribute('data-sort') ?? 'original-order';
-
-    const isotopeContainer = isotopeItem.querySelector('.isotope-container');
-    let initIsotope;
-
-    imagesLoaded(isotopeContainer, function() {
-      initIsotope = new Isotope(isotopeContainer, {
-        itemSelector: '.isotope-item',
-        layoutMode: layout,
-        filter: filter,
-        sortBy: sort,
-        percentPosition: true
-      });
-
-      isotopeInstances.push(initIsotope);
-    });
-
-    isotopeItem.querySelectorAll('.isotope-filters li').forEach(function(filters) {
-      filters.addEventListener('click', function() {
-        isotopeItem.querySelector('.isotope-filters .filter-active').classList.remove('filter-active');
-        this.classList.add('filter-active');
-        initIsotope.arrange({
-          filter: this.getAttribute('data-filter')
-        });
-        if (typeof aosInit === 'function') {
-          aosInit();
-        }
-      }, false);
-    });
-  });
-
-  // 3. Lazy Loading 
   const lazyImages = document.querySelectorAll('.lazy-image');
   const lazyImageObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
@@ -197,12 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
 
-        lazyImage.addEventListener('load', () => {
-          isotopeInstances.forEach(instance => {
-            instance.layout();
-          });
-        }, { once: true });
-
         lazyImage.src = lazySource;
         lazyImage.classList.remove('lazy-image');
         observer.unobserve(lazyImage);
@@ -213,25 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
   lazyImages.forEach(lazyImage => {
     lazyImageObserver.observe(lazyImage);
   });
-
-  /**
-   * Init swiper sliders
-   */
-  function initSwiper() {
-    document.querySelectorAll(".init-swiper").forEach(function(swiperElement) {
-      let config = JSON.parse(
-        swiperElement.querySelector(".swiper-config").innerHTML.trim()
-      );
-
-      if (swiperElement.classList.contains("swiper-tab")) {
-        initSwiperWithCustomPagination(swiperElement, config);
-      } else {
-        new Swiper(swiperElement, config);
-      }
-    });
-  }
-
-  window.addEventListener("load", initSwiper);
 
   /**
    * Correct scrolling position upon page load for URLs containing hash links.

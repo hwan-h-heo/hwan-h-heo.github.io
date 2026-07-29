@@ -650,33 +650,6 @@ function getCommonProjectStyle() {
   </style>`;
 }
 
-function injectCommonProjectStyle(html) {
-    if (html.includes('id="project-detail-common-style"')) {
-        return html;
-    }
-
-    return html.replace('</head>', `  ${getCommonProjectStyle()}\n</head>`);
-}
-
-function replaceOrInsertMeta(html, name, content) {
-    const escapedContent = escapeHtml(content || '');
-    const pattern = new RegExp(`<meta\\s+content=["'][^"']*["']\\s+name=["']${name}["']>`, 'i');
-    if (pattern.test(html)) {
-        return html.replace(pattern, `<meta content="${escapedContent}" name="${name}">`);
-    }
-
-    return html.replace('</head>', `  <meta content="${escapedContent}" name="${name}">\n</head>`);
-}
-
-function patchLegacyLazyLoadingScript(html) {
-    return html.replace(
-        /lazyImage\.src\s*=\s*lazyImage\.dataset\.src;/g,
-        `if (lazyImage.dataset.src) {
-            lazyImage.src = lazyImage.dataset.src;
-          }`
-    );
-}
-
 function renderMathRuntime(contentHtml) {
     if (!/(\$\$|\\\(|\\\[|(?:^|[^\\])\$[^$\n]+\$)/m.test(String(contentHtml || ''))) {
         return '';
@@ -686,39 +659,7 @@ function renderMathRuntime(contentHtml) {
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>`;
 }
 
-function replaceProjectNavItems(html, projectNav) {
-    const navPattern = /(<nav\s+id=["']navmenu["'][^>]*>\s*<ul>)([\s\S]*?)(<\/ul>\s*<\/nav>)/i;
-    return html.replace(navPattern, (match, openTag, items, closeTag) => `${openTag}
-${renderProjectNavItems(projectNav)}
-      ${closeTag}`);
-}
-
-function renderProjectPageFromLegacyTemplate({ project, contentHtml, legacyHtml, projectNav }) {
-    const title = project.title || 'Project';
-    const detailsInner = renderProjectDetailsInner(project, contentHtml, projectNav);
-    let html = legacyHtml;
-
-    html = html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(title)}</title>`);
-    html = replaceOrInsertMeta(html, 'description', project.description || '');
-    html = replaceOrInsertMeta(html, 'keywords', project.keywords || '');
-    html = injectCommonProjectStyle(html);
-    html = replaceProjectNavItems(html, projectNav);
-    html = patchLegacyLazyLoadingScript(html);
-    html = html.replace(/<li class=["']current["']>[\s\S]*?<\/li>/i, `<li class="current">${escapeHtml(title)}</li>`);
-
-    const sectionPattern = /(<section\s+id=["']portfolio-details["'][^>]*>)([\s\S]*?)(<\/section>\s*<!--\s*\/Portfolio Details Section\s*-->)/i;
-    if (sectionPattern.test(html)) {
-        return html.replace(sectionPattern, (match, openTag, oldContent, closeTag) => `${openTag}\n${detailsInner}\n    ${closeTag}`);
-    }
-
-    return html;
-}
-
-function renderProjectPage({ project, contentHtml, legacyHtml, projectNav = null }) {
-    if (legacyHtml) {
-        return renderProjectPageFromLegacyTemplate({ project, contentHtml, legacyHtml, projectNav });
-    }
-
+function renderProjectPage({ project, contentHtml, projectNav = null }) {
     const title = project.title || 'Project';
     const description = project.description || '';
     const keywords = project.keywords || '';
@@ -743,12 +684,9 @@ function renderProjectPage({ project, contentHtml, legacyHtml, projectNav = null
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="../../assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="../../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="../../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet">
 
-  <link href="../../assets/css/used.css" rel="stylesheet">
+  <link href="../../assets/css/portfolio.css" rel="stylesheet">
 ${mathRuntime}
 
   <style>
@@ -830,15 +768,6 @@ ${detailsInner}
   <div id="preloader"></div>
 
   <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="../../assets/vendor/php-email-form/validate.js"></script>
-  <script src="../../assets/vendor/aos/aos.js"></script>
-  <script src="../../assets/vendor/typed.js/typed.umd.js"></script>
-  <script src="../../assets/vendor/purecounter/purecounter_vanilla.js"></script>
-  <script src="../../assets/vendor/waypoints/noframework.waypoints.js"></script>
-  <script src="../../assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="../../assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
-  <script src="../../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-  <script src="../../assets/vendor/swiper/swiper-bundle.min.js"></script>
   <script src="../../assets/js/main.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {

@@ -35,6 +35,5 @@
     }
   ],
   "description": "Case study comparing VGGSfM and MASt3R camera reconstruction as front ends for 2D Gaussian Splatting.",
-  "keywords": "Radiance Fields, Gaussian Splatting, VGGSfM, Mast3r, Structure from Motion, SfM, Comparison, Portfolio",
-  "sourceBackup": ""
+  "keywords": "Radiance Fields, Gaussian Splatting, VGGSfM, Mast3r, Structure from Motion, SfM, Comparison, Portfolio"
 }

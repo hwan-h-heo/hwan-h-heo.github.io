@@ -59,6 +59,5 @@
     }
   ],
   "description": "Case study of VARCO 3D, covering 1B+ native 3D model development, CUDA inference optimization, mesh processing, UV unwrapping, and texture delivery.",
-  "keywords": "VARCO 3D, NC AI, 3D Generation, 3D Generative AI, VecSet-based ShapeVAE, Dense DiT Denoiser, Sparse DC VAE, Sparse DiT Denoiser, CUDA, cuBLASLt, QEM Decimation, UV Unwrapping, Texture Back Projection",
-  "sourceBackup": ""
+  "keywords": "VARCO 3D, NC AI, 3D Generation, 3D Generative AI, VecSet-based ShapeVAE, Dense DiT Denoiser, Sparse DC VAE, Sparse DiT Denoiser, CUDA, cuBLASLt, QEM Decimation, UV Unwrapping, Texture Back Projection"
 }

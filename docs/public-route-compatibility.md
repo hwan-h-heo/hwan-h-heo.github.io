@@ -121,15 +121,11 @@ Generated from current source metadata. Preserve these routes unless a documente
 ## Project Routes
 
 - `/projects/2dgs_viewer/`
-- `/projects/adv/`
 - `/projects/capa/`
 - `/projects/deepsfm/`
-- `/projects/face_nerf/`
 - `/projects/few_nerf/`
-- `/projects/hoi/`
 - `/projects/instant_pose/`
 - `/projects/nerf_in_game/`
-- `/projects/ref_nerf/`
 - `/projects/varco3d/`
 
 ## Compatibility Notes

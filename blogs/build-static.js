@@ -810,16 +810,9 @@ function generateProjectPages() {
         const contentHtml = markdown.trimStart().startsWith('<')
             ? markdown
             : parseProjectMarkdown(markdown, (source) => marked.parse(source));
-        const backupPath = project.sourceBackup
-            ? path.join(__dirname, '..', project.sourceBackup)
-            : '';
-        const legacyHtml = backupPath && fs.existsSync(backupPath)
-            ? fs.readFileSync(backupPath, 'utf8')
-            : '';
         const html = renderProjectPage({
             project,
             contentHtml,
-            legacyHtml,
             projectNav: getProjectNav(projectNavItems, slug)
         });
 

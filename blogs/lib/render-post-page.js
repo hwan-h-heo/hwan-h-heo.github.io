@@ -97,6 +97,10 @@ function renderConditionalBodyScripts(runtimeFeatures) {
         scripts.push('    <script src="/blogs/js/code-copy.js"></script>');
     }
 
+    if (runtimeFeatures.modelViewerTextureToggle) {
+        scripts.push('    <script src="/blogs/js/model-viewer-texture-toggle.js"></script>');
+    }
+
     if (runtimeFeatures.tween) {
         scripts.push('    <script src="/vendor/tween/tween.umd.js"></script>');
     }
@@ -110,6 +114,7 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
         prism: Boolean(runtimeFeatures.prism),
         bootstrap: Boolean(runtimeFeatures.bootstrap),
         modelViewer: Boolean(runtimeFeatures.modelViewer),
+        modelViewerTextureToggle: Boolean(runtimeFeatures.modelViewerTextureToggle),
         three: Boolean(runtimeFeatures.three),
         tween: Boolean(runtimeFeatures.tween),
         simpleModelViewer: Boolean(runtimeFeatures.simpleModelViewer),
@@ -231,11 +236,11 @@ ${alternateLinksHtml}
     <title>${escapeHtml(pageTitle)}</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/used.css" rel="stylesheet" />
+    <link href="/blogs/css/blog.css" rel="stylesheet" />
     <link href="/blogs/css/typography.css" rel="stylesheet" />
-    <link href="/blogs/css/blog_post_specific.css" rel="stylesheet" />
+    <link href="/blogs/css/post.css" rel="stylesheet" />
     <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
+    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet" />
 ${renderConditionalHeadAssets(activeRuntimeFeatures)}
 
     <style>

@@ -35,6 +35,5 @@
     }
   ],
   "description": "Case study of an open-source 2D Gaussian Splatting workspace for training, diagnostics, editing, transforms, camera paths, and mesh export.",
-  "keywords": "2D Gaussian Splatting, Viewer, Visualization, Editing, Rendering, Viser, Portfolio",
-  "sourceBackup": ""
+  "keywords": "2D Gaussian Splatting, Viewer, Visualization, Editing, Rendering, Viser, Portfolio"
 }

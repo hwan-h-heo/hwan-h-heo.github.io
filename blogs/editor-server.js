@@ -371,18 +371,10 @@ function readProjectPage(rawPath) {
         throw new Error('Project page source files were not found.');
     }
 
-    const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
-    const backupPath = metadata.sourceBackup
-        ? path.join(SITE_ROOT_DIR, metadata.sourceBackup)
-        : '';
-
     return {
         path: pagePath,
-        metadata,
-        content: fs.readFileSync(contentPath, 'utf8'),
-        legacyHtml: backupPath && fs.existsSync(backupPath)
-            ? fs.readFileSync(backupPath, 'utf8')
-            : ''
+        metadata: JSON.parse(fs.readFileSync(metadataPath, 'utf8')),
+        content: fs.readFileSync(contentPath, 'utf8')
     };
 }
 
@@ -411,8 +403,7 @@ function saveProjectPage(payload) {
             ? metadataInput.subtitles.map((subtitle) => String(subtitle || '').trim()).filter(Boolean)
             : [],
         description: String(metadataInput.description || '').trim(),
-        keywords: String(metadataInput.keywords || '').trim(),
-        sourceBackup: String(metadataInput.sourceBackup || '').trim()
+        keywords: String(metadataInput.keywords || '').trim()
     };
 
     if (!metadata.title || !metadata.heroTitle) {
@@ -430,13 +421,7 @@ function saveProjectPage(payload) {
     const contentHtml = content.trimStart().startsWith('<')
         ? content
         : parseProjectMarkdown(content, (source) => marked.parse(source));
-    const backupPath = metadata.sourceBackup
-        ? path.join(SITE_ROOT_DIR, metadata.sourceBackup)
-        : '';
-    const legacyHtml = backupPath && fs.existsSync(backupPath)
-        ? fs.readFileSync(backupPath, 'utf8')
-        : '';
-    fs.writeFileSync(indexPath, renderProjectPage({ project: metadata, contentHtml, legacyHtml }), 'utf8');
+    fs.writeFileSync(indexPath, renderProjectPage({ project: metadata, contentHtml }), 'utf8');
 
     return {
         success: true,
@@ -497,8 +482,7 @@ function createProjectPage(payload) {
             }
         ],
         description: '',
-        keywords: '',
-        sourceBackup: ''
+        keywords: ''
     };
     const content = `## Why It Mattered
 

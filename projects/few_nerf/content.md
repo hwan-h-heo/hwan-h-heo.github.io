@@ -1,26 +1,4 @@
-:::{.row .gx-5 .justify-content-center}
-:::{.project-readable .portfolio-description}
-:::{.fs-6}
-**TL; DR:** We introduce **SF-NeRF**, an advanced framework for reconstructing neural scene representations from a small number of unconstrained in-the-wild photos.
-:::
-:::{.fs-6}
-**Role:** Baseline Experiments & Research Discussion
-:::
-:::{.fs-6}
-**Keywords:** Neural Rendering, Radiance Fields, NeRF in-the-wild
-:::
-
-## Overview
-
----
-
-SF-NeRF tackles the challenge of decomposing transient and static phenomena in neural scene reconstruction.
-At its core is *FilterNet*, an additional MLP module designed to predict the transient components of each image.
-FilterNet leverages semantic information extracted from an image encoder pretrained in an unsupervised manner, which is key to enabling few-shot learning.
-
-Our framework is tailored for scenes captured under unconstrained conditions, such as varying illuminations and occlusions, commonly found in tourist photos. By utilizing DINO-based semantic features, we introduce an occlusion filtering module that predicts the transient color and its opacity for each pixel, enabling robust neural scene reconstruction even with limited data.
-
-## Methodology
+## Method
 
 ---
 
@@ -115,6 +93,4 @@ SF-NeRF significantly outperforms NeRF-W and Latent NeRF in novel view synthesis
 :::
 :::{.text-center}
 ![Image](assets/qual2.png){.img-thumbnail}
-:::
-:::
 :::

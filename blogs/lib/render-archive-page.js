@@ -43,10 +43,10 @@ function renderArchivePage({ title, description, canonicalPath, posts, siteData 
         <script type="application/ld+json">${serializeStructuredData(structuredData)}</script>
         <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        <link href="/blogs/css/used.css" rel="stylesheet" />
+        <link href="/blogs/css/blog.css" rel="stylesheet" />
         <link href="/blogs/css/sidebar.css" rel="stylesheet" />
         <link href="/blogs/css/typography.css" rel="stylesheet" />
-        <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
+        <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet" />
         <script>
             (function() {
                 try {

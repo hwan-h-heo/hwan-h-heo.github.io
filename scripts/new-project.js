@@ -28,8 +28,7 @@ function main() {
         heroTitle: title,
         subtitles: ['Project'],
         description: '',
-        keywords: '',
-        sourceBackup: ''
+        keywords: ''
     };
 
     const content = `:::{.container .portfolio-details-container .col-11}\n:::{.row .gy-4}\n:::{.col-lg-8}\n:::{.portfolio-description}\n## Project Overview\n\nStart writing the project page here.\n:::\n:::\n\n:::{.col-lg-4}\n:::{.portfolio-info}\n### Project Details\n\n- **Category**: Project\n- **Skills Demonstrated**: Add skills here\n:::\n:::\n:::\n:::\n`;

@@ -31,7 +31,7 @@ The generator in `blogs/build-static.js`:
 - Regenerates project pages from `projects/<slug>/project.json` and `projects/<slug>/content.md`.
 - Copies blog static directories and files under `blogs/dist/blogs`.
 - Copies `blogs/posts` source assets into `blogs/dist/blogs/posts`.
-- Copies root `assets`, `css`, `js`, and root `index.html` into the dist root.
+- Copies root `assets`, `js`, and root `index.html` into the dist root.
 - Copies project assets into `blogs/dist/projects`, excluding project source files.
 - Validates blog content files against `blogs/data/site-data.json`.
 - Generates blog post pages under `blogs/dist/blogs/posts/<slug>/`.
@@ -60,25 +60,25 @@ Route preservation risk is high for blog posts because the current public slug i
 Current high-level structure:
 
 - Root portfolio shell: `index.html`.
-- Root shared styles and scripts: `css/`, `js/`, `assets/`.
+- Root shared styles and scripts: `assets/css/`, `assets/js/`, and `js/`.
 - Portfolio data: partially in `blogs/data/site-data.json`, partially hardcoded in `index.html`.
 - Portfolio projects: `projects/<slug>/project.json`, `projects/<slug>/content.md`, generated `index.html`, and local assets.
 - Blog metadata: `blogs/data/site-data.json`.
 - Blog source: `blogs/posts/<YYMMDD_slug>/content-eng.md`, optional `content-kor.md`, and local assets.
-- Blog static shell/assets: `blogs/index.html`, `blogs/css/`, `blogs/js/`, `blogs/layouts/`, `blogs/search/`, `blogs/3DViewer/`.
+- Blog static shell/assets: `blogs/index.html`, `blogs/css/`, `blogs/js/`, `blogs/search/`, and `blogs/3DViewer/`.
 - Local editor: `blogs/editor/`.
 - Generated deploy output: `blogs/dist/`, which should not be edited by hand.
-- Legacy archival code: `blogs/legacy/`, which should not receive new features.
+- Old public-path compatibility: generated redirects from the current build; no archived generator source is kept in the runtime tree.
 
 Current counts from `blogs/data/site-data.json` and the filesystem:
 
-- 25 blog posts in metadata.
-- 25 post source directories under `blogs/posts`.
+- 26 blog posts in metadata.
+- 26 post source directories under `blogs/posts`.
 - 6 portfolio cards in metadata.
-- 12 project source directories under `projects`.
+- 7 project source directories under `projects`.
 - 4 publications.
 - 6 talks.
-- 7 featured portfolio blog previews.
+- 3 featured portfolio blog previews.
 - 6 blog series entries.
 
 ## Current Blog Implementation
@@ -129,7 +129,7 @@ Project detail pages have a better source model:
 - `projects/<slug>/project.json` contains project page metadata.
 - `projects/<slug>/content.md` contains page body content.
 - `blogs/build-static.js` regenerates `projects/<slug>/index.html`.
-- `projects/template.html` and renderer helpers define the shared page wrapper.
+- `blogs/lib/render-project-page.js` defines the shared page wrapper.
 
 The target block-based portfolio should begin by moving remaining hardcoded `index.html` content into structured data while keeping the current root route and visual shell stable.
 
@@ -161,7 +161,7 @@ Maintenance concerns:
 Current asset locations:
 
 - Root shared assets: `assets/`.
-- Root/shared CSS and JS: `css/`, `js/`, plus `assets/css` and `assets/js`.
+- Root/shared CSS and JS: `assets/css/`, `assets/js/`, and `js/`.
 - Blog post local assets: usually under `blogs/posts/<id>/assets/`, but older posts also place assets directly in the post folder.
 - Project assets: under `projects/<slug>/assets/` or direct files inside a project folder.
 - Portfolio card thumbnails: mostly `assets/thumbnails/` and selected root `assets/` files.

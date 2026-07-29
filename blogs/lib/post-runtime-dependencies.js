@@ -35,6 +35,7 @@ const RUNTIME_FEATURES = [
     'prism',
     'bootstrap',
     'modelViewer',
+    'modelViewerTextureToggle',
     'three',
     'tween',
     'simpleModelViewer',
@@ -199,6 +200,11 @@ function inferPostRuntimeFeatures({ post, contentSource, contentHtml, frontmatte
 
     if (/<model-viewer(?:\s|>)/i.test(contentHtml)) {
         features.add('modelViewer');
+    }
+
+    const interactiveHtml = stripCodeLikeContent(contentHtml);
+    if (/onclick=(["'])show_(?:geometry|texture)\(\)\1/i.test(interactiveHtml)) {
+        features.add('modelViewerTextureToggle');
     }
 
     if (/<simple-model-viewer(?:\s|>)/i.test(contentHtml)) {

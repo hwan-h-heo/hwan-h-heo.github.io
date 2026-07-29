@@ -1,14 +1,14 @@
 document.addEventListener('DOMContentLoaded', async function() {
     const section = document.getElementById('blog');
     const container = document.getElementById('portfolio-blog-posts');
-    const swiperElement = document.querySelector('.portfolio-blog-swiper');
+    const listShell = document.querySelector('.portfolio-blog-list-shell');
     const markReady = () => {
         if (!section) return;
         section.dataset.sectionReady = 'true';
         section.dispatchEvent(new CustomEvent('portfolio:section-ready'));
     };
 
-    if (!container || !swiperElement || !window.siteDataClient) {
+    if (!container || !listShell || !window.siteDataClient) {
         markReady();
         return;
     }
@@ -78,8 +78,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         `;
             }).join('');
 
-        swiperElement.classList.add('portfolio-blog-list-shell');
-        container.className = 'portfolio-blog-list';
         container.innerHTML = postsHtml;
     } catch (error) {
         console.error(error);
