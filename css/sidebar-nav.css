@@ -242,14 +242,14 @@
         display: none;
     }
 
-    .header {
+    #header.header {
         left: min(-100%, -300px);
         width: min(var(--site-sidebar-width), calc(100vw - 48px));
         transform: none;
         z-index: 1000;
     }
 
-    .header.header-show {
+    #header.header.header-show {
         left: 0;
     }
 
