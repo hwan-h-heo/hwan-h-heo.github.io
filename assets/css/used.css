@@ -2019,6 +2019,10 @@ h6 {
   transition: transform 0.32s ease, filter 0.32s ease;
 }
 
+.portfolio-project-link[href$="projects/instant_pose/"] .portfolio-project-cover img {
+  object-position: right center;
+}
+
 .portfolio-project-link:hover .portfolio-project-cover img,
 .portfolio-project-link:hover .portfolio-project-cover video,
 .portfolio-project-link.is-active .portfolio-project-cover img,
