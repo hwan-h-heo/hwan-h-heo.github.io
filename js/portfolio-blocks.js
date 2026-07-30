@@ -252,19 +252,13 @@
 
         const delay = (milliseconds) => new Promise(resolve => root.setTimeout(resolve, milliseconds));
         const getSnapTarget = (direction) => {
-            if (!direction) return null;
+            if (direction <= 0) return null;
 
-            const heroTop = heroSection.offsetTop;
             const handoffTop = firstHandoffSection.offsetTop;
             const position = root.scrollY;
-            const betweenHeroAndHandoff = position > heroTop + 48 && position < handoffTop - 2;
 
-            if (direction > 0 && position < handoffTop - 2) {
+            if (position < handoffTop - 2) {
                 return firstHandoffSection;
-            }
-
-            if (direction < 0 && (betweenHeroAndHandoff || position <= handoffTop + 48)) {
-                return position > heroTop + 1 ? heroSection : null;
             }
 
             return null;

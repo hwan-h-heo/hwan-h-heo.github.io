@@ -72,8 +72,88 @@
         collapseToggle.setAttribute('aria-expanded', 'true');
         header.appendChild(collapseToggle);
 
+        const collapsedTooltip = document.createElement('div');
+        collapsedTooltip.className = 'sidebar-collapsed-tooltip';
+        collapsedTooltip.setAttribute('role', 'tooltip');
+        collapsedTooltip.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(collapsedTooltip);
+        let collapsedTooltipTarget = null;
+
         function isCollapsed() {
             return documentRoot.classList.contains('sidebar-collapsed');
+        }
+
+        function hideCollapsedTooltip(target) {
+            if (target && target !== collapsedTooltipTarget) {
+                return;
+            }
+
+            collapsedTooltipTarget = null;
+            collapsedTooltip.classList.remove('is-visible');
+            collapsedTooltip.setAttribute('aria-hidden', 'true');
+        }
+
+        function showCollapsedTooltip(target) {
+            const label = target.dataset.sidebarLabel;
+            const canShow = (
+                label
+                && desktopMedia.matches
+                && isCollapsed()
+                && !header.classList.contains('sidebar-layout-changing')
+                && !header.classList.contains('sidebar-auto-hidden')
+            );
+            if (!canShow) {
+                hideCollapsedTooltip();
+                return;
+            }
+
+            collapsedTooltipTarget = target;
+            collapsedTooltip.textContent = label;
+            collapsedTooltip.classList.add('is-visible');
+            collapsedTooltip.setAttribute('aria-hidden', 'false');
+
+            const targetRect = target.getBoundingClientRect();
+            const tooltipHalfHeight = collapsedTooltip.offsetHeight / 2;
+            const viewportPadding = 8;
+            const targetCenter = targetRect.top + targetRect.height / 2;
+            const top = Math.min(
+                Math.max(targetCenter, tooltipHalfHeight + viewportPadding),
+                window.innerHeight - tooltipHalfHeight - viewportPadding
+            );
+            collapsedTooltip.style.left = `${Math.round(targetRect.right + 12)}px`;
+            collapsedTooltip.style.top = `${Math.round(top)}px`;
+        }
+
+        function bindCollapsedTooltip(target) {
+            const projectCopy = target.querySelector('.project-selector-copy');
+            const projectLabel = projectCopy
+                ? Array.from(projectCopy.querySelectorAll('small, strong'))
+                    .map(element => element.textContent.replace(/\s+/g, ' ').trim())
+                    .filter(Boolean)
+                    .join(' · ')
+                : '';
+            const label = (
+                target.getAttribute('aria-label')
+                || projectLabel
+                || target.textContent
+            ).replace(/\s+/g, ' ').trim();
+            if (!label) {
+                return;
+            }
+
+            target.dataset.sidebarLabel = label;
+            target.addEventListener('mouseenter', () => {
+                showCollapsedTooltip(target);
+            });
+            target.addEventListener('mouseleave', () => {
+                hideCollapsedTooltip(target);
+            });
+            target.addEventListener('focus', () => {
+                showCollapsedTooltip(target);
+            });
+            target.addEventListener('blur', () => {
+                hideCollapsedTooltip(target);
+            });
         }
 
         function updateCollapseButton(collapsed) {
@@ -84,6 +164,7 @@
         }
 
         function applyCollapsed(collapsed) {
+            hideCollapsedTooltip();
             documentRoot.classList.toggle('sidebar-collapsed', collapsed);
             updateCollapseButton(collapsed);
 
@@ -99,6 +180,7 @@
         }
 
         function cancelCollapsedTransition() {
+            hideCollapsedTooltip();
             window.clearTimeout(collapseChangeTimer);
             window.clearTimeout(collapseRevealTimer);
             header.classList.remove('sidebar-layout-changing');
@@ -140,6 +222,7 @@
         }
 
         function setMobileOpen(open) {
+            hideCollapsedTooltip();
             header.classList.toggle('header-show', open);
             documentRoot.classList.toggle('sidebar-mobile-open', open);
             mobileToggle.setAttribute('aria-expanded', String(open));
@@ -167,12 +250,10 @@
         });
 
         header.querySelectorAll('#navmenu a, .sidebar-labs-panel a').forEach((link) => {
-            const label = link.textContent.replace(/\s+/g, ' ').trim();
-            if (label && !link.hasAttribute('title')) {
-                link.setAttribute('title', label);
-            }
+            bindCollapsedTooltip(link);
 
             link.addEventListener('click', () => {
+                hideCollapsedTooltip(link);
                 if (!desktopMedia.matches) {
                     setMobileOpen(false);
                 }
@@ -180,12 +261,10 @@
         });
 
         header.querySelectorAll('details > summary').forEach((summary) => {
-            const label = summary.textContent.replace(/\s+/g, ' ').trim();
-            if (label && !summary.hasAttribute('title')) {
-                summary.setAttribute('title', label);
-            }
+            bindCollapsedTooltip(summary);
 
             summary.addEventListener('click', (event) => {
+                hideCollapsedTooltip(summary);
                 if (!desktopMedia.matches || !isCollapsed()) {
                     return;
                 }
@@ -216,12 +295,22 @@
             }
         });
 
+        window.addEventListener('resize', () => {
+            hideCollapsedTooltip();
+        });
+        header.addEventListener('scroll', () => {
+            hideCollapsedTooltip();
+        }, { passive: true });
+
         const autoHideTargetSelector = header.dataset.sidebarAutoHide;
         if (autoHideTargetSelector && 'IntersectionObserver' in window) {
             const target = document.querySelector(autoHideTargetSelector);
             if (target) {
                 const observer = new IntersectionObserver((entries) => {
                     const targetVisible = entries.some((entry) => entry.isIntersecting);
+                    if (targetVisible) {
+                        hideCollapsedTooltip();
+                    }
                     mobileToggle.classList.toggle('is-auto-hidden', targetVisible);
                     header.classList.toggle(
                         'sidebar-auto-hidden',

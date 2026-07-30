@@ -486,6 +486,10 @@
         function setExpanded(expanded) {
             collapse.classList.toggle('show', expanded);
             toggle.setAttribute('aria-expanded', String(expanded));
+            toggle.setAttribute(
+                'aria-label',
+                expanded ? toggle.dataset.closeLabel : toggle.dataset.openLabel
+            );
         }
 
         toggle.addEventListener('click', () => {

@@ -142,6 +142,11 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
     const alternateHref = hasAlternateLang
         ? getPostLanguageRoute(post, alternateLang)
         : null;
+    const searchLabel = lang === 'kor' ? '블로그 글 검색' : 'Search blog posts';
+    const searchPlaceholder = lang === 'kor' ? '글 검색...' : 'Search posts...';
+    const searchButtonLabel = lang === 'kor' ? '검색' : 'Search';
+    const openMenuLabel = lang === 'kor' ? '메뉴 열기' : 'Open menu';
+    const closeMenuLabel = lang === 'kor' ? '메뉴 닫기' : 'Close menu';
     const alternateLinksHtml = getPostAlternates(post)
         .map((alternate) => `    <link rel="alternate" hreflang="${alternate.hreflang}" href="${alternate.href}" />`)
         .join('\n');
@@ -268,16 +273,28 @@ ${renderConditionalHeadAssets(activeRuntimeFeatures)}
 <body>
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
         <div class="container px-4 px-lg-5">
-            <a class="navbar-brand" href="/blogs/">Hwan's Blog</a>
-            <button class="navbar-toggler" type="button" data-nav-toggle aria-controls="navbarResponsive" aria-expanded="false">
-                Menu <i class="bi bi-list"></i>
+            <div class="post-nav-brand-group">
+                <a class="navbar-brand" href="/blogs/">Hwan's Blog</a>
+                <a class="post-nav-portfolio-link" href="/">
+                    Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+                </a>
+            </div>
+            <button class="navbar-toggler" type="button" data-nav-toggle data-open-label="${openMenuLabel}" data-close-label="${closeMenuLabel}" aria-controls="navbarResponsive" aria-expanded="false" aria-label="${openMenuLabel}">
+                <span class="post-nav-menu-icon" aria-hidden="true"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                    <li class="nav-item"><a href="/blogs/search/" class="nav-link px-lg-3 py-3 py-lg-4">Search</a></li>
-                    <li class="nav-item nav-portfolio-item"><a href="/" class="nav-link nav-portfolio-link px-lg-3 py-3 py-lg-4">Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a></li>
-                    <li class="nav-item"><button class="btn nav-link px-lg-3 py-3 py-lg-4 blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
-                    ${alternateHref ? `<li class="nav-item"><a href="${alternateHref}" class="btn nav-link px-lg-3 py-3 py-lg-4" data-language-target="${alternateLang}" style="font-size:0.7rem">${alternateLang === 'eng' ? 'ENG' : 'KOR'}</a></li>` : ''}
+                    <li class="nav-item post-nav-search-item">
+                        <form id="post-nav-search-form" class="post-nav-search" role="search">
+                            <label class="visually-hidden" for="post-nav-search-input">${searchLabel}</label>
+                            <input id="post-nav-search-input" type="search" placeholder="${searchPlaceholder}" enterkeyhint="search" />
+                            <button type="submit" aria-label="${searchButtonLabel}">
+                                <i class="bi bi-search" aria-hidden="true"></i>
+                            </button>
+                        </form>
+                    </li>
+                    <li class="nav-item nav-theme-item"><button class="btn nav-link blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
+                    ${alternateHref ? `<li class="nav-item post-nav-language-item"><a href="${alternateHref}" class="nav-link post-nav-language-link" data-language-target="${alternateLang}">${alternateLang === 'eng' ? 'ENG' : 'KOR'}</a></li>` : ''}
                 </ul>
             </div>
         </div>
@@ -344,7 +361,14 @@ ${renderConditionalHeadAssets(activeRuntimeFeatures)}
 ${renderConditionalBodyScripts(activeRuntimeFeatures)}
     <script src="/blogs/js/theme-toggle.js"></script>
     <script src="/blogs/js/scroll-progress.js"></script>
+    <script src="/blogs/js/blog-shell.js"></script>
     <script src="/blogs/js/post-page.js"></script>
+    <script>
+        initBlogShell({
+            formSelector: '#post-nav-search-form',
+            inputSelector: '#post-nav-search-input'
+        });
+    </script>
 </body>
 </html>`;
 }
