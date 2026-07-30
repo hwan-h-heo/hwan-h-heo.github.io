@@ -50,15 +50,15 @@
 
 .sidebar-mobile-toggle {
     position: fixed;
-    top: 14px;
-    left: 16px;
+    top: 12px;
+    left: 14px;
     z-index: 1002;
     display: none;
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     padding: 0;
-    border-radius: 12px;
-    font-size: 21px;
+    border-radius: 50%;
+    font-size: 18px;
     backdrop-filter: blur(12px);
 }
 
@@ -273,8 +273,7 @@
         border-color 0.18s ease;
 }
 
-#header.header .navmenu a::after,
-#header.header .sidebar-labs-menu summary::after {
+#header.header .navmenu a::after {
     top: 50%;
     right: 12px;
     bottom: auto;
@@ -288,11 +287,14 @@
     transition: opacity 0.18s ease, transform 0.18s ease;
 }
 
-#header.header .navmenu a.active::after,
-#header.header .sidebar-labs-menu[open] summary::after,
-#header.header .sidebar-labs-menu.is-active summary::after {
+#header.header .navmenu a.active::after {
     opacity: 1;
     transform: translateY(-50%) scale(1);
+}
+
+#header.header .sidebar-labs-menu summary::after {
+    display: none;
+    content: none;
 }
 
 #header.header .navmenu a:hover,

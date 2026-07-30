@@ -143,7 +143,7 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
         ? getPostLanguageRoute(post, alternateLang)
         : null;
     const searchLabel = lang === 'kor' ? '블로그 글 검색' : 'Search blog posts';
-    const searchPlaceholder = lang === 'kor' ? '글 검색...' : 'Search posts...';
+    const searchPlaceholder = 'Search...';
     const searchButtonLabel = lang === 'kor' ? '검색' : 'Search';
     const openMenuLabel = lang === 'kor' ? '메뉴 열기' : 'Open menu';
     const closeMenuLabel = lang === 'kor' ? '메뉴 닫기' : 'Close menu';

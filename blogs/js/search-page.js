@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
         });
         if (searchInput) {
-            searchInput.placeholder = language === 'kor' ? '검색...' : 'Search...';
+            searchInput.placeholder = 'Search...';
         }
         if (!siteData) {
             const loadingState = resultsContainer?.querySelector('.blog-search-state');

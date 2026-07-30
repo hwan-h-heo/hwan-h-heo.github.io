@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             tabNotes: 'Notes',
             tabSeries: 'Series',
             featuredLabel: 'Featured',
-            latestPost: 'Latest Post',
             readPost: 'Read post',
             post: 'Post',
             note: 'Note',
@@ -35,13 +34,12 @@ document.addEventListener('DOMContentLoaded', async function() {
             heroKicker: "Hwan's Blog",
             heroTitle: 'Research notes for 3D AI systems',
             heroIntro: '3D generation, computer vision, graphics, CUDA inference, and the implementation details that usually stay between commits.',
-            searchPlaceholder: '검색...',
+            searchPlaceholder: 'Search...',
             archiveTitle: '글 목록',
             tabPosts: 'Posts',
             tabNotes: 'Notes',
             tabSeries: 'Series',
             featuredLabel: 'Featured',
-            latestPost: 'Latest Post',
             readPost: '글 읽기',
             post: 'Post',
             note: 'Note',
@@ -78,8 +76,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     function formatShortDate(dateString, lang) {
         const locale = lang === 'kor' ? 'ko-KR' : 'en-US';
         return new Date(dateString).toLocaleDateString(locale, {
-            month: 'short',
-            day: 'numeric'
+            year: 'numeric',
+            month: 'short'
         });
     }
 
@@ -221,7 +219,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             <article class="blog-feature-card">
                 <div class="blog-feature-label">
                     <span>${escapeHtml(copy(lang, 'featuredLabel'))}</span>
-                    <span>${escapeHtml(copy(lang, 'latestPost'))}</span>
                 </div>
                 <a class="blog-feature-cover" href="${escapeHtml(url)}" aria-label="${escapeHtml(copy(lang, 'readPost'))}: ${escapeHtml(title)}">
                     ${renderCoverImage(featuredPost, title, { eager: true })}
@@ -308,19 +305,16 @@ document.addEventListener('DOMContentLoaded', async function() {
                 return `
                     <article class="series-group">
                         <div class="series-card-header">
-                            <div>
-                                <span class="series-card-kicker">Series</span>
-                                <h3 class="series-title"><a href="${escapeHtml(seriesRoute)}">${escapeHtml(seriesTitle)}</a></h3>
-                            </div>
-                            <div class="series-card-side">
-                                <div class="series-card-meta">
-                                    <span>${posts.length} ${escapeHtml(copy(lang, 'items'))}</span>
-                                    <span>${escapeHtml(copy(lang, 'latest'))} ${escapeHtml(formatShortDate(latestPost.date, lang))}</span>
-                                </div>
-                                <a class="series-card-action" href="${escapeHtml(seriesRoute)}" aria-label="View series: ${escapeHtml(seriesTitle)}">
-                                    <span>View series</span>
-                                    <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                            <span class="series-card-kicker">Series</span>
+                            <h3 class="series-title">
+                                <a href="${escapeHtml(seriesRoute)}">
+                                    <span>${escapeHtml(seriesTitle)}</span>
+                                    <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
                                 </a>
+                            </h3>
+                            <div class="series-card-meta">
+                                <span>${posts.length} ${escapeHtml(copy(lang, 'items'))}</span>
+                                <span>${escapeHtml(copy(lang, 'latest'))} ${escapeHtml(formatShortDate(latestPost.date, lang))}</span>
                             </div>
                         </div>
                         <ol class="series-post-list">

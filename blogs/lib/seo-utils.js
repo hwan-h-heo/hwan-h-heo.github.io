@@ -112,9 +112,14 @@ function formatDate(value, lang = 'eng', options = {}) {
 }
 
 function formatShortDate(value, lang = 'eng') {
-    return formatDate(value, lang, {
-        month: 'short',
-        day: 'numeric'
+    const date = new Date(`${value}T00:00:00`);
+    if (Number.isNaN(date.getTime())) {
+        return '';
+    }
+
+    return date.toLocaleDateString(getLanguageMeta(lang).locale, {
+        year: 'numeric',
+        month: 'short'
     });
 }
 
@@ -227,7 +232,6 @@ function renderFeaturedPost(siteData, lang = 'eng') {
             <article class="blog-feature-card" data-post-id="${escapeHtml(featuredPost.id)}">
                 <div class="blog-feature-label">
                     <span>Featured</span>
-                    <span>Latest Post</span>
                 </div>
                 <a class="blog-feature-cover" href="${escapeHtml(url)}" aria-label="Read ${escapeHtml(title)}">
                     ${renderBlogCoverImage(featuredPost, title, { eager: true })}
@@ -281,19 +285,16 @@ function renderSeriesGroups(siteData, lang = 'eng') {
             return `
                     <article class="series-group" data-series-id="${escapeHtml(seriesId)}">
                         <div class="series-card-header">
-                            <div>
-                                <span class="series-card-kicker">Series</span>
-                                <h3 class="series-title"><a href="${escapeHtml(seriesRoute)}">${escapeHtml(seriesTitle)}</a></h3>
-                            </div>
-                            <div class="series-card-side">
-                                <div class="series-card-meta">
-                                    <span>${posts.length} items</span>
-                                    <span>Latest <time datetime="${escapeHtml(latestPost.date)}">${escapeHtml(formatShortDate(latestPost.date, lang))}</time></span>
-                                </div>
-                                <a class="series-card-action" href="${escapeHtml(seriesRoute)}" aria-label="View ${escapeHtml(seriesTitle)} series archive">
-                                    <span>View series</span>
-                                    <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                            <span class="series-card-kicker">Series</span>
+                            <h3 class="series-title">
+                                <a href="${escapeHtml(seriesRoute)}">
+                                    <span>${escapeHtml(seriesTitle)}</span>
+                                    <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
                                 </a>
+                            </h3>
+                            <div class="series-card-meta">
+                                <span>${posts.length} items</span>
+                                <span>Latest <time datetime="${escapeHtml(latestPost.date)}">${escapeHtml(formatShortDate(latestPost.date, lang))}</time></span>
                             </div>
                         </div>
                         <ol class="series-post-list">
