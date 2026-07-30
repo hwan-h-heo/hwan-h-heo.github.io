@@ -4490,6 +4490,19 @@ html[lang="ko"] .blog-home-hero p {
     background: rgba(255, 255, 255, 0.38);
 }
 
+.blog-home-footer,
+footer.border-top {
+    padding-top: 1.65rem;
+    padding-bottom: 1.65rem;
+}
+
+.blog-home-footer .small,
+footer.border-top .small {
+    font-size: 0.7rem;
+    line-height: 1.45;
+    letter-spacing: 0.01em;
+}
+
 @media (max-width: 991.98px) {
     .blog-feature-card {
         grid-template-columns: 1fr;

@@ -63,20 +63,6 @@ textarea {
     padding: 18px;
 }
 
-.topbar {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 18px;
-    align-items: stretch;
-    padding: 18px 20px;
-    border: 1px solid var(--border);
-    border-radius: 28px;
-    background: rgba(255, 255, 255, 0.68);
-    backdrop-filter: blur(20px);
-    box-shadow: var(--shadow);
-}
-
 .eyebrow {
     margin: 0 0 6px;
     color: var(--accent);
@@ -86,15 +72,6 @@ textarea {
     text-transform: uppercase;
 }
 
-.topbar h1 {
-    margin: 0;
-    max-width: 780px;
-    font-size: clamp(22px, 2vw, 31px);
-    line-height: 1.15;
-    letter-spacing: -0.03em;
-}
-
-.topbar-actions,
 .language-tabs,
 .toolbar-actions,
 .draft-actions {
@@ -106,17 +83,10 @@ textarea {
     scrollbar-width: none;
 }
 
-.topbar-actions::-webkit-scrollbar,
 .language-tabs::-webkit-scrollbar,
 .toolbar-actions::-webkit-scrollbar,
 .draft-actions::-webkit-scrollbar {
     display: none;
-}
-
-.topbar-actions {
-    align-items: center;
-    justify-content: flex-start;
-    max-width: 100%;
 }
 
 .button,
@@ -193,7 +163,6 @@ textarea {
     grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
     gap: 18px;
     align-items: start;
-    margin-top: 18px;
     transition: grid-template-columns 0.22s ease;
 }
 
@@ -307,6 +276,18 @@ textarea {
     font-size: 14px;
     font-weight: 800;
     letter-spacing: -0.02em;
+}
+
+.workflow-statuses {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.workflow-statuses .mode-badge,
+.workflow-statuses .pill {
+    padding: 6px 8px;
+    font-size: 10px;
 }
 
 .panel-header-inline {
@@ -560,11 +541,46 @@ textarea {
     box-shadow: var(--shadow-soft);
 }
 
+.toolbar-primary {
+    display: grid;
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+}
+
 .toolbar-navigation {
     display: flex;
     align-items: center;
     gap: 12px;
     min-width: 0;
+}
+
+.editor-brand {
+    flex: 0 0 auto;
+    color: var(--text);
+    font-family: var(--blog-heading);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+}
+
+.toolbar-document-actions {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.toolbar-document-actions::-webkit-scrollbar {
+    display: none;
+}
+
+.toolbar-document-actions .button {
+    padding: 8px 11px;
 }
 
 .editor-view-tabs {
@@ -1332,14 +1348,8 @@ textarea {
 }
 
 @media (max-width: 1320px) {
-    .topbar {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .topbar-actions {
-        justify-content: flex-start;
-        max-width: 100%;
+    .editor-brand {
+        display: none;
     }
 }
 
@@ -1384,7 +1394,6 @@ textarea {
         padding: 14px;
     }
 
-    .topbar,
     .toolbar {
         padding: 14px;
     }
@@ -1393,9 +1402,21 @@ textarea {
         grid-template-columns: 1fr;
     }
 
+    .toolbar-primary {
+        grid-template-columns: 1fr;
+    }
+
     .toolbar-navigation {
         align-items: stretch;
         flex-direction: column;
+    }
+
+    .editor-brand {
+        display: none;
+    }
+
+    .toolbar-document-actions {
+        justify-content: flex-start;
     }
 
     .editor-view-tabs {

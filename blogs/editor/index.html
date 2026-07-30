@@ -16,29 +16,6 @@
 </head>
 <body>
     <div class="editor-shell">
-        <header class="topbar">
-            <div>
-                <p class="eyebrow">Blog Editor</p>
-                <h1>Create posts, metadata, and markdown together</h1>
-            </div>
-            <div class="topbar-actions">
-                <span id="mode-badge" class="mode-badge">Preview only</span>
-                <a class="button button-secondary" href="./portfolio.html">Portfolio editor</a>
-                <button id="new-post-button" class="button button-secondary">New post</button>
-                <button id="load-post-button" class="button button-secondary">Load post</button>
-                <button id="save-draft-button" class="button button-secondary">Save draft</button>
-                <button id="drive-load-button" class="button button-secondary">
-                    <i class="bi bi-cloud-arrow-down"></i>
-                    Drive drafts
-                </button>
-                <button id="drive-save-button" class="button button-secondary">
-                    <i class="bi bi-cloud-arrow-up"></i>
-                    Save to Drive
-                </button>
-                <button id="publish-button" class="button button-primary">Publish</button>
-            </div>
-        </header>
-
         <main id="workspace" class="workspace">
             <aside id="control-sidebar" class="sidebar">
                 <div class="sidebar-topbar">
@@ -56,7 +33,10 @@
                     <section class="panel">
                         <div class="panel-header">
                             <h2>Workflow</h2>
-                            <span id="workspace-mode" class="pill">New post</span>
+                            <div class="workflow-statuses">
+                                <span id="mode-badge" class="mode-badge">Preview only</span>
+                                <span id="workspace-mode" class="pill">New post</span>
+                            </div>
                         </div>
                         <p class="panel-copy">
                             Draft saves the active language markdown only. Publish writes metadata to <code>blogs/data/site-data.json</code>
@@ -275,17 +255,35 @@
 
             <section class="editor-stage">
                 <div class="toolbar">
-                    <div class="toolbar-navigation">
-                        <div id="language-tabs" class="language-tabs"></div>
-                        <div class="editor-view-tabs" aria-label="Editor view">
-                            <button id="layout-view-button" class="editor-view-tab is-active" type="button" aria-pressed="true">
-                                <i class="bi bi-layout-text-window-reverse"></i>
-                                Layout
+                    <div class="toolbar-primary">
+                        <div class="toolbar-navigation">
+                            <span class="editor-brand">Blog Editor</span>
+                            <div id="language-tabs" class="language-tabs"></div>
+                            <div class="editor-view-tabs" aria-label="Editor view">
+                                <button id="layout-view-button" class="editor-view-tab is-active" type="button" aria-pressed="true">
+                                    <i class="bi bi-layout-text-window-reverse"></i>
+                                    Layout
+                                </button>
+                                <button id="markdown-view-button" class="editor-view-tab" type="button" aria-pressed="false">
+                                    <i class="bi bi-markdown"></i>
+                                    Markdown
+                                </button>
+                            </div>
+                        </div>
+                        <div class="toolbar-document-actions" aria-label="Post actions">
+                            <a class="button button-secondary" href="./portfolio.html">Portfolio</a>
+                            <button id="new-post-button" class="button button-secondary" title="Create a new post">New</button>
+                            <button id="load-post-button" class="button button-secondary" title="Load an existing post">Load</button>
+                            <button id="save-draft-button" class="button button-secondary" title="Save a local draft">Save</button>
+                            <button id="drive-load-button" class="button button-secondary" title="Load drafts from Google Drive">
+                                <i class="bi bi-cloud-arrow-down"></i>
+                                Drive
                             </button>
-                            <button id="markdown-view-button" class="editor-view-tab" type="button" aria-pressed="false">
-                                <i class="bi bi-markdown"></i>
-                                Markdown
+                            <button id="drive-save-button" class="button button-secondary" title="Save this draft to Google Drive">
+                                <i class="bi bi-cloud-arrow-up"></i>
+                                Drive save
                             </button>
+                            <button id="publish-button" class="button button-primary">Publish</button>
                         </div>
                     </div>
                     <div class="toolbar-actions">

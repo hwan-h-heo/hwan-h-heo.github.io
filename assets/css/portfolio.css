@@ -422,7 +422,9 @@ background-color: rgba(33, 37, 41, 0.03);
 .footer .footer-note {
   color: color-mix(in srgb, var(--default-color), transparent 45%);
   font-size: 0.78rem;
-  margin: 0 0 0.55rem;
+  font-style: italic;
+  line-height: 1.6;
+  margin: 0;
 }
 @media screen and (max-width: 768px) {
 [data-aos-delay] { transition-delay: 0 !important; }
@@ -444,8 +446,8 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   }
 
   .index-page #footer {
-    padding-top: 34px;
-    padding-bottom: 34px;
+    padding-top: 28px;
+    padding-bottom: 28px;
   }
 }
 @media (min-width: 2000px) {
@@ -2451,6 +2453,20 @@ h6 {
   .portfolio-talk {
     grid-template-columns: 1fr;
     gap: 0.35rem;
+  }
+}
+
+.index-page .scroll-top.button_top {
+  background-color: #212529;
+}
+
+.index-page .scroll-top.button_top:hover {
+  background-color: #111827;
+}
+
+@media (max-width: 767.98px) {
+  .index-page .scroll-top.button_top {
+    display: none !important;
   }
 }
 

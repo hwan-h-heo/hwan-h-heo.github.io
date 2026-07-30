@@ -231,6 +231,18 @@
   color: var(--accent-color);
 }
 
+.navmenu .sidebar-external-icon {
+  flex: 0 0 auto;
+  margin-left: auto;
+  font-size: 11px;
+  opacity: 0.68;
+}
+
+.navmenu .sidebar-external-link:hover .sidebar-external-icon,
+.navmenu .sidebar-external-link:focus .sidebar-external-icon {
+  opacity: 1;
+}
+
 .navmenu .active .toggle-dropdown,
 .navmenu .active:focus .toggle-dropdown {
   background-color: var(--accent-color);
@@ -405,4 +417,10 @@
   position: static;
   margin: 0 10px 6px 27px;
   padding: 3px 0 3px 8px;
+}
+
+@media (min-width: 1200px) {
+  html.sidebar-collapsed .blog-sidebar .sidebar-external-icon {
+    display: none;
+  }
 }
