@@ -3,6 +3,14 @@ const modelViewerTextureState = {
     textures: []
 };
 
+function updateViewerModeButtons(mode) {
+    document.querySelectorAll('.viewer-mode-button[data-viewer-mode]').forEach((button) => {
+        const isActive = button.dataset.viewerMode === mode;
+        button.classList.toggle('is-active', isActive);
+        button.setAttribute('aria-pressed', String(isActive));
+    });
+}
+
 function getToggleableModelViewer() {
     const modelViewer = document.getElementById('model-g');
     const materials = modelViewer?.model?.materials;
@@ -20,7 +28,11 @@ window.show_texture = function showTexture() {
 
     const { materials, modelViewer } = viewerState;
     const baseColorTexture = materials[0].pbrMetallicRoughness.baseColorTexture;
-    if (baseColorTexture.texture !== null || modelViewerTextureState.textures.length === 0) {
+    if (baseColorTexture.texture !== null) {
+        updateViewerModeButtons('texture');
+        return;
+    }
+    if (modelViewerTextureState.textures.length === 0) {
         return;
     }
 
@@ -31,6 +43,7 @@ window.show_texture = function showTexture() {
         );
     });
     modelViewer.exposure = modelViewerTextureState.exposure;
+    updateViewerModeButtons('texture');
 };
 
 window.show_geometry = function showGeometry() {
@@ -42,6 +55,7 @@ window.show_geometry = function showGeometry() {
     const { materials, modelViewer } = viewerState;
     const baseColorTexture = materials[0].pbrMetallicRoughness.baseColorTexture;
     if (baseColorTexture.texture === null) {
+        updateViewerModeButtons('geometry');
         return;
     }
 
@@ -54,4 +68,5 @@ window.show_geometry = function showGeometry() {
         material.pbrMetallicRoughness.baseColorTexture.setTexture(null);
     });
     modelViewer.exposure = 3;
+    updateViewerModeButtons('geometry');
 };

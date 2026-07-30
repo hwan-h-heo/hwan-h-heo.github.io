@@ -51,7 +51,7 @@
                     <button class="blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false">
                         <i class="bi bi-moon-stars" aria-hidden="true"></i>
                     </button>
-                    <button id="lang-toggle-main" class="blog-home-language" type="button" aria-label="Switch language preference">KOR</button>
+                    <button id="lang-toggle-main" class="blog-home-language" type="button" aria-label="한국어로 전환" title="한국어로 전환">가</button>
                 </div>
             </nav>
 
@@ -141,8 +141,11 @@
                 }
 
                 function setLanguage(language) {
+                    const targetLabel = language === 'eng' ? '한국어로 전환' : 'Switch to English';
                     document.documentElement.lang = language === 'kor' ? 'ko' : 'en';
-                    button.textContent = language === 'eng' ? 'KOR' : 'ENG';
+                    button.textContent = language === 'eng' ? '가' : 'A';
+                    button.setAttribute('aria-label', targetLabel);
+                    button.setAttribute('title', targetLabel);
                     updateArchiveCards(language);
                 }
 

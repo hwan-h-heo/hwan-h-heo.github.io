@@ -5,6 +5,11 @@
     --site-sidebar-transition-easing: cubic-bezier(0.22, 1, 0.36, 1);
     --site-sidebar-content-fade-duration: 0.1s;
     --site-sidebar-nav-font: "Inter", "Noto Sans KR", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --site-sidebar-accent: #45bce8;
+    --site-sidebar-background: #07090d;
+    --site-sidebar-ink: rgba(244, 248, 252, 0.94);
+    --site-sidebar-muted: rgba(190, 203, 216, 0.68);
+    --site-sidebar-line: rgba(203, 220, 235, 0.11);
 }
 
 .sidebar-mobile-toggle,
@@ -28,24 +33,32 @@
 }
 
 .sidebar-mobile-toggle:hover,
-.sidebar-mobile-toggle:focus-visible,
+.sidebar-mobile-toggle:focus-visible {
+    border-color: color-mix(in srgb, var(--site-sidebar-accent), white 22%);
+    color: #fff;
+    background: color-mix(in srgb, var(--site-sidebar-accent), #07111c 28%);
+    outline: none;
+}
+
 .sidebar-collapse-toggle:hover,
 .sidebar-collapse-toggle:focus-visible {
-    border-color: color-mix(in srgb, var(--accent-color, #149ddd), white 22%);
-    color: #fff;
-    background: color-mix(in srgb, var(--accent-color, #149ddd), #07111c 28%);
+    border-color: transparent;
+    color: var(--site-sidebar-accent);
+    background: transparent;
     outline: none;
 }
 
 .sidebar-mobile-toggle {
     position: fixed;
-    top: 14px;
-    left: 16px;
+    top: 12px;
+    left: 14px;
     z-index: 1002;
     display: none;
-    width: 40px;
-    height: 40px;
-    font-size: 21px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 18px;
     backdrop-filter: blur(12px);
 }
 
@@ -54,16 +67,16 @@
     flex: 0 0 auto;
     align-self: flex-start;
     display: none;
-    width: 44px;
-    height: 44px;
-    margin: auto 0 18px -2px;
+    width: 40px;
+    height: 40px;
+    margin: auto 0 0;
     padding: 0;
     border-color: transparent;
-    border-radius: 999px;
+    border-radius: 0;
     color: var(--nav-color, #a8a9b4);
     background: transparent;
     box-shadow: none;
-    font-size: 17px;
+    font-size: 16px;
 }
 
 .sidebar-mobile-toggle i,
@@ -78,7 +91,7 @@
     min-height: 32px;
     padding: 6px 10px;
     border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 7px;
+    border-radius: 9px;
     color: rgba(255, 255, 255, 0.92);
     background: rgba(8, 14, 23, 0.94);
     box-shadow: 0 9px 24px rgba(3, 8, 15, 0.28);
@@ -94,6 +107,271 @@
     transition:
         opacity 0.16s ease,
         transform 0.2s ease;
+}
+
+#header.header {
+    --accent-color: var(--site-sidebar-accent);
+    box-sizing: border-box;
+    padding: 22px 18px 12px;
+    border-right: 1px solid var(--site-sidebar-line);
+    background:
+        radial-gradient(
+            circle at 50% -8%,
+            color-mix(in srgb, var(--site-sidebar-accent), transparent 92%),
+            transparent 36%
+        ),
+        var(--site-sidebar-background);
+    scrollbar-color: rgba(195, 210, 223, 0.22) transparent;
+    scrollbar-width: thin;
+}
+
+#header.blog-sidebar {
+    --site-sidebar-accent: #4dd7b4;
+}
+
+#header.header .profile-img {
+    margin: 0 0 12px;
+}
+
+#header.header .profile-img img {
+    width: 82px;
+    margin: 0 auto;
+    padding: 3px;
+    border: 1px solid color-mix(in srgb, var(--site-sidebar-accent), transparent 66%);
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.055);
+    box-shadow:
+        0 14px 34px rgba(0, 0, 0, 0.24),
+        0 0 0 5px rgba(255, 255, 255, 0.025);
+}
+
+#header.header .logo {
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 14px;
+    text-align: center;
+}
+
+#header.header .logo .sitename {
+    color: var(--site-sidebar-ink);
+    font-family: var(--site-sidebar-nav-font);
+    font-size: 19px;
+    font-weight: 650;
+    letter-spacing: 0;
+}
+
+#header.header .logo::after {
+    color: var(--site-sidebar-muted);
+    content: "Portfolio · 3D AI";
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.3;
+    text-transform: uppercase;
+}
+
+#header.blog-sidebar .logo::after {
+    content: "Research notes · 3D AI";
+}
+
+#header.header .social-links {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin: 0 0 22px;
+}
+
+#header.header .social-links a {
+    width: 32px;
+    height: 32px;
+    margin: 0;
+    border: 1px solid var(--site-sidebar-line);
+    border-radius: 9px;
+    color: var(--site-sidebar-muted);
+    background: rgba(255, 255, 255, 0.025);
+    font-size: 13px;
+    transition:
+        color 0.18s ease,
+        background-color 0.18s ease,
+        border-color 0.18s ease,
+        transform 0.18s ease;
+}
+
+#header.header .social-links a:hover,
+#header.header .social-links a:focus-visible {
+    border-color: color-mix(in srgb, var(--site-sidebar-accent), transparent 55%);
+    color: var(--site-sidebar-accent);
+    background: color-mix(in srgb, var(--site-sidebar-accent), transparent 90%);
+    outline: none;
+    transform: translateY(-1px);
+}
+
+#header.header .navmenu {
+    margin-top: 2px;
+}
+
+#header.header .navmenu ul {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3px;
+    padding-bottom: 16px;
+}
+
+#header.header .navmenu li {
+    min-width: 0;
+}
+
+#header.header .project-nav-selector {
+    min-width: 0;
+    margin-right: 0;
+    margin-left: 0;
+}
+
+#header.header .project-nav-selector details,
+#header.header .project-nav-selector summary,
+#header.header .project-selector-options {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+}
+
+#header.header .project-selector-options {
+    overflow-x: hidden;
+}
+
+#header.header .project-selector-options a,
+#header.header .project-selector-options a:focus {
+    min-width: 0;
+    white-space: normal;
+}
+
+#header.header .project-selector-options a span:not(.project-selector-index) {
+    display: block;
+    min-width: 0;
+    overflow: visible;
+    overflow-wrap: anywhere;
+    -webkit-box-orient: initial;
+    -webkit-line-clamp: initial;
+}
+
+#header.header .navmenu a,
+#header.header .navmenu a:focus,
+#header.header .sidebar-labs-menu summary {
+    min-height: 43px;
+    padding: 9px 12px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    color: var(--site-sidebar-muted);
+    font-size: 14px;
+    font-weight: 520;
+    line-height: 1.35;
+    transition:
+        color 0.18s ease,
+        background-color 0.18s ease,
+        border-color 0.18s ease;
+}
+
+#header.header .navmenu a::after {
+    top: 50%;
+    right: 12px;
+    bottom: auto;
+    left: auto;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--site-sidebar-accent);
+    opacity: 0;
+    transform: translateY(-50%) scale(0.4);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+#header.header .navmenu a.active::after {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+}
+
+#header.header .sidebar-labs-menu summary::after {
+    display: none;
+    content: none;
+}
+
+#header.header .navmenu a:hover,
+#header.header .navmenu a:focus-visible,
+#header.header .sidebar-labs-menu summary:hover,
+#header.header .sidebar-labs-menu summary:focus-visible {
+    border-color: rgba(215, 229, 240, 0.08);
+    color: var(--site-sidebar-ink);
+    background: rgba(255, 255, 255, 0.045);
+    outline: none;
+}
+
+#header.header .navmenu a.active,
+#header.header .navmenu a.active:focus,
+#header.header .sidebar-labs-menu[open] summary,
+#header.header .sidebar-labs-menu.is-active summary {
+    border-color: transparent;
+    color: var(--site-sidebar-ink);
+    background: transparent;
+    outline: none;
+}
+
+#header.header .navmenu a .navicon,
+#header.header .navmenu a:focus .navicon,
+#header.header .sidebar-labs-menu summary .navicon {
+    flex: 0 0 22px;
+    width: 22px;
+    margin-right: 10px;
+    color: color-mix(in srgb, var(--site-sidebar-muted), transparent 6%);
+    font-size: 17px;
+    text-align: center;
+    transition: color 0.18s ease;
+}
+
+#header.header .navmenu a:hover .navicon,
+#header.header .navmenu a:focus-visible .navicon,
+#header.header .navmenu a.active .navicon,
+#header.header .navmenu a.active:focus .navicon,
+#header.header .sidebar-labs-menu summary:hover .navicon,
+#header.header .sidebar-labs-menu[open] summary .navicon,
+#header.header .sidebar-labs-menu.is-active summary .navicon {
+    color: var(--site-sidebar-accent);
+}
+
+#header.header .sidebar-labs {
+    padding-top: 8px;
+    border-top: 1px solid var(--site-sidebar-line);
+}
+
+#header.header .sidebar-labs-panel {
+    gap: 2px;
+    margin: 5px 8px 8px 34px;
+    padding: 4px;
+    border: 1px solid var(--site-sidebar-line);
+    border-left: 1px solid var(--site-sidebar-line);
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.025);
+}
+
+#header.header .sidebar-labs-panel a,
+#header.header .sidebar-labs-panel a:focus {
+    min-height: 34px;
+    padding: 7px 8px;
+    border-radius: 7px;
+    color: var(--site-sidebar-muted);
+}
+
+#header.header .sidebar-labs-panel a:hover,
+#header.header .sidebar-labs-panel a:focus-visible {
+    color: var(--site-sidebar-ink);
+    background: rgba(255, 255, 255, 0.045);
+    outline: none;
+}
+
+#header.header .sidebar-labs-panel a.active {
+    color: var(--site-sidebar-ink);
+    background: transparent;
 }
 
 .sidebar-collapsed-tooltip::before {
@@ -156,7 +434,7 @@
     font-size: 15px;
     font-weight: 400;
     line-height: 1.6;
-    letter-spacing: -0.006em;
+    letter-spacing: 0;
 }
 
 @media (min-width: 1200px) {
@@ -174,11 +452,17 @@
             var(--site-sidebar-transition-easing);
     }
 
-    html.sidebar-collapsed .header {
+    html.sidebar-collapsed #header.header {
         width: var(--site-sidebar-rail-width);
         padding-right: 10px;
         padding-left: 10px;
         overflow-x: hidden;
+        scrollbar-width: none;
+    }
+
+    html.sidebar-collapsed #header.header::-webkit-scrollbar {
+        width: 0;
+        height: 0;
     }
 
     html.sidebar-collapsed .header ~ main,
@@ -187,43 +471,52 @@
         margin-left: var(--site-sidebar-rail-width);
     }
 
-    html.sidebar-collapsed .header .logo,
-    html.sidebar-collapsed .header .social-links {
+    html.sidebar-collapsed #header.header .logo,
+    html.sidebar-collapsed #header.header .social-links {
         display: none;
         margin: 0;
     }
 
-    html.sidebar-collapsed .header .logo {
+    html.sidebar-collapsed #header.header .logo {
         display: none !important;
     }
 
-    html.sidebar-collapsed .header .profile-img img {
-        width: 44px;
-        margin: 18px auto 12px;
-        border-width: 3px;
+    html.sidebar-collapsed #header.header .profile-img img {
+        width: 40px;
+        margin: 0 auto 10px;
+        padding: 2px;
+        border-width: 1px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.24);
     }
 
     html.sidebar-collapsed #header.header .navmenu a,
     html.sidebar-collapsed #header.header .navmenu a:focus {
         justify-content: center;
-        min-height: 48px;
-        padding-right: 0;
-        padding-left: 0;
+        box-sizing: border-box;
+        width: 40px;
+        height: 40px;
+        min-height: 40px;
+        margin-right: auto;
+        margin-left: auto;
+        padding: 0;
         overflow: hidden;
+        border-radius: 10px;
         font-size: 0;
         letter-spacing: 0;
     }
 
-    html.sidebar-collapsed .header .navmenu a::after,
-    html.sidebar-collapsed .header .sidebar-labs-menu summary::after {
+    html.sidebar-collapsed #header.header .navmenu a::after,
+    html.sidebar-collapsed #header.header .sidebar-labs-menu summary::after {
         display: none;
     }
 
-    html.sidebar-collapsed .header .navmenu a .navicon,
-    html.sidebar-collapsed .header .navmenu a:focus .navicon,
-    html.sidebar-collapsed .header .sidebar-labs-menu summary .navicon {
+    html.sidebar-collapsed #header.header .navmenu a .navicon,
+    html.sidebar-collapsed #header.header .navmenu a:focus .navicon,
+    html.sidebar-collapsed #header.header .sidebar-labs-menu summary .navicon {
+        flex-basis: auto;
+        width: auto;
         margin: 0;
-        font-size: 21px;
+        font-size: 18px;
     }
 
     html.sidebar-collapsed .header .project-selector-copy,
@@ -235,12 +528,16 @@
         display: none;
     }
 
-    html.sidebar-collapsed .header .project-nav-selector summary,
-    html.sidebar-collapsed .header .sidebar-labs-menu summary {
+    html.sidebar-collapsed #header.header .project-nav-selector summary,
+    html.sidebar-collapsed #header.header .sidebar-labs-menu summary {
         justify-content: center;
-        min-height: 48px;
-        padding-right: 0;
-        padding-left: 0;
+        box-sizing: border-box;
+        width: 40px;
+        height: 40px;
+        min-height: 40px;
+        margin-right: auto;
+        margin-left: auto;
+        padding: 0;
     }
 
     html.sidebar-collapsed .header .sidebar-collapse-toggle {

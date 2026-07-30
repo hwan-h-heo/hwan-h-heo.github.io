@@ -101,16 +101,14 @@
         return -1;
     }
 
-    function protectMathSegments(markdown) {
+    function collectMathSegments(markdown) {
         const segments = [];
-        let result = '';
         let index = 0;
 
         while (index < markdown.length) {
             const fenceInfo = isFenceStart(markdown, index);
             if (fenceInfo) {
                 const fenceEnd = findFenceEnd(markdown, index, fenceInfo.marker, fenceInfo.markerLength);
-                result += markdown.slice(index, fenceEnd);
                 index = fenceEnd;
                 continue;
             }
@@ -123,41 +121,205 @@
 
                 const codeEnd = findInlineCodeEnd(markdown, index, tickCount);
                 if (codeEnd !== -1) {
-                    result += markdown.slice(index, codeEnd);
                     index = codeEnd;
                     continue;
                 }
             }
 
             let mathEnd = -1;
-            let mathSource = '';
+            let delimiter = '';
+            let display = false;
 
             if (markdown.startsWith('$$', index) && !isEscaped(markdown, index)) {
+                delimiter = '$$';
+                display = true;
                 mathEnd = findDelimitedEnd(markdown, index, '$$', true);
             } else if (markdown.startsWith('\\[', index)) {
+                delimiter = '\\[';
+                display = true;
                 mathEnd = findDelimitedEnd(markdown, index, '\\]', true);
             } else if (markdown.startsWith('\\(', index)) {
+                delimiter = '\\(';
                 mathEnd = findDelimitedEnd(markdown, index, '\\)', true);
             } else if (
                 markdown[index] === '$'
                 && !isEscaped(markdown, index)
                 && markdown[index + 1] !== '$'
             ) {
+                delimiter = '$';
                 mathEnd = findDelimitedEnd(markdown, index, '$', false);
             }
 
             if (mathEnd !== -1) {
-                mathSource = markdown.slice(index, mathEnd);
-                const placeholder = `MATH_PLACEHOLDER_${segments.length}_TOKEN`;
-                segments.push({ placeholder, source: mathSource });
-                result += placeholder;
+                segments.push({
+                    start: index,
+                    end: mathEnd,
+                    delimiter,
+                    display,
+                    source: markdown.slice(index, mathEnd)
+                });
                 index = mathEnd;
                 continue;
             }
 
-            result += markdown[index];
             index += 1;
         }
+
+        return segments;
+    }
+
+    function collectHtmlCommentRanges(markdown) {
+        const ranges = [];
+        let cursor = 0;
+
+        while (cursor < markdown.length) {
+            const start = markdown.indexOf('<!--', cursor);
+            if (start === -1) {
+                break;
+            }
+            const commentEnd = markdown.indexOf('-->', start + 4);
+            const end = commentEnd === -1 ? markdown.length : commentEnd + 3;
+            ranges.push({ start, end });
+            cursor = end;
+        }
+
+        return ranges;
+    }
+
+    function findDisplayMathSegments(markdown) {
+        const source = typeof markdown === 'string' ? markdown : '';
+        const commentRanges = collectHtmlCommentRanges(source);
+        return collectMathSegments(source).filter((segment) => (
+            segment.delimiter === '$$'
+            && !commentRanges.some((range) => (
+                segment.start >= range.start && segment.start < range.end
+            ))
+        ));
+    }
+
+    function normalizeMathMarkdownWithChanges(markdown) {
+        const source = typeof markdown === 'string' ? markdown : '';
+        const changes = [];
+        const correctionPattern = /\\(?:left|right)[ \t]*[{}]|={2,}|-{2,}/g;
+        const starredCommandPattern = /\\([A-Za-z]+)$/;
+        const validStarredCommands = new Set([
+            'DeclareMathOperator',
+            'hspace',
+            'operatorname',
+            'tag',
+            'vspace'
+        ]);
+
+        findDisplayMathSegments(source).forEach((segment) => {
+            const bodyStart = segment.start + 2;
+            const bodyEnd = segment.end - 2;
+            const body = source.slice(bodyStart, bodyEnd);
+
+            for (const match of body.matchAll(correctionPattern)) {
+                const value = match[0];
+                const replacement = value.startsWith('=') || value.startsWith('-')
+                    ? value[0]
+                    : `${value.slice(0, -1)}\\${value.slice(-1)}`;
+
+                changes.push({
+                    start: bodyStart + match.index,
+                    end: bodyStart + match.index + value.length,
+                    replacement
+                });
+            }
+
+            for (const match of body.matchAll(/\*[ \t]*\{/g)) {
+                const prefix = body.slice(0, match.index);
+                const commandMatch = prefix.match(starredCommandPattern);
+                if (
+                    commandMatch
+                    && validStarredCommands.has(commandMatch[1])
+                ) {
+                    continue;
+                }
+
+                changes.push({
+                    start: bodyStart + match.index,
+                    end: bodyStart + match.index + match[0].length,
+                    replacement: '_{'
+                });
+            }
+        });
+
+        if (changes.length === 0) {
+            return { markdown: source, changes };
+        }
+
+        changes.sort((a, b) => a.start - b.start);
+
+        let result = '';
+        let cursor = 0;
+        changes.forEach((change) => {
+            result += source.slice(cursor, change.start);
+            result += change.replacement;
+            cursor = change.end;
+        });
+        result += source.slice(cursor);
+
+        return { markdown: result, changes };
+    }
+
+    function normalizeMathMarkdown(markdown) {
+        return normalizeMathMarkdownWithChanges(markdown).markdown;
+    }
+
+    function mergeDisplayMathBlocks(markdown, sourceBlocks) {
+        const source = typeof markdown === 'string' ? markdown : '';
+        const blocks = Array.isArray(sourceBlocks)
+            ? sourceBlocks.map((block) => ({ ...block }))
+            : [];
+
+        findDisplayMathSegments(source).forEach((segment) => {
+            const firstIndex = blocks.findIndex((block) => (
+                block.end > segment.start && block.start < segment.end
+            ));
+            if (firstIndex < 0) {
+                return;
+            }
+
+            let lastIndex = firstIndex;
+            while (
+                lastIndex + 1 < blocks.length
+                && blocks[lastIndex + 1].start < segment.end
+            ) {
+                lastIndex += 1;
+            }
+
+            if (lastIndex === firstIndex) {
+                return;
+            }
+
+            const start = blocks[firstIndex].start;
+            const end = blocks[lastIndex].end;
+            blocks.splice(firstIndex, lastIndex - firstIndex + 1, {
+                type: 'math',
+                raw: source.slice(start, end),
+                start,
+                end
+            });
+        });
+
+        return blocks;
+    }
+
+    function protectMathSegments(markdown) {
+        const segments = [];
+        let result = '';
+        let cursor = 0;
+
+        collectMathSegments(markdown).forEach((segment) => {
+            const placeholder = `MATH_PLACEHOLDER_${segments.length}_TOKEN`;
+            result += markdown.slice(cursor, segment.start);
+            result += placeholder;
+            segments.push({ placeholder, source: segment.source });
+            cursor = segment.end;
+        });
+        result += markdown.slice(cursor);
 
         return { text: result, segments };
     }
@@ -172,12 +334,17 @@
         const parser = typeof parseMarkdown === 'function' ? parseMarkdown : function(source) {
             return source;
         };
-        const protectedMarkdown = protectMathSegments(typeof markdown === 'string' ? markdown : '');
+        const normalizedMarkdown = normalizeMathMarkdown(markdown);
+        const protectedMarkdown = protectMathSegments(normalizedMarkdown);
         const parsedHtml = parser(protectedMarkdown.text);
         return restoreMathSegments(parsedHtml, protectedMarkdown.segments);
     }
 
     return {
+        findDisplayMathSegments,
+        mergeDisplayMathBlocks,
+        normalizeMathMarkdown,
+        normalizeMathMarkdownWithChanges,
         parseMarkdownWithMath
     };
 });

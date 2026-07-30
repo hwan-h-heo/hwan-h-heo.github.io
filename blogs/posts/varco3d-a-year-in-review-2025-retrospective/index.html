@@ -77,14 +77,14 @@
                     <li class="nav-item post-nav-search-item">
                         <form id="post-nav-search-form" class="post-nav-search" role="search">
                             <label class="visually-hidden" for="post-nav-search-input">Search blog posts</label>
-                            <input id="post-nav-search-input" type="search" placeholder="Search posts..." enterkeyhint="search" />
+                            <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
                             <button type="submit" aria-label="Search">
                                 <i class="bi bi-search" aria-hidden="true"></i>
                             </button>
                         </form>
                     </li>
                     <li class="nav-item nav-theme-item"><button class="btn nav-link blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
-                    <li class="nav-item post-nav-language-item"><a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/" class="nav-link post-nav-language-link" data-language-target="kor">KOR</a></li>
+                    <li class="nav-item post-nav-language-item"><a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/" class="nav-link post-nav-language-link" data-language-target="kor" aria-label="한국어로 전환" title="한국어로 전환">가</a></li>
                 </ul>
             </div>
         </div>
@@ -301,7 +301,7 @@ $$
 <h3 id="toc-heading-3">1.2 <em>Texture</em> Generative AI</h3>
 <p>Around the same time, another team within the company was researching Texture Copilot, which generates and edits the texture of polygonal meshes using 2D generative AI.</p>
 <p><a href="https://ncsoft.github.io/ncresearch/3f0ba4889e331ddbed68c9dd48d845fa18d874de">NC Research Blog: Texture Copilot</a></p>
-<iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/HvyPxxDzrwo?si=1A8HVOcStAQE4rAS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe class="post-video-embed" src="https://www.youtube-nocookie.com/embed/HvyPxxDzrwo?si=1A8HVOcStAQE4rAS" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 <p>This approach involved rendering a given mesh as depth and normal maps from multiple angles, then using ControlNet to generate multi-view images and back-projecting them onto the mesh.</p>
 <img src='/blogs/posts/260115_Varco3D/assets/remote-d832175607cd.png' width=50% alt="Varco3D: A Year in Review — 2025 Retrospective — 1.2 Texture Generative AI" loading="lazy" decoding="async">
@@ -334,7 +334,7 @@ $$
 <li><strong>Geometry Generation</strong>: ShapeVAE + DiT</li>
 <li><strong>Texture Generation</strong>: Multi-View Image Synthesis to Mesh Back-projection, leveraging 2D Generative Models</li>
 </ol>
-<iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/AtQNAuQY4-A?si=pQWlS8qawVOyFSqK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe class="post-video-embed" src="https://www.youtube-nocookie.com/embed/AtQNAuQY4-A?si=pQWlS8qawVOyFSqK" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 <p>One important intuition I gained while training this model was that training a &#39;Geometry VAE&#39; requires far less data and resources than 2D generative models. This is based on the assumption that the distribution of 3D geometry is simpler than that of RGB images. Indeed, artist-crafted polygonal meshes, unlike RGB images, do not have much variation in high-frequency details or complex backgrounds.</p>
 <p>Additionally, high-performance open-source models at the time were unavailable for commercial use due to licensing issues. This background became the catalyst for forming an internal consensus that &#39;we must continuously advance our own models.&#39;</p>
@@ -529,21 +529,21 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
                             <article class="related-post-card">
                                 <a href="/blogs/posts/an-era-of-3d-generation/" aria-label="Read An Era of 3D Generation">
                                     <strong>An Era of 3D Generation</strong>
-                                    <time datetime="2025-03-02">Mar 2, 2025</time>
+                                    <time datetime="2025-03-02">Mar 2025</time>
                                 </a>
                             </article>
         
                             <article class="related-post-card">
                                 <a href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/" aria-label="Read Building Large 3D Generative Model (1) Data pre-processing">
                                     <strong>Building Large 3D Generative Model (1) Data pre-processing</strong>
-                                    <time datetime="2025-07-02">Jul 2, 2025</time>
+                                    <time datetime="2025-07-02">Jul 2025</time>
                                 </a>
                             </article>
         
                             <article class="related-post-card">
                                 <a href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/" aria-label="Read Building Large 3D Generative Model (2) VAE and DiT Deep Dive">
                                     <strong>Building Large 3D Generative Model (2) VAE and DiT Deep Dive</strong>
-                                    <time datetime="2025-07-10">Jul 10, 2025</time>
+                                    <time datetime="2025-07-10">Jul 2025</time>
                                 </a>
                             </article>
         

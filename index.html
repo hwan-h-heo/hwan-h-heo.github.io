@@ -47,7 +47,6 @@
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
 
   <script src="js/sidebar-controller.js"></script>
 
@@ -125,28 +124,28 @@
                 <div class="hero-actions">
                     
                 <a class="hero-action hero-action--section" href="#portfolio">
-                    <i class="bi bi-images" aria-hidden="true"></i>
-                    <span>Project</span>
-                    
+                    <small class="hero-action-index" aria-hidden="true">01</small>
+                    <span class="hero-action-label">Project</span>
+                    <i class="bi bi-arrow-down-right" aria-hidden="true"></i>
                 </a>
             
                 <a class="hero-action hero-action--section" href="#blog">
-                    <i class="bi bi-keyboard" aria-hidden="true"></i>
-                    <span>Blog</span>
-                    
+                    <small class="hero-action-index" aria-hidden="true">02</small>
+                    <span class="hero-action-label">Blog</span>
+                    <i class="bi bi-arrow-down-right" aria-hidden="true"></i>
                 </a>
             
                 <a class="hero-action hero-action--section" href="#about">
-                    <i class="bi bi-person" aria-hidden="true"></i>
-                    <span>About</span>
-                    
+                    <small class="hero-action-index" aria-hidden="true">03</small>
+                    <span class="hero-action-label">About</span>
+                    <i class="bi bi-arrow-down-right" aria-hidden="true"></i>
                 </a>
             
                 </div>
             </div>
             
             <a href="#portfolio" class="scroll-down-arrow" aria-label="Scroll to portfolio">
-                <i class="bi bi-chevron-double-down"></i>
+                <i class="bi bi-chevron-down" aria-hidden="true"></i>
             </a>
         
         </section><!-- /Hero Section -->
@@ -155,7 +154,7 @@
     <section id="portfolio" class="portfolio section light-background" data-section-ready="false">
 
       <!-- Section Title -->
-      <div class="container section-title portfolio-section-heading" data-aos="fade-up">
+      <div class="container section-title portfolio-section-heading">
         <div class="portfolio-heading-copy">
           <h2>Selected Projects</h2>
           <p class="portfolio-credibility">Production 3D AI systems · 4 papers · 6 invited talks</p>
@@ -167,7 +166,7 @@
       </div><!-- End Section Title -->
 
       <div class="container portfolio-content">
-        <div class="portfolio-project-list" id="portfolio-projects" data-aos="fade-up">
+        <div class="portfolio-project-list" id="portfolio-projects">
             <article class="portfolio-project-item" data-selected="true">
                 <a class="portfolio-project-link" href="projects/varco3d/">
                     <span class="portfolio-project-cover">
@@ -301,7 +300,7 @@
             </article>
         </div>
 
-        <div class="portfolio-evidence" data-aos="fade-up">
+        <div class="portfolio-evidence">
           <details class="portfolio-disclosure">
             <summary>
               <span>
@@ -461,7 +460,7 @@
       </div>
     </section>
     <!-- Testimonials Section -->
-    <section id="blog" class="testimonials section light-background" data-aos="fade-up" data-section-ready="false">
+    <section id="blog" class="testimonials section light-background" data-section-ready="false">
       <!-- Section Title -->
       <div class="container section-title">
         <h2><a href="blogs/" target="_blank">Technical Blog <i class="bi bi-box-arrow-up-right"></i> </a></h2>
@@ -482,22 +481,24 @@
 
     <!-- About Section -->
     <section id="about" class="about section" data-portfolio-block="about" data-section-ready="false">
-            <div class="container section-title" data-aos="fade-up">
+            <div class="container section-title">
                 <h2>About</h2>
             </div>
 
-            <div class="container" data-aos="fade-up" data-aos-delay="100">
+            <div class="container">
                 <div class="row gy-4 about-layout justify-content-center">
-                    <div class="col-lg-4" style="transition: 0.3s ease-in-out;">
+                    <div class="col-lg-4 about-media">
                         <img src="assets/profile4.png" class="img-fluid about-profile-image" alt="Portrait of Hwan Heo">
                     </div>
                     <div class="col-lg-8 content about-copy">
                         <div class="about-identity">
                             <h2 class="about-name">Hwan Heo</h2>
-                            <p class="about-role">Lead 3D AI Research Engineer</p>
-                            <p class="about-affiliation">NC AI · VARCO 3D</p>
+                            <p class="about-meta">
+                                <span class="about-role">Lead 3D AI Research Engineer</span>
+                                <span class="about-affiliation">NC AI · VARCO 3D</span>
+                            </p>
                         </div>
-                        <p class="about-intro">Hi, I'm <strong>Hwan Heo (허환)</strong>. I work where generative models, systems, and graphics meet.</p>
+                        <p class="about-intro">I work where generative models, systems, and graphics meet.</p>
                         <p class="about-bio">At <strong>NC AI</strong>, I lead research and engineering for the <strong>VARCO 3D team</strong>, developing production 3D AI systems across large-scale generative model training, inference optimization, and graphics algorithms.<br><br>When I'm away from CUDA kernels and mesh pipelines, I'm usually playing guitar, making music, or following an unexpected STEM rabbit hole.</p>
                         
             <aside class="about-contact" aria-label="Contact">
@@ -530,23 +531,22 @@
 
     <!-- Resume Section -->
     <section id="resume" class="resume section" data-portfolio-block="resume" data-section-ready="false">
-            <div class="container section-title" data-aos="fade-up" style="margin-bottom: -5rem; padding-left: 1rem">
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                    <h2>Resume</h2>
-                    <a class="btn btn-dark px-3 py-2" href="/assets/Hwan_Heo_s_Curriculum_Vitae.pdf">
-                        <div class="d-inline-block bi bi-download me-2"></div>
-                        Download CV
-                    </a>
-                </div>
+            <div class="container section-title resume-section-heading">
+                <h2>Resume</h2>
+                <a class="resume-cv-link" href="/assets/Hwan_Heo_s_Curriculum_Vitae.pdf" download aria-label="Download curriculum vitae">
+                    <span>Download CV</span>
+                    <small>PDF</small>
+                    <i class="bi bi-download" aria-hidden="true"></i>
+                </a>
             </div>
-            <div class="container">
-                <div class="row">
+            <div class="container resume-content">
+                <div class="row resume-layout">
                     
-                        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100" style="padding-left: 2rem;">
+                        <div class="col-lg-6 resume-column">
                             
             <h3 class="resume-title">Summary</h3>
             
-            <div class="resume-item pb-0">
+            <div class="resume-item">
                 <h4>Hwan Heo | 허환</h4>
                 
                 
@@ -562,7 +562,7 @@
                 <h5>2020 - 2022</h5>
                 <p><em>MLV Lab, Korea University, Seoul</em></p>
                 
-                
+                <ul><li>Advised by Professor <a href="https://www.hyunwoojkim.com/" target="_blank" rel="noopener noreferrer">Hyunwoo J. Kim</a>.</li></ul>
             </div>
         
             <div class="resume-item">
@@ -576,7 +576,7 @@
         
                         </div>
                     
-                        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200" style="padding-right: 1rem; padding-left: 2rem;">
+                        <div class="col-lg-6 resume-column">
                             
             <h3 class="resume-title">Experience</h3>
             
@@ -601,7 +601,7 @@
                 <h5>2022</h5>
                 <p><em>Generation Research, NAVER AI Lab</em></p>
                 
-                <ul><li>Researched pose optimization for neural rendering.</li></ul>
+                <ul><li>Researched pose optimization for neural rendering.</li><li>Mentored by Dr. <a href="https://wityworks.com/" target="_blank" rel="noopener noreferrer">Jin-Hwa Kim</a>.</li></ul>
             </div>
         
         
@@ -620,11 +620,7 @@
 
   <!-- Scroll Top -->
   <button id="scroll-top" class="scroll-top button_top d-flex align-items-center justify-content-center" aria-label="Back to top">
-    <svg class="svgIcon" viewBox="0 0 384 512">
-      <path
-        d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
-      ></path>
-    </svg>
+    <i class="bi bi-arrow-up" aria-hidden="true"></i>
   </button>
 
   <!-- Preloader -->
@@ -633,7 +629,6 @@
     <span class="preloader-label">Hwan Heo · 3D AI</span>
   </div>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
   <script src="blogs/js/site-data-client.js"></script>
   <script src="blogs/js/blog-cover-media.js"></script>
   <script src="js/portfolio-blocks.js"></script>

@@ -3,15 +3,23 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="Hwan Heo's Blog Search Engine" />
+        <meta name="description" content="Search Hwan Heo's technical articles and research notes" />
         <meta name="author" content="Hwan Heo" />
-        <title>HwanHeo's Blog</title>
+        <title>Search | Hwan Heo</title>
         <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
-        <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
         <link href="../css/blog.css" rel="stylesheet" />
+        <link href="../css/typography.css" rel="stylesheet" />
         <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet" />
+        <script>
+            (function() {
+                try {
+                    const storedTheme = localStorage.getItem('blog-theme');
+                    const theme = storedTheme === 'dark' || storedTheme === 'light' ? storedTheme : 'light';
+                    document.documentElement.dataset.theme = theme;
+                } catch (error) {}
+            })();
+        </script>
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -19,138 +27,58 @@
             gtag('js', new Date());
             gtag('config', 'G-RF7ETSKPK9');
         </script>
-        <style>
-            html {
-                overflow-y: scroll;
-            }
-            .custom-badge {
-                display: inline-block;
-                padding: 0.5em 1em; 
-                font-size: 14px; 
-            }
-            .series-group .series-title {
-                font-size: 1.3rem;
-                margin-bottom: 1rem;
-                border-left: 4px solid #007bff;
-                padding-left: 10px;
-            }
-
-            .series-group .series-post-list {
-                list-style-type: circle;
-                padding-left: 1.5rem;
-            }
-
-            .series-group .series-post-list li {
-                padding: 8px 0;
-                border-bottom: 1px solid #eee;
-            }
-
-            .series-group .series-post-list li a {
-                text-decoration: none;
-                font-size: 1rem;
-                color: #212529;
-            }
-
-            .series-group .series-post-list li a:hover {
-                color: #007bff;
-            }
-
-            .post-meta-sm {
-                font-size: 0.8rem;
-                color: #6c757d;
-                margin-left: 10px;
-            }
-        </style>
-    <script src="../../js/sidebar-controller.js"></script>
-    <link href="../css/sidebar.css" rel="stylesheet">
-    <link href="../../css/sidebar-nav.css" rel="stylesheet">
-    <link href="../css/typography.css" rel="stylesheet">
     </head>
-    <body class="blog-search-page">
-        <header id="header" class="header blog-sidebar dark-background d-flex flex-column">
-            <div class="profile-img">
-              <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="img-fluid rounded-circle">
-            </div>
-        
-            <a href="../" class="logo d-flex align-items-center justify-content-center">
-              <span class="sitename">Hwan's Blog</span>
-            </a>
-
-            <div class="social-links text-center">
-              <a href="https://github.com/hwanhuh" class="github" aria-label="GitHub"><i class="bi bi-github" aria-hidden="true"></i></a>
-              <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin" aria-label="LinkedIn"><i class="bi bi-linkedin" aria-hidden="true"></i></a>
-              <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram" aria-label="Google Scholar"><i class="bi bi-mortarboard-fill" aria-hidden="true"></i></a>
-              <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus" aria-label="Email"><i class="bi bi-envelope-fill" aria-hidden="true"></i></a>
-            </div>
-        
-            <nav id="navmenu" class="navmenu">
-                <ul>
-                    <li><a href="../"><i class="bi bi-house-door navicon" aria-hidden="true"></i>Blog Home</a></li>
-                    <li>
-                        <a href="../../" class="sidebar-external-link">
-                            <i class="bi bi-briefcase navicon" aria-hidden="true"></i>
-                            <span>Portfolio</span>
-                            <i class="bi bi-box-arrow-up-right sidebar-external-icon" aria-hidden="true"></i>
-                        </a>
-                    </li>
-                </ul>
+    <body class="blog-home-page blog-archive-page blog-search-page">
+        <main class="main blog-home-main">
+            <nav class="blog-home-topbar" id="blogHomeTopbar" aria-label="Blog utilities">
+                <a class="blog-home-back" href="../" aria-label="Back to blog home">
+                    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                    <span>Blog</span>
+                </a>
+                <div class="blog-home-toolbar-actions">
+                    <form id="search-form" class="blog-home-search" role="search">
+                        <label class="visually-hidden" for="search-input">Search posts</label>
+                        <input type="text" id="search-input" placeholder="Search...">
+                        <button type="submit" id="search-button" aria-label="Search">
+                            <i class="bi bi-search" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                    <button class="blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false">
+                        <i class="bi bi-moon-stars" aria-hidden="true"></i>
+                    </button>
+                    <button id="lang-toggle-main" class="blog-home-language" type="button" aria-label="한국어로 전환" title="한국어로 전환">가</button>
+                </div>
             </nav>
 
-            <div class="sidebar-labs">
-                <details class="sidebar-labs-menu">
-                    <summary>
-                        <i class="bi bi-tools navicon" aria-hidden="true"></i>
-                        <span>Labs</span>
-                        <i class="bi bi-chevron-down sidebar-labs-chevron" aria-hidden="true"></i>
-                    </summary>
-                    <div class="sidebar-labs-panel">
-                        <a href="../3DViewer/"><i class="bi bi-box navicon" aria-hidden="true"></i><span>3D Viewer</span></a>
-                        <a href="../editor/"><i class="bi bi-pencil-square navicon" aria-hidden="true"></i><span>Editor</span></a>
-                    </div>
-                </details>
-            </div>
-
-        </header>
-        <main class="main">
-        <!-- Main Content-->
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-9 col-xl-9">
-                    <form id="search-form" class="mb-4">
-                        <br/>
-                        <label for="search-input" class="form-label">Search Results</label>
-                        <div class="input-group">
-                            <input type="text" id="search-input" class="form-control form-control-lg" placeholder="Enter search term...">
-                            <button class="btn btn-dark" type="submit" id="search-button" aria-label="Search">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                                </svg>
-                            </button>
+            <header class="masthead blog-home-hero" style="background-image: url('../../assets/image_fx_.jpg'); background-position: center 34%; background-size: cover;">
+                <div class="container position-relative px-4 px-lg-5">
+                    <div class="blog-home-hero-grid">
+                        <div class="blog-home-hero-copy">
+                            <span class="blog-home-kicker" data-search-copy="kicker">Search</span>
+                            <h1 data-search-copy="title">Search the archive</h1>
+                            <p data-search-copy="intro">Find research notes by title, topic, tag, or anything mentioned in the article.</p>
                         </div>
-                    </form>
-                    <hr class="my-4" />
-
-                    <!-- 검색 결과가 여기에 동적으로 삽입됩니다 -->
-                    <div id="search-results-container">
-                        <!-- 로딩 스피너 (선택 사항) -->
-                        <p>Loading results, please wait...</p>
-                    </div>
-
-                    <div class="mb-5 d-flex justify-content-end">
-                        <!-- <button class="btn btn-primary rounded-pill btn-sm d-inline scroll-top" id="scroll-top"><strong><i class="bi bi-arrow-up-short"></i></strong></button> -->
-                        <button id="scroll-top" class="scroll-top button_top d-flex align-items-center justify-content-center">
-                            <svg class="svgIcon" viewBox="0 0 384 512">
-                              <path
-                                d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
-                              ></path>
-                            </svg>
-                        </button>
                     </div>
                 </div>
+            </header>
+
+            <div class="container px-4 px-lg-5 blog-home-container">
+                <section class="blog-home-archive blog-search-results" aria-labelledby="search-results-heading">
+                    <div class="blog-home-archive-head">
+                        <div>
+                            <span class="blog-search-eyebrow" data-search-copy="eyebrow">Archive index</span>
+                            <h2 id="search-results-heading" data-search-copy="results">Results</h2>
+                        </div>
+                        <span id="search-result-count" class="blog-search-count" aria-live="polite"></span>
+                    </div>
+                    <div id="search-results-container" class="blog-home-tab-content" aria-live="polite">
+                        <p class="blog-search-state">Searching the archive...</p>
+                    </div>
+                </section>
             </div>
-        </div>
-        <!-- Footer-->
-        <footer class="border-top">
+        </main>
+
+        <footer class="blog-home-footer">
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-9 col-xl-9">
@@ -159,15 +87,14 @@
                 </div>
             </div>
         </footer>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
         <script src="../js/site-data-client.js"></script>
         <script src="../js/blog-cover-media.js"></script>
         <script src="../js/blog-shell.js"></script>
+        <script src="../js/theme-toggle.js"></script>
         <script src="../js/search-page.js"></script>
         <script>
             initBlogShell({ formSelector: '#search-form', inputSelector: '#search-input' });
         </script>
-    </main>
     </body>
 </html>

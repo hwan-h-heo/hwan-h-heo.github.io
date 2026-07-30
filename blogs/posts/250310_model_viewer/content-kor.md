@@ -70,11 +70,11 @@ author: Hwan Heo
     cdn 으로 다음과 같이 html file 에서 import 한 후,
 </p>
 
-<pre id="pre-2" ><code id="model-viewer-cdn" style="font-size: 1rem"  class="language-html">&lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js&quot;&gt;&lt;/script&gt;
+<pre id="pre-2" ><code id="model-viewer-cdn" class="language-html">&lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js&quot;&gt;&lt;/script&gt;
 </code></pre>
 <p class="lang kor" ><code>model-viewer</code> 를 선언하면서 <code>src</code> 에 3D model path 만 입력하면 interactive 한 3D Model 을 웹에 바로 삽입할 수 있다. </p>
 
-<pre id="pre-3" ><code style="font-size: 1rem"  class='language-html'>&lt;model-viewer 
+<pre id="pre-3" ><code class='language-html'>&lt;model-viewer
     src=&quot;your_3d_model.glb&quot; >
 &lt;/model-viewer&gt;
 </code></pre>
@@ -90,7 +90,7 @@ author: Hwan Heo
 </ul>
 <p id="p-10"  class="lang kor" >등의 옵션을 제공하고 있어, model load 시 camera angle 이나 environment 등을 적용한 rendering 을 손쉽게 구현할 수 있다. </p>
 <p id="p-11" ><strong id="strong-1"><em>Example:</em></strong></p>
-<pre id="pre-3" ><code style="font-size: 1rem"  class='language-html'>&lt;model-viewer 
+<pre id="pre-3" ><code class='language-html'>&lt;model-viewer
     src=&quot;omni.glb&quot; 
     auto-rotate
     rotation-per-second=&quot;60deg&quot;
@@ -128,7 +128,7 @@ author: Hwan Heo
 </p>
 
 
-<pre id="pre-4" ><code id="code-mesh" style="font-size: 1rem"  class="language-javascript">var window_state = {};
+<pre id="pre-4" ><code id="code-mesh" class="language-javascript">var window_state = {};
 function show_geometry(){
     let modelViewer = document.getElementById(&#39;model&#39;);
     if (modelViewer.model.materials[0].pbrMetallicRoughness.baseColorTexture.texture === null) return;
@@ -149,8 +149,10 @@ function show_geometry(){
 </p>
 
 
-<button class="btn btn-sm btn-primary" onclick="show_geometry()">Geometry</button>
-<button class="btn btn-sm btn-secondary" onclick="show_texture()">Texture</button>
+<div class="viewer-mode-switch" role="group" aria-label="모델 표현 방식">
+    <button type="button" class="viewer-mode-button" data-viewer-mode="geometry" aria-pressed="false" onclick="show_geometry()">Geometry</button>
+    <button type="button" class="viewer-mode-button is-active" data-viewer-mode="texture" aria-pressed="true" onclick="show_texture()">Texture</button>
+</div>
 <model-viewer 
     style="width: 100%; height: 700px;" 
     exposure="3" 
@@ -166,7 +168,7 @@ function show_geometry(){
     위에서 살펴본 model viewer 만으로 rendering 할 수 없는 normal, wireframe rendering 등을 구현하기 위해서는 threejs 를 사용해서 직접 model viewer class 를 구현해야 한다.
 </p>
 <h3 id="h3-3" > Basic Usage </h3>
-<pre id="pre-2" ><code style="font-size: 1rem"  class='language-html'>&lt;script type=&quot;importmap&quot;&gt;
+<pre id="pre-2" ><code class='language-html'>&lt;script type=&quot;importmap&quot;&gt;
     {
         &quot;imports&quot;: {
             &quot;three&quot;: &quot;https://unpkg.com/three@0.150.0/build/three.module.js&quot;,
@@ -181,7 +183,7 @@ function show_geometry(){
 <p id="p-18"  class="lang kor" >
     <code>scene</code>, <code>camera</code>, <code>renderer</code> 등을 모두 직접 설정해줘야 하는데, jacascript 에서 다음과 같이 필요한 최소 패키지들을 import 한 후,
 </p>
-<pre id="pre-3" ><code style="font-size: 1rem"  class='language-javascript'>import * as THREE from 'three';
+<pre id="pre-3" ><code class='language-javascript'>import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
@@ -190,7 +192,7 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
     scene 과 camera 를 새로 정의하고
 </p>
 
-<pre id="pre-4" ><code style="font-size: 1rem"  class='language-javascript'>scene = new THREE.Scene(); 
+<pre id="pre-4" ><code class='language-javascript'>scene = new THREE.Scene();
 camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
 renderer = new THREE.WebGLRenderer({ antialias: true });
 controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -198,7 +200,7 @@ controls = new OrbitControls(this.camera, this.renderer.domElement);
 <p id="p-20"  class="lang kor" >
     다음과 같이 gltf 3D model 을 load 하여 scene 에 불러올 수 있다.
 </p>
-<pre id="pre-5"><code style="font-size: 1rem"  class='language-javascript'>loader = new GLTFLoader();
+<pre id="pre-5"><code class='language-javascript'>loader = new GLTFLoader();
 loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined, (error) => { console.error('Loading Error:', error); });</code></pre>
 
 <h3 id="h3-4">Custom Viewer Implementation</h3>
@@ -210,7 +212,7 @@ loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined
 <p id="p-23" class="lang kor" >
     예를 들어 Normal map 의 경우에는 threejs 에서 제공하는 <code>THREE.MeshNormalMaterial()</code> 을 mesh material 로 설정하는 것으로 rendering 할 수 있다.
 </p>
-<pre id="pre-5" ><code style="font-size: 1rem"  class="language-javascript">if (model) {
+<pre id="pre-5" ><code class="language-javascript">if (model) {
     model.traverse((child) => {
         if (child.isMesh) {
             child.material = new THREE.MeshNormalMaterial();
@@ -228,7 +230,7 @@ loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined
 <p id="p-25"  class="lang kor" >
     대신에 wireframemesh 를 복사본으로 선언한 후, original mesh 의 child 로 추가하여 mesh 의 original texture, geometry 와 함께 wireframe 을 렌더링하여 볼 수 있다.
 </p>
-<pre id="pre-6" ><code style="font-size: 1rem" class="language-javascript">model.traverse((child) => {
+<pre id="pre-6" ><code class="language-javascript">model.traverse((child) => {
     if (child.isMesh) {
         const wireframeMesh = new THREE.Mesh(child.geometry, new THREE.MeshBasicMaterial({
             wireframe: true,
@@ -263,7 +265,7 @@ loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined
       </h2>
       <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
         <div class="accordion-body">
-          <pre><code style="font-size: 1rem;" class="language-javascript">import * as THREE from &#39;three&#39;;
+          <pre><code class="language-javascript">import * as THREE from &#39;three&#39;;
 import { OrbitControls } from &#39;three/addons/controls/OrbitControls.js&#39;;
 import { GLTFLoader } from &#39;three/addons/loaders/GLTFLoader.js&#39;;
 import { RGBELoader } from &#39;three/addons/loaders/RGBELoader.js&#39;;
@@ -931,7 +933,7 @@ export { SimpleModelViewer };
   </div>
 
 <p id="p-23" class="lang kor" > 현재 component 는 아래와 같은 선언형 API 로 사용하는 편이 맞다. google model viewer class 처럼 여러 3D model 에 독립적으로 붙일 수 있으면서, 카메라, environment, selection, state 관련 옵션도 더 넓게 제어할 수 있다.</p> 
-<pre id="pre-12" ><code id="code-NaN" style="font-size:1rem"  class="language-javascript">&lt;simple-model-viewer 
+<pre id="pre-12" ><code id="code-NaN" class="language-javascript">&lt;simple-model-viewer
     src=&quot;model.glb&quot; 
     camera-orbit=&quot;0 0 20&quot;
     camera-target=&quot;0 0 0&quot;

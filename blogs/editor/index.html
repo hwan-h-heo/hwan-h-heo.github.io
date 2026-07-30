@@ -271,7 +271,6 @@
                             </div>
                         </div>
                         <div class="toolbar-document-actions" aria-label="Post actions">
-                            <a class="button button-secondary" href="./portfolio.html">Portfolio</a>
                             <button id="new-post-button" class="button button-secondary" title="Create a new post">New</button>
                             <button id="load-post-button" class="button button-secondary" title="Load an existing post">Load</button>
                             <button id="save-draft-button" class="button button-secondary" title="Save a local draft">Save</button>
@@ -366,13 +365,19 @@
                             </div>
                         </header>
 
-                        <main class="layout-post-main">
-                            <article id="preview-content" class="preview-content main-content layout-preview-content"></article>
-                            <button id="append-block-button" class="append-block-button" type="button">
-                                <i class="bi bi-plus-lg"></i>
-                                Add content block
-                            </button>
-                        </main>
+                        <div class="layout-post-body">
+                            <main class="layout-post-main">
+                                <article id="preview-content" class="preview-content main-content layout-preview-content"></article>
+                                <button id="append-block-button" class="append-block-button" type="button">
+                                    <i class="bi bi-plus-lg"></i>
+                                    Add content block
+                                </button>
+                            </main>
+                            <nav id="layout-toc" class="layout-editor-toc" aria-label="Table of contents" hidden>
+                                <div class="layout-editor-toc-title">Contents</div>
+                                <ol id="layout-toc-list" class="layout-editor-toc-list"></ol>
+                            </nav>
+                        </div>
 
                         <footer class="layout-blog-footer">Copyright © Hwan Heo</footer>
                     </div>
