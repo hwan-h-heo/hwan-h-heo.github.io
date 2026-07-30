@@ -3445,23 +3445,23 @@ html { overflow-y: scroll; }
     width: 40px;
     height: 40px;
     padding: 0;
-    overflow: hidden;
-    border: 0;
+    border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: 50%;
     color: #fff;
-    background: #212529;
+    background: rgba(15, 23, 42, 0.92);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.16);
     cursor: pointer;
     opacity: 0;
     pointer-events: none;
     transform: translateY(10px);
     visibility: hidden;
     transition:
-        width 0.3s ease,
-        border-radius 0.3s ease,
-        opacity 0.2s ease,
-        transform 0.2s ease,
-        visibility 0.2s ease,
-        background-color 0.3s ease;
+        opacity 0.18s cubic-bezier(0.2, 0, 0, 1),
+        transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+        visibility 0.18s cubic-bezier(0.2, 0, 0, 1),
+        color 0.18s cubic-bezier(0.2, 0, 0, 1),
+        background-color 0.18s cubic-bezier(0.2, 0, 0, 1),
+        border-color 0.18s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .button_top.active {
@@ -3473,42 +3473,41 @@ html { overflow-y: scroll; }
 
 .button_top:hover,
 .button_top:focus-visible {
-    width: 140px;
-    border-radius: 50px;
     background: #111827;
-    outline: none;
+    border-color: rgba(20, 157, 221, 0.42);
+    outline: 0;
+    transform: translateY(-2px);
 }
 
-.button_top .svgIcon {
-    width: 8px;
-    height: auto;
-    margin: 0;
-    transition: transform 0.3s ease;
+.button_top i {
+    color: currentColor;
+    font-size: 0.82rem;
+    line-height: 1;
+    transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.button_top .svgIcon path {
-    fill: currentColor;
+.button_top:hover i,
+.button_top:focus-visible i {
+    transform: translateY(-1px);
 }
 
-.button_top:hover .svgIcon,
-.button_top:focus-visible .svgIcon {
-    transform: translateY(-200%);
+.button_top:focus-visible {
+    outline: 2px solid rgba(20, 157, 221, 0.42);
+    outline-offset: 3px;
 }
 
-.button_top::before {
-    position: absolute;
-    bottom: -20px;
-    color: #fff;
-    content: "Back to Top";
-    font-size: 0;
-}
+@media (prefers-reduced-motion: reduce) {
+    .button_top,
+    .button_top i {
+        transition: none;
+    }
 
-.button_top:hover::before,
-.button_top:focus-visible::before {
-    bottom: auto;
-    font-size: 11px;
-    opacity: 1;
-    transition: font-size 0.3s ease, opacity 0.3s ease;
+    .button_top:hover,
+    .button_top:focus-visible,
+    .button_top:hover i,
+    .button_top:focus-visible i {
+        transform: none;
+    }
 }
 .toc {
 position: fixed;
@@ -5033,7 +5032,9 @@ html[data-theme="dark"] footer.border-top {
 }
 
 html[data-theme="dark"] .button_top {
-    background: #212529;
+    border-color: rgba(216, 226, 239, 0.16);
+    background: rgba(15, 23, 42, 0.94);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
 }
 
 html[data-theme="dark"] .button_top:hover,

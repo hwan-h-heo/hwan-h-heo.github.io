@@ -24,9 +24,12 @@
 
     function readCollapsedPreference() {
         try {
-            return localStorage.getItem(STORAGE_KEY) === 'true';
+            const storedPreference = localStorage.getItem(STORAGE_KEY);
+            return storedPreference === null
+                ? true
+                : storedPreference === 'true';
         } catch (error) {
-            return false;
+            return true;
         }
     }
 

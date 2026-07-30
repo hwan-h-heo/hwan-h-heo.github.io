@@ -697,13 +697,13 @@ function renderProjectPage({ project, contentHtml, projectNav = null }) {
 
   <script src="../../js/sidebar-controller.js"></script>
   <link href="../../assets/css/portfolio.css" rel="stylesheet">
+  <link href="/blogs/css/scroll-progress.css" rel="stylesheet">
 ${mathRuntime}
 
   <style>
     table { width: 100%; border-collapse: collapse; }
     th, td { width: 50%; border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; }
     th { width: 15%; background-color: #f2f2f2; }
-    .progress-bar { height: 0.4rem; background: #6EA8FE; width: 0%; z-index: 9999; position: fixed; }
     .feature-img { max-width: 100%; height: auto; }
     .gif-container { display: flex; justify-content: center; align-items: center; }
     .gif-container img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
@@ -721,10 +721,6 @@ ${mathRuntime}
 </head>
 
 <body class="portfolio-details-page">
-  <div class="progress-container">
-    <div class="progress-bar" id="myBar"></div>
-  </div>
-
   <header id="header" class="header dark-background d-flex flex-column">
     <div class="profile-img">
       <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="img-fluid rounded-circle">
@@ -773,28 +769,14 @@ ${detailsInner}
     </div>
   </footer>
 
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <button id="scroll-top" class="scroll-top project-scroll-top d-flex align-items-center justify-content-center" type="button" aria-label="Back to top">
+    <i class="bi bi-arrow-up" aria-hidden="true"></i>
+  </button>
   <div id="preloader"></div>
 
   <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../../assets/js/main.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        window.onscroll = updateScrollIndicator;
-        window.onresize = updateScrollIndicator;
-
-        function updateScrollIndicator() {
-            const bar = document.getElementById("myBar");
-            if (!bar) return;
-            var winScroll = document.documentElement.scrollTop;
-            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            if (height > 0) {
-                var scrolled = (winScroll / height) * 100;
-                bar.style.width = scrolled + "%";
-            }
-        }
-    });
-  </script>
+  <script src="/blogs/js/scroll-progress.js"></script>
 </body>
 
 </html>
