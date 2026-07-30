@@ -177,20 +177,20 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         return `
         <article class="post-preview">
-            <a href="${escapeHtml(getPostUrl(post, lang))}" class="post-card-link">
-                <div class="post-card-cover">
+            <div class="post-card-link">
+                <a href="${escapeHtml(getPostUrl(post, lang))}" class="post-card-cover" aria-label="${escapeHtml(copy(lang, 'readPost'))}: ${escapeHtml(title)}">
                     ${renderCoverImage(post, title)}
-                </div>
+                </a>
                 <div class="post-card-body">
                     <div class="post-card-eyebrow">
                         <span>${escapeHtml(getCategoryLabel(post, lang))}</span>
                         <span>${escapeHtml(seriesTitle)}</span>
                     </div>
-                    <h3 class="post-title">${escapeHtml(title)}</h3>
+                    <h3 class="post-title"><a href="${escapeHtml(getPostUrl(post, lang))}">${escapeHtml(title)}</a></h3>
                     ${subtitle ? `<p class="post-subtitle">${escapeHtml(subtitle)}</p>` : ''}
                     ${tagsHtml ? `<div class="post-tag-row">${tagsHtml}</div>` : ''}
                 </div>
-            </a>
+            </div>
             <p class="post-meta">
                 ${escapeHtml(seriesTitle)} / ${escapeHtml(formatDate(post.date, lang))}
             </p>

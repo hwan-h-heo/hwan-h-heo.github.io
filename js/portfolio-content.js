@@ -150,9 +150,15 @@
         const resolvedView = view === 'all' ? 'all' : 'selected';
         section.dataset.portfolioView = resolvedView;
 
+        const visibleItems = [];
         section.querySelectorAll('.portfolio-project-item').forEach((item) => {
             item.hidden = resolvedView === 'selected' && item.dataset.selected !== 'true';
+            item.classList.remove('is-last-visible');
+            if (!item.hidden) {
+                visibleItems.push(item);
+            }
         });
+        visibleItems[visibleItems.length - 1]?.classList.add('is-last-visible');
 
         section.querySelectorAll('[data-portfolio-view]').forEach((control) => {
             const active = control.dataset.portfolioView === resolvedView;
