@@ -109,8 +109,7 @@ function buildPublicRoutes(siteData, repoRoot = DEFAULT_REPO_ROOT) {
         { path: '/blogs/', type: 'blog-index' },
         { path: '/blogs/search/?q=3d', type: 'blog-search' },
         { path: '/blogs/3DViewer/', type: 'utility' },
-        { path: '/blogs/editor/', type: 'editor' },
-        { path: '/blogs/editor/portfolio.html', type: 'editor' }
+        { path: '/blogs/editor/', type: 'editor' }
     ];
 
     siteData.posts.forEach((post) => {

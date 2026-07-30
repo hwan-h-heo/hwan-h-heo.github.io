@@ -22,8 +22,7 @@ const BLOG_STATIC_FILES = new Set([
 ]);
 const PRIVATE_EDITOR_PREFIXES = [
     'blogs/editor/drafts/',
-    'blogs/editor/draft-assets/',
-    'blogs/editor/project-snapshots/'
+    'blogs/editor/draft-assets/'
 ];
 
 function normalizePath(filePath) {

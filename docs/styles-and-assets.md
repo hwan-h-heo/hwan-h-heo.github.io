@@ -10,7 +10,7 @@ The deployed site has two independent style surfaces.
 - `blogs/css/sidebar.css` owns the blog sidebar.
 - `blogs/css/post.css` owns generated post-only and rich-content components.
 - `blogs/css/code-copy.css` and `blogs/css/scroll-progress.css` are loaded only when those post features are enabled.
-- `blogs/editor/editor.css` and `blogs/editor/portfolio.css` are private to the local editors.
+- `blogs/editor/editor.css` is private to the local blog editor.
 
 Keep selectors in the narrowest stylesheet that owns the markup. Do not add a second
 site-wide entry point or restore the retired `used.css`, `main.css`,

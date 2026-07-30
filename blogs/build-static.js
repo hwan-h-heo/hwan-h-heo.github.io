@@ -77,7 +77,7 @@ function copyStaticAssets() {
     });
 
     const editorPath = path.join(__dirname, 'editor');
-    const privateEditorDirs = new Set(['drafts', 'draft-assets', 'project-snapshots']);
+    const privateEditorDirs = new Set(['drafts', 'draft-assets']);
     if (fs.existsSync(editorPath)) {
         copyRecursiveSync(editorPath, path.join(distDir, 'blogs', 'editor'), {
             shouldCopy: (sourcePath) => {

@@ -199,6 +199,8 @@
             'layout-date',
             'layout-reading-time',
             'layout-tags',
+            'layout-toc',
+            'layout-toc-list',
             'append-block-button',
             'editor-grid',
             'editor-textarea',
@@ -303,7 +305,7 @@
         });
 
         el.editorTextarea.addEventListener('input', () => {
-            state.contents[state.activeLanguage] = el.editorTextarea.value;
+            state.contents[state.activeLanguage] = normalizeActiveMathContent({ preserveSelection: true });
             updatePreview();
             updateStats();
             queueAutosave();
@@ -867,6 +869,62 @@
         return parts.length > 1 ? parts.slice(1).join(CONTENT_DELIMITER).trim() : text;
     }
 
+    function normalizeMathContent(content) {
+        const normalizer = window.blogMarkdown && window.blogMarkdown.normalizeMathMarkdown;
+        return typeof normalizer === 'function' ? normalizer(content) : content;
+    }
+
+    function mapOffsetThroughChanges(offset, changes) {
+        let delta = 0;
+
+        for (const change of changes) {
+            if (offset <= change.start) {
+                break;
+            }
+            if (offset >= change.end) {
+                delta += change.replacement.length - (change.end - change.start);
+                continue;
+            }
+            return change.start + delta + Math.min(
+                change.replacement.length,
+                offset - change.start
+            );
+        }
+
+        return offset + delta;
+    }
+
+    function normalizeActiveMathContent(options = {}) {
+        const source = el.editorTextarea.value || '';
+        const normalizer = window.blogMarkdown && window.blogMarkdown.normalizeMathMarkdownWithChanges;
+        if (typeof normalizer !== 'function') {
+            return source;
+        }
+
+        const result = normalizer(source);
+        if (!result || result.markdown === source) {
+            return source;
+        }
+
+        const preserveSelection = Boolean(options.preserveSelection)
+            && document.activeElement === el.editorTextarea;
+        const selectionStart = preserveSelection ? el.editorTextarea.selectionStart : 0;
+        const selectionEnd = preserveSelection ? el.editorTextarea.selectionEnd : 0;
+
+        el.editorTextarea.value = result.markdown;
+        state.contents[state.activeLanguage] = result.markdown;
+
+        if (preserveSelection) {
+            el.editorTextarea.setSelectionRange(
+                mapOffsetThroughChanges(selectionStart, result.changes),
+                mapOffsetThroughChanges(selectionEnd, result.changes)
+            );
+        }
+
+        updateStats();
+        return result.markdown;
+    }
+
     function resolvePreviewAssetBase(postId, targetPostId) {
         const resolvedId = targetPostId || postId;
         if (!resolvedId) {
@@ -880,7 +938,10 @@
 
     function updatePreview() {
         const postId = state.metadata.id.trim();
-        const content = stripLegacyContentPreamble(el.editorTextarea.value || '');
+        const normalizedContent = normalizeActiveMathContent({
+            preserveSelection: document.activeElement === el.editorTextarea
+        });
+        const content = stripLegacyContentPreamble(normalizedContent);
         const html = renderMarkdownHtml(content, postId);
         const isKoreanContent = state.activeLanguage === 'kor';
 
@@ -972,7 +1033,10 @@
             blocks[blocks.length - 1].end = content.length;
         }
 
-        return blocks;
+        const mergeMathBlocks = window.blogMarkdown && window.blogMarkdown.mergeDisplayMathBlocks;
+        return typeof mergeMathBlocks === 'function'
+            ? mergeMathBlocks(content, blocks)
+            : blocks;
     }
 
     function renderVisualPreview(content, postId) {
@@ -1833,7 +1897,7 @@
 
     function buildDriveDraftManifest(savedAt) {
         syncFormToState({ skipAutosave: true });
-        state.contents[state.activeLanguage] = el.editorTextarea.value;
+        state.contents[state.activeLanguage] = normalizeActiveMathContent();
         return {
             version: 1,
             savedAt,
@@ -2094,7 +2158,9 @@
     }
 
     function buildAutosaveSnapshot() {
-        state.contents[state.activeLanguage] = el.editorTextarea.value;
+        state.contents[state.activeLanguage] = normalizeActiveMathContent({
+            preserveSelection: document.activeElement === el.editorTextarea
+        });
 
         return {
             version: AUTOSAVE_VERSION,
@@ -2319,6 +2385,7 @@
 
         state.preview.outline = headings;
         el.outlineCount.textContent = `${headings.length} heading${headings.length === 1 ? '' : 's'}`;
+        renderLayoutToc(headings);
 
         if (headings.length === 0) {
             el.outlineList.innerHTML = '<p class="outline-empty">Add `##` or `###` headings to build a clickable outline.</p>';
@@ -2334,30 +2401,65 @@
 
         el.outlineList.querySelectorAll('[data-outline-index]').forEach((button) => {
             button.addEventListener('click', () => {
-                const headingIndex = Number.parseInt(button.dataset.outlineIndex, 10);
-                const targetHeading = state.preview.outline[headingIndex];
-                if (!targetHeading) {
-                    return;
-                }
-
-                focusEditorHeading(targetHeading);
-
-                const activePreview = state.ui.editorView === 'layout'
-                    ? el.previewContent
-                    : el.sourcePreviewContent;
-                const previewTarget = activePreview.querySelectorAll('h2, h3')[headingIndex];
-                if (previewTarget) {
-                    if (state.ui.editorView === 'layout') {
-                        previewTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    } else {
-                        activePreview.scrollTo({
-                            top: Math.max(0, previewTarget.offsetTop - 18),
-                            behavior: 'smooth'
-                        });
-                    }
-                }
+                navigateToOutlineHeading(Number.parseInt(button.dataset.outlineIndex, 10));
             });
         });
+    }
+
+    function renderLayoutToc(headings) {
+        if (!el.layoutToc || !el.layoutTocList) {
+            return;
+        }
+
+        el.layoutToc.hidden = headings.length === 0;
+        el.layoutTocList.innerHTML = headings.map((heading) => `
+            <li>
+                <button
+                    class="layout-editor-toc-button layout-editor-toc-button-level-${heading.level}"
+                    type="button"
+                    data-outline-index="${heading.outlineIndex}"
+                >${escapeHtml(heading.text)}</button>
+            </li>
+        `).join('');
+
+        el.layoutTocList.querySelectorAll('[data-outline-index]').forEach((button) => {
+            button.addEventListener('click', () => {
+                navigateToOutlineHeading(Number.parseInt(button.dataset.outlineIndex, 10));
+            });
+        });
+    }
+
+    function navigateToOutlineHeading(headingIndex) {
+        const targetHeading = state.preview.outline[headingIndex];
+        if (!targetHeading) {
+            return;
+        }
+
+        focusEditorHeading(targetHeading);
+
+        const activePreview = state.ui.editorView === 'layout'
+            ? el.previewContent
+            : el.sourcePreviewContent;
+        const previewTarget = activePreview.querySelectorAll('h2, h3')[headingIndex];
+        if (previewTarget) {
+            if (state.ui.editorView === 'layout') {
+                previewTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                activePreview.scrollTo({
+                    top: Math.max(0, previewTarget.offsetTop - 18),
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        if (el.layoutTocList) {
+            el.layoutTocList.querySelectorAll('[data-outline-index]').forEach((button) => {
+                button.classList.toggle(
+                    'is-active',
+                    Number.parseInt(button.dataset.outlineIndex, 10) === headingIndex
+                );
+            });
+        }
     }
 
     function extractMarkdownHeadings(content) {
@@ -2609,7 +2711,7 @@
 
     function buildPayload() {
         syncFormToState({ skipAutosave: true });
-        state.contents[state.activeLanguage] = el.editorTextarea.value;
+        state.contents[state.activeLanguage] = normalizeActiveMathContent();
 
         const payload = {
             mode: state.mode,
@@ -2642,7 +2744,9 @@
         };
 
         payload.post.languages.forEach((language) => {
-            payload.contents[language] = state.contents[language] || '';
+            const normalizedContent = normalizeMathContent(state.contents[language] || '');
+            state.contents[language] = normalizedContent;
+            payload.contents[language] = normalizedContent;
         });
 
         return payload;
@@ -2840,7 +2944,7 @@
             return;
         }
 
-        state.contents[state.activeLanguage] = el.editorTextarea.value;
+        state.contents[state.activeLanguage] = normalizeActiveMathContent();
 
         try {
             const response = await fetch(`${API_BASE}/draft`, {
@@ -2950,7 +3054,10 @@
 
     function downloadActiveMarkdown() {
         const filename = `${state.metadata.id || 'draft'}-${state.activeLanguage}.md`;
-        const blob = new Blob([el.editorTextarea.value], { type: 'text/markdown' });
+        const content = normalizeActiveMathContent({
+            preserveSelection: document.activeElement === el.editorTextarea
+        });
+        const blob = new Blob([content], { type: 'text/markdown' });
         const url = URL.createObjectURL(blob);
         const anchor = document.createElement('a');
         anchor.href = url;

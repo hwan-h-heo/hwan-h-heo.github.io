@@ -75,7 +75,6 @@ editor/
 ├── edit.html          # Redirect to index.html
 ├── drafts/            # Local markdown drafts (gitignored)
 ├── draft-assets/      # Temporary uploads (gitignored and excluded from deployment)
-├── project-snapshots/ # Local project backups (gitignored and excluded from deployment)
 └── README.md          # This file
 
 posts/
@@ -91,6 +90,7 @@ posts/
 - Use standard Markdown syntax
 - Layout view opens a clicked content block in place; use `Ctrl/Cmd + Enter` to finish or `Esc` to cancel
 - Math: Inline `$x^2$`, Block `$$x^2$$`
+- Complete `$$...$$` blocks stay together in Layout view and repair unescaped `\left{`/`\right}` braces, repeated `=`/`-` characters, and mistaken `*{...}` subscripts
 - Code blocks: Use triple backticks with language
 
 ## Example Post

@@ -145,9 +145,6 @@ Observed capabilities:
 - Saves drafts in `blogs/editor/drafts`.
 - Uploads draft images into `blogs/editor/draft-assets`.
 - Migrates draft asset references from `./draft-assets/<file>` into a post's `./assets/<file>` on post save.
-- Reads and writes portfolio bundle data in `site-data.json`.
-- Lists, creates, edits, deletes, and uploads assets for project pages.
-- Creates backups/snapshots for project page edits under `blogs/editor/project-snapshots`.
 
 Maintenance concerns:
 
