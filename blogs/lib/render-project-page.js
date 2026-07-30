@@ -729,7 +729,7 @@ ${mathRuntime}
       <a href="https://github.com/hwanhuh" class="github"><i class="bi bi-github"></i></a>
       <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin"><i class="bi bi-linkedin"></i></a>
       <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram"><i class="bi bi-mortarboard-fill"></i></a>
-      <a href="mailto:gjghks950@naver.com" class="google-plus"><i class="bi bi-envelope-fill"></i></a>
+      <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus"><i class="bi bi-envelope-fill"></i></a>
     </div>
 
     <nav id="navmenu" class="navmenu">
