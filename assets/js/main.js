@@ -41,21 +41,6 @@
 (function() {
   "use strict";
   /**
-   * Animation on scroll function and init
-   */
-  function aosInit() {
-    if (!window.AOS || !document.querySelector('[data-aos]')) return;
-
-    window.AOS.init({
-      duration: 600,
-      easing: 'ease-in-out',
-      once: true,
-      mirror: false
-    });
-  }
-  window.addEventListener('load', aosInit);
-
-  /**
    * Lazy loading for project media
    */
   const lazyImages = document.querySelectorAll('.lazy-image');
@@ -153,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
  * Portfolio Hover Media Play (with Loading Spinner)
  * ------------------------------------------------------------------- */
 function initPortfolioBoxes(root = document) {
-  const portfolioBoxes = root.querySelectorAll('.portfolio-box:not([data-portfolio-bound]), .portfolio-project-link:not([data-portfolio-bound])');
+  const portfolioBoxes = root.querySelectorAll('.portfolio-project-link:not([data-portfolio-bound])');
   const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
   portfolioBoxes.forEach(box => {
@@ -162,39 +147,23 @@ function initPortfolioBoxes(root = document) {
     const video = box.querySelector('video');
     const image = box.querySelector('img[data-gif]');
     const spinner = box.querySelector('.loading-spinner');
-    const titleElement = box.querySelector('.polar_content h6, .portfolio-project-title');
-
-    if (!titleElement) return;
-
-    const originalTitleHtml = titleElement.innerHTML;
-    const hoverTypingText = titleElement.getAttribute('data-hover-text');
-
     let staticSrc = image ? image.getAttribute('data-static') || image.src : null;
-    let typeInterval;
-    let isActive = false; // 터치 디바이스에서 활성 상태 추적
 
-    if (hoverTypingText && !box.querySelector('.portfolio-card-summary, .portfolio-project-summary')) {
-      const summaryElement = document.createElement('p');
-      summaryElement.className = 'portfolio-card-summary';
-      summaryElement.textContent = hoverTypingText;
-      titleElement.insertAdjacentElement('afterend', summaryElement);
+    if (video && spinner) {
+      video.addEventListener('waiting', () => {
+        spinner.style.display = 'block';
+      });
+      video.addEventListener('canplay', () => {
+        spinner.style.display = 'none';
+      });
     }
 
     const activateMedia = () => {
       box.classList.add('is-active');
 
       if (video) {
-        if (spinner) {
-          video.addEventListener('waiting', () => {
-            spinner.style.display = 'block';
-          });
-          video.addEventListener('canplay', () => {
-            spinner.style.display = 'none';
-          });
-        }
-
         video.play().catch(error => {
-          console.log("Video play was prevented.", error);
+          console.debug('Video preview was not started.', error);
         });
       }
 
@@ -218,18 +187,13 @@ function initPortfolioBoxes(root = document) {
           if (spinner) {
             spinner.style.display = 'none';
           }
-          console.log("Failed to load GIF.");
         };
         gifLoader.src = image.dataset.gif;
       }
     };
 
     const deactivateMedia = () => {
-      clearInterval(typeInterval);
       box.classList.remove('is-active');
-
-      titleElement.innerHTML = originalTitleHtml;
-      titleElement.classList.remove('typing-done');
 
       if (video) {
         video.pause();
@@ -245,32 +209,14 @@ function initPortfolioBoxes(root = document) {
       }
     };
 
-    // 터치 디바이스용 이벤트 처리
     if (isTouchDevice) {
-      box.addEventListener('click', (e) => {
-        // 링크로 이동하는 것을 막지 않되, 미디어 활성화 토글
-        if (!isActive) {
-          e.preventDefault();
-          isActive = true;
-          activateMedia();
-        } else {
-          // 두 번째 탭에서는 링크로 이동
-          isActive = false;
-        }
-      });
-
-      // 다른 곳을 터치하면 비활성화
-      document.addEventListener('touchstart', (e) => {
-        if (isActive && !box.contains(e.target)) {
-          isActive = false;
-          deactivateMedia();
-        }
-      });
-    } else {
-      // 데스크톱용 마우스 이벤트
-      box.addEventListener('mouseenter', activateMedia);
-      box.addEventListener('mouseleave', deactivateMedia);
+      return;
     }
+
+    box.addEventListener('mouseenter', activateMedia);
+    box.addEventListener('mouseleave', deactivateMedia);
+    box.addEventListener('focus', activateMedia);
+    box.addEventListener('blur', deactivateMedia);
   });
 }
 

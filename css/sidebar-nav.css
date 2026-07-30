@@ -42,9 +42,9 @@
 
 .sidebar-collapse-toggle:hover,
 .sidebar-collapse-toggle:focus-visible {
-    border-color: color-mix(in srgb, var(--site-sidebar-accent), transparent 52%);
+    border-color: transparent;
     color: var(--site-sidebar-accent);
-    background: color-mix(in srgb, var(--site-sidebar-accent), transparent 90%);
+    background: transparent;
     outline: none;
 }
 
@@ -71,10 +71,10 @@
     height: 40px;
     margin: auto 0 0;
     padding: 0;
-    border-color: var(--site-sidebar-line);
-    border-radius: 10px;
+    border-color: transparent;
+    border-radius: 0;
     color: var(--nav-color, #a8a9b4);
-    background: rgba(255, 255, 255, 0.025);
+    background: transparent;
     box-shadow: none;
     font-size: 16px;
 }
@@ -157,7 +157,7 @@
     font-family: var(--site-sidebar-nav-font);
     font-size: 19px;
     font-weight: 650;
-    letter-spacing: -0.025em;
+    letter-spacing: 0;
 }
 
 #header.header .logo::after {
@@ -166,7 +166,7 @@
     font-family: "IBM Plex Mono", monospace;
     font-size: 9px;
     font-weight: 500;
-    letter-spacing: 0.1em;
+    letter-spacing: 0;
     line-height: 1.3;
     text-transform: uppercase;
 }
@@ -297,12 +297,8 @@
 
 #header.header .navmenu a:hover,
 #header.header .navmenu a:focus-visible,
-#header.header .navmenu a.active,
-#header.header .navmenu a.active:focus,
 #header.header .sidebar-labs-menu summary:hover,
-#header.header .sidebar-labs-menu summary:focus-visible,
-#header.header .sidebar-labs-menu[open] summary,
-#header.header .sidebar-labs-menu.is-active summary {
+#header.header .sidebar-labs-menu summary:focus-visible {
     border-color: rgba(215, 229, 240, 0.08);
     color: var(--site-sidebar-ink);
     background: rgba(255, 255, 255, 0.045);
@@ -313,8 +309,10 @@
 #header.header .navmenu a.active:focus,
 #header.header .sidebar-labs-menu[open] summary,
 #header.header .sidebar-labs-menu.is-active summary {
-    border-color: color-mix(in srgb, var(--site-sidebar-accent), transparent 80%);
-    background: color-mix(in srgb, var(--site-sidebar-accent), transparent 91%);
+    border-color: transparent;
+    color: var(--site-sidebar-ink);
+    background: transparent;
+    outline: none;
 }
 
 #header.header .navmenu a .navicon,
@@ -363,11 +361,15 @@
 }
 
 #header.header .sidebar-labs-panel a:hover,
-#header.header .sidebar-labs-panel a:focus-visible,
-#header.header .sidebar-labs-panel a.active {
+#header.header .sidebar-labs-panel a:focus-visible {
     color: var(--site-sidebar-ink);
     background: rgba(255, 255, 255, 0.045);
     outline: none;
+}
+
+#header.header .sidebar-labs-panel a.active {
+    color: var(--site-sidebar-ink);
+    background: transparent;
 }
 
 .sidebar-collapsed-tooltip::before {
@@ -430,7 +432,7 @@
     font-size: 15px;
     font-weight: 400;
     line-height: 1.6;
-    letter-spacing: -0.006em;
+    letter-spacing: 0;
 }
 
 @media (min-width: 1200px) {

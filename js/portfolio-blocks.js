@@ -10,7 +10,6 @@
 })(typeof window !== 'undefined' ? window : null, function(root) {
     const CONTENT_PATH = '/content/portfolio/home.json';
     const HERO_SCROLL_CUE_ENABLED = true;
-    const SECTION_SCROLL_HANDOFF_ENABLED = true;
 
     function escapeHtml(value) {
         return String(value || '')
@@ -116,11 +115,11 @@
 
     function renderAbout(block) {
         return `
-            <div class="container section-title" data-aos="fade-up">
+            <div class="container section-title">
                 <h2>${escapeHtml(block.title)}</h2>
             </div>
 
-            <div class="container" data-aos="fade-up" data-aos-delay="100">
+            <div class="container">
                 <div class="row gy-4 about-layout justify-content-center">
                     <div class="col-lg-4 about-media">
                         <img src="${escapeHtml(block.image)}" class="img-fluid about-profile-image" alt="${escapeHtml(block.imageAlt)}">
@@ -171,7 +170,7 @@
 
     function renderResume(block) {
         return `
-            <div class="container section-title resume-section-heading" data-aos="fade-up">
+            <div class="container section-title resume-section-heading">
                 <h2>${escapeHtml(block.title)}</h2>
                 <a class="resume-cv-link" href="${escapeHtml(block.cvUrl)}" download aria-label="Download curriculum vitae">
                     <span>Download CV</span>
@@ -182,7 +181,7 @@
             <div class="container resume-content">
                 <div class="row resume-layout">
                     ${(block.columns || []).map((column, index) => `
-                        <div class="col-lg-6 resume-column" data-aos="fade-up" data-aos-delay="${index === 0 ? '100' : '200'}">
+                        <div class="col-lg-6 resume-column">
                             ${(column.sections || []).map(renderResumeSection).join('')}
                         </div>
                     `).join('')}
@@ -208,238 +207,6 @@
         if (!section) return;
         section.dataset.sectionReady = 'true';
         section.dispatchEvent(new root.CustomEvent('portfolio:section-ready'));
-    }
-
-    function shouldEnableSectionScrollHandoff() {
-        const snapSetting = root.document.documentElement.dataset.sectionSnap
-            || root.document.body?.dataset.sectionSnap;
-        return SECTION_SCROLL_HANDOFF_ENABLED
-            || root.PORTFOLIO_ENABLE_SECTION_SNAP === true
-            || snapSetting === 'on'
-            || snapSetting === 'true';
-    }
-
-    function initSectionScrollHandoff() {
-        const sections = Array.from(root.document.querySelectorAll('main > section[id]'));
-        const page = root.document.documentElement;
-        const heroSection = root.document.getElementById('home');
-        const heroIndex = sections.indexOf(heroSection);
-        const firstHandoffSection = heroIndex >= 0 ? sections[heroIndex + 1] : null;
-        if (!heroSection || !firstHandoffSection || page.dataset.sectionScrollBound === 'true') {
-            return;
-        }
-
-        page.dataset.sectionScrollBound = 'true';
-        const reducedMotion = root.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        let accumulatedWheelDelta = 0;
-        let wheelDirection = 0;
-        let wheelResetTimer;
-        let wheelReleaseTimer;
-        let touchStartY = null;
-        let touchGestureLocked = false;
-        let isSnapping = false;
-        let wheelGestureLocked = false;
-
-        const delay = (milliseconds) => new Promise(resolve => root.setTimeout(resolve, milliseconds));
-        const getSnapTarget = (direction) => {
-            if (direction <= 0) return null;
-
-            const handoffTop = firstHandoffSection.offsetTop;
-            const position = root.scrollY;
-
-            if (position < handoffTop - 2) {
-                return firstHandoffSection;
-            }
-
-            return null;
-        };
-        const waitForSectionReady = (section) => {
-            if (section.dataset.sectionReady !== 'false') {
-                return Promise.resolve();
-            }
-
-            return new Promise(resolve => {
-                const finish = () => {
-                    root.clearTimeout(timeoutId);
-                    section.removeEventListener('portfolio:section-ready', finish);
-                    resolve();
-                };
-                const timeoutId = root.setTimeout(finish, 560);
-                section.addEventListener('portfolio:section-ready', finish, { once: true });
-            });
-        };
-        const prepareSection = async (section) => {
-            const wasReady = section.dataset.sectionReady !== 'false';
-            await waitForSectionReady(section);
-
-            const imageDecodes = Array.from(section.querySelectorAll('img'))
-                .slice(0, 8)
-                .map(image => {
-                    if (typeof image.decode === 'function') {
-                        return image.decode().catch(() => undefined);
-                    }
-                    return Promise.resolve();
-                });
-            await Promise.race([Promise.all(imageDecodes), delay(240)]);
-            return wasReady;
-        };
-        const animateScrollToPosition = (getTargetY, duration) => new Promise(resolve => {
-            const startY = root.scrollY;
-            const distance = getTargetY() - startY;
-            if (duration === 0 || Math.abs(distance) < 1) {
-                root.scrollTo(0, getTargetY());
-                resolve();
-                return;
-            }
-
-            const startedAt = root.performance.now();
-            const step = (timestamp) => {
-                const progress = Math.min((timestamp - startedAt) / duration, 1);
-                const eased = progress < 0.5
-                    ? 4 * progress * progress * progress
-                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                const liveDistance = getTargetY() - startY;
-                root.scrollTo(0, startY + liveDistance * eased);
-                if (progress < 1) {
-                    root.requestAnimationFrame(step);
-                    return;
-                }
-                root.scrollTo(0, getTargetY());
-                resolve();
-            };
-            root.requestAnimationFrame(step);
-        });
-        const warmAdjacentSections = (section) => {
-            const index = sections.indexOf(section);
-            const warm = () => {
-                [sections[index - 1], sections[index + 1]]
-                    .filter(Boolean)
-                    .forEach(adjacent => prepareSection(adjacent));
-            };
-            if (typeof root.requestIdleCallback === 'function') {
-                root.requestIdleCallback(warm, { timeout: 700 });
-            } else {
-                root.setTimeout(warm, 80);
-            }
-        };
-        const releaseWheelGesture = () => {
-            root.clearTimeout(wheelReleaseTimer);
-            wheelReleaseTimer = root.setTimeout(() => {
-                wheelGestureLocked = false;
-            }, 90);
-        };
-        const snapToPosition = async (section, getTargetY, preferredDuration) => {
-            if (!section || isSnapping) return;
-
-            isSnapping = true;
-            wheelGestureLocked = true;
-            root.clearTimeout(wheelReleaseTimer);
-            page.classList.add('section-transitioning');
-            try {
-                const wasReady = await prepareSection(section);
-                const duration = reducedMotion
-                    ? 0
-                    : (preferredDuration || (wasReady ? 720 : 940));
-                await animateScrollToPosition(getTargetY, duration);
-                warmAdjacentSections(section);
-            } finally {
-                page.classList.remove('section-transitioning');
-                isSnapping = false;
-                releaseWheelGesture();
-            }
-        };
-        const snapToSection = (section, preferredDuration) => {
-            return snapToPosition(section, () => section.offsetTop, preferredDuration);
-        };
-
-        root.addEventListener('wheel', (event) => {
-            if (isSnapping || wheelGestureLocked) {
-                event.preventDefault();
-                return;
-            }
-
-            const direction = Math.sign(event.deltaY);
-            const target = direction ? getSnapTarget(direction) : null;
-            if (!target) {
-                accumulatedWheelDelta = 0;
-                wheelDirection = 0;
-                return;
-            }
-
-            event.preventDefault();
-            if (direction !== wheelDirection) {
-                accumulatedWheelDelta = 0;
-                wheelDirection = direction;
-            }
-            accumulatedWheelDelta += Math.abs(event.deltaY);
-            root.clearTimeout(wheelResetTimer);
-            wheelResetTimer = root.setTimeout(() => {
-                accumulatedWheelDelta = 0;
-                wheelDirection = 0;
-            }, 180);
-
-            if (accumulatedWheelDelta >= 24) {
-                accumulatedWheelDelta = 0;
-                snapToSection(target);
-            }
-        }, { passive: false });
-
-        root.addEventListener('touchstart', (event) => {
-            touchStartY = event.touches[0]?.clientY ?? null;
-            if (isSnapping) touchGestureLocked = true;
-        }, { passive: true });
-
-        root.addEventListener('touchmove', (event) => {
-            if (isSnapping || touchGestureLocked) {
-                event.preventDefault();
-                return;
-            }
-            if (touchStartY === null) return;
-
-            const currentY = event.touches[0]?.clientY;
-            if (typeof currentY !== 'number') return;
-
-            const movement = touchStartY - currentY;
-            if (Math.abs(movement) < 24) return;
-
-            const target = getSnapTarget(Math.sign(movement));
-            if (target) {
-                event.preventDefault();
-                touchStartY = null;
-                touchGestureLocked = true;
-                snapToSection(target);
-            }
-        }, { passive: false });
-
-        root.addEventListener('touchend', () => {
-            touchStartY = null;
-            touchGestureLocked = false;
-        }, { passive: true });
-
-        root.addEventListener('touchcancel', () => {
-            touchStartY = null;
-            touchGestureLocked = false;
-        }, { passive: true });
-
-        root.addEventListener('keydown', (event) => {
-            const targetElement = event.target;
-            const isEditable = targetElement instanceof root.HTMLElement
-                && (targetElement.isContentEditable || /^(INPUT|SELECT|TEXTAREA)$/.test(targetElement.tagName));
-            if (isEditable || isSnapping || event.repeat) return;
-
-            const isDown = ['ArrowDown', 'PageDown'].includes(event.key)
-                || (event.key === ' ' && !event.shiftKey);
-            const isUp = ['ArrowUp', 'PageUp'].includes(event.key)
-                || (event.key === ' ' && event.shiftKey);
-            const direction = isDown ? 1 : (isUp ? -1 : 0);
-            const target = direction ? getSnapTarget(direction) : null;
-            if (target) {
-                event.preventDefault();
-                snapToSection(target);
-            }
-        });
-
-        warmAdjacentSections(heroSection);
     }
 
     async function loadPortfolioBlocks() {
@@ -471,16 +238,10 @@
                 if (block) markSectionReady(target);
             });
 
-            if (shouldEnableSectionScrollHandoff()) {
-                initSectionScrollHandoff();
-            }
             if (!renderedBlock) {
                 return;
             }
 
-            if (root.AOS) {
-                root.AOS.refresh();
-            }
         } catch (error) {
             coreStatus = 'error';
             console.error(error);

@@ -156,7 +156,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         setText('#series-count', seriesCount);
 
         if (langToggleButton) {
-            langToggleButton.textContent = lang === 'eng' ? 'KOR' : 'ENG';
+            const targetLabel = lang === 'eng' ? '한국어로 전환' : 'Switch to English';
+            langToggleButton.textContent = lang === 'eng' ? '가' : 'A';
+            langToggleButton.setAttribute('aria-label', targetLabel);
+            langToggleButton.setAttribute('title', targetLabel);
         }
     }
 

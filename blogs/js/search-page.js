@@ -173,7 +173,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     function applyLanguage(language) {
         document.documentElement.lang = language === 'kor' ? 'ko' : 'en';
         if (languageButton) {
-            languageButton.textContent = language === 'eng' ? 'KOR' : 'ENG';
+            const targetLabel = language === 'eng' ? '한국어로 전환' : 'Switch to English';
+            languageButton.textContent = language === 'eng' ? '가' : 'A';
+            languageButton.setAttribute('aria-label', targetLabel);
+            languageButton.setAttribute('title', targetLabel);
         }
         document.querySelectorAll('[data-search-copy]').forEach((element) => {
             const key = element.dataset.searchCopy;

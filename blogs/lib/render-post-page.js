@@ -294,7 +294,7 @@ ${renderConditionalHeadAssets(activeRuntimeFeatures)}
                         </form>
                     </li>
                     <li class="nav-item nav-theme-item"><button class="btn nav-link blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
-                    ${alternateHref ? `<li class="nav-item post-nav-language-item"><a href="${alternateHref}" class="nav-link post-nav-language-link" data-language-target="${alternateLang}">${alternateLang === 'eng' ? 'ENG' : 'KOR'}</a></li>` : ''}
+                    ${alternateHref ? `<li class="nav-item post-nav-language-item"><a href="${alternateHref}" class="nav-link post-nav-language-link" data-language-target="${alternateLang}" aria-label="${alternateLang === 'eng' ? 'Switch to English' : '한국어로 전환'}" title="${alternateLang === 'eng' ? 'Switch to English' : '한국어로 전환'}">${alternateLang === 'eng' ? 'A' : '가'}</a></li>` : ''}
                 </ul>
             </div>
         </div>
