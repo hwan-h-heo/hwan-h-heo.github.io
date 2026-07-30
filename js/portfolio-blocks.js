@@ -122,14 +122,16 @@
 
             <div class="container" data-aos="fade-up" data-aos-delay="100">
                 <div class="row gy-4 about-layout justify-content-center">
-                    <div class="col-lg-4" style="transition: 0.3s ease-in-out;">
+                    <div class="col-lg-4 about-media">
                         <img src="${escapeHtml(block.image)}" class="img-fluid about-profile-image" alt="${escapeHtml(block.imageAlt)}">
                     </div>
                     <div class="col-lg-8 content about-copy">
                         <div class="about-identity">
                             <h2 class="about-name">${escapeHtml(block.name || block.role)}</h2>
-                            <p class="about-role">${escapeHtml(block.role)}</p>
-                            <p class="about-affiliation">${escapeHtml(block.affiliation)}</p>
+                            <p class="about-meta">
+                                <span class="about-role">${escapeHtml(block.role)}</span>
+                                <span class="about-affiliation">${escapeHtml(block.affiliation)}</span>
+                            </p>
                         </div>
                         <p class="about-intro">${block.introHtml || ''}</p>
                         <p class="about-bio">${block.bodyHtml || ''}</p>

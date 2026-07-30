@@ -55,7 +55,7 @@
       "id": "about",
       "type": "aboutProfile",
       "title": "About",
-      "introHtml": "Hi, I'm <strong>Hwan Heo (허환)</strong>. I work where generative models, systems, and graphics meet.",
+      "introHtml": "I work where generative models, systems, and graphics meet.",
       "image": "assets/profile4.png",
       "imageAlt": "Portrait of Hwan Heo",
       "name": "Hwan Heo",
@@ -104,7 +104,10 @@
                 {
                   "titleHtml": "<i class=\"bi bi-mortarboard-fill\"></i> M.S. in Computer Science &amp; Engineering",
                   "period": "2020 - 2022",
-                  "metaHtml": "MLV Lab, Korea University, Seoul"
+                  "metaHtml": "MLV Lab, Korea University, Seoul",
+                  "bulletsHtml": [
+                    "Advised by Professor <a href=\"https://www.hyunwoojkim.com/\" target=\"_blank\" rel=\"noopener noreferrer\">Hyunwoo J. Kim</a>."
+                  ]
                 },
                 {
                   "titleHtml": "<i class=\"bi bi-mortarboard-fill\"></i> B.S. in Computer Science &amp; Engineering",
@@ -141,7 +144,8 @@
                   "period": "2022",
                   "metaHtml": "Generation Research, NAVER AI Lab",
                   "bulletsHtml": [
-                    "Researched pose optimization for neural rendering."
+                    "Researched pose optimization for neural rendering.",
+                    "Mentored by Dr. <a href=\"https://wityworks.com/\" target=\"_blank\" rel=\"noopener noreferrer\">Jin-Hwa Kim</a>."
                   ]
                 }
               ]

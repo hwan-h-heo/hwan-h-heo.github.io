@@ -3436,33 +3436,32 @@ html { overflow-y: scroll; }
 
 .button_top {
     position: fixed;
-    right: 18px;
-    bottom: 18px;
+    right: 15px;
+    bottom: 15px;
     z-index: 40;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     padding: 0;
     overflow: hidden;
-    border: 1px solid rgba(17, 24, 39, 0.12);
-    border-radius: 12px;
-    color: #f8f9fa;
-    background: rgba(17, 24, 39, 0.92);
-    box-shadow: 0 12px 30px rgba(17, 24, 39, 0.15);
-    backdrop-filter: blur(12px);
+    border: 0;
+    border-radius: 50%;
+    color: #fff;
+    background: #212529;
     cursor: pointer;
     opacity: 0;
     pointer-events: none;
     transform: translateY(10px);
     visibility: hidden;
     transition:
+        width 0.3s ease,
+        border-radius 0.3s ease,
         opacity 0.2s ease,
         transform 0.2s ease,
         visibility 0.2s ease,
-        background-color 0.2s ease,
-        border-color 0.2s ease;
+        background-color 0.3s ease;
 }
 
 .button_top.active {
@@ -3474,18 +3473,42 @@ html { overflow-y: scroll; }
 
 .button_top:hover,
 .button_top:focus-visible {
-    border-color: rgba(21, 156, 120, 0.45);
+    width: 140px;
+    border-radius: 50px;
     background: #111827;
     outline: none;
-    transform: translateY(-2px);
 }
 
-.svgIcon {
-    width: 10px;
+.button_top .svgIcon {
+    width: 8px;
+    height: auto;
+    margin: 0;
+    transition: transform 0.3s ease;
 }
 
-.svgIcon path {
+.button_top .svgIcon path {
     fill: currentColor;
+}
+
+.button_top:hover .svgIcon,
+.button_top:focus-visible .svgIcon {
+    transform: translateY(-200%);
+}
+
+.button_top::before {
+    position: absolute;
+    bottom: -20px;
+    color: #fff;
+    content: "Back to Top";
+    font-size: 0;
+}
+
+.button_top:hover::before,
+.button_top:focus-visible::before {
+    bottom: auto;
+    font-size: 11px;
+    opacity: 1;
+    transition: font-size 0.3s ease, opacity 0.3s ease;
 }
 .toc {
 position: fixed;
@@ -5010,9 +5033,12 @@ html[data-theme="dark"] footer.border-top {
 }
 
 html[data-theme="dark"] .button_top {
-    border-color: rgba(216, 226, 239, 0.14);
-    background: rgba(27, 34, 45, 0.94);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+    background: #212529;
+}
+
+html[data-theme="dark"] .button_top:hover,
+html[data-theme="dark"] .button_top:focus-visible {
+    background: #111827;
 }
 
 @media (max-width: 1199px) {
