@@ -21,34 +21,23 @@
             .replace(/'/g, '&#39;');
     }
 
-    const HERO_ACTION_ICONS = {
-        '#portfolio': 'bi-images',
-        '#blog': 'bi-keyboard',
-        '#about': 'bi-person'
-    };
-
     function renderHeroActions(actions) {
-        return (actions || []).map((action) => {
+        return (actions || []).map((action, index) => {
             const style = ['section', 'download'].includes(action.style)
                 ? action.style
                 : 'section';
             const isSectionLink = (action.url || '').startsWith('#');
             const download = action.download ? ' download' : '';
-            const leadingIcon = HERO_ACTION_ICONS[action.url || ''] || '';
-            const trailingIcon = leadingIcon
-                ? ''
-                : action.download
-                    ? 'bi-download'
-                    : isSectionLink
-                        ? ''
-                        : 'bi-arrow-up-right';
-            const leadingIconHtml = leadingIcon ? `<i class="bi ${leadingIcon}" aria-hidden="true"></i>` : '';
-            const trailingIconHtml = trailingIcon ? `<i class="bi ${trailingIcon}" aria-hidden="true"></i>` : '';
+            const trailingIcon = action.download
+                ? 'bi-download'
+                : isSectionLink
+                    ? 'bi-arrow-down-right'
+                    : 'bi-arrow-up-right';
             return `
                 <a class="hero-action hero-action--${style}" href="${escapeHtml(action.url)}"${download}>
-                    ${leadingIconHtml}
-                    <span>${escapeHtml(action.label)}</span>
-                    ${trailingIconHtml}
+                    <small class="hero-action-index" aria-hidden="true">${String(index + 1).padStart(2, '0')}</small>
+                    <span class="hero-action-label">${escapeHtml(action.label)}</span>
+                    <i class="bi ${trailingIcon}" aria-hidden="true"></i>
                 </a>
             `;
         }).join('');
@@ -71,7 +60,7 @@
 
         return `
             <a href="#portfolio" class="scroll-down-arrow" aria-label="Scroll to portfolio">
-                <i class="bi bi-chevron-double-down"></i>
+                <i class="bi bi-chevron-down" aria-hidden="true"></i>
             </a>
         `;
     }
@@ -161,7 +150,7 @@
         const body = item.bodyHtml ? `<p>${item.bodyHtml}</p>` : '';
 
         return `
-            <div class="resume-item${item.period ? '' : ' pb-0'}">
+            <div class="resume-item">
                 <h4>${title}</h4>
                 ${period}
                 ${meta}
@@ -180,19 +169,18 @@
 
     function renderResume(block) {
         return `
-            <div class="container section-title" data-aos="fade-up" style="margin-bottom: -5rem; padding-left: 1rem">
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                    <h2>${escapeHtml(block.title)}</h2>
-                    <a class="btn btn-dark px-3 py-2" href="${escapeHtml(block.cvUrl)}">
-                        <div class="d-inline-block bi bi-download me-2"></div>
-                        Download CV
-                    </a>
-                </div>
+            <div class="container section-title resume-section-heading" data-aos="fade-up">
+                <h2>${escapeHtml(block.title)}</h2>
+                <a class="resume-cv-link" href="${escapeHtml(block.cvUrl)}" download aria-label="Download curriculum vitae">
+                    <span>Download CV</span>
+                    <small>PDF</small>
+                    <i class="bi bi-download" aria-hidden="true"></i>
+                </a>
             </div>
-            <div class="container">
-                <div class="row">
+            <div class="container resume-content">
+                <div class="row resume-layout">
                     ${(block.columns || []).map((column, index) => `
-                        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="${index === 0 ? '100' : '200'}" style="${index === 0 ? 'padding-left: 2rem;' : 'padding-right: 1rem; padding-left: 2rem;'}">
+                        <div class="col-lg-6 resume-column" data-aos="fade-up" data-aos-delay="${index === 0 ? '100' : '200'}">
                             ${(column.sections || []).map(renderResumeSection).join('')}
                         </div>
                     `).join('')}
