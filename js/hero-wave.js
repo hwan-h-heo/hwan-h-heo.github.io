@@ -85,9 +85,9 @@ function createHeroWave(THREE) {
     const introCycleDuration = isCompact ? 4.8 : 5.6;
     const ambientCycleDuration = 10.5;
     const ambientPlaybackRate = 0.88;
-    const introRevealStartPhase = 0.035;
-    const introRevealEndPhase = 0.18;
+    const ambientStartPhase = 0.44;
     const ctaRevealPhase = isCompact ? 0.42 : 0.44;
+    const ctaRevealDelay = introCycleDuration * ctaRevealPhase;
     const burstPreviewPhase = ctaRevealPhase - (isCompact ? 0.08 : 0.075);
     const burstEndPhase = ctaRevealPhase + (isCompact ? 0.28 : 0.26);
 
@@ -485,9 +485,17 @@ function createHeroWave(THREE) {
 
                 float mesh = formationAmount(position, uTime);
                 float frontier = formationFrontier(position, uTime);
+                float idleGrid = 0.045 + 0.018 * sin(
+                    uTime * 0.48
+                        + position.x * 0.22
+                        + position.z * 0.18
+                );
                 vAlpha = surfaceFade(transformed)
-                    * pow(mesh, 1.15)
-                    * (0.52 + frontier * 0.34);
+                    * (
+                        idleGrid
+                            + pow(mesh, 1.15)
+                                * (0.52 + frontier * 0.34)
+                    );
                 vTint = clamp(0.35 + transformed.y * 0.25 + frontier * 0.34, 0.0, 1.0);
 
                 gl_Position = projectionMatrix
@@ -688,46 +696,45 @@ function createHeroWave(THREE) {
     group.add(driftingParticles);
 
     let animationFrame = 0;
-    let animationTime = 0;
+    let animationTime = introCycleDuration
+        + ambientCycleDuration * ambientStartPhase;
+    let ctaElapsedTime = 0;
     let lastFrameTime = performance.now();
     let heroIsVisible = true;
     let pointerX = 0;
     let pointerY = 0;
+    let pointerTargetX = 0;
+    let pointerTargetY = 0;
     let disposed = false;
-    let introHasStarted = false;
-    let introStartQueued = false;
-    let cameraParallaxX = 0.16;
-    let cameraParallaxY = 0.1;
+    let ctaTimelineStarted = false;
+    let cameraParallaxX = 0.85;
+    let cameraParallaxY = 0.42;
+    let cameraParallaxZ = 0.38;
+    let cameraDriftX = 0.34;
+    let cameraDriftY = 0.12;
+    let cameraDriftZ = 0.14;
+    let groupParallaxX = 0.018;
+    let groupParallaxY = 0.04;
     const cameraBasePosition = new THREE.Vector3();
     const cameraLookTarget = new THREE.Vector3();
 
-    function startIntroTimeline() {
-        if (disposed || introHasStarted || introStartQueued) {
+    function startCtaTimeline() {
+        if (disposed || ctaTimelineStarted) {
             return;
         }
 
-        introStartQueued = true;
-        window.requestAnimationFrame(() => {
-            window.requestAnimationFrame(() => {
-                if (disposed) {
-                    return;
-                }
-                hero.classList.add('hero-intro-sweeping');
-                hero.style.setProperty('--hero-reveal-opacity', '0');
-                introHasStarted = true;
-                lastFrameTime = performance.now();
-            });
-        });
+        ctaTimelineStarted = true;
+        ctaElapsedTime = 0;
     }
 
     function handlePreloaderHidden() {
-        startIntroTimeline();
+        startCtaTimeline();
     }
 
-    function queueIntroTimeline() {
+    function queueCtaTimeline() {
         const preloader = document.getElementById('preloader');
         if (!preloader || preloader.dataset.revealComplete === 'true') {
-            startIntroTimeline();
+            startCtaTimeline();
             return;
         }
 
@@ -757,8 +764,14 @@ function createHeroWave(THREE) {
         camera.fov = narrow ? 47 : 42;
         cameraBasePosition.set(0, narrow ? 4.8 : 4.25, narrow ? 10.8 : 10.2);
         cameraLookTarget.set(0, narrow ? -1.55 : -1.35, -1.8);
-        cameraParallaxX = narrow ? 0.08 : 0.16;
-        cameraParallaxY = narrow ? 0.05 : 0.1;
+        cameraParallaxX = narrow ? 0.36 : 0.85;
+        cameraParallaxY = narrow ? 0.2 : 0.42;
+        cameraParallaxZ = narrow ? 0.16 : 0.38;
+        cameraDriftX = narrow ? 0.24 : 0.34;
+        cameraDriftY = narrow ? 0.08 : 0.12;
+        cameraDriftZ = narrow ? 0.09 : 0.14;
+        groupParallaxX = narrow ? 0.009 : 0.018;
+        groupParallaxY = narrow ? 0.02 : 0.04;
         camera.position.copy(cameraBasePosition);
         camera.lookAt(cameraLookTarget);
         camera.updateProjectionMatrix();
@@ -798,60 +811,58 @@ function createHeroWave(THREE) {
 
         const delta = Math.min((frameTime - lastFrameTime) / 1000, 0.05);
         lastFrameTime = frameTime;
-        if (introHasStarted) {
-            const playbackRate = animationTime < introCycleDuration
-                ? 1
-                : ambientPlaybackRate;
-            animationTime += Math.max(delta, 0) * playbackRate;
+        animationTime += Math.max(delta, 0) * ambientPlaybackRate;
+        if (ctaTimelineStarted) {
+            ctaElapsedTime += Math.max(delta, 0);
         }
         sharedUniforms.uTime.value = animationTime;
 
         if (
-            introHasStarted
-            && !hero.classList.contains('hero-intro-visible')
-        ) {
-            const revealStart = introCycleDuration * introRevealStartPhase;
-            const revealDuration = introCycleDuration
-                * (introRevealEndPhase - introRevealStartPhase);
-            const rawRevealProgress = Math.min(
-                Math.max(
-                    (animationTime - revealStart) / revealDuration,
-                    0
-                ),
-                1
-            );
-            const revealProgress = rawRevealProgress
-                * rawRevealProgress
-                * (3 - 2 * rawRevealProgress);
-            hero.style.setProperty(
-                '--hero-reveal-opacity',
-                revealProgress.toFixed(3)
-            );
-
-            if (rawRevealProgress >= 1) {
-                hero.classList.remove('hero-intro-sweeping');
-                hero.classList.add('hero-intro-visible');
-                hero.style.removeProperty('--hero-reveal-opacity');
-            }
-        }
-
-        if (
             !hero.classList.contains('hero-cta-visible')
-            && animationTime >= introCycleDuration * ctaRevealPhase
+            && ctaElapsedTime >= ctaRevealDelay
         ) {
             markHeroCtaVisible();
         }
 
+        const pointerEase = 1 - Math.exp(-Math.max(delta, 0) * 4.8);
+        const cameraEase = 1 - Math.exp(-Math.max(delta, 0) * 3.6);
+        const groupEase = 1 - Math.exp(-Math.max(delta, 0) * 2.8);
+        pointerX += (pointerTargetX - pointerX) * pointerEase;
+        pointerY += (pointerTargetY - pointerY) * pointerEase;
+
+        const driftX = Math.sin(animationTime * 0.24) * cameraDriftX;
+        const driftY = Math.sin(animationTime * 0.17 + 1.2) * cameraDriftY;
+        const driftZ = Math.cos(animationTime * 0.19 + 0.4) * cameraDriftZ;
         camera.position.x += (
-            cameraBasePosition.x + pointerX * cameraParallaxX - camera.position.x
-        ) * 0.04;
+            cameraBasePosition.x
+                + driftX
+                + pointerX * cameraParallaxX
+                - camera.position.x
+        ) * cameraEase;
         camera.position.y += (
-            cameraBasePosition.y - pointerY * cameraParallaxY - camera.position.y
-        ) * 0.04;
+            cameraBasePosition.y
+                + driftY
+                - pointerY * cameraParallaxY
+                - camera.position.y
+        ) * cameraEase;
+        camera.position.z += (
+            cameraBasePosition.z
+                + driftZ
+                + pointerY * cameraParallaxZ
+                - camera.position.z
+        ) * cameraEase;
         camera.lookAt(cameraLookTarget);
 
-        group.rotation.y += (pointerX * 0.012 - group.rotation.y) * 0.03;
-        group.rotation.x += (pointerY * 0.007 - group.rotation.x) * 0.03;
+        const targetGroupRotationY = pointerX * groupParallaxY
+            + Math.sin(animationTime * 0.16) * groupParallaxY * 0.28;
+        const targetGroupRotationX = pointerY * groupParallaxX
+            + Math.cos(animationTime * 0.13) * groupParallaxX * 0.32;
+        group.rotation.y += (
+            targetGroupRotationY - group.rotation.y
+        ) * groupEase;
+        group.rotation.x += (
+            targetGroupRotationX - group.rotation.x
+        ) * groupEase;
 
         renderer.render(scene, camera);
         animationFrame = window.requestAnimationFrame(render);
@@ -874,11 +885,23 @@ function createHeroWave(THREE) {
     }
 
     function handlePointerMove(event) {
-        if (event.pointerType === 'touch') {
+        if (!heroIsVisible) {
             return;
         }
-        pointerX = (event.clientX / Math.max(window.innerWidth, 1) - 0.5) * 2;
-        pointerY = (event.clientY / Math.max(window.innerHeight, 1) - 0.5) * 2;
+
+        const rect = hero.getBoundingClientRect();
+        const normalizedX = ((event.clientX - rect.left) / Math.max(rect.width, 1) - 0.5) * 2;
+        const normalizedY = ((event.clientY - rect.top) / Math.max(rect.height, 1) - 0.5) * 2;
+        const influence = event.pointerType === 'touch' ? 0.55 : 1;
+        pointerTargetX = Math.max(-1, Math.min(1, normalizedX)) * influence;
+        pointerTargetY = Math.max(-1, Math.min(1, normalizedY)) * influence;
+    }
+
+    function resetPointerTarget(event) {
+        if (!event || event.type === 'mouseleave' || event.pointerType === 'touch') {
+            pointerTargetX = 0;
+            pointerTargetY = 0;
+        }
     }
 
     function handleVisibilityChange() {
@@ -898,6 +921,10 @@ function createHeroWave(THREE) {
         resizeObserver?.disconnect();
         intersectionObserver?.disconnect();
         window.removeEventListener('pointermove', handlePointerMove);
+        window.removeEventListener('pointerdown', handlePointerMove);
+        window.removeEventListener('pointerup', resetPointerTarget);
+        window.removeEventListener('pointercancel', resetPointerTarget);
+        document.documentElement.removeEventListener('mouseleave', resetPointerTarget);
         document.removeEventListener('visibilitychange', handleVisibilityChange);
         document.removeEventListener(
             'portfolio:preloader-hidden',
@@ -922,6 +949,8 @@ function createHeroWave(THREE) {
             if (heroIsVisible) {
                 startRendering();
             } else {
+                pointerTargetX = 0;
+                pointerTargetY = 0;
                 stopRendering();
             }
         }, { threshold: 0.02 })
@@ -931,6 +960,10 @@ function createHeroWave(THREE) {
     resizeObserver?.observe(hero);
     intersectionObserver?.observe(hero);
     window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    window.addEventListener('pointerdown', handlePointerMove, { passive: true });
+    window.addEventListener('pointerup', resetPointerTarget, { passive: true });
+    window.addEventListener('pointercancel', resetPointerTarget, { passive: true });
+    document.documentElement.addEventListener('mouseleave', resetPointerTarget);
     document.addEventListener('visibilitychange', handleVisibilityChange);
     renderer.domElement.addEventListener('webglcontextlost', () => {
         dispose();
@@ -944,16 +977,13 @@ function createHeroWave(THREE) {
         hero.classList.add('hero-wave-ready');
     });
 
+    hero.classList.remove('hero-intro-sweeping');
+    hero.classList.add('hero-intro-visible');
+    hero.style.removeProperty('--hero-reveal-opacity');
     if (root.dataset.heroWaveBypassed === 'true') {
-        hero.classList.remove('hero-intro-sweeping');
-        hero.classList.add('hero-intro-visible');
         markHeroCtaVisible();
-        hero.style.removeProperty('--hero-reveal-opacity');
-        animationTime = introCycleDuration;
-        introHasStarted = true;
-        lastFrameTime = performance.now();
     } else {
-        queueIntroTimeline();
+        queueCtaTimeline();
     }
     startRendering();
 }

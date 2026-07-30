@@ -1667,7 +1667,6 @@ h6 {
   transform-origin: left center;
 }
 
-.hero-wave-pending .hero .hero-content,
 .hero-wave-active
   .hero:not(.hero-intro-sweeping):not(.hero-intro-visible)
   .hero-content {

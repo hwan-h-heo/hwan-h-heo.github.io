@@ -72,6 +72,48 @@
     line-height: 1;
 }
 
+.sidebar-collapsed-tooltip {
+    position: fixed;
+    z-index: 1100;
+    min-height: 32px;
+    padding: 6px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 7px;
+    color: rgba(255, 255, 255, 0.92);
+    background: rgba(8, 14, 23, 0.94);
+    box-shadow: 0 9px 24px rgba(3, 8, 15, 0.28);
+    font-family: var(--site-sidebar-nav-font);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    letter-spacing: 0;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-6px, -50%);
+    transition:
+        opacity 0.16s ease,
+        transform 0.2s ease;
+}
+
+.sidebar-collapsed-tooltip::before {
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-right: 6px solid rgba(8, 14, 23, 0.94);
+    border-bottom: 5px solid transparent;
+    content: '';
+    transform: translateY(-50%);
+}
+
+.sidebar-collapsed-tooltip.is-visible {
+    opacity: 1;
+    transform: translate(0, -50%);
+}
+
 .sidebar-mobile-toggle.is-auto-hidden {
     opacity: 0;
     pointer-events: none;
@@ -234,6 +276,10 @@
 }
 
 @media (max-width: 1199px) {
+    .sidebar-collapsed-tooltip {
+        display: none;
+    }
+
     .sidebar-mobile-toggle {
         display: inline-flex;
     }
@@ -277,6 +323,7 @@
     .header,
     .sidebar-mobile-toggle,
     .sidebar-collapse-toggle,
+    .sidebar-collapsed-tooltip,
     .header ~ main,
     .header ~ #footer,
     .header ~ footer {
