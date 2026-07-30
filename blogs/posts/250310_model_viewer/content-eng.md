@@ -130,8 +130,10 @@ function show_geometry(){
 <p id="p-15" class='lang eng'> By saving the original texture and adding a function to restore it, you can map these to button UI elements. This lets you toggle between texture and geometry views, as shown below: </p>
 
 
-<button class="btn btn-sm btn-primary" onclick="show_geometry()">Geometry</button>
-<button class="btn btn-sm btn-secondary" onclick="show_texture()">Texture</button>
+<div class="viewer-mode-switch" role="group" aria-label="Model appearance">
+    <button type="button" class="viewer-mode-button" data-viewer-mode="geometry" aria-pressed="false" onclick="show_geometry()">Geometry</button>
+    <button type="button" class="viewer-mode-button is-active" data-viewer-mode="texture" aria-pressed="true" onclick="show_texture()">Texture</button>
+</div>
 <model-viewer 
     style="width: 100%; height: 700px;" 
     exposure="3" 

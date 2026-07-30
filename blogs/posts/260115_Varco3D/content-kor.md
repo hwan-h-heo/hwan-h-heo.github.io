@@ -76,7 +76,7 @@ SDS loss로 3D 모델을 업데이트할 때, chain rule을 따라가 보면 tex
 [NC Research Blog: Texture Copilot](https://ncsoft.github.io/ncresearch/3f0ba4889e331ddbed68c9dd48d845fa18d874de)
 
 
-<iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/HvyPxxDzrwo?si=1A8HVOcStAQE4rAS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe class="post-video-embed" src="https://www.youtube-nocookie.com/embed/HvyPxxDzrwo?si=1A8HVOcStAQE4rAS" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 
 이는 주어진 메시를 다각도에서 Depth & Normal map으로 렌더링한 후, ControlNet을 이용해 Multi-view 이미지를 생성하고 이를 다시 메시에 역투영(Back-projection)하는 방식이었다. 
@@ -119,7 +119,7 @@ SDS loss로 3D 모델을 업데이트할 때, chain rule을 따라가 보면 tex
 2. **Texture Generation**: 2D Generative Model 을 차용한 Multi-View Image Synthesis to Mesh Back-projection
 
 
-<iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/AtQNAuQY4-A?si=pQWlS8qawVOyFSqK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe class="post-video-embed" src="https://www.youtube-nocookie.com/embed/AtQNAuQY4-A?si=pQWlS8qawVOyFSqK" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 
 이 모델을 학습시키며 얻은 중요한 직관 중 하나는, 'Geometry VAE'를 학습시키는 데는 2D 생성 모델보다 훨씬 적은 데이터와 리소스가 필요하다는 점이었다. 이는 3D geometry의 distribution이 RGB images보다 단순하다는 가정 때문인데, 실제로 아티스트가 제작한 polygonal mesh는 RGB image와 달리 high-frequency detail의 변화나 복잡한 배경이 많지 않다.

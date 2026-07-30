@@ -76,7 +76,7 @@ Around the same time, another team within the company was researching Texture Co
 
 [NC Research Blog: Texture Copilot](https://ncsoft.github.io/ncresearch/3f0ba4889e331ddbed68c9dd48d845fa18d874de)
 
-<iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/HvyPxxDzrwo?si=1A8HVOcStAQE4rAS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe class="post-video-embed" src="https://www.youtube-nocookie.com/embed/HvyPxxDzrwo?si=1A8HVOcStAQE4rAS" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 This approach involved rendering a given mesh as depth and normal maps from multiple angles, then using ControlNet to generate multi-view images and back-projecting them onto the mesh.
 
@@ -118,7 +118,7 @@ After moving to the new team, my first task was to expand the CaPa pipeline and 
 1. **Geometry Generation**: ShapeVAE + DiT
 2. **Texture Generation**: Multi-View Image Synthesis to Mesh Back-projection, leveraging 2D Generative Models
 
-<iframe width="480" height="270" src="https://www.youtube-nocookie.com/embed/AtQNAuQY4-A?si=pQWlS8qawVOyFSqK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe class="post-video-embed" src="https://www.youtube-nocookie.com/embed/AtQNAuQY4-A?si=pQWlS8qawVOyFSqK" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 One important intuition I gained while training this model was that training a 'Geometry VAE' requires far less data and resources than 2D generative models. This is based on the assumption that the distribution of 3D geometry is simpler than that of RGB images. Indeed, artist-crafted polygonal meshes, unlike RGB images, do not have much variation in high-frequency details or complex backgrounds.
 

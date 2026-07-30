@@ -3240,13 +3240,7 @@ text-decoration: none;
 html { overflow-y: scroll; }
 .blog-search-page .main {
     min-height: 100vh;
-    padding-top: 2.5rem;
-}
-
-@media (max-width: 1199px) {
-    .blog-search-page .main {
-        padding-top: 4.5rem;
-    }
+    padding-top: 0;
 }
 
 .series-group .series-title { font-size: 1.3rem; margin-bottom: 1rem; border-left: 4px solid rgb(0, 123, 255); padding-left: 10px; }
@@ -4214,6 +4208,59 @@ html[lang="ko"] .blog-home-hero p {
     padding-top: 0.28rem;
 }
 
+.blog-search-page .blog-home-hero h1 {
+    max-width: 14ch;
+}
+
+.blog-search-results {
+    min-height: 18rem;
+}
+
+.blog-search-eyebrow {
+    display: block;
+    margin-bottom: 0.28rem;
+    color: var(--blog-home-accent-dark);
+    font-family: var(--blog-mono);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.blog-search-count {
+    flex: 0 0 auto;
+    min-height: 1.82rem;
+    padding: 0.36rem 0.62rem;
+    border: 1px solid rgba(21, 156, 120, 0.22);
+    border-radius: 999px;
+    color: #0d6f5a;
+    background: rgba(21, 156, 120, 0.07);
+    font-family: var(--blog-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.blog-search-count:empty {
+    display: none;
+}
+
+.blog-search-state {
+    margin: 0;
+    padding: 2.8rem 1rem;
+    color: #6f7885;
+    font-size: 0.92rem;
+    line-height: 1.65;
+    text-align: center;
+}
+
+.blog-search-state strong {
+    color: var(--blog-home-ink);
+    font-weight: 650;
+}
+
 .blog-home-page .post-preview {
     margin: 0;
     padding: 0.82rem 0;
@@ -4659,6 +4706,12 @@ footer.border-top .small {
     }
 }
 
+@media (max-width: 767.98px) {
+    .scroll-top.button_top {
+        display: none !important;
+    }
+}
+
 html[data-theme="dark"] body {
     color: #d7dee8;
     background: #0e1117;
@@ -4938,6 +4991,20 @@ html[data-theme="dark"] .blog-home-page .post-tag {
     border-color: rgba(77, 215, 180, 0.24);
     color: #8debd3;
     background: rgba(77, 215, 180, 0.08);
+}
+
+html[data-theme="dark"] .blog-search-count {
+    border-color: rgba(77, 215, 180, 0.24);
+    color: #8debd3;
+    background: rgba(77, 215, 180, 0.08);
+}
+
+html[data-theme="dark"] .blog-search-state {
+    color: #9aa7b7;
+}
+
+html[data-theme="dark"] .blog-search-state strong {
+    color: #e6edf6;
 }
 
 html[data-theme="dark"] .blog-home-footer,

@@ -424,6 +424,49 @@ header.masthead .post-heading .meta {
     box-shadow: none;
 }
 
+.main-content .viewer-mode-switch {
+    display: inline-flex;
+    gap: 0.18rem;
+    margin: 0.2rem 0 1.15rem;
+    padding: 0.22rem;
+    border: 1px solid #dbe4e7;
+    border-radius: 10px;
+    background: #f5f8f7;
+    box-shadow: 0 7px 20px rgba(32, 49, 61, 0.05);
+}
+
+.main-content .viewer-mode-button {
+    min-height: 2rem;
+    padding: 0.42rem 0.72rem;
+    border: 0;
+    border-radius: 7px;
+    color: #5b6874;
+    background: transparent;
+    font-family: var(--blog-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.015em;
+    cursor: pointer;
+    transition: color 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.main-content .viewer-mode-button:hover {
+    color: #0d6f5a;
+    background: rgba(21, 156, 120, 0.07);
+}
+
+.main-content .viewer-mode-button.is-active {
+    color: #fff;
+    background: #159c78;
+    box-shadow: 0 4px 12px rgba(21, 156, 120, 0.2);
+}
+
+.main-content .viewer-mode-button:focus-visible {
+    outline: 2px solid rgba(21, 156, 120, 0.42);
+    outline-offset: 2px;
+}
+
 .main-content :not(pre) > code {
     padding: 0.14rem 0.34rem;
     border-radius: 6px;
@@ -506,6 +549,19 @@ header.masthead .post-heading .meta {
     height: auto;
     margin: 1.8rem auto;
     border-radius: 12px;
+}
+
+.main-content iframe.post-video-embed {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 1.8rem auto;
+    border: 0;
+    border-radius: 12px;
+    aspect-ratio: 16 / 9;
+    background: #0e1117;
+    box-shadow: 0 12px 28px rgba(39, 49, 59, 0.08);
 }
 
 .main-content table {
@@ -723,6 +779,27 @@ html[data-theme="dark"] .main-content .accordion-body {
     border-top-color: rgba(216, 226, 239, 0.1);
     color: #c9d3df;
     background: #0f151d;
+}
+
+html[data-theme="dark"] .main-content .viewer-mode-switch {
+    border-color: rgba(216, 226, 239, 0.13);
+    background: #121922;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.16);
+}
+
+html[data-theme="dark"] .main-content .viewer-mode-button {
+    color: #aebbc9;
+}
+
+html[data-theme="dark"] .main-content .viewer-mode-button:hover {
+    color: #8debd3;
+    background: rgba(77, 215, 180, 0.08);
+}
+
+html[data-theme="dark"] .main-content .viewer-mode-button.is-active {
+    color: #07110e;
+    background: #4dd7b4;
+    box-shadow: 0 4px 14px rgba(77, 215, 180, 0.16);
 }
 
 html[data-theme="dark"] .main-content :not(pre) > code {
