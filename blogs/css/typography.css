@@ -226,22 +226,202 @@ header.masthead .post-heading .meta {
     font-weight: 700;
 }
 
-.main-content pre {
-    margin: 1.7rem 0;
-    padding: 1rem 1.05rem;
-    border: 1px solid #dce5ee;
+.main-content pre,
+.main-content pre[class*="language-"] {
+    margin: 1.45rem 0;
+    padding: 0.9rem 1rem;
+    border: 1px solid #dbe4e7;
     border-radius: 12px;
-    background: #f6f8fa;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
+    color: #334155;
+    background: #f5f8f7;
+    box-shadow: none;
     overflow-x: auto;
-    font-size: 0.9rem !important;
-    line-height: 1.62;
+    font-size: 0.8125rem !important;
+    line-height: 1.58;
+    tab-size: 4;
+    text-shadow: none;
 }
 
-.main-content pre code {
+.main-content pre code,
+.main-content pre code[class*="language-"] {
     padding: 0;
+    color: inherit;
     background: transparent;
-    font-size: 0.9rem !important;
+    font-size: 0.8125rem !important;
+    line-height: inherit;
+    text-shadow: none;
+}
+
+.main-content .token.comment,
+.main-content .token.prolog,
+.main-content .token.doctype,
+.main-content .token.cdata {
+    color: #7b8794;
+}
+
+.main-content .token.punctuation {
+    color: #687584;
+}
+
+.main-content .token.property,
+.main-content .token.tag,
+.main-content .token.boolean,
+.main-content .token.number,
+.main-content .token.constant,
+.main-content .token.symbol,
+.main-content .token.deleted {
+    color: #b4534b;
+}
+
+.main-content .token.selector,
+.main-content .token.attr-name,
+.main-content .token.string,
+.main-content .token.char,
+.main-content .token.builtin,
+.main-content .token.inserted {
+    color: #0f766e;
+}
+
+.main-content .token.operator,
+.main-content .token.entity,
+.main-content .token.url,
+.main-content .language-css .token.string,
+.main-content .style .token.string {
+    color: #6d5aa0;
+    background: transparent;
+}
+
+.main-content .token.atrule,
+.main-content .token.attr-value,
+.main-content .token.keyword {
+    color: #2563a7;
+}
+
+.main-content .token.function,
+.main-content .token.class-name {
+    color: #8a5a10;
+}
+
+.main-content .token.regex,
+.main-content .token.important,
+.main-content .token.variable {
+    color: #9c4f77;
+}
+
+.main-content .accordion {
+    --bs-accordion-border-width: 0;
+    --bs-accordion-btn-focus-box-shadow: none;
+    margin: 1.45rem 0 1.8rem;
+    overflow: hidden;
+    border: 1px solid #dbe4ea;
+    border-radius: 14px;
+    background: #fbfcfc;
+    box-shadow: 0 10px 30px rgba(32, 49, 61, 0.055);
+}
+
+.main-content .accordion-item,
+.main-content .accordion-flush .accordion-item {
+    border: 0;
+    color: #435160;
+    background: transparent;
+}
+
+.main-content .accordion-header {
+    margin: 0;
+    padding: 0;
+}
+
+.main-content .accordion-button {
+    gap: 0.72rem;
+    min-height: 3rem;
+    padding: 0.62rem 0.85rem;
+    color: #435160;
+    background: transparent;
+    box-shadow: none;
+    font-family: var(--blog-mono);
+    font-size: 0.73rem;
+    font-weight: 500;
+    line-height: 1.45;
+    letter-spacing: 0.015em;
+}
+
+.main-content .accordion-button::before {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 1.55rem;
+    height: 1.55rem;
+    border: 1px solid rgba(21, 156, 120, 0.2);
+    border-radius: 7px;
+    color: #117b5f;
+    background: rgba(21, 156, 120, 0.07);
+    content: "</>";
+    font-size: 0.5rem;
+    font-weight: 600;
+    letter-spacing: -0.08em;
+}
+
+.main-content .accordion-button::after {
+    width: 0.48rem;
+    height: 0.48rem;
+    margin-right: 0.28rem;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    background-image: none;
+    background-size: auto;
+    opacity: 0.52;
+    transform: rotate(45deg);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.main-content .accordion-button:hover {
+    color: #0d6f5a;
+    background: rgba(21, 156, 120, 0.045);
+}
+
+.main-content .accordion-button:focus-visible {
+    outline: 2px solid rgba(21, 156, 120, 0.42);
+    outline-offset: -2px;
+}
+
+.main-content .accordion-button:not(.collapsed) {
+    color: #0d6f5a;
+    background: rgba(21, 156, 120, 0.065);
+    box-shadow: none;
+}
+
+.main-content .accordion-button:not(.collapsed)::after {
+    background-image: none;
+    opacity: 0.78;
+    transform: rotate(225deg);
+}
+
+.main-content .accordion-button strong,
+.main-content .accordion-button em {
+    color: inherit;
+    font-style: normal;
+    font-weight: inherit;
+}
+
+.main-content .accordion-body {
+    padding: 0.88rem;
+    border-top: 1px solid #e1e8ed;
+    background: #f7f9fa;
+}
+
+.main-content .accordion-body > :first-child {
+    margin-top: 0;
+}
+
+.main-content .accordion-body > :last-child {
+    margin-bottom: 0;
+}
+
+.main-content .accordion-body pre {
+    margin: 0;
+    border-radius: 10px;
+    box-shadow: none;
 }
 
 .main-content :not(pre) > code {
@@ -499,6 +679,50 @@ html[data-theme="dark"] .main-content a:hover {
 
 html[data-theme="dark"] .main-content strong {
     color: #eef4fb;
+}
+
+html[data-theme="dark"] .main-content .accordion {
+    border-color: rgba(216, 226, 239, 0.13);
+    background: #121922;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.2);
+}
+
+html[data-theme="dark"] .main-content .accordion-item,
+html[data-theme="dark"] .main-content .accordion-flush .accordion-item {
+    color: #c9d3df;
+    background: transparent;
+}
+
+html[data-theme="dark"] .main-content .accordion-button {
+    color: #b9c5d2;
+    background: transparent;
+}
+
+html[data-theme="dark"] .main-content .accordion-button::before {
+    border-color: rgba(77, 215, 180, 0.22);
+    color: #8debd3;
+    background: rgba(77, 215, 180, 0.08);
+}
+
+html[data-theme="dark"] .main-content .accordion-button:hover {
+    color: #e8eef6;
+    background: rgba(216, 226, 239, 0.045);
+}
+
+html[data-theme="dark"] .main-content .accordion-button:not(.collapsed) {
+    color: #8debd3;
+    background: rgba(77, 215, 180, 0.07);
+}
+
+html[data-theme="dark"] .main-content .accordion-button strong,
+html[data-theme="dark"] .main-content .accordion-button em {
+    color: inherit;
+}
+
+html[data-theme="dark"] .main-content .accordion-body {
+    border-top-color: rgba(216, 226, 239, 0.1);
+    color: #c9d3df;
+    background: #0f151d;
 }
 
 html[data-theme="dark"] .main-content :not(pre) > code {

@@ -59,11 +59,11 @@ author: Hwan Heo
 <h3 id="h3-1" > Basic Usage </h3>
 <p id="p-7" class='lang eng'> You can easily import it into an HTML file via CDN like this: </p>
 
-<pre id="pre-2" ><code id="model-viewer-cdn" style="font-size: 1rem"  class="language-html">&lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js&quot;&gt;&lt;/script&gt;
+<pre id="pre-2" ><code id="model-viewer-cdn" class="language-html">&lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js&quot;&gt;&lt;/script&gt;
 </code></pre>
 <p id="p-8" class='lang eng'> Then, just declare <code>model-viewer</code> and specify the 3D model path in the <code>src</code> attribute to embed an interactive 3D model directly into your webpage: </p>
 
-<pre id="pre-3" ><code style="font-size: 1rem"  class='language-html'>&lt;model-viewer 
+<pre id="pre-3" ><code class='language-html'>&lt;model-viewer
     src=&quot;your_3d_model.glb&quot; >
 &lt;/model-viewer&gt;
 </code></pre>
@@ -79,7 +79,7 @@ author: Hwan Heo
 </ul>
 <p id="p-10" class='lang eng'> These allow you to tweak things like camera angles or environment settings during model loading, making it super convenient to achieve polished rendering with minimal effort. </p>
 <p id="p-11" ><strong id="strong-1"><em>Example:</em></strong></p>
-<pre id="pre-3" ><code style="font-size: 1rem"  class='language-html'>&lt;model-viewer 
+<pre id="pre-3" ><code class='language-html'>&lt;model-viewer
     src=&quot;omni.glb&quot; 
     auto-rotate
     rotation-per-second=&quot;60deg&quot;
@@ -111,7 +111,7 @@ author: Hwan Heo
 <p id="p-14" class='lang eng'> Here’s how you can set this up in JavaScript by using the gradient image as the environment and stripping the original texture: </p>
 
 
-<pre id="pre-4" ><code id="code-mesh" style="font-size: 1rem"  class="language-javascript">var window_state = {};
+<pre id="pre-4" ><code id="code-mesh" class="language-javascript">var window_state = {};
 function show_geometry(){
     let modelViewer = document.getElementById(&#39;model&#39;);
     if (modelViewer.model.materials[0].pbrMetallicRoughness.baseColorTexture.texture === null) return;
@@ -145,7 +145,7 @@ function show_geometry(){
 <h2 id="h2-2" > Threejs-Based Custom Viewer </h2>
 <p id="p-16" class='lang eng'> To implement rendering modes like Normal or Wireframe that Google Model Viewer can’t handle, you’ll need to roll up your sleeves and build a custom model viewer class using Three.js. </p>
 <h3 id="h3-3" > Basic Usage </h3>
-<pre id="pre-2" ><code style="font-size: 1rem"  class='language-html'>&lt;script type=&quot;importmap&quot;&gt;
+<pre id="pre-2" ><code class='language-html'>&lt;script type=&quot;importmap&quot;&gt;
     {
         &quot;imports&quot;: {
             &quot;three&quot;: &quot;https://unpkg.com/three@0.150.0/build/three.module.js&quot;,
@@ -156,20 +156,20 @@ function show_geometry(){
 </code></pre>
 <p id="p-17" class='lang eng'> Like Model Viewer, you can import Three.js via CDN, but setting it up is quite a bit more involved. </p>
 <p id="p-18" class='lang eng'> You have to manually configure the <code>scene</code>, <code>camera</code>, <code>renderer</code>, and more. Start by importing the essential packages in JavaScript: </p>
-<pre id="pre-3" ><code style="font-size: 1rem"  class='language-javascript'>import * as THREE from 'three';
+<pre id="pre-3" ><code class='language-javascript'>import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 </code></pre>
 <p id="p-19" class='lang eng'> Then define your scene and camera: </p>
 
-<pre id="pre-4" ><code style="font-size: 1rem"  class='language-javascript'>scene = new THREE.Scene(); 
+<pre id="pre-4" ><code class='language-javascript'>scene = new THREE.Scene();
 camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
 renderer = new THREE.WebGLRenderer({ antialias: true });
 controls = new OrbitControls(this.camera, this.renderer.domElement);
 </code></pre>
 <p id="p-20" class='lang eng'> Finally, load a GLTF 3D model and add it to the scene: </p>
-<pre id="pre-5"><code style="font-size: 1rem"  class='language-javascript'>loader = new GLTFLoader();
+<pre id="pre-5"><code class='language-javascript'>loader = new GLTFLoader();
 loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined, (error) => { console.error('Loading Error:', error); });</code></pre>
 
 <h3 id="h3-4">Custom Viewer Implementation</h3>
@@ -177,7 +177,7 @@ loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined
 <p id="p-22" class='lang eng'> In Three.js, mesh textures are defined as PBR materials using <code>MeshStandardMaterial</code>. Rendering modes like Normal, Geometry, or Wireframe can be achieved by simply adjusting the material mappings. </p>
 <h4 id="h4-1" > Normal Map </h4>
 <p id="p-23" class='lang eng'> For example, to render a Normal map, you can set the mesh material to <code>THREE.MeshNormalMaterial()</code>, which Three.js provides out of the box: </p>
-<pre id="pre-5" ><code style="font-size: 1rem"  class="language-javascript">if (model) {
+<pre id="pre-5" ><code class="language-javascript">if (model) {
     model.traverse((child) => {
         if (child.isMesh) {
             child.material = new THREE.MeshNormalMaterial();
@@ -191,7 +191,7 @@ loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined
 <h4 id="h4-2" > Wireframe </h4>
 <p id="p-24" class='lang eng'> For Wireframe, setting <code>wireframe: true</code> in <code>THREE.MeshBasicMaterial()</code> will display the wireframe, but this hides the original texture and geometry, reducing visibility. </p>
 <p id="p-25" class='lang eng'> A better approach is to create a separate wireframe mesh as a copy and add it as a child of the original mesh. This way, you can render the wireframe alongside the original texture and geometry: </p>
-<pre id="pre-6" ><code style="font-size: 1rem" class="language-javascript">model.traverse((child) => {
+<pre id="pre-6" ><code class="language-javascript">model.traverse((child) => {
     if (child.isMesh) {
         const wireframeMesh = new THREE.Mesh(child.geometry, new THREE.MeshBasicMaterial({
             wireframe: true,
@@ -222,7 +222,7 @@ loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined
       </h2>
       <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
         <div class="accordion-body">
-          <pre><code style="font-size: 1rem;" class="language-javascript">import * as THREE from &#39;three&#39;;
+          <pre><code class="language-javascript">import * as THREE from &#39;three&#39;;
 import { OrbitControls } from &#39;three/addons/controls/OrbitControls.js&#39;;
 import { GLTFLoader } from &#39;three/addons/loaders/GLTFLoader.js&#39;;
 import { RGBELoader } from &#39;three/addons/loaders/RGBELoader.js&#39;;
@@ -890,7 +890,7 @@ export { SimpleModelViewer };
   </div>
 
 <p id="p-27" class='lang eng'> For the current component, use the declarative API below. It works independently across multiple 3D models, much like Google Model Viewer, while exposing newer camera, environment, selection, and state APIs: </p>
-<pre id="pre-12" ><code id="code-NaN" style="font-size:1rem"  class="language-javascript">&lt;simple-model-viewer 
+<pre id="pre-12" ><code id="code-NaN" class="language-javascript">&lt;simple-model-viewer
     src=&quot;model.glb&quot; 
     camera-orbit=&quot;0 0 20&quot;
     camera-target=&quot;0 0 0&quot;
