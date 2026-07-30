@@ -38,7 +38,7 @@ ${items}
 function renderProjectNavItems(projectNav) {
     const projectSidebarNav = renderProjectSidebarNav(projectNav);
     return `        <li><a href="../../#home"><i class="bi bi-house navicon"></i>Home</a></li>
-        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Projects</a></li>
+        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Project</a></li>
 ${projectSidebarNav}
         <li><a href="../../blogs/"><i class="bi bi-keyboard navicon"></i> Blog</a></li>
         <li><a href="../../#about"><i class="bi bi-person navicon"></i> About</a></li>
@@ -159,7 +159,7 @@ function getCommonProjectStyle() {
       display: none;
     }
     .navmenu .project-nav-selector {
-      margin: 0.2rem 0.9rem 0.85rem;
+      margin: 0.2rem 0 0.85rem;
     }
     .navmenu .project-nav-selector details {
       color: var(--nav-color);
@@ -240,6 +240,7 @@ function getCommonProjectStyle() {
       display: grid;
       gap: 0.08rem;
       margin-top: 0.38rem;
+      overflow-x: hidden;
       padding: 0.35rem;
     }
     .navmenu .project-selector-options a,
@@ -253,7 +254,15 @@ function getCommonProjectStyle() {
       gap: 0.55rem;
       line-height: 1.3;
       padding: 0.48rem 0.52rem;
+      white-space: normal;
       transition: color 0.2s ease, background-color 0.2s ease;
+    }
+    .navmenu .project-selector-options a span:not(.project-selector-index) {
+      display: block;
+      overflow: visible;
+      overflow-wrap: anywhere;
+      -webkit-box-orient: initial;
+      -webkit-line-clamp: initial;
     }
     .navmenu .project-selector-options a:hover {
       background: rgba(255, 255, 255, 0.05);

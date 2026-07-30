@@ -25,6 +25,33 @@
         scrollTop.dataset.initialized = 'true';
     }
 
+    function setupHomeTopbar() {
+        const topbar = document.querySelector('.blog-home-topbar');
+
+        if (!topbar || topbar.dataset.initialized === 'true') {
+            return;
+        }
+
+        const documentRoot = document.documentElement;
+        const hero = document.querySelector('.blog-home-hero');
+
+        function updateTopbar() {
+            const threshold = hero
+                ? Math.max(96, hero.offsetHeight - topbar.offsetHeight)
+                : 96;
+            const scrolled = window.scrollY > threshold;
+
+            topbar.classList.toggle('is-scrolled', scrolled);
+            documentRoot.classList.toggle('blog-topbar-scrolled', scrolled);
+        }
+
+        window.addEventListener('load', updateTopbar);
+        window.addEventListener('resize', updateTopbar);
+        document.addEventListener('scroll', updateTopbar, { passive: true });
+        updateTopbar();
+        topbar.dataset.initialized = 'true';
+    }
+
     function setupSearchForm(formSelector, inputSelector) {
         const searchForm = document.querySelector(formSelector);
         const searchInput = document.querySelector(inputSelector);
@@ -48,6 +75,7 @@
     window.initBlogShell = function initBlogShell(options = {}) {
         const run = function() {
             setupScrollTop();
+            setupHomeTopbar();
 
             if (options.formSelector && options.inputSelector) {
                 setupSearchForm(options.formSelector, options.inputSelector);
