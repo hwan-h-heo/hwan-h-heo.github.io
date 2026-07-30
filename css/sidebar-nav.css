@@ -33,12 +33,18 @@
 }
 
 .sidebar-mobile-toggle:hover,
-.sidebar-mobile-toggle:focus-visible,
-.sidebar-collapse-toggle:hover,
-.sidebar-collapse-toggle:focus-visible {
+.sidebar-mobile-toggle:focus-visible {
     border-color: color-mix(in srgb, var(--site-sidebar-accent), white 22%);
     color: #fff;
     background: color-mix(in srgb, var(--site-sidebar-accent), #07111c 28%);
+    outline: none;
+}
+
+.sidebar-collapse-toggle:hover,
+.sidebar-collapse-toggle:focus-visible {
+    border-color: color-mix(in srgb, var(--site-sidebar-accent), transparent 52%);
+    color: var(--site-sidebar-accent);
+    background: color-mix(in srgb, var(--site-sidebar-accent), transparent 90%);
     outline: none;
 }
 
@@ -63,7 +69,7 @@
     display: none;
     width: 40px;
     height: 40px;
-    margin: auto 0 18px -2px;
+    margin: auto 0 0;
     padding: 0;
     border-color: var(--site-sidebar-line);
     border-radius: 10px;
@@ -106,7 +112,7 @@
 #header.header {
     --accent-color: var(--site-sidebar-accent);
     box-sizing: border-box;
-    padding: 22px 18px 16px;
+    padding: 22px 18px 12px;
     border-right: 1px solid var(--site-sidebar-line);
     background:
         radial-gradient(
