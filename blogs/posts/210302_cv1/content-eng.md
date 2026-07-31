@@ -3,8 +3,6 @@ date: March 02, 2021
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
----
-
 ## 1. Image Filtering
 
 Image filtering is a fundamental process in computer vision used to modify or enhance an image. Common applications include denoising, resizing, and sharpening. Filters can be broadly categorized as linear or non-linear.

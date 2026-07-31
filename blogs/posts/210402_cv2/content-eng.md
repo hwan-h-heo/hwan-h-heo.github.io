@@ -5,8 +5,6 @@ author: Hwan Heo
 
 ## 3. Feature Extraction and Edge Detection
 
----
-
 #### Image Gradients for Edge Detection
 
 Edges in an image are locations with a sharp change in intensity. These changes can be detected by analyzing the image's derivatives. The first derivative of the intensity function will have a local extremum (maximum or minimum) at an edge location. Consequently, the second derivative will have a zero-crossing at that same location.

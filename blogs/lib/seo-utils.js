@@ -236,7 +236,6 @@ function renderFeaturedPost(siteData, lang = 'eng') {
                     <div class="blog-feature-meta">
                         <span>${escapeHtml(seriesTitle)}</span>
                         <time datetime="${escapeHtml(featuredPost.date)}">${escapeHtml(formatDate(featuredPost.date, lang))}</time>
-                        <span>Languages: ${renderLanguageLinks(featuredPost)}</span>
                     </div>
                     <h2><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h2>
                     ${description ? `<p>${escapeHtml(description)}</p>` : ''}
@@ -246,6 +245,9 @@ function renderFeaturedPost(siteData, lang = 'eng') {
                         ${renderSiteIcon('arrow-right')}
                     </a>
                 </div>
+                <nav class="visually-hidden" aria-label="Available languages">
+                    ${renderLanguageLinks(featuredPost)}
+                </nav>
             </article>
     `;
 }
@@ -402,10 +404,16 @@ function truncateNavTitle(title) {
 }
 
 function renderPostNavCard({ href, type, label, title }) {
+    const isPrevious = type === 'older';
+    const directionIcon = renderSiteIcon(isPrevious ? 'arrow-left' : 'arrow-right');
+    const kicker = isPrevious
+        ? `${directionIcon} ${escapeHtml(label)}`
+        : `${escapeHtml(label)} ${directionIcon}`;
+
     return `
                 <a class="post-nav-card is-${escapeHtml(type)}" href="${escapeHtml(href)}" aria-label="${escapeHtml(`${label}: ${title}`)}">
                     <span class="post-nav-kicker">
-                        <span>${escapeHtml(label)}</span>
+                        ${kicker}
                     </span>
                     <strong>${escapeHtml(truncateNavTitle(title))}</strong>
                 </a>
@@ -415,8 +423,8 @@ function renderPostNavCard({ href, type, label, title }) {
 function renderChronologicalPostNavigation(siteData, post, lang = 'eng') {
     const adjacent = getAdjacentLanguagePosts(siteData, post, lang);
     const labels = lang === 'kor'
-        ? { older: 'Older Post', newer: 'Newer Post' }
-        : { older: 'Older Post', newer: 'Newer Post' };
+        ? { older: 'Previous Post', newer: 'Next Post' }
+        : { older: 'Previous Post', newer: 'Next Post' };
 
     let navHtml = '<nav class="post-nav-grid" aria-label="Post navigation">';
     if (adjacent.older) {
@@ -482,7 +490,6 @@ function renderSeriesNavigation(siteData, post, lang = 'eng') {
                             <strong>${escapeHtml(title)}</strong>
                             ${date ? `<span>${escapeHtml(date)}</span>` : ''}
                         </span>
-                        <span class="series-current-pill">Current</span>
                     </li>
             `;
         }

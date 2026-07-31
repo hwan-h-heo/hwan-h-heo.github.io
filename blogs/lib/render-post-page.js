@@ -245,11 +245,6 @@ ${alternateLinksHtml}
     <script src="/assets/js/site-icons.js"></script>
 ${renderConditionalHeadAssets(activeRuntimeFeatures)}
 
-    <style>
-        .post-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
-        .post-tags span { display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,0.6); color: #fff; border-radius: 999px; padding: 0.16rem 0.55rem; font-size: 0.72rem; background: rgba(0,0,0,0.18); }
-    </style>
-
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
     <script>
         window.dataLayer = window.dataLayer || [];

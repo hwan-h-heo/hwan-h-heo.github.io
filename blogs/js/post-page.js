@@ -334,8 +334,7 @@
 
         const labels = {
             kicker: 'Series',
-            current: 'Current',
-            older: 'Older Post',
+            older: 'Previous Post',
             next: 'Next Post',
             explore: 'Explore Series'
         };
@@ -355,7 +354,6 @@
                             <strong>${escapeHtml(title)}</strong>
                             ${date ? `<span>${date}</span>` : ''}
                         </span>
-                        <span class="series-current-pill">${labels.current}</span>
                     </li>
                 `;
             }
@@ -400,10 +398,16 @@
         }
 
         function renderPostNavCard({ href, type, label, title }) {
+            const isPrevious = type === 'older';
+            const directionIcon = icons.render(isPrevious ? 'arrow-left' : 'arrow-right');
+            const kicker = isPrevious
+                ? `${directionIcon} ${escapeHtml(label)}`
+                : `${escapeHtml(label)} ${directionIcon}`;
+
             return `
                 <a class="post-nav-card is-${type}" href="${href}">
                     <span class="post-nav-kicker">
-                        <span>${escapeHtml(label)}</span>
+                        ${kicker}
                     </span>
                     <strong>${escapeHtml(truncatePostNavTitle(title))}</strong>
                 </a>

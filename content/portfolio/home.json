@@ -101,7 +101,7 @@
                   "period": "2023 - 2025",
                   "metaHtml": "Neural Rendering &amp; 3D Generation, NCSOFT Research<br>Research Personnel · Alternative Military Service",
                   "bulletsHtml": [
-                    "Developed 3D generation and neural rendering systems spanning latent diffusion, texture synthesis, Gaussian Splatting, and neural avatars."
+                    "Developed 3D generation and neural rendering systems spanning latent diffusion, Gaussian Splatting, and NeRF avatars."
                   ]
                 },
                 {

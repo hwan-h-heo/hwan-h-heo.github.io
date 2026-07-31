@@ -28,7 +28,6 @@ author: Hwan Heo
     Photography 가 아닌 domain 에서 Neural Rendering 을 적용하기 위해선 어떤 사항들을 고려해야하는지 생각해보자!
     + Viewer 가 없는 Neural Rendering technique 을 위한 빠른 viewer 개발 Tip
 </p>
-<hr/>
 <h2 id="introduction">Introduction</h2>
 <p class="lang kor" >최근 우연한 기회로 의료 도메인, 특히 Tomography (X-ray) 에서 Neural Rendering 을 어떻게 적용해야 하는지 찾아볼 일이 있었다. (Ref: <a href='https://github.com/caiyuanhao1998/SAX-NeRF'>SAX-NeRF</a>)</p>
 <p class="lang kor" >가시광의 반사를 포착하는 photography 와 다르게, tomography 는 물질을 투과한 신호를 바탕으로 이미지를 구성한다. 저자들이 Tomography 를 위해 일반적인 Neural Rendering setting 을 어떻게 수정해야 하는지를 탐구한 과정을 따라가면서, 나 또한 Neural Rendering 에 대한 추상적인 직관성과 이해를 증진시킬 수 있었다.</p>

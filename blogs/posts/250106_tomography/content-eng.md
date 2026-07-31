@@ -28,7 +28,6 @@ author: Hwan Heo
     In this article, we will explore how to apply radiance fields technique (NeRF and Gaussian Splatting) beyond photometric domain. 
     Also, I will post the short tip for the quick development of the NeRF / GS viewer which has no official viewer.
 </p>
-<hr/>
 <h2 id="introduction">Introduction</h2>
 <p class="lang eng">Recently, I had the serendipitous opportunity to explore how Neural Rendering could be applied within the medical domain, specifically in Tomography (X-ray), referencing <a href='https://github.com/caiyuanhao1998/SAX-NeRF'>SAX-NeRF</a>.</p>
 <p class="lang eng">Unlike photography, which captures the reflection of visible light, tomography constructs images based on signals that have penetrated a substance. In tracing the authors' investigative process of how to adapt the standard Neural Rendering setting for Tomography, I was able to deepen my abstract intuition and comprehension of Neural Rendering.</p>

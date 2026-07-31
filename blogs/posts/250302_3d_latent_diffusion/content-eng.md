@@ -7,8 +7,6 @@ author: Hwan Heo
     <ul><li><a href="#h2-1">Preliminary: What is Latent?</a><ul></ul></li><li><a href="#h2-2">ShapeVAE</a><ul><li><a href="#h3-1">Challenges for ShapeVAE</a></li></ul></li><li><a href="#h2-3">Trellis</a><ul><li><a href="#h3-2">Structured Latent</a></li><li><a href="#h3-3">3D Generation</a></li></ul></li><li><a href="#h2-4">Hunyuan3D-v2</a><ul><li><a href="#h3-4">Hunyuan-ShapeVAE</a></li><li><a href="#h3-5">Hunyuan3D-DiT</a></li><li><a href="#h3-6">Hunyuan3D-Paint</a></li></ul></li><li><a href="#h2-6"> Trellis vs Hunyuan? </a><ul></ul></li><li><a href="#h2-5">Closing</a><ul></ul></li></ul>
 </nav>
 
-<hr/>
-
 <figure id="figure-0" >
   <video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/teaser-poster.jpg" aria-label="3D latent diffusion teaser" style="width: 100%">
     <source src="./250302_3d_latent_diffusion/assets/teaser.mp4" type="video/mp4">

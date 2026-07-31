@@ -2233,6 +2233,28 @@ h6 {
   line-height: 1.55;
 }
 
+.portfolio-talk p a,
+.portfolio-talk p a:visited {
+  color: var(--color-link-muted);
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-link-muted), transparent 58%);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition:
+    color var(--motion-base) var(--ease-standard),
+    text-decoration-color var(--motion-base) var(--ease-standard);
+}
+
+.portfolio-talk p a:hover {
+  color: var(--color-ink);
+  text-decoration-color: var(--accent-on-light);
+}
+
+.portfolio-talk p a:focus-visible {
+  outline: 2px solid var(--accent-line-strong);
+  outline-offset: 3px;
+}
+
 @media (max-width: 767px) {
   .hero {
     min-height: 100svh;
@@ -2388,6 +2410,7 @@ h6 {
   }
 
   .portfolio-talk-links {
+    grid-column: 1;
     justify-content: flex-start;
   }
 }

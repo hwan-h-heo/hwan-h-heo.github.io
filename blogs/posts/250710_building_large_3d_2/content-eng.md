@@ -3,8 +3,6 @@ date: July 10, 2025
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
----
-
 ## Introduction
 
 In the [previous article](./?id=250702_building_large_3d_1), as the first step toward building a large 3D generative model, we took a deep dive into preparing the dataset and the essential data preprocessing pipeline, covering everything from mathematical and topological principles to actual algorithm implementation.

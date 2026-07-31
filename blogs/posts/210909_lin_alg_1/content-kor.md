@@ -7,8 +7,6 @@ author: Hwan Heo
 
 https://www.deeplearningbook.org/contents/linear_algebra.html -->
 
----
-
 ## 1. Linear System
 
 ### 1.1.1. Linear Combination

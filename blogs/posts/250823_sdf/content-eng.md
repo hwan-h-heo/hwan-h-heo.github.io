@@ -3,8 +3,6 @@ date: August 23, 2025
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
----
-
 #### TL;DR
 
 Let's explore the derivation and proof of the relationship between a Signed Distance Field (SDF) and the Eikonal Equation.

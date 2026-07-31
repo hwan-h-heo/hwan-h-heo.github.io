@@ -500,12 +500,12 @@ header.masthead .post-heading .meta {
 
 .main-content blockquote {
     margin: 2rem 0;
-    padding: 1.05rem 1.18rem 1.05rem 1.25rem;
-    border: 1px solid #dce3e8;
-    border-left: 3px solid #7c8a99;
-    border-radius: 8px;
-    background: #f7f9fb;
-    color: #465867;
+    padding: 0.18rem 0 0.18rem 1.22rem;
+    border: 0;
+    border-left: 2px solid #a7b2bc;
+    border-radius: 0;
+    background: transparent;
+    color: #3f4e5c;
     font-weight: 400;
 }
 
@@ -894,9 +894,8 @@ html[data-theme="dark"] .main-content .token.variable {
 }
 
 html[data-theme="dark"] .main-content blockquote {
-    border-color: #2b3541;
-    border-left-color: #68798a;
-    background: #151c24;
+    border-left-color: #657485;
+    background: transparent;
     color: #c8d3df;
 }
 

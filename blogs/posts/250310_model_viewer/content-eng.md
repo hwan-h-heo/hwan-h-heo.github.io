@@ -24,8 +24,6 @@ author: Hwan Heo
     </ul>
 </nav>
 
-<hr/>
-
 <!-- <img src='./250310_model_viewer/assets/image.gif' width=100%> -->
 
 <h2 id="h2-3" > Introduction </h2>

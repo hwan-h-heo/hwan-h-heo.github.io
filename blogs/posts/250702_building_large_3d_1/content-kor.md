@@ -3,8 +3,6 @@ date: July 02, 2025
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
----
-
 ## Introduction: Rise of 3D Generative AI
 
 2024년 하반기 이후, CLAY (Rodin) 를 기점으로 [Hunyuan3D](https://github.com/Tencent-Hunyuan/Hunyuan3D-2), [Trellis](https://microsoft.github.io/TRELLIS/), [TripoSG](https://yg256li.github.io/TripoSG-Page/), [Hi3DGen](https://stable-x.github.io/Hi3DGen/), [Direct3D-S2](https://nju-3dv.github.io/projects/Direct3D-S2/) 등 수많은 3D Generative Models 들이 쏟아지고 있다. 

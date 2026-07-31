@@ -3,8 +3,6 @@ date: August 10, 2025
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
----
-
 - Let's undertake a detailed mathematical and physical exploration, starting from **Normalizing Flow**, moving through **Continuous Normalizing Flow** and **Conditional Flow Matching**, and culminating in an understanding of why **Rectified Flow** adopts a **Linear Path**.
 
 - Due to its theoretical depth, easily accessible explanatory materials on Flow Matching are still scarce. It is challenging for many researchers and developers to gain a deep intuition for the fundamental question: 'Why are linear paths so effective?'. This article was written to address this gap by weaving the core ideas of Flow Matching—scattered across mathematics, physics, and recent papers—into a single, cohesive narrative, with the goal of providing an intuitive understanding of the 'Why' behind Flow Matching.

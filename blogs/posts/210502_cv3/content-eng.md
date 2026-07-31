@@ -3,8 +3,6 @@ date: April 02, 2021
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
----
-
 ## 6. Geometric Transformations
 
 #### Parametric Transformations

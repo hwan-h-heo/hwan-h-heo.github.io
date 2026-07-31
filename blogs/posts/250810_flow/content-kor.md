@@ -3,8 +3,6 @@ date: August 10, 2025
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
----
-
 - **Normalizing Flow** 부터 **Continuous Normalizing Flow** 와 **Conditional Flow Matching**, 그리고 **Rectitifed Flow 가 왜 Linear Path 를 채택하는지** 수학적, 물리적으로 상세하게 이해해보자. 
 
 - Flow Matching 은 그 이론적 깊이 때문에 쉽게 접근할 수 있는 설명 자료가 아직 부족합니다. 많은 연구자, 개발자들이 '왜 하필 직선 경로가 효과적인가?' 라는 근본적인 질문에 대한 깊이 있는 직관을 갖기는 어렵습니다. 이 글은 그런 실정에서 수학, 물리학, 그리고 최신 논문에 흩어져 있는 Flow Matching 의 핵심 아이디어들을 하나의 유기적인 이야기로 엮어내어, Flow Matching 의 'Why' 에 대한 직관을 얻어 가는 것을 목표로 삼고 씌여졌습니다.

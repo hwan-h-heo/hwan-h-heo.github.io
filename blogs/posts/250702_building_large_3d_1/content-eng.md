@@ -5,8 +5,6 @@ author: Hwan Heo
 
 <!-- - 3D Generation from [CaPa](https://www.youtube.com/watch?v=AtQNAuQY4-A) :) -->
 
----
-
 ## Introduction: Rise of 3D Generative AI
 
 Since the latter half of 2024, starting with CLAY (Rodin), a wave of 3D Generative Models has been released, including [Hunyuan3D](https://github.com/Tencent-Hunyuan/Hunyuan3D-2), [Trellis](https://microsoft.github.io/TRELLIS/), [TripoSG](https://yg256li.github.io/TripoSG-Page/), [Hi3DGen](https://stable-x.github.io/Hi3DGen/), and [Direct3D-S2](https://nju-3dv.github.io/projects/Direct3D-S2/).

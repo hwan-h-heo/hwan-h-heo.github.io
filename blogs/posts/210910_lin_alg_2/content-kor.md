@@ -7,8 +7,6 @@ author: Hwan Heo
 
 https://www.deeplearningbook.org/contents/linear_algebra.html -->
 
----
-
 - [이전 글](./?id=210909_lin_alg_1)에 이어...
 
 #### TL;DR
