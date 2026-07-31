@@ -3,21 +3,6 @@ date: August 23, 2024
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<button id="copyButton">
-    <i class="bi bi-share-fill"></i>
-</button>
-
-<div id="myshare_modal" class="share_modal">
-    <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
-        <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
-        </div>
-    </div>
-</div>
-
-
 <nav class="toc">
     <ul>
         <li>
@@ -83,7 +68,7 @@ author: Hwan Heo
             EWA splatting 으로 구현된 rasterization 은 affine projection error 가 있으며, 이 때문에 다양한 camera 에 대한 modeling 을 구현하더라도 high-quality 로 학습하는 것이 쉽지 않다. 
         </p>
         <figure>
-            <img class="img-fluid" src="./240823_grt/assets/cam_model.png" width="85%">
+            <img class="post-media" src="./240823_grt/assets/cam_model.png" width="85%">
             <figcaption style="text-align: center; font-size: 15px;"> Inflexibility of 3D GS with Diverse Camera Models, source: <span style="text-decoration: underline;"><a href="https://letianhuang.github.io/op43dgs/">Optimal GS</a></span> </figcaption>
         </figure>
     </li>
@@ -93,7 +78,7 @@ author: Hwan Heo
             MLP 로 이루어진 NeRF 는 image 간 calibration 차이에도 일부 강건하지만, 3D GS 는 explicit primitive 를 사용하기 때문에 motion blur, rolling shutter 등 image quality 에 극도로 민감하다.
         </p>
         <figure>
-            <img class="img-fluid" src="./240823_grt/assets/cap.png" width="85%">
+            <img class="post-media" src="./240823_grt/assets/cap.png" width="85%">
             <figcaption style="text-align: center; font-size: 15px;"> <strong>Left</strong>: GT,  <strong>Right</strong>: trained 3D GS on motion blurred scene, <br/> source: <span style="text-decoration: underline;"><a href="https://benhenryl.github.io/Deblurring-3D-Gaussian-Splatting/">Deblurring 3D GS</a></span> </figcaption>
         </figure>
     </li>
@@ -103,7 +88,7 @@ author: Hwan Heo
             Physically-based Rendering 이 아니기 때문에 조명, 반사 효과 등을 모델링하기 힘들다.
         </p>
         <figure>
-            <img class="img-fluid" src="./240823_grt/assets/ref.png" width="70%">
+            <img class="post-media" src="./240823_grt/assets/ref.png" width="70%">
             <figcaption style="text-align: center; font-size: 15px;"> Left: GT, Right: 3D GS, source: <span style="text-decoration: underline;"><a href="https://gapszju.github.io/3DGS-DR/">3D GS-DR</a></span> </figcaption>
         </figure>
     </li>
@@ -144,20 +129,20 @@ rgb[idx * C + 2] = result.z;</code></pre>
 
 <h2 id="method"> 3. 3D Gaussian Ray Tracing </h2>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig1.png" width="100%" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#fig1_modal">
+    <button class="post-image-lightbox-trigger" type="button" data-image-lightbox-target="#fig1-lightbox" aria-controls="fig1-lightbox" aria-haspopup="dialog" aria-label="그림 1 방법 개요 크게 보기">
+        <img class="post-media" src="./240823_grt/assets/fig1.png" width="100%" alt="3D Gaussian Ray Tracing 방법 개요">
+    </button>
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 1.</strong> Method Overview</figcaption>
 </figure>
-<!-- Modal Structure -->
-<div class="modal fade" id="fig1_modal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body">
-                <!-- Original size image -->
-                <img src="./240823_grt/assets/fig1.png" alt="Full Size Image" width="100%" class="img-fluid">
-            </div>
-        </div>
+<dialog class="post-image-lightbox" id="fig1-lightbox" aria-label="그림 1: 방법 개요">
+    <div class="post-image-lightbox-frame">
+        <button class="post-image-lightbox-close" type="button" data-image-lightbox-close aria-label="확대 이미지 닫기">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-x-lg"></use></svg>
+        </button>
+        <img src="./240823_grt/assets/fig1.png" alt="3D Gaussian Ray Tracing 방법 개요" class="post-image-lightbox-image">
     </div>
-</div>
+</dialog>
+<span class="post-image-lightbox-layout-reserve" aria-hidden="true"></span>
 <p class="lang kor" >3D Gaussian 을 위한 Ray Tracer 설계를 위해 다음 두가지의 핵심 요소가 필요하다. </p>
 <ul class="lang kor" >
     <li> Hit traversal 가속화를 위해 BVH 를 사용하는데, BVH 를 위한 proxy primitive 를 3D Gaussian 에 알맞게 정의할 것
@@ -171,20 +156,20 @@ rgb[idx * C + 2] = result.z;</code></pre>
 <h3 id="bounding-primitives"> 3.1. Bounding Primitives</h3>
 <p class="lang kor" >간략하게 BVH (<span style="text-decoration: underline;"><a href="https://en.wikipedia.org/wiki/Bounding_volume_hierarchy">Bounding Volume Hierarchy</a></span>) 부터 짚고 넘어가자. </p>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig3.png" width="90%">
+    <img class="post-media" src="./240823_grt/assets/fig3.png" width="90%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 2.</strong> Bounding Volume Hierarchy</figcaption>
 </figure>
 <p class="lang kor" >BVH 란, 공간을 분할하여 hierarchy 로 나타낸 tree structure 이다. Parants node 는 더 큰 bounding volumes 으로 leefs 를 완전히 감싸는 형태로 이루어져있으며, 이를 통해 효율적으로 공간을 분할 탐색할 수 있게 된다. </p>
 <p class="lang kor" >즉 BVH 의 목적은 3D Gaussian 을 적절하게 감싸는 proxy primitive 를 정의하고, 이 proxy geometry 로 BVH 를 구성하여 어떠한 3D Gaussian 들을 ray traversal 과정에서 탐색할 것인지를 결정하는 것이다. </p>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig2.png" width="65%">
+    <img class="post-media" src="./240823_grt/assets/fig2.png" width="65%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 3.</strong> bounding primitive </figcaption>
 </figure>
 <p class="lang kor" > 저자에 의하면, NVIDIA OptiX 에서는 미리 정의된 3가지 타입 1) triangle, 2) sphere and 3) AABBs 은 모두 3D Gaussian 에 적절하지 않다고 한다. 3) 의 AABB 를 이용하는 경우를 생각해보면, 계산은 간단하지만 false positive proxy hit 이 많아지기 때문에 trade-off 가 있다 (see Fig. 4).</p>
 
 <h4 id="stretched-polyhedron-proxy"> Stretched Polyhedron Proxy</h4>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig4.png" width="90%">
+    <img class="post-media" src="./240823_grt/assets/fig4.png" width="90%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 4.</strong> Proxy Primitives</figcaption>
 </figure>
 
@@ -230,7 +215,7 @@ $$
 
 <h3 id="ray-tracing-renderer"> 3.2. Ray Tracing Renderer</h3>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig5.png" width="100%">
+    <img class="post-media" src="./240823_grt/assets/fig5.png" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 5.</strong> Ray Tracing </figcaption>
 </figure>
 
@@ -247,7 +232,7 @@ $$
 </ul>
 <p class="lang kor" >다음 그림은 $k=3$ 일 때 3D GRT 의 ray tracing 과정을 도식화한 것이다. </p>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig6.png" width="80%">
+    <img class="post-media" src="./240823_grt/assets/fig6.png" width="80%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 6. Next $k$ closest hit Ray Tracer:</strong> on each round of tracing, the next $k$ closest hit particles are collected and sorted into depth order along the ray, the radiance is computed in-order, and the ray is cast again to process the next chunk.  </figcaption>
 </figure>
 
@@ -260,7 +245,7 @@ $$
 </div>
 <p> where $ \mathbf{o}_g = {\rm S^{-1}R^T}(\mathbf{o} - \mu),  d_g = {\rm S^{-1}R^T} \mathbf{d}$. </p>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/inter.png" width="40%">
+    <img class="post-media" src="./240823_grt/assets/inter.png" width="40%">
 </figure>
 
 <div class="lang kor" >
@@ -297,11 +282,11 @@ $$
 <p class="lang kor" >정량적, 정성적 평가 모두 훌륭하게 제시되어 있다. (역시 갓비디아…) </p>
 <p class="lang kor" >3D GS 와 NVS quantitative results 는 거의 차이나지 않으며, fps 는 조금 느리지만 여전히 real-time 을 달성한다. </p>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig7.png" width="100%">
+    <img class="post-media" src="./240823_grt/assets/fig7.png" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 7.</strong> Quantitative Results </figcaption>
 </figure>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig8.png" width="70%">
+    <img class="post-media" src="./240823_grt/assets/fig8.png" width="70%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 8.</strong> Speed Comparison </figcaption>
 </figure>
 <br/>
@@ -314,7 +299,7 @@ $$
     proxy mesh design 에 대한 당위성이나 $k$ buffer 에서 적절한 $k$ 값을 설정하는 등의 실험이 보고되어있다.  
 </p>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig9.png" width="100%">
+    <img class="post-media" src="./240823_grt/assets/fig9.png" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 9.</strong> Ablation Study </figcaption>
 </figure>
 <br/>
@@ -360,14 +345,14 @@ $$
 
 <p class="lang kor" >정량 평가는 Fig. 10 에서 볼 수 있는데, </p>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/kernel_qual.png" width="100%">
+    <img class="post-media" src="./240823_grt/assets/kernel_qual.png" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 10.</strong> Kernel Design Comparison </figcaption>
 </figure>
 
 <p class="lang kor" >각 kernel 별로 reconstruction 성능은 비슷하나, Generalized Gaussian (GG) 를 사용할 때 fps 가 3D Gaussian 에 비해 2배 가까이 올라간다. 이는 GG 의 kernel design 에서 $e^{-x}$ inner quadratic 을 degree $n$ 으로 제곱하기 때문에 density 가 mean 부근으로 몰려서 opaque particle 에 가깝게 modeling 되기 때문이다. </p>
 <p class="lang kor" >따라서 ray-particle hit 자체가 줄어들 것을 예상할 수 있으며, 이는 실제 저자들이 제공하는 ray-hit visualization 에서도 볼 수 있다. </p>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/ray_hit.png" width="100%">
+    <img class="post-media" src="./240823_grt/assets/ray_hit.png" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 11.</strong> Ray hit count for left: 3D G, right: GG  </figcaption>
 </figure>
 
@@ -375,11 +360,11 @@ $$
 
 <p class="lang kor" >Qualitative Results 에서는 앞서 지적한 rasterization 의 한계점을 타파한 모습들을 보여준다. 다양한 camera model 에 대한 rendering 및 light effect 를 모델링하는 모습을 통해 3D GRT 가 효과적으로 구현되었음을 입증한다. </p>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig10.png" width="100%">
+    <img class="post-media" src="./240823_grt/assets/fig10.png" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 12.</strong> 3D GRT w/ various light effect </figcaption>
 </figure>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig11.png" width="100%">
+    <img class="post-media" src="./240823_grt/assets/fig11.png" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 13.</strong> 3D GRT's reconstruction capability for non-pinhole camera </figcaption>
 </figure>
 

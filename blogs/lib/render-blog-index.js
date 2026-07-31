@@ -100,19 +100,19 @@ function renderStaticBlogIndex(sourceHtml, siteData) {
     );
     html = replaceOrFail(
         html,
-        /(<div class="tab-pane fade show active" id="posts-tab" role="tabpanel" aria-labelledby="posts-tab-control" tabindex="0">)\s*(<\/div>)/,
+        /(<div class="blog-home-tab-panel is-active" id="posts-tab" role="tabpanel" aria-labelledby="posts-tab-control" tabindex="0">)\s*(<\/div>)/,
         `$1\n${postsHtml}\n                    $2`,
         'posts tab'
     );
     html = replaceOrFail(
         html,
-        /(<div class="tab-pane fade" id="notes-tab" role="tabpanel" aria-labelledby="notes-tab-control" tabindex="0">)\s*(<\/div>)/,
+        /(<div class="blog-home-tab-panel" id="notes-tab" role="tabpanel" aria-labelledby="notes-tab-control" tabindex="0" hidden>)\s*(<\/div>)/,
         `$1\n${notesHtml}\n                    $2`,
         'notes tab'
     );
     html = replaceOrFail(
         html,
-        /(<div class="tab-pane fade" id="series-tab" role="tabpanel" aria-labelledby="series-tab-control" tabindex="0">)\s*(<\/div>)/,
+        /(<div class="blog-home-tab-panel" id="series-tab" role="tabpanel" aria-labelledby="series-tab-control" tabindex="0" hidden>)\s*(<\/div>)/,
         `$1\n${seriesHtml}\n                    $2`,
         'series tab'
     );

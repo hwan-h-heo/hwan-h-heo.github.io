@@ -3,20 +3,6 @@ date: August 10, 2025
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<button id="copyButton">
-<i class="bi bi-share-fill"></i>
-</button>
-
-<div id="myshare_modal" class="share_modal">
-<div class="share_modal-content">
-<span class="share_modal_close">×</span>
-<p><strong>Link Copied!</strong></p>
-<div class="copy_indicator-container">
-<div class="copy_indicator" id="share_modalIndicator"></div>
-</div>
-</div>
-</div>
-
 ---
 
 - **Normalizing Flow** 부터 **Continuous Normalizing Flow** 와 **Conditional Flow Matching**, 그리고 **Rectitifed Flow 가 왜 Linear Path 를 채택하는지** 수학적, 물리적으로 상세하게 이해해보자. 

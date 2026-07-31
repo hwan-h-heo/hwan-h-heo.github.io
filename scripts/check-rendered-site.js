@@ -540,7 +540,14 @@ async function main() {
     console.log(`Rendered site check passed: ${totals.pages} routes, ${totals.media.size} unique local media resources.`);
 }
 
-main().catch((error) => {
-    console.error(error.message);
-    process.exit(1);
-});
+if (require.main === module) {
+    main().catch((error) => {
+        console.error(error.message);
+        process.exit(1);
+    });
+}
+
+module.exports = {
+    getLaunchOptions,
+    startStaticServer
+};

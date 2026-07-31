@@ -79,8 +79,8 @@
     font-size: 16px;
 }
 
-.sidebar-mobile-toggle i,
-.sidebar-collapse-toggle i {
+.sidebar-mobile-toggle .site-icon,
+.sidebar-collapse-toggle .site-icon {
     display: block;
     line-height: 1;
 }
@@ -514,7 +514,7 @@
     html.sidebar-collapsed #header.header .navmenu a:focus .navicon,
     html.sidebar-collapsed #header.header .sidebar-labs-menu summary .navicon {
         flex-basis: auto;
-        width: auto;
+        width: 1em;
         margin: 0;
         font-size: 18px;
     }

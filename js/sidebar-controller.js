@@ -1,10 +1,11 @@
 (function() {
+    const icons = window.SiteIcons;
     const DESKTOP_MEDIA = '(min-width: 1200px)';
     const STORAGE_KEY = 'site-sidebar-collapsed';
     const CONTENT_FADE_DURATION = 100;
     const SIDEBAR_TRANSITION_DURATION = 480;
 
-    function createIconButton(className, iconClass, label, controls) {
+    function createIconButton(className, iconName, label, controls) {
         const button = document.createElement('button');
         button.type = 'button';
         button.className = className;
@@ -15,10 +16,7 @@
             button.setAttribute('aria-controls', controls);
         }
 
-        const icon = document.createElement('i');
-        icon.className = `bi ${iconClass}`;
-        icon.setAttribute('aria-hidden', 'true');
-        button.appendChild(icon);
+        button.insertAdjacentHTML('beforeend', icons.render(iconName));
         return button;
     }
 
@@ -59,7 +57,7 @@
 
         const mobileToggle = createIconButton(
             'sidebar-mobile-toggle',
-            'bi-list',
+            'list',
             'Open navigation',
             header.id
         );
@@ -68,7 +66,7 @@
 
         const collapseToggle = createIconButton(
             'sidebar-collapse-toggle',
-            'bi-layout-sidebar-inset',
+            'layout-sidebar-inset',
             'Collapse sidebar',
             header.id
         );
@@ -231,8 +229,7 @@
             mobileToggle.setAttribute('aria-expanded', String(open));
             mobileToggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
             mobileToggle.setAttribute('title', open ? 'Close navigation' : 'Open navigation');
-            mobileToggle.querySelector('i')?.classList.toggle('bi-list', !open);
-            mobileToggle.querySelector('i')?.classList.toggle('bi-x', open);
+            icons.set(mobileToggle.querySelector('.site-icon'), open ? 'x' : 'list');
         }
 
         function syncViewportState() {

@@ -1,3 +1,5 @@
+const { render: renderSiteIcon } = require('../../assets/js/site-icons');
+
 function escapeHtml(value) {
     return String(value || '')
         .replace(/&/g, '&amp;')
@@ -27,9 +29,9 @@ function renderProjectSidebarNav(projectNav) {
     return `        <li class="project-nav-selector">
           <details>
             <summary aria-current="page">
-              <i class="bi bi-grid navicon" aria-hidden="true"></i>
+              ${renderSiteIcon('grid', { className: 'navicon' })}
               <span class="project-selector-copy"><small>Switch project</small><strong>${escapeHtml(currentItem.label)}</strong></span>
-              <i class="bi bi-chevron-down project-selector-toggle" aria-hidden="true"></i>
+              ${renderSiteIcon('chevron-down', { className: 'project-selector-toggle' })}
             </summary>
             <div class="project-selector-options">
 ${items}
@@ -40,11 +42,11 @@ ${items}
 
 function renderProjectNavItems(projectNav) {
     const projectSidebarNav = renderProjectSidebarNav(projectNav);
-    return `        <li><a href="../../#home"><i class="bi bi-house navicon"></i>Home</a></li>
-        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Projects</a></li>
+    return `        <li><a href="../../#home">${renderSiteIcon('house', { className: 'navicon' })}Home</a></li>
+        <li><a href="../../#portfolio" class="active">${renderSiteIcon('images', { className: 'navicon' })} Projects</a></li>
 ${projectSidebarNav}
-        <li><a href="../../blogs/"><i class="bi bi-keyboard navicon"></i> Blog</a></li>
-        <li><a href="../../#about"><i class="bi bi-person navicon"></i> About</a></li>`;
+        <li><a href="../../blogs/">${renderSiteIcon('keyboard', { className: 'navicon' })} Blog</a></li>
+        <li><a href="../../#about">${renderSiteIcon('person', { className: 'navicon' })} About</a></li>`;
 }
 
 function renderProjectPager(projectNav) {
@@ -52,13 +54,13 @@ function renderProjectPager(projectNav) {
         return '';
     }
 
-    return `<div class="container project-page-nav">
+    return `<div class="portfolio-shell project-page-nav">
         <a class="project-page-nav-link project-page-nav-prev" href="../${escapeHtml(projectNav.previous.slug)}/">
-          <span class="project-page-nav-kicker"><i class="bi bi-arrow-left"></i> Previous Project</span>
+          <span class="project-page-nav-kicker">${renderSiteIcon('arrow-left')} Previous Project</span>
           <strong>${escapeHtml(projectNav.previous.label)}</strong>
         </a>
         <a class="project-page-nav-link project-page-nav-next" href="../${escapeHtml(projectNav.next.slug)}/">
-          <span class="project-page-nav-kicker">Next Project <i class="bi bi-arrow-right"></i></span>
+          <span class="project-page-nav-kicker">Next Project ${renderSiteIcon('arrow-right')}</span>
           <strong>${escapeHtml(projectNav.next.label)}</strong>
         </a>
       </div>`;
@@ -76,10 +78,10 @@ function renderProjectHero(project) {
     const heroTitle = project.heroTitle || title;
     const subtitles = Array.isArray(project.subtitles) ? project.subtitles : [];
 
-    return `      <div class="container project-hero-shell">
+    return `      <div class="portfolio-shell project-hero-shell">
         <div class="project-hero-header">
           <span class="project-hero-kicker">Project Case Study</span>
-          <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline">${heroTitle}</span></h1>
+          <h1><span class="text-gradient">${heroTitle}</span></h1>
           ${subtitles.length ? `<div class="project-hero-meta">${subtitles.map((subtitle) => `<span>${escapeHtml(subtitle)}</span>`).join('')}</div>` : ''}
         </div>
       </div>`;
@@ -109,9 +111,9 @@ function renderCaseStudyDetailsInner(project, contentHtml, projectNav = null) {
 
     return `${renderProjectHero(project)}
 
-      <div class="container portfolio-details-container col-11 project-case-study-overview">
-        <div class="row gy-4">
-          <div class="col-lg-8">
+      <div class="portfolio-shell portfolio-details-container project-case-study-overview project-overview-shell">
+        <div class="project-overview-layout">
+          <div class="project-overview-copy">
             <div class="portfolio-description project-overview">
               <h2>Project Overview</h2>
               ${overview.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('\n              ')}
@@ -123,7 +125,7 @@ ${contributions.map((contribution) => `                  <li>${escapeHtml(contri
               </div>` : ''}
             </div>
           </div>
-          <div class="col-lg-4">
+          <div class="project-overview-meta">
             <aside class="portfolio-info">
               <h3>Project Details</h3>
               <ul>
@@ -134,7 +136,7 @@ ${details.map(renderProjectDetailItem).join('\n')}
         </div>
       </div>
 
-      <div class="container col-11 project-case-study-shell">
+      <div class="portfolio-shell project-case-study-shell">
         <article class="portfolio-description project-case-study-article">
 ${contentHtml}
         </article>
@@ -189,13 +191,12 @@ function renderProjectPage({ project, contentHtml, projectNav = null }) {
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet">
-
+  <script src="../../assets/js/site-icons.js"></script>
   <script src="../../js/sidebar-controller.js"></script>
   <link href="../../assets/css/portfolio.css" rel="stylesheet">
   <link href="../../assets/css/project-detail.css" rel="stylesheet">
   <link href="/blogs/css/scroll-progress.css" rel="stylesheet">
+  <link href="../../assets/css/site-icons.css" rel="stylesheet">
 ${mathRuntime}
   <link href="../../css/sidebar-nav.css" rel="stylesheet">
 
@@ -209,20 +210,20 @@ ${mathRuntime}
 </head>
 
 <body class="portfolio-details-page">
-  <header id="header" class="header dark-background d-flex flex-column">
+  <header id="header" class="header dark-background">
     <div class="profile-img">
-      <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="img-fluid rounded-circle">
+      <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="sidebar-profile-image">
     </div>
 
-    <a href="../../" class="logo d-flex align-items-center justify-content-center">
+    <a href="../../" class="logo">
       <span class="sitename">Hwan Heo</span>
     </a>
 
-    <div class="social-links text-center">
-      <a href="https://github.com/hwanhuh" class="github" aria-label="GitHub"><i class="bi bi-github" aria-hidden="true"></i></a>
-      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin" aria-label="LinkedIn"><i class="bi bi-linkedin" aria-hidden="true"></i></a>
-      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram" aria-label="Google Scholar"><i class="bi bi-mortarboard-fill" aria-hidden="true"></i></a>
-      <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus" aria-label="Email"><i class="bi bi-envelope-fill" aria-hidden="true"></i></a>
+    <div class="social-links">
+      <a href="https://github.com/hwanhuh" class="github" aria-label="GitHub">${renderSiteIcon('github')}</a>
+      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin" aria-label="LinkedIn">${renderSiteIcon('linkedin')}</a>
+      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram" aria-label="Google Scholar">${renderSiteIcon('mortarboard-fill')}</a>
+      <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus" aria-label="Email">${renderSiteIcon('envelope-fill')}</a>
     </div>
 
     <nav id="navmenu" class="navmenu">
@@ -234,7 +235,7 @@ ${renderProjectNavItems(projectNav)}
 
   <main class="main">
     <div class="page-title dark-background">
-      <div class="container">
+      <div class="portfolio-shell">
         <nav class="breadcrumbs" aria-label="Breadcrumb">
           <ol>
             <li><a href="../../">Home</a></li>
@@ -249,19 +250,18 @@ ${detailsInner}
     </section>
   </main>
 
-  <footer id="footer" class="footer position-relative light-background">
-    <div class="container">
-      <div class="copyright text-center">
-        <p>© <span>Copyright</span> <strong class="px-1 sitename">Hwan Heo</strong> <span>All Rights Reserved</span></p>
+  <footer id="footer" class="footer light-background">
+    <div class="portfolio-shell">
+      <div class="copyright">
+        <p>© <span>Copyright</span> <strong class="project-footer-owner sitename">Hwan Heo</strong> <span>All Rights Reserved</span></p>
       </div>
     </div>
   </footer>
 
-  <button id="scroll-top" class="scroll-top project-scroll-top d-flex align-items-center justify-content-center" type="button" aria-label="Back to top">
-    <i class="bi bi-arrow-up" aria-hidden="true"></i>
+  <button id="scroll-top" class="scroll-top project-scroll-top" type="button" aria-label="Back to top">
+    ${renderSiteIcon('arrow-up')}
   </button>
 
-  <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../../assets/js/main.js"></script>
   <script src="/blogs/js/scroll-progress.js"></script>
 </body>

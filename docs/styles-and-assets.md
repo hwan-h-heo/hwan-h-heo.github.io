@@ -6,25 +6,65 @@ The deployed site has two independent style surfaces.
 
 - [`portfolio-design-language.md`](portfolio-design-language.md) defines the
   visual grammar and review rules for portfolio-facing UI.
-- `assets/css/portfolio.css` is the shared entry point for the portfolio home and current project pages.
-- `blogs/css/blog.css` contains the reduced framework surface and shared blog components.
+- `assets/css/portfolio.css` is the framework-free shared entry point for the portfolio home and current project pages. It owns the document reset, the responsive `portfolio-shell`, and shared portfolio/sidebar foundations.
+- `assets/css/project-detail.css` owns project-page layout and content components, including the project overview columns and responsive media treatments.
+- `blogs/css/blog.css` owns the framework-free blog shell, responsive reading layout, and shared blog components.
 - `blogs/css/typography.css` owns blog type and article reading styles.
 - `blogs/css/sidebar.css` owns the blog sidebar.
 - `blogs/css/post.css` owns generated post-only and rich-content components.
 - `blogs/css/code-copy.css` and `blogs/css/scroll-progress.css` are loaded only when those post features are enabled.
 - `blogs/editor/editor.css` is private to the local blog editor.
+- `assets/css/site-icons.css`, `assets/js/site-icons.js`, and
+  `assets/icons/site-icons.svg` provide the shared first-party SVG icon
+  surface. Use `SiteIcons.render()` for generated markup and `SiteIcons.set()`
+  for state changes; do not introduce icon-font classes or a second icon
+  runtime.
 
 Keep selectors in the narrowest stylesheet that owns the markup. Do not add a second
 site-wide entry point or restore the retired `used.css`, `main.css`,
 `project-legacy.css`, `blog_post_specific.css`, `blog_style.css`, or
 `styles.css` paths.
 
+Post link-copy controls are generated once by `blogs/build-static.js`. Do not
+embed `copyButton` or `myshare_modal` markup in post Markdown; the content check
+rejects those legacy copies. Hand-authored table-of-contents markup remains
+supported for posts whose curated hierarchy differs from the generated heading
+outline.
+
 ## Vendor files
 
-`assets/vendor/` contains only the browser build that the site loads for each
-library. Do not copy whole package distributions into this directory. In
-particular, source maps, RTL variants, CommonJS/ESM builds, and unminified
-duplicates should stay in package caches rather than the deployment tree.
+`assets/vendor/` has no tracked runtime files. The portfolio, blog shell,
+post interactions, and shared icons do not load a third-party UI framework or
+icon font. Do not restore a site-wide vendor bundle for layout, components, or
+utilities.
+
+The 3D viewer is the separate exception for non-UI libraries. During a build,
+the pinned packages under `blogs/node_modules/` are copied selectively into
+`blogs/dist/vendor/three/` and `blogs/dist/vendor/tween/`. These generated files
+are not authored deployment assets and must not be edited or committed.
+
+The site icon sprite contains only the selected upstream SVG paths needed by
+the UI and has no runtime package dependency. Keep the accompanying MIT
+license at `assets/icons/LICENSE.site-icons.txt`; when adding an icon,
+regenerate the selected sprite with `scripts/build-site-icon-sprite.js` and
+verify every `<use>` fragment against a real symbol.
+
+The sprite generator intentionally takes an extracted upstream icon directory
+instead of adding a package to the runtime dependency graph. To reproduce the
+current 1.11.3 source set, use a temporary npm package extraction:
+
+```bash
+icon_tmp_dir="$(mktemp -d)"
+npm pack bootstrap-icons@1.11.3 --pack-destination "$icon_tmp_dir"
+tar -xzf "$icon_tmp_dir/bootstrap-icons-1.11.3.tgz" -C "$icon_tmp_dir"
+node scripts/build-site-icon-sprite.js "$icon_tmp_dir/package/icons" assets/icons/site-icons.svg
+npm run build
+npm run check:legacy-ui
+```
+
+Keep the version in the sprite provenance comment aligned with the extracted
+package and retain its matching `LICENSE.site-icons.txt`. The temporary package
+is a maintenance input only; do not add it to either `package.json`.
 
 ## Media lifecycle
 
@@ -77,6 +117,11 @@ npm run audit:assets
 npm run check:assets
 npm run build
 ```
+
+Run `npm run check:legacy-ui` after the build whenever shared markup, styles,
+scripts, or icons change. The check scans authored runtime files and generated
+output, while narrowly allowing the icon provenance/license and the editor's
+initial-data API terminology.
 
 The static asset audit is intentionally conservative: it reports a file only
 when its filename appears nowhere in current tracked source. Generated output

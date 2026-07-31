@@ -14,9 +14,12 @@
     "check:content": "node scripts/check-content.js",
     "check:assets": "node scripts/check-assets.js",
     "audit:assets": "node scripts/audit-static-assets.js",
+    "check:legacy-ui": "node scripts/check-legacy-ui.js",
     "check:render": "node scripts/check-rendered-site.js",
+    "check:ui": "node scripts/check-ui-regression.js",
+    "capture:ui": "node scripts/check-ui-regression.js --screenshots-dir=artifacts/ui-regression",
     "validate:seo": "node scripts/validate-seo-output.js",
-    "verify": "npm run check:content && npm run check:assets && npm run audit:assets && npm run build && npm run validate:seo && npm run check:render",
+    "verify": "npm run check:content && npm run check:assets && npm run audit:assets && npm run build && npm run validate:seo && npm run check:legacy-ui && npm run check:render && npm run check:ui",
     "verify:production": "node scripts/check-rendered-site.js --production",
     "freeze:routes": "node scripts/freeze-route-compatibility.js"
   },

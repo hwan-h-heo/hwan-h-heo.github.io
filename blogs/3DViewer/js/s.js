@@ -5,6 +5,7 @@ import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
+const icons = window.SiteIcons;
 // If using Tween.js, make sure it's loaded globally or imported
 // import * as TWEEN from '@tweenjs/tween.js'; // Example import
 
@@ -49,6 +50,15 @@ class SimpleModelViewer extends HTMLElement {
                     /* Style your fullscreen button */
                     margin-left: 5px; /* Example */
                 }
+                .site-icon {
+                    display: inline-block;
+                    width: 1em;
+                    height: 1em;
+                    margin: 0;
+                    overflow: visible;
+                    fill: currentColor;
+                    vertical-align: -0.125em;
+                }
                  #errorDisplay {
                     position: absolute;
                     bottom: 10px;
@@ -64,7 +74,7 @@ class SimpleModelViewer extends HTMLElement {
             </style>
             <div class="controls">
                  <div class="right-ui-panel">
-                    <button id="togglePanelBtn" style="width:100%" title="Toggle Panel"><i class="bi bi-caret-right"></i></button>
+                    <button id="togglePanelBtn" style="width:100%" title="Toggle Panel" aria-label="Toggle panel">${icons.render('caret-right')}</button>
                     <div id="panelContent" style="display: none;">
                         <!-- ... (Tabs: Render, Control, Edit) ... -->
                          <div id="render-tab-content" class="tab-content" style="display: block;">
@@ -72,11 +82,7 @@ class SimpleModelViewer extends HTMLElement {
                             <fieldset style="margin-top: 0.5rem;">
                                 <legend style="font-size: 0.8rem;"><strong>Util</strong></legend>
                                 <!-- ... other buttons ... -->
-                                <button id="fullscreenBtn" title="Toggle Fullscreen (F)">
-                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-fullscreen" viewBox="0 0 16 16">
-                                        <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5M.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5"/>
-                                     </svg>
-                                </button>
+                                <button id="fullscreenBtn" title="Toggle Fullscreen (F)" aria-label="Toggle fullscreen">${icons.render('fullscreen')}</button>
                                 <!-- ... other buttons ... -->
                             </fieldset>
                             <!-- ... -->
@@ -480,11 +486,11 @@ class SimpleModelViewer extends HTMLElement {
          if (show) {
              controls.style.width = '25rem'; // Or use a CSS class
              content.style.display = 'block';
-             button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16"><path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/></svg>`; // Pointing Left
+             button.innerHTML = icons.render('caret-right-fill');
          } else {
              controls.style.width = '4rem'; // Or use a CSS class
              content.style.display = 'none';
-             button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left-fill" viewBox="0 0 16 16"><path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/></svg>`; // Pointing Right
+             button.innerHTML = icons.render('caret-left-fill');
          }
      }
 
@@ -908,13 +914,7 @@ class SimpleModelViewer extends HTMLElement {
         // Update button appearance if needed
         const fsButton = this.shadowRoot.querySelector('#fullscreenBtn');
          // Simple toggle: change icon or style
-        fsButton.innerHTML = this.state.isFullscreen ? `
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-fullscreen-exit" viewBox="0 0 16 16">
-              <path d="M5.5 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 1 .5-.5m5 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 1 .5-.5m-5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 1 .5-.5m5 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 1 .5-.5"/>
-            </svg>` : `
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-fullscreen" viewBox="0 0 16 16">
-               <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5M.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5"/>
-            </svg>`;
+        fsButton.innerHTML = icons.render(this.state.isFullscreen ? 'fullscreen-exit' : 'fullscreen');
         // Crucially, trigger a resize after entering/exiting fullscreen
         // Use setTimeout to allow the browser to settle dimensions
         setTimeout(() => this.resizeRenderer(), 100);

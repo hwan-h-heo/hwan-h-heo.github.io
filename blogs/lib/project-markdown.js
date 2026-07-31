@@ -106,11 +106,11 @@ function ensureLazyImageSource(attrs) {
 function enhanceProjectMedia(html) {
     return String(html || '')
         .replace(/<img\b([^>]*)>/gi, (match, attrs) => {
-            const nextAttrs = ensureLazyImageSource(mergeClassAttribute(attrs, 'img-fluid'));
+            const nextAttrs = ensureLazyImageSource(mergeClassAttribute(attrs, 'project-media'));
             return `<img${nextAttrs}>`;
         })
         .replace(/<video\b([^>]*)>/gi, (match, attrs) => {
-            let nextAttrs = mergeClassAttribute(attrs, 'img-fluid');
+            let nextAttrs = mergeClassAttribute(attrs, 'project-media');
             nextAttrs = mergeClassAttribute(nextAttrs, 'project-video')
                 .replace(/\sstyle=["'][^"']*(?:width|max-width)[^"']*["']/gi, '');
             if (!/\splaysinline\b/i.test(nextAttrs)) {

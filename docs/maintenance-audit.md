@@ -4,6 +4,48 @@ Date: 2026-06-26
 
 This audit documents the current repository before major refactor work. It is evidence for `docs/refactor-guide.md` Phase 1 and should be updated when the implementation changes meaningful build, routing, content, editor, asset, or deployment behavior.
 
+## 2026-07-31 implementation result
+
+The remainder of this document is the dated Phase 1 snapshot. The current
+implementation supersedes its proposed validation and UI-asset work as
+follows:
+
+- The public UI is plain HTML, CSS, and JavaScript with component-owned
+  portfolio, project, blog, post, editor, and shared-sidebar styles. It has no
+  runtime UI framework, animation-on-scroll library, grid/utility compatibility
+  layer, or icon font.
+- Shared interface icons are 68 symbols in
+  `assets/icons/site-icons.svg`, styled by `assets/css/site-icons.css` and
+  rendered or updated through `assets/js/site-icons.js`. The selected upstream
+  paths retain their MIT license and reproducible generator; they add no
+  browser or npm runtime dependency.
+- Blog tabs, mobile navigation, disclosures, the image lightbox, theme and
+  language toggles, link-copy feedback, and scroll state are first-party
+  interactions. Post share controls are injected exactly once by the static
+  build. A post may keep a hand-authored TOC; otherwise the build generates one
+  from its heading outline.
+- `assets/vendor/` has no tracked runtime files. Pinned Three.js and Tween.js
+  builds for the 3D viewer are copied from `blogs/node_modules/` into generated
+  `blogs/dist/vendor/` output only.
+- The current metadata contains 26 published posts and 43 language-specific
+  post pages, six series archives, nine tag archives, seven project pages, and
+  five shell/utility routes: 70 browser-checked public routes in total.
+- Root validation now includes `check:content`, `check:assets`, `audit:assets`,
+  the static build, SEO validation, `check:legacy-ui`, the all-route rendered
+  resource check, and a responsive interaction suite. `check:legacy-ui` scans
+  authored runtime files and `blogs/dist` after a build, rejects retired UI
+  dependencies and class tokens, and validates sprite hrefs.
+- The build excludes editor drafts, draft assets, and project snapshots from
+  deploy output. Generated `blogs/dist/` and project `index.html` files remain
+  build artifacts and must not be edited by hand.
+
+The only retained runtime-source uses of the old library name are
+provenance/license for the selected SVG paths and the editor's "bootstrap"
+initial-data/API term; the latter is not a frontend dependency. Historical and
+reproduction references in documentation are intentionally descriptive.
+Statements below describe the repository as it existed on the original audit
+date, not the current UI.
+
 ## Scope Checked
 
 Checked current repository structure, root and blog package scripts, portfolio home page, blog static build pipeline, site data loader/validator, blog list scripts, portfolio preview scripts, editor API behavior, project-page generation, and asset reference patterns.

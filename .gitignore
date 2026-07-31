@@ -4,3 +4,4 @@ blogs/editor/draft-assets/
 projects/*/index.html
 node_modules/
 blogs/node_modules/
+/artifacts/ui-regression/

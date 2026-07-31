@@ -3,21 +3,6 @@ date: August 23, 2024
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<button id="copyButton">
-    <i class="bi bi-share-fill"></i>
-</button>
-
-<div id="myshare_modal" class="share_modal">
-    <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
-        <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
-        </div>
-    </div>
-</div>
-
-
 <nav class="toc">
     <ul>
         <li>
@@ -87,7 +72,7 @@ author: Hwan Heo
             These errors complicate achieving high-quality results, even when modeling non-pinhole camera types.
         </p>
         <figure>
-            <img class="img-fluid" src="./240823_grt/assets/cam_model.png" width="85%">
+            <img class="post-media" src="./240823_grt/assets/cam_model.png" width="85%">
             <figcaption style="text-align: center; font-size: 15px;"> Inflexibility of 3D GS with Diverse Camera Models, source: <span style="text-decoration: underline;"><a href="https://letianhuang.github.io/op43dgs/">Optimal GS</a></span> </figcaption>
         </figure>
     </li>
@@ -97,7 +82,7 @@ author: Hwan Heo
             Unlike NeRF, which utilizes MLPs and exhibits a degree of robustness against calibration discrepancies between images, 3D GS relies on explicit geometric primitives. This reliance renders 3D GS highly sensitive to variations in image quality, including issues such as motion blur and rolling shutter effects, which can significantly degrade the final output.
         </p>
         <figure>
-            <img class="img-fluid" src="./240823_grt/assets/cap.png" width="85%">
+            <img class="post-media" src="./240823_grt/assets/cap.png" width="85%">
             <figcaption style="text-align: center; font-size: 15px;"> <strong>Left</strong>: GT,  <strong>Right</strong>: trained 3D GS on motion blurred scene, <br/> source: <span style="text-decoration: underline;"><a href="https://benhenryl.github.io/Deblurring-3D-Gaussian-Splatting/">Deblurring 3D GS</a></span> </figcaption>
         </figure>
     </li>
@@ -107,7 +92,7 @@ author: Hwan Heo
             Another challenge facing 3D GS is its inability to incorporate physically-based rendering (PBR) effects. Since 3D GS does not adhere to the principles of PBR, accurately modeling lighting and reflection effects within a scene remains problematic. This limitation restricts the realism and applicability of 3D GS in scenarios where accurate light interaction is critical.
         </p>
         <figure>
-            <img class="img-fluid" src="./240823_grt/assets/ref.png" width="70%">
+            <img class="post-media" src="./240823_grt/assets/ref.png" width="70%">
             <figcaption style="text-align: center; font-size: 15px;"> Left: GT, Right: 3D GS, source: <span style="text-decoration: underline;"><a href="https://gapszju.github.io/3DGS-DR/">3D GS-DR</a></span> </figcaption>
         </figure>
     </li>
@@ -152,20 +137,20 @@ rgb[idx * C + 2] = result.z;</code></pre>
 
 <h2 id="method"> 3. 3D Gaussian Ray Tracing </h2>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig1.png" width="100%" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#fig1_modal">
+    <button class="post-image-lightbox-trigger" type="button" data-image-lightbox-target="#fig1-lightbox" aria-controls="fig1-lightbox" aria-haspopup="dialog" aria-label="Enlarge Figure 1: Method Overview">
+        <img class="post-media" src="./240823_grt/assets/fig1.png" width="100%" alt="3D Gaussian Ray Tracing method overview">
+    </button>
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 1.</strong> Method Overview</figcaption>
 </figure>
-<!-- Modal Structure -->
-<div class="modal fade" id="fig1_modal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body">
-                <!-- Original size image -->
-                <img src="./240823_grt/assets/fig1.png" alt="Full Size Image" width="100%" class="img-fluid">
-            </div>
-        </div>
+<dialog class="post-image-lightbox" id="fig1-lightbox" aria-label="Figure 1: Method Overview">
+    <div class="post-image-lightbox-frame">
+        <button class="post-image-lightbox-close" type="button" data-image-lightbox-close aria-label="Close enlarged image">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-x-lg"></use></svg>
+        </button>
+        <img src="./240823_grt/assets/fig1.png" alt="3D Gaussian Ray Tracing method overview" class="post-image-lightbox-image">
     </div>
-</div>
+</dialog>
+<span class="post-image-lightbox-layout-reserve" aria-hidden="true"></span>
 <p class="lang eng">To effectively design a ray tracer tailored for 3D Gaussian Splatting, two key elements are essential:</p>
 <ol class="lang eng">
     <li><p><strong>BVH with Appropriate Proxy Primitives</strong><br/>Use Bounding Volume Hierarchy (BVH) to accelerate hit traversal by defining proxy primitives that encapsulate 3D Gaussians accurately.</p>
@@ -178,14 +163,14 @@ rgb[idx * C + 2] = result.z;</code></pre>
 <p class="lang eng">Let&#39;s start with BVH (<span style="text-decoration: underline;"><a href="https://en.wikipedia.org/wiki/Bounding_volume_hierarchy">Bounding Volume Hierarchy</a></span>).</p>
 
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig3.png" width="90%">
+    <img class="post-media" src="./240823_grt/assets/fig3.png" width="90%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 2.</strong> Bounding Volume Hierarchy</figcaption>
 </figure>
 <p class="lang eng">BVH is a hierarchical tree structure used to efficiently divide space for rendering and ray tracing. In this structure, parent nodes consist of larger bounding volumes that encompass smaller leaf nodes, facilitating efficient space partitioning and exploration.</p> 
 <p class="lang eng">The main objective of BVH in this context is to define a proxy primitive that accurately encapsulates 3D Gaussians and to use this proxy geometry to construct a BVH. This hierarchy then guides the ray traversal process by determining which 3D Gaussians should be considered for intersection tests.</p>
 
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig2.png" width="65%">
+    <img class="post-media" src="./240823_grt/assets/fig2.png" width="65%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 3.</strong> bounding primitive </figcaption>
 </figure>
 <p class="lang eng">NVIDIA OptiX, a common framework for ray tracing, offers three predefined proxy primitive types: triangles, spheres, and axis-aligned bounding boxes (AABBs). However, none of these are ideal for 3D Gaussians. For instance, using AABBs would simplify calculations but would lead to many false-positive proxy hits, as AABBs cannot tightly enclose the Gaussian distribution, leading to inefficiencies in ray tracing (see Fig. 4)</p>
@@ -193,7 +178,7 @@ rgb[idx * C + 2] = result.z;</code></pre>
 
 <h4 id="stretched-polyhedron-proxy"> Stretched Polyhedron Proxy</h4>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig4.png" width="90%">
+    <img class="post-media" src="./240823_grt/assets/fig4.png" width="90%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 4.</strong> Proxy Primitives</figcaption>
 </figure>
 <p class="lang eng">After experimental evaluations, the authors found that using an icosahedron—a polyhedron with 20 triangular faces—was the most appropriate proxy geometry for 3D Gaussians.</p>
@@ -241,7 +226,7 @@ $$</p>
 
 <h3 id="ray-tracing-renderer"> 3.2. Ray Tracing Renderer</h3>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig5.png" width="100%">
+    <img class="post-media" src="./240823_grt/assets/fig5.png" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 5.</strong> Ray Tracing </figcaption>
 </figure>
 <p class="lang eng">For differentiable and efficient rendering in 3D GRT, the process involves sequentially rendering through a <em>next $k$ closest hit</em>. This approach helps in managing multiple semi-transparent particles along a single ray path. The rendering process is outlined as follows:</p>
@@ -258,7 +243,7 @@ $$</p>
 <p class="lang eng">The following diagram (referenced in the text) illustrates the ray tracing process of 3D GRT when $k=3$, showing how multiple particles are managed and rendered along a single ray.</p>
 
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig6.png" width="80%">
+    <img class="post-media" src="./240823_grt/assets/fig6.png" width="80%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 6. Next $k$ closest hit Ray Tracer:</strong> on each round of tracing, the next $k$ closest hit particles are collected and sorted into depth order along the ray, the radiance is computed in-order, and the ray is cast again to process the next chunk.  </figcaption>
 </figure>
 
@@ -271,7 +256,7 @@ $$</p>
 </div>
 <p> where $ \mathbf{o}_g = {\rm S^{-1}R^T}(\mathbf{o} - \mu),  d_g = {\rm S^{-1}R^T} \mathbf{d}$. </p>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/inter.png" width="40%">
+    <img class="post-media" src="./240823_grt/assets/inter.png" width="40%">
 </figure>
 
 <div class="lang eng">
@@ -316,11 +301,11 @@ $$</p>
 <p class="lang eng">The quantitative evaluations of 3D GRT indicate that there is almost no significant difference between the quantitative metrics of 3D GRT and other novel view synthesis (NVS) techniques. While the fps is slightly lower in comparison, 3D GS still achieves real-time performance.</p>
 
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig7.png" width="100%">
+    <img class="post-media" src="./240823_grt/assets/fig7.png" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 7.</strong> Quantitative Results </figcaption>
 </figure>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig8.png" width="70%">
+    <img class="post-media" src="./240823_grt/assets/fig8.png" width="70%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 8.</strong> Speed Comparison </figcaption>
 </figure>
 <br/>
@@ -334,7 +319,7 @@ $$</p>
 <p class="lang eng"> Experimental results support the design of the Ray Tracer, highlighting the importance of these parameters in achieving efficient and accurate rendering.</p>
 
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig9.png" width="100%">
+    <img class="post-media" src="./240823_grt/assets/fig9.png" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 9.</strong> Ablation Study </figcaption>
 </figure>
 <br/>
@@ -384,7 +369,7 @@ $$</p>
     the frames per second (fps) nearly double compared to the standard 3D Gaussian kernel.
 </p>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/kernel_qual.png" width="100%">
+    <img class="post-media" src="./240823_grt/assets/kernel_qual.png" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 10.</strong> Kernel Design Comparison </figcaption>
 </figure>
 <p class="lang eng">
@@ -395,7 +380,7 @@ $$</p>
 </p>
 
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/ray_hit.png" width="100%">
+    <img class="post-media" src="./240823_grt/assets/ray_hit.png" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 11.</strong> Ray hit count for left: 3D G, right: GG  </figcaption>
 </figure>
 
@@ -403,11 +388,11 @@ $$</p>
 <p class="lang eng">In addition to the quantitative analysis, the qualitative results demonstrate how this method effectively overcomes the limitations of rasterization.</p> 
 <p class="lang eng"> Specifically, the 3D GRT shows significant improvements in modeling and rendering, particularly in handling complex light effects across various camera models. This ability to accurately represent lighting and reflections, which are often challenging in rasterization-based techniques, demonstrates that the method could be highly effective in realistic rendering scenarios.</p>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig10.png" width="100%">
+    <img class="post-media" src="./240823_grt/assets/fig10.png" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 12.</strong> 3D GRT w/ various light effect </figcaption>
 </figure>
 <figure>
-    <img class="img-fluid" src="./240823_grt/assets/fig11.png" width="100%">
+    <img class="post-media" src="./240823_grt/assets/fig11.png" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 13.</strong> 3D GRT's reconstruction capability for non-pinhole camera </figcaption>
 </figure>
 <p class="lang eng">Overall, the combination of both quantitative and qualitative evaluations highlights the strengths of this new 3D GS approach, especially in terms of performance, memory efficiency, and the ability to handle complex visual effects.</p>

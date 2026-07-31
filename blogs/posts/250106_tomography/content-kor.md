@@ -3,25 +3,6 @@ date: January 06, 2025
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<!-- <div style="text-align: center;">
-    <button type="button" class="btn custom-btn" onclick="setLanguage('eng')" style="font-size: 13px;">eng</button>
-    |
-    <button type="button" class="btn custom-btn" onclick="setLanguage('kor')" style="font-size: 13px;">kor</button>
-</div> -->
-
-<button id="copyButton">
-    <i class="bi bi-share-fill"></i>
-</button>
-<div id="myshare_modal" class="share_modal">
-    <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
-        <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
-        </div>
-    </div>
-</div>
-
 <nav class="toc">
     <ul>
         <li><a href="#introduction">Introduction</a></li>
@@ -54,7 +35,7 @@ author: Hwan Heo
 <p class="lang kor" >이 글에서는 SAX-NeRF 에 대한 개인적인 review 를 통해 Neural Rendering, NeRF, GS 등의 저변에 깔린 직관에 대해서 기술해보도록 하겠다. 아울러 official viewer 가 없을 때 viser 로 간단한 web viewer 를 만드는 tip 에 대해서도 써보려 한다.</p>
 
 <h2 id="tomography-vs-photography">1. Tomography vs. Photography</h2>
-<img class="img-fluid" src="./250106_tomography/assets/image1.png" width="100%" alt="Tomography vs Photography" />
+<img class="post-media" src="./250106_tomography/assets/image1.png" width="100%" alt="Tomography vs Photography" />
 <h3 id="photography">1.1. Photography</h3>
 <p class="lang kor" >- <code>'본다'</code> 라는 행위는 물리학적으로 어떤 의미를 지닐까?</p>
 <p class="lang kor" >'본다'는 것은 광원에서 방출된 빛이 물체와 상호작용하여, 물체의 표면에서 특정 파장의 (or energy) 빛을 흡수하거나 반사하고, 흡수되지 않은 파장의 반사된 (reflection) 빛이 관찰자의 눈(또는 감지 장치)에 도달하여 시각적으로 인지되는 과정을 말한다.</p>
@@ -70,14 +51,14 @@ author: Hwan Heo
     <li>$c({\rm \textbf{r}}(t), {\rm \textbf{d}})$: 해당 지점에서 물체가 반사하는 빛의 색 (color). (d 는 방향성을 반영하기 위해 사용하는 view-dependent color.</li>
     <li>$T(t)$: 누적 투명도, 이전에 만난 물체가 광선을 차단했는지 (불투명) 또는 통과했는지 (투명).</li>
 </ul>
-<img class="img-fluid" src="./250106_tomography/assets/image2.png" alt="NeRF Rendering Equation" />
+<img class="post-media" src="./250106_tomography/assets/image2.png" alt="NeRF Rendering Equation" />
 <p class="lang kor" >이와 같이 NeRF 의 rendering equation 은 우리가 물체를 '본다'는 행위를 수식적으로 표현한 결과물이다. 물리적 빛-물체 상호작용 (흡수, 반사, 투명도 등) 의 모든 요소를 통합하여, NeRF는 광선 경로를 따라 누적된 빛의 기여를 계산해 최종적으로 이미지를 생성한다.</p>
-<img class="img-fluid" src="./250106_tomography/assets/image3.png" alt="NeRF Image Generation" />
+<img class="post-media" src="./250106_tomography/assets/image3.png" alt="NeRF Image Generation" />
 
 <h3 id="tomography">1.2. Tomography</h3>
 <p class="lang kor" >그렇다면 Neural Rendering 을 가시광 영역이 아닌 domain 에 적용하려면 어떻게 해야할까?</p>
 <p class="lang kor" >해당 domain 의 대표적이면서 대중적인 예시가 X-ray, CT 등으로 익숙한 Tomography 일 것이다. Tomgraphy 는 가시광선보다 파장이 짧은 (에너지가 큰) X-ray 를 사용하여 빛이 반사되기보다는, 물체를 <strong><em>투과 (penetration)</em></strong>하고, 빛의 세기가 물체 내부의 밀도에 의해 <strong><em>감쇠 (attenuation) </em></strong> 되는 과정을 기반으로 한다. 이 과정은 가시광선 기반의 Reflection과 대비되며, 빛이 물체의 뒤쪽에 맺히는 상 (intensity)을 분석하여 물체의 내부 구조를 재구성한다.</p>
-<img class="img-fluid" src="./250106_tomography/assets/image5.png" alt="Tomography Process" />
+<img class="post-media" src="./250106_tomography/assets/image5.png" alt="Tomography Process" />
 <p class="lang kor" >Tomography 에서 이러한 penetration, attenuation 과정을 modeling 하는 식은 <a href="https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law">Beer-Lambert Law</a> 로 표현되는데, 구체적으로는 다음과 같다.</p>
 <p class="lang kor" >
 $$ I_\text{gt}(\mathbf{r}) = I_o \cdot \exp \left ( - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt \right ) 
@@ -98,16 +79,16 @@ $$</p>
 <p class="lang kor" >Tomography 를 입력으로 하는 NeRF 를 reconstruction 하기 위해서는, 기존 emission-absorption ray casting 대신에 위의 Beer-Lambert Law 기반으로 rendering equation 을 대체해야 할 것이다.</p>
 <p class="lang kor" >최종적인 intensity rendering term 은 NeRF 에서처럼 discretized form 으로 다음과 같이 표현된다.</p>
 <p>$$ I_{pred}(\mathbf{r}) = I_0 \cdot \exp\left(-\sum_{i=1}^{N} \rho_i \delta_i\right) $$</p>
-<img class="img-fluid" src="./250106_tomography/assets/image6.png" alt="Tomography Intensity Rendering" />
+<img class="post-media" src="./250106_tomography/assets/image6.png" alt="Tomography Intensity Rendering" />
 
 <h2 id="modeling">2. Modeling</h2>
 <p class="lang kor" >다시 NeRF 로 돌아가보자. Hash Grid NeRF, TensoRF 등의 변형이 있지만, 기본적으로 NeRF 의 골자는 어떠한 3D scene 을 parameterize 해서 표현하자는 것이다.</p>
 <p class="lang kor" >이 parameterization 의 방법이 MLP 라면 NeRF 계열이, explicit 한 3D Gaussian, 2D Gaussian surfel 등을 사용하면 Gaussian Splatting 계열이 될 것이다.</p>
 <p class="lang kor" >일반적으로 이러한 parameter model 은 3D Cartessian Coordinate $(x,y,z)$ 을 입력으로 받아 그 점의 density 와 color $(\sigma, c)$ 를 출력하도록 modeling 된다.</p>
-<img class="img-fluid" src="./250106_tomography/assets/image7.png" alt="NeRF Modeling" />
+<img class="post-media" src="./250106_tomography/assets/image7.png" alt="NeRF Modeling" />
 <p class="lang kor" >하지만 Tomography 의 rendering equation 에서는 $(\sigma, c)$ 가 아닌 radiodensity $\rho$ 가 필요하므로, Tomography 에 NeRF 를 적용하려면, Photography 와 다른 방식으로 모델링해야 한다.</p>
 <p class="lang kor" >Beer-Lambert Law 를 바탕으로 수정된 Tomography 의 rendering equation 은 radiodensity $\rho$ 에만 dependent 하므로, Tomography-NeRF 또한 3D Cartessian Coordinate $(x,y,z)$ 을 입력으로 받아 $\rho$ 하나만을 출력하게 하는 구조로 바꿔주면 된다.</p>
-<img class="img-fluid" src="./250106_tomography/assets/image8.png" alt="Tomography NeRF Modeling" />
+<img class="post-media" src="./250106_tomography/assets/image8.png" alt="Tomography NeRF Modeling" />
 <p class="lang kor" >SAX-NeRF 에서는 이후 X-Ray 특성을 고려해서 MLP 를 적용하기보단, Transformer 로 바꿔주고 attention 안에서 ray 간 locality inductive bias 를 고려하는 설계 등을 제시하긴 한다. 하지만 크게 중요한 부분은 아니라고 생각해서 스킵하도록 하겠다. 궁금하면 논문을 참조하길 바란다.</p>
 
 <h2 id="quick-viewer-development-tip">3. Quick Viewer Development Tip</h2>
@@ -121,18 +102,14 @@ $$</p>
     <li>Rendering (rendering equation 적용)</li>
 </ol>
 <p class="lang kor" >대게의 경우 2), 3) 은 코드가 공개되어 있는 상태라면 참고해서 구현하는 것이 어렵지는 않다. 하지만 camera coordinate system 은 project 마다 다른 경우, 특히 OpenGL <-> OpenCV 의 coordinate system 이 달라서 오류가 나는 경우가 많으므로 구현하려는 project 에 맞춰서 ray 를 생성해야 한다.</p>
-<img class="img-fluid" src="./250106_tomography/assets/image9.png" alt="Coordinate Systems" />
+<img class="post-media" src="./250106_tomography/assets/image9.png" alt="Coordinate Systems" />
 <p class="lang kor" >또다른 문제는 1) 을 custom 하게 구현해서 원하는 대로 scene 을 컨트롤 하기가 좀 힘들다는데 있는데, 다행히도 NeRFStudio team 이 개발 중인 <a href="https://github.com/nerfstudio-project/viser">viser</a> 를 이용하면 이 부분을 굉장히 쉽게 해결할 수 있다. 예전에 개발했던 2D Gaussian Spaltting 용 viewer 도 이 viser 를 이용한 project 이다.</p>
 <p class="lang kor" >아래는 viser 를 이용해서 구현한 아주 간단한 SAX-NeRF viewer 이다. 아래 구현에서는 viser project 중에서도 minimal 한 feature 를 제공하고 잇는 <code>nerfview</code> package 를 이용하였다.</p>
-<div class="accordion accordion-flush" id="accordionFlushExample1">
-<div class="accordion-item">
-<h2 class="accordion-header">
-<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+<details class="code-disclosure">
+<summary class="code-disclosure-summary">
     <strong><em>viewer.py</em></strong>
-</button>
-</h2>
-<div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-<div class="accordion-body">
+</summary>
+<div class="code-disclosure-body">
 
 ```python
 from typing import Tuple
@@ -302,32 +279,26 @@ if __name__ == "__main__":
 ```
 
 </div>
-</div>
-</div>
-</div>
+</details>
 <br/>
 
 <p><strong>Captured Results:</strong></p>
-<img class="img-fluid" src="./250106_tomography/assets/viewer_capture.gif" alt="viewer capture" />
+<img class="post-media" src="./250106_tomography/assets/viewer_capture.gif" alt="viewer capture" />
 <p class="lang kor" >이처럼 간단한 코딩으로 새로운 NeRF / GS 모델에 대한 viewer 를 빠르게 만들 수 있다. 원래는 github 에 올릴까 하다가 너무 간단한 코딩이라 블로그에만 올리고 갈무리하려 한다.</p>
 
 <h3 id="marching-cube-extraction">3.2. Marching Cube Extraction</h3>
 <p class="lang kor" >또 하나 NeRF / GS scene 을 interactive 하게 확인하는 방법은, marching cube 등의 scalar field -> polygonal mesh 변환 알고리즘을 이용하는 것이다.</p>
-<img class="img-fluid" src="./250106_tomography/assets/image10.png" style="width: 70%;" alt="Marching Cubes" />
+<img class="post-media" src="./250106_tomography/assets/image10.png" style="width: 70%;" alt="Marching Cubes" />
 <p class="lang kor" >하지만 명심할 점은, 2D GS 또는 SDF 와 같이 surface reconstruction 을 위해 특별히 설계되지 않은 일반적인 NeRF/GS 모델은 conventional 한 mesh conversion 알고리즘과 완벽하게 호환되지 않을 수 있다는 것이다. 
     NeRF/GS 에서 얻은 density field 는 volumetric density 를 나타내기 때문에, 추출된 mesh 에 noise 가 많아 보이거나 isosurface 값을 신중하게 조정해야 할 수 있다.
 </p>
 <p class="lang kor" >어디까지나 참고로 활용해보면 좋을 것.</p>
 <p class="lang kor" >다음은 <code>scikit-image</code> 를 사용하여 SAX-NeRF 에서 간단한 mesh 를 생성하는 코드 snippet 의 예이다.</p>
-<div class="accordion accordion-flush" id="accordionFlushExample1">
-<div class="accordion-item">
-<h2 class="accordion-header">
-<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+<details class="code-disclosure">
+<summary class="code-disclosure-summary">
     <strong><em>marching_cube.py</em></strong>
-</button>
-</h2>
-<div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-<div class="accordion-body">
+</summary>
+<div class="code-disclosure-body">
 
 ```python
 
@@ -363,11 +334,9 @@ mesh.export("output.obj")
 ```
 
 </div>
-</div>
-</div>
-</div>
+</details>
 <br/>
-<img class="img-fluid" src="./250106_tomography/assets/foot_gif.gif" alt="foot capture" />
+<img class="post-media" src="./250106_tomography/assets/foot_gif.gif" alt="foot capture" />
 <h2 id="concluding-remarks">Concluding Remarks</h2>
 <p class="lang kor" >SAX-NeRF 를 살펴보면서, Neural Rendering 의 기본 원리가 어떻게 기존 photography 영역을 넘어서 적용될 수 있는지 확인해 보았다. 
     Tomography 에서 Beer-Lambert Law 와 같은 기본적인 물리적 현상을 이해함으로써, 다양한 이미징 방식에 맞춰 rendering equation 과 모델 구조를 수정할 수 있음을 알 수 있었다. 

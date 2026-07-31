@@ -1,4 +1,7 @@
 (function() {
+    const icons = typeof window === 'undefined'
+        ? require('../assets/js/site-icons')
+        : window.SiteIcons;
     function escapeHtml(value) {
         return String(value || '')
             .replace(/&/g, '&amp;')
@@ -29,7 +32,7 @@
             : '';
 
         return `
-            <img class="img-fluid" src="${escapeHtml(project.image)}"${gifAttrs} alt="${escapeHtml(project.alt || project.title)}">
+            <img src="${escapeHtml(project.image)}"${gifAttrs} alt="${escapeHtml(project.alt || project.title)}">
         `;
     }
 
@@ -43,7 +46,7 @@
     function renderProject(project, index = 0) {
         const selected = isSelectedProject(project, index);
         const targetAttrs = project.external ? ' target="_blank" rel="noopener noreferrer"' : '';
-        const externalIcon = project.external ? ' <i class="bi bi-box-arrow-up-right"></i>' : '';
+        const externalIcon = project.external ? ` ${icons.render('box-arrow-up-right')}` : '';
         const eyebrowHtml = project.typeLabel
             ? `<span class="portfolio-project-eyebrow">${escapeHtml(project.typeLabel)}</span>`
             : '';
@@ -79,12 +82,12 @@
     }
 
     function renderLink(link) {
-        const icon = link.icon || 'bi-link';
+        const icon = link.icon || 'link';
         const external = /^https?:\/\//.test(link.url || '');
         const targetAttrs = external ? ' target="_blank" rel="noopener noreferrer"' : '';
         return `
             <a class="portfolio-paper-link" href="${escapeHtml(link.url)}"${targetAttrs}>
-                <i class="bi ${escapeHtml(icon)}" aria-hidden="true"></i>
+                ${icons.render(icon)}
                 ${escapeHtml(link.label)}
             </a>
         `;

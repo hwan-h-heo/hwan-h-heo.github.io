@@ -3,20 +3,6 @@ date: September 17, 2024
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<button id="copyButton">
-    <i class="bi bi-share-fill"></i>
-</button>
-
-<div id="myshare_modal" class="share_modal">
-    <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
-        <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
-        </div>
-    </div>
-</div>
-
 <nav class="toc">
     <ul>
         <li>
@@ -80,15 +66,12 @@ You can easily modify the canvas size to suit your needs.
 <br/>
 The code below handles all of these details:
 </p>
-<div class="accordion accordion-flush" id="accordionFlushExample">
-<div class="accordion-item">
-<h2 class="accordion-header">
-<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+<div class="code-disclosure-frame">
+<details class="code-disclosure">
+<summary class="code-disclosure-summary">
     <strong><em>Show Code!</em></strong>
-</button>
-</h2>
-<div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-<div class="accordion-body">
+</summary>
+<div class="code-disclosure-body">
 
 ```javascript
 <script type="module">
@@ -164,8 +147,7 @@ function update() {
 </script>;
 ```
 </div>
-</div>
-</div>
+</details>
 <p>
     Tip.
 </p>
@@ -197,3 +179,4 @@ function update() {
     <br/><br/>
     That’s all for now!
 </p>
+</div>

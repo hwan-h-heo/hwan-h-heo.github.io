@@ -1,0 +1,13 @@
+.site-icon {
+  display: inline-block;
+  width: 1em;
+  min-width: 0;
+  max-width: none;
+  height: 1em;
+  margin: 0;
+  overflow: visible;
+  fill: currentColor;
+  line-height: 1;
+  vertical-align: -0.125em;
+  transition: none;
+}

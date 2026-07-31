@@ -3,25 +3,6 @@ date: January 06, 2025
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<!-- <div style="text-align: center;">
-    <button type="button" class="btn custom-btn" onclick="setLanguage('eng')" style="font-size: 13px;">eng</button>
-    |
-    <button type="button" class="btn custom-btn" onclick="setLanguage('kor')" style="font-size: 13px;">kor</button>
-</div> -->
-
-<button id="copyButton">
-    <i class="bi bi-share-fill"></i>
-</button>
-<div id="myshare_modal" class="share_modal">
-    <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
-        <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
-        </div>
-    </div>
-</div>
-
 <nav class="toc">
     <ul>
         <li><a href="#introduction">Introduction</a></li>
@@ -53,7 +34,7 @@ author: Hwan Heo
 <p class="lang eng">Unlike photography, which captures the reflection of visible light, tomography constructs images based on signals that have penetrated a substance. In tracing the authors' investigative process of how to adapt the standard Neural Rendering setting for Tomography, I was able to deepen my abstract intuition and comprehension of Neural Rendering.</p>
 <p class="lang eng">In this post, I aim to elucidate the foundational intuitions behind Neural Rendering, NeRF, and GS through a personal review of SAX-NeRF. Additionally, I will offer insights into a technique for creating a simple web viewer using viser when an official viewer is unavailable.</p>
 <h2 id="tomography-vs-photography">1. Tomography vs. Photography</h2>
-<img class="img-fluid" src="./250106_tomography/assets/image1.png" width="100%" alt="Tomography vs Photography" />
+<img class="post-media" src="./250106_tomography/assets/image1.png" width="100%" alt="Tomography vs Photography" />
 <h3 id="photography">1.1. Photography</h3>
 <p class="lang eng">- What are the underlying physical principles of the act of <code>'seeing'</code>?</p>
 <p class="lang eng">'Seeing' physically denotes the process where light emitted from a source interacts with an object, causing the object's surface to absorb or reflect specific wavelengths (or energy) of light. The unabsorbed, reflected light then reaches the observer's eye (or detection device), leading to visual perception.</p>
@@ -68,14 +49,14 @@ author: Hwan Heo
     <li>$c({\rm \textbf{r}}(t), {\rm \textbf{d}})$: The color of the light reflected by the object at that point. (d is used to reflect view-dependent color.)</li>
     <li>$T(t)$: The accumulated transmittance, indicating whether previously encountered objects blocked (opaque) or allowed passage (transparent) of the ray.</li>
 </ul>
-<img class="img-fluid" src="./250106_tomography/assets/image2.png" alt="NeRF Rendering Equation" />
+<img class="post-media" src="./250106_tomography/assets/image2.png" alt="NeRF Rendering Equation" />
 <p class="lang eng">Thus, NeRF's rendering equation mathematically formalizes the process of visual object perception. By integrating all elements of the physical light-object interaction (absorption, reflection, transparency, etc.), NeRF calculates the cumulative contribution of light along the ray path to ultimately generate an image.</p>
-<img class="img-fluid" src="./250106_tomography/assets/image3.png" alt="NeRF Image Generation" />
+<img class="post-media" src="./250106_tomography/assets/image3.png" alt="NeRF Image Generation" />
 
 <h3 id="tomography">1.2. Tomography</h3>
 <p class="lang eng">So, what considerations are necessary for applying Neural Rendering to domains outside the visible light spectrum?</p>
 <p class="lang eng">A quintessential example in this domain is Tomography, including X-ray and CT scans. Tomography utilizes X-rays, which have shorter wavelengths (and higher energy) than visible light. Instead of reflection, the process is based on the <strong><em>penetration</em></strong> of X-rays through an object and the <strong><em>attenuation</em></strong> of the light's intensity by the object's internal density. This contrasts with the reflection-based nature of visible light, and the internal structure of the object is reconstructed by analyzing the intensity of the light that passes through and reaches the detector.</p>
-<img class="img-fluid" src="./250106_tomography/assets/image5.png" alt="Tomography Process" />
+<img class="post-media" src="./250106_tomography/assets/image5.png" alt="Tomography Process" />
 <p class="lang eng">In Tomography, this penetration and attenuation process is modeled by the <a href="https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law">Beer-Lambert Law</a>, which is specifically expressed as:</p>
 <p class="lang eng">$$ I_\text{gt}(\mathbf{r}) = I_o \cdot \exp \left ( - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt \right ) $$</p>
 <ul class="lang eng">
@@ -96,16 +77,16 @@ author: Hwan Heo
 $$ I_{pred}(\mathbf{r}) = I_0 \cdot \exp\left(-\sum_{i=1}^{N} \rho_i \delta_i\right) 
 $$
 </p>
-<img class="img-fluid" src="./250106_tomography/assets/image6.png" alt="Tomography Intensity Rendering" />
+<img class="post-media" src="./250106_tomography/assets/image6.png" alt="Tomography Intensity Rendering" />
 
 <h2 id="modeling">2. Modeling</h2>
 <p class="lang eng">Returning our focus to NeRF, while variations such as Hash Grid NeRF and TensoRF exist, the fundamental principle of NeRF is to parameterize and represent a 3D scene.</p>
 <p class="lang eng">When this parameterization is achieved through an MLP, it is classified within the NeRF family, whereas the utilization of explicit 3D Gaussians or 2D Gaussian surfels aligns it with the Gaussian Splatting methodology.</p>
 <p class="lang eng">Conventionally, these parameter models are designed to receive a 3D Cartesian Coordinate $(x,y,z)$ as input, subsequently producing the density and color $(\sigma, c)$ at the specified location.</p>
-<img class="img-fluid" src="./250106_tomography/assets/image7.png" alt="NeRF Modeling" />
+<img class="post-media" src="./250106_tomography/assets/image7.png" alt="NeRF Modeling" />
 <p class="lang eng">However, the rendering equation pertinent to Tomography necessitates the radiodensity $\rho$ as opposed to $(\sigma, c)$. Consequently, the application of NeRF to Tomography mandates a distinct modeling strategy compared to that employed in Photography.</p>
 <p class="lang eng">Given that the rendering equation for Tomography, adapted based on the Beer-Lambert Law, exhibits sole dependency on radiodensity $\rho$, a Tomography-NeRF model can be architected to accept a 3D Cartesian Coordinate $(x,y,z)$ as input and exclusively generate $\rho$ as the output.</p>
-<img class="img-fluid" src="./250106_tomography/assets/image8.png" alt="Tomography NeRF Modeling" />
+<img class="post-media" src="./250106_tomography/assets/image8.png" alt="Tomography NeRF Modeling" />
 <p class="lang eng">Subsequently, SAX-NeRF introduces an alternative design, favoring a Transformer architecture over an MLP to accommodate X-Ray specific attributes, and incorporating ray-wise locality inductive bias within the attention mechanism. However, considering this aspect to be of secondary importance to the central discussion, I will proceed without further elaboration. Readers seeking further details are encouraged to consult the original publication.</p>
 
 <h2 id="quick-viewer-development-tip">3. Quick Viewer Development Tip</h2>
@@ -118,18 +99,14 @@ $$
     <li>Rendering (applying the rendering equation).</li>
 </ol>
 <p class="lang eng">Typically, the implementation of elements 2) and 3) is less challenging, provided that the corresponding code is publicly accessible. However, camera coordinate systems can vary across projects, particularly between OpenGL and OpenCV, which often leads to errors. Therefore, it is crucial to generate rays specifically tailored to the project being implemented.</p>
-<img class="img-fluid" src="./250106_tomography/assets/image9.png" alt="Coordinate Systems" />
+<img class="post-media" src="./250106_tomography/assets/image9.png" alt="Coordinate Systems" />
 <p class="lang eng">Another challenge lies in the difficulty of custom implementing 1) to control the scene as desired. Fortunately, <a href="https://github.com/nerfstudio-project/viser">viser</a>, developed by the NeRFStudio team, offers a remarkably easy solution. A 2D Gaussian Splatting viewer I developed previously also utilized this viser project.</p>
 <p class="lang eng">Below is a very simple SAX-NeRF viewer implemented using viser. This implementation utilizes the <code>nerfview</code> package, which provides minimal features within the viser project.</p>
-<div class="accordion accordion-flush" id="accordionFlushExample1">
-<div class="accordion-item">
-<h2 class="accordion-header">
-<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+<details class="code-disclosure">
+<summary class="code-disclosure-summary">
     <strong><em>viewer.py</em></strong>
-</button>
-</h2>
-<div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-<div class="accordion-body">
+</summary>
+<div class="code-disclosure-body">
 
 ```python
 from typing import Tuple
@@ -299,32 +276,26 @@ if __name__ == "__main__":
 ```
 
 </div>
-</div>
-</div>
-</div>
+</details>
 <br/>
 
 <p><strong>Captured Results:</strong></p>
-<img class="img-fluid" src="./250106_tomography/assets/viewer_capture.gif" alt="viewer capture" />
+<img class="post-media" src="./250106_tomography/assets/viewer_capture.gif" alt="viewer capture" />
 <p class="lang eng">As demonstrated, a viewer for a new NeRF / GS model can be quickly created with minimal coding. I initially considered uploading this to GitHub, but due to its simplicity, I will only include it in this blog post.</p>
 
 <h3 id="marching-cube-extraction">3.2. Marching Cube Extraction</h3>
 <p class="lang eng">Another method for interactively examining a NeRF / GS scene is by using scalar field to polygonal mesh conversion algorithms, such as marching cubes.</p>
-<img class="img-fluid" src="./250106_tomography/assets/image10.png" style="width: 70%;" alt="Marching Cubes" />
+<img class="post-media" src="./250106_tomography/assets/image10.png" style="width: 70%;" alt="Marching Cubes" />
 <p class="lang eng">However, it is important to note that standard NeRF or GS models, which are not specifically designed for surface reconstruction like 2D GS or SDF, may not align perfectly with conventional mesh conversion algorithms. The density field obtained from NeRF or GS represents a volumetric density rather than a clear surface. Therefore, the extracted mesh might appear noisy or require careful tuning of the isosurface value.</p>
     NeRF/GS 에서 얻은 density field 는 volumetric density 를 나타내기 때문에, 추출된 mesh 에 noise 가 많아 보이거나 isosurface 값을 신중하게 조정해야 할 수 있다.
 </p>
 <p class="lang eng">This should be considered as a supplementary approach for gaining a rough geometric understanding of the scene.</p>
 <p class="lang eng">Below is an example code snippet for generating a simple mesh from SAX-NeRF using <code>scikit-image</code>:</p>
-<div class="accordion accordion-flush" id="accordionFlushExample1">
-<div class="accordion-item">
-<h2 class="accordion-header">
-<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+<details class="code-disclosure">
+<summary class="code-disclosure-summary">
     <strong><em>marching_cube.py</em></strong>
-</button>
-</h2>
-<div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-<div class="accordion-body">
+</summary>
+<div class="code-disclosure-body">
 
 ```python
 
@@ -360,11 +331,9 @@ mesh.export("output.obj")
 ```
 
 </div>
-</div>
-</div>
-</div>
+</details>
 <br/>
-<img class="img-fluid" src="./250106_tomography/assets/foot_gif.gif" alt="foot capture" />
+<img class="post-media" src="./250106_tomography/assets/foot_gif.gif" alt="foot capture" />
 <h2 id="concluding-remarks">Concluding Remarks</h2>
 <p class="lang eng">Through the exploration of SAX-NeRF, we've seen how the foundational principles of Neural Rendering can be adapted beyond the realm of traditional photography. By understanding the underlying physical phenomena, such as the Beer-Lambert Law in tomography, we can modify the rendering equation and model architecture to suit different imaging modalities. This adaptation underscores the abstract nature of Neural Rendering and its potential applicability across various scientific domains.</p>
 <p class="lang eng">Ultimately, the ability to apply Neural Rendering to diverse data types and the ease with which we can now visualize these results opens up exciting possibilities for future research and applications across various fields.</p>

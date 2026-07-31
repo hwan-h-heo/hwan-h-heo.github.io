@@ -1,4 +1,5 @@
 const { SITE_URL } = require('./site-config');
+const { render: renderSiteIcon } = require('../../assets/js/site-icons');
 const {
     escapeHtml,
     renderPostPreview,
@@ -46,7 +47,8 @@ function renderArchivePage({ title, description, canonicalPath, posts, siteData 
         <link href="/blogs/css/blog.css" rel="stylesheet" />
         <link href="/blogs/css/sidebar.css" rel="stylesheet" />
         <link href="/blogs/css/typography.css" rel="stylesheet" />
-        <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet" />
+        <link href="/assets/css/site-icons.css" rel="stylesheet" />
+        <script src="/assets/js/site-icons.js"></script>
         <script>
             (function() {
                 try {
@@ -61,7 +63,7 @@ function renderArchivePage({ title, description, canonicalPath, posts, siteData 
         <main class="main blog-home-main">
             <nav class="blog-home-topbar" id="blogHomeTopbar" aria-label="Blog utilities">
                 <a class="blog-home-back" href="/blogs/" aria-label="Back to blog home">
-                    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                    ${renderSiteIcon('arrow-left')}
                     <span>Blog</span>
                 </a>
                 <div class="blog-home-toolbar-actions">
@@ -69,18 +71,18 @@ function renderArchivePage({ title, description, canonicalPath, posts, siteData 
                         <label class="visually-hidden" for="blog-home-search-input">Search posts</label>
                         <input type="text" id="blog-home-search-input" placeholder="Search...">
                         <button type="submit" aria-label="Search">
-                            <i class="bi bi-search" aria-hidden="true"></i>
+                            ${renderSiteIcon('search')}
                         </button>
                     </form>
                     <button class="blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false">
-                        <i class="bi bi-moon-stars" aria-hidden="true"></i>
+                        ${renderSiteIcon('moon-stars', { className: 'theme-toggle-icon' })}
                     </button>
                     <button id="lang-toggle-main" class="blog-home-language" type="button" aria-label="한국어로 전환" title="한국어로 전환">가</button>
                 </div>
             </nav>
 
             <header class="masthead blog-home-hero" style="background-image: url('/assets/image_fx_.jpg'); background-position: center 34%; background-size: cover;">
-                <div class="container position-relative px-4 px-lg-5">
+                <div class="blog-shell blog-hero-shell">
                     <div class="blog-home-hero-grid">
                         <div class="blog-home-hero-copy">
                             <span class="blog-home-kicker">Archive</span>
@@ -91,7 +93,7 @@ function renderArchivePage({ title, description, canonicalPath, posts, siteData 
                 </div>
             </header>
 
-            <div class="container px-4 px-lg-5 blog-home-container">
+            <div class="blog-shell blog-home-container">
                 <section class="blog-home-archive" aria-labelledby="archive-posts-heading">
                     <div class="blog-home-archive-head">
                         <div>

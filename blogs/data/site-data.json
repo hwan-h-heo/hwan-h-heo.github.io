@@ -766,17 +766,17 @@
         {
           "label": "paper",
           "url": "https://arxiv.org/abs/2501.09433",
-          "icon": "bi-file-earmark-text"
+          "icon": "file-earmark-text"
         },
         {
           "label": "project",
           "url": "https://ncsoft.github.io/CaPa/",
-          "icon": "bi-link"
+          "icon": "link"
         },
         {
           "label": "github",
           "url": "https://github.com/ncsoft/CaPa",
-          "icon": "bi-github"
+          "icon": "github"
         }
       ]
     },
@@ -794,12 +794,12 @@
         {
           "label": "paper",
           "url": "https://dl.acm.org/doi/10.5555/3618408.3618936",
-          "icon": "bi-file-earmark-text"
+          "icon": "file-earmark-text"
         },
         {
           "label": "project",
           "url": "projects/instant_pose/",
-          "icon": "bi-link"
+          "icon": "link"
         }
       ]
     },
@@ -811,17 +811,17 @@
         {
           "label": "paper",
           "url": "https://arxiv.org/abs/2303.03966",
-          "icon": "bi-file-earmark-text"
+          "icon": "file-earmark-text"
         },
         {
           "label": "project",
           "url": "projects/few_nerf/",
-          "icon": "bi-link"
+          "icon": "link"
         },
         {
           "label": "github",
           "url": "https://github.com/2j1ejyu/SF-NeRF",
-          "icon": "bi-github"
+          "icon": "github"
         }
       ]
     }
@@ -835,7 +835,7 @@
         {
           "label": "PDF",
           "url": "https://drive.google.com/file/d/1dvAoIkgMRq4Ks1K7zFhLgAf88B2ArJ4r/view?usp=sharing",
-          "icon": "bi-file-earmark-text"
+          "icon": "file-earmark-text"
         }
       ]
     },

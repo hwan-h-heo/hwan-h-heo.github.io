@@ -101,6 +101,9 @@
 - Excluded editor drafts, draft assets, and project snapshots from deploy output.
 - Replaced the 3D viewer's remote Three.js, Tween.js, texture, and HDR dependencies with pinned local build assets.
 - Replaced public social icon CDN dependencies with the repository's local Bootstrap Icons files.
+  This records the 2026-07-21 intermediate state; those icon-font files were
+  later replaced by the licensed first-party SVG sprite and are not current
+  runtime dependencies.
 - Added full source-asset checking and Playwright rendering checks for every public route.
 - Aligned canonical URLs, sitemap output, social metadata, and production verification with `https://hwan-h-heo.github.io` through a shared site configuration.
 - Separated portfolio and blog preview text from thumbnail media, and added desktop/mobile overlap regression checks for preview cards.

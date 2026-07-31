@@ -3,20 +3,6 @@ date: June 02, 2024
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<button id="copyButton">
-    <i class="bi bi-share-fill"></i>
-</button>
-
-<div id="myshare_modal" class="share_modal">
-    <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
-        <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
-        </div>
-    </div>
-</div>
-
 <nav class="toc">
     <ul>
         <li><a href="#intro"> Introduction </a></li>
@@ -568,7 +554,7 @@ author: Hwan Heo
 </div>
 
 <h4 id="-github-project-link-https-github-com-hwanhuh-2d-gs-viser-viewer-tree-main-">⭐ <a href="https://github.com/hwanhuh/2D-GS-Viser-Viewer/tree/main">Github Project Link</a></h4>
-<p><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240602_2dgs/assets/viser_train-poster.jpg" aria-label="2D Gaussian Splatting training result" style="width: 100%"><source src="./240602_2dgs/assets/viser_train.mp4" type="video/mp4"></video></p>
+<p><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./240602_2dgs/assets/viser_train-poster.jpg" aria-label="2D Gaussian Splatting training result" style="width: 100%"><source src="./240602_2dgs/assets/viser_train.mp4" type="video/mp4"></video></p>
 
 <ul class="lang kor" >
     <li><p>Viser 를 이용해서 구현하였으며, 2D GS 의 homogeneous projection 을 그대로 사용하여 projection error 가 없다. </p>

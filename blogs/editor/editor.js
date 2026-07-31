@@ -1,4 +1,5 @@
 (function() {
+    const icons = window.SiteIcons;
     const API_BASE = 'http://localhost:3030/api';
     const POST_ID_PATTERN = /^\d{6}_[A-Za-z0-9_]+$/;
     const CONTENT_DELIMITER = '--- 여기부터 실제 콘텐츠 ---';
@@ -38,7 +39,7 @@
             id: 'figure',
             label: 'Figure + caption',
             description: 'Image figure with centered caption.',
-            template: '<figure>\n    <img class="img-fluid" src="./assets/image.png" alt="Describe the image" width="80%">\n    <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 1.</strong> __CURSOR__</figcaption>\n</figure>'
+            template: '<figure>\n    <img class="post-media" src="./assets/image.png" alt="Describe the image" width="80%">\n    <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 1.</strong> __CURSOR__</figcaption>\n</figure>'
         },
         {
             id: 'video',
@@ -473,7 +474,7 @@
         el.workspace.classList.toggle('is-sidebar-collapsed', collapsed);
         el.controlSidebar.classList.toggle('is-collapsed', collapsed);
         el.sidebarToggleButton.setAttribute('aria-expanded', String(!collapsed));
-        el.sidebarToggleIcon.className = `bi ${collapsed ? 'bi-layout-sidebar-inset' : 'bi-layout-sidebar'}`;
+        icons.set(el.sidebarToggleIcon, collapsed ? 'layout-sidebar-inset' : 'layout-sidebar');
         el.sidebarToggleLabel.textContent = collapsed ? 'Show controls' : 'Hide controls';
         el.sidebarToggleButton.title = collapsed ? 'Show control panel' : 'Hide control panel';
     }
@@ -1046,7 +1047,7 @@
         if (state.preview.blocks.length === 0) {
             el.previewContent.innerHTML = `
                 <button class="visual-empty-state" type="button" data-append-block>
-                    <i class="bi bi-plus-circle"></i>
+                    ${icons.render('plus-circle')}
                     <strong>Start this post</strong>
                     <span>Add the first content block and write directly in the layout.</span>
                 </button>
@@ -1058,12 +1059,12 @@
             <div class="visual-block visual-block-${escapeHtml(block.type)}" data-block-index="${index}" tabindex="0">
                 <div class="visual-block-content">${renderMarkdownHtml(block.raw, postId)}</div>
                 <div class="visual-block-actions" aria-label="Content block actions">
-                    <button type="button" data-edit-block="${index}" title="Edit this block"><i class="bi bi-pencil"></i></button>
-                    <button type="button" data-delete-block="${index}" title="Delete this block"><i class="bi bi-trash3"></i></button>
+                    <button type="button" data-edit-block="${index}" title="Edit this block" aria-label="Edit this block">${icons.render('pencil')}</button>
+                    <button type="button" data-delete-block="${index}" title="Delete this block" aria-label="Delete this block">${icons.render('trash3')}</button>
                 </div>
             </div>
             <button class="visual-add-button" type="button" data-insert-after="${index}" title="Add a block here" aria-label="Add a content block here">
-                <i class="bi bi-plus"></i>
+                ${icons.render('plus')}
             </button>
         `).join('');
     }
@@ -1540,8 +1541,8 @@
                 ? `Drafts save to “${DRIVE_ROOT_FOLDER_NAME}”. Access tokens stay in this browser tab only.`
                 : 'Click Connect when you want to save or load a Drive draft.';
         el.driveConnectButton.innerHTML = connected
-            ? '<i class="bi bi-arrow-repeat"></i> Reconnect'
-            : '<i class="bi bi-google"></i> Connect';
+            ? `${icons.render('arrow-repeat')} Reconnect`
+            : `${icons.render('google')} Connect`;
 
         [el.driveConnectButton, el.driveSettingsButton, el.driveSaveButton, el.driveLoadButton].forEach((control) => {
             control.disabled = state.drive.busy;

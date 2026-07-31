@@ -9,10 +9,6 @@ const DEPENDENCY_ALIASES = new Map([
     ['syntax-highlight', 'prism'],
     ['syntax-highlighting', 'prism'],
     ['prism', 'prism'],
-    ['bootstrap', 'bootstrap'],
-    ['bootstrap-js', 'bootstrap'],
-    ['bootstrap-modal', 'bootstrap'],
-    ['bootstrap-collapse', 'bootstrap'],
     ['model-viewer', 'modelViewer'],
     ['modelviewer', 'modelViewer'],
     ['google-model-viewer', 'modelViewer'],
@@ -33,7 +29,6 @@ const DEPENDENCY_ALIASES = new Map([
 const RUNTIME_FEATURES = [
     'katex',
     'prism',
-    'bootstrap',
     'modelViewer',
     'modelViewerTextureToggle',
     'three',
@@ -156,11 +151,6 @@ function hasCodeBlocks(contentSource, contentHtml) {
         || /<pre\b|class=(["'])[^"']*\blanguage-[^"']*\1/i.test(contentHtml);
 }
 
-function hasBootstrapComponents(contentHtml) {
-    const html = stripCodeLikeContent(contentHtml);
-    return /data-bs-|class=(["'])[^"']*\b(?:modal|accordion|accordion-collapse|accordion-button)\b[^"']*\1/i.test(html);
-}
-
 function createFeatureObject(features) {
     const featureSet = new Set(features);
 
@@ -213,10 +203,6 @@ function inferPostRuntimeFeatures({ post, contentSource, contentHtml, frontmatte
 
     if (/id=(["'])threeCanvas\1|id=(["'])canvasContainer\2/i.test(contentHtml) || post.id === '240917_3djs') {
         features.add('gaussianSplats');
-    }
-
-    if (hasBootstrapComponents(contentHtml)) {
-        features.add('bootstrap');
     }
 
     return createFeatureObject(features);

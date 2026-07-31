@@ -3,7 +3,6 @@
     --blog-heading: "Manrope", "Noto Sans KR", system-ui, -apple-system, "Segoe UI", sans-serif;
     --blog-korean: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
     --blog-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-    --bs-body-font-family: var(--blog-sans);
     --default-font: var(--blog-sans);
     --heading-font: var(--blog-heading);
     --nav-font: var(--blog-sans);
@@ -42,9 +41,8 @@ button,
 input,
 select,
 textarea,
-.btn,
-.navbar,
-.nav {
+.post-site-nav,
+.blog-home-tabs {
     font-family: var(--blog-sans);
 }
 
@@ -308,10 +306,12 @@ header.masthead .post-heading .meta {
     color: #9c4f77;
 }
 
-.main-content .accordion {
-    --bs-accordion-border-width: 0;
-    --bs-accordion-btn-focus-box-shadow: none;
+.main-content .code-disclosure,
+.main-content .code-disclosure-frame {
+    width: 100%;
+    max-width: 100%;
     margin: 1.45rem 0 1.8rem;
+    box-sizing: border-box;
     overflow: hidden;
     border: 1px solid #dbe4ea;
     border-radius: 14px;
@@ -319,33 +319,43 @@ header.masthead .post-heading .meta {
     box-shadow: 0 10px 30px rgba(32, 49, 61, 0.055);
 }
 
-.main-content .accordion-item,
-.main-content .accordion-flush .accordion-item {
+.main-content .code-disclosure-frame > .code-disclosure {
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.main-content .code-disclosure-summary {
+    position: relative;
+    display: flex;
+    gap: 0.72rem;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    min-height: 3rem;
+    padding: 0.62rem 0.85rem;
     border: 0;
     color: #435160;
     background: transparent;
-}
-
-.main-content .accordion-header {
-    margin: 0;
-    padding: 0;
-}
-
-.main-content .accordion-button {
-    gap: 0.72rem;
-    min-height: 3rem;
-    padding: 0.62rem 0.85rem;
-    color: #435160;
-    background: transparent;
     box-shadow: none;
+    box-sizing: border-box;
+    cursor: pointer;
     font-family: var(--blog-mono);
     font-size: 0.73rem;
     font-weight: 500;
     line-height: 1.45;
+    list-style: none;
     letter-spacing: 0.015em;
+    overflow-anchor: none;
 }
 
-.main-content .accordion-button::before {
+.main-content .code-disclosure-summary::-webkit-details-marker {
+    display: none;
+}
+
+.main-content .code-disclosure-summary::before {
     display: inline-flex;
     flex: 0 0 auto;
     align-items: center;
@@ -362,7 +372,7 @@ header.masthead .post-heading .meta {
     letter-spacing: -0.08em;
 }
 
-.main-content .accordion-button::after {
+.main-content .code-disclosure-summary::after {
     width: 0.48rem;
     height: 0.48rem;
     margin-right: 0.28rem;
@@ -375,50 +385,57 @@ header.masthead .post-heading .meta {
     transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-.main-content .accordion-button:hover {
+.main-content .code-disclosure-summary:hover {
     color: #0d6f5a;
     background: rgba(21, 156, 120, 0.045);
 }
 
-.main-content .accordion-button:focus-visible {
+.main-content .code-disclosure-summary:focus-visible {
     outline: 2px solid rgba(21, 156, 120, 0.42);
     outline-offset: -2px;
 }
 
-.main-content .accordion-button:not(.collapsed) {
+.main-content .code-disclosure[open] > .code-disclosure-summary {
     color: #0d6f5a;
     background: rgba(21, 156, 120, 0.065);
     box-shadow: none;
 }
 
-.main-content .accordion-button:not(.collapsed)::after {
+.main-content .code-disclosure[open] > .code-disclosure-summary::after {
     background-image: none;
     opacity: 0.78;
     transform: rotate(225deg);
 }
 
-.main-content .accordion-button strong,
-.main-content .accordion-button em {
+.main-content .code-disclosure-summary strong,
+.main-content .code-disclosure-summary em {
     color: inherit;
     font-style: normal;
     font-weight: inherit;
 }
 
-.main-content .accordion-body {
+.main-content .code-disclosure-body {
+    max-width: 100%;
+    min-width: 0;
     padding: 0.88rem;
+    box-sizing: border-box;
     border-top: 1px solid #e1e8ed;
     background: #f7f9fa;
 }
 
-.main-content .accordion-body > :first-child {
+.main-content .code-disclosure:not([open]) > .code-disclosure-body {
+    display: none;
+}
+
+.main-content .code-disclosure-body > :first-child {
     margin-top: 0;
 }
 
-.main-content .accordion-body > :last-child {
+.main-content .code-disclosure-body > :last-child {
     margin-bottom: 0;
 }
 
-.main-content .accordion-body pre {
+.main-content .code-disclosure-body pre {
     margin: 0;
     border-radius: 10px;
     box-shadow: none;
@@ -737,45 +754,45 @@ html[data-theme="dark"] .main-content strong {
     color: #eef4fb;
 }
 
-html[data-theme="dark"] .main-content .accordion {
+html[data-theme="dark"] .main-content .code-disclosure,
+html[data-theme="dark"] .main-content .code-disclosure-frame {
     border-color: rgba(216, 226, 239, 0.13);
     background: #121922;
     box-shadow: 0 14px 36px rgba(0, 0, 0, 0.2);
 }
 
-html[data-theme="dark"] .main-content .accordion-item,
-html[data-theme="dark"] .main-content .accordion-flush .accordion-item {
-    color: #c9d3df;
+html[data-theme="dark"] .main-content .code-disclosure-frame > .code-disclosure {
     background: transparent;
+    box-shadow: none;
 }
 
-html[data-theme="dark"] .main-content .accordion-button {
+html[data-theme="dark"] .main-content .code-disclosure-summary {
     color: #b9c5d2;
     background: transparent;
 }
 
-html[data-theme="dark"] .main-content .accordion-button::before {
+html[data-theme="dark"] .main-content .code-disclosure-summary::before {
     border-color: rgba(77, 215, 180, 0.22);
     color: #8debd3;
     background: rgba(77, 215, 180, 0.08);
 }
 
-html[data-theme="dark"] .main-content .accordion-button:hover {
+html[data-theme="dark"] .main-content .code-disclosure-summary:hover {
     color: #e8eef6;
     background: rgba(216, 226, 239, 0.045);
 }
 
-html[data-theme="dark"] .main-content .accordion-button:not(.collapsed) {
+html[data-theme="dark"] .main-content .code-disclosure[open] > .code-disclosure-summary {
     color: #8debd3;
     background: rgba(77, 215, 180, 0.07);
 }
 
-html[data-theme="dark"] .main-content .accordion-button strong,
-html[data-theme="dark"] .main-content .accordion-button em {
+html[data-theme="dark"] .main-content .code-disclosure-summary strong,
+html[data-theme="dark"] .main-content .code-disclosure-summary em {
     color: inherit;
 }
 
-html[data-theme="dark"] .main-content .accordion-body {
+html[data-theme="dark"] .main-content .code-disclosure-body {
     border-top-color: rgba(216, 226, 239, 0.1);
     color: #c9d3df;
     background: #0f151d;

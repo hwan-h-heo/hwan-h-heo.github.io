@@ -30,6 +30,12 @@ siteData.posts.forEach((post) => {
         const filePath = path.join(repoRoot, 'blogs', 'posts', post.id, `content-${language}.md`);
         if (!fs.existsSync(filePath)) {
             errors.push(`Missing post content: ${path.relative(repoRoot, filePath)}`);
+            return;
+        }
+
+        const content = fs.readFileSync(filePath, 'utf8');
+        if (/id=(["'])(?:copyButton|myshare_modal)\1/.test(content)) {
+            errors.push(`Post source must not embed shared link controls: ${path.relative(repoRoot, filePath)}`);
         }
     });
 });

@@ -3,20 +3,6 @@ date: July 21, 2024
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<button id="copyButton">
-    <i class="bi bi-share-fill"></i>
-</button>
-
-<div id="myshare_modal" class="share_modal">
-    <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
-        <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
-        </div>
-    </div>
-</div>
-
 <nav class="toc">
     <ul>
         <li><a href="#intro"> Introduction </a></li>
@@ -148,16 +134,16 @@ author: Hwan Heo
         <th>MASt3R</th>
     </tr>
     <tr>
-        <td><img class="img-fluid" src="./240721_sfm/assets/NLE_vggsfm.jpg" alt="NLE vggsfm"></td>
-        <td><img class="img-fluid" src="./240721_sfm/assets/NLE_mast3r.jpg" alt="NLE mast3r"></td>
+        <td><img class="post-media" src="./240721_sfm/assets/NLE_vggsfm.jpg" alt="NLE vggsfm"></td>
+        <td><img class="post-media" src="./240721_sfm/assets/NLE_mast3r.jpg" alt="NLE mast3r"></td>
     </tr>
     <tr>
-        <td><img class="img-fluid" src="./240721_sfm/assets/pen_sparse_vggsfm.jpg" alt="pen vggsfm"></td>
-        <td><img class="img-fluid" src="./240721_sfm/assets/pen_sparse_mast3r.jpg" alt="pen mast3r"></td>
+        <td><img class="post-media" src="./240721_sfm/assets/pen_sparse_vggsfm.jpg" alt="pen vggsfm"></td>
+        <td><img class="post-media" src="./240721_sfm/assets/pen_sparse_mast3r.jpg" alt="pen mast3r"></td>
     </tr>
     <tr>
-        <td><img class="img-fluid" src="./240721_sfm/assets/guitar_vggsfm.jpg" alt="guitar vggsfm"></td>
-        <td><img class="img-fluid" src="./240721_sfm/assets/guitar_mast3r.jpg" alt="guitar mast3r"></td>
+        <td><img class="post-media" src="./240721_sfm/assets/guitar_vggsfm.jpg" alt="guitar vggsfm"></td>
+        <td><img class="post-media" src="./240721_sfm/assets/guitar_mast3r.jpg" alt="guitar mast3r"></td>
     </tr>
 </table>
 
@@ -168,16 +154,16 @@ author: Hwan Heo
         <th>MASt3R</th>
     </tr>
     <tr>
-        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240721_sfm/assets/NLE_vggsfm_2dgs-poster.jpg" aria-label="NLE VGGSfM 2D Gaussian Splatting result" style="width: 100%"><source src="./240721_sfm/assets/NLE_vggsfm_2dgs.mp4" type="video/mp4"></video></td>
-        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240721_sfm/assets/NLE_mast3r_2dgs-poster.jpg" aria-label="NLE MASt3R 2D Gaussian Splatting result" style="width: 100%"><source src="./240721_sfm/assets/NLE_mast3r_2dgs.mp4" type="video/mp4"></video></td>
+        <td><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./240721_sfm/assets/NLE_vggsfm_2dgs-poster.jpg" aria-label="NLE VGGSfM 2D Gaussian Splatting result" style="width: 100%"><source src="./240721_sfm/assets/NLE_vggsfm_2dgs.mp4" type="video/mp4"></video></td>
+        <td><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./240721_sfm/assets/NLE_mast3r_2dgs-poster.jpg" aria-label="NLE MASt3R 2D Gaussian Splatting result" style="width: 100%"><source src="./240721_sfm/assets/NLE_mast3r_2dgs.mp4" type="video/mp4"></video></td>
     </tr>
     <tr>
-        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240721_sfm/assets/pen_sparse_vggsfm_2dgs-poster.jpg" aria-label="Pen sparse VGGSfM 2D Gaussian Splatting result" style="width: 100%"><source src="./240721_sfm/assets/pen_sparse_vggsfm_2dgs.mp4" type="video/mp4"></video></td>
-        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240721_sfm/assets/pen_sparse_mast3r_2dgs-poster.jpg" aria-label="Pen sparse MASt3R 2D Gaussian Splatting result" style="width: 100%"><source src="./240721_sfm/assets/pen_sparse_mast3r_2dgs.mp4" type="video/mp4"></video></td>
+        <td><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./240721_sfm/assets/pen_sparse_vggsfm_2dgs-poster.jpg" aria-label="Pen sparse VGGSfM 2D Gaussian Splatting result" style="width: 100%"><source src="./240721_sfm/assets/pen_sparse_vggsfm_2dgs.mp4" type="video/mp4"></video></td>
+        <td><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./240721_sfm/assets/pen_sparse_mast3r_2dgs-poster.jpg" aria-label="Pen sparse MASt3R 2D Gaussian Splatting result" style="width: 100%"><source src="./240721_sfm/assets/pen_sparse_mast3r_2dgs.mp4" type="video/mp4"></video></td>
     </tr>
     <tr>
-        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240721_sfm/assets/guitar_vggsfm_2dgs-poster.jpg" aria-label="Guitar VGGSfM 2D Gaussian Splatting result" style="width: 100%"><source src="./240721_sfm/assets/guitar_vggsfm_2dgs.mp4" type="video/mp4"></video></td>
-        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240721_sfm/assets/guitar_mast3r_2dgs-poster.jpg" aria-label="Guitar MASt3R 2D Gaussian Splatting result" style="width: 100%"><source src="./240721_sfm/assets/guitar_mast3r_2dgs.mp4" type="video/mp4"></video></td>
+        <td><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./240721_sfm/assets/guitar_vggsfm_2dgs-poster.jpg" aria-label="Guitar VGGSfM 2D Gaussian Splatting result" style="width: 100%"><source src="./240721_sfm/assets/guitar_vggsfm_2dgs.mp4" type="video/mp4"></video></td>
+        <td><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./240721_sfm/assets/guitar_mast3r_2dgs-poster.jpg" aria-label="Guitar MASt3R 2D Gaussian Splatting result" style="width: 100%"><source src="./240721_sfm/assets/guitar_mast3r_2dgs.mp4" type="video/mp4"></video></td>
     </tr>
 </table>
 <br/>

@@ -28,6 +28,7 @@ const {
 const { escapeXml, getPostAlternates, truncateText } = require('./lib/seo-utils');
 const { analyzeChangedFiles, getChangedFiles, serializeChangedFiles } = require('../scripts/lib/change-impact');
 const { renderBlock: renderPortfolioBlock } = require('../js/portfolio-blocks');
+const { render: renderSiteIcon } = require('../assets/js/site-icons');
 const {
     renderProject: renderPortfolioProject,
     renderPublication,
@@ -618,16 +619,16 @@ function normalizePostContent(post, content, htmlContent, lang) {
         };
 
     const shareButtonHtml = `<button id="copyButton" type="button" aria-label="Copy post link">
-    <i class="bi bi-link-45deg" aria-hidden="true"></i>
+    ${renderSiteIcon('link-45deg')}
 </button>
 
 <div id="myshare_modal" class="share_modal" role="status" aria-live="polite" aria-hidden="true">
     <div class="share_modal-content">
         <button class="share_modal_close" type="button" aria-label="Dismiss">
-            <i class="bi bi-x-lg" aria-hidden="true"></i>
+            ${renderSiteIcon('x-lg')}
         </button>
         <span class="share_modal-icon" aria-hidden="true">
-            <i class="bi bi-check2"></i>
+            ${renderSiteIcon('check2')}
         </span>
         <span class="share_modal-message">
             <strong>${shareLabels.copied}</strong>
@@ -641,9 +642,7 @@ function normalizePostContent(post, content, htmlContent, lang) {
 
 `;
 
-    if (!content.includes('id="copyButton"') && !content.includes('id="myshare_modal"')) {
-        updatedHtmlContent = shareButtonHtml + updatedHtmlContent;
-    }
+    updatedHtmlContent = shareButtonHtml + updatedHtmlContent;
 
     if (!content.includes('<nav class="toc">')) {
         const { tocHtml, contentHtml } = generateTOC(updatedHtmlContent, lang);

@@ -1,4 +1,5 @@
 const { SITE_URL } = require('./site-config');
+const { render: renderSiteIcon } = require('../../assets/js/site-icons');
 const {
     escapeHtml,
     getAbsoluteUrl,
@@ -87,10 +88,6 @@ function renderConditionalHeadAssets(runtimeFeatures) {
 function renderConditionalBodyScripts(runtimeFeatures) {
     const scripts = [];
 
-    if (runtimeFeatures.bootstrap) {
-        scripts.push('    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>');
-    }
-
     if (runtimeFeatures.prism) {
         scripts.push('    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>');
         scripts.push('    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>');
@@ -112,7 +109,6 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
     const activeRuntimeFeatures = {
         katex: Boolean(runtimeFeatures.katex),
         prism: Boolean(runtimeFeatures.prism),
-        bootstrap: Boolean(runtimeFeatures.bootstrap),
         modelViewer: Boolean(runtimeFeatures.modelViewer),
         modelViewerTextureToggle: Boolean(runtimeFeatures.modelViewerTextureToggle),
         three: Boolean(runtimeFeatures.three),
@@ -245,7 +241,8 @@ ${alternateLinksHtml}
     <link href="/blogs/css/typography.css" rel="stylesheet" />
     <link href="/blogs/css/post.css" rel="stylesheet" />
     <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js"></script>
 ${renderConditionalHeadAssets(activeRuntimeFeatures)}
 
     <style>
@@ -271,46 +268,46 @@ ${renderConditionalHeadAssets(activeRuntimeFeatures)}
         </script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
-        <div class="container px-4 px-lg-5">
+    <nav class="post-site-nav" id="mainNav">
+        <div class="blog-shell post-nav-shell">
             <div class="post-nav-brand-group">
-                <a class="navbar-brand" href="/blogs/">Hwan's Blog</a>
+                <a class="post-nav-brand" href="/blogs/">Hwan's Blog</a>
                 <a class="post-nav-portfolio-link" href="/">
-                    Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+                    Portfolio ${renderSiteIcon('box-arrow-up-right')}
                 </a>
             </div>
-            <button class="navbar-toggler" type="button" data-nav-toggle data-open-label="${openMenuLabel}" data-close-label="${closeMenuLabel}" aria-controls="navbarResponsive" aria-expanded="false" aria-label="${openMenuLabel}">
+            <button class="post-nav-toggle" type="button" data-nav-toggle data-open-label="${openMenuLabel}" data-close-label="${closeMenuLabel}" aria-controls="postNavPanel" aria-expanded="false" aria-label="${openMenuLabel}">
                 <span class="post-nav-menu-icon" aria-hidden="true"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                    <li class="nav-item post-nav-search-item">
+            <div class="post-nav-panel" id="postNavPanel">
+                <ul class="post-nav-actions">
+                    <li class="post-nav-action post-nav-search-item">
                         <form id="post-nav-search-form" class="post-nav-search" role="search">
                             <label class="visually-hidden" for="post-nav-search-input">${searchLabel}</label>
                             <input id="post-nav-search-input" type="search" placeholder="${searchPlaceholder}" enterkeyhint="search" />
                             <button type="submit" aria-label="${searchButtonLabel}">
-                                <i class="bi bi-search" aria-hidden="true"></i>
+                                ${renderSiteIcon('search')}
                             </button>
                         </form>
                     </li>
-                    <li class="nav-item nav-theme-item"><button class="btn nav-link blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
-                    ${alternateHref ? `<li class="nav-item post-nav-language-item"><a href="${alternateHref}" class="nav-link post-nav-language-link" data-language-target="${alternateLang}" aria-label="${alternateLang === 'eng' ? 'Switch to English' : '한국어로 전환'}" title="${alternateLang === 'eng' ? 'Switch to English' : '한국어로 전환'}">${alternateLang === 'eng' ? 'A' : '가'}</a></li>` : ''}
+                    <li class="post-nav-action post-nav-theme-item"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false">${renderSiteIcon('moon-stars', { className: 'theme-toggle-icon' })}</button></li>
+                    ${alternateHref ? `<li class="post-nav-action post-nav-language-item"><a href="${alternateHref}" class="post-nav-language-link" data-language-target="${alternateLang}" aria-label="${alternateLang === 'eng' ? 'Switch to English' : '한국어로 전환'}" title="${alternateLang === 'eng' ? 'Switch to English' : '한국어로 전환'}">${alternateLang === 'eng' ? 'A' : '가'}</a></li>` : ''}
                 </ul>
             </div>
         </div>
     </nav>
 
     <header class="masthead" style="background-image: url('${coverImage}')">
-        <div class="container position-relative px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="blog-shell post-hero-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
                     <div class="post-heading">
                         <br/>
                         <h1>${escapeHtml(title)}</h1>
                         <span class="meta">
                             Posted on <time datetime="${escapeHtml(post.date)}">${date}</time>
                             <span style="margin: 0 8px;">•</span>
-                            <i class="bi bi-clock" style="margin-right: 4px;"></i>${readingTime.text}
+                            ${renderSiteIcon('clock', { className: 'post-reading-time-icon' })}${readingTime.text}
                         </span>
                         ${tagHtml}
                         <hr/>
@@ -320,29 +317,29 @@ ${renderConditionalHeadAssets(activeRuntimeFeatures)}
         </div>
     </header>
 
-    <article class="mb-4">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
+    <article class="post-article">
+        <div class="blog-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
                     ${breadcrumbsHtml}
                     <div id="series-container">${staticSeriesNavigation}</div>
                 </div>
-                <div class="col-md-10 col-lg-8 col-xl-7 main-content">
+                <div class="post-reading-column main-content">
                     ${contentHtml}
                 </div>
-                <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="post-reading-column">
                     ${relatedPostsHtml}
-                    <div id="post-navigation" class="mt-4">${staticPostNavigation}</div>
+                    <div id="post-navigation" class="post-navigation-space">${staticPostNavigation}</div>
                 </div>
             </div>
         </div>
     </article>
 
-    <footer class="border-top">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div class="small text-center text-muted fst-italic">Copyright © Hwan Heo</div>
+    <footer class="blog-post-footer">
+        <div class="blog-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
+                    <div class="blog-footer-note">Copyright © Hwan Heo</div>
                 </div>
             </div>
         </div>

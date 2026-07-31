@@ -1,9 +1,56 @@
 document.addEventListener('DOMContentLoaded', async function() {
+    const icons = window.SiteIcons;
     const postsContainer = document.querySelector('#posts-tab');
     const seriesContainer = document.querySelector('#series-tab');
     const notesContainer = document.querySelector('#notes-tab');
     const featureContainer = document.querySelector('#blog-home-feature');
     const langToggleButton = document.getElementById('lang-toggle-main');
+    const tabControls = Array.from(document.querySelectorAll('[role="tab"][data-tab-target]'));
+
+    function activateTab(control, { focus = false } = {}) {
+        if (!control) {
+            return;
+        }
+
+        tabControls.forEach((tab) => {
+            const isActive = tab === control;
+            const panel = document.querySelector(tab.dataset.tabTarget);
+            tab.classList.toggle('is-active', isActive);
+            tab.setAttribute('aria-selected', String(isActive));
+            tab.tabIndex = isActive ? 0 : -1;
+
+            if (panel) {
+                panel.classList.toggle('is-active', isActive);
+                panel.hidden = !isActive;
+            }
+        });
+
+        if (focus) {
+            control.focus();
+        }
+    }
+
+    tabControls.forEach((control, index) => {
+        control.addEventListener('click', () => activateTab(control));
+        control.addEventListener('keydown', (event) => {
+            let targetIndex = index;
+
+            if (event.key === 'ArrowLeft') {
+                targetIndex = (index - 1 + tabControls.length) % tabControls.length;
+            } else if (event.key === 'ArrowRight') {
+                targetIndex = (index + 1) % tabControls.length;
+            } else if (event.key === 'Home') {
+                targetIndex = 0;
+            } else if (event.key === 'End') {
+                targetIndex = tabControls.length - 1;
+            } else {
+                return;
+            }
+
+            event.preventDefault();
+            activateTab(tabControls[targetIndex], { focus: true });
+        });
+    });
 
     const { loadSiteData, getPostTitle, getPostDescription, getPostUrl } = window.siteDataClient;
     const coverMedia = window.blogCoverMedia;
@@ -224,7 +271,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     ${tagsHtml ? `<div class="post-tag-row">${tagsHtml}</div>` : ''}
                     <a class="blog-feature-read" href="${escapeHtml(url)}">
                         <span>${escapeHtml(copy(lang, 'readPost'))}</span>
-                        <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                        ${icons.render('arrow-right')}
                     </a>
                 </div>
             </article>
@@ -300,7 +347,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                             <h3 class="series-title">
                                 <a href="${escapeHtml(seriesRoute)}">
                                     <span>${escapeHtml(seriesTitle)}</span>
-                                    <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+                                    ${icons.render('arrow-up-right')}
                                 </a>
                             </h3>
                             <div class="series-card-meta">

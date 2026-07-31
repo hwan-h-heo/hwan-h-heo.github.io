@@ -3,20 +3,6 @@ date: November 28, 2021
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<button id="copyButton">
-    <i class="bi bi-share-fill"></i>
-</button>
-
-<div id="myshare_modal" class="share_modal">
-    <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
-        <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
-        </div>
-    </div>
-</div>
-
 <nav class="toc">
     <ul>
         <li><a href="#intro"> Introduction </a></li>
@@ -42,7 +28,7 @@ author: Hwan Heo
 <h2 id="intro">1. Introduction</h2>
 <p>Fourier-featuring is a function that embeds a coordinate space point into frequency space.</p>
 <p>A prominent example in deep learning is <strong>&#39;Positional Encoding&#39;</strong>, which uses sinusoidal functions to embed coordinate space into frequency space, thereby incorporating positional information that Networks cannot capture.</p>
-<figure class="justify-content-center">
+<figure>
     <img src="./211128_fourier/assets/main.png" alt="Gaussian RT" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"> <strong>Figure 1.</strong> Coordinate-Based MLPs </figcaption>
 </figure>
@@ -51,7 +37,7 @@ author: Hwan Heo
 </p>
 <h3 id="sec2">2. Background </h3>
 <h3 id="sec2.1">2.1. Kernel Trick</h3>
-<figure class="justify-content-center">
+<figure>
     <img src="./211128_fourier/assets/kernel_trick.png" alt="Gaussian RT" width="80%">
     <figcaption style="text-align: center; font-size: 15px;"> <strong>Figure 2.</strong> illustration of Kernel-Trick </figcaption>
 </figure>

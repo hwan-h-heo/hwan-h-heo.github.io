@@ -29,7 +29,16 @@ Everything else should stay quiet enough to support the work.
 Portfolio tokens and shared portfolio components live in
 `assets/css/portfolio.css`. Project-page-only rules live in
 `assets/css/project-detail.css`. The shared responsive sidebar lives in
-`css/sidebar-nav.css`.
+`css/sidebar-nav.css`. Portfolio and project markup is framework-free; the
+responsive `portfolio-shell` and the About/Project component layouts are owned
+by these stylesheets rather than by generic framework utility classes.
+Shared interface icons use the first-party SVG sprite and `.site-icon`
+foundation documented in `docs/styles-and-assets.md`; component styles own
+only their local size, color, spacing, and motion.
+Portfolio and blog UI must remain framework-free at runtime. New components
+should use semantic, component-owned class names rather than generic grid,
+utility, or icon-font tokens; `npm run check:legacy-ui` enforces that boundary
+in authored and generated files.
 
 The blog has its own CSS surface because long-form articles need different
 reading, code, math, and dark-theme rules. Do not copy values from
@@ -50,7 +59,8 @@ The portfolio home already has a coherent modern and editorial base:
 
 The main drift risks are:
 
-- `portfolio.css` still contains a compatibility layer alongside current rules.
+- Generic layout helpers can obscure component ownership; keep new portfolio
+  layout rules scoped to the shell or the component that uses them.
 - Blog CSS retains older framework colors, shadows, radii, and tracking values.
 - The shared dark sidebar has a surface-local cyan token.
 - Direct hex and rgba values still exist in legacy or media-specific rules.

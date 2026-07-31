@@ -27,11 +27,18 @@ function main() {
         title,
         heroTitle: title,
         subtitles: ['Project'],
+        layout: 'case-study',
+        overview: ['Start writing the project overview here.'],
+        contributions: [],
+        details: [
+            { label: 'Category', value: 'Project' },
+            { label: 'Skills Demonstrated', value: 'Add skills here' }
+        ],
         description: '',
         keywords: ''
     };
 
-    const content = `:::{.container .portfolio-details-container .col-11}\n:::{.row .gy-4}\n:::{.col-lg-8}\n:::{.portfolio-description}\n## Project Overview\n\nStart writing the project page here.\n:::\n:::\n\n:::{.col-lg-4}\n:::{.portfolio-info}\n### Project Details\n\n- **Category**: Project\n- **Skills Demonstrated**: Add skills here\n:::\n:::\n:::\n:::\n`;
+    const content = `## Case Study\n\nStart writing the project page here.\n`;
 
     fs.writeFileSync(path.join(projectDir, 'project.json'), `${JSON.stringify(metadata, null, 2)}\n`, 'utf8');
     fs.writeFileSync(path.join(projectDir, 'content.md'), content, 'utf8');

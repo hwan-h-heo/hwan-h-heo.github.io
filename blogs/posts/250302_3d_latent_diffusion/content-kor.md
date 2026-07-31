@@ -3,20 +3,6 @@ date: March 02, 2025
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<button id="copyButton">
-    <i class="bi bi-share-fill"></i>
-</button>
-
-<div id="myshare_modal" class="share_modal">
-    <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
-        <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
-        </div>
-    </div>
-</div>
-
 <br/>
 
 - 이 글은 ShapeVAE (3Dshape2vecset, michelangelo) 와 SOTA 3D Latent Diffusion 인 Trellis, Hunyuan3D 에 대한 상세한 Review 가 포함되어 있습니다. 
@@ -461,12 +447,12 @@ Ref module 과 mv module 이 독립적으로 작동하는 일종의 ‘multi-tas
 </thead>
 <tbody>
 <tr>
-<td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-19-poster.jpg" aria-label="Trellis result 1" style="width: 100%"><source src="./250302_3d_latent_diffusion/assets/image-19.mp4" type="video/mp4"></video></td>
-<td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-20-poster.jpg" aria-label="Hunyuan3D result 1" style="width: 100%"><source src="./250302_3d_latent_diffusion/assets/image-20.mp4" type="video/mp4"></video></td>
+<td><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-19-poster.jpg" aria-label="Trellis result 1" style="width: 100%"><source src="./250302_3d_latent_diffusion/assets/image-19.mp4" type="video/mp4"></video></td>
+<td><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-20-poster.jpg" aria-label="Hunyuan3D result 1" style="width: 100%"><source src="./250302_3d_latent_diffusion/assets/image-20.mp4" type="video/mp4"></video></td>
 </tr>
 <tr>
-<td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-21-poster.jpg" aria-label="Trellis result 2" style="width: 100%"><source src="./250302_3d_latent_diffusion/assets/image-21.mp4" type="video/mp4"></video></td>
-<td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-22-poster.jpg" aria-label="Hunyuan3D result 2" style="width: 100%"><source src="./250302_3d_latent_diffusion/assets/image-22.mp4" type="video/mp4"></video></td>
+<td><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-21-poster.jpg" aria-label="Trellis result 2" style="width: 100%"><source src="./250302_3d_latent_diffusion/assets/image-21.mp4" type="video/mp4"></video></td>
+<td><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-22-poster.jpg" aria-label="Hunyuan3D result 2" style="width: 100%"><source src="./250302_3d_latent_diffusion/assets/image-22.mp4" type="video/mp4"></video></td>
 </tr>
 </tbody>
 </table>
@@ -485,7 +471,7 @@ Mesh Quality 의 경우 Trellis 보다 Hunyuan3D 의 topology 가 훨씬 좋다.
 마지막으로 CaPa Result 를 별첨한다 :)
 
 <figure>
-<video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-23-poster.jpg" aria-label="Generated 3D asset by CaPa" style="width: 100%"><source src="./250302_3d_latent_diffusion/assets/image-23.mp4" type="video/mp4"></video>
+<video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-23-poster.jpg" aria-label="Generated 3D asset by CaPa" style="width: 100%"><source src="./250302_3d_latent_diffusion/assets/image-23.mp4" type="video/mp4"></video>
 </figure>
 
 

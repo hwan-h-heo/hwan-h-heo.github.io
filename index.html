@@ -45,9 +45,9 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="assets/css/site-icons.css" rel="stylesheet">
 
+  <script src="assets/js/site-icons.js"></script>
   <script src="js/sidebar-controller.js"></script>
 
   <!-- Main CSS File -->
@@ -82,28 +82,28 @@
 
 <body class="index-page">
 
-  <header id="header" class="header sidebar-auto-hidden dark-background d-flex flex-column" data-sidebar-auto-hide="#home">
+  <header id="header" class="header sidebar-auto-hidden dark-background" data-sidebar-auto-hide="#home">
     <div class="profile-img">
-      <img src="assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="img-fluid rounded-circle">
+      <img src="assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="sidebar-profile-image">
     </div>
 
-    <a href="#home" class="logo d-flex align-items-center justify-content-center">
+    <a href="#home" class="logo">
       <span class="sitename">Hwan Heo</span>
     </a>
 
-    <div class="social-links text-center">
-      <a href="https://github.com/hwanhuh" class="github"><i class="bi bi-github"></i></a>
-      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin"><i class="bi bi-linkedin"></i></a>
-      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram"><i class="bi bi-mortarboard-fill"></i></a>
-      <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus"><i class="bi bi-envelope-fill"></i></a>
+    <div class="social-links">
+      <a href="https://github.com/hwanhuh" class="github" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
+      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
+      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
+      <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
     </div>
 
     <nav id="navmenu" class="navmenu">
       <ul>
-        <li><a href="#home" class="active"><i class="bi bi-house navicon"></i>Home</a></li>
-        <li><a href="#portfolio"><i class="bi bi-images navicon"></i> Projects</a></li>
-        <li><a href="#blog"> <i class="bi bi-keyboard navicon"></i> Blog </a></li>
-        <li><a href="#about"><i class="bi bi-person navicon"></i> About</a></li>
+        <li><a href="#home" class="active"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house"></use></svg>Home</a></li>
+        <li><a href="#portfolio"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-images"></use></svg> Projects</a></li>
+        <li><a href="#blog"> <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-keyboard"></use></svg> Blog </a></li>
+        <li><a href="#about"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-person"></use></svg> About</a></li>
       </ul>
     </nav>
   </header>
@@ -116,7 +116,7 @@
     <section id="portfolio" class="portfolio section light-background" data-section-ready="false">
 
       <!-- Section Title -->
-      <div class="container section-title portfolio-section-heading">
+      <div class="portfolio-shell section-title portfolio-section-heading">
         <div class="portfolio-heading-copy">
           <h2>Selected Projects</h2>
           <p class="portfolio-credibility">Production 3D AI systems · 4 papers · 6 invited talks</p>
@@ -127,7 +127,7 @@
         </ul>
       </div><!-- End Section Title -->
 
-      <div class="container portfolio-content">
+      <div class="portfolio-shell portfolio-content">
         <div class="portfolio-project-list" id="portfolio-projects"><!-- portfolio-projects-static --></div>
 
         <div class="portfolio-evidence">
@@ -139,7 +139,7 @@
               </span>
               <span class="portfolio-disclosure-meta">
                 <span>4 publications</span>
-                <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
               </span>
             </summary>
             <div class="portfolio-disclosure-panel">
@@ -155,7 +155,7 @@
               </span>
               <span class="portfolio-disclosure-meta">
                 <span>6 talks</span>
-                <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
               </span>
             </summary>
             <div class="portfolio-disclosure-panel">
@@ -165,14 +165,14 @@
         </div>
       </div>
     </section>
-    <!-- Testimonials Section -->
-    <section id="blog" class="testimonials section light-background" data-section-ready="false">
+    <!-- Blog Section -->
+    <section id="blog" class="portfolio-blog-section section light-background" data-section-ready="false">
       <!-- Section Title -->
-      <div class="container section-title">
-        <h2><a href="blogs/" target="_blank">Technical Blog <i class="bi bi-box-arrow-up-right"></i> </a></h2>
+      <div class="portfolio-shell section-title">
+        <h2><a href="blogs/" target="_blank">Technical Blog <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg> </a></h2>
         <p>Essays and technical notes on building 3D generative systems:<br/>from representations and model training to CUDA kernels, geometry processing, and production engineering.</p>
       </div><!-- End Section Title -->
-      <div class="container portfolio-blog-content">
+      <div class="portfolio-shell portfolio-blog-content">
         <h5 class="portfolio-blog-subheading">Selected Notes</h5>
         <div class="portfolio-blog-list-shell">
           <div class="portfolio-blog-list" id="portfolio-blog-posts"></div>
@@ -183,7 +183,7 @@
           <p>You can also find me on my <a href="https://velog.io/@gjghks950/posts">Korean blog</a> or <a href="https://www.youtube.com/@hwanshobbystorage861">YouTube channel</a>, where I share guitar performances and arrangements (currently on a break).</p>
         </aside>
       </div>
-    </section><!-- /Testimonials Section -->
+    </section><!-- /Blog Section -->
 
     <!-- About Section -->
     <section id="about" class="about section">
@@ -192,15 +192,15 @@
     </section><!-- /About Section -->
   </main>
 
-  <footer id="footer" class="footer position-relative light-background">
-    <div class="container">
-      <p class="footer-note text-center">A small collection of work, research, and ideas gathered along the way.</p>
+  <footer id="footer" class="footer light-background">
+    <div class="portfolio-shell">
+      <p class="footer-note">A small collection of work, research, and ideas gathered along the way.</p>
     </div>
   </footer>
 
   <!-- Scroll Top -->
-  <button id="scroll-top" class="scroll-top button_top d-flex align-items-center justify-content-center" aria-label="Back to top">
-    <i class="bi bi-arrow-up" aria-hidden="true"></i>
+  <button id="scroll-top" class="scroll-top button_top" aria-label="Back to top">
+    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up"></use></svg>
   </button>
 
   <!-- Preloader -->
@@ -208,7 +208,6 @@
     <span class="preloader-orbit" aria-hidden="true"><span></span></span>
     <span class="preloader-label">Hwan Heo · 3D AI</span>
   </div>
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="blogs/js/site-data-client.js"></script>
   <script src="blogs/js/blog-cover-media.js"></script>
   <script src="js/portfolio-blocks.js"></script>

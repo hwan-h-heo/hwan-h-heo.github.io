@@ -10,7 +10,8 @@
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <link href="../css/blog.css" rel="stylesheet" />
         <link href="../css/typography.css" rel="stylesheet" />
-        <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet" />
+        <link href="/assets/css/site-icons.css" rel="stylesheet" />
+        <script src="/assets/js/site-icons.js"></script>
         <script>
             (function() {
                 try {
@@ -32,7 +33,7 @@
         <main class="main blog-home-main">
             <nav class="blog-home-topbar" id="blogHomeTopbar" aria-label="Blog utilities">
                 <a class="blog-home-back" href="../" aria-label="Back to blog home">
-                    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg>
                     <span>Blog</span>
                 </a>
                 <div class="blog-home-toolbar-actions">
@@ -40,18 +41,18 @@
                         <label class="visually-hidden" for="search-input">Search posts</label>
                         <input type="text" id="search-input" placeholder="Search...">
                         <button type="submit" id="search-button" aria-label="Search">
-                            <i class="bi bi-search" aria-hidden="true"></i>
+                            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
                         </button>
                     </form>
                     <button class="blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false">
-                        <i class="bi bi-moon-stars" aria-hidden="true"></i>
+                        <svg class="site-icon" data-icon="moon-stars" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg>
                     </button>
                     <button id="lang-toggle-main" class="blog-home-language" type="button" aria-label="한국어로 전환" title="한국어로 전환">가</button>
                 </div>
             </nav>
 
             <header class="masthead blog-home-hero" style="background-image: url('../../assets/image_fx_.jpg'); background-position: center 34%; background-size: cover;">
-                <div class="container position-relative px-4 px-lg-5">
+                <div class="blog-shell blog-hero-shell">
                     <div class="blog-home-hero-grid">
                         <div class="blog-home-hero-copy">
                             <span class="blog-home-kicker" data-search-copy="kicker">Search</span>
@@ -62,7 +63,7 @@
                 </div>
             </header>
 
-            <div class="container px-4 px-lg-5 blog-home-container">
+            <div class="blog-shell blog-home-container">
                 <section class="blog-home-archive blog-search-results" aria-labelledby="search-results-heading">
                     <div class="blog-home-archive-head">
                         <div>
@@ -79,10 +80,10 @@
         </main>
 
         <footer class="blog-home-footer">
-            <div class="container px-4 px-lg-5">
-                <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-md-10 col-lg-9 col-xl-9">
-                        <div class="small text-center text-muted fst-italic">Copyright &copy; Hwan Heo</div>
+            <div class="blog-shell">
+                <div class="blog-home-footer-row">
+                    <div class="blog-home-footer-copy">
+                        <div class="blog-footer-note">Copyright &copy; Hwan Heo</div>
                     </div>
                 </div>
             </div>

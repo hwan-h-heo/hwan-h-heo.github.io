@@ -1,4 +1,5 @@
 const { SITE_URL } = require('./site-config');
+const { render: renderSiteIcon } = require('../../assets/js/site-icons');
 const {
     getPostRoute,
     getSeriesRoute,
@@ -242,7 +243,7 @@ function renderFeaturedPost(siteData, lang = 'eng') {
                     ${tagsHtml ? `<div class="post-tag-row">${tagsHtml}</div>` : ''}
                     <a class="blog-feature-read" href="${escapeHtml(url)}" aria-label="Read ${escapeHtml(title)}">
                         <span>Read post</span>
-                        <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                        ${renderSiteIcon('arrow-right')}
                     </a>
                 </div>
             </article>
@@ -284,7 +285,7 @@ function renderSeriesGroups(siteData, lang = 'eng') {
                             <h3 class="series-title">
                                 <a href="${escapeHtml(seriesRoute)}">
                                     <span>${escapeHtml(seriesTitle)}</span>
-                                    <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+                                    ${renderSiteIcon('arrow-up-right')}
                                 </a>
                             </h3>
                             <div class="series-card-meta">
@@ -502,7 +503,7 @@ function renderSeriesNavigation(siteData, post, lang = 'eng') {
     return `
             <details class="series-card">
                 <summary class="series-summary">
-                    <span class="series-icon" aria-hidden="true"><i class="bi bi-collection"></i></span>
+                    <span class="series-icon" aria-hidden="true">${renderSiteIcon('collection')}</span>
                     <span class="series-summary-copy">
                         <span class="series-kicker">Series</span>
                         <strong>${escapeHtml(seriesTitle)}</strong>
@@ -510,7 +511,7 @@ function renderSeriesNavigation(siteData, post, lang = 'eng') {
                     <span class="series-meta">${currentIndex + 1} / ${postsInSeries.length}</span>
                     <span class="series-toggle">
                         <span>${postsInSeries.length} posts</span>
-                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                        ${renderSiteIcon('chevron-down')}
                     </span>
                 </summary>
                 <div class="series-body">

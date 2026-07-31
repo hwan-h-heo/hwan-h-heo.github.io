@@ -39,7 +39,7 @@ These variations can include changes in illumination, color tone, and other envi
 
 ### Dientangling Transients and Statics Using FilterNet
 
-![Image](assets/main.png){.img-thumbnail}
+![Image](assets/main.png){.project-framed-image}
 
 To achieve consistent scene decomposition, we use an additional MLP module, dubbed FilterNet.
 FilterNet receives feature maps $f_i(\mathbf{p})$ extracted from the input image by a pretrained **DINO** image encoder $E_\phi$.
@@ -88,9 +88,9 @@ The overall quantitative results and qualitative results demonstrate that the SF
 
 SF-NeRF significantly outperforms NeRF-W and Latent NeRF in novel view synthesis tasks, particularly in few-shot settings. Evaluations on the Phototourism dataset—featuring diverse and unconstrained photographs—demonstrate SF-NeRF's superior ability to handle transient occluders and achieve high-quality scene reconstructions with just 30 images per landmark.
 
-:::{.text-center}
-![Image](assets/qual.png){.img-thumbnail}
+:::{.project-centered-media}
+![Image](assets/qual.png){.project-framed-image}
 :::
-:::{.text-center}
-![Image](assets/qual2.png){.img-thumbnail}
+:::{.project-centered-media}
+![Image](assets/qual2.png){.project-framed-image}
 :::
