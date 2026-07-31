@@ -142,6 +142,9 @@ not depend on adding a serif family.
 - Resume is subordinate to About and must align with the About portrait and
   copy grid.
 - Project and blog preview rows must share column widths, gaps, and text order.
+- Project and Blog remain on one pale output surface. Separate the two chapters
+  with balanced whitespace rather than a background-color change or an
+  additional divider.
 - Fixed-format elements need stable dimensions or aspect ratios.
 - Use whitespace to group related content before adding borders or containers.
 - Major narrative sections may have larger gaps than reference sections.

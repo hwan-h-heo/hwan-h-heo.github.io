@@ -439,6 +439,15 @@ background-color: rgba(33, 37, 41, 0.03);
   border-top: 0;
 }
 section, .section { color: var(--default-color); background-color: var(--background-color); padding: 80px 1rem; overflow: clip; }
+
+.index-page #portfolio {
+  padding-bottom: clamp(5.5rem, 6vw, 6rem);
+}
+
+.index-page #blog {
+  padding-top: clamp(5.5rem, 6vw, 6rem);
+}
+
 @media (min-width: 1200px) {
   .index-page .main > section.section:not(#home) {
     box-sizing: border-box;
