@@ -143,28 +143,36 @@
 
     function renderResumeItem(item) {
         const bullets = (item.bulletsHtml || []).length
-            ? `<ul>${item.bulletsHtml.map((bullet) => `<li>${bullet}</li>`).join('')}</ul>`
+            ? `<ul class="resume-entry-details">${item.bulletsHtml.map((bullet) => `<li>${bullet}</li>`).join('')}</ul>`
             : '';
         const title = item.titleHtml || escapeHtml(item.title);
-        const period = item.period ? `<h5>${escapeHtml(item.period)}</h5>` : '';
-        const meta = item.metaHtml ? `<p><em>${item.metaHtml}</em></p>` : '';
-        const body = item.bodyHtml ? `<p>${item.bodyHtml}</p>` : '';
+        const period = item.period
+            ? `<time class="resume-period">${escapeHtml(item.period)}</time>`
+            : '';
+        const meta = item.metaHtml ? `<p class="resume-entry-meta">${item.metaHtml}</p>` : '';
+        const body = item.bodyHtml ? `<p class="resume-entry-copy">${item.bodyHtml}</p>` : '';
 
         return `
-            <div class="resume-item">
-                <h4>${title}</h4>
+            <article class="resume-item${item.period ? '' : ' resume-item-undated'}">
                 ${period}
-                ${meta}
-                ${body}
-                ${bullets}
-            </div>
+                <div class="resume-entry">
+                    <h4>${title}</h4>
+                    ${meta}
+                    ${body}
+                    ${bullets}
+                </div>
+            </article>
         `;
     }
 
     function renderResumeSection(section) {
         return `
-            <h3 class="resume-title">${escapeHtml(section.title)}</h3>
-            ${(section.items || []).map(renderResumeItem).join('')}
+            <div class="resume-index-section">
+                <h3 class="resume-title">${escapeHtml(section.title)}</h3>
+                <div class="resume-index-list">
+                    ${(section.items || []).map(renderResumeItem).join('')}
+                </div>
+            </div>
         `;
     }
 
@@ -174,14 +182,13 @@
                 <h2>${escapeHtml(block.title)}</h2>
                 <a class="resume-cv-link" href="${escapeHtml(block.cvUrl)}" download aria-label="Download curriculum vitae">
                     <span>Download CV</span>
-                    <small>PDF</small>
                     <i class="bi bi-download" aria-hidden="true"></i>
                 </a>
             </div>
             <div class="container resume-content">
-                <div class="row resume-layout">
-                    ${(block.columns || []).map((column, index) => `
-                        <div class="col-lg-6 resume-column">
+                <div class="resume-layout">
+                    ${(block.columns || []).map((column) => `
+                        <div class="resume-column">
                             ${(column.sections || []).map(renderResumeSection).join('')}
                         </div>
                     `).join('')}

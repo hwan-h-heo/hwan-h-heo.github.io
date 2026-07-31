@@ -44,8 +44,7 @@ function renderProjectNavItems(projectNav) {
         <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Projects</a></li>
 ${projectSidebarNav}
         <li><a href="../../blogs/"><i class="bi bi-keyboard navicon"></i> Blog</a></li>
-        <li><a href="../../#about"><i class="bi bi-person navicon"></i> About</a></li>
-        <li><a href="../../#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>`;
+        <li><a href="../../#about"><i class="bi bi-person navicon"></i> About</a></li>`;
 }
 
 function renderProjectPager(projectNav) {
