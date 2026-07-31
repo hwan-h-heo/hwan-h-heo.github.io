@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                   <span class="portfolio-blog-preview-title">${escapeHtml(title)}</span>
                   ${subtitle ? `<span class="portfolio-blog-preview-summary">${escapeHtml(subtitle)}</span>` : ''}
                   ${tagsHtml ? `<span class="portfolio-blog-preview-tags">${tagsHtml}</span>` : ''}
-                  ${date ? `<span class="portfolio-blog-preview-meta">${escapeHtml(seriesTitle)} / ${escapeHtml(date)}</span>` : ''}
+                  ${date ? `<span class="portfolio-blog-preview-meta">${escapeHtml(date)}</span>` : ''}
                 </span>
               </a>
             </article>

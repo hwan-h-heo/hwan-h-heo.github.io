@@ -75,6 +75,8 @@ Use neutral color for almost all content:
 | `--color-text-faint` | tertiary metadata and inactive icons |
 | `--color-line` | standard structural hairline |
 | `--color-line-soft` | repeated-row and image borders |
+| `--action-underline-light` | low-contrast animated underline on light surfaces |
+| `--action-underline-dark` | low-contrast animated underline on dark surfaces |
 
 Do not create hierarchy by introducing another hue. Move up or down this
 neutral scale first.
@@ -205,6 +207,12 @@ Use a shared index/table grammar. Do not introduce a separate card system.
   treatment and middle-dot separator. Preview tags do not use pills.
 - Blog home preview footers show the publication date only; do not repeat the
   series or language availability already communicated elsewhere.
+- Portfolio home preview descriptions reserve a two-line slot before tags and
+  metadata so short copy does not disturb row alignment. Dense Blog archive
+  rows follow their description's natural height.
+- Blog home archive rows mirror the Portfolio preview hierarchy and alignment,
+  while retaining a more compact media rail for the denser archive context.
+  Keep top-aligned copy, description, tags, and date in one grid.
 
 ## Interaction And Motion
 
@@ -238,7 +246,8 @@ animation to this state.
 
 Hero CTA, Selected/All, and Download CV share the left-origin underline
 language. Line thickness may differ by surface: 2px on the dark hero, 1px on
-light editorial controls.
+light editorial controls. Animated lines use the neutral
+`--action-underline-*` tokens rather than a full-strength accent.
 
 Light-surface text actions such as Download CV and publication or talk links
 use underline motion only. Do not translate their text or icons on hover.
