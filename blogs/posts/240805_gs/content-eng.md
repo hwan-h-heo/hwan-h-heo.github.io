@@ -3,20 +3,6 @@ date: August 08, 2024
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<button id="copyButton">
-    <i class="bi bi-share-fill"></i>
-</button>
-
-<div id="myshare_modal" class="share_modal">
-    <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
-        <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
-        </div>
-    </div>
-</div>
-
 <nav class="toc">
     <ul>
         <li><a href="#sec1"> 3D Gaussian as Primitive Kernel</a></li>
@@ -484,7 +470,7 @@ float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));
             The final color value for each pixel is calculated by accumulating opacity and color along the sorted Gaussians.
         </p>
         <figure>
-            <img class="img-fluid" src="./240805_gs/assets/presort.jpg" width="70%" height="60%" alt="Gaussian Accumulation">
+            <img class="post-media" src="./240805_gs/assets/presort.jpg" width="70%" height="60%" alt="Gaussian Accumulation">
             <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 6.</strong>  An illustration of the tile based parallel rendering, <br/> source: <span style="text-decoration: underline;"><a href="https://arxiv.org/abs/2401.03890"><em>A Survey on 3D Gaussian Splatting </em></a></span> </figcaption>
         </figure>
     </li>
@@ -520,7 +506,7 @@ __shared__ float4 collected_conic_opacity[BLOCK_SIZE];</code></pre>
     </li>
 </ul>
 <figure>
-    <img class="img-fluid" src="./240805_gs/assets/nerf_vs_gs.jpg" width="70%">
+    <img class="post-media" src="./240805_gs/assets/nerf_vs_gs.jpg" width="70%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 7.</strong> NeRF vs 3D GS, source: <span style="text-decoration: underline;"><a href="https://arxiv.org/abs/2401.03890"><em>A Survey on 3D Gaussian Splatting </em></a></span> </figcaption>
 </figure>
 <p class="lang eng">
@@ -589,11 +575,11 @@ glm::mat3 J = glm::mat3(
 <table>
     <tr>
         <th>Scene #1</th>
-        <td><img class="img-fluid" src="./240805_gs/assets/bicycle.gif" alt="Scene 1"></td>
+        <td><img class="post-media" src="./240805_gs/assets/bicycle.gif" alt="Scene 1"></td>
     </tr>
     <tr>
         <th>Scene #2</th>
-        <td><img class="img-fluid" src="./240805_gs/assets/garden.gif" alt="Scene 2"></td>
+        <td><img class="post-media" src="./240805_gs/assets/garden.gif" alt="Scene 2"></td>
     </tr>
 </table>
 

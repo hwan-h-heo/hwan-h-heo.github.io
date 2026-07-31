@@ -45,9 +45,9 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="assets/css/site-icons.css" rel="stylesheet">
 
+  <script src="assets/js/site-icons.js"></script>
   <script src="js/sidebar-controller.js"></script>
 
   <!-- Main CSS File -->
@@ -83,28 +83,28 @@
 
 <body class="index-page">
 
-  <header id="header" class="header sidebar-auto-hidden dark-background d-flex flex-column" data-sidebar-auto-hide="#home">
+  <header id="header" class="header sidebar-auto-hidden dark-background" data-sidebar-auto-hide="#home">
     <div class="profile-img">
-      <img src="assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="img-fluid rounded-circle">
+      <img src="assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="sidebar-profile-image">
     </div>
 
-    <a href="#home" class="logo d-flex align-items-center justify-content-center">
+    <a href="#home" class="logo">
       <span class="sitename">Hwan Heo</span>
     </a>
 
-    <div class="social-links text-center">
-      <a href="https://github.com/hwanhuh" class="github"><i class="bi bi-github"></i></a>
-      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin"><i class="bi bi-linkedin"></i></a>
-      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram"><i class="bi bi-mortarboard-fill"></i></a>
-      <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus"><i class="bi bi-envelope-fill"></i></a>
+    <div class="social-links">
+      <a href="https://github.com/hwanhuh" class="github" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
+      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
+      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
+      <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
     </div>
 
     <nav id="navmenu" class="navmenu">
       <ul>
-        <li><a href="#home" class="active"><i class="bi bi-house navicon"></i>Home</a></li>
-        <li><a href="#portfolio"><i class="bi bi-images navicon"></i> Projects</a></li>
-        <li><a href="#blog"> <i class="bi bi-keyboard navicon"></i> Blog </a></li>
-        <li><a href="#about"><i class="bi bi-person navicon"></i> About</a></li>
+        <li><a href="#home" class="active"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house"></use></svg>Home</a></li>
+        <li><a href="#portfolio"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-images"></use></svg> Projects</a></li>
+        <li><a href="#blog"> <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-keyboard"></use></svg> Blog </a></li>
+        <li><a href="#about"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-person"></use></svg> About</a></li>
       </ul>
     </nav>
   </header>
@@ -125,26 +125,26 @@
                 <a class="hero-action hero-action--section" href="#portfolio">
                     <small class="hero-action-index" aria-hidden="true">01</small>
                     <span class="hero-action-label">Project</span>
-                    <i class="bi bi-arrow-down-right" aria-hidden="true"></i>
+                    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-down-right"></use></svg>
                 </a>
             
                 <a class="hero-action hero-action--section" href="#blog">
                     <small class="hero-action-index" aria-hidden="true">02</small>
                     <span class="hero-action-label">Blog</span>
-                    <i class="bi bi-arrow-down-right" aria-hidden="true"></i>
+                    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-down-right"></use></svg>
                 </a>
             
                 <a class="hero-action hero-action--section" href="#about">
                     <small class="hero-action-index" aria-hidden="true">03</small>
                     <span class="hero-action-label">About</span>
-                    <i class="bi bi-arrow-down-right" aria-hidden="true"></i>
+                    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-down-right"></use></svg>
                 </a>
             
                 </div>
             </div>
             
             <a href="#portfolio" class="scroll-down-arrow" aria-label="Scroll to portfolio">
-                <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
             </a>
         
         </section><!-- /Hero Section -->
@@ -153,7 +153,7 @@
     <section id="portfolio" class="portfolio section light-background" data-section-ready="false">
 
       <!-- Section Title -->
-      <div class="container section-title portfolio-section-heading">
+      <div class="portfolio-shell section-title portfolio-section-heading">
         <div class="portfolio-heading-copy">
           <h2>Selected Projects</h2>
           <p class="portfolio-credibility">Production 3D AI systems · 4 papers · 6 invited talks</p>
@@ -164,13 +164,13 @@
         </ul>
       </div><!-- End Section Title -->
 
-      <div class="container portfolio-content">
+      <div class="portfolio-shell portfolio-content">
         <div class="portfolio-project-list" id="portfolio-projects">
             <article class="portfolio-project-item" data-selected="true">
                 <a class="portfolio-project-link" href="projects/varco3d/">
                     <span class="portfolio-project-cover">
                         
-            <img class="img-fluid" src="assets/thumbnails/varco3d_thumbnail.png" data-static="assets/thumbnails/varco3d_thumbnail.png" data-gif="assets/varco3d_hero.webp" alt="VARCO 3D service teaser">
+            <img src="assets/thumbnails/varco3d_thumbnail.png" data-static="assets/thumbnails/varco3d_thumbnail.png" data-gif="assets/varco3d_hero.webp" alt="VARCO 3D service teaser">
         
                         <div class="loading-spinner" style="display: none;"></div>
                     </span>
@@ -191,7 +191,7 @@
                 <a class="portfolio-project-link" href="projects/capa/">
                     <span class="portfolio-project-cover">
                         
-            <img class="img-fluid" src="assets/thumbnails/capa_thumbnail.png" data-static="assets/thumbnails/capa_thumbnail.png" data-gif="assets/capa_teaser.webp" alt="CaPa teaser">
+            <img src="assets/thumbnails/capa_thumbnail.png" data-static="assets/thumbnails/capa_thumbnail.png" data-gif="assets/capa_teaser.webp" alt="CaPa teaser">
         
                         <div class="loading-spinner" style="display: none;"></div>
                     </span>
@@ -212,7 +212,7 @@
                 <a class="portfolio-project-link" href="projects/instant_pose/">
                     <span class="portfolio-project-cover">
                         
-            <img class="img-fluid" src="projects/instant_pose/assets/pose_fig2_thumbnail.png" alt="Hash-grid gradient and trilinear interpolation diagrams">
+            <img src="projects/instant_pose/assets/pose_fig2_thumbnail.png" alt="Hash-grid gradient and trilinear interpolation diagrams">
         
                         
                     </span>
@@ -233,7 +233,7 @@
                 <a class="portfolio-project-link" href="projects/2dgs_viewer/">
                     <span class="portfolio-project-cover">
                         
-            <img class="img-fluid" src="assets/thumbnails/2dgs_viewer_thumbnail.png" data-static="assets/thumbnails/2dgs_viewer_thumbnail.png" data-gif="assets/2dgs_viewer_teaser.webp" alt="2D GS viewer teaser">
+            <img src="assets/thumbnails/2dgs_viewer_thumbnail.png" data-static="assets/thumbnails/2dgs_viewer_thumbnail.png" data-gif="assets/2dgs_viewer_teaser.webp" alt="2D GS viewer teaser">
         
                         <div class="loading-spinner" style="display: none;"></div>
                     </span>
@@ -254,7 +254,7 @@
                 <a class="portfolio-project-link" href="projects/deepsfm/">
                     <span class="portfolio-project-cover">
                         
-            <img class="img-fluid" src="assets/thumbnails/deepsfm_thumbnail.png" data-static="assets/thumbnails/deepsfm_thumbnail.png" data-gif="assets/sfm_teaser.webp" alt="DeepSFM and NeRF face teaser">
+            <img src="assets/thumbnails/deepsfm_thumbnail.png" data-static="assets/thumbnails/deepsfm_thumbnail.png" data-gif="assets/sfm_teaser.webp" alt="DeepSFM and NeRF face teaser">
         
                         <div class="loading-spinner" style="display: none;"></div>
                     </span>
@@ -275,7 +275,7 @@
                 <a class="portfolio-project-link" href="projects/nerf_in_game/">
                     <span class="portfolio-project-cover">
                         
-            <img class="img-fluid" src="projects/nerf_in_game/teaser.jpg" alt="NeRF game teaser">
+            <img src="projects/nerf_in_game/teaser.jpg" alt="NeRF game teaser">
         
                         
                     </span>
@@ -302,7 +302,7 @@
               </span>
               <span class="portfolio-disclosure-meta">
                 <span>4 publications</span>
-                <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
               </span>
             </summary>
             <div class="portfolio-disclosure-panel">
@@ -315,17 +315,17 @@
                 </div>
                 <div class="portfolio-paper-links">
             <a class="portfolio-paper-link" href="https://arxiv.org/abs/2501.09433" target="_blank" rel="noopener noreferrer">
-                <i class="bi bi-file-earmark-text" aria-hidden="true"></i>
+                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-file-earmark-text"></use></svg>
                 paper
             </a>
         
             <a class="portfolio-paper-link" href="https://ncsoft.github.io/CaPa/" target="_blank" rel="noopener noreferrer">
-                <i class="bi bi-link" aria-hidden="true"></i>
+                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link"></use></svg>
                 project
             </a>
         
             <a class="portfolio-paper-link" href="https://github.com/ncsoft/CaPa" target="_blank" rel="noopener noreferrer">
-                <i class="bi bi-github" aria-hidden="true"></i>
+                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg>
                 github
             </a>
         </div>
@@ -348,12 +348,12 @@
                 </div>
                 <div class="portfolio-paper-links">
             <a class="portfolio-paper-link" href="https://dl.acm.org/doi/10.5555/3618408.3618936" target="_blank" rel="noopener noreferrer">
-                <i class="bi bi-file-earmark-text" aria-hidden="true"></i>
+                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-file-earmark-text"></use></svg>
                 paper
             </a>
         
             <a class="portfolio-paper-link" href="projects/instant_pose/">
-                <i class="bi bi-link" aria-hidden="true"></i>
+                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link"></use></svg>
                 project
             </a>
         </div>
@@ -367,17 +367,17 @@
                 </div>
                 <div class="portfolio-paper-links">
             <a class="portfolio-paper-link" href="https://arxiv.org/abs/2303.03966" target="_blank" rel="noopener noreferrer">
-                <i class="bi bi-file-earmark-text" aria-hidden="true"></i>
+                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-file-earmark-text"></use></svg>
                 paper
             </a>
         
             <a class="portfolio-paper-link" href="projects/few_nerf/">
-                <i class="bi bi-link" aria-hidden="true"></i>
+                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link"></use></svg>
                 project
             </a>
         
             <a class="portfolio-paper-link" href="https://github.com/2j1ejyu/SF-NeRF" target="_blank" rel="noopener noreferrer">
-                <i class="bi bi-github" aria-hidden="true"></i>
+                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg>
                 github
             </a>
         </div>
@@ -394,7 +394,7 @@
               </span>
               <span class="portfolio-disclosure-meta">
                 <span>6 talks</span>
-                <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
               </span>
             </summary>
             <div class="portfolio-disclosure-panel">
@@ -407,7 +407,7 @@
                 </div>
                 <div class="portfolio-paper-links portfolio-talk-links">
             <a class="portfolio-paper-link" href="https://drive.google.com/file/d/1dvAoIkgMRq4Ks1K7zFhLgAf88B2ArJ4r/view?usp=sharing" target="_blank" rel="noopener noreferrer">
-                <i class="bi bi-file-earmark-text" aria-hidden="true"></i>
+                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-file-earmark-text"></use></svg>
                 PDF
             </a>
         </div>
@@ -463,14 +463,14 @@
         </div>
       </div>
     </section>
-    <!-- Testimonials Section -->
-    <section id="blog" class="testimonials section light-background" data-section-ready="false">
+    <!-- Blog Section -->
+    <section id="blog" class="portfolio-blog-section section light-background" data-section-ready="false">
       <!-- Section Title -->
-      <div class="container section-title">
-        <h2><a href="blogs/" target="_blank">Technical Blog <i class="bi bi-box-arrow-up-right"></i> </a></h2>
+      <div class="portfolio-shell section-title">
+        <h2><a href="blogs/" target="_blank">Technical Blog <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg> </a></h2>
         <p>Essays and technical notes on building 3D generative systems:<br/>from representations and model training to CUDA kernels, geometry processing, and production engineering.</p>
       </div><!-- End Section Title -->
-      <div class="container portfolio-blog-content">
+      <div class="portfolio-shell portfolio-blog-content">
         <h5 class="portfolio-blog-subheading">Selected Notes</h5>
         <div class="portfolio-blog-list-shell">
           <div class="portfolio-blog-list" id="portfolio-blog-posts"></div>
@@ -481,7 +481,7 @@
           <p>You can also find me on my <a href="https://velog.io/@gjghks950/posts">Korean blog</a> or <a href="https://www.youtube.com/@hwanshobbystorage861">YouTube channel</a>, where I share guitar performances and arrangements (currently on a break).</p>
         </aside>
       </div>
-    </section><!-- /Testimonials Section -->
+    </section><!-- /Blog Section -->
 
     <!-- About Section -->
     <section id="about" class="about section">
@@ -490,15 +490,15 @@
     </section><!-- /About Section -->
   </main>
 
-  <footer id="footer" class="footer position-relative light-background">
-    <div class="container">
-      <p class="footer-note text-center">A small collection of work, research, and ideas gathered along the way.</p>
+  <footer id="footer" class="footer light-background">
+    <div class="portfolio-shell">
+      <p class="footer-note">A small collection of work, research, and ideas gathered along the way.</p>
     </div>
   </footer>
 
   <!-- Scroll Top -->
-  <button id="scroll-top" class="scroll-top button_top d-flex align-items-center justify-content-center" aria-label="Back to top">
-    <i class="bi bi-arrow-up" aria-hidden="true"></i>
+  <button id="scroll-top" class="scroll-top button_top" aria-label="Back to top">
+    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up"></use></svg>
   </button>
 
   <!-- Preloader -->
@@ -506,7 +506,6 @@
     <span class="preloader-orbit" aria-hidden="true"><span></span></span>
     <span class="preloader-label">Hwan Heo · 3D AI</span>
   </div>
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="blogs/js/site-data-client.js"></script>
   <script src="blogs/js/blog-cover-media.js"></script>
   <script src="js/portfolio-blocks.js"></script>

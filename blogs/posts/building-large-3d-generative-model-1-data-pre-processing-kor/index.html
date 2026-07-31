@@ -33,17 +33,13 @@
     <link href="/blogs/css/typography.css" rel="stylesheet" />
     <link href="/blogs/css/post.css" rel="stylesheet" />
     <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
     <link href="/blogs/css/code-copy.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-
-    <style>
-        .post-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
-        .post-tags span { display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,0.6); color: #fff; border-radius: 999px; padding: 0.16rem 0.55rem; font-size: 0.72rem; background: rgba(0,0,0,0.18); }
-    </style>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
     <script>
@@ -63,46 +59,46 @@
         </script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
-        <div class="container px-4 px-lg-5">
+    <nav class="post-site-nav" id="mainNav">
+        <div class="blog-shell post-nav-shell">
             <div class="post-nav-brand-group">
-                <a class="navbar-brand" href="/blogs/">Hwan's Blog</a>
+                <a class="post-nav-brand" href="/blogs/">Hwan's Blog</a>
                 <a class="post-nav-portfolio-link" href="/">
-                    Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+                    Portfolio <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
                 </a>
             </div>
-            <button class="navbar-toggler" type="button" data-nav-toggle data-open-label="메뉴 열기" data-close-label="메뉴 닫기" aria-controls="navbarResponsive" aria-expanded="false" aria-label="메뉴 열기">
+            <button class="post-nav-toggle" type="button" data-nav-toggle data-open-label="메뉴 열기" data-close-label="메뉴 닫기" aria-controls="postNavPanel" aria-expanded="false" aria-label="메뉴 열기">
                 <span class="post-nav-menu-icon" aria-hidden="true"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                    <li class="nav-item post-nav-search-item">
+            <div class="post-nav-panel" id="postNavPanel">
+                <ul class="post-nav-actions">
+                    <li class="post-nav-action post-nav-search-item">
                         <form id="post-nav-search-form" class="post-nav-search" role="search">
                             <label class="visually-hidden" for="post-nav-search-input">블로그 글 검색</label>
                             <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
                             <button type="submit" aria-label="검색">
-                                <i class="bi bi-search" aria-hidden="true"></i>
+                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
                             </button>
                         </form>
                     </li>
-                    <li class="nav-item nav-theme-item"><button class="btn nav-link blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
-                    <li class="nav-item post-nav-language-item"><a href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/" class="nav-link post-nav-language-link" data-language-target="eng" aria-label="Switch to English" title="Switch to English">A</a></li>
+                    <li class="post-nav-action post-nav-theme-item"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><svg class="site-icon theme-toggle-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg></button></li>
+                    <li class="post-nav-action post-nav-language-item"><a href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/" class="post-nav-language-link" data-language-target="eng" aria-label="Switch to English" title="Switch to English">A</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <header class="masthead" style="background-image: url('/blogs/posts/250702_building_large_3d_1/assets/image-10.png')">
-        <div class="container position-relative px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="blog-shell post-hero-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
                     <div class="post-heading">
                         <br/>
                         <h1>Large 3D Generative Model 구축하기 (1) 데이터 전처리</h1>
                         <span class="meta">
                             Posted on <time datetime="2025-07-02">July 2, 2025</time>
                             <span style="margin: 0 8px;">•</span>
-                            <i class="bi bi-clock" style="margin-right: 4px;"></i>18 min read
+                            <svg class="site-icon post-reading-time-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-clock"></use></svg>18 min read
                         </span>
                         <div class="post-tags"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
                         <hr/>
@@ -112,10 +108,10 @@
         </div>
     </header>
 
-    <article class="mb-4">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
+    <article class="post-article">
+        <div class="blog-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
@@ -129,7 +125,7 @@
                     <div id="series-container">
             <details class="series-card">
                 <summary class="series-summary">
-                    <span class="series-icon" aria-hidden="true"><i class="bi bi-collection"></i></span>
+                    <span class="series-icon" aria-hidden="true"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-collection"></use></svg></span>
                     <span class="series-summary-copy">
                         <span class="series-kicker">Series</span>
                         <strong>3D AI</strong>
@@ -137,7 +133,7 @@
                     <span class="series-meta">5 / 7</span>
                     <span class="series-toggle">
                         <span>7 posts</span>
-                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
                     </span>
                 </summary>
                 <div class="series-body">
@@ -188,7 +184,6 @@
                             <strong>Large 3D Generative Model 구축하기 (1) 데이터 전처리</strong>
                             <span>2025.07.02</span>
                         </span>
-                        <span class="series-current-pill">Current</span>
                     </li>
             
                 <li class="series-post">
@@ -215,22 +210,29 @@
             </details>
     </div>
                 </div>
-                <div class="col-md-10 col-lg-8 col-xl-7 main-content">
-                    <nav class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Introduction: Rise of 3D Generative AI" aria-label="Introduction: Rise of 3D Generative AI"><span class="toc-link-text">Introduction: Rise of 3D Generative AI</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="A. Dataset" aria-label="A. Dataset"><span class="toc-link-text">A. Dataset</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="B. Pre-processing for Shape VAE" aria-label="B. Pre-processing for Shape VAE"><span class="toc-link-text">B. Pre-processing for Shape VAE</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="B.1. 3D Representation" aria-label="B.1. 3D Representation"><span class="toc-link-text">B.1. 3D Representation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="B.2. VAE for 3D: vecset-based VAE" aria-label="B.2. VAE for 3D: vecset-based VAE"><span class="toc-link-text">B.2. VAE for 3D: vecset-based VAE</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="B.3. Watertight Mesh in Mathematics" aria-label="B.3. Watertight Mesh in Mathematics"><span class="toc-link-text">B.3. Watertight Mesh in Mathematics</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="B.4. How to Make it Watertight: An Algorithmic Deep Dive" aria-label="B.4. How to Make it Watertight: An Algorithmic Deep Dive"><span class="toc-link-text">B.4. How to Make it Watertight: An Algorithmic Deep Dive</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="B.5. Pointcloud Sampling" aria-label="B.5. Pointcloud Sampling"><span class="toc-link-text">B.5. Pointcloud Sampling</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-8" title="마치며" aria-label="마치며"><span class="toc-link-text">마치며</span></a></li></ol></nav><button id="copyButton">
-    <i class="bi bi-share-fill"></i>
+                <div class="post-reading-column main-content">
+                    <nav class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Introduction: Rise of 3D Generative AI" aria-label="Introduction: Rise of 3D Generative AI"><span class="toc-link-text">Introduction: Rise of 3D Generative AI</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="A. Dataset" aria-label="A. Dataset"><span class="toc-link-text">A. Dataset</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="B. Pre-processing for Shape VAE" aria-label="B. Pre-processing for Shape VAE"><span class="toc-link-text">B. Pre-processing for Shape VAE</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="B.1. 3D Representation" aria-label="B.1. 3D Representation"><span class="toc-link-text">B.1. 3D Representation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="B.2. VAE for 3D: vecset-based VAE" aria-label="B.2. VAE for 3D: vecset-based VAE"><span class="toc-link-text">B.2. VAE for 3D: vecset-based VAE</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="B.3. Watertight Mesh in Mathematics" aria-label="B.3. Watertight Mesh in Mathematics"><span class="toc-link-text">B.3. Watertight Mesh in Mathematics</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="B.4. How to Make it Watertight: An Algorithmic Deep Dive" aria-label="B.4. How to Make it Watertight: An Algorithmic Deep Dive"><span class="toc-link-text">B.4. How to Make it Watertight: An Algorithmic Deep Dive</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="B.5. Pointcloud Sampling" aria-label="B.5. Pointcloud Sampling"><span class="toc-link-text">B.5. Pointcloud Sampling</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-8" title="마치며" aria-label="마치며"><span class="toc-link-text">마치며</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
+    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
-<div id="myshare_modal" class="share_modal">
+<div id="myshare_modal" class="share_modal" role="status" aria-live="polite" aria-hidden="true">
     <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
+        <button class="share_modal_close" type="button" aria-label="Dismiss">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-x-lg"></use></svg>
+        </button>
+        <span class="share_modal-icon" aria-hidden="true">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-check2"></use></svg>
+        </span>
+        <span class="share_modal-message">
+            <strong>링크 복사됨</strong>
+            <small>글 주소를 바로 공유할 수 있습니다.</small>
+        </span>
         <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
+            <div class="copy_indicator" id="share_modalIndicator"></div>
         </div>
     </div>
 </div>
 
-<hr>
 <h2 id="toc-heading-0">Introduction: Rise of 3D Generative AI</h2>
 <p>2024년 하반기 이후, CLAY (Rodin) 를 기점으로 <a href="https://github.com/Tencent-Hunyuan/Hunyuan3D-2">Hunyuan3D</a>, <a href="https://microsoft.github.io/TRELLIS/">Trellis</a>, <a href="https://yg256li.github.io/TripoSG-Page/">TripoSG</a>, <a href="https://stable-x.github.io/Hi3DGen/">Hi3DGen</a>, <a href="https://nju-3dv.github.io/projects/Direct3D-S2/">Direct3D-S2</a> 등 수많은 3D Generative Models 들이 쏟아지고 있다. </p>
 <p>이 모든 method 들은 다음의 설계, </p>
@@ -686,7 +688,7 @@ salient_points = mesh.salient_point_sample(64000, thresh_bihedral=30)
 <p><strong><em>Stay Tuned!</em></strong></p>
 
                 </div>
-                <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="post-reading-column">
                     
                     <section class="related-posts" aria-labelledby="related-posts-heading">
                         <h2 id="related-posts-heading">Related Posts</h2>
@@ -709,17 +711,17 @@ salient_points = mesh.salient_point_sample(64000, thresh_bihedral=30)
                         </div>
                     </section>
     
-                    <div id="post-navigation" class="mt-4"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/3d-model-viewer-in-web-kor/" aria-label="Older Post: 커스텀 3D 웹뷰어 만들기">
+                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
+                <a class="post-nav-card is-older" href="/blogs/posts/3d-model-viewer-in-web-kor/" aria-label="Previous Post: 커스텀 3D 웹뷰어 만들기">
                     <span class="post-nav-kicker">
-                        <span>Older Post</span>
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
                     </span>
                     <strong>커스텀 3D 웹뷰어 만들기</strong>
                 </a>
     
-                <a class="post-nav-card is-next" href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive-kor/" aria-label="Newer Post: Large 3D Generative Model 구축하기 (2) VAE and DiT 분석">
+                <a class="post-nav-card is-next" href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive-kor/" aria-label="Next Post: Large 3D Generative Model 구축하기 (2) VAE and DiT 분석">
                     <span class="post-nav-kicker">
-                        <span>Newer Post</span>
+                        Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
                     <strong>Large 3D Generative Model 구축하기 (2) VAE and DiT 분석</strong>
                 </a>
@@ -729,11 +731,11 @@ salient_points = mesh.salient_point_sample(64000, thresh_bihedral=30)
         </div>
     </article>
 
-    <footer class="border-top">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div class="small text-center text-muted fst-italic">Copyright © Hwan Heo</div>
+    <footer class="blog-post-footer">
+        <div class="blog-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
+                    <div class="blog-footer-note">Copyright © Hwan Heo</div>
                 </div>
             </div>
         </div>
@@ -1384,7 +1386,6 @@ salient_points = mesh.salient_point_sample(64000, thresh_bihedral=30)
   "runtimeFeatures": {
     "katex": true,
     "prism": true,
-    "bootstrap": false,
     "modelViewer": false,
     "modelViewerTextureToggle": false,
     "three": false,

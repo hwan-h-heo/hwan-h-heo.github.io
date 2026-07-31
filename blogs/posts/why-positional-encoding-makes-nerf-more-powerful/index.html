@@ -32,15 +32,11 @@
     <link href="/blogs/css/typography.css" rel="stylesheet" />
     <link href="/blogs/css/post.css" rel="stylesheet" />
     <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-
-    <style>
-        .post-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
-        .post-tags span { display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,0.6); color: #fff; border-radius: 999px; padding: 0.16rem 0.55rem; font-size: 0.72rem; background: rgba(0,0,0,0.18); }
-    </style>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
     <script>
@@ -60,29 +56,29 @@
         </script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
-        <div class="container px-4 px-lg-5">
+    <nav class="post-site-nav" id="mainNav">
+        <div class="blog-shell post-nav-shell">
             <div class="post-nav-brand-group">
-                <a class="navbar-brand" href="/blogs/">Hwan's Blog</a>
+                <a class="post-nav-brand" href="/blogs/">Hwan's Blog</a>
                 <a class="post-nav-portfolio-link" href="/">
-                    Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+                    Portfolio <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
                 </a>
             </div>
-            <button class="navbar-toggler" type="button" data-nav-toggle data-open-label="Open menu" data-close-label="Close menu" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Open menu">
+            <button class="post-nav-toggle" type="button" data-nav-toggle data-open-label="Open menu" data-close-label="Close menu" aria-controls="postNavPanel" aria-expanded="false" aria-label="Open menu">
                 <span class="post-nav-menu-icon" aria-hidden="true"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                    <li class="nav-item post-nav-search-item">
+            <div class="post-nav-panel" id="postNavPanel">
+                <ul class="post-nav-actions">
+                    <li class="post-nav-action post-nav-search-item">
                         <form id="post-nav-search-form" class="post-nav-search" role="search">
                             <label class="visually-hidden" for="post-nav-search-input">Search blog posts</label>
                             <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
                             <button type="submit" aria-label="Search">
-                                <i class="bi bi-search" aria-hidden="true"></i>
+                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
                             </button>
                         </form>
                     </li>
-                    <li class="nav-item nav-theme-item"><button class="btn nav-link blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
+                    <li class="post-nav-action post-nav-theme-item"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><svg class="site-icon theme-toggle-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg></button></li>
                     
                 </ul>
             </div>
@@ -90,16 +86,16 @@
     </nav>
 
     <header class="masthead" style="background-image: url('/blogs/posts/211128_fourier/assets/main.png')">
-        <div class="container position-relative px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="blog-shell post-hero-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
                     <div class="post-heading">
                         <br/>
                         <h1>Why Positional Encoding Makes NeRF more Powerful</h1>
                         <span class="meta">
                             Posted on <time datetime="2021-11-28">November 28, 2021</time>
                             <span style="margin: 0 8px;">•</span>
-                            <i class="bi bi-clock" style="margin-right: 4px;"></i>6 min read
+                            <svg class="site-icon post-reading-time-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-clock"></use></svg>6 min read
                         </span>
                         <div class="post-tags"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                         <hr/>
@@ -109,10 +105,10 @@
         </div>
     </header>
 
-    <article class="mb-4">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
+    <article class="post-article">
+        <div class="blog-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
@@ -126,7 +122,7 @@
                     <div id="series-container">
             <details class="series-card">
                 <summary class="series-summary">
-                    <span class="series-icon" aria-hidden="true"><i class="bi bi-collection"></i></span>
+                    <span class="series-icon" aria-hidden="true"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-collection"></use></svg></span>
                     <span class="series-summary-copy">
                         <span class="series-kicker">Series</span>
                         <strong>Radiance Fields &amp; Gaussian Splatting</strong>
@@ -134,7 +130,7 @@
                     <span class="series-meta">8 / 8</span>
                     <span class="series-toggle">
                         <span>8 posts</span>
-                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
                     </span>
                 </summary>
                 <div class="series-body">
@@ -215,24 +211,31 @@
                             <strong>Why Positional Encoding Makes NeRF more Powerful</strong>
                             <span>2021.11.28</span>
                         </span>
-                        <span class="series-current-pill">Current</span>
                     </li>
             </ol>
                 </div>
             </details>
     </div>
                 </div>
-                <div class="col-md-10 col-lg-8 col-xl-7 main-content">
-                    <button id="copyButton">
-    <i class="bi bi-share-fill"></i>
+                <div class="post-reading-column main-content">
+                    <button id="copyButton" type="button" aria-label="Copy post link">
+    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
-<div id="myshare_modal" class="share_modal">
+<div id="myshare_modal" class="share_modal" role="status" aria-live="polite" aria-hidden="true">
     <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
+        <button class="share_modal_close" type="button" aria-label="Dismiss">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-x-lg"></use></svg>
+        </button>
+        <span class="share_modal-icon" aria-hidden="true">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-check2"></use></svg>
+        </span>
+        <span class="share_modal-message">
+            <strong>Link copied</strong>
+            <small>Post URL is ready to share.</small>
+        </span>
         <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
+            <div class="copy_indicator" id="share_modalIndicator"></div>
         </div>
     </div>
 </div>
@@ -262,7 +265,7 @@
 <h2 id="intro">1. Introduction</h2>
 <p>Fourier-featuring is a function that embeds a coordinate space point into frequency space.</p>
 <p>A prominent example in deep learning is <strong>&#39;Positional Encoding&#39;</strong>, which uses sinusoidal functions to embed coordinate space into frequency space, thereby incorporating positional information that Networks cannot capture.</p>
-<figure class="justify-content-center">
+<figure>
     <img src="/blogs/posts/211128_fourier/assets/main.png" alt="Gaussian RT" width="100%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"> <strong>Figure 1.</strong> Coordinate-Based MLPs </figcaption>
 </figure>
@@ -271,7 +274,7 @@
 </p>
 <h3 id="sec2">2. Background </h3>
 <h3 id="sec2.1">2.1. Kernel Trick</h3>
-<figure class="justify-content-center">
+<figure>
     <img src="/blogs/posts/211128_fourier/assets/kernel_trick.png" alt="Gaussian RT" width="80%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"> <strong>Figure 2.</strong> illustration of Kernel-Trick </figcaption>
 </figure>
@@ -391,7 +394,7 @@ $$</p>
 </ol>
 <video controls style="width: 100%;"><source src="https://bmild.github.io/fourfeat/img/lion_none_gauss_v1.mp4" type="video/mp4"></video>
                 </div>
-                <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="post-reading-column">
                     
                     <section class="related-posts" aria-labelledby="related-posts-heading">
                         <h2 id="related-posts-heading">Related Posts</h2>
@@ -428,17 +431,17 @@ $$</p>
                         </div>
                     </section>
     
-                    <div id="post-navigation" class="mt-4"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/change-of-basis/" aria-label="Older Post: Change of Basis">
+                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
+                <a class="post-nav-card is-older" href="/blogs/posts/change-of-basis/" aria-label="Previous Post: Change of Basis">
                     <span class="post-nav-kicker">
-                        <span>Older Post</span>
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
                     </span>
                     <strong>Change of Basis</strong>
                 </a>
     
-                <a class="post-nav-card is-next" href="/blogs/posts/instant-ngp-review-re-implementation/" aria-label="Newer Post: Instant-NGP Review &amp; Re-Implementation">
+                <a class="post-nav-card is-next" href="/blogs/posts/instant-ngp-review-re-implementation/" aria-label="Next Post: Instant-NGP Review &amp; Re-Implementation">
                     <span class="post-nav-kicker">
-                        <span>Newer Post</span>
+                        Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
                     <strong>Instant-NGP Review &amp; Re-Implementation</strong>
                 </a>
@@ -448,11 +451,11 @@ $$</p>
         </div>
     </article>
 
-    <footer class="border-top">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div class="small text-center text-muted fst-italic">Copyright © Hwan Heo</div>
+    <footer class="blog-post-footer">
+        <div class="blog-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
+                    <div class="blog-footer-note">Copyright © Hwan Heo</div>
                 </div>
             </div>
         </div>
@@ -1103,7 +1106,6 @@ $$</p>
   "runtimeFeatures": {
     "katex": true,
     "prism": false,
-    "bootstrap": false,
     "modelViewer": false,
     "modelViewerTextureToggle": false,
     "three": false,

@@ -33,15 +33,11 @@
     <link href="/blogs/css/typography.css" rel="stylesheet" />
     <link href="/blogs/css/post.css" rel="stylesheet" />
     <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-
-    <style>
-        .post-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
-        .post-tags span { display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,0.6); color: #fff; border-radius: 999px; padding: 0.16rem 0.55rem; font-size: 0.72rem; background: rgba(0,0,0,0.18); }
-    </style>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
     <script>
@@ -61,46 +57,46 @@
         </script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
-        <div class="container px-4 px-lg-5">
+    <nav class="post-site-nav" id="mainNav">
+        <div class="blog-shell post-nav-shell">
             <div class="post-nav-brand-group">
-                <a class="navbar-brand" href="/blogs/">Hwan's Blog</a>
+                <a class="post-nav-brand" href="/blogs/">Hwan's Blog</a>
                 <a class="post-nav-portfolio-link" href="/">
-                    Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+                    Portfolio <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
                 </a>
             </div>
-            <button class="navbar-toggler" type="button" data-nav-toggle data-open-label="Open menu" data-close-label="Close menu" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Open menu">
+            <button class="post-nav-toggle" type="button" data-nav-toggle data-open-label="Open menu" data-close-label="Close menu" aria-controls="postNavPanel" aria-expanded="false" aria-label="Open menu">
                 <span class="post-nav-menu-icon" aria-hidden="true"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                    <li class="nav-item post-nav-search-item">
+            <div class="post-nav-panel" id="postNavPanel">
+                <ul class="post-nav-actions">
+                    <li class="post-nav-action post-nav-search-item">
                         <form id="post-nav-search-form" class="post-nav-search" role="search">
                             <label class="visually-hidden" for="post-nav-search-input">Search blog posts</label>
                             <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
                             <button type="submit" aria-label="Search">
-                                <i class="bi bi-search" aria-hidden="true"></i>
+                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
                             </button>
                         </form>
                     </li>
-                    <li class="nav-item nav-theme-item"><button class="btn nav-link blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
-                    <li class="nav-item post-nav-language-item"><a href="/blogs/posts/linear-system-kor/" class="nav-link post-nav-language-link" data-language-target="kor" aria-label="한국어로 전환" title="한국어로 전환">가</a></li>
+                    <li class="post-nav-action post-nav-theme-item"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><svg class="site-icon theme-toggle-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg></button></li>
+                    <li class="post-nav-action post-nav-language-item"><a href="/blogs/posts/linear-system-kor/" class="post-nav-language-link" data-language-target="kor" aria-label="한국어로 전환" title="한국어로 전환">가</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <header class="masthead" style="background-image: url('/blogs/posts/210909_lin_alg_1/assets/image.png')">
-        <div class="container position-relative px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="blog-shell post-hero-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
                     <div class="post-heading">
                         <br/>
                         <h1>Linear System</h1>
                         <span class="meta">
                             Posted on <time datetime="2021-09-09">September 9, 2021</time>
                             <span style="margin: 0 8px;">•</span>
-                            <i class="bi bi-clock" style="margin-right: 4px;"></i>11 min read
+                            <svg class="site-icon post-reading-time-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-clock"></use></svg>11 min read
                         </span>
                         <div class="post-tags"><a class="post-tag" href="/blogs/tags/linear-algebra/">Linear Algebra</a></div>
                         <hr/>
@@ -110,10 +106,10 @@
         </div>
     </header>
 
-    <article class="mb-4">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
+    <article class="post-article">
+        <div class="blog-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
@@ -127,7 +123,7 @@
                     <div id="series-container">
             <details class="series-card">
                 <summary class="series-summary">
-                    <span class="series-icon" aria-hidden="true"><i class="bi bi-collection"></i></span>
+                    <span class="series-icon" aria-hidden="true"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-collection"></use></svg></span>
                     <span class="series-summary-copy">
                         <span class="series-kicker">Series</span>
                         <strong>Linear Algebra for Deep Learning</strong>
@@ -135,7 +131,7 @@
                     <span class="series-meta">2 / 2</span>
                     <span class="series-toggle">
                         <span>2 posts</span>
-                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
                     </span>
                 </summary>
                 <div class="series-body">
@@ -156,34 +152,39 @@
                             <strong>Linear System</strong>
                             <span>2021.09.09</span>
                         </span>
-                        <span class="series-current-pill">Current</span>
                     </li>
             </ol>
                 </div>
             </details>
     </div>
                 </div>
-                <div class="col-md-10 col-lg-8 col-xl-7 main-content">
-                    <nav class="toc" aria-label="Table of contents"><div class="toc-title">On This Page</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="1. Linear System" aria-label="1. Linear System"><span class="toc-link-text">1. Linear System</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-1" title="1.1.1. Linear Combination" aria-label="1.1.1. Linear Combination"><span class="toc-link-text">1.1.1. Linear Combination</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-2" title="1.1.2. Linear Independence" aria-label="1.1.2. Linear Independence"><span class="toc-link-text">1.1.2. Linear Independence</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-3" title="2. Linear Transformation" aria-label="2. Linear Transformation"><span class="toc-link-text">2. Linear Transformation</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="2.1. Linear Transformation with the Change of Basis" aria-label="2.1. Linear Transformation with the Change of Basis"><span class="toc-link-text">2.1. Linear Transformation with the Change of Basis</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="2.2. Non-square Matrix Case" aria-label="2.2. Non-square Matrix Case"><span class="toc-link-text">2.2. Non-square Matrix Case</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="2.3. Matrix Multiplication" aria-label="2.3. Matrix Multiplication"><span class="toc-link-text">2.3. Matrix Multiplication</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="2.4. Determinant" aria-label="2.4. Determinant"><span class="toc-link-text">2.4. Determinant</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.5. System of Linear Equations" aria-label="2.5. System of Linear Equations"><span class="toc-link-text">2.5. System of Linear Equations</span></a></li></ol></li></ol></nav><button id="copyButton">
-    <i class="bi bi-share-fill"></i>
+                <div class="post-reading-column main-content">
+                    <nav class="toc" aria-label="Table of contents"><div class="toc-title">On This Page</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="1. Linear System" aria-label="1. Linear System"><span class="toc-link-text">1. Linear System</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-1" title="1.1.1. Linear Combination" aria-label="1.1.1. Linear Combination"><span class="toc-link-text">1.1.1. Linear Combination</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-2" title="1.1.2. Linear Independence" aria-label="1.1.2. Linear Independence"><span class="toc-link-text">1.1.2. Linear Independence</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-3" title="2. Linear Transformation" aria-label="2. Linear Transformation"><span class="toc-link-text">2. Linear Transformation</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="2.1. Linear Transformation with the Change of Basis" aria-label="2.1. Linear Transformation with the Change of Basis"><span class="toc-link-text">2.1. Linear Transformation with the Change of Basis</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="2.2. Non-square Matrix Case" aria-label="2.2. Non-square Matrix Case"><span class="toc-link-text">2.2. Non-square Matrix Case</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="2.3. Matrix Multiplication" aria-label="2.3. Matrix Multiplication"><span class="toc-link-text">2.3. Matrix Multiplication</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="2.4. Determinant" aria-label="2.4. Determinant"><span class="toc-link-text">2.4. Determinant</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.5. System of Linear Equations" aria-label="2.5. System of Linear Equations"><span class="toc-link-text">2.5. System of Linear Equations</span></a></li></ol></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
+    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
-<div id="myshare_modal" class="share_modal">
+<div id="myshare_modal" class="share_modal" role="status" aria-live="polite" aria-hidden="true">
     <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
+        <button class="share_modal_close" type="button" aria-label="Dismiss">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-x-lg"></use></svg>
+        </button>
+        <span class="share_modal-icon" aria-hidden="true">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-check2"></use></svg>
+        </span>
+        <span class="share_modal-message">
+            <strong>Link copied</strong>
+            <small>Post URL is ready to share.</small>
+        </span>
         <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
+            <div class="copy_indicator" id="share_modalIndicator"></div>
         </div>
     </div>
 </div>
-
 
 <!-- ***- DL Book 이외의 중요한 내용을 일부 추가하였음.***
 
 https://www.deeplearningbook.org/contents/linear_algebra.html -->
 
-<hr>
 <h2 id="toc-heading-0">1. Linear System</h2>
 <h3 id="toc-heading-1">1.1.1. Linear Combination</h3>
 <p>$$
@@ -365,7 +366,7 @@ $$
 </ul>
 
                 </div>
-                <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="post-reading-column">
                     
                     <section class="related-posts" aria-labelledby="related-posts-heading">
                         <h2 id="related-posts-heading">Related Posts</h2>
@@ -402,17 +403,17 @@ $$
                         </div>
                     </section>
     
-                    <div id="post-navigation" class="mt-4"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/3d-stereo-vision-and-epipolar-geometry/" aria-label="Older Post: 3D Stereo Vision and Epipolar Geometry">
+                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
+                <a class="post-nav-card is-older" href="/blogs/posts/3d-stereo-vision-and-epipolar-geometry/" aria-label="Previous Post: 3D Stereo Vision and Epipolar Geometry">
                     <span class="post-nav-kicker">
-                        <span>Older Post</span>
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
                     </span>
                     <strong>3D Stereo Vision and Epipolar Geometry</strong>
                 </a>
     
-                <a class="post-nav-card is-next" href="/blogs/posts/change-of-basis/" aria-label="Newer Post: Change of Basis">
+                <a class="post-nav-card is-next" href="/blogs/posts/change-of-basis/" aria-label="Next Post: Change of Basis">
                     <span class="post-nav-kicker">
-                        <span>Newer Post</span>
+                        Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
                     <strong>Change of Basis</strong>
                 </a>
@@ -422,11 +423,11 @@ $$
         </div>
     </article>
 
-    <footer class="border-top">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div class="small text-center text-muted fst-italic">Copyright © Hwan Heo</div>
+    <footer class="blog-post-footer">
+        <div class="blog-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
+                    <div class="blog-footer-note">Copyright © Hwan Heo</div>
                 </div>
             </div>
         </div>
@@ -1077,7 +1078,6 @@ $$
   "runtimeFeatures": {
     "katex": true,
     "prism": false,
-    "bootstrap": false,
     "modelViewer": false,
     "modelViewerTextureToggle": false,
     "three": false,

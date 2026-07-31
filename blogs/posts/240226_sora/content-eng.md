@@ -3,20 +3,6 @@ date: Febrary 26, 2024
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<button id="copyButton">
-    <i class="bi bi-share-fill"></i>
-</button>
-
-<div id="myshare_modal" class="share_modal">
-    <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
-        <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
-        </div>
-    </div>
-</div>
-
 <nav class="toc">
     <ul>
         <li>
@@ -45,7 +31,7 @@ author: Hwan Heo
 
 <h2 id="tl-dr">TL; DR</h2>
 <figure>
-    <video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240226_sora/assets/image-poster.jpg" aria-label="Gaussian RT" style="width: 100%">
+    <video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./240226_sora/assets/image-poster.jpg" aria-label="Gaussian RT" style="width: 100%">
         <source src="./240226_sora/assets/image.mp4" type="video/mp4">
     </video>
     <figcaption style="text-align: center; font-size: 15px;"><strong></strong> NeRF Reconstruction from SORA </figcaption>
@@ -101,7 +87,7 @@ author: Hwan Heo
 <ol>
 <li><p><strong>Santorini </strong></p>
     <figure>
-        <video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240226_sora/assets/image-poster.jpg" aria-label="Gaussian RT" style="width: 100%">
+        <video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./240226_sora/assets/image-poster.jpg" aria-label="Gaussian RT" style="width: 100%">
             <source src="./240226_sora/assets/image.mp4" type="video/mp4">
         </video>
         <figcaption style="text-align: center; font-size: 15px;">COLMAP reconstruction from Sora: Santorini </figcaption>
@@ -109,7 +95,7 @@ author: Hwan Heo
 </li>
 <li><p><strong>Museum </strong></p>
     <figure>
-        <video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240226_sora/assets/image-poster.jpg" aria-label="Gaussian RT" style="width: 100%">
+        <video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./240226_sora/assets/image-poster.jpg" aria-label="Gaussian RT" style="width: 100%">
             <source src="./240226_sora/assets/image.mp4" type="video/mp4">
         </video>
         <figcaption style="text-align: center; font-size: 15px;">COLMAP reconstruction from Sora: Museum </figcaption>

@@ -15,13 +15,12 @@
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet">
-
+  <script src="../../assets/js/site-icons.js"></script>
   <script src="../../js/sidebar-controller.js"></script>
   <link href="../../assets/css/portfolio.css" rel="stylesheet">
   <link href="../../assets/css/project-detail.css" rel="stylesheet">
   <link href="/blogs/css/scroll-progress.css" rel="stylesheet">
+  <link href="../../assets/css/site-icons.css" rel="stylesheet">
 
   <link href="../../css/sidebar-nav.css" rel="stylesheet">
 
@@ -35,32 +34,32 @@
 </head>
 
 <body class="portfolio-details-page">
-  <header id="header" class="header dark-background d-flex flex-column">
+  <header id="header" class="header dark-background">
     <div class="profile-img">
-      <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="img-fluid rounded-circle">
+      <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="sidebar-profile-image">
     </div>
 
-    <a href="../../" class="logo d-flex align-items-center justify-content-center">
+    <a href="../../" class="logo">
       <span class="sitename">Hwan Heo</span>
     </a>
 
-    <div class="social-links text-center">
-      <a href="https://github.com/hwanhuh" class="github" aria-label="GitHub"><i class="bi bi-github" aria-hidden="true"></i></a>
-      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin" aria-label="LinkedIn"><i class="bi bi-linkedin" aria-hidden="true"></i></a>
-      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram" aria-label="Google Scholar"><i class="bi bi-mortarboard-fill" aria-hidden="true"></i></a>
-      <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus" aria-label="Email"><i class="bi bi-envelope-fill" aria-hidden="true"></i></a>
+    <div class="social-links">
+      <a href="https://github.com/hwanhuh" class="github" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
+      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
+      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
+      <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
     </div>
 
     <nav id="navmenu" class="navmenu">
       <ul>
-        <li><a href="../../#home"><i class="bi bi-house navicon"></i>Home</a></li>
-        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Projects</a></li>
+        <li><a href="../../#home"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house"></use></svg>Home</a></li>
+        <li><a href="../../#portfolio" class="active"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-images"></use></svg> Projects</a></li>
         <li class="project-nav-selector">
           <details>
             <summary aria-current="page">
-              <i class="bi bi-grid navicon" aria-hidden="true"></i>
+              <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-grid"></use></svg>
               <span class="project-selector-copy"><small>Switch project</small><strong>VARCO 3D</strong></span>
-              <i class="bi bi-chevron-down project-selector-toggle" aria-hidden="true"></i>
+              <svg class="site-icon project-selector-toggle" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
             </summary>
             <div class="project-selector-options">
           <a href="../capa/"><span class="project-selector-index">01</span><span>CaPa</span></a>
@@ -71,15 +70,15 @@
             </div>
           </details>
         </li>
-        <li><a href="../../blogs/"><i class="bi bi-keyboard navicon"></i> Blog</a></li>
-        <li><a href="../../#about"><i class="bi bi-person navicon"></i> About</a></li>
+        <li><a href="../../blogs/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-keyboard"></use></svg> Blog</a></li>
+        <li><a href="../../#about"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-person"></use></svg> About</a></li>
       </ul>
     </nav>
   </header>
 
   <main class="main">
     <div class="page-title dark-background">
-      <div class="container">
+      <div class="portfolio-shell">
         <nav class="breadcrumbs" aria-label="Breadcrumb">
           <ol>
             <li><a href="../../">Home</a></li>
@@ -90,17 +89,17 @@
     </div>
 
     <section id="portfolio-details" class="portfolio-details section">
-      <div class="container project-hero-shell">
+      <div class="portfolio-shell project-hero-shell">
         <div class="project-hero-header">
           <span class="project-hero-kicker">Project Case Study</span>
-          <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline">VARCO 3D: Production 3D Generative AI</span></h1>
+          <h1><span class="text-gradient">VARCO 3D: Production 3D Generative AI</span></h1>
           <div class="project-hero-meta"><span>NC AI</span><span>Production 3D Generation</span></div>
         </div>
       </div>
 
-      <div class="container portfolio-details-container col-11 project-case-study-overview">
-        <div class="row gy-4">
-          <div class="col-lg-8">
+      <div class="portfolio-shell portfolio-details-container project-case-study-overview project-overview-shell">
+        <div class="project-overview-layout">
+          <div class="project-overview-copy">
             <div class="portfolio-description project-overview">
               <h2>Project Overview</h2>
               <p>VARCO 3D is NC AI&#39;s production 3D generative AI service for creating textured meshes from native 3D generation models and GPU-first geometry processing.</p>
@@ -116,7 +115,7 @@
               </div>
             </div>
           </div>
-          <div class="col-lg-4">
+          <div class="project-overview-meta">
             <aside class="portfolio-info">
               <h3>Project Details</h3>
               <ul>
@@ -135,7 +134,7 @@
         </div>
       </div>
 
-      <div class="container col-11 project-case-study-shell">
+      <div class="portfolio-shell project-case-study-shell">
         <article class="portfolio-description project-case-study-article">
 <h2>System Focus</h2>
 <p>The practical target of VARCO 3D is not just to synthesize geometry.
@@ -174,7 +173,7 @@ The optimized path entered production serving with numerical validation and fall
 </ul>
 <p>This layer is where the generated result becomes a deployable asset: cleaned geometry, controlled face count, valid UVs, and texture maps produced without a slow CPU-bound handoff.</p>
 <h2>Result</h2>
-<video autoplay muted loop playsinline preload="metadata" poster="./assets/community-showcase-poster.webp" aria-label="Recent VARCO 3D community creations transitioning from geometry to textured assets" class="img-fluid project-video">
+<video autoplay muted loop playsinline preload="metadata" poster="./assets/community-showcase-poster.webp" aria-label="Recent VARCO 3D community creations transitioning from geometry to textured assets" class="project-media project-video">
   <source src="./assets/community-showcase.mp4" type="video/mp4">
 </video>
 
@@ -182,32 +181,31 @@ The optimized path entered production serving with numerical validation and fall
 
         </article>
       </div>
-<div class="container project-page-nav">
+<div class="portfolio-shell project-page-nav">
         <a class="project-page-nav-link project-page-nav-prev" href="../nerf_in_game/">
-          <span class="project-page-nav-kicker"><i class="bi bi-arrow-left"></i> Previous Project</span>
+          <span class="project-page-nav-kicker"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Project</span>
           <strong>Neural Rendering in Game Engine</strong>
         </a>
         <a class="project-page-nav-link project-page-nav-next" href="../capa/">
-          <span class="project-page-nav-kicker">Next Project <i class="bi bi-arrow-right"></i></span>
+          <span class="project-page-nav-kicker">Next Project <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg></span>
           <strong>CaPa</strong>
         </a>
       </div>
     </section>
   </main>
 
-  <footer id="footer" class="footer position-relative light-background">
-    <div class="container">
-      <div class="copyright text-center">
-        <p>© <span>Copyright</span> <strong class="px-1 sitename">Hwan Heo</strong> <span>All Rights Reserved</span></p>
+  <footer id="footer" class="footer light-background">
+    <div class="portfolio-shell">
+      <div class="copyright">
+        <p>© <span>Copyright</span> <strong class="project-footer-owner sitename">Hwan Heo</strong> <span>All Rights Reserved</span></p>
       </div>
     </div>
   </footer>
 
-  <button id="scroll-top" class="scroll-top project-scroll-top d-flex align-items-center justify-content-center" type="button" aria-label="Back to top">
-    <i class="bi bi-arrow-up" aria-hidden="true"></i>
+  <button id="scroll-top" class="scroll-top project-scroll-top" type="button" aria-label="Back to top">
+    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up"></use></svg>
   </button>
 
-  <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../../assets/js/main.js"></script>
   <script src="/blogs/js/scroll-progress.js"></script>
 </body>

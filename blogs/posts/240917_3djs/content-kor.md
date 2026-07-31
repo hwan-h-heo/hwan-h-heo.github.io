@@ -3,20 +3,6 @@ date: September 17, 2024
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<button id="copyButton">
-    <i class="bi bi-share-fill"></i>
-</button>
-
-<div id="myshare_modal" class="share_modal">
-    <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
-        <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
-        </div>
-    </div>
-</div>
-
 <nav class="toc">
     <ul>
         <li>
@@ -70,15 +56,12 @@ author: Hwan Heo
 3D GS ply scene 이면 모두 로드 가능하며, 본인의 3D GS scene 에 맡게 카메라나 GS 의 position, rotation 등을 수정하면 된다. 
 패키지 basic usgae 처럼 불러오면 화면 전체에 3D content 가 렌더링 되기 때문에 canvas div 를 선언하고 이 영역 내에서만 렌더링 되도록 작업하였다. 
 </p>
-<div class="accordion accordion-flush" id="accordionFlushExample">
-<div class="accordion-item">
-<h2 class="accordion-header">
-<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+<div class="code-disclosure-frame">
+<details class="code-disclosure">
+<summary class="code-disclosure-summary">
     <strong><em>Show Code!</em></strong>
-</button>
-</h2>
-<div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-<div class="accordion-body">
+</summary>
+<div class="code-disclosure-body">
 
 ```javascript
 <script type="module">
@@ -154,8 +137,7 @@ function update() {
 </script>;
 ```
 </div>
-</div>
-</div>
+</details>
 <p>
     Tip.
 </p>
@@ -184,3 +166,4 @@ function update() {
     자기 pr 의 시대에 직접 학습시킨 gaussian splatting scene 을 개인 webpage 에 add 하는 방법 또한 누군가에게는 도움이 될 거라고 믿으며 글을 작성하였다.
     :)
 </p>
+</div>

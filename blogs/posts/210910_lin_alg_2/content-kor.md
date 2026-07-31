@@ -3,26 +3,9 @@ date: September 09, 2021
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<button id="copyButton">
-    <i class="bi bi-share-fill"></i>
-</button>
-
-<div id="myshare_modal" class="share_modal">
-    <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
-        <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
-        </div>
-    </div>
-</div>
-
-
 <!-- ***- DL Book 이외의 중요한 내용을 일부 추가하였음.***
 
 https://www.deeplearningbook.org/contents/linear_algebra.html -->
-
----
 
 - [이전 글](./?id=210909_lin_alg_1)에 이어...
 

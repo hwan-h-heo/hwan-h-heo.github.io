@@ -33,7 +33,8 @@
     <link href="/blogs/css/typography.css" rel="stylesheet" />
     <link href="/blogs/css/post.css" rel="stylesheet" />
     <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js"></script>
     <script type="importmap">
         {
             "imports": {
@@ -48,11 +49,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-
-    <style>
-        .post-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
-        .post-tags span { display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,0.6); color: #fff; border-radius: 999px; padding: 0.16rem 0.55rem; font-size: 0.72rem; background: rgba(0,0,0,0.18); }
-    </style>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
     <script>
@@ -72,46 +68,46 @@
         </script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
-        <div class="container px-4 px-lg-5">
+    <nav class="post-site-nav" id="mainNav">
+        <div class="blog-shell post-nav-shell">
             <div class="post-nav-brand-group">
-                <a class="navbar-brand" href="/blogs/">Hwan's Blog</a>
+                <a class="post-nav-brand" href="/blogs/">Hwan's Blog</a>
                 <a class="post-nav-portfolio-link" href="/">
-                    Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+                    Portfolio <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
                 </a>
             </div>
-            <button class="navbar-toggler" type="button" data-nav-toggle data-open-label="Open menu" data-close-label="Close menu" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Open menu">
+            <button class="post-nav-toggle" type="button" data-nav-toggle data-open-label="Open menu" data-close-label="Close menu" aria-controls="postNavPanel" aria-expanded="false" aria-label="Open menu">
                 <span class="post-nav-menu-icon" aria-hidden="true"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                    <li class="nav-item post-nav-search-item">
+            <div class="post-nav-panel" id="postNavPanel">
+                <ul class="post-nav-actions">
+                    <li class="post-nav-action post-nav-search-item">
                         <form id="post-nav-search-form" class="post-nav-search" role="search">
                             <label class="visually-hidden" for="post-nav-search-input">Search blog posts</label>
                             <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
                             <button type="submit" aria-label="Search">
-                                <i class="bi bi-search" aria-hidden="true"></i>
+                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
                             </button>
                         </form>
                     </li>
-                    <li class="nav-item nav-theme-item"><button class="btn nav-link blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
-                    <li class="nav-item post-nav-language-item"><a href="/blogs/posts/3d-model-viewer-in-web-kor/" class="nav-link post-nav-language-link" data-language-target="kor" aria-label="한국어로 전환" title="한국어로 전환">가</a></li>
+                    <li class="post-nav-action post-nav-theme-item"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><svg class="site-icon theme-toggle-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg></button></li>
+                    <li class="post-nav-action post-nav-language-item"><a href="/blogs/posts/3d-model-viewer-in-web-kor/" class="post-nav-language-link" data-language-target="kor" aria-label="한국어로 전환" title="한국어로 전환">가</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <header class="masthead" style="background-image: url('/blogs/posts/250310_model_viewer/assets/image.png')">
-        <div class="container position-relative px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="blog-shell post-hero-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
                     <div class="post-heading">
                         <br/>
                         <h1>3D Model Viewer in Web</h1>
                         <span class="meta">
                             Posted on <time datetime="2025-03-10">March 10, 2025</time>
                             <span style="margin: 0 8px;">•</span>
-                            <i class="bi bi-clock" style="margin-right: 4px;"></i>16 min read
+                            <svg class="site-icon post-reading-time-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-clock"></use></svg>16 min read
                         </span>
                         <div class="post-tags"><a class="post-tag" href="/blogs/tags/web-3d/">Web 3D</a><a class="post-tag" href="/blogs/tags/three-js/">Three.js</a></div>
                         <hr/>
@@ -121,10 +117,10 @@
         </div>
     </header>
 
-    <article class="mb-4">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
+    <article class="post-article">
+        <div class="blog-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
@@ -138,7 +134,7 @@
                     <div id="series-container">
             <details class="series-card">
                 <summary class="series-summary">
-                    <span class="series-icon" aria-hidden="true"><i class="bi bi-collection"></i></span>
+                    <span class="series-icon" aria-hidden="true"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-collection"></use></svg></span>
                     <span class="series-summary-copy">
                         <span class="series-kicker">Series</span>
                         <strong>3D in Web</strong>
@@ -146,7 +142,7 @@
                     <span class="series-meta">1 / 2</span>
                     <span class="series-toggle">
                         <span>2 posts</span>
-                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
                     </span>
                 </summary>
                 <div class="series-body">
@@ -157,7 +153,6 @@
                             <strong>3D Model Viewer in Web</strong>
                             <span>2025.03.10</span>
                         </span>
-                        <span class="series-current-pill">Current</span>
                     </li>
             
                 <li class="series-post">
@@ -174,8 +169,30 @@
             </details>
     </div>
                 </div>
-                <div class="col-md-10 col-lg-8 col-xl-7 main-content">
-                    <!-- 2. TOC(목차) 추가 -->
+                <div class="post-reading-column main-content">
+                    <button id="copyButton" type="button" aria-label="Copy post link">
+    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
+</button>
+
+<div id="myshare_modal" class="share_modal" role="status" aria-live="polite" aria-hidden="true">
+    <div class="share_modal-content">
+        <button class="share_modal_close" type="button" aria-label="Dismiss">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-x-lg"></use></svg>
+        </button>
+        <span class="share_modal-icon" aria-hidden="true">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-check2"></use></svg>
+        </span>
+        <span class="share_modal-message">
+            <strong>Link copied</strong>
+            <small>Post URL is ready to share.</small>
+        </span>
+        <div class="copy_indicator-container">
+            <div class="copy_indicator" id="share_modalIndicator"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 2. TOC(목차) 추가 -->
 <nav class="toc">
     <ul>
         <li><a href="#h2-3"> Introduction </a><ul></ul></li>
@@ -195,22 +212,6 @@
         <li><a href='#conclusion'>Conclusion</a></li>
     </ul>
 </nav>
-
-<button id="copyButton">
-    <i class="bi bi-share-fill"></i>
-</button>
-
-<div id="myshare_modal" class="share_modal">
-    <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
-        <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
-        </div>
-    </div>
-</div>
-
-<hr/>
 
 <!-- <img src='/blogs/posts/250310_model_viewer/assets/image.gif' width=100% alt="3D Model Viewer in Web" loading="lazy" decoding="async"> -->
 
@@ -387,15 +388,11 @@ loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined
     style="width: 100%; height: 600px;">
 </simple-model-viewer>
 <p class="lang eng"> The current implementation is maintained in <code>js/simple-model-viewer.js</code>. The snippet below is an early prototype excerpt kept for historical context, and the updated usage example right after it reflects the current API surface. </p>
-<div id="div-1"  class="accordion accordion-flush">
-    <div class="accordion-item">
-      <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+<details id="div-1" class="code-disclosure">
+      <summary class="code-disclosure-summary">
           <strong><em>Historical prototype excerpt</em></strong>
-        </button>
-      </h2>
-      <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-        <div class="accordion-body">
+      </summary>
+      <div class="code-disclosure-body">
           <pre><code class="language-javascript">import * as THREE from &#39;three&#39;;
 import { OrbitControls } from &#39;three/addons/controls/OrbitControls.js&#39;;
 import { GLTFLoader } from &#39;three/addons/loaders/GLTFLoader.js&#39;;
@@ -405,7 +402,7 @@ import { RGBELoader } from &#39;three/addons/loaders/RGBELoader.js&#39;;
     constructor() {
         super();
         this.attachShadow({ mode: &#39;open&#39; });
-        this.shadowRoot.innerHTML = <code>            &amp;lt;style&amp;gt;                 :host { display: block; border: 2px solid #ccc; border-radius: 8px;}                 #loadingProgressBar {                     position: absolute;                     top: 0;                     left: 0;                     width: 0%;                      height: 5px;                     background-color: #4CAF50;                      z-index: 1;                      display: none;                  }                 #canvas-container { width: 100%; height: 100%; position: relative; }                 canvas { width: 100%; height: 100%; }                 .controls { margin: 5px; }                 button {                     background-color: #04AA6D;                     border: none;                     color: white;                     padding: 5px 10px;                     border-radius: 4px;                     cursor: pointer;                     text-align: center;                     text-decoration: none;                     display: inline-block;                     font-size: 0.8rem;                 }                 button:hover { background-color: #3e8e41 }                 .transform-panel {                     position: absolute;                     top: 0.5rem;                     right: 0.5rem;                     font-size: 0.8rem;                     background-color: rgba(200, 200, 200, 0.8);                     padding: 0.5rem;                     border-radius: 5px;                     display: flex;                     flex-direction: column;                     gap: 3px;                     z-index: 1000;                 }                 .transform-panel label {                     display: flex;                     justify-content: space-between;                     align-items: center;                 }                 .transform-panel input { width: 3rem; }             &amp;lt;/style&amp;gt;             &amp;lt;div class=&amp;quot;controls&amp;quot;&amp;gt;                 &amp;lt;div id=&amp;#39;meta&amp;#39;&amp;gt;                     &amp;lt;button id=&amp;quot;textureBtn&amp;quot;&amp;gt;Diffuse&amp;lt;/button&amp;gt;                     &amp;lt;button id=&amp;quot;meshBtn&amp;quot;&amp;gt;Geometry&amp;lt;/button&amp;gt;                     &amp;lt;button id=&amp;quot;normalBtn&amp;quot;&amp;gt;Normal&amp;lt;/button&amp;gt;                     &amp;lt;button id=&amp;quot;wireframeBtn&amp;quot;&amp;gt;Wireframe&amp;lt;/button&amp;gt;                     &amp;lt;button id=&amp;quot;autoRotateBtn&amp;quot;&amp;gt;Auto-Rotate&amp;lt;/button&amp;gt;                     &amp;lt;button id=&amp;quot;toonShadingBtn&amp;quot;&amp;gt;Toon Shading&amp;lt;/button&amp;gt;                     &amp;lt;button id=&amp;quot;setBgBtn1&amp;quot;&amp;gt;Env1&amp;lt;/button&amp;gt;                     &amp;lt;button id=&amp;quot;setBgBtn2&amp;quot;&amp;gt;Env2&amp;lt;/button&amp;gt;                     &amp;lt;button id=&amp;quot;setBgBtn3&amp;quot;&amp;gt;Env3&amp;lt;/button&amp;gt;                     &amp;lt;button id=&amp;quot;removeBgBtn&amp;quot;&amp;gt;Remove Env&amp;lt;/button&amp;gt;                     &amp;lt;div id=&amp;quot;modelInfo&amp;quot; style=&amp;#39;padding-left: 0.1rem; font-size:0.8rem&amp;#39;&amp;gt;&amp;lt;strong&amp;gt;[Model Info]&amp;lt;/strong&amp;gt; loading...&amp;lt;/div&amp;gt;                 &amp;lt;/div&amp;gt;                 &amp;lt;div id=&amp;quot;transform-container&amp;quot; style=&amp;quot;position: relative;&amp;quot;&amp;gt;                     &amp;lt;div class=&amp;quot;transform-panel&amp;quot;&amp;gt;                         &amp;lt;button id=&amp;quot;togglePanelBtn&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;bi bi-caret-left&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&amp;lt;/button&amp;gt;                         &amp;lt;div id=&amp;quot;transformControls&amp;quot; style=&amp;quot;display: block;&amp;quot;&amp;gt;                             &amp;lt;label&amp;gt;Position X: &amp;lt;input type=&amp;quot;number&amp;quot; id=&amp;quot;posX&amp;quot; step=&amp;quot;0.1&amp;quot; value=&amp;quot;0&amp;quot;&amp;gt;&amp;lt;/label&amp;gt;                             &amp;lt;label&amp;gt;Position Y: &amp;lt;input type=&amp;quot;number&amp;quot; id=&amp;quot;posY&amp;quot; step=&amp;quot;0.1&amp;quot; value=&amp;quot;0&amp;quot;&amp;gt;&amp;lt;/label&amp;gt;                             &amp;lt;label&amp;gt;Position Z: &amp;lt;input type=&amp;quot;number&amp;quot; id=&amp;quot;posZ&amp;quot; step=&amp;quot;0.1&amp;quot; value=&amp;quot;0&amp;quot;&amp;gt;&amp;lt;/label&amp;gt;                             &amp;lt;label&amp;gt;Rotation X (deg): &amp;lt;input type=&amp;quot;number&amp;quot; id=&amp;quot;rotX&amp;quot; step=&amp;quot;1&amp;quot; value=&amp;quot;0&amp;quot;&amp;gt;&amp;lt;/label&amp;gt;                             &amp;lt;label&amp;gt;Rotation Y (deg): &amp;lt;input type=&amp;quot;number&amp;quot; id=&amp;quot;rotY&amp;quot; step=&amp;quot;1&amp;quot; value=&amp;quot;0&amp;quot;&amp;gt;&amp;lt;/label&amp;gt;                             &amp;lt;label&amp;gt;Rotation Z (deg): &amp;lt;input type=&amp;quot;number&amp;quot; id=&amp;quot;rotZ&amp;quot; step=&amp;quot;1&amp;quot; value=&amp;quot;0&amp;quot;&amp;gt;&amp;lt;/label&amp;gt;                             &amp;lt;div&amp;gt;Scale: &amp;lt;input type=&amp;quot;range&amp;quot; id=&amp;quot;scale&amp;quot; style=&amp;quot;width: 7rem;&amp;quot; min=&amp;quot;1&amp;quot; max=&amp;quot;20&amp;quot; step=&amp;quot;0.1&amp;quot; value=&amp;quot;8&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;                             &amp;lt;div&amp;gt;Roughness: &amp;lt;input type=&amp;quot;range&amp;quot; id=&amp;quot;roughness&amp;quot; style=&amp;quot;width: 7rem;&amp;quot; min=&amp;quot;0&amp;quot; max=&amp;quot;1&amp;quot; step=&amp;quot;0.01&amp;quot; value=&amp;quot;0.5&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;                              &amp;lt;div&amp;gt;Metalness: &amp;lt;input type=&amp;quot;range&amp;quot; id=&amp;quot;metalness&amp;quot; style=&amp;quot;width: 7rem;&amp;quot; min=&amp;quot;0&amp;quot; max=&amp;quot;1&amp;quot; step=&amp;quot;0.01&amp;quot; value=&amp;quot;0.5&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;                          &amp;lt;/div&amp;gt;                     &amp;lt;/div&amp;gt;                 &amp;lt;/div&amp;gt;             &amp;lt;/div&amp;gt;             &amp;lt;div id=&amp;quot;canvas-container&amp;quot; style=&amp;#39;text-align: center&amp;#39;&amp;gt;                 &amp;lt;div id=&amp;quot;loadingProgressBar&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;             &amp;lt;/div&amp;gt;        </code>;</p>
+        this.shadowRoot.innerHTML = <code>            &amp;lt;style&amp;gt;                 :host { display: block; border: 2px solid #ccc; border-radius: 8px;}                 #loadingProgressBar {                     position: absolute;                     top: 0;                     left: 0;                     width: 0%;                      height: 5px;                     background-color: #4CAF50;                      z-index: 1;                      display: none;                  }                 #canvas-container { width: 100%; height: 100%; position: relative; }                 canvas { width: 100%; height: 100%; }                 .controls { margin: 5px; }                 button {                     background-color: #04AA6D;                     border: none;                     color: white;                     padding: 5px 10px;                     border-radius: 4px;                     cursor: pointer;                     text-align: center;                     text-decoration: none;                     display: inline-block;                     font-size: 0.8rem;                 }                 button:hover { background-color: #3e8e41 }                 .transform-panel {                     position: absolute;                     top: 0.5rem;                     right: 0.5rem;                     font-size: 0.8rem;                     background-color: rgba(200, 200, 200, 0.8);                     padding: 0.5rem;                     border-radius: 5px;                     display: flex;                     flex-direction: column;                     gap: 3px;                     z-index: 1000;                 }                 .transform-panel label {                     display: flex;                     justify-content: space-between;                     align-items: center;                 }                 .transform-panel input { width: 3rem; }             &amp;lt;/style&amp;gt;             &amp;lt;div class=&amp;quot;controls&amp;quot;&amp;gt;                 &amp;lt;div id=&amp;#39;meta&amp;#39;&amp;gt;                     &amp;lt;button id=&amp;quot;textureBtn&amp;quot;&amp;gt;Diffuse&amp;lt;/button&amp;gt;                     &amp;lt;button id=&amp;quot;meshBtn&amp;quot;&amp;gt;Geometry&amp;lt;/button&amp;gt;                     &amp;lt;button id=&amp;quot;normalBtn&amp;quot;&amp;gt;Normal&amp;lt;/button&amp;gt;                     &amp;lt;button id=&amp;quot;wireframeBtn&amp;quot;&amp;gt;Wireframe&amp;lt;/button&amp;gt;                     &amp;lt;button id=&amp;quot;autoRotateBtn&amp;quot;&amp;gt;Auto-Rotate&amp;lt;/button&amp;gt;                     &amp;lt;button id=&amp;quot;toonShadingBtn&amp;quot;&amp;gt;Toon Shading&amp;lt;/button&amp;gt;                     &amp;lt;button id=&amp;quot;setBgBtn1&amp;quot;&amp;gt;Env1&amp;lt;/button&amp;gt;                     &amp;lt;button id=&amp;quot;setBgBtn2&amp;quot;&amp;gt;Env2&amp;lt;/button&amp;gt;                     &amp;lt;button id=&amp;quot;setBgBtn3&amp;quot;&amp;gt;Env3&amp;lt;/button&amp;gt;                     &amp;lt;button id=&amp;quot;removeBgBtn&amp;quot;&amp;gt;Remove Env&amp;lt;/button&amp;gt;                     &amp;lt;div id=&amp;quot;modelInfo&amp;quot; style=&amp;#39;padding-left: 0.1rem; font-size:0.8rem&amp;#39;&amp;gt;&amp;lt;strong&amp;gt;[Model Info]&amp;lt;/strong&amp;gt; loading...&amp;lt;/div&amp;gt;                 &amp;lt;/div&amp;gt;                 &amp;lt;div id=&amp;quot;transform-container&amp;quot; style=&amp;quot;position: relative;&amp;quot;&amp;gt;                     &amp;lt;div class=&amp;quot;transform-panel&amp;quot;&amp;gt;                         &amp;lt;button id=&amp;quot;togglePanelBtn&amp;quot;&amp;gt;&amp;lt;svg class=&amp;quot;site-icon&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;use href=&amp;quot;/assets/icons/site-icons.svg#icon-caret-left&amp;quot;&amp;gt;&amp;lt;/use&amp;gt;&amp;lt;/svg&amp;gt;&amp;lt;/button&amp;gt;                         &amp;lt;div id=&amp;quot;transformControls&amp;quot; style=&amp;quot;display: block;&amp;quot;&amp;gt;                             &amp;lt;label&amp;gt;Position X: &amp;lt;input type=&amp;quot;number&amp;quot; id=&amp;quot;posX&amp;quot; step=&amp;quot;0.1&amp;quot; value=&amp;quot;0&amp;quot;&amp;gt;&amp;lt;/label&amp;gt;                             &amp;lt;label&amp;gt;Position Y: &amp;lt;input type=&amp;quot;number&amp;quot; id=&amp;quot;posY&amp;quot; step=&amp;quot;0.1&amp;quot; value=&amp;quot;0&amp;quot;&amp;gt;&amp;lt;/label&amp;gt;                             &amp;lt;label&amp;gt;Position Z: &amp;lt;input type=&amp;quot;number&amp;quot; id=&amp;quot;posZ&amp;quot; step=&amp;quot;0.1&amp;quot; value=&amp;quot;0&amp;quot;&amp;gt;&amp;lt;/label&amp;gt;                             &amp;lt;label&amp;gt;Rotation X (deg): &amp;lt;input type=&amp;quot;number&amp;quot; id=&amp;quot;rotX&amp;quot; step=&amp;quot;1&amp;quot; value=&amp;quot;0&amp;quot;&amp;gt;&amp;lt;/label&amp;gt;                             &amp;lt;label&amp;gt;Rotation Y (deg): &amp;lt;input type=&amp;quot;number&amp;quot; id=&amp;quot;rotY&amp;quot; step=&amp;quot;1&amp;quot; value=&amp;quot;0&amp;quot;&amp;gt;&amp;lt;/label&amp;gt;                             &amp;lt;label&amp;gt;Rotation Z (deg): &amp;lt;input type=&amp;quot;number&amp;quot; id=&amp;quot;rotZ&amp;quot; step=&amp;quot;1&amp;quot; value=&amp;quot;0&amp;quot;&amp;gt;&amp;lt;/label&amp;gt;                             &amp;lt;div&amp;gt;Scale: &amp;lt;input type=&amp;quot;range&amp;quot; id=&amp;quot;scale&amp;quot; style=&amp;quot;width: 7rem;&amp;quot; min=&amp;quot;1&amp;quot; max=&amp;quot;20&amp;quot; step=&amp;quot;0.1&amp;quot; value=&amp;quot;8&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;                             &amp;lt;div&amp;gt;Roughness: &amp;lt;input type=&amp;quot;range&amp;quot; id=&amp;quot;roughness&amp;quot; style=&amp;quot;width: 7rem;&amp;quot; min=&amp;quot;0&amp;quot; max=&amp;quot;1&amp;quot; step=&amp;quot;0.01&amp;quot; value=&amp;quot;0.5&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;                              &amp;lt;div&amp;gt;Metalness: &amp;lt;input type=&amp;quot;range&amp;quot; id=&amp;quot;metalness&amp;quot; style=&amp;quot;width: 7rem;&amp;quot; min=&amp;quot;0&amp;quot; max=&amp;quot;1&amp;quot; step=&amp;quot;0.01&amp;quot; value=&amp;quot;0.5&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;                          &amp;lt;/div&amp;gt;                     &amp;lt;/div&amp;gt;                 &amp;lt;/div&amp;gt;             &amp;lt;/div&amp;gt;             &amp;lt;div id=&amp;quot;canvas-container&amp;quot; style=&amp;#39;text-align: center&amp;#39;&amp;gt;                 &amp;lt;div id=&amp;quot;loadingProgressBar&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;             &amp;lt;/div&amp;gt;        </code>;</p>
 <pre><code>    this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
     this.renderer = new THREE.WebGLRenderer({
@@ -519,10 +516,10 @@ initEventListeners() {
         const button = this.shadowRoot.querySelector(&amp;#39;#togglePanelBtn&amp;#39;);
         if (controls.style.display === &amp;#39;none&amp;#39;) {
             controls.style.display = &amp;#39;block&amp;#39;;
-            button.innerHTML = &amp;#39;&amp;lt;i class=&amp;quot;bi bi-caret-left-fill&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&amp;#39;;
+            button.innerHTML = &amp;#39;&amp;lt;svg class=&amp;quot;site-icon&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;use href=&amp;quot;/assets/icons/site-icons.svg#icon-caret-left-fill&amp;quot;&amp;gt;&amp;lt;/use&amp;gt;&amp;lt;/svg&amp;gt;&amp;#39;;
         } else {
             controls.style.display = &amp;#39;none&amp;#39;;
-            button.innerHTML = &amp;#39;&amp;lt;i class=&amp;quot;bi bi-caret-left&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&amp;#39;;
+            button.innerHTML = &amp;#39;&amp;lt;svg class=&amp;quot;site-icon&amp;quot; aria-hidden=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;use href=&amp;quot;/assets/icons/site-icons.svg#icon-caret-left&amp;quot;&amp;gt;&amp;lt;/use&amp;gt;&amp;lt;/svg&amp;gt;&amp;#39;;
         }
     });
 
@@ -974,10 +971,9 @@ disableToonShading() {
 <p>customElements.define(&#39;simple-model-viewer&#39;, SimpleModelViewer);
 export { SimpleModelViewer };
           </code></pre>
-        </div>
-      </div>
-    </div>
-  </div></p>
+        </div></p>
+</details>
+
 <p id="p-27" class='lang eng'> For the current component, use the declarative API below. It works independently across multiple 3D models, much like Google Model Viewer, while exposing newer camera, environment, selection, and state APIs: </p>
 <pre id="pre-12" ><code id="code-NaN" class="language-javascript">&lt;simple-model-viewer
     src=&quot;model.glb&quot; 
@@ -1035,7 +1031,7 @@ export { SimpleModelViewer };
 <p id="p-31" class='lang eng'> In this project, I used Three.js to build a custom viewer supporting Diffuse, Mesh, Wireframe, and Normal rendering modes, complete with a panel for adjusting model position and rotation. This gives users the flexibility to manipulate models and explore different visual effects. </p> 
 <p id="p-32" class='lang eng'> Looking ahead, there’s room to expand with features like lighting controls or camera view saving. I hope this post helps you understand the ins and outs of 3D model viewers and pick the best approach for your next project! </p>
                 </div>
-                <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="post-reading-column">
                     
                     <section class="related-posts" aria-labelledby="related-posts-heading">
                         <h2 id="related-posts-heading">Related Posts</h2>
@@ -1058,17 +1054,17 @@ export { SimpleModelViewer };
                         </div>
                     </section>
     
-                    <div id="post-navigation" class="mt-4"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/an-era-of-3d-generation/" aria-label="Older Post: An Era of 3D Generation">
+                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
+                <a class="post-nav-card is-older" href="/blogs/posts/an-era-of-3d-generation/" aria-label="Previous Post: An Era of 3D Generation">
                     <span class="post-nav-kicker">
-                        <span>Older Post</span>
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
                     </span>
                     <strong>An Era of 3D Generation</strong>
                 </a>
     
-                <a class="post-nav-card is-next" href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/" aria-label="Newer Post: Building Large 3D Generative Model (1) Data pre-processing">
+                <a class="post-nav-card is-next" href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/" aria-label="Next Post: Building Large 3D Generative Model (1) Data pre-processing">
                     <span class="post-nav-kicker">
-                        <span>Newer Post</span>
+                        Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
                     <strong>Building Large 3D Generative Model (1) Data pre-processing</strong>
                 </a>
@@ -1078,11 +1074,11 @@ export { SimpleModelViewer };
         </div>
     </article>
 
-    <footer class="border-top">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div class="small text-center text-muted fst-italic">Copyright © Hwan Heo</div>
+    <footer class="blog-post-footer">
+        <div class="blog-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
+                    <div class="blog-footer-note">Copyright © Hwan Heo</div>
                 </div>
             </div>
         </div>
@@ -1733,7 +1729,6 @@ export { SimpleModelViewer };
   "runtimeFeatures": {
     "katex": true,
     "prism": true,
-    "bootstrap": true,
     "modelViewer": true,
     "modelViewerTextureToggle": true,
     "three": true,
@@ -1743,7 +1738,6 @@ export { SimpleModelViewer };
   }
 };
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="/blogs/js/code-copy.js"></script>

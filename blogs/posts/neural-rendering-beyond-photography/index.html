@@ -33,17 +33,13 @@
     <link href="/blogs/css/typography.css" rel="stylesheet" />
     <link href="/blogs/css/post.css" rel="stylesheet" />
     <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
     <link href="/blogs/css/code-copy.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-
-    <style>
-        .post-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
-        .post-tags span { display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,0.6); color: #fff; border-radius: 999px; padding: 0.16rem 0.55rem; font-size: 0.72rem; background: rgba(0,0,0,0.18); }
-    </style>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
     <script>
@@ -63,46 +59,46 @@
         </script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
-        <div class="container px-4 px-lg-5">
+    <nav class="post-site-nav" id="mainNav">
+        <div class="blog-shell post-nav-shell">
             <div class="post-nav-brand-group">
-                <a class="navbar-brand" href="/blogs/">Hwan's Blog</a>
+                <a class="post-nav-brand" href="/blogs/">Hwan's Blog</a>
                 <a class="post-nav-portfolio-link" href="/">
-                    Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+                    Portfolio <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
                 </a>
             </div>
-            <button class="navbar-toggler" type="button" data-nav-toggle data-open-label="Open menu" data-close-label="Close menu" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Open menu">
+            <button class="post-nav-toggle" type="button" data-nav-toggle data-open-label="Open menu" data-close-label="Close menu" aria-controls="postNavPanel" aria-expanded="false" aria-label="Open menu">
                 <span class="post-nav-menu-icon" aria-hidden="true"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                    <li class="nav-item post-nav-search-item">
+            <div class="post-nav-panel" id="postNavPanel">
+                <ul class="post-nav-actions">
+                    <li class="post-nav-action post-nav-search-item">
                         <form id="post-nav-search-form" class="post-nav-search" role="search">
                             <label class="visually-hidden" for="post-nav-search-input">Search blog posts</label>
                             <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
                             <button type="submit" aria-label="Search">
-                                <i class="bi bi-search" aria-hidden="true"></i>
+                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
                             </button>
                         </form>
                     </li>
-                    <li class="nav-item nav-theme-item"><button class="btn nav-link blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
-                    <li class="nav-item post-nav-language-item"><a href="/blogs/posts/neural-rendering-beyond-photography-kor/" class="nav-link post-nav-language-link" data-language-target="kor" aria-label="한국어로 전환" title="한국어로 전환">가</a></li>
+                    <li class="post-nav-action post-nav-theme-item"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><svg class="site-icon theme-toggle-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg></button></li>
+                    <li class="post-nav-action post-nav-language-item"><a href="/blogs/posts/neural-rendering-beyond-photography-kor/" class="post-nav-language-link" data-language-target="kor" aria-label="한국어로 전환" title="한국어로 전환">가</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <header class="masthead" style="background-image: url('/blogs/posts/250106_tomography/assets/image1.png')">
-        <div class="container position-relative px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="blog-shell post-hero-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
                     <div class="post-heading">
                         <br/>
                         <h1>Neural Rendering Beyond Photography</h1>
                         <span class="meta">
                             Posted on <time datetime="2025-01-06">January 6, 2025</time>
                             <span style="margin: 0 8px;">•</span>
-                            <i class="bi bi-clock" style="margin-right: 4px;"></i>11 min read
+                            <svg class="site-icon post-reading-time-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-clock"></use></svg>11 min read
                         </span>
                         <div class="post-tags"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                         <hr/>
@@ -112,10 +108,10 @@
         </div>
     </header>
 
-    <article class="mb-4">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
+    <article class="post-article">
+        <div class="blog-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
@@ -129,7 +125,7 @@
                     <div id="series-container">
             <details class="series-card">
                 <summary class="series-summary">
-                    <span class="series-icon" aria-hidden="true"><i class="bi bi-collection"></i></span>
+                    <span class="series-icon" aria-hidden="true"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-collection"></use></svg></span>
                     <span class="series-summary-copy">
                         <span class="series-kicker">Series</span>
                         <strong>Radiance Fields &amp; Gaussian Splatting</strong>
@@ -137,7 +133,7 @@
                     <span class="series-meta">1 / 8</span>
                     <span class="series-toggle">
                         <span>8 posts</span>
-                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
                     </span>
                 </summary>
                 <div class="series-body">
@@ -148,7 +144,6 @@
                             <strong>Neural Rendering Beyond Photography</strong>
                             <span>2025.01.06</span>
                         </span>
-                        <span class="series-current-pill">Current</span>
                     </li>
             
                 <li class="series-post">
@@ -225,22 +220,25 @@
             </details>
     </div>
                 </div>
-                <div class="col-md-10 col-lg-8 col-xl-7 main-content">
-                    <!-- <div style="text-align: center;">
-    <button type="button" class="btn custom-btn" onclick="setLanguage('eng')" style="font-size: 13px;">eng</button>
-    |
-    <button type="button" class="btn custom-btn" onclick="setLanguage('kor')" style="font-size: 13px;">kor</button>
-</div> -->
-
-<button id="copyButton">
-    <i class="bi bi-share-fill"></i>
+                <div class="post-reading-column main-content">
+                    <button id="copyButton" type="button" aria-label="Copy post link">
+    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
-<div id="myshare_modal" class="share_modal">
+
+<div id="myshare_modal" class="share_modal" role="status" aria-live="polite" aria-hidden="true">
     <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
+        <button class="share_modal_close" type="button" aria-label="Dismiss">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-x-lg"></use></svg>
+        </button>
+        <span class="share_modal-icon" aria-hidden="true">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-check2"></use></svg>
+        </span>
+        <span class="share_modal-message">
+            <strong>Link copied</strong>
+            <small>Post URL is ready to share.</small>
+        </span>
         <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
+            <div class="copy_indicator" id="share_modalIndicator"></div>
         </div>
     </div>
 </div>
@@ -270,13 +268,12 @@
     In this article, we will explore how to apply radiance fields technique (NeRF and Gaussian Splatting) beyond photometric domain. 
     Also, I will post the short tip for the quick development of the NeRF / GS viewer which has no official viewer.
 </p>
-<hr/>
 <h2 id="introduction">Introduction</h2>
 <p class="lang eng">Recently, I had the serendipitous opportunity to explore how Neural Rendering could be applied within the medical domain, specifically in Tomography (X-ray), referencing <a href='https://github.com/caiyuanhao1998/SAX-NeRF'>SAX-NeRF</a>.</p>
 <p class="lang eng">Unlike photography, which captures the reflection of visible light, tomography constructs images based on signals that have penetrated a substance. In tracing the authors' investigative process of how to adapt the standard Neural Rendering setting for Tomography, I was able to deepen my abstract intuition and comprehension of Neural Rendering.</p>
 <p class="lang eng">In this post, I aim to elucidate the foundational intuitions behind Neural Rendering, NeRF, and GS through a personal review of SAX-NeRF. Additionally, I will offer insights into a technique for creating a simple web viewer using viser when an official viewer is unavailable.</p>
 <h2 id="tomography-vs-photography">1. Tomography vs. Photography</h2>
-<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image1.png" width="100%" alt="Tomography vs Photography" loading="lazy" decoding="async">
+<img class="post-media" src="/blogs/posts/250106_tomography/assets/image1.png" width="100%" alt="Tomography vs Photography" loading="lazy" decoding="async">
 <h3 id="photography">1.1. Photography</h3>
 <p class="lang eng">- What are the underlying physical principles of the act of <code>'seeing'</code>?</p>
 <p class="lang eng">'Seeing' physically denotes the process where light emitted from a source interacts with an object, causing the object's surface to absorb or reflect specific wavelengths (or energy) of light. The unabsorbed, reflected light then reaches the observer's eye (or detection device), leading to visual perception.</p>
@@ -291,14 +288,14 @@
     <li>$c({\rm \textbf{r}}(t), {\rm \textbf{d}})$: The color of the light reflected by the object at that point. (d is used to reflect view-dependent color.)</li>
     <li>$T(t)$: The accumulated transmittance, indicating whether previously encountered objects blocked (opaque) or allowed passage (transparent) of the ray.</li>
 </ul>
-<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image2.png" alt="NeRF Rendering Equation" loading="lazy" decoding="async">
+<img class="post-media" src="/blogs/posts/250106_tomography/assets/image2.png" alt="NeRF Rendering Equation" loading="lazy" decoding="async">
 <p class="lang eng">Thus, NeRF's rendering equation mathematically formalizes the process of visual object perception. By integrating all elements of the physical light-object interaction (absorption, reflection, transparency, etc.), NeRF calculates the cumulative contribution of light along the ray path to ultimately generate an image.</p>
-<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image3.png" alt="NeRF Image Generation" loading="lazy" decoding="async">
+<img class="post-media" src="/blogs/posts/250106_tomography/assets/image3.png" alt="NeRF Image Generation" loading="lazy" decoding="async">
 
 <h3 id="tomography">1.2. Tomography</h3>
 <p class="lang eng">So, what considerations are necessary for applying Neural Rendering to domains outside the visible light spectrum?</p>
 <p class="lang eng">A quintessential example in this domain is Tomography, including X-ray and CT scans. Tomography utilizes X-rays, which have shorter wavelengths (and higher energy) than visible light. Instead of reflection, the process is based on the <strong><em>penetration</em></strong> of X-rays through an object and the <strong><em>attenuation</em></strong> of the light's intensity by the object's internal density. This contrasts with the reflection-based nature of visible light, and the internal structure of the object is reconstructed by analyzing the intensity of the light that passes through and reaches the detector.</p>
-<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image5.png" alt="Tomography Process" loading="lazy" decoding="async">
+<img class="post-media" src="/blogs/posts/250106_tomography/assets/image5.png" alt="Tomography Process" loading="lazy" decoding="async">
 <p class="lang eng">In Tomography, this penetration and attenuation process is modeled by the <a href="https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law">Beer-Lambert Law</a>, which is specifically expressed as:</p>
 <p class="lang eng">$$ I_\text{gt}(\mathbf{r}) = I_o \cdot \exp \left ( - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt \right ) $$</p>
 <ul class="lang eng">
@@ -319,16 +316,16 @@
 $$ I_{pred}(\mathbf{r}) = I_0 \cdot \exp\left(-\sum_{i=1}^{N} \rho_i \delta_i\right) 
 $$
 </p>
-<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image6.png" alt="Tomography Intensity Rendering" loading="lazy" decoding="async">
+<img class="post-media" src="/blogs/posts/250106_tomography/assets/image6.png" alt="Tomography Intensity Rendering" loading="lazy" decoding="async">
 
 <h2 id="modeling">2. Modeling</h2>
 <p class="lang eng">Returning our focus to NeRF, while variations such as Hash Grid NeRF and TensoRF exist, the fundamental principle of NeRF is to parameterize and represent a 3D scene.</p>
 <p class="lang eng">When this parameterization is achieved through an MLP, it is classified within the NeRF family, whereas the utilization of explicit 3D Gaussians or 2D Gaussian surfels aligns it with the Gaussian Splatting methodology.</p>
 <p class="lang eng">Conventionally, these parameter models are designed to receive a 3D Cartesian Coordinate $(x,y,z)$ as input, subsequently producing the density and color $(\sigma, c)$ at the specified location.</p>
-<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image7.png" alt="NeRF Modeling" loading="lazy" decoding="async">
+<img class="post-media" src="/blogs/posts/250106_tomography/assets/image7.png" alt="NeRF Modeling" loading="lazy" decoding="async">
 <p class="lang eng">However, the rendering equation pertinent to Tomography necessitates the radiodensity $\rho$ as opposed to $(\sigma, c)$. Consequently, the application of NeRF to Tomography mandates a distinct modeling strategy compared to that employed in Photography.</p>
 <p class="lang eng">Given that the rendering equation for Tomography, adapted based on the Beer-Lambert Law, exhibits sole dependency on radiodensity $\rho$, a Tomography-NeRF model can be architected to accept a 3D Cartesian Coordinate $(x,y,z)$ as input and exclusively generate $\rho$ as the output.</p>
-<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image8.png" alt="Tomography NeRF Modeling" loading="lazy" decoding="async">
+<img class="post-media" src="/blogs/posts/250106_tomography/assets/image8.png" alt="Tomography NeRF Modeling" loading="lazy" decoding="async">
 <p class="lang eng">Subsequently, SAX-NeRF introduces an alternative design, favoring a Transformer architecture over an MLP to accommodate X-Ray specific attributes, and incorporating ray-wise locality inductive bias within the attention mechanism. However, considering this aspect to be of secondary importance to the central discussion, I will proceed without further elaboration. Readers seeking further details are encouraged to consult the original publication.</p>
 
 <h2 id="quick-viewer-development-tip">3. Quick Viewer Development Tip</h2>
@@ -341,18 +338,14 @@ $$
     <li>Rendering (applying the rendering equation).</li>
 </ol>
 <p class="lang eng">Typically, the implementation of elements 2) and 3) is less challenging, provided that the corresponding code is publicly accessible. However, camera coordinate systems can vary across projects, particularly between OpenGL and OpenCV, which often leads to errors. Therefore, it is crucial to generate rays specifically tailored to the project being implemented.</p>
-<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image9.png" alt="Coordinate Systems" loading="lazy" decoding="async">
+<img class="post-media" src="/blogs/posts/250106_tomography/assets/image9.png" alt="Coordinate Systems" loading="lazy" decoding="async">
 <p class="lang eng">Another challenge lies in the difficulty of custom implementing 1) to control the scene as desired. Fortunately, <a href="https://github.com/nerfstudio-project/viser">viser</a>, developed by the NeRFStudio team, offers a remarkably easy solution. A 2D Gaussian Splatting viewer I developed previously also utilized this viser project.</p>
 <p class="lang eng">Below is a very simple SAX-NeRF viewer implemented using viser. This implementation utilizes the <code>nerfview</code> package, which provides minimal features within the viser project.</p>
-<div class="accordion accordion-flush" id="accordionFlushExample1">
-<div class="accordion-item">
-<h2 class="accordion-header">
-<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+<details class="code-disclosure">
+<summary class="code-disclosure-summary">
     <strong><em>viewer.py</em></strong>
-</button>
-</h2>
-<div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-<div class="accordion-body">
+</summary>
+<div class="code-disclosure-body">
 
 <pre><code class="language-python">from typing import Tuple
 import time
@@ -520,32 +513,26 @@ if __name__ == &quot;__main__&quot;:
     tyro.cli(lambda: main(args)) 
 </code></pre>
 </div>
-</div>
-</div>
-</div>
+</details>
 <br/>
 
 <p><strong>Captured Results:</strong></p>
-<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/viewer_capture.gif" alt="viewer capture" loading="lazy" decoding="async">
+<img class="post-media" src="/blogs/posts/250106_tomography/assets/viewer_capture.gif" alt="viewer capture" loading="lazy" decoding="async">
 <p class="lang eng">As demonstrated, a viewer for a new NeRF / GS model can be quickly created with minimal coding. I initially considered uploading this to GitHub, but due to its simplicity, I will only include it in this blog post.</p>
 
 <h3 id="marching-cube-extraction">3.2. Marching Cube Extraction</h3>
 <p class="lang eng">Another method for interactively examining a NeRF / GS scene is by using scalar field to polygonal mesh conversion algorithms, such as marching cubes.</p>
-<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/image10.png" style="width: 70%;" alt="Marching Cubes" loading="lazy" decoding="async">
+<img class="post-media" src="/blogs/posts/250106_tomography/assets/image10.png" style="width: 70%;" alt="Marching Cubes" loading="lazy" decoding="async">
 <p class="lang eng">However, it is important to note that standard NeRF or GS models, which are not specifically designed for surface reconstruction like 2D GS or SDF, may not align perfectly with conventional mesh conversion algorithms. The density field obtained from NeRF or GS represents a volumetric density rather than a clear surface. Therefore, the extracted mesh might appear noisy or require careful tuning of the isosurface value.</p>
     NeRF/GS 에서 얻은 density field 는 volumetric density 를 나타내기 때문에, 추출된 mesh 에 noise 가 많아 보이거나 isosurface 값을 신중하게 조정해야 할 수 있다.
 </p>
 <p class="lang eng">This should be considered as a supplementary approach for gaining a rough geometric understanding of the scene.</p>
 <p class="lang eng">Below is an example code snippet for generating a simple mesh from SAX-NeRF using <code>scikit-image</code>:</p>
-<div class="accordion accordion-flush" id="accordionFlushExample1">
-<div class="accordion-item">
-<h2 class="accordion-header">
-<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+<details class="code-disclosure">
+<summary class="code-disclosure-summary">
     <strong><em>marching_cube.py</em></strong>
-</button>
-</h2>
-<div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-<div class="accordion-body">
+</summary>
+<div class="code-disclosure-body">
 
 <pre><code class="language-python">
 from skimage import measure
@@ -579,16 +566,14 @@ mesh = trimesh.Trimesh(vertices=verts, faces=faces)
 mesh.export(&quot;output.obj&quot;) 
 </code></pre>
 </div>
-</div>
-</div>
-</div>
+</details>
 <br/>
-<img class="img-fluid" src="/blogs/posts/250106_tomography/assets/foot_gif.gif" alt="foot capture" loading="lazy" decoding="async">
+<img class="post-media" src="/blogs/posts/250106_tomography/assets/foot_gif.gif" alt="foot capture" loading="lazy" decoding="async">
 <h2 id="concluding-remarks">Concluding Remarks</h2>
 <p class="lang eng">Through the exploration of SAX-NeRF, we've seen how the foundational principles of Neural Rendering can be adapted beyond the realm of traditional photography. By understanding the underlying physical phenomena, such as the Beer-Lambert Law in tomography, we can modify the rendering equation and model architecture to suit different imaging modalities. This adaptation underscores the abstract nature of Neural Rendering and its potential applicability across various scientific domains.</p>
 <p class="lang eng">Ultimately, the ability to apply Neural Rendering to diverse data types and the ease with which we can now visualize these results opens up exciting possibilities for future research and applications across various fields.</p>
                 </div>
-                <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="post-reading-column">
                     
                     <section class="related-posts" aria-labelledby="related-posts-heading">
                         <h2 id="related-posts-heading">Related Posts</h2>
@@ -618,17 +603,17 @@ mesh.export(&quot;output.obj&quot;)
                         </div>
                     </section>
     
-                    <div id="post-navigation" class="mt-4"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/add-gaussian-splatting-to-your-website/" aria-label="Older Post: Add Gaussian Splatting to Your Website">
+                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
+                <a class="post-nav-card is-older" href="/blogs/posts/add-gaussian-splatting-to-your-website/" aria-label="Previous Post: Add Gaussian Splatting to Your Website">
                     <span class="post-nav-kicker">
-                        <span>Older Post</span>
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
                     </span>
                     <strong>Add Gaussian Splatting to Your Website</strong>
                 </a>
     
-                <a class="post-nav-card is-next" href="/blogs/posts/an-era-of-3d-generation/" aria-label="Newer Post: An Era of 3D Generation">
+                <a class="post-nav-card is-next" href="/blogs/posts/an-era-of-3d-generation/" aria-label="Next Post: An Era of 3D Generation">
                     <span class="post-nav-kicker">
-                        <span>Newer Post</span>
+                        Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
                     <strong>An Era of 3D Generation</strong>
                 </a>
@@ -638,11 +623,11 @@ mesh.export(&quot;output.obj&quot;)
         </div>
     </article>
 
-    <footer class="border-top">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div class="small text-center text-muted fst-italic">Copyright © Hwan Heo</div>
+    <footer class="blog-post-footer">
+        <div class="blog-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
+                    <div class="blog-footer-note">Copyright © Hwan Heo</div>
                 </div>
             </div>
         </div>
@@ -1293,7 +1278,6 @@ mesh.export(&quot;output.obj&quot;)
   "runtimeFeatures": {
     "katex": true,
     "prism": true,
-    "bootstrap": true,
     "modelViewer": false,
     "modelViewerTextureToggle": false,
     "three": false,
@@ -1303,7 +1287,6 @@ mesh.export(&quot;output.obj&quot;)
   }
 };
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="/blogs/js/code-copy.js"></script>

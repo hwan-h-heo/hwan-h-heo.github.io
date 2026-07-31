@@ -33,15 +33,11 @@
     <link href="/blogs/css/typography.css" rel="stylesheet" />
     <link href="/blogs/css/post.css" rel="stylesheet" />
     <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-
-    <style>
-        .post-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
-        .post-tags span { display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,0.6); color: #fff; border-radius: 999px; padding: 0.16rem 0.55rem; font-size: 0.72rem; background: rgba(0,0,0,0.18); }
-    </style>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
     <script>
@@ -61,46 +57,46 @@
         </script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
-        <div class="container px-4 px-lg-5">
+    <nav class="post-site-nav" id="mainNav">
+        <div class="blog-shell post-nav-shell">
             <div class="post-nav-brand-group">
-                <a class="navbar-brand" href="/blogs/">Hwan's Blog</a>
+                <a class="post-nav-brand" href="/blogs/">Hwan's Blog</a>
                 <a class="post-nav-portfolio-link" href="/">
-                    Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+                    Portfolio <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
                 </a>
             </div>
-            <button class="navbar-toggler" type="button" data-nav-toggle data-open-label="메뉴 열기" data-close-label="메뉴 닫기" aria-controls="navbarResponsive" aria-expanded="false" aria-label="메뉴 열기">
+            <button class="post-nav-toggle" type="button" data-nav-toggle data-open-label="메뉴 열기" data-close-label="메뉴 닫기" aria-controls="postNavPanel" aria-expanded="false" aria-label="메뉴 열기">
                 <span class="post-nav-menu-icon" aria-hidden="true"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                    <li class="nav-item post-nav-search-item">
+            <div class="post-nav-panel" id="postNavPanel">
+                <ul class="post-nav-actions">
+                    <li class="post-nav-action post-nav-search-item">
                         <form id="post-nav-search-form" class="post-nav-search" role="search">
                             <label class="visually-hidden" for="post-nav-search-input">블로그 글 검색</label>
                             <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
                             <button type="submit" aria-label="검색">
-                                <i class="bi bi-search" aria-hidden="true"></i>
+                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
                             </button>
                         </form>
                     </li>
-                    <li class="nav-item nav-theme-item"><button class="btn nav-link blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
-                    <li class="nav-item post-nav-language-item"><a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" class="nav-link post-nav-language-link" data-language-target="eng" aria-label="Switch to English" title="Switch to English">A</a></li>
+                    <li class="post-nav-action post-nav-theme-item"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><svg class="site-icon theme-toggle-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg></button></li>
+                    <li class="post-nav-action post-nav-language-item"><a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" class="post-nav-language-link" data-language-target="eng" aria-label="Switch to English" title="Switch to English">A</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <header class="masthead" style="background-image: url('/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif')">
-        <div class="container position-relative px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="blog-shell post-hero-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
                     <div class="post-heading">
                         <br/>
                         <h1>3D 생성형 AI 서비스; Varco3D 개발기</h1>
                         <span class="meta">
                             Posted on <time datetime="2026-01-15">January 15, 2026</time>
                             <span style="margin: 0 8px;">•</span>
-                            <i class="bi bi-clock" style="margin-right: 4px;"></i>15 min read
+                            <svg class="site-icon post-reading-time-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-clock"></use></svg>15 min read
                         </span>
                         <div class="post-tags"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
                         <hr/>
@@ -110,10 +106,10 @@
         </div>
     </header>
 
-    <article class="mb-4">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
+    <article class="post-article">
+        <div class="blog-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
@@ -127,7 +123,7 @@
                     <div id="series-container">
             <details class="series-card">
                 <summary class="series-summary">
-                    <span class="series-icon" aria-hidden="true"><i class="bi bi-collection"></i></span>
+                    <span class="series-icon" aria-hidden="true"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-collection"></use></svg></span>
                     <span class="series-summary-copy">
                         <span class="series-kicker">Series</span>
                         <strong>3D AI</strong>
@@ -135,7 +131,7 @@
                     <span class="series-meta">2 / 7</span>
                     <span class="series-toggle">
                         <span>7 posts</span>
-                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
                     </span>
                 </summary>
                 <div class="series-body">
@@ -156,7 +152,6 @@
                             <strong>3D 생성형 AI 서비스; Varco3D 개발기</strong>
                             <span>2026.01.15</span>
                         </span>
-                        <span class="series-current-pill">Current</span>
                     </li>
             
                 <li class="series-post">
@@ -213,18 +208,18 @@
             </details>
     </div>
                 </div>
-                <div class="col-md-10 col-lg-8 col-xl-7 main-content">
+                <div class="post-reading-column main-content">
                     <nav class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Introduction" aria-label="Introduction"><span class="toc-link-text">Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="1. Back to the 2024" aria-label="1. Back to the 2024"><span class="toc-link-text">1. Back to the 2024</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-2" title="1.1 Non-Native 3D Generation" aria-label="1.1 Non-Native 3D Generation"><span class="toc-link-text">1.1 Non-Native 3D Generation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="1.2. Texture Generative AI" aria-label="1.2. Texture Generative AI"><span class="toc-link-text">1.2. Texture Generative AI</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="1.3. Beyond SDS; Native 3D Generation" aria-label="1.3. Beyond SDS; Native 3D Generation"><span class="toc-link-text">1.3. Beyond SDS; Native 3D Generation</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-5" title="2. Pursue SOTA: 3D Sovereign AI" aria-label="2. Pursue SOTA: 3D Sovereign AI"><span class="toc-link-text">2. Pursue SOTA: 3D Sovereign AI</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="2.1. Varco3D-alpha" aria-label="2.1. Varco3D-alpha"><span class="toc-link-text">2.1. Varco3D-alpha</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="2.2. SOTA Sparse Voxel Method" aria-label="2.2. SOTA Sparse Voxel Method"><span class="toc-link-text">2.2. SOTA Sparse Voxel Method</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.3. Varco3D 1.0-preview" aria-label="2.3. Varco3D 1.0-preview"><span class="toc-link-text">2.3. Varco3D 1.0-preview</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-9" title="3. Back to the VecSet" aria-label="3. Back to the VecSet"><span class="toc-link-text">3. Back to the VecSet</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="3.1. Lattice" aria-label="3.1. Lattice"><span class="toc-link-text">3.1. Lattice</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-11" title="3.2. FlashVDM; vice-versa of Lattice?" aria-label="3.2. FlashVDM; vice-versa of Lattice?"><span class="toc-link-text">3.2. FlashVDM; vice-versa of Lattice?</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-12" title="3.3. Varco3D-Lattice" aria-label="3.3. Varco3D-Lattice"><span class="toc-link-text">3.3. Varco3D-Lattice</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-13" title="4. Next Step in 3D Generation" aria-label="4. Next Step in 3D Generation"><span class="toc-link-text">4. Next Step in 3D Generation</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-14" title="4.1. Sparse Voxel vs. VecSet" aria-label="4.1. Sparse Voxel vs. VecSet"><span class="toc-link-text">4.1. Sparse Voxel vs. VecSet</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-15" title="4.2. Beyond SDF: Trellis 2 &amp; Faith-Contouring" aria-label="4.2. Beyond SDF: Trellis 2 &amp; Faith-Contouring"><span class="toc-link-text">4.2. Beyond SDF: Trellis 2 &amp; Faith-Contouring</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-16" title="Epilogue" aria-label="Epilogue"><span class="toc-link-text">Epilogue</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
-    <i class="bi bi-link-45deg" aria-hidden="true"></i>
+    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
 <div id="myshare_modal" class="share_modal" role="status" aria-live="polite" aria-hidden="true">
     <div class="share_modal-content">
         <button class="share_modal_close" type="button" aria-label="Dismiss">
-            <i class="bi bi-x-lg" aria-hidden="true"></i>
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-x-lg"></use></svg>
         </button>
         <span class="share_modal-icon" aria-hidden="true">
-            <i class="bi bi-check2"></i>
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-check2"></use></svg>
         </span>
         <span class="share_modal-message">
             <strong>링크 복사됨</strong>
@@ -505,7 +500,7 @@ $$
 </ul>
 
                 </div>
-                <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="post-reading-column">
                     
                     <section class="related-posts" aria-labelledby="related-posts-heading">
                         <h2 id="related-posts-heading">Related Posts</h2>
@@ -535,17 +530,17 @@ $$
                         </div>
                     </section>
     
-                    <div id="post-navigation" class="mt-4"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/sdf-and-eikonal-equation-kor/" aria-label="Older Post: SDF 와 Eikonal Equation 의 관계는?">
+                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
+                <a class="post-nav-card is-older" href="/blogs/posts/sdf-and-eikonal-equation-kor/" aria-label="Previous Post: SDF 와 Eikonal Equation 의 관계는?">
                     <span class="post-nav-kicker">
-                        <span>Older Post</span>
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
                     </span>
                     <strong>SDF 와 Eikonal Equation 의 관계는?</strong>
                 </a>
     
-                <a class="post-nav-card is-next" href="/blogs/posts/optimizing-sparse-3d-generation-inference-kor/" aria-label="Newer Post: 컴파일러가 놓친 Sparse 3D Forward 최적화">
+                <a class="post-nav-card is-next" href="/blogs/posts/optimizing-sparse-3d-generation-inference-kor/" aria-label="Next Post: 컴파일러가 놓친 Sparse 3D Forward 최적화">
                     <span class="post-nav-kicker">
-                        <span>Newer Post</span>
+                        Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
                     <strong>컴파일러가 놓친 Sparse 3D Forward 최적화</strong>
                 </a>
@@ -555,11 +550,11 @@ $$
         </div>
     </article>
 
-    <footer class="border-top">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div class="small text-center text-muted fst-italic">Copyright © Hwan Heo</div>
+    <footer class="blog-post-footer">
+        <div class="blog-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
+                    <div class="blog-footer-note">Copyright © Hwan Heo</div>
                 </div>
             </div>
         </div>
@@ -1210,7 +1205,6 @@ $$
   "runtimeFeatures": {
     "katex": true,
     "prism": false,
-    "bootstrap": false,
     "modelViewer": false,
     "modelViewerTextureToggle": false,
     "three": false,

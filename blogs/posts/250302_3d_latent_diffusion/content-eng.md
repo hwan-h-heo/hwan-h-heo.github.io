@@ -3,28 +3,12 @@ date: March 02, 2025
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<button id="copyButton">
-    <i class="bi bi-share-fill"></i>
-</button>
-
-<div id="myshare_modal" class="share_modal">
-    <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
-        <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
-        </div>
-    </div>
-</div>
-
 <nav class="toc">
     <ul><li><a href="#h2-1">Preliminary: What is Latent?</a><ul></ul></li><li><a href="#h2-2">ShapeVAE</a><ul><li><a href="#h3-1">Challenges for ShapeVAE</a></li></ul></li><li><a href="#h2-3">Trellis</a><ul><li><a href="#h3-2">Structured Latent</a></li><li><a href="#h3-3">3D Generation</a></li></ul></li><li><a href="#h2-4">Hunyuan3D-v2</a><ul><li><a href="#h3-4">Hunyuan-ShapeVAE</a></li><li><a href="#h3-5">Hunyuan3D-DiT</a></li><li><a href="#h3-6">Hunyuan3D-Paint</a></li></ul></li><li><a href="#h2-6"> Trellis vs Hunyuan? </a><ul></ul></li><li><a href="#h2-5">Closing</a><ul></ul></li></ul>
 </nav>
 
-<hr/>
-
 <figure id="figure-0" >
-  <video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/teaser-poster.jpg" aria-label="3D latent diffusion teaser" style="width: 100%">
+  <video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/teaser-poster.jpg" aria-label="3D latent diffusion teaser" style="width: 100%">
     <source src="./250302_3d_latent_diffusion/assets/teaser.mp4" type="video/mp4">
   </video>
 </figure>
@@ -431,13 +415,13 @@ $$</p>
 <tbody>
 <tr>
 <td><figure id="figure-10" >
-  <video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-19-poster.jpg" aria-label="Trellis result 1" style="width: 100%">
+  <video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-19-poster.jpg" aria-label="Trellis result 1" style="width: 100%">
     <source src="./250302_3d_latent_diffusion/assets/image-19.mp4" type="video/mp4">
   </video>
 </figure></td>
 <td>
     <figure id="figure-11" >
-  <video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-20-poster.jpg" aria-label="Hunyuan3D result 1" style="width: 100%">
+  <video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-20-poster.jpg" aria-label="Hunyuan3D result 1" style="width: 100%">
     <source src="./250302_3d_latent_diffusion/assets/image-20.mp4" type="video/mp4">
   </video>
 </figure>
@@ -446,14 +430,14 @@ $$</p>
 <tr>
 <td>
     <figure id="figure-12" >
-  <video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-21-poster.jpg" aria-label="Trellis result 2" style="width: 100%">
+  <video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-21-poster.jpg" aria-label="Trellis result 2" style="width: 100%">
     <source src="./250302_3d_latent_diffusion/assets/image-21.mp4" type="video/mp4">
   </video>
 </figure>
 </td>
 <td>
     <figure id="figure-13" >
-  <video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-22-poster.jpg" aria-label="Hunyuan3D result 2" style="width: 100%">
+  <video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-22-poster.jpg" aria-label="Hunyuan3D result 2" style="width: 100%">
     <source src="./250302_3d_latent_diffusion/assets/image-22.mp4" type="video/mp4">
   </video>
 </figure>
@@ -468,7 +452,7 @@ $$</p>
 <p id="p-118" >The clear advantages and disadvantages seem to arise from their respective end-to-end vs. 2-stage pipelines. It is anticipated that subsequent research in 3D Latent Diffusion will emerge, enhancing quality in each of these aspects.</p>
 <p id="p-119" >Finally, I show CaPa's Result :)</p>
 <figure id="figure-14" >
-  <video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-23-poster.jpg" aria-label="Generated 3D asset by CaPa" style="width: 100%">
+  <video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/image-23-poster.jpg" aria-label="Generated 3D asset by CaPa" style="width: 100%">
     <source src="./250302_3d_latent_diffusion/assets/image-23.mp4" type="video/mp4">
   </video>
   <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Generated 3D asset by CaPa</figcaption>

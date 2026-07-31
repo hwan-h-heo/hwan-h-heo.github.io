@@ -33,17 +33,13 @@
     <link href="/blogs/css/typography.css" rel="stylesheet" />
     <link href="/blogs/css/post.css" rel="stylesheet" />
     <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
     <link href="/blogs/css/code-copy.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-
-    <style>
-        .post-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
-        .post-tags span { display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,0.6); color: #fff; border-radius: 999px; padding: 0.16rem 0.55rem; font-size: 0.72rem; background: rgba(0,0,0,0.18); }
-    </style>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
     <script>
@@ -63,46 +59,46 @@
         </script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
-        <div class="container px-4 px-lg-5">
+    <nav class="post-site-nav" id="mainNav">
+        <div class="blog-shell post-nav-shell">
             <div class="post-nav-brand-group">
-                <a class="navbar-brand" href="/blogs/">Hwan's Blog</a>
+                <a class="post-nav-brand" href="/blogs/">Hwan's Blog</a>
                 <a class="post-nav-portfolio-link" href="/">
-                    Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+                    Portfolio <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
                 </a>
             </div>
-            <button class="navbar-toggler" type="button" data-nav-toggle data-open-label="메뉴 열기" data-close-label="메뉴 닫기" aria-controls="navbarResponsive" aria-expanded="false" aria-label="메뉴 열기">
+            <button class="post-nav-toggle" type="button" data-nav-toggle data-open-label="메뉴 열기" data-close-label="메뉴 닫기" aria-controls="postNavPanel" aria-expanded="false" aria-label="메뉴 열기">
                 <span class="post-nav-menu-icon" aria-hidden="true"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                    <li class="nav-item post-nav-search-item">
+            <div class="post-nav-panel" id="postNavPanel">
+                <ul class="post-nav-actions">
+                    <li class="post-nav-action post-nav-search-item">
                         <form id="post-nav-search-form" class="post-nav-search" role="search">
                             <label class="visually-hidden" for="post-nav-search-input">블로그 글 검색</label>
                             <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
                             <button type="submit" aria-label="검색">
-                                <i class="bi bi-search" aria-hidden="true"></i>
+                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
                             </button>
                         </form>
                     </li>
-                    <li class="nav-item nav-theme-item"><button class="btn nav-link blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
-                    <li class="nav-item post-nav-language-item"><a href="/blogs/posts/an-era-of-3d-generation/" class="nav-link post-nav-language-link" data-language-target="eng" aria-label="Switch to English" title="Switch to English">A</a></li>
+                    <li class="post-nav-action post-nav-theme-item"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><svg class="site-icon theme-toggle-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg></button></li>
+                    <li class="post-nav-action post-nav-language-item"><a href="/blogs/posts/an-era-of-3d-generation/" class="post-nav-language-link" data-language-target="eng" aria-label="Switch to English" title="Switch to English">A</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <header class="masthead" style="background-image: url('/blogs/posts/250302_3d_latent_diffusion/assets/teaser-poster.jpg')">
-        <div class="container position-relative px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="blog-shell post-hero-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
                     <div class="post-heading">
                         <br/>
                         <h1>3D 생성 모델의 시대</h1>
                         <span class="meta">
                             Posted on <time datetime="2025-03-02">March 2, 2025</time>
                             <span style="margin: 0 8px;">•</span>
-                            <i class="bi bi-clock" style="margin-right: 4px;"></i>20 min read
+                            <svg class="site-icon post-reading-time-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-clock"></use></svg>20 min read
                         </span>
                         <div class="post-tags"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
                         <hr/>
@@ -112,10 +108,10 @@
         </div>
     </header>
 
-    <article class="mb-4">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
+    <article class="post-article">
+        <div class="blog-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
@@ -129,7 +125,7 @@
                     <div id="series-container">
             <details class="series-card">
                 <summary class="series-summary">
-                    <span class="series-icon" aria-hidden="true"><i class="bi bi-collection"></i></span>
+                    <span class="series-icon" aria-hidden="true"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-collection"></use></svg></span>
                     <span class="series-summary-copy">
                         <span class="series-kicker">Series</span>
                         <strong>3D AI</strong>
@@ -137,7 +133,7 @@
                     <span class="series-meta">6 / 7</span>
                     <span class="series-toggle">
                         <span>7 posts</span>
-                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
                     </span>
                 </summary>
                 <div class="series-body">
@@ -198,7 +194,6 @@
                             <strong>3D 생성 모델의 시대</strong>
                             <span>2025.03.02</span>
                         </span>
-                        <span class="series-current-pill">Current</span>
                     </li>
             
                 <li class="series-post">
@@ -215,17 +210,25 @@
             </details>
     </div>
                 </div>
-                <div class="col-md-10 col-lg-8 col-xl-7 main-content">
-                    <nav class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="들어가며" aria-label="들어가며"><span class="toc-link-text">들어가며</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="Preliminary: What is Latent?" aria-label="Preliminary: What is Latent?"><span class="toc-link-text">Preliminary: What is Latent?</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="1. ShapeVAE" aria-label="1. ShapeVAE"><span class="toc-link-text">1. ShapeVAE</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="Challenges for ShapeVAE" aria-label="Challenges for ShapeVAE"><span class="toc-link-text">Challenges for ShapeVAE</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-4" title="2. Trellis" aria-label="2. Trellis"><span class="toc-link-text">2. Trellis</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="2.1. Structured Latent Representation" aria-label="2.1. Structured Latent Representation"><span class="toc-link-text">2.1. Structured Latent Representation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="2.2. SLAT Generation" aria-label="2.2. SLAT Generation"><span class="toc-link-text">2.2. SLAT Generation</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-7" title="3. Hunyuan3D-v2" aria-label="3. Hunyuan3D-v2"><span class="toc-link-text">3. Hunyuan3D-v2</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="3.1. Hunyuan-ShapeVAE" aria-label="3.1. Hunyuan-ShapeVAE"><span class="toc-link-text">3.1. Hunyuan-ShapeVAE</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-9" title="3.2. Hunyuan3D-DiT" aria-label="3.2. Hunyuan3D-DiT"><span class="toc-link-text">3.2. Hunyuan3D-DiT</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="3.3. Hunyuan3D-paint" aria-label="3.3. Hunyuan3D-paint"><span class="toc-link-text">3.3. Hunyuan3D-paint</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-11" title="4. Trellis vs Hunyuan3D" aria-label="4. Trellis vs Hunyuan3D"><span class="toc-link-text">4. Trellis vs Hunyuan3D</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-12" title="Closing" aria-label="Closing"><span class="toc-link-text">Closing</span></a></li></ol></nav><button id="copyButton">
-    <i class="bi bi-share-fill"></i>
+                <div class="post-reading-column main-content">
+                    <nav class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="들어가며" aria-label="들어가며"><span class="toc-link-text">들어가며</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="Preliminary: What is Latent?" aria-label="Preliminary: What is Latent?"><span class="toc-link-text">Preliminary: What is Latent?</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="1. ShapeVAE" aria-label="1. ShapeVAE"><span class="toc-link-text">1. ShapeVAE</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="Challenges for ShapeVAE" aria-label="Challenges for ShapeVAE"><span class="toc-link-text">Challenges for ShapeVAE</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-4" title="2. Trellis" aria-label="2. Trellis"><span class="toc-link-text">2. Trellis</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="2.1. Structured Latent Representation" aria-label="2.1. Structured Latent Representation"><span class="toc-link-text">2.1. Structured Latent Representation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="2.2. SLAT Generation" aria-label="2.2. SLAT Generation"><span class="toc-link-text">2.2. SLAT Generation</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-7" title="3. Hunyuan3D-v2" aria-label="3. Hunyuan3D-v2"><span class="toc-link-text">3. Hunyuan3D-v2</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="3.1. Hunyuan-ShapeVAE" aria-label="3.1. Hunyuan-ShapeVAE"><span class="toc-link-text">3.1. Hunyuan-ShapeVAE</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-9" title="3.2. Hunyuan3D-DiT" aria-label="3.2. Hunyuan3D-DiT"><span class="toc-link-text">3.2. Hunyuan3D-DiT</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="3.3. Hunyuan3D-paint" aria-label="3.3. Hunyuan3D-paint"><span class="toc-link-text">3.3. Hunyuan3D-paint</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-11" title="4. Trellis vs Hunyuan3D" aria-label="4. Trellis vs Hunyuan3D"><span class="toc-link-text">4. Trellis vs Hunyuan3D</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-12" title="Closing" aria-label="Closing"><span class="toc-link-text">Closing</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
+    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
-<div id="myshare_modal" class="share_modal">
+<div id="myshare_modal" class="share_modal" role="status" aria-live="polite" aria-hidden="true">
     <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
+        <button class="share_modal_close" type="button" aria-label="Dismiss">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-x-lg"></use></svg>
+        </button>
+        <span class="share_modal-icon" aria-hidden="true">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-check2"></use></svg>
+        </span>
+        <span class="share_modal-message">
+            <strong>링크 복사됨</strong>
+            <small>글 주소를 바로 공유할 수 있습니다.</small>
+        </span>
         <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
+            <div class="copy_indicator" id="share_modalIndicator"></div>
         </div>
     </div>
 </div>
@@ -625,12 +628,12 @@ $$ </p>
 </thead>
 <tbody>
 <tr>
-<td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="/blogs/posts/250302_3d_latent_diffusion/assets/image-19-poster.jpg" aria-label="Trellis result 1" style="width: 100%"><source src="/blogs/posts/250302_3d_latent_diffusion/assets/image-19.mp4" type="video/mp4"></video></td>
-<td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="/blogs/posts/250302_3d_latent_diffusion/assets/image-20-poster.jpg" aria-label="Hunyuan3D result 1" style="width: 100%"><source src="/blogs/posts/250302_3d_latent_diffusion/assets/image-20.mp4" type="video/mp4"></video></td>
+<td><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="/blogs/posts/250302_3d_latent_diffusion/assets/image-19-poster.jpg" aria-label="Trellis result 1" style="width: 100%"><source src="/blogs/posts/250302_3d_latent_diffusion/assets/image-19.mp4" type="video/mp4"></video></td>
+<td><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="/blogs/posts/250302_3d_latent_diffusion/assets/image-20-poster.jpg" aria-label="Hunyuan3D result 1" style="width: 100%"><source src="/blogs/posts/250302_3d_latent_diffusion/assets/image-20.mp4" type="video/mp4"></video></td>
 </tr>
 <tr>
-<td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="/blogs/posts/250302_3d_latent_diffusion/assets/image-21-poster.jpg" aria-label="Trellis result 2" style="width: 100%"><source src="/blogs/posts/250302_3d_latent_diffusion/assets/image-21.mp4" type="video/mp4"></video></td>
-<td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="/blogs/posts/250302_3d_latent_diffusion/assets/image-22-poster.jpg" aria-label="Hunyuan3D result 2" style="width: 100%"><source src="/blogs/posts/250302_3d_latent_diffusion/assets/image-22.mp4" type="video/mp4"></video></td>
+<td><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="/blogs/posts/250302_3d_latent_diffusion/assets/image-21-poster.jpg" aria-label="Trellis result 2" style="width: 100%"><source src="/blogs/posts/250302_3d_latent_diffusion/assets/image-21.mp4" type="video/mp4"></video></td>
+<td><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="/blogs/posts/250302_3d_latent_diffusion/assets/image-22-poster.jpg" aria-label="Hunyuan3D result 2" style="width: 100%"><source src="/blogs/posts/250302_3d_latent_diffusion/assets/image-22.mp4" type="video/mp4"></video></td>
 </tr>
 </tbody>
 </table>
@@ -643,7 +646,7 @@ $$ </p>
 <p>서로 end2end &lt;-&gt; 2-stage pipeline 이기 때문에 나타나는 장단점이 명확한 것 같다. 각자의 부분에서 quality 를 높여가면서 3D Latent Diffusion 후속 연구들이 등장할 것이라 예상되는 부분. </p>
 <p>마지막으로 CaPa Result 를 별첨한다 :)</p>
 <figure>
-<video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="/blogs/posts/250302_3d_latent_diffusion/assets/image-23-poster.jpg" aria-label="Generated 3D asset by CaPa" style="width: 100%"><source src="/blogs/posts/250302_3d_latent_diffusion/assets/image-23.mp4" type="video/mp4"></video>
+<video class="post-media" autoplay loop muted playsinline preload="metadata" poster="/blogs/posts/250302_3d_latent_diffusion/assets/image-23-poster.jpg" aria-label="Generated 3D asset by CaPa" style="width: 100%"><source src="/blogs/posts/250302_3d_latent_diffusion/assets/image-23.mp4" type="video/mp4"></video>
 </figure>
 
 
@@ -654,7 +657,7 @@ $$ </p>
 <p>마지막으로 최근에는 MeshAnything 을 필두로 mesh face 를 auto-regressive 하게 생성하여 일명 &#39;Artistic-Created Mesh&#39; 로 만드는 연구도 주목받고 있지만 (이 연구들도 ShapeVAE latent space 를 이용한다) auto-regressive 방식이라 시간이 오래 걸리고 아직은 퀄리티가 안 좋아서 당분간은 주시하기만 해야할 것 같다.</p>
 
                 </div>
-                <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="post-reading-column">
                     
                     <section class="related-posts" aria-labelledby="related-posts-heading">
                         <h2 id="related-posts-heading">Related Posts</h2>
@@ -684,17 +687,17 @@ $$ </p>
                         </div>
                     </section>
     
-                    <div id="post-navigation" class="mt-4"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/neural-rendering-beyond-photography-kor/" aria-label="Older Post: X-Ray 와 NeRF">
+                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
+                <a class="post-nav-card is-older" href="/blogs/posts/neural-rendering-beyond-photography-kor/" aria-label="Previous Post: X-Ray 와 NeRF">
                     <span class="post-nav-kicker">
-                        <span>Older Post</span>
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
                     </span>
                     <strong>X-Ray 와 NeRF</strong>
                 </a>
     
-                <a class="post-nav-card is-next" href="/blogs/posts/3d-model-viewer-in-web-kor/" aria-label="Newer Post: 커스텀 3D 웹뷰어 만들기">
+                <a class="post-nav-card is-next" href="/blogs/posts/3d-model-viewer-in-web-kor/" aria-label="Next Post: 커스텀 3D 웹뷰어 만들기">
                     <span class="post-nav-kicker">
-                        <span>Newer Post</span>
+                        Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
                     <strong>커스텀 3D 웹뷰어 만들기</strong>
                 </a>
@@ -704,11 +707,11 @@ $$ </p>
         </div>
     </article>
 
-    <footer class="border-top">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div class="small text-center text-muted fst-italic">Copyright © Hwan Heo</div>
+    <footer class="blog-post-footer">
+        <div class="blog-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
+                    <div class="blog-footer-note">Copyright © Hwan Heo</div>
                 </div>
             </div>
         </div>
@@ -1359,7 +1362,6 @@ $$ </p>
   "runtimeFeatures": {
     "katex": true,
     "prism": true,
-    "bootstrap": false,
     "modelViewer": false,
     "modelViewerTextureToggle": false,
     "three": false,

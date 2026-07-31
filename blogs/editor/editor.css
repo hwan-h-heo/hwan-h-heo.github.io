@@ -656,7 +656,7 @@ textarea {
     font-weight: 700;
 }
 
-.toolbar-actions .icon-button i {
+.toolbar-actions .icon-button .site-icon {
     font-size: 14px;
 }
 
@@ -700,7 +700,7 @@ textarea {
     font-weight: 700;
 }
 
-.layout-editor-hint i {
+.layout-editor-hint .site-icon {
     margin-right: 5px;
 }
 
@@ -1124,7 +1124,7 @@ textarea {
     cursor: pointer;
 }
 
-.visual-empty-state i {
+.visual-empty-state .site-icon {
     font-size: 24px;
 }
 

@@ -15,13 +15,12 @@
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet">
-
+  <script src="../../assets/js/site-icons.js"></script>
   <script src="../../js/sidebar-controller.js"></script>
   <link href="../../assets/css/portfolio.css" rel="stylesheet">
   <link href="../../assets/css/project-detail.css" rel="stylesheet">
   <link href="/blogs/css/scroll-progress.css" rel="stylesheet">
+  <link href="../../assets/css/site-icons.css" rel="stylesheet">
 
   <link href="../../css/sidebar-nav.css" rel="stylesheet">
 
@@ -35,32 +34,32 @@
 </head>
 
 <body class="portfolio-details-page">
-  <header id="header" class="header dark-background d-flex flex-column">
+  <header id="header" class="header dark-background">
     <div class="profile-img">
-      <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="img-fluid rounded-circle">
+      <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="sidebar-profile-image">
     </div>
 
-    <a href="../../" class="logo d-flex align-items-center justify-content-center">
+    <a href="../../" class="logo">
       <span class="sitename">Hwan Heo</span>
     </a>
 
-    <div class="social-links text-center">
-      <a href="https://github.com/hwanhuh" class="github" aria-label="GitHub"><i class="bi bi-github" aria-hidden="true"></i></a>
-      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin" aria-label="LinkedIn"><i class="bi bi-linkedin" aria-hidden="true"></i></a>
-      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram" aria-label="Google Scholar"><i class="bi bi-mortarboard-fill" aria-hidden="true"></i></a>
-      <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus" aria-label="Email"><i class="bi bi-envelope-fill" aria-hidden="true"></i></a>
+    <div class="social-links">
+      <a href="https://github.com/hwanhuh" class="github" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
+      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
+      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
+      <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
     </div>
 
     <nav id="navmenu" class="navmenu">
       <ul>
-        <li><a href="../../#home"><i class="bi bi-house navicon"></i>Home</a></li>
-        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Projects</a></li>
+        <li><a href="../../#home"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house"></use></svg>Home</a></li>
+        <li><a href="../../#portfolio" class="active"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-images"></use></svg> Projects</a></li>
         <li class="project-nav-selector">
           <details>
             <summary aria-current="page">
-              <i class="bi bi-grid navicon" aria-hidden="true"></i>
+              <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-grid"></use></svg>
               <span class="project-selector-copy"><small>Switch project</small><strong>2D GS Viewer</strong></span>
-              <i class="bi bi-chevron-down project-selector-toggle" aria-hidden="true"></i>
+              <svg class="site-icon project-selector-toggle" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
             </summary>
             <div class="project-selector-options">
           <a href="../varco3d/"><span class="project-selector-index">01</span><span>VARCO 3D</span></a>
@@ -71,15 +70,15 @@
             </div>
           </details>
         </li>
-        <li><a href="../../blogs/"><i class="bi bi-keyboard navicon"></i> Blog</a></li>
-        <li><a href="../../#about"><i class="bi bi-person navicon"></i> About</a></li>
+        <li><a href="../../blogs/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-keyboard"></use></svg> Blog</a></li>
+        <li><a href="../../#about"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-person"></use></svg> About</a></li>
       </ul>
     </nav>
   </header>
 
   <main class="main">
     <div class="page-title dark-background">
-      <div class="container">
+      <div class="portfolio-shell">
         <nav class="breadcrumbs" aria-label="Breadcrumb">
           <ol>
             <li><a href="../../">Home</a></li>
@@ -90,17 +89,17 @@
     </div>
 
     <section id="portfolio-details" class="portfolio-details section">
-      <div class="container project-hero-shell">
+      <div class="portfolio-shell project-hero-shell">
         <div class="project-hero-header">
           <span class="project-hero-kicker">Project Case Study</span>
-          <h1 class="display-6 fw-bolder mb-0"><span class="text-gradient d-inline">2D Gaussian Splatting Viewer</span></h1>
+          <h1><span class="text-gradient">2D Gaussian Splatting Viewer</span></h1>
           <div class="project-hero-meta"><span>Open-source 3D Tooling</span><span>Released 2024</span></div>
         </div>
       </div>
 
-      <div class="container portfolio-details-container col-11 project-case-study-overview">
-        <div class="row gy-4">
-          <div class="col-lg-8">
+      <div class="portfolio-shell portfolio-details-container project-case-study-overview project-overview-shell">
+        <div class="project-overview-layout">
+          <div class="project-overview-copy">
             <div class="portfolio-description project-overview">
               <h2>Project Overview</h2>
               <p>I built the 2D Gaussian Splatting Viewer to turn a research release into a workflow people could inspect, edit, and extend. The original implementation produced a new surface-oriented representation, but diagnosing a reconstruction still required separate scripts and one-off visualizations.</p>
@@ -115,7 +114,7 @@
               </div>
             </div>
           </div>
-          <div class="col-lg-4">
+          <div class="project-overview-meta">
             <aside class="portfolio-info">
               <h3>Project Details</h3>
               <ul>
@@ -129,35 +128,35 @@
         </div>
       </div>
 
-      <div class="container col-11 project-case-study-shell">
+      <div class="portfolio-shell project-case-study-shell">
         <article class="portfolio-description project-case-study-article">
 <h2>Key Features</h2>
 <h3>Rendering diagnostics</h3>
-<video autoplay muted loop playsinline preload="metadata" aria-label="Rendering diagnostics in the 2D Gaussian Splatting viewer" class="img-fluid project-video">
+<video autoplay muted loop playsinline preload="metadata" aria-label="Rendering diagnostics in the 2D Gaussian Splatting viewer" class="project-media project-video">
   <source src="assets/rendering-suite.mp4" type="video/mp4">
 </video>
 
 <p>RGB, edge, normal, depth, distortion, and curvature outputs share one rendering suite.</p>
 <h3>Training inside the viewer</h3>
-<video autoplay muted loop playsinline preload="metadata" aria-label="Interactive 2D Gaussian Splatting training workflow" class="img-fluid project-video">
+<video autoplay muted loop playsinline preload="metadata" aria-label="Interactive 2D Gaussian Splatting training workflow" class="project-media project-video">
   <source src="assets/training-workflow.mp4" type="video/mp4">
 </video>
 
 <p>Training, camera navigation, and intermediate render modes share one application.</p>
 <h3>Crop and general controls</h3>
-<video autoplay muted loop playsinline preload="metadata" aria-label="Crop and general scene controls" class="img-fluid project-video">
+<video autoplay muted loop playsinline preload="metadata" aria-label="Crop and general scene controls" class="project-media project-video">
   <source src="assets/general-controls.mp4" type="video/mp4">
 </video>
 
 <p>Crop regions, point-cloud display, disk visualization, and render-path preview remain synchronized.</p>
 <h3>Editing and mesh export</h3>
-<video autoplay muted loop playsinline preload="metadata" aria-label="Splat editing and mesh export" class="img-fluid project-video">
+<video autoplay muted loop playsinline preload="metadata" aria-label="Splat editing and mesh export" class="project-media project-video">
   <source src="assets/editing-and-export.mp4" type="video/mp4">
 </video>
 
 <p>Users can edit and save splats, then export the surface as a mesh.</p>
 <h3>Rigid scene transforms</h3>
-<video autoplay muted loop playsinline preload="metadata" aria-label="Rigid transforms for a Gaussian Splatting scene" class="img-fluid project-video">
+<video autoplay muted loop playsinline preload="metadata" aria-label="Rigid transforms for a Gaussian Splatting scene" class="project-media project-video">
   <source src="assets/rigid-transform.mp4" type="video/mp4">
 </video>
 
@@ -167,32 +166,31 @@
 
         </article>
       </div>
-<div class="container project-page-nav">
+<div class="portfolio-shell project-page-nav">
         <a class="project-page-nav-link project-page-nav-prev" href="../instant_pose/">
-          <span class="project-page-nav-kicker"><i class="bi bi-arrow-left"></i> Previous Project</span>
+          <span class="project-page-nav-kicker"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Project</span>
           <strong>Instant Pose for Hash-Grid NeRFs</strong>
         </a>
         <a class="project-page-nav-link project-page-nav-next" href="../deepsfm/">
-          <span class="project-page-nav-kicker">Next Project <i class="bi bi-arrow-right"></i></span>
+          <span class="project-page-nav-kicker">Next Project <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg></span>
           <strong>Deep SfM for Radiance Fields</strong>
         </a>
       </div>
     </section>
   </main>
 
-  <footer id="footer" class="footer position-relative light-background">
-    <div class="container">
-      <div class="copyright text-center">
-        <p>© <span>Copyright</span> <strong class="px-1 sitename">Hwan Heo</strong> <span>All Rights Reserved</span></p>
+  <footer id="footer" class="footer light-background">
+    <div class="portfolio-shell">
+      <div class="copyright">
+        <p>© <span>Copyright</span> <strong class="project-footer-owner sitename">Hwan Heo</strong> <span>All Rights Reserved</span></p>
       </div>
     </div>
   </footer>
 
-  <button id="scroll-top" class="scroll-top project-scroll-top d-flex align-items-center justify-content-center" type="button" aria-label="Back to top">
-    <i class="bi bi-arrow-up" aria-hidden="true"></i>
+  <button id="scroll-top" class="scroll-top project-scroll-top" type="button" aria-label="Back to top">
+    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up"></use></svg>
   </button>
 
-  <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../../assets/js/main.js"></script>
   <script src="/blogs/js/scroll-progress.js"></script>
 </body>

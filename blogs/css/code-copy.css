@@ -46,7 +46,7 @@ pre:focus-within .copy-code-button,
     background: #159c78;
 }
 
-.copy-code-button i {
+.copy-code-button .site-icon {
     pointer-events: none;
 }
 

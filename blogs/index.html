@@ -9,9 +9,9 @@
         <link rel="icon" type="image/x-icon" href="../assets/favicon.ico" />
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
+        <!-- Blog styles -->
         <link href="css/blog.css" rel="stylesheet" />
-        <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet" />
+        <link href="/assets/css/site-icons.css" rel="stylesheet" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -28,6 +28,7 @@
                 } catch (error) {}
             })();
         </script>
+    <script src="/assets/js/site-icons.js"></script>
     <script src="../js/sidebar-controller.js"></script>
     <link href="css/sidebar.css" rel="stylesheet">
     <link href="../css/sidebar-nav.css" rel="stylesheet">
@@ -46,30 +47,30 @@
         <script type="application/ld+json">{"@context":"https://schema.org","@type":"Blog","name":"Hwan Heo's Blog","url":"https://hwan-h-heo.github.io/blogs/","description":"Technical articles on sparse 3D generation, neural rendering, mesh processing, CUDA kernels, and production inference optimization.","author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"inLanguage":"en"}</script>
     </head>
     <body class="blog-home-page">
-        <header id="header" class="header blog-sidebar dark-background d-flex flex-column">
+        <header id="header" class="header blog-sidebar dark-background">
             <div class="profile-img">
-              <img src="../assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="img-fluid rounded-circle">
+              <img src="../assets/icon.webp" alt="Portrait illustration of Hwan Heo">
             </div>
         
-            <a href="./" class="logo d-flex align-items-center justify-content-center">
+            <a href="./" class="logo">
               <span class="sitename">Hwan's Blog</span>
             </a>
 
-            <div class="social-links text-center">
-              <a href="https://github.com/hwanhuh" class="github" aria-label="GitHub"><i class="bi bi-github" aria-hidden="true"></i></a>
-              <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin" aria-label="LinkedIn"><i class="bi bi-linkedin" aria-hidden="true"></i></a>
-              <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram" aria-label="Google Scholar"><i class="bi bi-mortarboard-fill" aria-hidden="true"></i></a>
-              <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus" aria-label="Email"><i class="bi bi-envelope-fill" aria-hidden="true"></i></a>
+            <div class="social-links">
+              <a href="https://github.com/hwanhuh" class="github" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
+              <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
+              <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
+              <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
             </div>
         
             <nav id="navmenu" class="navmenu">
                 <ul>
-                    <li><a href="./" class="active"><i class="bi bi-house navicon" aria-hidden="true"></i>Blog Home</a></li>
+                    <li><a href="./" class="active"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house"></use></svg>Blog Home</a></li>
                     <li>
                         <a href="../" class="sidebar-external-link">
-                            <i class="bi bi-briefcase navicon" aria-hidden="true"></i>
+                            <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-briefcase"></use></svg>
                             <span>Portfolio</span>
-                            <i class="bi bi-box-arrow-up-right sidebar-external-icon" aria-hidden="true"></i>
+                            <svg class="site-icon sidebar-external-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
                         </a>
                     </li>
                 </ul>
@@ -78,13 +79,13 @@
             <div class="sidebar-labs">
                 <details class="sidebar-labs-menu">
                     <summary>
-                        <i class="bi bi-tools navicon" aria-hidden="true"></i>
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-tools"></use></svg>
                         <span>Labs</span>
-                        <i class="bi bi-chevron-down sidebar-labs-chevron" aria-hidden="true"></i>
+                        <svg class="site-icon sidebar-labs-chevron" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
                     </summary>
                     <div class="sidebar-labs-panel">
-                        <a href="./3DViewer/"><i class="bi bi-box navicon" aria-hidden="true"></i><span>3D Viewer</span></a>
-                        <a href="./editor/"><i class="bi bi-pencil-square navicon" aria-hidden="true"></i><span>Editor</span></a>
+                        <a href="./3DViewer/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg><span>3D Viewer</span></a>
+                        <a href="./editor/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg><span>Editor</span></a>
                     </div>
                 </details>
             </div>
@@ -97,18 +98,18 @@
                     <label class="visually-hidden" for="blog-home-search-input">Search posts</label>
                     <input type="text" id="blog-home-search-input" data-placeholder-i18n="searchPlaceholder" placeholder="Search...">
                     <button type="submit" aria-label="Search">
-                        <i class="bi bi-search" aria-hidden="true"></i>
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
                     </button>
                 </form>
                 <button class="blog-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false">
-                    <i class="bi bi-moon-stars" aria-hidden="true"></i>
+                    <svg class="site-icon" data-icon="moon-stars" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg>
                 </button>
                 <button id="lang-toggle-main" class="blog-home-language" type="button" aria-label="한국어로 전환" title="한국어로 전환">가</button>
             </div>
         </nav>
 
         <header class="masthead blog-home-hero" style="background-image: url('../assets/image_fx_.jpg'); background-position: center 34%; background-size: cover;">
-            <div class="container position-relative px-4 px-lg-5">
+            <div class="blog-shell blog-hero-shell">
                 <div class="blog-home-hero-grid">
                     <div class="blog-home-hero-copy">
                         <span class="blog-home-kicker" data-i18n="heroKicker">Hwan's Blog</span>
@@ -119,7 +120,7 @@
             </div>
         </header>
 
-        <div class="container px-4 px-lg-5 blog-home-container">
+        <div class="blog-shell blog-home-container">
             <section id="blog-home-feature" class="blog-home-feature" aria-live="polite">
             <article class="blog-feature-card" data-post-id="260727_sparse_3d">
                 <div class="blog-feature-label">
@@ -132,16 +133,18 @@
                     <div class="blog-feature-meta">
                         <span>3D AI</span>
                         <time datetime="2026-07-27">July 27, 2026</time>
-                        <span>Languages: <a href="/blogs/posts/optimizing-sparse-3d-generation-inference/" hreflang="en">English</a>, <a href="/blogs/posts/optimizing-sparse-3d-generation-inference-kor/" hreflang="ko">Korean</a></span>
                     </div>
                     <h2><a href="/blogs/posts/optimizing-sparse-3d-generation-inference/">What the Compiler Missed in Sparse 3D Inference</a></h2>
                     <p>Why generic compiler paths underperform on dynamic sparse 3D generative models—and how null-context attention removal and model-aware CUDA kernels cut inference</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a><span class="post-tag">CUDA</span></div>
                     <a class="blog-feature-read" href="/blogs/posts/optimizing-sparse-3d-generation-inference/" aria-label="Read What the Compiler Missed in Sparse 3D Inference">
                         <span>Read post</span>
-                        <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </a>
                 </div>
+                <nav class="visually-hidden" aria-label="Available languages">
+                    <a href="/blogs/posts/optimizing-sparse-3d-generation-inference/" hreflang="en">English</a>, <a href="/blogs/posts/optimizing-sparse-3d-generation-inference-kor/" hreflang="ko">Korean</a>
+                </nav>
             </article>
     </section>
 
@@ -150,21 +153,21 @@
                     <div>
                         <h2 id="blog-home-archive-title" data-i18n="archiveTitle">All Writing</h2>
                     </div>
-                    <ul class="nav blog-home-tabs" role="tablist" aria-label="Blog categories">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="posts-tab-control" data-bs-toggle="tab" data-bs-target="#posts-tab" type="button" role="tab" aria-controls="posts-tab" aria-selected="true">
+                    <ul class="blog-home-tabs" role="tablist" aria-label="Blog categories">
+                        <li class="blog-home-tab-item" role="presentation">
+                            <button class="blog-home-tab is-active" id="posts-tab-control" data-tab-target="#posts-tab" type="button" role="tab" aria-controls="posts-tab" aria-selected="true" tabindex="0">
                                 <span data-i18n="tabPosts">Posts</span>
                                 <span class="blog-home-tab-count" id="posts-count">17</span>
                             </button>
                         </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="notes-tab-control" data-bs-toggle="tab" data-bs-target="#notes-tab" type="button" role="tab" aria-controls="notes-tab" aria-selected="false">
+                        <li class="blog-home-tab-item" role="presentation">
+                            <button class="blog-home-tab" id="notes-tab-control" data-tab-target="#notes-tab" type="button" role="tab" aria-controls="notes-tab" aria-selected="false" tabindex="-1">
                                 <span data-i18n="tabNotes">Notes</span>
                                 <span class="blog-home-tab-count" id="notes-count">8</span>
                             </button>
                         </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="series-tab-control" data-bs-toggle="tab" data-bs-target="#series-tab" type="button" role="tab" aria-controls="series-tab" aria-selected="false">
+                        <li class="blog-home-tab-item" role="presentation">
+                            <button class="blog-home-tab" id="series-tab-control" data-tab-target="#series-tab" type="button" role="tab" aria-controls="series-tab" aria-selected="false" tabindex="-1">
                                 <span data-i18n="tabSeries">Series</span>
                                 <span class="blog-home-tab-count" id="series-count">6</span>
                             </button>
@@ -172,8 +175,8 @@
                     </ul>
                 </div>
 
-                <div class="tab-content blog-home-tab-content">
-                    <div class="tab-pane fade show active" id="posts-tab" role="tabpanel" aria-labelledby="posts-tab-control" tabindex="0">
+                <div class="blog-home-tab-content">
+                    <div class="blog-home-tab-panel is-active" id="posts-tab" role="tabpanel" aria-labelledby="posts-tab-control" tabindex="0">
 
         <article class="post-preview" data-post-id="260115_Varco3D" data-post-category="post">
             <div class="post-card-link">
@@ -551,7 +554,7 @@
     
                     </div>
 
-                    <div class="tab-pane fade" id="notes-tab" role="tabpanel" aria-labelledby="notes-tab-control" tabindex="0">
+                    <div class="blog-home-tab-panel" id="notes-tab" role="tabpanel" aria-labelledby="notes-tab-control" tabindex="0" hidden>
 
         <article class="post-preview" data-post-id="250823_sdf" data-post-category="note">
             <div class="post-card-link">
@@ -731,7 +734,7 @@
     
                     </div>
 
-                    <div class="tab-pane fade" id="series-tab" role="tabpanel" aria-labelledby="series-tab-control" tabindex="0">
+                    <div class="blog-home-tab-panel" id="series-tab" role="tabpanel" aria-labelledby="series-tab-control" tabindex="0" hidden>
 
                     <article class="series-group" data-series-id="3d-generation">
                         <div class="series-card-header">
@@ -739,7 +742,7 @@
                             <h3 class="series-title">
                                 <a href="/blogs/series/3d-generation/">
                                     <span>3D AI</span>
-                                    <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+                                    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up-right"></use></svg>
                                 </a>
                             </h3>
                             <div class="series-card-meta">
@@ -798,7 +801,7 @@
                             <h3 class="series-title">
                                 <a href="/blogs/series/graphics/">
                                     <span>Computer Graphics</span>
-                                    <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+                                    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up-right"></use></svg>
                                 </a>
                             </h3>
                             <div class="series-card-meta">
@@ -827,7 +830,7 @@
                             <h3 class="series-title">
                                 <a href="/blogs/series/web-3d/">
                                     <span>3D in Web</span>
-                                    <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+                                    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up-right"></use></svg>
                                 </a>
                             </h3>
                             <div class="series-card-meta">
@@ -856,7 +859,7 @@
                             <h3 class="series-title">
                                 <a href="/blogs/series/nerf-and-gs/">
                                     <span>Radiance Fields &amp; Gaussian Splatting</span>
-                                    <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+                                    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up-right"></use></svg>
                                 </a>
                             </h3>
                             <div class="series-card-meta">
@@ -915,7 +918,7 @@
                             <h3 class="series-title">
                                 <a href="/blogs/series/linear-algebra/">
                                     <span>Linear Algebra for Deep Learning</span>
-                                    <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+                                    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up-right"></use></svg>
                                 </a>
                             </h3>
                             <div class="series-card-meta">
@@ -944,7 +947,7 @@
                             <h3 class="series-title">
                                 <a href="/blogs/series/computer-vision/">
                                     <span>Classical Computer Vision</span>
-                                    <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+                                    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up-right"></use></svg>
                                 </a>
                             </h3>
                             <div class="series-card-meta">
@@ -983,24 +986,22 @@
 
                     <!-- Divider-->
                     <!-- Pager-->
-                    <div class="mb-5 d-flex justify-content-end">
+                    <div class="blog-home-scroll-action">
                         <button id="scroll-top" class="scroll-top button_top" type="button" aria-label="Back to top">
-                            <i class="bi bi-arrow-up" aria-hidden="true"></i>
+                            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up"></use></svg>
                         </button>
                     </div>
         </div>
         <!-- Footer-->
         <footer class="blog-home-footer">
-            <div class="container px-4 px-lg-5">
-                <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-md-10 col-lg-9 col-xl-9">
-                        <div class="small text-center text-muted fst-italic">Copyright &copy; Hwan Heo</div>
+            <div class="blog-shell">
+                <div class="blog-home-footer-row">
+                    <div class="blog-home-footer-copy">
+                        <div class="blog-footer-note">Copyright &copy; Hwan Heo</div>
                     </div>
                 </div>
             </div>
         </footer>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="./js/site-data-client.js"></script>
         <script src="./js/blog-cover-media.js"></script>
         <script src="./js/blog-shell.js"></script>

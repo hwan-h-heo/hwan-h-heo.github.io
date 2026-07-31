@@ -1,4 +1,5 @@
 (function() {
+    const icons = window.SiteIcons;
     function getPostTitle(post, lang) {
         return post[`title_${lang}`] || post.title_eng;
     }
@@ -51,7 +52,7 @@
         copyButton.setAttribute('type', 'button');
         copyButton.setAttribute('aria-label', 'Copy post link');
         copyButton.setAttribute('title', 'Copy link');
-        copyButton.innerHTML = '<i class="bi bi-link-45deg" aria-hidden="true"></i>';
+        copyButton.innerHTML = icons.render('link-45deg');
 
         shareModal.setAttribute('role', 'status');
         shareModal.setAttribute('aria-live', 'polite');
@@ -71,10 +72,10 @@
         if (modalContent) {
             modalContent.innerHTML = `
                 <button class="share_modal_close" type="button" aria-label="Dismiss">
-                    <i class="bi bi-x-lg" aria-hidden="true"></i>
+                    ${icons.render('x-lg')}
                 </button>
                 <span class="share_modal-icon" aria-hidden="true">
-                    <i class="bi bi-check2"></i>
+                    ${icons.render('check2')}
                 </span>
                 <span class="share_modal-message">
                     <strong>${modalLabels.copied}</strong>
@@ -164,6 +165,53 @@
         });
 
         updateShareButtonVisibility();
+    }
+
+    function setupImageLightboxes() {
+        document.querySelectorAll('[data-image-lightbox-target]').forEach((trigger) => {
+            const targetSelector = trigger.getAttribute('data-image-lightbox-target');
+            const dialog = targetSelector ? document.querySelector(targetSelector) : null;
+
+            if (!(dialog instanceof HTMLDialogElement)) {
+                return;
+            }
+
+            const closeButton = dialog.querySelector('[data-image-lightbox-close]');
+            let returnFocus = trigger;
+
+            function openLightbox() {
+                if (dialog.open) {
+                    return;
+                }
+
+                returnFocus = document.activeElement instanceof HTMLElement
+                    ? document.activeElement
+                    : trigger;
+                document.documentElement.classList.add('post-image-lightbox-open');
+                dialog.showModal();
+                window.requestAnimationFrame(() => closeButton?.focus());
+            }
+
+            function closeLightbox() {
+                if (dialog.open) {
+                    dialog.close();
+                }
+            }
+
+            trigger.addEventListener('click', openLightbox);
+            closeButton?.addEventListener('click', closeLightbox);
+            dialog.addEventListener('click', (event) => {
+                if (event.target === dialog) {
+                    closeLightbox();
+                }
+            });
+            dialog.addEventListener('close', () => {
+                document.documentElement.classList.remove('post-image-lightbox-open');
+                if (returnFocus?.isConnected) {
+                    returnFocus.focus({ preventScroll: true });
+                }
+            });
+        });
     }
 
     function initializeTOC() {
@@ -286,8 +334,7 @@
 
         const labels = {
             kicker: 'Series',
-            current: 'Current',
-            older: 'Older Post',
+            older: 'Previous Post',
             next: 'Next Post',
             explore: 'Explore Series'
         };
@@ -307,7 +354,6 @@
                             <strong>${escapeHtml(title)}</strong>
                             ${date ? `<span>${date}</span>` : ''}
                         </span>
-                        <span class="series-current-pill">${labels.current}</span>
                     </li>
                 `;
             }
@@ -327,7 +373,7 @@
         seriesContainer.innerHTML = `
             <details class="series-card">
                 <summary class="series-summary">
-                    <span class="series-icon" aria-hidden="true"><i class="bi bi-collection"></i></span>
+                    <span class="series-icon" aria-hidden="true">${icons.render('collection')}</span>
                     <span class="series-summary-copy">
                         <span class="series-kicker">${labels.kicker}</span>
                         <strong>${escapeHtml(seriesTitle)}</strong>
@@ -335,7 +381,7 @@
                     <span class="series-meta">${currentIndex + 1} / ${postsInSeries.length}</span>
                     <span class="series-toggle">
                         <span>${countLabel}</span>
-                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                        ${icons.render('chevron-down')}
                     </span>
                 </summary>
                 <div class="series-body">
@@ -352,10 +398,16 @@
         }
 
         function renderPostNavCard({ href, type, label, title }) {
+            const isPrevious = type === 'older';
+            const directionIcon = icons.render(isPrevious ? 'arrow-left' : 'arrow-right');
+            const kicker = isPrevious
+                ? `${directionIcon} ${escapeHtml(label)}`
+                : `${escapeHtml(label)} ${directionIcon}`;
+
             return `
                 <a class="post-nav-card is-${type}" href="${href}">
                     <span class="post-nav-kicker">
-                        <span>${escapeHtml(label)}</span>
+                        ${kicker}
                     </span>
                     <strong>${escapeHtml(truncatePostNavTitle(title))}</strong>
                 </a>
@@ -464,17 +516,17 @@
         });
     }
 
-    function setupNavbarCollapse() {
+    function setupPostNavPanel() {
         const nav = document.getElementById('mainNav');
         const toggle = nav?.querySelector('[data-nav-toggle]');
-        const collapse = nav?.querySelector('.navbar-collapse');
+        const panel = nav?.querySelector('.post-nav-panel');
 
-        if (!toggle || !collapse) {
+        if (!toggle || !panel) {
             return;
         }
 
         function setExpanded(expanded) {
-            collapse.classList.toggle('show', expanded);
+            panel.classList.toggle('is-open', expanded);
             toggle.setAttribute('aria-expanded', String(expanded));
             toggle.setAttribute(
                 'aria-label',
@@ -483,10 +535,10 @@
         }
 
         toggle.addEventListener('click', () => {
-            setExpanded(!collapse.classList.contains('show'));
+            setExpanded(!panel.classList.contains('is-open'));
         });
 
-        collapse.querySelectorAll('a, button').forEach((item) => {
+        panel.querySelectorAll('a, button').forEach((item) => {
             item.addEventListener('click', () => {
                 if (window.matchMedia('(max-width: 991.98px)').matches) {
                     setExpanded(false);
@@ -498,6 +550,14 @@
             if (!window.matchMedia('(max-width: 991.98px)').matches) {
                 setExpanded(false);
             }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key !== 'Escape' || !panel.classList.contains('is-open')) {
+                return;
+            }
+            setExpanded(false);
+            toggle.focus();
         });
     }
 
@@ -511,7 +571,7 @@
         let ticking = false;
 
         function isMenuOpen() {
-            return Boolean(nav.querySelector('.navbar-collapse.show'));
+            return Boolean(nav.querySelector('.post-nav-panel.is-open'));
         }
 
         function updateNav() {
@@ -546,7 +606,7 @@
 
         window.addEventListener('scroll', requestUpdate, { passive: true });
         window.addEventListener('resize', requestUpdate);
-        nav.querySelector('.navbar-toggler')?.addEventListener('click', () => {
+        nav.querySelector('.post-nav-toggle')?.addEventListener('click', () => {
             window.setTimeout(requestUpdate, 0);
         });
         updateNav();
@@ -556,7 +616,8 @@
         syncLanguagePreference();
         initializeMathRendering();
         setupShareButton();
-        setupNavbarCollapse();
+        setupImageLightboxes();
+        setupPostNavPanel();
         setupAutoRevealNav();
         initializeTOC();
         renderSeriesNavigation();

@@ -3,20 +3,6 @@ date: April 26, 2024
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<button id="copyButton">
-    <i class="bi bi-share-fill"></i>
-</button>
-
-<div id="myshare_modal" class="share_modal">
-    <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
-        <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
-        </div>
-    </div>
-</div>
-
 <nav class="toc">
     <ul>
         <li><a href="#sec1"> Introduction </a></li>
@@ -231,19 +217,19 @@ def make_textured_mesh(outname, scale=None):
 <table>
     <tr>
         <th>Scene #1</th>
-        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240426_diffusion_depth/assets/res1-poster.jpg" aria-label="Scene 1"><source src="./240426_diffusion_depth/assets/res1.mp4" type="video/mp4"></video></td>
+        <td><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./240426_diffusion_depth/assets/res1-poster.jpg" aria-label="Scene 1"><source src="./240426_diffusion_depth/assets/res1.mp4" type="video/mp4"></video></td>
     </tr>
     <tr>
         <th>Scene #2</th>
-        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240426_diffusion_depth/assets/res2-poster.jpg" aria-label="Scene 2"><source src="./240426_diffusion_depth/assets/res2.mp4" type="video/mp4"></video></td>
+        <td><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./240426_diffusion_depth/assets/res2-poster.jpg" aria-label="Scene 2"><source src="./240426_diffusion_depth/assets/res2.mp4" type="video/mp4"></video></td>
     </tr>
     <tr>
         <th>Scene #3</th>
-        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240426_diffusion_depth/assets/res3-poster.jpg" aria-label="Scene 3"><source src="./240426_diffusion_depth/assets/res3.mp4" type="video/mp4"></video></td>
+        <td><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./240426_diffusion_depth/assets/res3-poster.jpg" aria-label="Scene 3"><source src="./240426_diffusion_depth/assets/res3.mp4" type="video/mp4"></video></td>
     </tr>
     <tr>
         <th>Scene #4</th>
-        <td><video class="img-fluid" autoplay loop muted playsinline preload="metadata" poster="./240426_diffusion_depth/assets/res4-poster.jpg" aria-label="Scene 4"><source src="./240426_diffusion_depth/assets/res4.mp4" type="video/mp4"></video></td>
+        <td><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./240426_diffusion_depth/assets/res4-poster.jpg" aria-label="Scene 4"><source src="./240426_diffusion_depth/assets/res4.mp4" type="video/mp4"></video></td>
     </tr>
 </table>
 

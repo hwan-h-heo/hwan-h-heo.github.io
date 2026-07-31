@@ -24,22 +24,6 @@ author: Hwan Heo
     </ul>
 </nav>
 
-<button id="copyButton">
-    <i class="bi bi-share-fill"></i>
-</button>
-
-<div id="myshare_modal" class="share_modal">
-    <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
-        <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
-        </div>
-    </div>
-</div>
-
-<hr/>
-
 <!-- <img src='./250310_model_viewer/assets/image.gif' width=100%> -->
 
 <h2 id="h2-3" > Introduction </h2>
@@ -215,15 +199,11 @@ loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined
     style="width: 100%; height: 600px;">
 </simple-model-viewer>
 <p class="lang eng"> The current implementation is maintained in <code>js/simple-model-viewer.js</code>. The snippet below is an early prototype excerpt kept for historical context, and the updated usage example right after it reflects the current API surface. </p>
-<div id="div-1"  class="accordion accordion-flush">
-    <div class="accordion-item">
-      <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+<details id="div-1" class="code-disclosure">
+      <summary class="code-disclosure-summary">
           <strong><em>Historical prototype excerpt</em></strong>
-        </button>
-      </h2>
-      <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-        <div class="accordion-body">
+      </summary>
+      <div class="code-disclosure-body">
           <pre><code class="language-javascript">import * as THREE from &#39;three&#39;;
 import { OrbitControls } from &#39;three/addons/controls/OrbitControls.js&#39;;
 import { GLTFLoader } from &#39;three/addons/loaders/GLTFLoader.js&#39;;
@@ -298,7 +278,7 @@ class SimpleModelViewer extends HTMLElement {
                 &lt;/div&gt;
                 &lt;div id=&quot;transform-container&quot; style=&quot;position: relative;&quot;&gt;
                     &lt;div class=&quot;transform-panel&quot;&gt;
-                        &lt;button id=&quot;togglePanelBtn&quot;&gt;&lt;i class=&quot;bi bi-caret-left&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+                        &lt;button id=&quot;togglePanelBtn&quot;&gt;&lt;svg class=&quot;site-icon&quot; aria-hidden=&quot;true&quot;&gt;&lt;use href=&quot;/assets/icons/site-icons.svg#icon-caret-left&quot;&gt;&lt;/use&gt;&lt;/svg&gt;&lt;/button&gt;
                         &lt;div id=&quot;transformControls&quot; style=&quot;display: block;&quot;&gt;
                             &lt;label&gt;Position X: &lt;input type=&quot;number&quot; id=&quot;posX&quot; step=&quot;0.1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
                             &lt;label&gt;Position Y: &lt;input type=&quot;number&quot; id=&quot;posY&quot; step=&quot;0.1&quot; value=&quot;0&quot;&gt;&lt;/label&gt;
@@ -431,10 +411,10 @@ class SimpleModelViewer extends HTMLElement {
             const button = this.shadowRoot.querySelector(&#39;#togglePanelBtn&#39;);
             if (controls.style.display === &#39;none&#39;) {
                 controls.style.display = &#39;block&#39;;
-                button.innerHTML = &#39;&lt;i class=&quot;bi bi-caret-left-fill&quot;&gt;&lt;/i&gt;&#39;;
+                button.innerHTML = &#39;&lt;svg class=&quot;site-icon&quot; aria-hidden=&quot;true&quot;&gt;&lt;use href=&quot;/assets/icons/site-icons.svg#icon-caret-left-fill&quot;&gt;&lt;/use&gt;&lt;/svg&gt;&#39;;
             } else {
                 controls.style.display = &#39;none&#39;;
-                button.innerHTML = &#39;&lt;i class=&quot;bi bi-caret-left&quot;&gt;&lt;/i&gt;&#39;;
+                button.innerHTML = &#39;&lt;svg class=&quot;site-icon&quot; aria-hidden=&quot;true&quot;&gt;&lt;use href=&quot;/assets/icons/site-icons.svg#icon-caret-left&quot;&gt;&lt;/use&gt;&lt;/svg&gt;&#39;;
             }
         });
 
@@ -887,9 +867,7 @@ customElements.define(&#39;simple-model-viewer&#39;, SimpleModelViewer);
 export { SimpleModelViewer };
           </code></pre>
         </div>
-      </div>
-    </div>
-  </div>
+</details>
 
 <p id="p-27" class='lang eng'> For the current component, use the declarative API below. It works independently across multiple 3D models, much like Google Model Viewer, while exposing newer camera, environment, selection, and state APIs: </p>
 <pre id="pre-12" ><code id="code-NaN" class="language-javascript">&lt;simple-model-viewer

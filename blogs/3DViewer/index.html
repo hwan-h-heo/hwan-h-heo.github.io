@@ -17,11 +17,11 @@
         </script>
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
+        <!-- Blog styles -->
         <link href="../css/blog.css" rel="stylesheet" />
         <!-- Prism.js CSS -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
-        <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet" />
+        <link href="/assets/css/site-icons.css" rel="stylesheet" />
         <style>
             body {
                 width: 100vw;
@@ -43,36 +43,37 @@
                 }
             }
         </style>
+        <script src="/assets/js/site-icons.js"></script>
         <script src="../../js/sidebar-controller.js"></script>
         <link href="../css/sidebar.css" rel="stylesheet">
         <link href="../../css/sidebar-nav.css" rel="stylesheet">
         <link href="../css/typography.css" rel="stylesheet">
     </head>
     <body>
-        <header id="header" class="header blog-sidebar dark-background d-flex flex-column">
+        <header id="header" class="header blog-sidebar dark-background">
             <div class="profile-img">
-              <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="img-fluid rounded-circle">
+              <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo">
             </div>
         
-            <a href="../" class="logo d-flex align-items-center justify-content-center">
+            <a href="../" class="logo">
               <span class="sitename">Hwan's Blog</span>
             </a>
 
-            <div class="social-links text-center">
-              <a href="https://github.com/hwanhuh" class="github" aria-label="GitHub"><i class="bi bi-github" aria-hidden="true"></i></a>
-              <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin" aria-label="LinkedIn"><i class="bi bi-linkedin" aria-hidden="true"></i></a>
-              <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram" aria-label="Google Scholar"><i class="bi bi-mortarboard-fill" aria-hidden="true"></i></a>
-              <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus" aria-label="Email"><i class="bi bi-envelope-fill" aria-hidden="true"></i></a>
+            <div class="social-links">
+              <a href="https://github.com/hwanhuh" class="github" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
+              <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
+              <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
+              <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
             </div>
         
             <nav id="navmenu" class="navmenu">
               <ul>
-                <li><a href="../"><i class="bi bi-house-door navicon" aria-hidden="true"></i>Blog Home</a></li>
+                <li><a href="../"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house-door"></use></svg>Blog Home</a></li>
                 <li>
                   <a href="../../" class="sidebar-external-link">
-                    <i class="bi bi-briefcase navicon" aria-hidden="true"></i>
+                    <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-briefcase"></use></svg>
                     <span>Portfolio</span>
-                    <i class="bi bi-box-arrow-up-right sidebar-external-icon" aria-hidden="true"></i>
+                    <svg class="site-icon sidebar-external-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
                   </a>
                 </li>
               </ul>
@@ -81,13 +82,13 @@
             <div class="sidebar-labs">
               <details class="sidebar-labs-menu is-active">
                 <summary>
-                  <i class="bi bi-tools navicon" aria-hidden="true"></i>
+                  <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-tools"></use></svg>
                   <span>Labs</span>
-                  <i class="bi bi-chevron-down sidebar-labs-chevron" aria-hidden="true"></i>
+                  <svg class="site-icon sidebar-labs-chevron" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
                 </summary>
                 <div class="sidebar-labs-panel">
-                  <a href="./" class="active"><i class="bi bi-box navicon" aria-hidden="true"></i><span>3D Viewer</span></a>
-                  <a href="../editor/"><i class="bi bi-pencil-square navicon" aria-hidden="true"></i><span>Editor</span></a>
+                  <a href="./" class="active"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg><span>3D Viewer</span></a>
+                  <a href="../editor/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg><span>Editor</span></a>
                 </div>
               </details>
             </div>

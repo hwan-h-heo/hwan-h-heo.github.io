@@ -8,6 +8,7 @@
         root.document.addEventListener('DOMContentLoaded', api.mountPortfolioBlocks);
     }
 })(typeof window !== 'undefined' ? window : null, function(root) {
+    const icons = root?.SiteIcons || require('../assets/js/site-icons');
     const CONTENT_PATH = '/content/portfolio/home.json';
     const HERO_SCROLL_CUE_ENABLED = true;
 
@@ -28,15 +29,15 @@
             const isSectionLink = (action.url || '').startsWith('#');
             const download = action.download ? ' download' : '';
             const trailingIcon = action.download
-                ? 'bi-download'
+                ? 'download'
                 : isSectionLink
-                    ? 'bi-arrow-down-right'
-                    : 'bi-arrow-up-right';
+                    ? 'arrow-down-right'
+                    : 'arrow-up-right';
             return `
                 <a class="hero-action hero-action--${style}" href="${escapeHtml(action.url)}"${download}>
                     <small class="hero-action-index" aria-hidden="true">${String(index + 1).padStart(2, '0')}</small>
                     <span class="hero-action-label">${escapeHtml(action.label)}</span>
-                    <i class="bi ${trailingIcon}" aria-hidden="true"></i>
+                    ${icons.render(trailingIcon)}
                 </a>
             `;
         }).join('');
@@ -59,7 +60,7 @@
 
         return `
             <a href="#portfolio" class="scroll-down-arrow" aria-label="Scroll to portfolio">
-                <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                ${icons.render('chevron-down')}
             </a>
         `;
     }
@@ -91,16 +92,16 @@
             const externalAttrs = /^https?:\/\//i.test(link.url || '')
                 ? ' target="_blank" rel="noopener noreferrer"'
                 : '';
-            const icon = link.icon || 'bi bi-arrow-up-right';
+            const icon = link.icon || 'arrow-up-right';
 
             return `
                 <a class="about-contact-link" href="${escapeHtml(link.url)}"${externalAttrs}>
-                    <i class="${escapeHtml(icon)}" aria-hidden="true"></i>
+                    ${icons.render(icon)}
                     <span>
                         <strong>${escapeHtml(link.label)}</strong>
                         <small>${escapeHtml(link.value)}</small>
                     </span>
-                    <i class="bi bi-arrow-up-right about-contact-arrow" aria-hidden="true"></i>
+                    ${icons.render('arrow-up-right', { className: 'about-contact-arrow' })}
                 </a>
             `;
         }).join('');
@@ -115,16 +116,16 @@
 
     function renderAbout(block) {
         return `
-            <div class="container section-title">
+            <div class="portfolio-shell section-title">
                 <h2>${escapeHtml(block.title)}</h2>
             </div>
 
-            <div class="container">
-                <div class="row gy-4 about-layout justify-content-center">
-                    <div class="col-lg-4 about-media">
-                        <img src="${escapeHtml(block.image)}" class="img-fluid about-profile-image" alt="${escapeHtml(block.imageAlt)}">
+            <div class="portfolio-shell">
+                <div class="about-layout">
+                    <div class="about-media">
+                        <img src="${escapeHtml(block.image)}" class="about-profile-image" alt="${escapeHtml(block.imageAlt)}">
                     </div>
-                    <div class="col-lg-8 content about-copy">
+                    <div class="content about-copy">
                         <div class="about-identity">
                             <h2 class="about-name">${escapeHtml(block.name || block.role)}</h2>
                             <p class="about-meta">
@@ -178,14 +179,14 @@
 
     function renderResume(block) {
         return `
-            <div class="container section-title resume-section-heading">
+            <div class="portfolio-shell section-title resume-section-heading">
                 <h2>${escapeHtml(block.title)}</h2>
                 <a class="resume-cv-link" href="${escapeHtml(block.cvUrl)}" download aria-label="Download curriculum vitae">
                     <span>Download CV</span>
-                    <i class="bi bi-download" aria-hidden="true"></i>
+                    ${icons.render('download')}
                 </a>
             </div>
-            <div class="container resume-content">
+            <div class="portfolio-shell resume-content">
                 <div class="resume-layout">
                     ${(block.columns || []).map((column) => `
                         <div class="resume-column">

@@ -1,4 +1,5 @@
 (function() {
+    const icons = window.SiteIcons;
     const STORAGE_KEY = 'blog-theme';
     function getStoredTheme() {
         try {
@@ -26,7 +27,7 @@
 
     function updateToggleButtons(theme) {
         document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
-            const icon = button.querySelector('i');
+            const icon = button.querySelector('.site-icon');
             const isDark = theme === 'dark';
 
             button.setAttribute('aria-pressed', String(isDark));
@@ -34,7 +35,7 @@
             button.setAttribute('title', isDark ? 'Light mode' : 'Dark mode');
 
             if (icon) {
-                icon.className = isDark ? 'bi bi-sun' : 'bi bi-moon-stars';
+                icons.set(icon, isDark ? 'sun' : 'moon-stars');
             }
         });
     }

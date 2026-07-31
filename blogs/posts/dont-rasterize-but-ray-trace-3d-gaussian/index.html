@@ -33,17 +33,13 @@
     <link href="/blogs/css/typography.css" rel="stylesheet" />
     <link href="/blogs/css/post.css" rel="stylesheet" />
     <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
     <link href="/blogs/css/code-copy.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-
-    <style>
-        .post-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
-        .post-tags span { display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,0.6); color: #fff; border-radius: 999px; padding: 0.16rem 0.55rem; font-size: 0.72rem; background: rgba(0,0,0,0.18); }
-    </style>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
     <script>
@@ -63,46 +59,46 @@
         </script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
-        <div class="container px-4 px-lg-5">
+    <nav class="post-site-nav" id="mainNav">
+        <div class="blog-shell post-nav-shell">
             <div class="post-nav-brand-group">
-                <a class="navbar-brand" href="/blogs/">Hwan's Blog</a>
+                <a class="post-nav-brand" href="/blogs/">Hwan's Blog</a>
                 <a class="post-nav-portfolio-link" href="/">
-                    Portfolio <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+                    Portfolio <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
                 </a>
             </div>
-            <button class="navbar-toggler" type="button" data-nav-toggle data-open-label="Open menu" data-close-label="Close menu" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Open menu">
+            <button class="post-nav-toggle" type="button" data-nav-toggle data-open-label="Open menu" data-close-label="Close menu" aria-controls="postNavPanel" aria-expanded="false" aria-label="Open menu">
                 <span class="post-nav-menu-icon" aria-hidden="true"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                    <li class="nav-item post-nav-search-item">
+            <div class="post-nav-panel" id="postNavPanel">
+                <ul class="post-nav-actions">
+                    <li class="post-nav-action post-nav-search-item">
                         <form id="post-nav-search-form" class="post-nav-search" role="search">
                             <label class="visually-hidden" for="post-nav-search-input">Search blog posts</label>
                             <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
                             <button type="submit" aria-label="Search">
-                                <i class="bi bi-search" aria-hidden="true"></i>
+                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
                             </button>
                         </form>
                     </li>
-                    <li class="nav-item nav-theme-item"><button class="btn nav-link blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i></button></li>
-                    <li class="nav-item post-nav-language-item"><a href="/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian-kor/" class="nav-link post-nav-language-link" data-language-target="kor" aria-label="한국어로 전환" title="한국어로 전환">가</a></li>
+                    <li class="post-nav-action post-nav-theme-item"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><svg class="site-icon theme-toggle-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg></button></li>
+                    <li class="post-nav-action post-nav-language-item"><a href="/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian-kor/" class="post-nav-language-link" data-language-target="kor" aria-label="한국어로 전환" title="한국어로 전환">가</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <header class="masthead" style="background-image: url('/blogs/posts/240823_grt/assets/teaser.gif')">
-        <div class="container position-relative px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="blog-shell post-hero-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
                     <div class="post-heading">
                         <br/>
                         <h1>Don&#39;t Rasterize, But Ray Trace 3D Gaussian</h1>
                         <span class="meta">
                             Posted on <time datetime="2024-08-23">August 23, 2024</time>
                             <span style="margin: 0 8px;">•</span>
-                            <i class="bi bi-clock" style="margin-right: 4px;"></i>14 min read
+                            <svg class="site-icon post-reading-time-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-clock"></use></svg>14 min read
                         </span>
                         <div class="post-tags"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                         <hr/>
@@ -112,10 +108,10 @@
         </div>
     </header>
 
-    <article class="mb-4">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
+    <article class="post-article">
+        <div class="blog-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
                     
                     <nav class="breadcrumbs" aria-label="Breadcrumb">
                         <ol>
@@ -129,7 +125,7 @@
                     <div id="series-container">
             <details class="series-card">
                 <summary class="series-summary">
-                    <span class="series-icon" aria-hidden="true"><i class="bi bi-collection"></i></span>
+                    <span class="series-icon" aria-hidden="true"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-collection"></use></svg></span>
                     <span class="series-summary-copy">
                         <span class="series-kicker">Series</span>
                         <strong>Radiance Fields &amp; Gaussian Splatting</strong>
@@ -137,7 +133,7 @@
                     <span class="series-meta">2 / 8</span>
                     <span class="series-toggle">
                         <span>8 posts</span>
-                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
                     </span>
                 </summary>
                 <div class="series-body">
@@ -158,7 +154,6 @@
                             <strong>Don&#39;t Rasterize, But Ray Trace 3D Gaussian</strong>
                             <span>2024.08.23</span>
                         </span>
-                        <span class="series-current-pill">Current</span>
                     </li>
             
                 <li class="series-post">
@@ -225,21 +220,28 @@
             </details>
     </div>
                 </div>
-                <div class="col-md-10 col-lg-8 col-xl-7 main-content">
-                    <button id="copyButton">
-    <i class="bi bi-share-fill"></i>
+                <div class="post-reading-column main-content">
+                    <button id="copyButton" type="button" aria-label="Copy post link">
+    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
-<div id="myshare_modal" class="share_modal">
+<div id="myshare_modal" class="share_modal" role="status" aria-live="polite" aria-hidden="true">
     <div class="share_modal-content">
-        <span class="share_modal_close">×</span>
-        <p><strong>Link Copied!</strong></p>
+        <button class="share_modal_close" type="button" aria-label="Dismiss">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-x-lg"></use></svg>
+        </button>
+        <span class="share_modal-icon" aria-hidden="true">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-check2"></use></svg>
+        </span>
+        <span class="share_modal-message">
+            <strong>Link copied</strong>
+            <small>Post URL is ready to share.</small>
+        </span>
         <div class="copy_indicator-container">
-        <div class="copy_indicator" id="share_modalIndicator"></div>
+            <div class="copy_indicator" id="share_modalIndicator"></div>
         </div>
     </div>
 </div>
-
 
 <nav class="toc">
     <ul>
@@ -310,7 +312,7 @@
             These errors complicate achieving high-quality results, even when modeling non-pinhole camera types.
         </p>
         <figure>
-            <img class="img-fluid" src="/blogs/posts/240823_grt/assets/cam_model.png" width="85%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — Challenges in 3D Gaussian Splatting" loading="lazy" decoding="async">
+            <img class="post-media" src="/blogs/posts/240823_grt/assets/cam_model.png" width="85%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — Challenges in 3D Gaussian Splatting" loading="lazy" decoding="async">
             <figcaption style="text-align: center; font-size: 15px;"> Inflexibility of 3D GS with Diverse Camera Models, source: <span style="text-decoration: underline;"><a href="https://letianhuang.github.io/op43dgs/">Optimal GS</a></span> </figcaption>
         </figure>
     </li>
@@ -320,7 +322,7 @@
             Unlike NeRF, which utilizes MLPs and exhibits a degree of robustness against calibration discrepancies between images, 3D GS relies on explicit geometric primitives. This reliance renders 3D GS highly sensitive to variations in image quality, including issues such as motion blur and rolling shutter effects, which can significantly degrade the final output.
         </p>
         <figure>
-            <img class="img-fluid" src="/blogs/posts/240823_grt/assets/cap.png" width="85%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — Challenges in 3D Gaussian Splatting, figure 2" loading="lazy" decoding="async">
+            <img class="post-media" src="/blogs/posts/240823_grt/assets/cap.png" width="85%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — Challenges in 3D Gaussian Splatting, figure 2" loading="lazy" decoding="async">
             <figcaption style="text-align: center; font-size: 15px;"> <strong>Left</strong>: GT,  <strong>Right</strong>: trained 3D GS on motion blurred scene, <br/> source: <span style="text-decoration: underline;"><a href="https://benhenryl.github.io/Deblurring-3D-Gaussian-Splatting/">Deblurring 3D GS</a></span> </figcaption>
         </figure>
     </li>
@@ -330,7 +332,7 @@
             Another challenge facing 3D GS is its inability to incorporate physically-based rendering (PBR) effects. Since 3D GS does not adhere to the principles of PBR, accurately modeling lighting and reflection effects within a scene remains problematic. This limitation restricts the realism and applicability of 3D GS in scenarios where accurate light interaction is critical.
         </p>
         <figure>
-            <img class="img-fluid" src="/blogs/posts/240823_grt/assets/ref.png" width="70%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — Challenges in 3D Gaussian Splatting, figure 3" loading="lazy" decoding="async">
+            <img class="post-media" src="/blogs/posts/240823_grt/assets/ref.png" width="70%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — Challenges in 3D Gaussian Splatting, figure 3" loading="lazy" decoding="async">
             <figcaption style="text-align: center; font-size: 15px;"> Left: GT, Right: 3D GS, source: <span style="text-decoration: underline;"><a href="https://gapszju.github.io/3DGS-DR/">3D GS-DR</a></span> </figcaption>
         </figure>
     </li>
@@ -375,20 +377,20 @@ rgb[idx * C + 2] = result.z;</code></pre>
 
 <h2 id="method"> 3. 3D Gaussian Ray Tracing </h2>
 <figure>
-    <img class="img-fluid" src="/blogs/posts/240823_grt/assets/fig1.png" width="100%" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#fig1_modal" alt="Don't Rasterize, But Ray Trace 3D Gaussian — 3. 3D Gaussian Ray Tracing" loading="lazy" decoding="async">
+    <button class="post-image-lightbox-trigger" type="button" data-image-lightbox-target="#fig1-lightbox" aria-controls="fig1-lightbox" aria-haspopup="dialog" aria-label="Enlarge Figure 1: Method Overview">
+        <img class="post-media" src="/blogs/posts/240823_grt/assets/fig1.png" width="100%" alt="3D Gaussian Ray Tracing method overview" loading="lazy" decoding="async">
+    </button>
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 1.</strong> Method Overview</figcaption>
 </figure>
-<!-- Modal Structure -->
-<div class="modal fade" id="fig1_modal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body">
-                <!-- Original size image -->
-                <img src="/blogs/posts/240823_grt/assets/fig1.png" alt="Full Size Image" width="100%" class="img-fluid" loading="lazy" decoding="async">
-            </div>
-        </div>
+<dialog class="post-image-lightbox" id="fig1-lightbox" aria-label="Figure 1: Method Overview">
+    <div class="post-image-lightbox-frame">
+        <button class="post-image-lightbox-close" type="button" data-image-lightbox-close aria-label="Close enlarged image">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-x-lg"></use></svg>
+        </button>
+        <img src="/blogs/posts/240823_grt/assets/fig1.png" alt="3D Gaussian Ray Tracing method overview" class="post-image-lightbox-image" loading="lazy" decoding="async">
     </div>
-</div>
+</dialog>
+<span class="post-image-lightbox-layout-reserve" aria-hidden="true"></span>
 <p class="lang eng">To effectively design a ray tracer tailored for 3D Gaussian Splatting, two key elements are essential:</p>
 <ol class="lang eng">
     <li><p><strong>BVH with Appropriate Proxy Primitives</strong><br/>Use Bounding Volume Hierarchy (BVH) to accelerate hit traversal by defining proxy primitives that encapsulate 3D Gaussians accurately.</p>
@@ -401,14 +403,14 @@ rgb[idx * C + 2] = result.z;</code></pre>
 <p class="lang eng">Let&#39;s start with BVH (<span style="text-decoration: underline;"><a href="https://en.wikipedia.org/wiki/Bounding_volume_hierarchy">Bounding Volume Hierarchy</a></span>).</p>
 
 <figure>
-    <img class="img-fluid" src="/blogs/posts/240823_grt/assets/fig3.png" width="90%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — 3.1. Bounding Primitives" loading="lazy" decoding="async">
+    <img class="post-media" src="/blogs/posts/240823_grt/assets/fig3.png" width="90%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — 3.1. Bounding Primitives" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 2.</strong> Bounding Volume Hierarchy</figcaption>
 </figure>
 <p class="lang eng">BVH is a hierarchical tree structure used to efficiently divide space for rendering and ray tracing. In this structure, parent nodes consist of larger bounding volumes that encompass smaller leaf nodes, facilitating efficient space partitioning and exploration.</p> 
 <p class="lang eng">The main objective of BVH in this context is to define a proxy primitive that accurately encapsulates 3D Gaussians and to use this proxy geometry to construct a BVH. This hierarchy then guides the ray traversal process by determining which 3D Gaussians should be considered for intersection tests.</p>
 
 <figure>
-    <img class="img-fluid" src="/blogs/posts/240823_grt/assets/fig2.png" width="65%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — 3.1. Bounding Primitives, figure 2" loading="lazy" decoding="async">
+    <img class="post-media" src="/blogs/posts/240823_grt/assets/fig2.png" width="65%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — 3.1. Bounding Primitives, figure 2" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 3.</strong> bounding primitive </figcaption>
 </figure>
 <p class="lang eng">NVIDIA OptiX, a common framework for ray tracing, offers three predefined proxy primitive types: triangles, spheres, and axis-aligned bounding boxes (AABBs). However, none of these are ideal for 3D Gaussians. For instance, using AABBs would simplify calculations but would lead to many false-positive proxy hits, as AABBs cannot tightly enclose the Gaussian distribution, leading to inefficiencies in ray tracing (see Fig. 4)</p>
@@ -416,7 +418,7 @@ rgb[idx * C + 2] = result.z;</code></pre>
 
 <h4 id="stretched-polyhedron-proxy"> Stretched Polyhedron Proxy</h4>
 <figure>
-    <img class="img-fluid" src="/blogs/posts/240823_grt/assets/fig4.png" width="90%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — Stretched Polyhedron Proxy" loading="lazy" decoding="async">
+    <img class="post-media" src="/blogs/posts/240823_grt/assets/fig4.png" width="90%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — Stretched Polyhedron Proxy" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 4.</strong> Proxy Primitives</figcaption>
 </figure>
 <p class="lang eng">After experimental evaluations, the authors found that using an icosahedron—a polyhedron with 20 triangular faces—was the most appropriate proxy geometry for 3D Gaussians.</p>
@@ -464,7 +466,7 @@ $$</p>
 
 <h3 id="ray-tracing-renderer"> 3.2. Ray Tracing Renderer</h3>
 <figure>
-    <img class="img-fluid" src="/blogs/posts/240823_grt/assets/fig5.png" width="100%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — 3.2. Ray Tracing Renderer" loading="lazy" decoding="async">
+    <img class="post-media" src="/blogs/posts/240823_grt/assets/fig5.png" width="100%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — 3.2. Ray Tracing Renderer" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 5.</strong> Ray Tracing </figcaption>
 </figure>
 <p class="lang eng">For differentiable and efficient rendering in 3D GRT, the process involves sequentially rendering through a <em>next $k$ closest hit</em>. This approach helps in managing multiple semi-transparent particles along a single ray path. The rendering process is outlined as follows:</p>
@@ -481,7 +483,7 @@ $$</p>
 <p class="lang eng">The following diagram (referenced in the text) illustrates the ray tracing process of 3D GRT when $k=3$, showing how multiple particles are managed and rendered along a single ray.</p>
 
 <figure>
-    <img class="img-fluid" src="/blogs/posts/240823_grt/assets/fig6.png" width="80%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — 3.2. Ray Tracing Renderer, figure 2" loading="lazy" decoding="async">
+    <img class="post-media" src="/blogs/posts/240823_grt/assets/fig6.png" width="80%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — 3.2. Ray Tracing Renderer, figure 2" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 6. Next $k$ closest hit Ray Tracer:</strong> on each round of tracing, the next $k$ closest hit particles are collected and sorted into depth order along the ray, the radiance is computed in-order, and the ray is cast again to process the next chunk.  </figcaption>
 </figure>
 
@@ -494,7 +496,7 @@ $$</p>
 </div>
 <p> where $ \mathbf{o}_g = {\rm S^{-1}R^T}(\mathbf{o} - \mu),  d_g = {\rm S^{-1}R^T} \mathbf{d}$. </p>
 <figure>
-    <img class="img-fluid" src="/blogs/posts/240823_grt/assets/inter.png" width="40%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — 3.3. Ray-Gaussian Intersection" loading="lazy" decoding="async">
+    <img class="post-media" src="/blogs/posts/240823_grt/assets/inter.png" width="40%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — 3.3. Ray-Gaussian Intersection" loading="lazy" decoding="async">
 </figure>
 
 <div class="lang eng">
@@ -539,11 +541,11 @@ $$</p>
 <p class="lang eng">The quantitative evaluations of 3D GRT indicate that there is almost no significant difference between the quantitative metrics of 3D GRT and other novel view synthesis (NVS) techniques. While the fps is slightly lower in comparison, 3D GS still achieves real-time performance.</p>
 
 <figure>
-    <img class="img-fluid" src="/blogs/posts/240823_grt/assets/fig7.png" width="100%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — 4.1. Quantitative Results" loading="lazy" decoding="async">
+    <img class="post-media" src="/blogs/posts/240823_grt/assets/fig7.png" width="100%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — 4.1. Quantitative Results" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 7.</strong> Quantitative Results </figcaption>
 </figure>
 <figure>
-    <img class="img-fluid" src="/blogs/posts/240823_grt/assets/fig8.png" width="70%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — 4.1. Quantitative Results, figure 2" loading="lazy" decoding="async">
+    <img class="post-media" src="/blogs/posts/240823_grt/assets/fig8.png" width="70%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — 4.1. Quantitative Results, figure 2" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 8.</strong> Speed Comparison </figcaption>
 </figure>
 <br/>
@@ -557,7 +559,7 @@ $$</p>
 <p class="lang eng"> Experimental results support the design of the Ray Tracer, highlighting the importance of these parameters in achieving efficient and accurate rendering.</p>
 
 <figure>
-    <img class="img-fluid" src="/blogs/posts/240823_grt/assets/fig9.png" width="100%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — Ablation Study" loading="lazy" decoding="async">
+    <img class="post-media" src="/blogs/posts/240823_grt/assets/fig9.png" width="100%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — Ablation Study" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 9.</strong> Ablation Study </figcaption>
 </figure>
 <br/>
@@ -607,7 +609,7 @@ $$</p>
     the frames per second (fps) nearly double compared to the standard 3D Gaussian kernel.
 </p>
 <figure>
-    <img class="img-fluid" src="/blogs/posts/240823_grt/assets/kernel_qual.png" width="100%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — Particle Kernel Design" loading="lazy" decoding="async">
+    <img class="post-media" src="/blogs/posts/240823_grt/assets/kernel_qual.png" width="100%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — Particle Kernel Design" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 10.</strong> Kernel Design Comparison </figcaption>
 </figure>
 <p class="lang eng">
@@ -618,7 +620,7 @@ $$</p>
 </p>
 
 <figure>
-    <img class="img-fluid" src="/blogs/posts/240823_grt/assets/ray_hit.png" width="100%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — Particle Kernel Design, figure 2" loading="lazy" decoding="async">
+    <img class="post-media" src="/blogs/posts/240823_grt/assets/ray_hit.png" width="100%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — Particle Kernel Design, figure 2" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 11.</strong> Ray hit count for left: 3D G, right: GG  </figcaption>
 </figure>
 
@@ -626,11 +628,11 @@ $$</p>
 <p class="lang eng">In addition to the quantitative analysis, the qualitative results demonstrate how this method effectively overcomes the limitations of rasterization.</p> 
 <p class="lang eng"> Specifically, the 3D GRT shows significant improvements in modeling and rendering, particularly in handling complex light effects across various camera models. This ability to accurately represent lighting and reflections, which are often challenging in rasterization-based techniques, demonstrates that the method could be highly effective in realistic rendering scenarios.</p>
 <figure>
-    <img class="img-fluid" src="/blogs/posts/240823_grt/assets/fig10.png" width="100%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — 4.2. Qualitative Results" loading="lazy" decoding="async">
+    <img class="post-media" src="/blogs/posts/240823_grt/assets/fig10.png" width="100%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — 4.2. Qualitative Results" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 12.</strong> 3D GRT w/ various light effect </figcaption>
 </figure>
 <figure>
-    <img class="img-fluid" src="/blogs/posts/240823_grt/assets/fig11.png" width="100%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — 4.2. Qualitative Results, figure 2" loading="lazy" decoding="async">
+    <img class="post-media" src="/blogs/posts/240823_grt/assets/fig11.png" width="100%" alt="Don't Rasterize, But Ray Trace 3D Gaussian — 4.2. Qualitative Results, figure 2" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 13.</strong> 3D GRT's reconstruction capability for non-pinhole camera </figcaption>
 </figure>
 <p class="lang eng">Overall, the combination of both quantitative and qualitative evaluations highlights the strengths of this new 3D GS approach, especially in terms of performance, memory efficiency, and the ability to handle complex visual effects.</p>
@@ -643,7 +645,7 @@ $$</p>
     <p>However, the inherent trade-offs between the two methods are evident. While rasterization remains faster in scenarios involving primary rays and static scenes, 3D Gaussian Ray Tracing, despite being carefully optimized for hardware acceleration, still requires more computational resources, particularly when frequent BVH rebuilds are necessary for dynamic scenes.</p>
 </div>
                 </div>
-                <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="post-reading-column">
                     
                     <section class="related-posts" aria-labelledby="related-posts-heading">
                         <h2 id="related-posts-heading">Related Posts</h2>
@@ -666,17 +668,17 @@ $$</p>
                         </div>
                     </section>
     
-                    <div id="post-navigation" class="mt-4"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/" aria-label="Older Post: A Comprehensive Analysis of Gaussian Splatting Rasterization">
+                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
+                <a class="post-nav-card is-older" href="/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/" aria-label="Previous Post: A Comprehensive Analysis of Gaussian Splatting Rasterization">
                     <span class="post-nav-kicker">
-                        <span>Older Post</span>
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
                     </span>
                     <strong>A Comprehensive Analysis of Gaussian Splatting Rasteriz...</strong>
                 </a>
     
-                <a class="post-nav-card is-next" href="/blogs/posts/add-gaussian-splatting-to-your-website/" aria-label="Newer Post: Add Gaussian Splatting to Your Website">
+                <a class="post-nav-card is-next" href="/blogs/posts/add-gaussian-splatting-to-your-website/" aria-label="Next Post: Add Gaussian Splatting to Your Website">
                     <span class="post-nav-kicker">
-                        <span>Newer Post</span>
+                        Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
                     <strong>Add Gaussian Splatting to Your Website</strong>
                 </a>
@@ -686,11 +688,11 @@ $$</p>
         </div>
     </article>
 
-    <footer class="border-top">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div class="small text-center text-muted fst-italic">Copyright © Hwan Heo</div>
+    <footer class="blog-post-footer">
+        <div class="blog-shell">
+            <div class="post-reading-row">
+                <div class="post-reading-column">
+                    <div class="blog-footer-note">Copyright © Hwan Heo</div>
                 </div>
             </div>
         </div>
@@ -1341,7 +1343,6 @@ $$</p>
   "runtimeFeatures": {
     "katex": true,
     "prism": true,
-    "bootstrap": true,
     "modelViewer": false,
     "modelViewerTextureToggle": false,
     "three": false,
@@ -1351,7 +1352,6 @@ $$</p>
   }
 };
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="/blogs/js/code-copy.js"></script>

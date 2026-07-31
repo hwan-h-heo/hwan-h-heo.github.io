@@ -241,7 +241,7 @@
   margin: 0;
   color: var(--project-heading);
   font-size: clamp(2rem, 4vw, 3.05rem);
-  font-weight: 720;
+  font-weight: 700;
   letter-spacing: 0;
   line-height: 1.1;
   overflow-wrap: break-word;
@@ -279,8 +279,36 @@
   max-width: 1040px;
 }
 
-.portfolio-details .container.col-11:not(.portfolio-details-container) {
-  max-width: 920px;
+.portfolio-details .project-overview-layout {
+  --project-overview-gutter-x: 1.5rem;
+  --project-overview-gutter-y: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: calc(-1 * var(--project-overview-gutter-y));
+  margin-right: calc(-0.5 * var(--project-overview-gutter-x));
+  margin-left: calc(-0.5 * var(--project-overview-gutter-x));
+}
+
+.portfolio-details .project-overview-layout > .project-overview-copy,
+.portfolio-details .project-overview-layout > .project-overview-meta {
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
+  margin-top: var(--project-overview-gutter-y);
+  padding-right: calc(0.5 * var(--project-overview-gutter-x));
+  padding-left: calc(0.5 * var(--project-overview-gutter-x));
+}
+
+@media (min-width: 992px) {
+  .portfolio-details .project-overview-layout > .project-overview-copy {
+    flex: 0 0 auto;
+    width: 66.6667%;
+  }
+
+  .portfolio-details .project-overview-layout > .project-overview-meta {
+    flex: 0 0 auto;
+    width: 33.3333%;
+  }
 }
 
 .portfolio-details .project-readable {
@@ -467,8 +495,8 @@
   box-shadow: none;
 }
 
-.portfolio-details .text-center .project-video,
-.portfolio-details .text-center video {
+.portfolio-details .project-centered-media .project-video,
+.portfolio-details .project-centered-media video {
   margin-right: auto;
   margin-left: auto;
 }
@@ -523,7 +551,7 @@
 }
 
 .portfolio-details img[width],
-.portfolio-details .text-center img,
+.portfolio-details .project-centered-media img,
 .portfolio-details .gif-container img {
   display: block;
   margin-right: auto;
@@ -555,6 +583,15 @@
 .portfolio-details table img {
   width: 100%;
   border-radius: 4px;
+}
+
+.portfolio-details .project-framed-image {
+  max-width: 100%;
+  height: auto;
+  padding: 0.25rem;
+  background-color: var(--color-page);
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
 }
 
 .portfolio-details .portfolio-info {
@@ -691,15 +728,20 @@
   margin: 0 auto;
 }
 
+.portfolio-details-page .project-footer-owner {
+  padding-right: 0.25rem;
+  padding-left: 0.25rem;
+}
+
 @media (max-width: 768px) {
   .portfolio-details-page .portfolio-details.section {
     padding: 3.3rem 0 4.5rem;
   }
 
-  .portfolio-details-page .page-title .container,
+  .portfolio-details-page .page-title .portfolio-shell,
   .portfolio-details .project-hero-shell,
   .portfolio-details .portfolio-details-container,
-  .portfolio-details .container.col-11 {
+  .portfolio-details .project-case-study-shell {
     width: calc(100% - 2.5rem);
     max-width: none;
     padding-right: 0;

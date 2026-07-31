@@ -1,6 +1,7 @@
 // Code block copy button functionality
 (function() {
     'use strict';
+    const icons = window.SiteIcons;
 
     // Add copy button to all code blocks
     function addCopyButtons() {
@@ -17,7 +18,7 @@
             // Create copy button
             const button = document.createElement('button');
             button.className = 'copy-code-button';
-            button.innerHTML = '<i class="bi bi-clipboard"></i>';
+            button.innerHTML = icons.render('clipboard');
             button.setAttribute('aria-label', 'Copy code to clipboard');
             button.setAttribute('title', 'Copy code');
 
@@ -29,12 +30,12 @@
                     await navigator.clipboard.writeText(code);
 
                     // Show success feedback
-                    button.innerHTML = '<i class="bi bi-check2"></i>';
+                    button.innerHTML = icons.render('check2');
                     button.classList.add('copied');
 
                     // Reset after 2 seconds
                     setTimeout(() => {
-                        button.innerHTML = '<i class="bi bi-clipboard"></i>';
+                        button.innerHTML = icons.render('clipboard');
                         button.classList.remove('copied');
                     }, 2000);
                 } catch (err) {
@@ -48,19 +49,19 @@
 
                     try {
                         document.execCommand('copy');
-                        button.innerHTML = '<i class="bi bi-check2"></i>';
+                        button.innerHTML = icons.render('check2');
                         button.classList.add('copied');
 
                         setTimeout(() => {
-                            button.innerHTML = '<i class="bi bi-clipboard"></i>';
+                            button.innerHTML = icons.render('clipboard');
                             button.classList.remove('copied');
                         }, 2000);
                     } catch (err) {
                         console.error('Failed to copy code:', err);
-                        button.innerHTML = '<i class="bi bi-x"></i>';
+                        button.innerHTML = icons.render('x');
 
                         setTimeout(() => {
-                            button.innerHTML = '<i class="bi bi-clipboard"></i>';
+                            button.innerHTML = icons.render('clipboard');
                         }, 2000);
                     } finally {
                         document.body.removeChild(textArea);
