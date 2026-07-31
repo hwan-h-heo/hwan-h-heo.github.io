@@ -236,8 +236,10 @@ function validateLocalFileReference(value, errors, label, key, { allowGeneratedP
 function validatePortfolioProjectShape(project, index, errors) {
     const label = `portfolio project ${project.id || index}`;
 
-    ['id', 'title', 'summary', 'url'].forEach((key) => validateStringField(project, key, errors, label));
-    ['badge', 'image', 'gif', 'video', 'poster', 'alt'].forEach((key) => validateStringField(project, key, errors, label, false));
+    ['id', 'title', 'summary', 'url', 'typeLabel', 'organization', 'period']
+        .forEach((key) => validateStringField(project, key, errors, label));
+    ['accolade', 'image', 'gif', 'video', 'poster', 'alt']
+        .forEach((key) => validateStringField(project, key, errors, label, false));
 
     if (!Array.isArray(project.categories) || project.categories.length === 0) {
         errors.push(`"${label}" must define a non-empty categories array.`);
@@ -249,15 +251,16 @@ function validatePortfolioProjectShape(project, index, errors) {
         });
     }
 
-    if (project.tags !== undefined) {
-        if (!Array.isArray(project.tags)) {
-            errors.push(`"tags" must be an array in ${label}.`);
-        } else {
-            project.tags.forEach((tag) => {
-                if (typeof tag !== 'string' || !tag.trim()) {
-                    errors.push(`Invalid empty or non-string tag in ${label}.`);
-                }
-            });
+    if (!Array.isArray(project.tags) || project.tags.length < 2) {
+        errors.push(`"${label}" must define at least two tags.`);
+    } else {
+        project.tags.forEach((tag) => {
+            if (typeof tag !== 'string' || !tag.trim()) {
+                errors.push(`Invalid empty or non-string tag in ${label}.`);
+            }
+        });
+        if (new Set(project.tags).size !== project.tags.length) {
+            errors.push(`"${label}" must not define duplicate tags.`);
         }
     }
 
@@ -429,6 +432,20 @@ function validateSiteData(rawSiteData) {
             errors.push(`Featured portfolio post "${item.id}" must use a local teaserImage.`);
         } else {
             validateLocalFileReference(item.teaserImage, errors, `featured portfolio post ${item.id}`, 'teaserImage');
+        }
+        if (item.previewTags !== undefined) {
+            if (!Array.isArray(item.previewTags) || item.previewTags.length !== 2) {
+                errors.push(`Featured portfolio post "${item.id}" must define exactly two previewTags.`);
+            } else {
+                item.previewTags.forEach((tag) => {
+                    if (typeof tag !== 'string' || !tag.trim()) {
+                        errors.push(`Featured portfolio post "${item.id}" has an invalid preview tag.`);
+                    }
+                });
+                if (new Set(item.previewTags).size !== item.previewTags.length) {
+                    errors.push(`Featured portfolio post "${item.id}" must not define duplicate previewTags.`);
+                }
+            }
         }
         if (featuredIds.has(item.id)) {
             errors.push(`Featured portfolio post "${item.id}" is duplicated.`);

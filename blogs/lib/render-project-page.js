@@ -41,7 +41,7 @@ ${items}
 function renderProjectNavItems(projectNav) {
     const projectSidebarNav = renderProjectSidebarNav(projectNav);
     return `        <li><a href="../../#home"><i class="bi bi-house navicon"></i>Home</a></li>
-        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Project</a></li>
+        <li><a href="../../#portfolio" class="active"><i class="bi bi-images navicon"></i> Projects</a></li>
 ${projectSidebarNav}
         <li><a href="../../blogs/"><i class="bi bi-keyboard navicon"></i> Blog</a></li>
         <li><a href="../../#about"><i class="bi bi-person navicon"></i> About</a></li>
