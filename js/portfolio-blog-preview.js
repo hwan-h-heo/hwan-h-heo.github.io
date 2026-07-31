@@ -42,8 +42,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             return series?.eng || post.series || 'Blog';
         };
 
-        const renderTags = (post) => (post.tags || [])
-            .slice(0, 3)
+        const renderTags = (tags) => (tags || [])
+            .slice(0, 2)
             .map((tag) => `<span class="portfolio-blog-preview-tag">${escapeHtml(tag)}</span>`)
             .join('');
 
@@ -53,17 +53,19 @@ document.addEventListener('DOMContentLoaded', async function() {
                 const title = getPostTitle(item.post, 'eng');
                 const subtitle = item.post.subtitle_eng || getPostDescription(item.post, 'eng');
                 const seriesTitle = getSeriesTitle(item.post);
-                const category = item.post.category === 'note' ? 'Note' : 'Post';
                 const date = formatDate(item.post.date);
-                const tagsHtml = renderTags(item.post);
+                const tagsHtml = renderTags(item.previewTags || item.post.tags);
                 const image = item.teaserImage || item.post.cover || '/assets/blog_bg.jpeg';
-                const keepAnimated = item.post.animatedPreview === true && coverMedia?.isAnimatedCover(image);
+                const animatedImage = coverMedia?.isAnimatedCover(image)
+                    ? image
+                    : item.post.cover;
+                const keepAnimated = item.post.animatedPreview === true && coverMedia?.isAnimatedCover(animatedImage);
                 const preview = coverMedia?.getBlogCoverPreviewUrl(item.id, 'portfolio') || image;
                 const autoplaySource = keepAnimated
-                    ? ` data-autoplay-src="${escapeHtml(image)}"`
+                    ? ` data-autoplay-src="${escapeHtml(animatedImage)}"`
                     : '';
-                const animatedSource = !keepAnimated && coverMedia?.isAnimatedCover(image)
-                    ? ` data-animated-src="${escapeHtml(image)}"`
+                const animatedSource = !keepAnimated && coverMedia?.isAnimatedCover(animatedImage)
+                    ? ` data-animated-src="${escapeHtml(animatedImage)}"`
                     : '';
                 const imageAlt = item.teaserAlt || `${title} article preview`;
 
@@ -75,7 +77,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                 </span>
                 <span class="portfolio-blog-preview-body">
                   <span class="portfolio-blog-preview-eyebrow">
-                    <span>${escapeHtml(category)}</span>
                     <span>${escapeHtml(seriesTitle)}</span>
                   </span>
                   <span class="portfolio-blog-preview-title">${escapeHtml(title)}</span>

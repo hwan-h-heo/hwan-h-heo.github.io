@@ -4015,10 +4015,15 @@ html[lang="ko"] .blog-home-hero p {
     text-wrap: balance;
 }
 
-.blog-feature-copy h2 a,
-.blog-feature-copy h2 a:hover {
+.blog-feature-copy h2 a {
     color: inherit;
     text-decoration: none;
+    transition: color 0.24s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.blog-home-page .blog-feature-card:hover .blog-feature-copy h2 a,
+.blog-home-page .blog-feature-card:focus-within .blog-feature-copy h2 a {
+    color: var(--blog-home-accent-dark);
 }
 
 .blog-feature-copy p {
@@ -4209,10 +4214,15 @@ html[lang="ko"] .blog-home-hero p {
     color: inherit;
 }
 
-.blog-home-page .post-card-body .post-title a,
-.blog-home-page .post-card-body .post-title a:hover {
+.blog-home-page .post-card-body .post-title a {
     color: inherit;
     text-decoration: none;
+    transition: color 0.24s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.blog-home-page .post-card-link:hover .post-card-body .post-title a,
+.blog-home-page .post-card-link:focus-within .post-card-body .post-title a {
+    color: var(--blog-home-accent-dark);
 }
 
 .blog-home-page .post-card-cover {
@@ -4300,13 +4310,27 @@ html[lang="ko"] .blog-home-hero p {
 }
 
 .blog-home-page .post-tag-row {
+    gap: 0;
     margin-top: 0.7rem;
 }
 
 .blog-home-page .post-tag {
-    border-color: rgba(21, 156, 120, 0.22);
-    color: #0d6f5a;
-    background: rgba(21, 156, 120, 0.07);
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    color: var(--blog-home-muted);
+    background: transparent;
+    font-family: var(--blog-sans, "Inter", system-ui, sans-serif);
+    font-size: 0.74rem;
+    font-weight: 500;
+    line-height: 1.4;
+    text-decoration: none;
+}
+
+.blog-home-page .post-tag + .post-tag::before {
+    margin: 0 0.55rem;
+    color: #8993a0;
+    content: "·";
 }
 
 .blog-home-page .post-preview > .post-meta {
@@ -4918,9 +4942,13 @@ html[data-theme="dark"] .blog-home-page .series-group {
 }
 
 html[data-theme="dark"] .blog-home-page .post-tag {
-    border-color: rgba(77, 215, 180, 0.24);
-    color: #8debd3;
-    background: rgba(77, 215, 180, 0.08);
+    border-color: transparent;
+    color: #95a3b5;
+    background: transparent;
+}
+
+html[data-theme="dark"] .blog-home-page .post-tag + .post-tag::before {
+    color: #687587;
 }
 
 html[data-theme="dark"] .blog-search-count {

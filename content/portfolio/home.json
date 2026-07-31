@@ -86,33 +86,32 @@
         {
           "sections": [
             {
-              "title": "Summary",
+              "title": "Experience",
               "items": [
                 {
-                  "title": "Hwan Heo | 허환",
-                  "bodyHtml": "<em>AI Research Engineer building production 3D AI systems across generative models, neural rendering, and graphics.</em>",
+                  "title": "Lead 3D AI Research Engineer",
+                  "period": "2025 - Present",
+                  "metaHtml": "3D Generation, NC AI",
                   "bulletsHtml": [
-                    "AI Research Engineer at NC AI",
-                    "Former Research Personnel · Alternative Military Service"
-                  ]
-                }
-              ]
-            },
-            {
-              "title": "Education",
-              "items": [
-                {
-                  "titleHtml": "<i class=\"bi bi-mortarboard-fill\"></i> M.S. in Computer Science &amp; Engineering",
-                  "period": "2020 - 2022",
-                  "metaHtml": "MLV Lab, Korea University, Seoul",
-                  "bulletsHtml": [
-                    "Advised by Professor <a href=\"https://www.hyunwoojkim.com/\" target=\"_blank\" rel=\"noopener noreferrer\">Hyunwoo J. Kim</a>."
+                    "Leading VARCO 3D R&amp;D across generative model training, inference optimization, graphics algorithms, and deployment."
                   ]
                 },
                 {
-                  "titleHtml": "<i class=\"bi bi-mortarboard-fill\"></i> B.S. in Computer Science &amp; Engineering",
-                  "period": "2015 - 2020",
-                  "metaHtml": "Korea University, Seoul"
+                  "title": "AI Researcher",
+                  "period": "2023 - 2025",
+                  "metaHtml": "Neural Rendering &amp; 3D Generation, NCSOFT Research<br>Research Personnel · Alternative Military Service",
+                  "bulletsHtml": [
+                    "Developed 3D generation and neural rendering systems spanning latent diffusion, texture synthesis, Gaussian Splatting, and neural avatars."
+                  ]
+                },
+                {
+                  "title": "Research Intern",
+                  "period": "2022",
+                  "metaHtml": "Generation Research, NAVER AI Lab",
+                  "bulletsHtml": [
+                    "Researched pose optimization for neural rendering.",
+                    "Mentored by Dr. <a href=\"https://wityworks.com/\" target=\"_blank\" rel=\"noopener noreferrer\">Jin-Hwa Kim</a>."
+                  ]
                 }
               ]
             }
@@ -121,32 +120,20 @@
         {
           "sections": [
             {
-              "title": "Experience",
+              "title": "Education",
               "items": [
                 {
-                  "titleHtml": "<i class=\"bi bi-building-fill\"></i> AI Research Engineer",
-                  "period": "2025 - Present",
-                  "metaHtml": "3D Generation, NC AI",
+                  "title": "M.S. in Computer Science & Engineering",
+                  "period": "2020 - 2022",
+                  "metaHtml": "MLV Lab, Korea University, Seoul",
                   "bulletsHtml": [
-                    "Leading <em>VARCO 3D</em> R&amp;D across generative model training, inference optimization, graphics algorithms, and deployment."
+                    "Advised by Professor <a href=\"https://www.hyunwoojkim.com/\" target=\"_blank\" rel=\"noopener noreferrer\">Hyunwoo J. Kim</a>."
                   ]
                 },
                 {
-                  "titleHtml": "<i class=\"bi bi-building-fill\"></i> AI Researcher",
-                  "period": "2023 - 2025",
-                  "metaHtml": "Neural Rendering &amp; 3D Generation, NCSOFT Research",
-                  "bulletsHtml": [
-                    "Developed 3D generation and neural rendering systems spanning latent diffusion, texture synthesis, Gaussian Splatting, and neural avatars."
-                  ]
-                },
-                {
-                  "titleHtml": "<i class=\"bi bi-building-fill\"></i> AI Researcher, Intern",
-                  "period": "2022",
-                  "metaHtml": "Generation Research, NAVER AI Lab",
-                  "bulletsHtml": [
-                    "Researched pose optimization for neural rendering.",
-                    "Mentored by Dr. <a href=\"https://wityworks.com/\" target=\"_blank\" rel=\"noopener noreferrer\">Jin-Hwa Kim</a>."
-                  ]
+                  "title": "B.S. in Computer Science & Engineering",
+                  "period": "2015 - 2020",
+                  "metaHtml": "Korea University, Seoul"
                 }
               ]
             }

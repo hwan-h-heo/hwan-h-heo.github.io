@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0" />
+    <meta name="description" content="Why generic compiler paths underperform on dynamic sparse models—and how model-aware CUDA optimization reduced latency." />
     <meta name="keywords" content="post, 3d-generation, 3D Generation, Generative AI, CUDA, 3D graphics, computer vision, machine learning" />
     <meta name="author" content="Hwan Heo" />
     <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference/" />
@@ -13,7 +13,7 @@
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference/" />
     <meta property="og:title" content="What the Compiler Missed in Sparse 3D Inference" />
-    <meta property="og:description" content="Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0" />
+    <meta property="og:description" content="Why generic compiler paths underperform on dynamic sparse models—and how model-aware CUDA optimization reduced latency." />
     <meta property="og:image" content="https://hwan-h-heo.github.io/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png" />
     <meta property="og:site_name" content="HwanHeo's Blog" />
     <meta property="article:published_time" content="2026-07-27T00:00:00.000Z" />
@@ -22,9 +22,9 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference/" />
     <meta name="twitter:title" content="What the Compiler Missed in Sparse 3D Inference" />
-    <meta name="twitter:description" content="Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0" />
+    <meta name="twitter:description" content="Why generic compiler paths underperform on dynamic sparse models—and how model-aware CUDA optimization reduced latency." />
     <meta name="twitter:image" content="https://hwan-h-heo.github.io/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"What the Compiler Missed in Sparse 3D Inference","description":"Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0","url":"https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference/","mainEntityOfPage":"https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference/","image":["https://hwan-h-heo.github.io/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png"],"author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"publisher":{"@type":"Person","name":"Hwan Heo"},"datePublished":"2026-07-27","dateModified":"2026-07-27","inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"What the Compiler Missed in Sparse 3D Inference","description":"Why generic compiler paths underperform on dynamic sparse models—and how model-aware CUDA optimization reduced latency.","url":"https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference/","mainEntityOfPage":"https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference/","image":["https://hwan-h-heo.github.io/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png"],"author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"publisher":{"@type":"Person","name":"Hwan Heo"},"datePublished":"2026-07-27","dateModified":"2026-07-27","inLanguage":"en"}</script>
 
     <title>What the Compiler Missed in Sparse 3D Inference | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
@@ -121,7 +121,7 @@
                         <ol>
                             <li><a href="/">Portfolio</a></li>
                             <li><a href="/blogs/">Blog</a></li>
-                            <li><a href="/blogs/series/3d-generation/">3D Generative AI</a></li>
+                            <li><a href="/blogs/series/3d-generation/">3D AI</a></li>
                             <li aria-current="page">What the Compiler Missed in Sparse 3D Inference</li>
                         </ol>
                     </nav>
@@ -132,7 +132,7 @@
                     <span class="series-icon" aria-hidden="true"><i class="bi bi-collection"></i></span>
                     <span class="series-summary-copy">
                         <span class="series-kicker">Series</span>
-                        <strong>3D Generative AI</strong>
+                        <strong>3D AI</strong>
                     </span>
                     <span class="series-meta">1 / 8</span>
                     <span class="series-toggle">
@@ -155,7 +155,7 @@
                     <a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/">
                         <span class="series-post-index">02</span>
                         <span class="series-post-copy">
-                            <strong>Varco3D: A Year in Review — 2025 Retrospective</strong>
+                            <strong>VARCO 3D: A Year in Review — 2025 Retrospective</strong>
                             <span>2026.01.15</span>
                         </span>
                     </a>
@@ -1056,8 +1056,8 @@ $$</p>
                         <div class="related-post-grid">
                             
                             <article class="related-post-card">
-                                <a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" aria-label="Read Varco3D: A Year in Review — 2025 Retrospective">
-                                    <strong>Varco3D: A Year in Review — 2025 Retrospective</strong>
+                                <a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" aria-label="Read VARCO 3D: A Year in Review — 2025 Retrospective">
+                                    <strong>VARCO 3D: A Year in Review — 2025 Retrospective</strong>
                                     <time datetime="2026-01-15">Jan 2026</time>
                                 </a>
                             </article>
@@ -1087,11 +1087,11 @@ $$</p>
                     </section>
     
                     <div id="post-navigation" class="mt-4"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" aria-label="Older Post: Varco3D: A Year in Review — 2025 Retrospective">
+                <a class="post-nav-card is-older" href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" aria-label="Older Post: VARCO 3D: A Year in Review — 2025 Retrospective">
                     <span class="post-nav-kicker">
                         <span>Older Post</span>
                     </span>
-                    <strong>Varco3D: A Year in Review — 2025 Retrospective</strong>
+                    <strong>VARCO 3D: A Year in Review — 2025 Retrospective</strong>
                 </a>
     <span class="post-nav-spacer" aria-hidden="true"></span></nav></div>
                 </div>
@@ -1116,9 +1116,9 @@ $$</p>
       "id": "260727_sparse_3d",
       "title_eng": "What the Compiler Missed in Sparse 3D Inference",
       "title_kor": "컴파일러가 놓친 Sparse 3D Forward 최적화",
-      "subtitle_eng": "Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0",
+      "subtitle_eng": "Why generic compiler paths underperform on dynamic sparse models—and how model-aware CUDA optimization reduced latency.",
       "subtitle_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
-      "description_eng": "Null-Context Attention Elimination and CUDA Fusion in VARCO3D 2.0",
+      "description_eng": "Why generic compiler paths underperform on dynamic sparse models—and how model-aware CUDA optimization reduced latency.",
       "description_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
       "tags": [
         "3D Generation",
@@ -1139,12 +1139,12 @@ $$</p>
     },
     {
       "id": "260115_Varco3D",
-      "title_eng": "Varco3D: A Year in Review — 2025 Retrospective",
+      "title_eng": "VARCO 3D: A Year in Review — 2025 Retrospective",
       "title_kor": "3D 생성형 AI 서비스; Varco3D 개발기",
-      "subtitle_eng": "A technical retrospective on recent 3D generative AI systems",
-      "subtitle_kor": "최근 3D 생성형 AI 시스템을 돌아보는 기술 회고",
-      "description_eng": "A technical retrospective on recent 3D generative AI systems",
-      "description_kor": "최근 3D 생성형 AI 시스템을 돌아보는 기술 회고",
+      "subtitle_eng": "How a fast-follower team tracked the evolution of 3D AI and built an in-house generative 3D service.",
+      "subtitle_kor": "빠르게 발전하는 3D AI를 추적하며 인하우스 3D 생성형 AI 서비스를 구축해 간 과정",
+      "description_eng": "How a fast-follower team tracked the evolution of 3D AI and built an in-house generative 3D service.",
+      "description_kor": "빠르게 발전하는 3D AI를 추적하며 인하우스 3D 생성형 AI 서비스를 구축해 간 과정",
       "tags": [
         "3D Generation",
         "Generative AI"
@@ -1403,10 +1403,10 @@ $$</p>
       "id": "240805_gs",
       "title_eng": "A Comprehensive Analysis of Gaussian Splatting Rasterization",
       "title_kor": "Gaussian Splatting Rasterization 완벽 분석",
-      "subtitle_eng": "Understanding 3D GS's Rasterization Algorithm",
-      "subtitle_kor": "GS rasterization 알고리즘과 cuda 구현 톺아보기",
-      "description_eng": "Understanding 3D GS's Rasterization Algorithm",
-      "description_kor": "GS rasterization 알고리즘과 cuda 구현 톺아보기",
+      "subtitle_eng": "A ground-up understanding of Gaussian Splatting by mapping the mathematics directly to its CUDA rasterizer implementation.",
+      "subtitle_kor": "수식과 CUDA rasterizer 코드를 직접 대응시키는 Gaussian Splatting 완전 해설",
+      "description_eng": "A ground-up understanding of Gaussian Splatting by mapping the mathematics directly to its CUDA rasterizer implementation.",
+      "description_kor": "수식과 CUDA rasterizer 코드를 직접 대응시키는 Gaussian Splatting 완전 해설",
       "tags": [
         "Neural Rendering",
         "Gaussian Splatting"
@@ -1725,8 +1725,8 @@ $$</p>
       "kor": "Radiance Fields & Gaussian Splatting"
     },
     "3d-generation": {
-      "eng": "3D Generative AI",
-      "kor": "3D 생성 AI"
+      "eng": "3D AI",
+      "kor": "3D AI"
     },
     "web-3d": {
       "eng": "3D in Web",

@@ -8,42 +8,11 @@
             .replace(/'/g, '&#39;');
     }
 
-    const CATEGORY_LABELS = {
-        app: 'Application',
-        research: 'Research',
-        per: 'Personal'
-    };
-    const PROJECT_ACTION_LABELS = {
-        varco3d: 'Service Overview',
-        capa: 'Research Project',
-        deepsfm: 'Project Notes',
-        '2dgs-viewer': 'Viewer Project',
-        'instant-pose': 'Paper Project',
-        'nerf-in-game': 'Engine Project'
-    };
-
     function isSelectedProject(project, index) {
         if (typeof project.selected === 'boolean') {
             return project.selected;
         }
         return index < 3;
-    }
-
-    function getProjectCategoryLabels(project) {
-        return (project.categories || [])
-            .map((category) => CATEGORY_LABELS[category] || category)
-            .filter(Boolean);
-    }
-
-    function getProjectActionLabel(project) {
-        return PROJECT_ACTION_LABELS[project.id] || 'Project Page';
-    }
-
-    function renderProjectTags(project) {
-        return (project.tags || [])
-            .slice(0, 3)
-            .map((tag) => `<span class="portfolio-project-tag">${escapeHtml(tag)}</span>`)
-            .join('');
     }
 
     function renderMedia(project) {
@@ -64,20 +33,27 @@
         `;
     }
 
+    function renderProjectTags(project) {
+        return (project.tags || [])
+            .slice(0, 2)
+            .map((tag) => `<span class="portfolio-project-tag">${escapeHtml(tag)}</span>`)
+            .join('');
+    }
+
     function renderProject(project, index = 0) {
         const selected = isSelectedProject(project, index);
-        const categoryLabels = getProjectCategoryLabels(project);
         const targetAttrs = project.external ? ' target="_blank" rel="noopener noreferrer"' : '';
         const externalIcon = project.external ? ' <i class="bi bi-box-arrow-up-right"></i>' : '';
-        const badgeHtml = project.badge
-            ? `<span class="portfolio-project-badge">${escapeHtml(project.badge)}</span>`
+        const eyebrowHtml = project.typeLabel
+            ? `<span class="portfolio-project-eyebrow">${escapeHtml(project.typeLabel)}</span>`
             : '';
         const spinnerHtml = project.gif || project.video
             ? '<div class="loading-spinner" style="display: none;"></div>'
             : '';
-        const selectedLabel = selected ? '<span>Selected Project</span>' : '<span>Project Archive</span>';
-        const actionLabel = getProjectActionLabel(project);
         const tagsHtml = renderProjectTags(project);
+        const accoladeHtml = project.accolade
+            ? `<span class="portfolio-project-accolade">${escapeHtml(project.accolade)}</span>`
+            : '';
         const hidden = selected ? '' : ' hidden';
 
         return `
@@ -86,17 +62,16 @@
                     <span class="portfolio-project-cover">
                         ${renderMedia(project)}
                         ${spinnerHtml}
-                        ${badgeHtml}
                     </span>
                     <span class="portfolio-project-body">
-                        <span class="portfolio-project-eyebrow">
-                            ${selectedLabel}
-                            ${categoryLabels[0] ? `<span>${escapeHtml(categoryLabels[0])}</span>` : ''}
-                        </span>
+                        ${eyebrowHtml}
                         <span class="portfolio-project-title">${escapeHtml(project.title)}${externalIcon}</span>
                         <span class="portfolio-project-summary">${escapeHtml(project.summary)}</span>
-                        ${tagsHtml ? `<span class="portfolio-project-tags">${tagsHtml}</span>` : ''}
-                        <span class="portfolio-project-meta">${escapeHtml(actionLabel)} <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+                        <span class="portfolio-project-tags">${tagsHtml}</span>
+                        <span class="portfolio-project-meta">
+                            <span>${escapeHtml(project.organization)} / ${escapeHtml(project.period)}</span>
+                            ${accoladeHtml}
+                        </span>
                     </span>
                 </a>
             </article>
@@ -134,6 +109,9 @@
 
     function renderTalk(talk) {
         const titleHtml = talk.titleHtml || escapeHtml(talk.title);
+        const linksHtml = (talk.links || []).length
+            ? talk.links.map(renderLink).join('')
+            : '';
 
         return `
             <li class="portfolio-talk">
@@ -142,6 +120,7 @@
                     <h3>${titleHtml}</h3>
                     <p>${talk.venueHtml}</p>
                 </div>
+                ${linksHtml ? `<div class="portfolio-paper-links portfolio-talk-links">${linksHtml}</div>` : ''}
             </li>
         `;
     }
