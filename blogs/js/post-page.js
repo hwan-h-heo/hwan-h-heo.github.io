@@ -284,26 +284,16 @@
             || siteData.series[currentPost.series]?.eng
             || 'Series';
 
-        const labels = config.lang === 'kor'
-            ? {
-                kicker: '시리즈',
-                current: '현재 글',
-                older: '이전 글',
-                next: '다음 글',
-                explore: '다른 시리즈'
-            }
-            : {
-                kicker: 'Series',
-                current: 'Current',
-                older: 'Older Post',
-                next: 'Next Post',
-                explore: 'Explore Series'
-            };
+        const labels = {
+            kicker: 'Series',
+            current: 'Current',
+            older: 'Older Post',
+            next: 'Next Post',
+            explore: 'Explore Series'
+        };
 
         const currentIndex = postsInSeries.findIndex((post) => post.id === config.postId);
-        const countLabel = config.lang === 'kor'
-            ? `${postsInSeries.length}편`
-            : `${postsInSeries.length} posts`;
+        const countLabel = `${postsInSeries.length} posts`;
         const listItems = postsInSeries.map((post, index) => {
             const title = getPostTitle(post, config.lang);
             const slug = config.lang === 'eng' ? post.slug : `${post.slug}-kor`;

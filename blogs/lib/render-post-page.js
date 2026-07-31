@@ -20,7 +20,7 @@ function serializeForScript(value) {
 }
 
 function resolveOgImage(post, featuredPortfolioPosts) {
-    const configuredImage = post.socialImage || post.cover || '';
+    const configuredImage = post.socialImage || post.previewImage || post.cover || '';
     if (configuredImage && !/\.svg(?:[?#]|$)/i.test(configuredImage)) {
         return getAbsoluteUrl(configuredImage);
     }

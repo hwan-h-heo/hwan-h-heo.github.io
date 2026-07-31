@@ -22,8 +22,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             tabSeries: 'Series',
             featuredLabel: 'Featured',
             readPost: 'Read post',
-            post: 'Post',
-            note: 'Note',
             items: 'items',
             latest: 'Latest',
             noPosts: 'No posts yet.',
@@ -41,8 +39,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             tabSeries: 'Series',
             featuredLabel: 'Featured',
             readPost: '글 읽기',
-            post: 'Post',
-            note: 'Note',
             items: 'items',
             latest: 'Latest',
             noPosts: '아직 게시글이 없습니다.',
@@ -96,10 +92,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     function getSeriesTitle(post, lang) {
         return siteData.series[post.series]?.[lang] || siteData.series[post.series]?.eng || 'Series';
-    }
-
-    function getCategoryLabel(post, lang) {
-        return post.category === 'note' ? copy(lang, 'note') : copy(lang, 'post');
     }
 
     function renderTags(post) {
@@ -183,7 +175,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                 </a>
                 <div class="post-card-body">
                     <div class="post-card-eyebrow">
-                        <span>${escapeHtml(getCategoryLabel(post, lang))}</span>
                         <span>${escapeHtml(seriesTitle)}</span>
                     </div>
                     <h3 class="post-title"><a href="${escapeHtml(getPostUrl(post, lang))}">${escapeHtml(title)}</a></h3>
@@ -192,7 +183,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 </div>
             </div>
             <p class="post-meta">
-                ${escapeHtml(seriesTitle)} / ${escapeHtml(formatDate(post.date, lang))}
+                <time datetime="${escapeHtml(post.date)}">${escapeHtml(formatDate(post.date, lang))}</time>
             </p>
         </article>
         `;

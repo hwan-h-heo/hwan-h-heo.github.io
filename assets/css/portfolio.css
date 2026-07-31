@@ -31,9 +31,16 @@
   --color-line: rgba(15, 23, 42, 0.1);
   --color-line-soft: rgba(15, 23, 42, 0.08);
 
-  --accent-color: #149ddd;
-  --accent-on-dark: #69d2e6;
-  --accent-on-light: #167f94;
+  /* Canonical accent roles. Keep bright cyan out of long-form text. */
+  --accent-interactive: #149ddd;
+  --accent-editorial: #167f94;
+  --accent-dark-surface: #69d2e6;
+
+  /* Compatibility aliases used by project and legacy shared styles. */
+  --accent-color: var(--accent-interactive);
+  --accent-on-light: var(--accent-editorial);
+  --accent-on-dark: var(--accent-dark-surface);
+  --color-link-muted: color-mix(in srgb, var(--color-text-strong), var(--accent-editorial) 30%);
   --accent-soft: rgba(20, 157, 221, 0.065);
   --accent-line: rgba(20, 157, 221, 0.2);
   --accent-line-strong: rgba(20, 157, 221, 0.42);
@@ -640,7 +647,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   border: 0;
   border-top: 1px solid var(--color-line);
   border-radius: 0;
-  transition: color var(--motion-fast) var(--ease-standard);
+  transition: color var(--motion-base) var(--ease-standard);
 }
 
 .about .about-contact-link:hover {
@@ -685,8 +692,8 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   flex: 0 0 auto;
   font-size: 0.72rem;
   transition:
-    color var(--motion-fast) var(--ease-standard),
-    transform var(--motion-base) var(--ease-emphasized);
+    color var(--motion-base) var(--ease-standard),
+    transform var(--motion-slow) var(--ease-emphasized);
 }
 
 .about .about-contact-link:hover .about-contact-arrow {
@@ -792,9 +799,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   font-weight: 700;
   line-height: 1;
   text-decoration: none;
-  transition:
-    color var(--motion-base) var(--ease-standard),
-    transform var(--motion-slow) var(--ease-emphasized);
+  transition: color var(--motion-base) var(--ease-standard);
 }
 
 .resume-cv-link::after {
@@ -813,7 +818,6 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 .resume-cv-link:hover {
   color: var(--color-ink);
   background: transparent;
-  transform: translateY(-1px);
 }
 
 .resume-cv-link:hover::after,
@@ -829,11 +833,6 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 .resume-cv-link i {
   color: var(--accent-color);
   font-size: 0.82rem;
-  transition: transform var(--motion-slow) var(--ease-emphasized);
-}
-
-.resume-cv-link:hover i {
-  transform: translateY(1px);
 }
 
 .resume-layout {
@@ -928,18 +927,19 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 }
 
 .resume .resume-item a {
-  color: var(--accent-color);
-  text-decoration-color: color-mix(in srgb, var(--accent-color), transparent 58%);
+  color: var(--color-link-muted);
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-link-muted), transparent 58%);
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
   transition:
-    color var(--motion-fast) var(--ease-standard),
-    text-decoration-color var(--motion-fast) var(--ease-standard);
+    color var(--motion-base) var(--ease-standard),
+    text-decoration-color var(--motion-base) var(--ease-standard);
 }
 
 .resume .resume-item a:hover {
   color: var(--color-ink);
-  text-decoration-color: color-mix(in srgb, var(--color-ink) 50%, transparent);
+  text-decoration-color: var(--accent-on-light);
 }
 
 .resume .resume-item a:focus-visible {
@@ -1139,6 +1139,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   line-height: 1.34;
   letter-spacing: 0;
   text-wrap: pretty;
+  transition: color var(--motion-base) var(--ease-standard);
 }
 
 .testimonials .portfolio-blog-preview-summary {
@@ -1211,6 +1212,22 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   color: #334155;
   font-size: 0.94rem;
   line-height: 1.65;
+}
+
+.testimonials .portfolio-blog-side-notes a {
+  color: var(--color-link-muted);
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-link-muted), transparent 58%);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition:
+    color var(--motion-base) var(--ease-standard),
+    text-decoration-color var(--motion-base) var(--ease-standard);
+}
+
+.testimonials .portfolio-blog-side-notes a:hover {
+  color: var(--color-ink);
+  text-decoration-color: var(--accent-on-light);
 }
 
 @media (max-width: 767px) {
@@ -1840,10 +1857,6 @@ h6 {
     filter var(--motion-base) var(--ease-standard);
 }
 
-.portfolio-project-link[href$="projects/instant_pose/"] .portfolio-project-cover img {
-  object-position: right center;
-}
-
 .portfolio-project-link:hover .portfolio-project-cover img,
 .portfolio-project-link:hover .portfolio-project-cover video,
 .portfolio-project-link.is-active .portfolio-project-cover img,
@@ -1880,6 +1893,7 @@ h6 {
   line-height: 1.34;
   letter-spacing: 0;
   text-wrap: pretty;
+  transition: color var(--motion-base) var(--ease-standard);
 }
 
 .portfolio-project-title i {
@@ -1910,6 +1924,13 @@ h6 {
 .portfolio-project-link:focus-visible .portfolio-project-title::after {
   opacity: 1;
   transform: translate(0, 0);
+}
+
+.testimonials .portfolio-blog-preview-link:hover .portfolio-blog-preview-title,
+.testimonials .portfolio-blog-preview-link:focus-visible .portfolio-blog-preview-title,
+.portfolio-project-link:hover .portfolio-project-title,
+.portfolio-project-link:focus-visible .portfolio-project-title {
+  color: var(--accent-editorial);
 }
 
 .portfolio-project-summary {
@@ -1988,7 +2009,7 @@ h6 {
 .portfolio-disclosure-kicker {
   display: block;
   margin-bottom: 0.12rem;
-  color: var(--accent-color);
+  color: var(--accent-editorial);
   font-family: var(--mono-font);
   font-size: 0.62rem;
   font-weight: 500;
@@ -2037,11 +2058,11 @@ h6 {
 
 .portfolio-publication {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 1rem 2rem;
-  position: relative;
-  padding: 1.35rem 0 1.35rem 3rem;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  grid-template-columns: 1.75rem minmax(0, 1fr) auto;
+  gap: 1.1rem;
+  align-items: start;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--color-line-soft);
   counter-increment: publication;
 }
 
@@ -2052,12 +2073,12 @@ h6 {
 
 .portfolio-publication::before {
   content: "0" counter(publication);
-  position: absolute;
-  top: 1.42rem;
-  left: 0;
+  padding-top: 0.14rem;
   color: #94a3b8;
   font-family: var(--mono-font);
   font-size: 0.68rem;
+  font-weight: 500;
+  line-height: 1.45;
   letter-spacing: 0;
 }
 
@@ -2066,6 +2087,7 @@ h6 {
   margin: 0;
   color: #0f172a;
   font-size: 0.94rem;
+  font-weight: 650;
   line-height: 1.45;
   letter-spacing: 0;
 }
@@ -2092,46 +2114,76 @@ h6 {
 .portfolio-paper-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.38rem;
+  gap: 0.55rem 1rem;
   align-content: flex-start;
   justify-content: flex-end;
 }
 
 .portfolio-paper-link {
+  position: relative;
   display: inline-flex;
-  gap: 0.35rem;
+  gap: 0.5rem;
   align-items: center;
-  padding: 0.38rem 0.55rem;
-  border: 1px solid rgba(15, 23, 42, 0.14);
-  border-radius: 0.35rem;
-  color: #334155;
-  font-family: var(--mono-font);
-  font-size: 0.63rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  transition:
-    color var(--motion-fast) var(--ease-standard),
-    border-color var(--motion-fast) var(--ease-standard),
-    background-color var(--motion-fast) var(--ease-standard),
-    transform var(--motion-base) var(--ease-emphasized);
+  min-height: 2.25rem;
+  padding: 0.45rem 0 0.5rem;
+  overflow: hidden;
+  border: 0;
+  border-bottom: 1px solid var(--color-line);
+  border-radius: 0;
+  color: var(--color-text-strong);
+  background: transparent;
+  font-family: var(--heading-font);
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  transition: color var(--motion-base) var(--ease-standard);
+}
+
+.portfolio-paper-link::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: var(--color-ink);
+  content: "";
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 480ms var(--ease-emphasized);
 }
 
 .portfolio-paper-link:hover {
-  color: var(--accent-on-light);
-  border-color: var(--accent-line-strong);
-  background: var(--accent-soft);
-  transform: translateY(-1px);
+  color: var(--color-ink);
+  background: transparent;
+}
+
+.portfolio-paper-link:hover::after,
+.portfolio-paper-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.portfolio-paper-link:focus-visible {
+  outline: 2px solid var(--accent-line-strong);
+  outline-offset: 4px;
+}
+
+.portfolio-paper-link i {
+  color: var(--accent-interactive);
+  font-size: 0.82rem;
 }
 
 .portfolio-talk {
   display: grid;
-  grid-template-columns: 6.5rem minmax(0, 1fr);
+  grid-template-columns: 6.5rem minmax(0, 1fr) auto;
   gap: 1.5rem;
-  padding: 1.2rem 0;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  align-items: start;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--color-line-soft);
 }
 
 .portfolio-talk time {
+  padding-top: 0.14rem;
   color: var(--color-text-soft);
   font-family: var(--mono-font);
   font-size: 0.68rem;
@@ -2281,22 +2333,27 @@ h6 {
   }
 
   .portfolio-publication {
-    grid-template-columns: 1fr;
-    gap: 0.8rem;
-    padding: 1.2rem 0 1.2rem 2rem;
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+    gap: 0.75rem;
+    padding: 1.15rem 0;
   }
 
   .portfolio-publication::before {
-    top: 1.27rem;
+    padding-top: 0.12rem;
   }
 
   .portfolio-paper-links {
+    grid-column: 2;
     justify-content: flex-start;
   }
 
   .portfolio-talk {
     grid-template-columns: 1fr;
     gap: 0.35rem;
+  }
+
+  .portfolio-talk-links {
+    justify-content: flex-start;
   }
 }
 
@@ -2359,7 +2416,9 @@ h6 {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .testimonials .portfolio-blog-preview-title,
   .testimonials .portfolio-blog-preview-title::after,
+  .portfolio-project-title,
   .portfolio-project-title::after {
     transition: none;
   }

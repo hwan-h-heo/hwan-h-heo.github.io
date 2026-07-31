@@ -52,7 +52,7 @@ async function generateBlogCoverPreviews({ siteData, repoRoot, distDir }) {
     const postsById = new Map(siteData.posts.map((post) => [post.id, post]));
     const entries = siteData.posts.map((post) => ({
         id: post.id,
-        source: post.cover,
+        source: post.previewImage || post.cover,
         variant: 'cover'
     }));
 
@@ -64,7 +64,7 @@ async function generateBlogCoverPreviews({ siteData, repoRoot, distDir }) {
 
         entries.push({
             id: item.id,
-            source: item.teaserImage || post.cover,
+            source: item.teaserImage || post.previewImage || post.cover,
             variant: 'portfolio'
         });
     });

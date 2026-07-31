@@ -308,7 +308,7 @@
         "Gaussian Splatting"
       ],
       "cover": "/blogs/posts/240805_gs/assets/garden.gif",
-      "animatedPreview": true,
+      "previewImage": "/blogs/posts/240805_gs/assets/garden-preview.jpg",
       "status": "published",
       "updated": "2024-08-05"
     },
@@ -692,8 +692,8 @@
       "organization": "NAVER AI Lab",
       "period": "2022–2023",
       "accolade": "ICML 2023",
-      "image": "projects/instant_pose/assets/pose_fig2.jpg",
-      "alt": "Instant Pose teaser"
+      "image": "projects/instant_pose/assets/pose_fig2_thumbnail.png",
+      "alt": "Hash-grid gradient and trilinear interpolation diagrams"
     },
     {
       "id": "2dgs-viewer",
@@ -829,9 +829,15 @@
   "talks": [
     {
       "title": "Introduction to 3D Generative AI",
-      "titleHtml": "Introduction to 3D Generative AI <a href=\"https://drive.google.com/file/d/1dvAoIkgMRq4Ks1K7zFhLgAf88B2ArJ4r/view?usp=sharing\">(PDF)</a>",
       "venueHtml": "Generative AI Seminar (CS.93000B) - KAIST",
-      "date": "Mar 2026"
+      "date": "Mar 2026",
+      "links": [
+        {
+          "label": "PDF",
+          "url": "https://drive.google.com/file/d/1dvAoIkgMRq4Ks1K7zFhLgAf88B2ArJ4r/view?usp=sharing",
+          "icon": "bi-file-earmark-text"
+        }
+      ]
     },
     {
       "title": "Introduction to 3D Generative AI",
@@ -880,8 +886,8 @@
     },
     {
       "id": "240805_gs",
-      "teaserImage": "/blogs/posts/240805_gs/assets/garden.gif",
-      "teaserAlt": "Differentiable Gaussian rasterization blog teaser"
+      "teaserImage": "/blogs/posts/240805_gs/assets/garden-preview.jpg",
+      "teaserAlt": "Split view of the Gaussian point cloud and rasterized garden scene"
     }
   ]
 }

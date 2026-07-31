@@ -109,6 +109,9 @@
 
     function renderTalk(talk) {
         const titleHtml = talk.titleHtml || escapeHtml(talk.title);
+        const linksHtml = (talk.links || []).length
+            ? talk.links.map(renderLink).join('')
+            : '';
 
         return `
             <li class="portfolio-talk">
@@ -117,6 +120,7 @@
                     <h3>${titleHtml}</h3>
                     <p>${talk.venueHtml}</p>
                 </div>
+                ${linksHtml ? `<div class="portfolio-paper-links portfolio-talk-links">${linksHtml}</div>` : ''}
             </li>
         `;
     }

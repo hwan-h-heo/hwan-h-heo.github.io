@@ -56,13 +56,16 @@ document.addEventListener('DOMContentLoaded', async function() {
                 const date = formatDate(item.post.date);
                 const tagsHtml = renderTags(item.previewTags || item.post.tags);
                 const image = item.teaserImage || item.post.cover || '/assets/blog_bg.jpeg';
-                const keepAnimated = item.post.animatedPreview === true && coverMedia?.isAnimatedCover(image);
+                const animatedImage = coverMedia?.isAnimatedCover(image)
+                    ? image
+                    : item.post.cover;
+                const keepAnimated = item.post.animatedPreview === true && coverMedia?.isAnimatedCover(animatedImage);
                 const preview = coverMedia?.getBlogCoverPreviewUrl(item.id, 'portfolio') || image;
                 const autoplaySource = keepAnimated
-                    ? ` data-autoplay-src="${escapeHtml(image)}"`
+                    ? ` data-autoplay-src="${escapeHtml(animatedImage)}"`
                     : '';
-                const animatedSource = !keepAnimated && coverMedia?.isAnimatedCover(image)
-                    ? ` data-animated-src="${escapeHtml(image)}"`
+                const animatedSource = !keepAnimated && coverMedia?.isAnimatedCover(animatedImage)
+                    ? ` data-animated-src="${escapeHtml(animatedImage)}"`
                     : '';
                 const imageAlt = item.teaserAlt || `${title} article preview`;
 

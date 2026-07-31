@@ -26,6 +26,7 @@ const POST_ALLOWED_KEYS = new Set([
     'seoTitle_kor',
     'tags',
     'cover',
+    'previewImage',
     'animatedPreview',
     'socialImage',
     'translationKey',
@@ -90,7 +91,7 @@ function validatePostShape(post, seriesMap, errors) {
         errors.push(`Post "${post.id}" references unknown series "${post.series}".`);
     }
 
-    ['description_eng', 'description_kor', 'seoTitle', 'seoTitle_eng', 'seoTitle_kor', 'cover', 'socialImage', 'translationKey', 'status', 'updated', 'slug'].forEach((key) => {
+    ['description_eng', 'description_kor', 'seoTitle', 'seoTitle_eng', 'seoTitle_kor', 'cover', 'previewImage', 'socialImage', 'translationKey', 'status', 'updated', 'slug'].forEach((key) => {
         validateStringField(post, key, errors, `post "${post.id || 'unknown'}"`, false);
     });
 
@@ -171,6 +172,7 @@ function validatePostShape(post, seriesMap, errors) {
     }
 
     validateLocalFileReference(post.cover, errors, `post "${post.id || 'unknown'}"`, 'cover');
+    validateLocalFileReference(post.previewImage, errors, `post "${post.id || 'unknown'}"`, 'previewImage');
     validateLocalFileReference(post.socialImage, errors, `post "${post.id || 'unknown'}"`, 'socialImage');
 }
 
@@ -337,6 +339,7 @@ function normalizeSiteData(rawSiteData, relatedData = {}) {
             description_eng: post.description_eng || post.subtitle_eng || '',
             description_kor: post.description_kor || post.subtitle_kor || post.description_eng || post.subtitle_eng || '',
             cover: post.cover || '/assets/blog_bg.jpeg',
+            previewImage: post.previewImage || '',
             socialImage: post.socialImage || '',
             translationKey: post.translationKey || post.id,
             updated: post.updated || post.date,

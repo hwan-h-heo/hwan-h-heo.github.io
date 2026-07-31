@@ -127,13 +127,6 @@ function getSeriesTitle(siteData, seriesId, lang = 'eng') {
     return siteData.series?.[seriesId]?.[lang] || siteData.series?.[seriesId]?.eng || 'Series';
 }
 
-function getCategoryLabel(post, lang = 'eng') {
-    if (post.category === 'note') {
-        return lang === 'kor' ? 'Note' : 'Note';
-    }
-    return 'Post';
-}
-
 function getLanguageSummary(post) {
     return post.languages
         .map((lang) => getLanguageMeta(lang).label)
@@ -201,7 +194,6 @@ function renderPostPreview(post, lang, siteData) {
                 </a>
                 <div class="post-card-body">
                     <div class="post-card-eyebrow">
-                        <span>${escapeHtml(getCategoryLabel(post, lang))}</span>
                         <span>${escapeHtml(seriesTitle)}</span>
                     </div>
                     <h3 class="post-title"><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h3>
@@ -210,8 +202,11 @@ function renderPostPreview(post, lang, siteData) {
                 </div>
             </div>
             <p class="post-meta">
-                ${escapeHtml(seriesTitle)} / <time datetime="${escapeHtml(post.date)}">${escapeHtml(formatDate(post.date, lang))}</time> / Languages: ${renderLanguageLinks(post)}
+                <time datetime="${escapeHtml(post.date)}">${escapeHtml(formatDate(post.date, lang))}</time>
             </p>
+            <nav class="visually-hidden" aria-label="Available languages">
+                ${renderLanguageLinks(post)}
+            </nav>
         </article>
     `;
 }

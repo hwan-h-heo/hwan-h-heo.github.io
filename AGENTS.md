@@ -13,6 +13,9 @@ The repository has two main parts. The portfolio site lives at the root with [`i
 ## Coding Style & Naming Conventions
 Use plain HTML, CSS, and JavaScript with no framework assumptions. Match the surrounding file’s style: Node-side scripts in `blogs/` currently use 4-space indentation. Keep filenames lowercase and descriptive. Blog post directories follow `YYMMDD_topic`, for example `blogs/posts/240602_2dgs/`. Keep Markdown filenames consistent with the current pattern: `content-eng.md` and `content-kor.md`. When adding or editing blog metadata, update [`blogs/data/site-data.json`](/Users/hwanheo/Projects/hwan-h-heo.io/blogs/data/site-data.json) instead of legacy JS files. Keep `languages` entries aligned with the actual `content-*.md` files, because the build now validates them strictly.
 
+## Design Changes
+Before making any portfolio-facing visual or CSS change, read and follow [`docs/portfolio-design-language.md`](docs/portfolio-design-language.md). Treat it as the source of truth for color roles, typography, spacing, borders, component hierarchy, motion, responsive behavior, and the shared Project/Blog preview grammar. If a deliberate design change introduces a new rule, update that document in the same change so the implementation and design language remain aligned.
+
 ## Testing Guidelines
 There is no automated test suite yet. Validate changes by running `npm run build` and reviewing the generated site in `blogs/dist/`. For UI changes, run `npm run dev` and manually check portfolio blog preview rendering, blog navigation, TOC behavior, language toggles, image paths, redirect behavior from legacy `?id=` URLs, search results, and project links. For editor changes, also verify draft save/upload flows with `cd blogs && npm run edit`.
 
