@@ -11,7 +11,7 @@
       <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference/</guid>
       <pubDate>Mon, 27 Jul 2026 00:00:00 GMT</pubDate>
       <language>en</language>
-      <description>Why generic compiler paths underperform on dynamic sparse models—and how model-aware CUDA optimization reduced latency.</description>
+      <description>Why generic compiler paths underperform on dynamic sparse 3D generative models—and how null-context attention removal and model-aware CUDA kernels cut inference latency.</description>
     </item>
     <item>
       <title>VARCO 3D: A Year in Review — 2025 Retrospective</title>
@@ -19,7 +19,7 @@
       <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective/</guid>
       <pubDate>Thu, 15 Jan 2026 00:00:00 GMT</pubDate>
       <language>en</language>
-      <description>How a fast-follower team tracked the evolution of 3D AI and built an in-house generative 3D service.</description>
+      <description>How a fast-follower team tracked the evolution of 3D AI to build an in-house generative 3D service—from VecSet VAEs to voxel-conditioned 3D DiTs.</description>
     </item>
     <item>
       <title>SDF and Eikonal Equation</title>
@@ -107,7 +107,7 @@
       <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/</guid>
       <pubDate>Mon, 05 Aug 2024 00:00:00 GMT</pubDate>
       <language>en</language>
-      <description>A ground-up understanding of Gaussian Splatting by mapping the mathematics directly to its CUDA rasterizer implementation.</description>
+      <description>A ground-up guide to Gaussian Splatting and differentiable rasterization, tracing the mathematics through its CUDA implementation—from projection and covariance to sorting and alpha blending.</description>
     </item>
     <item>
       <title>Radiance Fields from Deep-based Structure-from-Motion</title>

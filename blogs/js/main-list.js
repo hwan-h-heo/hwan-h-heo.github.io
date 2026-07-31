@@ -180,11 +180,11 @@ document.addEventListener('DOMContentLoaded', async function() {
                     <h3 class="post-title"><a href="${escapeHtml(getPostUrl(post, lang))}">${escapeHtml(title)}</a></h3>
                     ${subtitle ? `<p class="post-subtitle">${escapeHtml(subtitle)}</p>` : ''}
                     ${tagsHtml ? `<div class="post-tag-row">${tagsHtml}</div>` : ''}
+                    <p class="post-meta">
+                        <time datetime="${escapeHtml(post.date)}">${escapeHtml(formatDate(post.date, lang))}</time>
+                    </p>
                 </div>
             </div>
-            <p class="post-meta">
-                <time datetime="${escapeHtml(post.date)}">${escapeHtml(formatDate(post.date, lang))}</time>
-            </p>
         </article>
         `;
     }

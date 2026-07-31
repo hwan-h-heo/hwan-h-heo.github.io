@@ -4,7 +4,7 @@
       "id": "260727_sparse_3d",
       "title_eng": "What the Compiler Missed in Sparse 3D Inference",
       "title_kor": "컴파일러가 놓친 Sparse 3D Forward 최적화",
-      "subtitle_eng": "Why generic compiler paths underperform on dynamic sparse models—and how model-aware CUDA optimization reduced latency.",
+      "subtitle_eng": "Why generic compiler paths underperform on dynamic sparse 3D generative models—and how null-context attention removal and model-aware CUDA kernels cut inference latency.",
       "subtitle_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
       "date": "2026-07-27",
       "category": "post",
@@ -14,7 +14,7 @@
         "kor"
       ],
       "slug": "optimizing-sparse-3d-generation-inference",
-      "description_eng": "Why generic compiler paths underperform on dynamic sparse models—and how model-aware CUDA optimization reduced latency.",
+      "description_eng": "Why generic compiler paths underperform on dynamic sparse 3D generative models—and how null-context attention removal and model-aware CUDA kernels cut inference latency.",
       "description_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
       "tags": [
         "3D Generation",
@@ -29,7 +29,7 @@
       "id": "260115_Varco3D",
       "title_eng": "VARCO 3D: A Year in Review — 2025 Retrospective",
       "title_kor": "3D 생성형 AI 서비스; Varco3D 개발기",
-      "subtitle_eng": "How a fast-follower team tracked the evolution of 3D AI and built an in-house generative 3D service.",
+      "subtitle_eng": "How a fast-follower team tracked the evolution of 3D AI to build an in-house generative 3D service—from VecSet VAEs to voxel-conditioned 3D DiTs.",
       "subtitle_kor": "빠르게 발전하는 3D AI를 추적하며 인하우스 3D 생성형 AI 서비스를 구축해 간 과정",
       "date": "2026-01-15",
       "category": "post",
@@ -39,7 +39,7 @@
         "kor"
       ],
       "slug": "varco3d-a-year-in-review-2025-retrospective",
-      "description_eng": "How a fast-follower team tracked the evolution of 3D AI and built an in-house generative 3D service.",
+      "description_eng": "How a fast-follower team tracked the evolution of 3D AI to build an in-house generative 3D service—from VecSet VAEs to voxel-conditioned 3D DiTs.",
       "description_kor": "빠르게 발전하는 3D AI를 추적하며 인하우스 3D 생성형 AI 서비스를 구축해 간 과정",
       "tags": [
         "3D Generation",
@@ -291,7 +291,7 @@
       "id": "240805_gs",
       "title_eng": "A Comprehensive Analysis of Gaussian Splatting Rasterization",
       "title_kor": "Gaussian Splatting Rasterization 완벽 분석",
-      "subtitle_eng": "A ground-up understanding of Gaussian Splatting by mapping the mathematics directly to its CUDA rasterizer implementation.",
+      "subtitle_eng": "A ground-up guide to Gaussian Splatting and differentiable rasterization, tracing the mathematics through its CUDA implementation—from projection and covariance to sorting and alpha blending.",
       "subtitle_kor": "수식과 CUDA rasterizer 코드를 직접 대응시키는 Gaussian Splatting 완전 해설",
       "date": "2024-08-05",
       "category": "post",
@@ -301,7 +301,7 @@
         "kor"
       ],
       "slug": "a-comprehensive-analysis-of-gaussian-splatting-rasterization",
-      "description_eng": "A ground-up understanding of Gaussian Splatting by mapping the mathematics directly to its CUDA rasterizer implementation.",
+      "description_eng": "A ground-up guide to Gaussian Splatting and differentiable rasterization, tracing the mathematics through its CUDA implementation—from projection and covariance to sorting and alpha blending.",
       "description_kor": "수식과 CUDA rasterizer 코드를 직접 대응시키는 Gaussian Splatting 완전 해설",
       "tags": [
         "Neural Rendering",

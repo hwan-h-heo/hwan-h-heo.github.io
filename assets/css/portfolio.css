@@ -30,6 +30,8 @@
   --color-text-faint: #94a3b8;
   --color-line: rgba(15, 23, 42, 0.1);
   --color-line-soft: rgba(15, 23, 42, 0.08);
+  --action-underline-light: rgba(71, 85, 105, 0.46);
+  --action-underline-dark: rgba(226, 232, 240, 0.48);
 
   /* Canonical accent roles. Keep bright cyan out of long-form text. */
   --accent-interactive: #149ddd;
@@ -808,7 +810,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   bottom: 0;
   left: 0;
   height: 1px;
-  background: var(--color-ink);
+  background: var(--action-underline-light);
   content: "";
   transform: scaleX(0);
   transform-origin: left center;
@@ -1144,6 +1146,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 
 .testimonials .portfolio-blog-preview-summary {
   display: -webkit-box;
+  min-height: 3.16em;
   margin: 0.44rem 0 0;
   color: #526070;
   overflow: hidden;
@@ -1524,7 +1527,7 @@ h6 {
   bottom: -1px;
   left: 0;
   height: 2px;
-  background: var(--accent-on-dark);
+  background: var(--action-underline-dark);
   transform: scaleX(0);
   transform-origin: left center;
   transition: transform 480ms var(--ease-emphasized);
@@ -1758,7 +1761,7 @@ h6 {
   bottom: 0;
   left: 0;
   height: 1px;
-  background: var(--color-ink);
+  background: var(--action-underline-light);
   transform: scaleX(0);
   transform-origin: left center;
   transition: transform 480ms var(--ease-emphasized);
@@ -1935,6 +1938,7 @@ h6 {
 
 .portfolio-project-summary {
   display: -webkit-box;
+  min-height: 3.16em;
   margin-top: 0.44rem;
   color: #526070;
   overflow: hidden;
@@ -2146,7 +2150,7 @@ h6 {
   bottom: 0;
   left: 0;
   height: 1px;
-  background: var(--color-ink);
+  background: var(--action-underline-light);
   content: "";
   transform: scaleX(0);
   transform-origin: left center;

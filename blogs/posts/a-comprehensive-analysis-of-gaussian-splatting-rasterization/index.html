@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="A ground-up understanding of Gaussian Splatting by mapping the mathematics directly to its CUDA rasterizer implementation." />
+    <meta name="description" content="A ground-up guide to Gaussian Splatting and differentiable rasterization, tracing the mathematics through its CUDA implementation—from projection and covariance" />
     <meta name="keywords" content="post, nerf-and-gs, Neural Rendering, Gaussian Splatting, 3D graphics, computer vision, machine learning" />
     <meta name="author" content="Hwan Heo" />
     <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/" />
@@ -13,7 +13,7 @@
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://hwan-h-heo.github.io/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/" />
     <meta property="og:title" content="A Comprehensive Analysis of Gaussian Splatting Rasterization" />
-    <meta property="og:description" content="A ground-up understanding of Gaussian Splatting by mapping the mathematics directly to its CUDA rasterizer implementation." />
+    <meta property="og:description" content="A ground-up guide to Gaussian Splatting and differentiable rasterization, tracing the mathematics through its CUDA implementation—from projection and covariance" />
     <meta property="og:image" content="https://hwan-h-heo.github.io/blogs/posts/240805_gs/assets/garden-preview.jpg" />
     <meta property="og:site_name" content="HwanHeo's Blog" />
     <meta property="article:published_time" content="2024-08-05T00:00:00.000Z" />
@@ -22,9 +22,9 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://hwan-h-heo.github.io/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/" />
     <meta name="twitter:title" content="A Comprehensive Analysis of Gaussian Splatting Rasterization" />
-    <meta name="twitter:description" content="A ground-up understanding of Gaussian Splatting by mapping the mathematics directly to its CUDA rasterizer implementation." />
+    <meta name="twitter:description" content="A ground-up guide to Gaussian Splatting and differentiable rasterization, tracing the mathematics through its CUDA implementation—from projection and covariance" />
     <meta name="twitter:image" content="https://hwan-h-heo.github.io/blogs/posts/240805_gs/assets/garden-preview.jpg" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"A Comprehensive Analysis of Gaussian Splatting Rasterization","description":"A ground-up understanding of Gaussian Splatting by mapping the mathematics directly to its CUDA rasterizer implementation.","url":"https://hwan-h-heo.github.io/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/","mainEntityOfPage":"https://hwan-h-heo.github.io/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/","image":["https://hwan-h-heo.github.io/blogs/posts/240805_gs/assets/garden-preview.jpg"],"author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"publisher":{"@type":"Person","name":"Hwan Heo"},"datePublished":"2024-08-05","dateModified":"2024-08-05","inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"A Comprehensive Analysis of Gaussian Splatting Rasterization","description":"A ground-up guide to Gaussian Splatting and differentiable rasterization, tracing the mathematics through its CUDA implementation—from projection and covariance","url":"https://hwan-h-heo.github.io/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/","mainEntityOfPage":"https://hwan-h-heo.github.io/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/","image":["https://hwan-h-heo.github.io/blogs/posts/240805_gs/assets/garden-preview.jpg"],"author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"publisher":{"@type":"Person","name":"Hwan Heo"},"datePublished":"2024-08-05","dateModified":"2024-08-05","inLanguage":"en"}</script>
 
     <title>A Comprehensive Analysis of Gaussian Splatting Rasterization | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
@@ -904,9 +904,9 @@ glm::mat3 J = glm::mat3(
       "id": "260727_sparse_3d",
       "title_eng": "What the Compiler Missed in Sparse 3D Inference",
       "title_kor": "컴파일러가 놓친 Sparse 3D Forward 최적화",
-      "subtitle_eng": "Why generic compiler paths underperform on dynamic sparse models—and how model-aware CUDA optimization reduced latency.",
+      "subtitle_eng": "Why generic compiler paths underperform on dynamic sparse 3D generative models—and how null-context attention removal and model-aware CUDA kernels cut inference latency.",
       "subtitle_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
-      "description_eng": "Why generic compiler paths underperform on dynamic sparse models—and how model-aware CUDA optimization reduced latency.",
+      "description_eng": "Why generic compiler paths underperform on dynamic sparse 3D generative models—and how null-context attention removal and model-aware CUDA kernels cut inference latency.",
       "description_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
       "tags": [
         "3D Generation",
@@ -929,9 +929,9 @@ glm::mat3 J = glm::mat3(
       "id": "260115_Varco3D",
       "title_eng": "VARCO 3D: A Year in Review — 2025 Retrospective",
       "title_kor": "3D 생성형 AI 서비스; Varco3D 개발기",
-      "subtitle_eng": "How a fast-follower team tracked the evolution of 3D AI and built an in-house generative 3D service.",
+      "subtitle_eng": "How a fast-follower team tracked the evolution of 3D AI to build an in-house generative 3D service—from VecSet VAEs to voxel-conditioned 3D DiTs.",
       "subtitle_kor": "빠르게 발전하는 3D AI를 추적하며 인하우스 3D 생성형 AI 서비스를 구축해 간 과정",
-      "description_eng": "How a fast-follower team tracked the evolution of 3D AI and built an in-house generative 3D service.",
+      "description_eng": "How a fast-follower team tracked the evolution of 3D AI to build an in-house generative 3D service—from VecSet VAEs to voxel-conditioned 3D DiTs.",
       "description_kor": "빠르게 발전하는 3D AI를 추적하며 인하우스 3D 생성형 AI 서비스를 구축해 간 과정",
       "tags": [
         "3D Generation",
@@ -1191,9 +1191,9 @@ glm::mat3 J = glm::mat3(
       "id": "240805_gs",
       "title_eng": "A Comprehensive Analysis of Gaussian Splatting Rasterization",
       "title_kor": "Gaussian Splatting Rasterization 완벽 분석",
-      "subtitle_eng": "A ground-up understanding of Gaussian Splatting by mapping the mathematics directly to its CUDA rasterizer implementation.",
+      "subtitle_eng": "A ground-up guide to Gaussian Splatting and differentiable rasterization, tracing the mathematics through its CUDA implementation—from projection and covariance to sorting and alpha blending.",
       "subtitle_kor": "수식과 CUDA rasterizer 코드를 직접 대응시키는 Gaussian Splatting 완전 해설",
-      "description_eng": "A ground-up understanding of Gaussian Splatting by mapping the mathematics directly to its CUDA rasterizer implementation.",
+      "description_eng": "A ground-up guide to Gaussian Splatting and differentiable rasterization, tracing the mathematics through its CUDA implementation—from projection and covariance to sorting and alpha blending.",
       "description_kor": "수식과 CUDA rasterizer 코드를 직접 대응시키는 Gaussian Splatting 완전 해설",
       "tags": [
         "Neural Rendering",
