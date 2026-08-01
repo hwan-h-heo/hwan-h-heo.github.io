@@ -29,14 +29,14 @@
     <title>Is Diffusion&#39;s Estimated Depth Really Good? | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css" rel="stylesheet" />
-    <link href="/blogs/css/typography.css" rel="stylesheet" />
-    <link href="/blogs/css/post.css" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/css/site-icons.css" rel="stylesheet" />
-    <script src="/assets/js/site-icons.js"></script>
+    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
+    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
-    <link href="/blogs/css/code-copy.css" rel="stylesheet" />
+    <link href="/blogs/css/code-copy.css?v=97949adbc2" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -221,7 +221,7 @@
     </div>
                 </div>
                 <div class="post-reading-column main-content">
-                    <button id="copyButton" type="button" aria-label="Copy post link">
+                    <nav class="toc" aria-label="Table of contents"><div class="toc-title">On This Page</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="1. Introduction" aria-label="1. Introduction"><span class="toc-link-text">1. Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="2. Generating 3D Vertices and Faces from Depth Maps" aria-label="2. Generating 3D Vertices and Faces from Depth Maps"><span class="toc-link-text">2. Generating 3D Vertices and Faces from Depth Maps</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="3. Texturing the Mesh from Depth Maps" aria-label="3. Texturing the Mesh from Depth Maps"><span class="toc-link-text">3. Texturing the Mesh from Depth Maps</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-3" title="4. Results &amp; Analysis" aria-label="4. Results &amp; Analysis"><span class="toc-link-text">4. Results &amp; Analysis</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-4" title="Closing" aria-label="Closing"><span class="toc-link-text">Closing</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
@@ -243,21 +243,7 @@
     </div>
 </div>
 
-<nav class="toc">
-    <ul>
-        <li><a href="#sec1"> Introduction </a></li>
-        <li>
-            <a href="#sec2"> Generating 3D Vertices and Faces from Depth Maps </a>
-        </li>
-        <li><a href="#sec3"> Texturing the Mesh from Depth Maps </a></li>
-        <li>
-            <a href="#sec4"> Result & Analysis </a>
-        </li>
-        <li><a href="#closing"> Closing </a></li>
-    </ul>
-</nav>
-
-<h2 id="sec1">1. Introduction </h2>
+<h2 id="toc-heading-0"><span id="sec1"></span>1. Introduction</h2>
 <p class="lang eng">
     The success of 2D diffusion models has inspired researchers to explore the diffusion process of 
     geometric information, such as depth and normal maps. 
@@ -282,6 +268,7 @@
     precision warrants further scrutiny.
 </p>
 <img src="/blogs/posts/240426_diffusion_depth/assets/teaser.jpeg" alt="Marigold's teaser" width="100%" loading="lazy" decoding="async">
+
 <p><em>Figure credit: <a href="https://marigoldmonodepth.github.io/">Depth estimation result from Marigold<a></a></em></p>
 <p class="lang eng"> 
     In this article, we employ DepthMap to generate point clouds and meshes, 
@@ -289,7 +276,7 @@
     such as Marigold.
 </p>
 
-<h2 id="sec2">2. Generating 3D Vertices and Faces from Depth Maps</h2>
+<h2 id="toc-heading-1"><span id="sec2"></span>2. Generating 3D Vertices and Faces from Depth Maps</h2>
 <p class="lang eng">
     Our initial step involves using the Marigold model as a baseline for depth estimation. 
     Despite its relatively lightweight architecture, Marigold is known for its high performance 
@@ -407,7 +394,7 @@ def move_top_right(mask):
     as it is currently executed in a non-parallelized manner using a <em>for</em> loop.
 </p>
 
-<h2 id="sec3">3. Texturing the Mesh from Depth Maps</h2>
+<h2 id="toc-heading-2"><span id="sec3"></span>3. Texturing the Mesh from Depth Maps</h2>
 <p class="lang eng">
     Texturing is a critical aspect of 3D asset creation. For the task at hand, 
     using the image pixel colors as vertex colors is effective, given that the number of vertices corresponds to the image size.
@@ -441,7 +428,7 @@ def move_top_right(mask):
     as it significantly increases the number of faces, particularly with FHD inputs.
 </p>
 
-<h2 id="sec4"> 4. Results & Analysis</h2>
+<h2 id="toc-heading-3"><span id="sec4"></span>4. Results &amp; Analysis</h2>
 <p class="lang eng">
     We generated textured meshes using four images from the Marigold Demo.
     The results are shown below:
@@ -478,14 +465,14 @@ def move_top_right(mask):
 
 
 <img src="/blogs/posts/240426_diffusion_depth/assets/butterfly.jpg" alt="Marigold's teaser" width="100%" loading="lazy" decoding="async">
-<p><em>Left: front view / Right: side view of the mesh</em></p>
 
+<p><em>Left: front view / Right: side view of the mesh</em></p>
 <p class="lang eng">
     Zooming in on the front view reveals that the stripes on the torso were incorrectly inferred as part of the background. 
     The extreme discontinuities in the depth map exacerbate the difficulty of accurate estimation in such cases.
 </p>
 
-<h2 id="closing"> Closing </h2>
+<h2 id="toc-heading-4"><span id="closing"></span>Closing</h2>
 <p class="lang eng">
     In this study, we explored the process of generating textured meshes from depth maps to qualitatively assess 
     the depth estimation quality of diffusion-based models and other generative techniques.
@@ -544,11 +531,11 @@ def move_top_right(mask):
                     <strong>Can Sora Understand 3D?</strong>
                 </a>
     
-                <a class="post-nav-card is-next" href="/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting/" aria-label="Next Post: Under the 3D: Geometrically Accurate 2D Gaussian Splatting">
+                <a class="post-nav-card is-next" href="/blogs/posts/an-era-of-3d-generation/" aria-label="Next Post: An Era of 3D Generation">
                     <span class="post-nav-kicker">
                         Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
-                    <strong>Under the 3D: Geometrically Accurate 2D Gaussian Splatting</strong>
+                    <strong>An Era of 3D Generation</strong>
                 </a>
     </nav></div>
                 </div>
@@ -1222,11 +1209,11 @@ def move_top_right(mask):
     </script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
-    <script src="/blogs/js/code-copy.js"></script>
-    <script src="/blogs/js/theme-toggle.js"></script>
-    <script src="/blogs/js/scroll-progress.js"></script>
-    <script src="/blogs/js/blog-shell.js"></script>
-    <script src="/blogs/js/post-page.js"></script>
+    <script src="/blogs/js/code-copy.js?v=e6b60656e4"></script>
+    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
+    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
     <script>
         initBlogShell({
             formSelector: '#post-nav-search-form',

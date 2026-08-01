@@ -277,10 +277,9 @@ $$
 where `W` is the sliding window. 
 
 Using a first-order Taylor expansion, this can be approximated as:
-<p>
+
 $$ E(u,v) \approx \sum_{W} [I_x u + I_y v]^2 = [u, v] \left( \sum_{W} \begin{bmatrix} I_x^2 & I_x I_y \\ I_x I_y & I_y^2 \end{bmatrix} \right) \begin{bmatrix} u \\ v \end{bmatrix}
 $$
-</p>
 
 This can be written compactly as:
 $$ E(u,v) \approx [u, v] H \begin{bmatrix} u \\ v \end{bmatrix}

@@ -29,12 +29,12 @@
     <title>From Flow Matching to Optimal Transport: A Physics-based View of Generative Models | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css" rel="stylesheet" />
-    <link href="/blogs/css/typography.css" rel="stylesheet" />
-    <link href="/blogs/css/post.css" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/css/site-icons.css" rel="stylesheet" />
-    <script src="/assets/js/site-icons.js"></script>
+    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
+    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -375,12 +375,9 @@ $$</p>
 $$</p>
 <p>This equation mathematically expresses the <strong>law of conservation of probability mass</strong>: &quot;<em>probability is neither created nor destroyed, and its density changes only through flow.</em>&quot;</p>
 <p>In addition to <strong><em>deterministic drift</em></strong> (ODE), a more general partial differential equation that considers random noise like Brownian motion is known as the <strong><a href="https://en.wikipedia.org/wiki/Fokker%E2%80%93Planck_equation">Fokker-Planck Equation</a></strong>.</p>
-<p>
-$$
+<p>$$
 \frac{\partial p_t(x)}{\partial t} = \underbrace{-\nabla \cdot [f(x,t)p_t(x)]}_{\text{Drift (flow)}} + \underbrace{\frac{1}{2}\sum_{i,j} \frac{\partial^2}{\partial x_i \partial x_j} [[g(t)g(t)^T]_{ij} p_t(x)]}_{\text{Diffusion}}
-$$
-</p>
-
+$$</p>
 <p>Since a Continuous Normalizing Flow (CNF) is a purely deterministic form with no diffusion term ($g=0$), the dynamics of the probability distribution followed by a CNF can be seen as a <strong><em>special case of the Fokker-Planck Equation, namely the Continuity Equation</em></strong>.</p>
 <hr>
 <h4>2.2.2. Derivation of Log-Likelihood</h4>
@@ -426,15 +423,12 @@ $$</p>
 $$
 \frac{d \log p_t(x_t)}{dt} = \frac{\partial \log p_t(x_t)}{\partial t} + u_t(x_t) \cdot \nabla_x \log p_t(x_t) \quad \cdots \text{(eqn. 1)}
 $$</p>
-<p>
-$$
+<p>$$
 \begin{aligned}
 \frac{d \log p_t(x_t)}{dt} &amp;= \underbrace{\left[-(\nabla \log p_t) \cdot u_t - (\nabla \cdot u_t)\right]}_{\text{from (eqn. 2)}} + u_t \cdot \nabla \log p_t
 \\ &amp;= - \nabla \cdot u_t(x_t)
 \end{aligned}
-$$
-</p>
-
+$$</p>
 <p>As a result, we have arrived at the following very concise final equation:</p>
 <p>$$
 \frac{d \log p_t(x_t)}{dt} = - \nabla \cdot u_t(x_t)
@@ -477,12 +471,9 @@ which is identical to the definition of divergence.</p>
 <h2 id="toc-heading-7">3. Flow Matching</h2>
 <p>While Continuous Normalizing Flow (CNF) facilitated computation by replacing the Jacobian determinant with the integral of the trace, a serious problem remained: <strong><em>slow training speed</em></strong>. To calculate the log-likelihood, the ODE had to be solved at every training step, which was essentially like repeating the slow sampling process of a diffusion model each time.</p>
 <p>The ideal loss function for training a velocity field $v_\theta(x_t, t)$ with a Neural Network is as follows:</p>
-<p>
-$$
+<p>$$
 \mathcal{L} = \mathbb{E}_{t \sim \mathcal{U}, x_t \sim p_t} [\|v_\theta(x_t, t) - u_t(x_t)\|^2]
-$$
-</p>
-
+$$</p>
 <p>This loss function is a regression problem that predicts the actual velocity field $u_t(x_t)$ at a point, given a sample $x_t$ at time $t$.</p>
 <ul>
 <li>$v_\theta(x_t, t)$: The predicted velocity vector field from the network we are training.</li>
@@ -547,16 +538,13 @@ $$
 {\frac{\partial p_t(x_t | x_1)}{\partial t} = - \nabla \cdot (p_{t|1}(x_t | x_1) u_t(x_t | x_1))}
 $$
 using Bayes&#39; rule, we can see that the following holds.</p>
-<p>
-$$
+<p>$$
 \begin{aligned}
 \frac{\partial p_t(x_t)}{\partial t} &amp;= \boxed{\frac{\partial}{\partial t} \int p_{t|1}(x_t | x_1)} \  p_1 (x_1) dx_1 \\
 &amp;= \boxed{ - \int \nabla \cdot (p_{t|1}(x_t | x_1) u_t(x_t | x_1)) }\  p_1 (x_1) dx_1 \\ 
 &amp;= - \nabla \cdot \left ( \boxed{  \int u_t(x_t | x_1)) \frac{p_{t|1}(x_t | x_1) p_1 (x_1)}{p_t(x_t)} dx_1 } \ p_t(x_t) \right ) \\ &amp;= - \nabla \cdot \bigg [ \boxed{u_t(x_t)} \  p_{t}(x_t ) \bigg ]
 \end{aligned}
-$$
-</p>
-
+$$</p>
 <p>In other words, the marginal vector field $u_t(x_t)$ at a point $x_t$ is equal to the average of all possible conditional vector fields $u_t(x_t|x_1)$ that pass through that point.
 $$
 u_t(x_t) = \mathbb{E}_{p(x_1|x_t)}[u_t(x_t|x_1)] = \int u_t(x_t|x_1) p(x_1|x_t) dx_1
@@ -565,15 +553,11 @@ $$</p>
 <p><strong>_ Therefore, the total loss function is equivalent to the conditional loss function._</strong></p>
 </blockquote>
 <p>From the first fact, it is proven that the ideal but computationally infeasible loss function we wanted to solve is equivalent to the computable conditional loss function.</p>
-<p>
-$$
+<p>$$
 \mathcal{L}_{\text{marginal}} = \mathbb{E}_{t, x_t} [\|v_\theta - u_t\|^2] \\ \iff \\ \mathcal{L}_{\text{CFM}} = \mathbb{E}_{t, x_1, x_t|x_1} [\|v_\theta - u_t(\cdot|x_1)\|^2] + C
-$$
-</p>
-
+$$</p>
 <p>The reason the two losses are equivalent becomes clear when we examine the inner product term that appears when expanding the loss function.</p>
-<p>
-$$
+<p>$$
 \begin{aligned}
 \mathbb{E}_{x_t \sim p_t} [\langle v_\theta(x_t), u_t(x_t) \rangle] &amp;= \int \left[ v_\theta(x_t) \cdot  \boxed{u_t(x_t)} \ \right ]p_t(x_t) dx_t \\
 &amp;= \int \left[ v_\theta(x_t) \cdot \boxed{\int u_t(x_t|x_1) p_t(x_1|x_t) dx_1 } \right ]p_t(x_t) dx_t \\
@@ -581,9 +565,7 @@ $$
 &amp;= \iint v_\theta(x_t) \cdot u_t(x_t|x_1) \boxed{p(x_1, x_t)} dx_1 dx_t \\
 &amp;= \mathbb{E}_{(x_1, x_t) \sim p(x_1, x_t)} [\langle v_\theta(x_t), u_t(x_t|x_1) \rangle]
 \end{aligned}
-$$
-</p>
-
+$$</p>
 <p>This means we can perfectly replace the regression problem for the unknown $u_t$ with a regression problem for $u_t(\cdot|x_1)$, which we have designed and for which we know the answer.</p>
 <img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-63e35c0aefb1.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.1.2. Conditional Flow Matching" loading="lazy" decoding="async">
 
@@ -635,12 +617,9 @@ $  u_t(x_t|x_0, x_1) = \frac{dx_t}{dt} = x_1 - x_0
 $</li>
 </ul>
 <p>Now, substituting this into the CFM loss function completes the final objective function for Rectified Flow.</p>
-<p>
-$$
+<p>$$
 \mathcal{L} = \mathbb{E}_{t \sim U, x_0 \sim p_0, x_1 \sim p_1} \left[ \left\| v_\theta((1-t)x_0 + tx_1, t) - (x_1 - x_0) \right\|^2 \right]
-$$
-</p>
-
+$$</p>
 <p>The neural network learns to solve a <em><strong>very simple regression problem</strong></em>: given an intermediate point $x_t$, predict the direction vector from the start point to the destination ($x_1 - x_0$). This simplicity brings about dramatic improvements in training speed and stability.</p>
 <p>Finally, Rectified Flow has another advantage.</p>
 <p>The coupling $(Z_0, Z_1)$ obtained from a single training run is already in a much more ordered (less entangled) state than the initial independent coupling $(X_0, X_1)$. What if we use this $(Z_0, Z_1)$ as new &#39;data&#39; and train a Rectified Flow again? The Rectified Flow researchers showed that repeating this <em><strong>&#39;Reflow&#39;</strong></em> process makes the travel paths of the samples exponentially closer to straight lines.
@@ -908,12 +887,9 @@ $$</li>
 </ol>
 <p><em>cf.</em> The names Exp / Log here are not the exp, log operations we perform on scalar functions, but are closer in name to &#39;exp&#39; as the solution to a linear differential equation, and &#39;log&#39; as its inverse (the same concept as the exp/log map used between Lie Groups and Algebras). It is better to interpret them as generalized definitions of &#39;subtraction&#39; and &#39;addition&#39; on a Manifold.</p>
 <p>Combining these two, we complete the <strong>Geodesic Conditional Flow</strong> on a Manifold.</p>
-<p>
-$$
+<p>$$
 \psi_t(x_0|x_1) = \text{exp}_{x_0} (t \cdot \text{log}_{x_0}(x_1))
-$$
-</p>
-
+$$</p>
 <p>This is the true meaning of <strong>Rectified Flow</strong>. The model is now trained to <strong>flow along the Geodesic</strong>, the shortest path on the Manifold, not a straight line in Euclidean space.</p>
 <p>Now, if we redefine the Action of a free particle on a Manifold, the total kinetic energy is calculated using the Riemannian Metric $g$ and integrated over time. And the path that minimizes this Action is, by definition, the <em><strong>Geodesic</strong></em>.</p>
 <p>Therefore, the &#39;straight-line path&#39; idea of Rectified Flow was not a special case limited to Euclidean space. It reflects a deeper and more general physical principle of <strong>&quot;following the path of least energy consumption (Action) under a given geometric structure (Manifold, metric)&quot;</strong>. The simple equation $$\ddot{x}=0$$ is replaced by the more complex geodesic equation on a Manifold, but the fundamental principle remains the same.</p>
@@ -1004,18 +980,18 @@ If we reconsider this &#39;averaging&#39; process, if a point $x_t$ is far from 
                     </section>
     
                     <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/generalized-winding-number/" aria-label="Previous Post: Generalized Winding Number">
+                <a class="post-nav-card is-older" href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/" aria-label="Previous Post: Building Large 3D Generative Model (2) VAE and DiT Deep Dive">
                     <span class="post-nav-kicker">
                         <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
                     </span>
-                    <strong>Generalized Winding Number</strong>
+                    <strong>Building Large 3D Generative Model (2) VAE and DiT Deep...</strong>
                 </a>
     
-                <a class="post-nav-card is-next" href="/blogs/posts/sdf-and-eikonal-equation/" aria-label="Next Post: SDF and Eikonal Equation">
+                <a class="post-nav-card is-next" href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" aria-label="Next Post: VARCO 3D: A Year in Review — 2025 Retrospective">
                     <span class="post-nav-kicker">
                         Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
-                    <strong>SDF and Eikonal Equation</strong>
+                    <strong>VARCO 3D: A Year in Review — 2025 Retrospective</strong>
                 </a>
     </nav></div>
                 </div>
@@ -1688,10 +1664,10 @@ If we reconsider this &#39;averaging&#39; process, if a point $x_t$ is far from 
 };
     </script>
 
-    <script src="/blogs/js/theme-toggle.js"></script>
-    <script src="/blogs/js/scroll-progress.js"></script>
-    <script src="/blogs/js/blog-shell.js"></script>
-    <script src="/blogs/js/post-page.js"></script>
+    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
+    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
     <script>
         initBlogShell({
             formSelector: '#post-nav-search-form',

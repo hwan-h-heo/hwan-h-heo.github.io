@@ -37,22 +37,20 @@
   <!-- Favicons -->
   <link href="assets/favicon.ico" rel="icon">
   <link href="assets/favicon.ico" rel="apple-touch-icon">
-  <link rel="modulepreload" href="/vendor/three/build/three.module.js">
-
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect" />
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="assets/css/site-icons.css" rel="stylesheet">
+  <link href="assets/css/site-icons.css?v=32957b8b04" rel="stylesheet">
 
-  <script src="assets/js/site-icons.js"></script>
-  <script src="js/sidebar-controller.js"></script>
+  <script src="assets/js/site-icons.js?v=76c23064c5"></script>
+  <script src="js/sidebar-controller.js?v=5614640768"></script>
 
   <!-- Main CSS File -->
-  <link href="assets/css/portfolio.css" rel="stylesheet">
-  <link href="css/sidebar-nav.css" rel="stylesheet">
+  <link href="assets/css/portfolio.css?v=80330b36f8" rel="stylesheet">
+  <link href="css/sidebar-nav.css?v=9306b5ba05" rel="stylesheet">
 
   <script>
     window.setTimeout(function releaseDelayedHero() {
@@ -166,130 +164,154 @@
 
       <div class="portfolio-shell portfolio-content">
         <div class="portfolio-project-list" id="portfolio-projects">
-            <article class="portfolio-project-item" data-selected="true">
-                <a class="portfolio-project-link" href="projects/varco3d/">
+            <article class="portfolio-project-item" data-selected="true" data-selected-order="0" data-all-order="0">
+                <div class="portfolio-project-layout">
+                    <a class="portfolio-project-cover-link" href="projects/varco3d/" aria-label="View VARCO 3D">
                     <span class="portfolio-project-cover">
                         
-            <img src="assets/thumbnails/varco3d_thumbnail.png" data-static="assets/thumbnails/varco3d_thumbnail.png" data-gif="assets/varco3d_hero.webp" alt="VARCO 3D service teaser">
+            <img src="assets/thumbnails/varco3d_thumbnail.webp" data-static="assets/thumbnails/varco3d_thumbnail.webp" data-gif="assets/varco3d_hero.webp" alt="VARCO 3D service teaser">
         
                         <div class="loading-spinner" style="display: none;"></div>
                     </span>
-                    <span class="portfolio-project-body">
+                    </a>
+                    <div class="portfolio-project-body">
                         <span class="portfolio-project-eyebrow">Production R&amp;D</span>
-                        <span class="portfolio-project-title">VARCO 3D</span>
+                        <a class="portfolio-project-title-link" href="projects/varco3d/">
+                            <span class="portfolio-project-title">VARCO 3D</span>
+                        </a>
                         <span class="portfolio-project-summary">Led the production 3D generation stack—from 1B+ native models and CUDA inference to mesh processing, UV unwrapping, and texture delivery.</span>
                         <span class="portfolio-project-tags"><span class="portfolio-project-tag">3D Generation</span><span class="portfolio-project-tag">CUDA</span></span>
                         <span class="portfolio-project-meta">
                             <span>NC AI / 2025–Present</span>
-                            
+                            <span class="portfolio-project-accolade">30K+ users · 300K+ assets generated</span>
                         </span>
-                    </span>
-                </a>
+                    </div>
+                </div>
             </article>
         
-            <article class="portfolio-project-item" data-selected="true">
-                <a class="portfolio-project-link" href="projects/capa/">
+            <article class="portfolio-project-item" data-selected="true" data-selected-order="1" data-all-order="1">
+                <div class="portfolio-project-layout">
+                    <a class="portfolio-project-cover-link" href="projects/capa/" aria-label="View CaPa">
                     <span class="portfolio-project-cover">
                         
             <img src="assets/thumbnails/capa_thumbnail.png" data-static="assets/thumbnails/capa_thumbnail.png" data-gif="assets/capa_teaser.webp" alt="CaPa teaser">
         
                         <div class="loading-spinner" style="display: none;"></div>
                     </span>
-                    <span class="portfolio-project-body">
+                    </a>
+                    <div class="portfolio-project-body">
                         <span class="portfolio-project-eyebrow">Research</span>
-                        <span class="portfolio-project-title">CaPa</span>
+                        <a class="portfolio-project-title-link" href="projects/capa/">
+                            <span class="portfolio-project-title">CaPa</span>
+                        </a>
                         <span class="portfolio-project-summary">Designed Spatially Decoupled Attention to solve the Janus problem, enabling the first 4K-texture image-to-3D system and leading to VARCO 3D.</span>
                         <span class="portfolio-project-tags"><span class="portfolio-project-tag">Diffusion</span><span class="portfolio-project-tag">Textured Mesh</span></span>
                         <span class="portfolio-project-meta">
                             <span>NCSOFT / 2024</span>
                             <span class="portfolio-project-accolade">Featured on Hugging Face Daily Papers</span>
                         </span>
-                    </span>
-                </a>
+                    </div>
+                </div>
             </article>
         
-            <article class="portfolio-project-item" data-selected="true">
-                <a class="portfolio-project-link" href="projects/instant_pose/">
+            <article class="portfolio-project-item" data-selected="true" data-selected-order="2" data-all-order="5">
+                <div class="portfolio-project-layout">
+                    <a class="portfolio-project-cover-link" href="projects/instant_pose/" aria-label="View Instant Pose for Hash-Grid NeRFs">
                     <span class="portfolio-project-cover">
                         
             <img src="projects/instant_pose/assets/pose_fig2_thumbnail.png" alt="Hash-grid gradient and trilinear interpolation diagrams">
         
                         
                     </span>
-                    <span class="portfolio-project-body">
+                    </a>
+                    <div class="portfolio-project-body">
                         <span class="portfolio-project-eyebrow">Research</span>
-                        <span class="portfolio-project-title">Instant Pose for Hash-Grid NeRFs</span>
+                        <a class="portfolio-project-title-link" href="projects/instant_pose/">
+                            <span class="portfolio-project-title">Instant Pose for Hash-Grid NeRFs</span>
+                        </a>
                         <span class="portfolio-project-summary">Identified unstable hash-grid coordinate gradients and designed a smooth backward interpolation path for fast camera-pose refinement, published at ICML 2023.</span>
                         <span class="portfolio-project-tags"><span class="portfolio-project-tag">NeRF</span><span class="portfolio-project-tag">Camera Pose</span></span>
                         <span class="portfolio-project-meta">
                             <span>NAVER AI Lab / 2022–2023</span>
                             <span class="portfolio-project-accolade">ICML 2023</span>
                         </span>
-                    </span>
-                </a>
+                    </div>
+                </div>
             </article>
         
-            <article class="portfolio-project-item" data-selected="false" hidden>
-                <a class="portfolio-project-link" href="projects/2dgs_viewer/">
+            <article class="portfolio-project-item" data-selected="false" data-selected-order="3" data-all-order="3" hidden>
+                <div class="portfolio-project-layout">
+                    <a class="portfolio-project-cover-link" href="projects/2dgs_viewer/" aria-label="View 2D GS Viewer">
                     <span class="portfolio-project-cover">
                         
             <img src="assets/thumbnails/2dgs_viewer_thumbnail.png" data-static="assets/thumbnails/2dgs_viewer_thumbnail.png" data-gif="assets/2dgs_viewer_teaser.webp" alt="2D GS viewer teaser">
         
                         <div class="loading-spinner" style="display: none;"></div>
                     </span>
-                    <span class="portfolio-project-body">
+                    </a>
+                    <div class="portfolio-project-body">
                         <span class="portfolio-project-eyebrow">Open-source Tool</span>
-                        <span class="portfolio-project-title">2D GS Viewer</span>
+                        <a class="portfolio-project-title-link" href="projects/2dgs_viewer/">
+                            <span class="portfolio-project-title">2D GS Viewer</span>
+                        </a>
                         <span class="portfolio-project-summary">Built a browser viewer to inspect, edit, train, and export 2D Gaussian Splatting scenes.</span>
                         <span class="portfolio-project-tags"><span class="portfolio-project-tag">Gaussian Splatting</span><span class="portfolio-project-tag">Three.js</span></span>
                         <span class="portfolio-project-meta">
                             <span>Personal Project / 2024</span>
                             <span class="portfolio-project-accolade">160+ GitHub stars</span>
                         </span>
-                    </span>
-                </a>
+                    </div>
+                </div>
             </article>
         
-            <article class="portfolio-project-item" data-selected="false" hidden>
-                <a class="portfolio-project-link" href="projects/deepsfm/">
+            <article class="portfolio-project-item" data-selected="false" data-selected-order="4" data-all-order="2" hidden>
+                <div class="portfolio-project-layout">
+                    <a class="portfolio-project-cover-link" href="projects/deepsfm/" aria-label="View Deep SfM for Radiance Fields">
                     <span class="portfolio-project-cover">
                         
             <img src="assets/thumbnails/deepsfm_thumbnail.png" data-static="assets/thumbnails/deepsfm_thumbnail.png" data-gif="assets/sfm_teaser.webp" alt="DeepSFM and NeRF face teaser">
         
                         <div class="loading-spinner" style="display: none;"></div>
                     </span>
-                    <span class="portfolio-project-body">
+                    </a>
+                    <div class="portfolio-project-body">
                         <span class="portfolio-project-eyebrow">Technical Study</span>
-                        <span class="portfolio-project-title">Deep SfM for Radiance Fields</span>
+                        <a class="portfolio-project-title-link" href="projects/deepsfm/">
+                            <span class="portfolio-project-title">Deep SfM for Radiance Fields</span>
+                        </a>
                         <span class="portfolio-project-summary">Compared VGGSfM and MASt3R for camera recovery in Gaussian Splatting and radiance fields.</span>
                         <span class="portfolio-project-tags"><span class="portfolio-project-tag">Structure from Motion</span><span class="portfolio-project-tag">Radiance Fields</span></span>
                         <span class="portfolio-project-meta">
                             <span>Personal Project / 2024</span>
                             <span class="portfolio-project-accolade">230+ GitHub stars</span>
                         </span>
-                    </span>
-                </a>
+                    </div>
+                </div>
             </article>
         
-            <article class="portfolio-project-item" data-selected="false" hidden>
-                <a class="portfolio-project-link" href="projects/nerf_in_game/">
+            <article class="portfolio-project-item" data-selected="false" data-selected-order="5" data-all-order="4" hidden>
+                <div class="portfolio-project-layout">
+                    <a class="portfolio-project-cover-link" href="projects/nerf_in_game/" aria-label="View Neural Rendering in Game Engine">
                     <span class="portfolio-project-cover">
                         
             <img src="projects/nerf_in_game/teaser.jpg" alt="NeRF game teaser">
         
                         
                     </span>
-                    <span class="portfolio-project-body">
+                    </a>
+                    <div class="portfolio-project-body">
                         <span class="portfolio-project-eyebrow">Applied R&amp;D</span>
-                        <span class="portfolio-project-title">Neural Rendering in Game Engine</span>
+                        <a class="portfolio-project-title-link" href="projects/nerf_in_game/">
+                            <span class="portfolio-project-title">Neural Rendering in Game Engine</span>
+                        </a>
                         <span class="portfolio-project-summary">Built a 360° capture-to-engine pipeline, optimizing neural rendering for Unity and Unreal.</span>
                         <span class="portfolio-project-tags"><span class="portfolio-project-tag">Neural Rendering</span><span class="portfolio-project-tag">Unity / Unreal Engine</span></span>
                         <span class="portfolio-project-meta">
                             <span>NCSOFT / 2023</span>
-                            
+                            <span class="portfolio-project-accolade">Published on NCSOFT Research</span>
                         </span>
-                    </span>
-                </a>
+                    </div>
+                </div>
             </article>
         </div>
 
@@ -506,14 +528,14 @@
     <span class="preloader-orbit" aria-hidden="true"><span></span></span>
     <span class="preloader-label">Hwan Heo · 3D AI</span>
   </div>
-  <script src="blogs/js/site-data-client.js"></script>
-  <script src="blogs/js/blog-cover-media.js"></script>
-  <script src="js/portfolio-blocks.js"></script>
-  <script src="js/portfolio-content.js"></script>
-  <script src="js/portfolio-blog-preview.js"></script>
-  <script type="module" src="js/hero-wave.js"></script>
+  <script src="blogs/js/site-data-client.js?v=fd5ff44d2c"></script>
+  <script src="blogs/js/blog-cover-media.js?v=f16969bf34"></script>
+  <script src="js/portfolio-blocks.js?v=5111a625c9"></script>
+  <script src="js/portfolio-content.js?v=949253f594"></script>
+  <script src="js/portfolio-blog-preview.js?v=8238848054"></script>
+  <script type="module" src="js/hero-wave.js?v=69ffd58d56"></script>
 
   <!-- Main JS File -->
-  <script src="assets/js/main.js"></script>
+  <script src="assets/js/main.js?v=78df49ef91"></script>
 </body>
 </html>

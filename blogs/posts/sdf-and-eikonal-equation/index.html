@@ -29,12 +29,12 @@
     <title>SDF and Eikonal Equation | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css" rel="stylesheet" />
-    <link href="/blogs/css/typography.css" rel="stylesheet" />
-    <link href="/blogs/css/post.css" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/css/site-icons.css" rel="stylesheet" />
-    <script src="/assets/js/site-icons.js"></script>
+    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
+    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -232,25 +232,20 @@ f(x_2) - f(x_1) &amp; \ge d(x_2, \partial\Omega) - \|x_1-p_2\| \\ &amp;= \|x_2-p
 $$
 </p>
 Using the reverse triangle inequality, this can be simplified as follows:
-<p>
-$$
+
+<p>$$
 \begin{aligned}
 f(x_2) - f(x_1) &amp;\ge -\|(x_2-p_2) - (x_1-p_2)\| \\ &amp; = -\|x_2-x_1\| \\  \therefore |f(x_1) - f(x_2)| &amp; \le \|x_1-x_2\|
 \end{aligned}
-$$
-</p>
-
+$$</p>
 <p><em>cf.</em> $ \|a\|-\|b\| \ge -\|a-b\| $ </p>
 <p>This shows that the function $f$ is a <strong><a href="https://en.wikipedia.org/wiki/Lipschitz_continuity">1-Lipschitz Continuous Function</a></strong>, meaning the distance between the function&#39;s values does not increase more than the distance between the points themselves.</p>
 <p>If $f$ is differentiable at a point $x$, then by the definition of the gradient, we have:</p>
-<p>
-$$
+<p>$$
 \begin{aligned}
 |\nabla f(x) \cdot v| &amp; = \lim_{t \to 0} \frac{|f(x+tv) - f(x)|}{t} \\ &amp; \le \lim_{t \to 0} \frac{\|tv\|}{t} = \|v\|
 \end{aligned}
-$$
-</p>
-
+$$</p>
 <p>Now, let&#39;s choose the unit vector $v = \frac{\nabla f(x)}{\|\nabla f(x)\|}$ (assuming $\nabla f(x) \neq 0$):
 $$\left | \nabla f(x) \cdot \frac{\nabla f(x)}{\|\nabla f(x)\|} \right | = \frac{\|\nabla f(x)\|^2}{\|\nabla f(x)\|} = \|\nabla f(x)\|$$
 Therefore,
@@ -262,14 +257,11 @@ which implies $\|\nabla f(x)\| \le 1$.</p>
 <p>Let&#39;s consider a point $x \in \mathbb{R}^n \setminus \partial\Omega$ where $f$ is differentiable. We also assume there exists a <strong>unique</strong> closest point $p \in \partial\Omega$ to $x$. (Such points constitute most of the space, excluding the &#39;medial axis&#39;.)</p>
 <p>Now, consider the unit vector $$ n = \frac{x-p}{\|x-p\|} $$, which points from $p$ to $x$, representing the direction of fastest movement away from the boundary.</p>
 <p>To analyze the directional derivative in this direction, consider the point $x+tn$ for a sufficiently small positive number $t &gt; 0$. Under the assumption that $p$ is the unique closest point to $x$, for a small enough $t$, the closest point to $x+tn$ will also be $p$. Therefore, the distance function value is calculated as:</p>
-<p>
-$$
+<p>$$
 \begin{aligned}
 d(x+tn, \partial\Omega) &amp;= \|(x+tn) - p\| \\ &amp;= \|(x-p) + tn\| \\ &amp; = \|\|x-p\|n + tn\| \\ &amp; = (\|x-p\|+t) = d(x, \partial\Omega)+t
 \end{aligned}
-$$
-</p>
-
+$$</p>
 <p>Applying the sign from the SDF definition, we get the following:</p>
 <ul>
 <li>If $x \in \Omega^c$ $(f &gt; 0)$, then $f(x) = d(x, \partial\Omega)$, so $$ f(x+tn) = d(x, \partial\Omega)+t = f(x)+t$$ </li>
@@ -316,14 +308,11 @@ $$ \nabla f(x) = \nabla d(x, \partial\Omega) = \frac{x-p}{\|x-p\|} $$</p>
 $$ \nabla f(x) = -\nabla d(x, \partial\Omega) = -\frac{x-p}{\|x-p\|} $$</p>
 <h3 id="toc-heading-8">2.2. Gradient&#39;s Norm</h3>
 <p>In both cases, the gradient $\nabla f(x)$ is either a unit vector or a unit vector multiplied by -1. Therefore, calculating the Euclidean norm of the gradient yields:</p>
-<p>
-$$ 
+<p>$$ 
 \begin{aligned}
 \|\nabla f(x)\| &amp;= \left\| \pm \frac{x-p}{\|x-p\|} \right\| \\ &amp; = \frac{\|x-p\|}{\|x-p\|} = 1 
 \end{aligned}
-$$
-</p>
-
+$$</p>
 <p>This shows that $f$ satisfies the Eikonal equation at all points where it is differentiable.</p>
 <hr>
 <h2 id="toc-heading-9">Discussion</h2>
@@ -381,18 +370,18 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
                     </section>
     
                     <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/" aria-label="Previous Post: From Flow Matching to Optimal Transport: A Physics-based View of Generative Models">
+                <a class="post-nav-card is-older" href="/blogs/posts/generalized-winding-number/" aria-label="Previous Post: Generalized Winding Number">
                     <span class="post-nav-kicker">
                         <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
                     </span>
-                    <strong>From Flow Matching to Optimal Transport: A Physics-base...</strong>
+                    <strong>Generalized Winding Number</strong>
                 </a>
     
-                <a class="post-nav-card is-next" href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" aria-label="Next Post: VARCO 3D: A Year in Review — 2025 Retrospective">
+                <a class="post-nav-card is-explore" href="/blogs/posts/optimizing-sparse-3d-generation-inference/" aria-label="Explore Series: 3D AI">
                     <span class="post-nav-kicker">
-                        Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
+                        Explore Series <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
-                    <strong>VARCO 3D: A Year in Review — 2025 Retrospective</strong>
+                    <strong>3D AI</strong>
                 </a>
     </nav></div>
                 </div>
@@ -1065,10 +1054,10 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
 };
     </script>
 
-    <script src="/blogs/js/theme-toggle.js"></script>
-    <script src="/blogs/js/scroll-progress.js"></script>
-    <script src="/blogs/js/blog-shell.js"></script>
-    <script src="/blogs/js/post-page.js"></script>
+    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
+    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
     <script>
         initBlogShell({
             formSelector: '#post-nav-search-form',

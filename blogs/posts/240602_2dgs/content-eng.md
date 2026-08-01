@@ -3,31 +3,8 @@ date: June 02, 2024
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<nav class="toc">
-    <ul>
-        <li><a href="#intro"> Introduction </a></li>
-        <li><a href="#1-preliminary"> Background </a></li>
-        <ul>
-            <li><a href="#1-1-3d-gaussian-splatting"> 3D Gaussian Splatting </a></li>
-            <li><a href="#1-2-surface-reconstruction-problem-in-3d-gs"> Surface Reconstruction Problem </a></li>
-            <li><a href="#1-3-sugar-surface-aligned-gaussian-splatting"> Surface-Aligned Gaussian Splatting </a></li>
-        </ul>
-        <li><a href="#2-2d-gaussian-splatting"> 2D Gaussian Splatting </a></li>
-        <ul>
-            <li><a href="#2-1-2d-gaussian-modeling-gaussian-surfels-"> 2D Gaussian Modeling </a></li>
-            <li><a href="#2-2-splatting"> 2D-to-2D Projection </a></li>
-            <li><a href="#2-3-training-2d-gs"> Training 2D GS </a></li>
-        </ul>
-        <li><a href="#3-experimens-custom-viser-viewer"> Experimens &amp; Custom Viser Viewer </a></li>
-        <ul>
-            <li><a href="#3-1-qualitative-results-custom-object-reconstruction"> Qualitative Results </a></li>
-            <li><a href="#3-2-custom-viser-viewer-for-2d-gaussian-splatting"> Custom Viser Viewer for 2D GS </a></li>
-        </ul>
-        <li><a href="#4-conclusion"> Conclusion </a></li>
-    </ul>
-</nav>
+## <span id="intro"></span>Introduction
 
-<h2 id="intro"> Introduction </h2>
 <blockquote class="lang eng">
     <p>
         This article provides an in-depth review of the paper "2D Gaussian Splatting for Geometrically Accurate Radiance Fields," 
@@ -43,7 +20,8 @@ author: Hwan Heo
     </figcaption>
 </figure>
 
-<h3 id="recap-radiance-fields-mesh-recon-" class="lang eng"> Challenges in Mesh Reconstruction for Radiance Fields </h3>
+### <span id="recap-radiance-fields-mesh-recon-" class="lang eng"></span>Challenges in Mesh Reconstruction for Radiance Fields
+
 <p class="lang eng"> 
     In a previous discussion (<span style="text-decoration: underline;"><a href="https://ncsoft.github.io/ncresearch/b515d0241ebe9af4a549e991ae0efc4a90f0f65e">Can NeRF be used in game production? (kor)</a></span>), 
     I highlighted the ongoing challenges in the practical application of Radiance Fields technologies. 
@@ -66,8 +44,10 @@ author: Hwan Heo
 
 <hr/>
 
-<h2 id="1-preliminary">1. Background </h2>
-<h3 id="1-1-3d-gaussian-splatting"> 1.1. 3D Gaussian Splatting</h3>
+## <span id="1-preliminary"></span>1. Background
+
+### <span id="1-1-3d-gaussian-splatting"></span>1.1. 3D Gaussian Splatting
+
 <p><img src="./240602_2dgs/assets/image-7.png" alt="" width="100%"></p>
 
 <div class="lang eng">
@@ -117,7 +97,7 @@ author: Hwan Heo
     </ol>
 </div>
 
-<h3 id="1-2-surface-reconstruction-problem-in-3d-gs"> 1.2. Surface Reconstruction Problem in 3D GS</h3>
+### <span id="1-2-surface-reconstruction-problem-in-3d-gs"></span>1.2. Surface Reconstruction Problem in 3D GS
 
 <div class="lang eng">
     <p>
@@ -159,7 +139,7 @@ author: Hwan Heo
     </p>
 </div>
 
-<h3 id="1-3-sugar-surface-aligned-gaussian-splatting"> 1.3. SuGaR: Surface-Aligned Gaussian Splatting</h3>
+### <span id="1-3-sugar-surface-aligned-gaussian-splatting"></span>1.3. SuGaR: Surface-Aligned Gaussian Splatting
 
 <div class="lang eng">
     <p>
@@ -182,8 +162,10 @@ author: Hwan Heo
     contribute to surface reconstruction difficulties, often resulting in meshes with suboptimal geometry in custom scenes.
 </p>
 
-<h2 id="2-2d-gaussian-splatting">2. 2D Gaussian Splatting</h2>
-<h3 id="2-1-2d-gaussian-modeling-gaussian-surfels-"> 2.1. 2D Gaussian Modeling (Gaussian Surfels)</h3>
+## <span id="2-2d-gaussian-splatting"></span>2. 2D Gaussian Splatting
+
+### <span id="2-1-2d-gaussian-modeling-gaussian-surfels-"></span>2.1. 2D Gaussian Modeling (Gaussian Surfels)
+
 <p><img src ='./240602_2dgs/assets/image-6.png' width=100%></p>
 <div class="lang eng">
     <p>
@@ -236,8 +218,9 @@ author: Hwan Heo
     and spherical harmonics coefficients for opacity and non-Lambertian color.
 </p>
 
-<h3 id="2-2-splatting"> 2.2. Splatting </h3>
-<h4 id="2-2-1-accurate-2d-to-2d-projection-in-homogeneous-coordinates"> 2D-to-2D Projection </h4>
+### <span id="2-2-splatting"></span>2.2. Splatting
+
+#### <span id="2-2-1-accurate-2d-to-2d-projection-in-homogeneous-coordinates"></span>2D-to-2D Projection
 
 <div class="lang eng">
     <p>
@@ -276,7 +259,7 @@ author: Hwan Heo
     However, the inverse transform can introduce numerical instabilities, leading to optimization challenges.
 </p>
 
-<h4 id="2-2-2-ray-splat-intersection"> Ray-Splat Intersection w/ Homography</h4>
+#### <span id="2-2-2-ray-splat-intersection"></span>Ray-Splat Intersection w/ Homography
 
 <div class="lang eng">
     <p>
@@ -319,13 +302,15 @@ author: Hwan Heo
 </div>
 <img src='./240602_2dgs/assets/image-2.jpeg' width="100%">
 
-<h3 id="2-3-training-2d-gs"> 2.3. Training 2D GS </h3>
+### <span id="2-3-training-2d-gs"></span>2.3. Training 2D GS
+
 <
 <p class="lang eng">
     In addition to the image rendering loss defined through 2D projection and rasterization, 
     the training process for 2D GS incorporates two additional regularization losses: Depth Distortion Loss and Normal Consistency Loss.
 </p>
-<h4 id="2-3-1-depth-distortion"> Depth Distortion Regularization </h4>
+
+#### <span id="2-3-1-depth-distortion"></span>Depth Distortion Regularization
 
 <div class="lang eng">
     <p>
@@ -374,9 +359,9 @@ author: Hwan Heo
     \end{aligned}
     $$
 </div>
-<p> 
-    where $A_i = \sum_{j=0}^{i} \omega_j$, $D_i = \sum_{j=0}^{i} \omega_j m_j$, and $D_i^2 = \sum_{j=0}^{i} \omega_j m_j^2$
-</p>
+
+where $A_i = \sum_{j=0}^{i} \omega_j$, $D_i = \sum_{j=0}^{i} \omega_j m_j$, and $D_i^2 = \sum_{j=0}^{i} \omega_j m_j^2$
+
 <p class="lang eng">
     Also, the implementation of this loss shows that, 
     each of the terms is either an accumulation of opacity or an accumulation of opacity $\times$ depth.
@@ -395,7 +380,7 @@ author: Hwan Heo
     In the 2D GS implementations, this is handled by the rasterizer.
 </p>
 
-<h4 id="2-3-2-normal-consistency"> Normal Consistency Regularization </h4>
+#### <span id="2-3-2-normal-consistency"></span>Normal Consistency Regularization
 
 <div class="lang eng">
     <p>
@@ -449,8 +434,9 @@ author: Hwan Heo
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure:</strong> Normal vs Depth2Normal, captured in my custom viewer </figcaption>
 </figure>
 
-<h2 id="3-experimens-custom-viser-viewer">3. Experimens &amp; Custom Viewer</h2>
-<h3 id="3-1-qualitative-results-custom-object-reconstruction">3.1. Qualitative Results </h3>
+## <span id="3-experimens-custom-viser-viewer"></span>3. Experimens &amp; Custom Viewer
+
+### <span id="3-1-qualitative-results-custom-object-reconstruction"></span>3.1. Qualitative Results
 
 <p class="lang eng">
     Although the quantitative results on Novel view synthesis may not appear impressive in comparison 
@@ -494,7 +480,7 @@ author: Hwan Heo
     </blockquote>
 </div>
 
-<h3 id="3-2-custom-viser-viewer-for-2d-gaussian-splatting">3.2. Custom Viser Viewer for 2D Gaussian Splatting</h3>
+### <span id="3-2-custom-viser-viewer-for-2d-gaussian-splatting"></span>3.2. Custom Viser Viewer for 2D Gaussian Splatting
 
 <div class="lang eng">
     <p>
@@ -513,10 +499,12 @@ author: Hwan Heo
         making it easier to monitor scene training and generate rendering camera paths.
     </p>
 </div>
-<h4 id="-github-project-link-https-github-com-hwanhuh-2d-gs-viser-viewer-tree-main-">⭐ <a href="https://github.com/hwanhuh/2D-GS-Viser-Viewer/tree/main">Github Project Link</a></h4>
-<p><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./240602_2dgs/assets/viser_train-poster.jpg" aria-label="2D Gaussian Splatting training result" style="width: 100%"><source src="./240602_2dgs/assets/viser_train.mp4" type="video/mp4"></video></p>
 
-<h2 id="4-conclusion">4. Conclusion</h2>
+#### <span id="-github-project-link-https-github-com-hwanhuh-2d-gs-viser-viewer-tree-main-"></span>⭐ <a href="https://github.com/hwanhuh/2D-GS-Viser-Viewer/tree/main">Github Project Link</a>
+
+<video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./240602_2dgs/assets/viser_train-poster.jpg" aria-label="2D Gaussian Splatting training result" style="width: 100%"><source src="./240602_2dgs/assets/viser_train.mp4" type="video/mp4"></video>
+
+## <span id="4-conclusion"></span>4. Conclusion
 
 <div class="lang eng">
     <p>

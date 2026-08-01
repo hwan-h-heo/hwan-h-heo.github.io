@@ -3,21 +3,7 @@ date: April 26, 2024
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<nav class="toc">
-    <ul>
-        <li><a href="#sec1"> Introduction </a></li>
-        <li>
-            <a href="#sec2"> Generating 3D Vertices and Faces from Depth Maps </a>
-        </li>
-        <li><a href="#sec3"> Texturing the Mesh from Depth Maps </a></li>
-        <li>
-            <a href="#sec4"> Result & Analysis </a>
-        </li>
-        <li><a href="#closing"> Closing </a></li>
-    </ul>
-</nav>
-
-<h2 id="sec1">1. Introduction </h2>
+## <span id="sec1"></span>1. Introduction
 
 <p class="lang kor" >
     2D Diffusion 의 성공 이후로, Diffusion Model 의 막강한 성능에 힘입어 depth, normal map 등의 geometric information 을 diffusion 으로 추론하려는 연구가 이어지고 있다.
@@ -35,13 +21,14 @@ author: Hwan Heo
     등이 그 예시인데, 결과를 볼 때 꽤나 잘 되는 것 같으면서도, 이게 실제로 geometric 하게 depth 를 얼마나 잘 예측했나가 바로 와닿지는 않는다.
 </p>
 <img src="./240426_diffusion_depth/assets/teaser.jpeg" alt="Marigold's teaser" width="100%">
-<p><em>Figure credit: <a href="https://marigoldmonodepth.github.io/">Depth estimation result from Marigold<a></a></em></p>
+
+<em>Figure credit: <a href="https://marigoldmonodepth.github.io/">Depth estimation result from Marigold<a></a></em>
 
 <p class="lang kor" >
     백문이 불여일견, 오늘은 DepthMap 을 통해 pointclouds 나 mesh 를 생성하고, 현재 Marigold 등의 SOTA depth estimation 모델의 성능이 어떠한지 정성적으로 평가해보자.
 </p>
 
-<h2 id="sec2">2. Generating 3D Vertices and Faces from Depth Maps</h2>
+## <span id="sec2"></span>2. Generating 3D Vertices and Faces from Depth Maps
 
 <p class="lang kor" >
     우선 depth estimation 의 baseline 으로는 위에서 언급한 Marigold 를 사용한다. light model 이긴 해도 huggingface 에서 demo 도 제공해주고 있어 성능 및 사용의 용이성이 모두 높아 선정하였다. 
@@ -157,7 +144,7 @@ def get_mesh_from_depth(outname, scale=None):
     병렬화나 고속화 등을 고려하지 않고 for 문으로 일괄 처리하기 때문에 High-Resolution Input 에 대해서 이 부분의 시간이 많이 걸린다.
 </p>
 
-<h2 id="sec3">3. Texturing the Mesh from Depth Maps</h2>
+## <span id="sec3"></span>3. Texturing the Mesh from Depth Maps
 
 <p class="lang kor" >
     Texturing... 은 원래 3D asset 생성 과정에서 굉장히 중요한 문제지만, 현재 우리가 하고 있는 task 에 한정해서는 
@@ -192,7 +179,7 @@ def make_textured_mesh(outname, scale=None):
     laplacian smoothing 에서 iteration 3 이상은 추천하지 않는다.
 </p>
 
-<h2 id="sec4"> 4. Results & Analysis</h2>
+## <span id="sec4"></span>4. Results & Analysis
 
 <p class="lang kor" > 
     Marigold Demo 에 있는 네 가지 사진을 이용해 Textured Mesh 를 만들어 보았다.
@@ -226,13 +213,14 @@ def make_textured_mesh(outname, scale=None):
 </p>
 
 <img src="./240426_diffusion_depth/assets/butterfly.jpg" alt="Marigold's teaser" width="100%">
-<p><em>Left: front view / Right: side view of the mesh</em></p>
+
+*Left: front view / Right: side view of the mesh*
 
 <p class="lang kor" >
     또한 위의 front 결과를 확대해서 보면, 몸통의 줄무늬 때문에 부분부분 background 로 추론되었다. Depth map 자체가 극단적인 discontinuity 를 갖기 때문에, 이러한 경우에 estimation 이 더 어려운 것으로 보인다.
 </p>
 
-<h2 id="closing"> Closing </h2>
+## <span id="closing"></span>Closing
 
 <p class="lang kor" >
     Diffusion 등 generation 기법을 이용해 생성된 depthmap 이 정성적으로 어느 정도의 quality 를 갖는지 볼 수 있도록 Depth map 으로부터 textured-mesh 를 생성하는 방법에 대해 논의해보았다.

@@ -29,14 +29,14 @@
     <title>X-Ray 와 NeRF | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css" rel="stylesheet" />
-    <link href="/blogs/css/typography.css" rel="stylesheet" />
-    <link href="/blogs/css/post.css" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/css/site-icons.css" rel="stylesheet" />
-    <script src="/assets/js/site-icons.js"></script>
+    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
+    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
-    <link href="/blogs/css/code-copy.css" rel="stylesheet" />
+    <link href="/blogs/css/code-copy.css?v=97949adbc2" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -181,7 +181,7 @@
     </div>
                 </div>
                 <div class="post-reading-column main-content">
-                    <button id="copyButton" type="button" aria-label="Copy post link">
+                    <nav class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Introduction" aria-label="Introduction"><span class="toc-link-text">Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="1. Tomography vs. Photography" aria-label="1. Tomography vs. Photography"><span class="toc-link-text">1. Tomography vs. Photography</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-2" title="1.1. Photography" aria-label="1.1. Photography"><span class="toc-link-text">1.1. Photography</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="1.2. Tomography" aria-label="1.2. Tomography"><span class="toc-link-text">1.2. Tomography</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-4" title="2. Modeling" aria-label="2. Modeling"><span class="toc-link-text">2. Modeling</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-5" title="3. Quick Viewer Development Tip" aria-label="3. Quick Viewer Development Tip"><span class="toc-link-text">3. Quick Viewer Development Tip</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="3.1. Viser Viewer" aria-label="3.1. Viser Viewer"><span class="toc-link-text">3.1. Viser Viewer</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="3.2. Marching Cube Extraction" aria-label="3.2. Marching Cube Extraction"><span class="toc-link-text">3.2. Marching Cube Extraction</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-8" title="Concluding Remarks" aria-label="Concluding Remarks"><span class="toc-link-text">Concluding Remarks</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
@@ -203,43 +203,26 @@
     </div>
 </div>
 
-<nav class="toc">
-    <ul>
-        <li><a href="#introduction">Introduction</a></li>
-        <li><a href="#tomography-vs-photography">Tomography vs. Photography</a>
-            <ul>
-                <li><a href="#photography">Photography</a></li>
-                <li><a href="#tomography">Tomography</a></li>
-            </ul>
-        </li>
-        <li><a href="#modeling">Modeling</a></li>
-        <li><a href="#quick-viewer-development-tip"> Viewer Tip</a>
-            <ul>
-                <li><a href="#viser-viewer">Viser Viewer</a></li>
-                <li><a href="#marching-cube-extraction">Marching Cube Extraction</a></li>
-            </ul>
-        </li>
-        <li><a href="#concluding-remarks">Concluding Remarks</a></li>
-    </ul>
-</nav>
-
 <p class="lang kor">
     <strong> TL; DR. </strong>
     Photography 가 아닌 domain 에서 Neural Rendering 을 적용하기 위해선 어떤 사항들을 고려해야하는지 생각해보자!
     + Viewer 가 없는 Neural Rendering technique 을 위한 빠른 viewer 개발 Tip
 </p>
-<h2 id="introduction">Introduction</h2>
+
+<h2 id="toc-heading-0"><span id="introduction"></span>Introduction</h2>
 <p class="lang kor" >최근 우연한 기회로 의료 도메인, 특히 Tomography (X-ray) 에서 Neural Rendering 을 어떻게 적용해야 하는지 찾아볼 일이 있었다. (Ref: <a href='https://github.com/caiyuanhao1998/SAX-NeRF'>SAX-NeRF</a>)</p>
 <p class="lang kor" >가시광의 반사를 포착하는 photography 와 다르게, tomography 는 물질을 투과한 신호를 바탕으로 이미지를 구성한다. 저자들이 Tomography 를 위해 일반적인 Neural Rendering setting 을 어떻게 수정해야 하는지를 탐구한 과정을 따라가면서, 나 또한 Neural Rendering 에 대한 추상적인 직관성과 이해를 증진시킬 수 있었다.</p>
 <p class="lang kor" >이 글에서는 SAX-NeRF 에 대한 개인적인 review 를 통해 Neural Rendering, NeRF, GS 등의 저변에 깔린 직관에 대해서 기술해보도록 하겠다. 아울러 official viewer 가 없을 때 viser 로 간단한 web viewer 를 만드는 tip 에 대해서도 써보려 한다.</p>
 
-<h2 id="tomography-vs-photography">1. Tomography vs. Photography</h2>
+<h2 id="toc-heading-1"><span id="tomography-vs-photography"></span>1. Tomography vs. Photography</h2>
 <img class="post-media" src="/blogs/posts/250106_tomography/assets/image1.png" width="100%" alt="Tomography vs Photography" loading="lazy" decoding="async">
-<h3 id="photography">1.1. Photography</h3>
+
+<h3 id="toc-heading-2"><span id="photography"></span>1.1. Photography</h3>
 <p class="lang kor" >- <code>'본다'</code> 라는 행위는 물리학적으로 어떤 의미를 지닐까?</p>
 <p class="lang kor" >'본다'는 것은 광원에서 방출된 빛이 물체와 상호작용하여, 물체의 표면에서 특정 파장의 (or energy) 빛을 흡수하거나 반사하고, 흡수되지 않은 파장의 반사된 (reflection) 빛이 관찰자의 눈(또는 감지 장치)에 도달하여 시각적으로 인지되는 과정을 말한다.</p>
 <p class="lang kor" >이 과정은 빛과 물체 간의 상호작용 (흡수 및 반사), 그리고 그 상호작용의 결과가 관찰자의 시각 체계로 전달되는 과정을 포함한다.</p>
 <p class="lang kor" >Neural Rendering, Novel View Synthesis 에서 주로 다루는 scene 은 <code>'가시광 영역에서 관찰한 대상'</code> 이 목표이다. 따라서 흔히 사용하는 NeRF 의 rendering equation (emission-absorption ray casting) 은 '본다' 라는 과정의 직관을 수학적으로 나타내고 있다.</p>
+
 <p>$$ C(r) = \int_{t_n}^{t_f} T(t) \cdot \sigma ({\rm \textbf{r}}(t))  \cdot c({\rm \textbf{r}}(t), {\rm \textbf{d}} ) \ dt  $$</p>
 <p>$$ \text{where }T(t) = \text{exp} \bigg( - \int_{t_n}^{t}\sigma ({\rm \textbf{r}}(s)) ds \bigg ) $$</p>
 <p class="lang kor" >이 식에서 $C(r)$ 은 광선을 따라 누적된 최종 색을 의미한다. 각 식의 요소는 다음과 같이 해석된다:</p>
@@ -254,7 +237,7 @@
 <p class="lang kor" >이와 같이 NeRF 의 rendering equation 은 우리가 물체를 '본다'는 행위를 수식적으로 표현한 결과물이다. 물리적 빛-물체 상호작용 (흡수, 반사, 투명도 등) 의 모든 요소를 통합하여, NeRF는 광선 경로를 따라 누적된 빛의 기여를 계산해 최종적으로 이미지를 생성한다.</p>
 <img class="post-media" src="/blogs/posts/250106_tomography/assets/image3.png" alt="NeRF Image Generation" loading="lazy" decoding="async">
 
-<h3 id="tomography">1.2. Tomography</h3>
+<h3 id="toc-heading-3"><span id="tomography"></span>1.2. Tomography</h3>
 <p class="lang kor" >그렇다면 Neural Rendering 을 가시광 영역이 아닌 domain 에 적용하려면 어떻게 해야할까?</p>
 <p class="lang kor" >해당 domain 의 대표적이면서 대중적인 예시가 X-ray, CT 등으로 익숙한 Tomography 일 것이다. Tomgraphy 는 가시광선보다 파장이 짧은 (에너지가 큰) X-ray 를 사용하여 빛이 반사되기보다는, 물체를 <strong><em>투과 (penetration)</em></strong>하고, 빛의 세기가 물체 내부의 밀도에 의해 <strong><em>감쇠 (attenuation) </em></strong> 되는 과정을 기반으로 한다. 이 과정은 가시광선 기반의 Reflection과 대비되며, 빛이 물체의 뒤쪽에 맺히는 상 (intensity)을 분석하여 물체의 내부 구조를 재구성한다.</p>
 <img class="post-media" src="/blogs/posts/250106_tomography/assets/image5.png" alt="Tomography Process" loading="lazy" decoding="async">
@@ -269,7 +252,8 @@ $$</p>
 </ul>
 <p class="lang kor" >exponential 항이 익숙하지 않은가? NeRF modeling 에서 사용하는 Accumulated Transmittance 수식과 똑같은 형태를 지니고 있다. 실제로 두 항은 Intensity 가 감소하는 정도가 *1) 현재 지점 빛의 세기, 2) 현재 지점의 불투명도에* 비례할 것이라는 동일한 가정을 지니고 있다.</p>
 <p class="lang kor" >다음과 같은 유도 과정을 통해서도 이 modeling 의 저변에 빛의 intensity 에 대한 직관성이 담겨있는 것을 알 수 있다.</p>
-<p> <strong> * Derivation of Beer-Lambert Law</strong>  (which mirrors the derivation of Accumulated Transmittance)</p>
+
+<p><strong> * Derivation of Beer-Lambert Law</strong>  (which mirrors the derivation of Accumulated Transmittance)</p>
 <p>$$ I_\text{gt}(\mathbf{r}) = I_o \cdot \exp \left ( - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt \right ) $$</p>
 <p>$$ \rightarrow \ln(I_\text{gt}(\mathbf{r}) ) - \ln (I_o) = - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt $$</p>
 <p>$$ \rightarrow \int_{t_n}^{t_f } \frac{1}{I(\mathbf{r}(t))} dI(\mathbf{r}(t)) = - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt $$</p>
@@ -277,10 +261,11 @@ $$</p>
 <p>$$ \therefore \frac{d}{dt}I(t) = -I(t)\cdot \rho(t) $$</p>
 <p class="lang kor" >Tomography 를 입력으로 하는 NeRF 를 reconstruction 하기 위해서는, 기존 emission-absorption ray casting 대신에 위의 Beer-Lambert Law 기반으로 rendering equation 을 대체해야 할 것이다.</p>
 <p class="lang kor" >최종적인 intensity rendering term 은 NeRF 에서처럼 discretized form 으로 다음과 같이 표현된다.</p>
+
 <p>$$ I_{pred}(\mathbf{r}) = I_0 \cdot \exp\left(-\sum_{i=1}^{N} \rho_i \delta_i\right) $$</p>
 <img class="post-media" src="/blogs/posts/250106_tomography/assets/image6.png" alt="Tomography Intensity Rendering" loading="lazy" decoding="async">
 
-<h2 id="modeling">2. Modeling</h2>
+<h2 id="toc-heading-4"><span id="modeling"></span>2. Modeling</h2>
 <p class="lang kor" >다시 NeRF 로 돌아가보자. Hash Grid NeRF, TensoRF 등의 변형이 있지만, 기본적으로 NeRF 의 골자는 어떠한 3D scene 을 parameterize 해서 표현하자는 것이다.</p>
 <p class="lang kor" >이 parameterization 의 방법이 MLP 라면 NeRF 계열이, explicit 한 3D Gaussian, 2D Gaussian surfel 등을 사용하면 Gaussian Splatting 계열이 될 것이다.</p>
 <p class="lang kor" >일반적으로 이러한 parameter model 은 3D Cartessian Coordinate $(x,y,z)$ 을 입력으로 받아 그 점의 density 와 color $(\sigma, c)$ 를 출력하도록 modeling 된다.</p>
@@ -290,8 +275,8 @@ $$</p>
 <img class="post-media" src="/blogs/posts/250106_tomography/assets/image8.png" alt="Tomography NeRF Modeling" loading="lazy" decoding="async">
 <p class="lang kor" >SAX-NeRF 에서는 이후 X-Ray 특성을 고려해서 MLP 를 적용하기보단, Transformer 로 바꿔주고 attention 안에서 ray 간 locality inductive bias 를 고려하는 설계 등을 제시하긴 한다. 하지만 크게 중요한 부분은 아니라고 생각해서 스킵하도록 하겠다. 궁금하면 논문을 참조하길 바란다.</p>
 
-<h2 id="quick-viewer-development-tip">3. Quick Viewer Development Tip</h2>
-<h3 id="viser-viewer">3.1. Viser Viewer</h3>
+<h2 id="toc-heading-5"><span id="quick-viewer-development-tip"></span>3. Quick Viewer Development Tip</h2>
+<h3 id="toc-heading-6"><span id="viser-viewer"></span>3.1. Viser Viewer</h3>
 <p class="lang kor" >SAX-NeRF 는 code 가 공개되어 있긴 하지만, official viewer 가 없고 visualization 으로 제공하는 기본 코드가 제한적이라 결과를 좀 더 interactive 하게 살펴보기 위해서는 viewer 를 구현할 필요가 있었다.</p>
 <p class="lang kor" ><em>Q. NeRF / GS model 을 interactive 하게 '보기' 위해서는 어떤 요소들이 필요할까?</em></p>
 
@@ -483,7 +468,7 @@ if __name__ == &quot;__main__&quot;:
 <img class="post-media" src="/blogs/posts/250106_tomography/assets/viewer_capture.gif" alt="viewer capture" loading="lazy" decoding="async">
 <p class="lang kor" >이처럼 간단한 코딩으로 새로운 NeRF / GS 모델에 대한 viewer 를 빠르게 만들 수 있다. 원래는 github 에 올릴까 하다가 너무 간단한 코딩이라 블로그에만 올리고 갈무리하려 한다.</p>
 
-<h3 id="marching-cube-extraction">3.2. Marching Cube Extraction</h3>
+<h3 id="toc-heading-7"><span id="marching-cube-extraction"></span>3.2. Marching Cube Extraction</h3>
 <p class="lang kor" >또 하나 NeRF / GS scene 을 interactive 하게 확인하는 방법은, marching cube 등의 scalar field -> polygonal mesh 변환 알고리즘을 이용하는 것이다.</p>
 <img class="post-media" src="/blogs/posts/250106_tomography/assets/image10.png" style="width: 70%;" alt="Marching Cubes" loading="lazy" decoding="async">
 <p class="lang kor" >하지만 명심할 점은, 2D GS 또는 SDF 와 같이 surface reconstruction 을 위해 특별히 설계되지 않은 일반적인 NeRF/GS 모델은 conventional 한 mesh conversion 알고리즘과 완벽하게 호환되지 않을 수 있다는 것이다. 
@@ -532,7 +517,8 @@ mesh.export(&quot;output.obj&quot;)
 </details>
 <br/>
 <img class="post-media" src="/blogs/posts/250106_tomography/assets/foot_gif.gif" alt="foot capture" loading="lazy" decoding="async">
-<h2 id="concluding-remarks">Concluding Remarks</h2>
+
+<h2 id="toc-heading-8"><span id="concluding-remarks"></span>Concluding Remarks</h2>
 <p class="lang kor" >SAX-NeRF 를 살펴보면서, Neural Rendering 의 기본 원리가 어떻게 기존 photography 영역을 넘어서 적용될 수 있는지 확인해 보았다. 
     Tomography 에서 Beer-Lambert Law 와 같은 기본적인 물리적 현상을 이해함으로써, 다양한 이미징 방식에 맞춰 rendering equation 과 모델 구조를 수정할 수 있음을 알 수 있었다. 
 </p>
@@ -571,18 +557,18 @@ mesh.export(&quot;output.obj&quot;)
                     </section>
     
                     <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/add-gaussian-splatting-to-your-website-kor/" aria-label="Previous Post: 웹사이트에 3D GS 삽입하기">
+                <a class="post-nav-card is-older" href="/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian-kor/" aria-label="Previous Post: 3D Gaussian Ray Tracing 톺아보기">
                     <span class="post-nav-kicker">
                         <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
                     </span>
-                    <strong>웹사이트에 3D GS 삽입하기</strong>
+                    <strong>3D Gaussian Ray Tracing 톺아보기</strong>
                 </a>
     
-                <a class="post-nav-card is-next" href="/blogs/posts/an-era-of-3d-generation-kor/" aria-label="Next Post: 3D 생성 모델의 시대">
+                <a class="post-nav-card is-explore" href="/blogs/posts/optimizing-sparse-3d-generation-inference-kor/" aria-label="Explore Series: 3D AI">
                     <span class="post-nav-kicker">
-                        Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
+                        Explore Series <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
-                    <strong>3D 생성 모델의 시대</strong>
+                    <strong>3D AI</strong>
                 </a>
     </nav></div>
                 </div>
@@ -1256,11 +1242,11 @@ mesh.export(&quot;output.obj&quot;)
     </script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
-    <script src="/blogs/js/code-copy.js"></script>
-    <script src="/blogs/js/theme-toggle.js"></script>
-    <script src="/blogs/js/scroll-progress.js"></script>
-    <script src="/blogs/js/blog-shell.js"></script>
-    <script src="/blogs/js/post-page.js"></script>
+    <script src="/blogs/js/code-copy.js?v=e6b60656e4"></script>
+    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
+    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
     <script>
         initBlogShell({
             formSelector: '#post-nav-search-form',

@@ -89,22 +89,20 @@ In other words, to determine if a vector is linearly independent of a given set 
 ### 2.2. Non-square Matrix Case
 
 **2.2.1.**
-<p>
+
 $$
 \begin{bmatrix} a & b \\ c & d \\ e & f \\ \end{bmatrix}
 $$
-</p>
 
 *   For a 3x2 matrix, let's assume its columns are linearly independent. The column space forms a plane. What's important to note here is that while this transformation maps a point in 2D to a point in 3D, the space formed by these transformed points is a plane within the 3D space.
 
 *   This has a slightly different meaning than simply saying the dimension of the span is 2. The column space does not collapse into a 2D Cartesian coordinate system; rather, it becomes a hyperplane in 3D space.
 
 **2.2.2.**
-<p>
+
 $$
 \begin{bmatrix} a & b & c \\ d & e & f \\ \end{bmatrix}
 $$
-</p>
 
 *   This is a transformation that maps a point in 3D to a point in 2D. Although there are three basis vectors, the column space itself is 2-dimensional, so it is not full rank. This can be interpreted as a reduction of the span, meaning a point from 3D is projected onto a 2D plane. In other words, for an $m \times n$ matrix where $m < n$, the transformation projects a point from a higher-dimensional space to a lower-dimensional one.
 

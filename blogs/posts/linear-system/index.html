@@ -29,12 +29,12 @@
     <title>Linear System | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css" rel="stylesheet" />
-    <link href="/blogs/css/typography.css" rel="stylesheet" />
-    <link href="/blogs/css/post.css" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/css/site-icons.css" rel="stylesheet" />
-    <script src="/assets/js/site-icons.js"></script>
+    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
+    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -260,12 +260,9 @@ $$
 </ul>
 <h3 id="toc-heading-5">2.2. Non-square Matrix Case</h3>
 <p><strong>2.2.1.</strong></p>
-<p>
-$$
+<p>$$
 \begin{bmatrix} a &amp; b \\ c &amp; d \\ e &amp; f \\ \end{bmatrix}
-$$
-</p>
-
+$$</p>
 <ul>
 <li><p>For a 3x2 matrix, let&#39;s assume its columns are linearly independent. The column space forms a plane. What&#39;s important to note here is that while this transformation maps a point in 2D to a point in 3D, the space formed by these transformed points is a plane within the 3D space.</p>
 </li>
@@ -273,12 +270,9 @@ $$
 </li>
 </ul>
 <p><strong>2.2.2.</strong></p>
-<p>
-$$
+<p>$$
 \begin{bmatrix} a &amp; b &amp; c \\ d &amp; e &amp; f \\ \end{bmatrix}
-$$
-</p>
-
+$$</p>
 <ul>
 <li><p>This is a transformation that maps a point in 3D to a point in 2D. Although there are three basis vectors, the column space itself is 2-dimensional, so it is not full rank. This can be interpreted as a reduction of the span, meaning a point from 3D is projected onto a 2D plane. In other words, for an $m \times n$ matrix where $m &lt; n$, the transformation projects a point from a higher-dimensional space to a lower-dimensional one.</p>
 </li>
@@ -403,14 +397,7 @@ $$
                         </div>
                     </section>
     
-                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/3d-stereo-vision-and-epipolar-geometry/" aria-label="Previous Post: 3D Stereo Vision and Epipolar Geometry">
-                    <span class="post-nav-kicker">
-                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
-                    </span>
-                    <strong>3D Stereo Vision and Epipolar Geometry</strong>
-                </a>
-    
+                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation"><span class="post-nav-spacer" aria-hidden="true"></span>
                 <a class="post-nav-card is-next" href="/blogs/posts/change-of-basis/" aria-label="Next Post: Change of Basis">
                     <span class="post-nav-kicker">
                         Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
@@ -1088,10 +1075,10 @@ $$
 };
     </script>
 
-    <script src="/blogs/js/theme-toggle.js"></script>
-    <script src="/blogs/js/scroll-progress.js"></script>
-    <script src="/blogs/js/blog-shell.js"></script>
-    <script src="/blogs/js/post-page.js"></script>
+    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
+    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
     <script>
         initBlogShell({
             formSelector: '#post-nav-search-form',

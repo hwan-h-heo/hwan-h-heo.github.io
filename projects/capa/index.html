@@ -15,14 +15,14 @@
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <script src="../../assets/js/site-icons.js"></script>
-  <script src="../../js/sidebar-controller.js"></script>
-  <link href="../../assets/css/portfolio.css" rel="stylesheet">
-  <link href="../../assets/css/project-detail.css" rel="stylesheet">
-  <link href="/blogs/css/scroll-progress.css" rel="stylesheet">
-  <link href="../../assets/css/site-icons.css" rel="stylesheet">
+  <script src="../../assets/js/site-icons.js?v=76c23064c5"></script>
+  <script src="../../js/sidebar-controller.js?v=5614640768"></script>
+  <link href="../../assets/css/portfolio.css?v=80330b36f8" rel="stylesheet">
+  <link href="../../assets/css/project-detail.css?v=143930b0ee" rel="stylesheet">
+  <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet">
+  <link href="../../assets/css/site-icons.css?v=32957b8b04" rel="stylesheet">
 
-  <link href="../../css/sidebar-nav.css" rel="stylesheet">
+  <link href="../../css/sidebar-nav.css?v=9306b5ba05" rel="stylesheet">
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
   <script>
@@ -82,6 +82,7 @@
         <nav class="breadcrumbs" aria-label="Breadcrumb">
           <ol>
             <li><a href="../../">Home</a></li>
+            <li><a href="../../#portfolio">Projects</a></li>
             <li class="current">CaPa: Efficient 4K Textured Mesh Generation</li>
           </ol>
         </nav>
@@ -102,14 +103,16 @@
           <div class="project-overview-copy">
             <div class="portfolio-description project-overview">
               <h2>Project Overview</h2>
-              <p>CaPa addressed the Janus problem in image-to-3D generation with Spatially Decoupled Attention, preventing duplicated features and conflicting details across generated views.</p>
-              <p>It was the first image-to-3D system to generate 4K textures. The result demonstrated the product potential of native 3D generation inside the company and became a turning point toward the in-house VARCO 3D service.</p>
+              <p>CaPa is a fully feed-forward Carve-n-Paint system that separates mesh-compatible geometry generation from high-resolution texture synthesis.</p>
+              <p>Its model-agnostic Spatially Decoupled Attention prevents duplicated features across views without retraining the underlying 2D model, enabling the first image-to-3D pipeline to deliver complete 4K textured meshes in under 30 seconds. The result became a turning point toward the in-house VARCO 3D service.</p>
+              
               <div class="project-contributions">
                 <p>Core contributions</p>
                 <ul>
-                  <li>Designed Spatially Decoupled Attention to resolve cross-view Janus artifacts.</li>
-                  <li>Built the Carve-n-Paint pipeline for complete 4K textured meshes in under 30 seconds.</li>
-                  <li>Established the research direction that developed into VARCO 3D.</li>
+                  <li>Led the geometry and texture pipeline, delivering 4K textured meshes in under 30 seconds.</li>
+                  <li>Trained an occupancy-based 3D latent diffusion model for mesh-compatible geometry.</li>
+                  <li>Designed training-free Spatially Decoupled Attention to resolve cross-view Janus artifacts.</li>
+                  <li>Built 3D-aware occlusion inpainting that restores hidden surfaces in about five seconds.</li>
                 </ul>
               </div>
             </div>
@@ -132,10 +135,22 @@
 
       <div class="portfolio-shell project-case-study-shell">
         <article class="portfolio-description project-case-study-article">
-<h2>Solving the Janus Problem</h2>
+<h2>Carve, Then Paint</h2>
 <p><img src="assets/remote-adac548a479a.png" alt="CaPa Carve-n-Paint pipeline" class="project-media" loading="lazy" decoding="async"></p>
-<p>Image-to-3D systems frequently duplicated faces and other semantic features across views.
-CaPa addressed this Janus problem with <strong>Spatially Decoupled Attention</strong>, separating spatial correspondence from attention so multi-view texture could remain consistent without retraining the underlying image model.</p>
+<p>CaPa separates asset generation into two feed-forward stages.
+A multi-view guided 3D latent diffusion model first generates an occupancy field that can be converted into a clean polygonal mesh; a 2D latent diffusion model then paints four geometry-aligned views and projects them onto that surface.</p>
+<p>For the geometry stage, we trained the ShapeVAE and 3D latent diffusion stack on 150K curated Objaverse assets.
+The full training run took about eight days on 32 NVIDIA A100 GPUs.</p>
+<h2>Solving the Janus Problem Without Retraining</h2>
+<p>Image-to-3D systems frequently duplicate faces and other semantic features across views.
+CaPa addresses this Janus problem with <strong>Spatially Decoupled Attention</strong>, assigning each hidden-channel group to its corresponding view region inside the same denoising U-Net.</p>
+<p>Because the mechanism is model-agnostic and training-free, the texture stage can directly reuse large pre-trained models such as SDXL, IP-Adapter, and Depth-ControlNet without an architecture-specific multi-view model or additional fine-tuning.
+It produces geometry-aligned 4K texture detail while preserving view-specific identity.</p>
+<h2>3D-Aware Occlusion Inpainting</h2>
+<p>Four orthogonal views cannot observe every surface.
+For the remaining regions, CaPa clusters occluded faces using their normals and 3D positions, derives a viewpoint for each cluster, and packs the projections into an occlusion-specific UV map that preserves surface locality.</p>
+<p>The same 2D diffusion model then restores those regions in a single pass of about five seconds.
+This reduced visible seams while reaching an FID of 55.23 and KID of 13.46, compared with 128.71 and 37.38 for UV-ControlNet in the paper&#39;s evaluation.</p>
 <h2>4K Texture Generation</h2>
 <p>The Carve-n-Paint pipeline first constructs stable geometry, then generates texture directly for that surface.
 CaPa was the first image-to-3D system to generate 4K textures, with the full pipeline running in under 30 seconds.</p>
@@ -171,8 +186,8 @@ That result became a turning point toward NC AI&#39;s in-house <a href="/project
     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up"></use></svg>
   </button>
 
-  <script src="../../assets/js/main.js"></script>
-  <script src="/blogs/js/scroll-progress.js"></script>
+  <script src="../../assets/js/main.js?v=78df49ef91"></script>
+  <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
 </body>
 
 </html>

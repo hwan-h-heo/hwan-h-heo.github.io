@@ -15,14 +15,14 @@
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <script src="../../assets/js/site-icons.js"></script>
-  <script src="../../js/sidebar-controller.js"></script>
-  <link href="../../assets/css/portfolio.css" rel="stylesheet">
-  <link href="../../assets/css/project-detail.css" rel="stylesheet">
-  <link href="/blogs/css/scroll-progress.css" rel="stylesheet">
-  <link href="../../assets/css/site-icons.css" rel="stylesheet">
+  <script src="../../assets/js/site-icons.js?v=76c23064c5"></script>
+  <script src="../../js/sidebar-controller.js?v=5614640768"></script>
+  <link href="../../assets/css/portfolio.css?v=80330b36f8" rel="stylesheet">
+  <link href="../../assets/css/project-detail.css?v=143930b0ee" rel="stylesheet">
+  <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet">
+  <link href="../../assets/css/site-icons.css?v=32957b8b04" rel="stylesheet">
 
-  <link href="../../css/sidebar-nav.css" rel="stylesheet">
+  <link href="../../css/sidebar-nav.css?v=9306b5ba05" rel="stylesheet">
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
   <script>
@@ -82,6 +82,7 @@
         <nav class="breadcrumbs" aria-label="Breadcrumb">
           <ol>
             <li><a href="../../">Home</a></li>
+            <li><a href="../../#portfolio">Projects</a></li>
             <li class="current">VARCO 3D: Production 3D Generative AI</li>
           </ol>
         </nav>
@@ -102,15 +103,22 @@
           <div class="project-overview-copy">
             <div class="portfolio-description project-overview">
               <h2>Project Overview</h2>
-              <p>VARCO 3D is NC AI&#39;s production 3D generative AI service for creating textured meshes from native 3D generation models and GPU-first geometry processing.</p>
-              <p>My work spans the full generation stack: mesh pre- and post-processing, designing and training 1B+ parameter in-house 3D generative models from scratch, and moving research-grade inference paths into production service.</p>
+              <p>VARCO 3D is NC AI’s production 3D generative AI service for creating textured meshes using native 3D generation models and GPU-first geometry processing.</p>
+              <p>My work spans the full generation stack: training in-house 3D generative models with more than 1B parameters, optimizing their production inference paths, and building GPU-native mesh and texture-processing systems for asset delivery.</p>
+              <figure class="project-overview-media">
+                <video autoplay muted loop playsinline preload="metadata" poster="./assets/community-showcase-poster.webp" aria-label="Recent VARCO 3D community creations transitioning from geometry to textured assets">
+                  <source src="./assets/community-showcase.mp4" type="video/mp4">
+                </video>
+                <figcaption>Ten recent creations published on <a href="https://3d.varco.ai/explore" target="_blank" rel="noopener noreferrer">VARCO 3D Explore.</a></figcaption>
+              </figure>
               <div class="project-contributions">
                 <p>Core contributions</p>
                 <ul>
-                  <li>Designed and trained in-house 3D generative models at 1B+ parameter scale, covering the transition from VARCO 3D 1.0 to 2.0.</li>
-                  <li>Analyzed the production forward path, removed null-context attention arithmetic, and fused memory-bound paths with custom CUDA kernels and cuBLASLt epilogues.</li>
-                  <li>Implemented CUDA-based solid correction, QEM decimation, topology cleaning, and large-mesh UV unwrapping paths for production outputs.</li>
-                  <li>Built a CUDA rasterizer based texture back-projection pipeline that maps multi-view generated images into UV texture space.</li>
+                  <li>Trained dense and sparse in-house 3D generative models with more than 1B parameters.</li>
+                  <li>Reduced 15-step denoising latency by <strong>25.66% without quantization</strong> through forward-path analysis and CUDA kernel optimization.</li>
+                  <li>Built a CUDA mesh pipeline that cleans, remeshes, and decimates geometry from <strong>1M to 1K faces in approximately five seconds</strong>.</li>
+                  <li>Developed a tile-based UV unwrapper that processes meshes with more than <strong>1M faces in under 30 seconds on average</strong>, while maintaining <strong>over 50% UV-space utilization even on challenging inputs</strong>.</li>
+                  <li>Implemented a CUDA multi-view texture-projection pipeline that generates an <strong>8K texture map in approximately two seconds</strong>.</li>
                 </ul>
               </div>
             </div>
@@ -119,15 +127,11 @@
             <aside class="portfolio-info">
               <h3>Project Details</h3>
               <ul>
-              <li><strong>Role</strong>3D Model and Production Pipeline R&amp;D</li>
+              <li><strong>Role</strong>3D Generation and Production R&amp;D</li>
               <li><strong>Organization</strong>NC AI</li>
-              <li><strong>Category</strong>Commercial AI Service, 3D Generation</li>
-              <li><strong>Model Scale</strong>1B+ parameter in-house models</li>
-              <li><strong>Technology</strong>ShapeVAE, DiT, Sparse 3D, CUDA, cuBLASLt, QEM, UV Unwrapping</li>
+              <li><strong>Scale</strong>1B+ parameter models · 1M-face meshes · 8K textures</li>
               <li><strong>Service</strong><a href="https://3d.varco.ai/" target="_blank" rel="noopener noreferrer">VARCO 3D</a></li>
-              <li><strong>Technical Writing</strong><a href="/blogs/posts/optimizing-sparse-3d-generation-inference/">Sparse 3D Inference Optimization</a></li>
-              <li><strong>Retrospective</strong><a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/">VARCO 3D: A Year in Review</a></li>
-              <li><strong>Related Project</strong><a href="/projects/capa/">CaPa</a></li>
+              <li><strong>Related Technical Writing</strong><span class="project-detail-links"><a href="/blogs/posts/optimizing-sparse-3d-generation-inference/">Sparse 3D Inference Optimization</a><a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/">VARCO 3D: A Year in Review</a></span></li>
               </ul>
             </aside>
           </div>
@@ -139,7 +143,7 @@
 <h2>System Focus</h2>
 <p>The practical target of VARCO 3D is not just to synthesize geometry.
 The service path has to produce a textured mesh that is fast to generate, stable to post-process, and usable by downstream 3D workflows.</p>
-<p>I worked across three connected layers:</p>
+<p>I worked across three connected layers, from training 1B+ parameter models from scratch to shipping the GPU-native systems around them:</p>
 <ol>
 <li><strong>Native 3D generation</strong> — train large in-house geometry models rather than relying on slow per-asset SDS optimization.</li>
 <li><strong>Production inference</strong> — profile and rewrite the expensive denoising path so the model can run under service latency constraints.</li>
@@ -159,25 +163,21 @@ Serving therefore needed model-aware profiling and custom CUDA work rather than 
 <h2>Production Inference Optimization</h2>
 <p>On the VARCO 3D 2.0 sparse denoiser, I profiled the forward path and identified null-context attention as arithmetic the model did not need to repeat.
 The optimized path replaces unconditional cross-attention with a fixed-vector path, then fuses memory-bound tensor operations through custom CUDA kernels and cuBLASLt epilogues.</p>
+<p>Across ten production assets with 3,664 to 30,227 active tokens, the combined path reduced CUDA-synchronized 15-step denoising latency by <strong>25.66% on average</strong> on A100 BF16.
+The gain came from forward-path and kernel optimization alone, without quantizing the model.</p>
 <p>This was not a benchmark-only shortcut.
 The optimized path entered production serving with numerical validation and fallback rules around the fused kernels.</p>
 <p><a href="/blogs/posts/optimizing-sparse-3d-generation-inference/">Read the VARCO 3D 2.0 inference optimization write-up</a></p>
 <h2>Mesh and Texture Delivery</h2>
 <p>To extend geometry generation into textured-mesh delivery, I implemented and optimized the post-generation pipeline around GPU execution:</p>
 <ul>
-<li><strong>CUDA-based QEM and topology cleaning</strong> for stable simplification and production mesh repair.</li>
+<li><strong>CUDA-based topology cleaning, remeshing, and QEM decimation</strong> that robustly reduces meshes from 1M to 1K faces in about five seconds.</li>
 <li><strong>Custom UDF kernels</strong> for fast solid correction from generated geometry.</li>
 <li><strong>Flood-fill acceleration kernels</strong> to make occupancy and solidness correction practical at service scale.</li>
-<li><strong>Optimized tile-based UV unwrapping</strong> so algorithmic unwrap remains stable on million-face meshes.</li>
-<li><strong>CUDA rasterizer based back-projection</strong> that uses UV IDs to project multi-view generated images directly into texture-map space.</li>
+<li><strong>Optimized tile-based UV unwrapping</strong> that processes meshes with over 1M faces in under 30 seconds on average while keeping UV-space utilization above 50% even in worst-case inputs.</li>
+<li><strong>CUDA rasterizer–based back-projection</strong> with visibility-aware view selection and blending that projects multi-view generated images into an 8K UV texture map in approximately two seconds.</li>
 </ul>
 <p>This layer is where the generated result becomes a deployable asset: cleaned geometry, controlled face count, valid UVs, and texture maps produced without a slow CPU-bound handoff.</p>
-<h2>Result</h2>
-<video autoplay muted loop playsinline preload="metadata" poster="./assets/community-showcase-poster.webp" aria-label="Recent VARCO 3D community creations transitioning from geometry to textured assets" class="project-media project-video">
-  <source src="./assets/community-showcase.mp4" type="video/mp4">
-</video>
-
-<p>The geometry-to-texture reel uses ten recent public creations from <a href="https://3d.varco.ai/explore">VARCO 3D Explore</a>.</p>
 
         </article>
       </div>
@@ -206,8 +206,8 @@ The optimized path entered production serving with numerical validation and fall
     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up"></use></svg>
   </button>
 
-  <script src="../../assets/js/main.js"></script>
-  <script src="/blogs/js/scroll-progress.js"></script>
+  <script src="../../assets/js/main.js?v=78df49ef91"></script>
+  <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
 </body>
 
 </html>

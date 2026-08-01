@@ -29,12 +29,12 @@
     <title>Generalized Winding Number | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css" rel="stylesheet" />
-    <link href="/blogs/css/typography.css" rel="stylesheet" />
-    <link href="/blogs/css/post.css" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/css/site-icons.css" rel="stylesheet" />
-    <script src="/assets/js/site-icons.js"></script>
+    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
+    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -214,12 +214,9 @@ Although there are methods to determine inside/outside using the <code>flood fil
 <p>Based on this intuition, let&#39;s extend this to more mathematical terms.</p>
 <h3 id="toc-heading-4">2. Definition w/ Cauchy Integral</h3>
 <p>In the complex plane, the winding number $n(\gamma, a)$ for a closed path $\gamma$ and a point $a$ not on the path is defined by the following Cauchy integral:</p>
-<p>
-$$
+<p>$$
 n(\gamma, a) = \frac{1}{2\pi i} \oint_\gamma \frac{1}{z-a} dz
-$$
-</p>
-
+$$</p>
 <p>This integral value is always an integer, representing how many times $\gamma$ wraps around point $a$.</p>
 <hr>
 <h4>Why can Winding Number be defined by Cauchy integral?</h4>
@@ -248,20 +245,14 @@ $$
 <hr>
 <h3 id="toc-heading-6">1. Discretization of Winding Number</h3>
 <p>Regarding the definition of winding number examined above, without loss of generality, if we assume the reference point $p$ is the origin, the winding number can be defined by <em>integrating the angle change in spherical coordinates</em>.</p>
-<p>
-$$
+<p>$$
 w(p) = \frac{1}{2\pi} \int_C d\theta
-$$
-</p>
-
+$$</p>
 <p>Intuitively, this is equivalent to projecting the curve $C$ onto a unit circle around $p$, and dividing the signed length of that projected path by $2\pi$.</p>
 <p>If curve $C$ is a polyline composed of several segments, or piecewise linear, this integral can be precisely discretized into the sum of the angles formed by each segment.</p>
-<p>
-$$
+<p>$$
 w(p) = \frac{1}{2\pi} \sum_{i=1}^n \theta_i
-$$
-</p>
-
+$$</p>
 <p>Here, $\theta_i$ is the signed angle formed by two consecutive vertices $c_i, c_{i+1}$ on the curve and the point $p$.</p>
 <h3 id="toc-heading-7">2. Winding Number in 3D: Solid Angle</h3>
 <p>Winding Number can be immediately generalized to 3D. In this case, the <strong>angle</strong> in 2D space is replaced by the <strong>solid angle, ($\Omega$)</strong> in 3D. 
@@ -269,12 +260,9 @@ The solid angle is a measure of how much space a surface occupies when viewed fr
 <img src='/blogs/posts/250809_gwn/assets/remote-74dfc1934801.png' width=40% alt="Generalized Winding Number — 2. Winding Number in 3D: Solid Angle" loading="lazy" decoding="async">
 
 <p>The winding number of a closed surface $S$ with respect to point $p$ is defined as the total solid angle subtended by $S$ at $p$, divided by the solid angle of the entire sphere, $4\pi$.</p>
-<p>
-$$
+<p>$$
 \omega(p) = \frac{1}{4\pi} \int_{S} \frac{(x-p) \cdot \mathbf{n}_x}{\|x-p\|^3} dA
-$$
-</p>
-
+$$</p>
 <ul>
 <li><p>In this formula, $p$ is a point in 3D space for which the winding number is being calculated, $S$: closed surface (mesh), $x$: a point on the surface $S$, $\mathbf{n}_x$: the normal vector at point $x$. </p>
 </li>
@@ -315,12 +303,9 @@ $$
 </li>
 </ul>
 <p>Similarly, if the surface is composed of a triangle mesh, it can be precisely discretized into the sum of the solid angles $\Omega_f$ created by each triangle.</p>
-<p>
-$$
+<p>$$
 w(p) = \sum_{f=1}^m \frac{1}{4\pi} \Omega_f(p)
-$$
-</p>
-
+$$</p>
 <p>Here, $\Omega(p, T)$ denotes the solid angle subtended by triangle $T$ at point $p$.</p>
 <aside>
 💡 <strong id="strong-2" > Summary </strong> : Although defined mathematically by the Cauchy integral formula, one can think of it as calculating the ratio of the projected surface area of all mesh faces onto a unit sphere centered at point $p$. Just as the winding number in 2D calculates the counter-clockwise wrap as positive, GWN is calculated based on the principle that the front side of the surface (Normal direction) is seen as positive, and the back side is seen as negative, which are then summed up. That is, on the mesh surface this value will be close to 0.5, inside the mesh it will be close to 1, and outside the mesh it will be close to 0. 
@@ -349,12 +334,9 @@ $$
 <li><p><strong>SDF Combination</strong>: Combine the sign and distance obtained from the above two steps to get the final SDF value.</p>
 </li>
 </ol>
-<p>
-$$
+<p>$$
 \text{SDF}(p) = \text{sign}(0.5-w(p)) \times \text{distance}(p, S)
-$$
-</p>
-
+$$</p>
 <hr>
 <h3 id="toc-heading-10">Why GWN?</h3>
 <p>GWN&#39;s greatest strength is its <strong>Robustness</strong>. It calculates meaningful values even if the input mesh is <strong>open, non-manifold, or has other issues</strong>.</p>
@@ -428,19 +410,12 @@ $$
                         </div>
                     </section>
     
-                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/" aria-label="Previous Post: Building Large 3D Generative Model (2) VAE and DiT Deep Dive">
-                    <span class="post-nav-kicker">
-                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
-                    </span>
-                    <strong>Building Large 3D Generative Model (2) VAE and DiT Deep...</strong>
-                </a>
-    
-                <a class="post-nav-card is-next" href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/" aria-label="Next Post: From Flow Matching to Optimal Transport: A Physics-based View of Generative Models">
+                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation"><span class="post-nav-spacer" aria-hidden="true"></span>
+                <a class="post-nav-card is-next" href="/blogs/posts/sdf-and-eikonal-equation/" aria-label="Next Post: SDF and Eikonal Equation">
                     <span class="post-nav-kicker">
                         Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
-                    <strong>From Flow Matching to Optimal Transport: A Physics-base...</strong>
+                    <strong>SDF and Eikonal Equation</strong>
                 </a>
     </nav></div>
                 </div>
@@ -1113,10 +1088,10 @@ $$
 };
     </script>
 
-    <script src="/blogs/js/theme-toggle.js"></script>
-    <script src="/blogs/js/scroll-progress.js"></script>
-    <script src="/blogs/js/blog-shell.js"></script>
-    <script src="/blogs/js/post-page.js"></script>
+    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
+    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
     <script>
         initBlogShell({
             formSelector: '#post-nav-search-form',

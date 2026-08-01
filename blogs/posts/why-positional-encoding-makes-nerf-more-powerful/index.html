@@ -28,12 +28,12 @@
     <title>Why Positional Encoding Makes NeRF more Powerful | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css" rel="stylesheet" />
-    <link href="/blogs/css/typography.css" rel="stylesheet" />
-    <link href="/blogs/css/post.css" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/css/site-icons.css" rel="stylesheet" />
-    <script src="/assets/js/site-icons.js"></script>
+    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
+    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -95,7 +95,7 @@
                         <span class="meta">
                             Posted on <time datetime="2021-11-28">November 28, 2021</time>
                             <span style="margin: 0 8px;">•</span>
-                            <svg class="site-icon post-reading-time-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-clock"></use></svg>6 min read
+                            <svg class="site-icon post-reading-time-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-clock"></use></svg>7 min read
                         </span>
                         <div class="post-tags"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                         <hr/>
@@ -218,7 +218,7 @@
     </div>
                 </div>
                 <div class="post-reading-column main-content">
-                    <button id="copyButton" type="button" aria-label="Copy post link">
+                    <nav class="toc" aria-label="Table of contents"><div class="toc-title">On This Page</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="1. Introduction" aria-label="1. Introduction"><span class="toc-link-text">1. Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="2. Background" aria-label="2. Background"><span class="toc-link-text">2. Background</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="2.1. Kernel Trick" aria-label="2.1. Kernel Trick"><span class="toc-link-text">2.1. Kernel Trick</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="2.2. Neural Tangent Kernel" aria-label="2.2. Neural Tangent Kernel"><span class="toc-link-text">2.2. Neural Tangent Kernel</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="Linearization of NN Training &amp; Kernel" aria-label="Linearization of NN Training &amp; Kernel"><span class="toc-link-text">Linearization of NN Training &amp; Kernel</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="Gradient-Based Training &amp; Kernel Regression" aria-label="Gradient-Based Training &amp; Kernel Regression"><span class="toc-link-text">Gradient-Based Training &amp; Kernel Regression</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="2.3. Spectral Bias of DNNs" aria-label="2.3. Spectral Bias of DNNs"><span class="toc-link-text">2.3. Spectral Bias of DNNs</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-8" title="3. Fourier Features for a Tunable Stationary Neural Tangent Kernel" aria-label="3. Fourier Features for a Tunable Stationary Neural Tangent Kernel"><span class="toc-link-text">3. Fourier Features for a Tunable Stationary Neural Tangent Kernel</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-9" title="3.1. Fourier-Featuring" aria-label="3.1. Fourier-Featuring"><span class="toc-link-text">3.1. Fourier-Featuring</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="3.2. NTK Kernel with Fourier-Featuring" aria-label="3.2. NTK Kernel with Fourier-Featuring"><span class="toc-link-text">3.2. NTK Kernel with Fourier-Featuring</span></a></li></ol></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
@@ -240,60 +240,44 @@
     </div>
 </div>
 
-<nav class="toc">
-    <ul>
-        <li><a href="#intro"> Introduction </a></li>
-        <li><a href="#sec2"> Background </a></li>
-        <ul>
-            <li><a href="#sec2.1"> Kernel Trick </a></li>
-            <li><a href="#sec2.2"> Neural Tangent Kernel </a></li>
-            <li><a href="#sec2.3"> Spectral Bias of Neural Networks </a></li>
-        </ul>
-        <li>
-            <a href="#sec3"> Fourier Featuring </a>
-        </li>
-        <ul>
-            <li><a href="#sec3.1"> Fourier Feature Mapping </a></li>
-            <li><a href="#sec3.2"> Fourier Featuring w/ NTK </a></li>
-        </ul>
-    </ul>
-</nav>
-
-<h3 id="tl-dr">TL;DR</h3>
-<p> In this article, we explore why positional encoding increases NeRF's high-fidelity reconstruction ability via exploring the paper: <em>Fourier Features Let Networks Learn High-Frequency Functions in Low-Dimensional Domains </em> </p>
-<p> By leveraging a Neural Tangent Kernel (NTK) theory, the authors demonstrate that Fourier features improve the convergence and performance of neural networks on these complex tasks.</p>
-<h2 id="intro">1. Introduction</h2>
+<h3 id="toc-heading-0"><span id="tl-dr"></span>TL;DR</h3>
+<p>In this article, we explore why positional encoding increases NeRF&#39;s high-fidelity reconstruction ability via exploring the paper: <em>Fourier Features Let Networks Learn High-Frequency Functions in Low-Dimensional Domains </em></p>
+<p>By leveraging a Neural Tangent Kernel (NTK) theory, the authors demonstrate that Fourier features improve the convergence and performance of neural networks on these complex tasks.</p>
+<h2 id="toc-heading-1"><span id="intro"></span>1. Introduction</h2>
 <p>Fourier-featuring is a function that embeds a coordinate space point into frequency space.</p>
 <p>A prominent example in deep learning is <strong>&#39;Positional Encoding&#39;</strong>, which uses sinusoidal functions to embed coordinate space into frequency space, thereby incorporating positional information that Networks cannot capture.</p>
 <figure>
     <img src="/blogs/posts/211128_fourier/assets/main.png" alt="Gaussian RT" width="100%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"> <strong>Figure 1.</strong> Coordinate-Based MLPs </figcaption>
 </figure>
-<p>Building upon <strong>NTK theory</strong>, this article foucuses on the theoretical investigation of how neural networks process coordinate information through Fourier-featuring, 
-    especially for the coordinate-based MLPs, which map dense, continuous low-dimensional input to the high-dimensional output (<em>e.g.,</em> NeRF). 
-</p>
-<h3 id="sec2">2. Background </h3>
-<h3 id="sec2.1">2.1. Kernel Trick</h3>
+
+<p>Building upon <strong>NTK theory</strong>, this article foucuses on the theoretical investigation of how neural networks process coordinate information through Fourier-featuring,
+    especially for the coordinate-based MLPs, which map dense, continuous low-dimensional input to the high-dimensional output (<em>e.g.,</em> NeRF).</p>
+<h2 id="toc-heading-2"><span id="sec2"></span>2. Background</h2>
+<h3 id="toc-heading-3"><span id="sec2.1"></span>2.1. Kernel Trick</h3>
 <figure>
     <img src="/blogs/posts/211128_fourier/assets/kernel_trick.png" alt="Gaussian RT" width="80%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"> <strong>Figure 2.</strong> illustration of Kernel-Trick </figcaption>
 </figure>
+
 <p>For a linearly inseparable data point $x$, let $\phi (x)$ be a non-linear mapping function that makes $\phi (x)$ linearly separable.</p>
 <p>The kernel trick performs kernel regression without explicitly finding the feature map by defining the kernel as follows:</p>
 <p>$$K(x, \ x&amp;#39;) = \phi(x) ^T \phi(x&amp;#39;)
 $$</p>
 <p>This approach is interpreted as using a feature map $\phi$ with desirable properties through the kernel, rather than mapping input $x$ and then taking the inner product.</p>
-<h3 id="sec2.2">2.2. Neural Tangent Kernel </h3>
+<h3 id="toc-heading-4"><span id="sec2.2"></span>2.2. Neural Tangent Kernel</h3>
 <p><strong><em>Neural Tangent Kernel (NTK)</em></strong> theory describes the gradient descent-based training of deep neural networks with infinite width through kernel regression, aiming to explain neural networks using the kernel trick.</p>
-<h3 id="2-2-1-linearization-of-nn-training-kernel-definition"> Linearization of NN Training &amp; Kernel</h3>
+<h3 id="toc-heading-5"><span id="2-2-1-linearization-of-nn-training-kernel-definition"></span>Linearization of NN Training &amp; Kernel</h3>
 <p>A neural network can be represented by the linearization:</p>
 <div class="math-container">$$f(w, \ x) \simeq f(w_0 , \ x) \ + \ \nabla _w f( w_0 , \ x) ^T (w - w_0 )
 $$</div>
+
 <p>This Taylor expansion has the following properties:</p>
 <ol>
 <li>It is <strong><em>linear</em></strong> with respect to the weights $w$.</li>
 <li>It is <strong><em>non-linear</em></strong> with respect to $x$.</li>
 </ol>
+
 <p>The gradient term $\nabla _w f( w_0 , \ x) ^T (w - w_0 )$ acts as a feature map that maps a non-linear data point $x$ to a useful space.</p>
 <p>The corresponding kernel $K$ is defined as follows:</p>
 <div class="math-container">
@@ -301,41 +285,45 @@ $$</div>
     $$
 </div>
 
-<h3 id="2-2-2-gradient-based-training-kernel-regression"> Gradient-Based Training &amp; Kernel Regression</h3>
+<h3 id="toc-heading-6"><span id="2-2-2-gradient-based-training-kernel-regression"></span>Gradient-Based Training &amp; Kernel Regression</h3>
 <p>The NTK can be found through gradient descent in the neural network. For a timestep $t$, gradient descent is expressed as:</p>
 <div class="math-container">
     $$w(t+1) \ = \ w(t) - \eta \nabla _w l. $$
 </div>
-<p>Subsequently, this can be derived as follows: </p>
+
+<p>Subsequently, this can be derived as follows:</p>
 <div class="math-container">
     $$ { w(t+1)  \ - \ w(t) \over \eta } = -\nabla _w l \simeq {dw \over dt}.$$
 </div>
-<p>
-    With least squares (MSE) as the loss function,
-</p>
+
+<p>With least squares (MSE) as the loss function,</p>
 <div class="math-container">
     $$l(w) = {1 \over 2}  \| f(w, x ) - y \|^2,$$
 </div>
-<p> the gradient term $\nabla l$ with respect to the $w$ can be derived as </p>
+
+<p>the gradient term $\nabla l$ with respect to the $w$ can be derived as</p>
 <div class="math-container">
     $$  \nabla _w l= \nabla _w  |f(w, x) - y |. $$
 </div>
-<p> Therefore, Neural network training via optimization can be represented by NTK kernel regression:</p>
+
+<p>Therefore, Neural network training via optimization can be represented by NTK kernel regression:</p>
 <div class="math-container">
     $$\begin{aligned}
     {d \over dt } y(w) &amp;= \nabla _w f(w, x) ^T \cdot {d \over dt }w \\
     &amp;= - \nabla _w f(w, x) ^T \cdot \nabla _w f(w, x) (f(w, x) - y) \\ &amp;= -h_{\text{NTK}} (f(w,x) -y )
     \end{aligned}$$
 </div>
+
 <p>Let $u=y(w)-y$, then the output residual at training iteration $t$ can be written as:</p>
 <div class="math-container">$$ u(t) = u(0) \exp (-\eta h_{\text{NTK}} t )
 $$</div>
 
-<h3 id="sec2.3">2.3. Spectral Bias of DNNs</h3>
+<h3 id="toc-heading-7"><span id="sec2.3"></span>2.3. Spectral Bias of DNNs</h3>
 <p>Based on the NTK approximation, the network&#39;s prediction after $t$ iterations for test data $\mathbf X_\text{test}$ is:</p>
 <div class="math-container">
     $$ \hat{\mathbf{y}}^{(t)} \simeq \mathbf{K}_{\text{test}} \mathbf{K}^{-1} ( \mathbf{I} - e^{-\eta \mathbf{K} t} ) \mathbf{y}$$
 </div>
+
 <p>For ideal training, $\mathbf K_\text{test} =  \mathbf K$. <em>i.e.,</em> equivalent to the last equation in 2.2.2.</p>
 <p>By eigendecomposing $\mathbf K = \mathbf Q \mathbf \Lambda \mathbf Q^{\rm T}$, we obtain:</p>
 <div class="math-container">
@@ -346,11 +334,12 @@ $$</div>
     &amp; \simeq - e ^{-\eta \mathbf{\Lambda} t}   \mathbf{Q}^{\rm T} \mathbf y \quad (\because e ^{-\eta \mathbf{K} t} = \mathbf{Q} e ^{-\eta \mathbf{\Lambda} t} \mathbf{Q}^{\rm T} ) 
     \end{aligned}$$
 </div>
-<p> In the above Equation, the exponential decay term decreases with the eigenvalue. It means <em>larger eigenvalues are learned first.</em> </p> 
-<p> For example, in case of the image, large eigenvalues (in spectral domain) correspond to contours, so convergence to high-frequency components is slow without embedding in NeRF.</p>
-<h2 id="sec3">3. Fourier Features for a Tunable Stationary Neural Tangent Kernel</h2>
+
+<p>In the above Equation, the exponential decay term decreases with the eigenvalue. It means <em>larger eigenvalues are learned first.</em></p>
+<p>For example, in case of the image, large eigenvalues (in spectral domain) correspond to contours, so convergence to high-frequency components is slow without embedding in NeRF.</p>
+<h2 id="toc-heading-8"><span id="sec3"></span>3. Fourier Features for a Tunable Stationary Neural Tangent Kernel</h2>
 <p>This section explores how Fourier Features embedding in the kernel space can address convergence issues for high-frequency components.</p>
-<h3 id="sec3.1">3.1. Fourier-Featuring </h3>
+<h3 id="toc-heading-9"><span id="sec3.1"></span>3.1. Fourier-Featuring</h3>
 <p>The Fourier-Feature mapping function $\gamma$ is defined as:</p>
 <div class="math-container">$$\gamma (v) \  = \ \big [a_1 \cos (2 \pi b_1 ^T v), \dots , a_m \cos (2 \pi b_m ^T v), \ a_m \sin (2 \pi b_m ^T v ) \big ]^T
 $$</div>
@@ -370,13 +359,15 @@ $a_i =1, \ b_i = 2^{i} {}$</li>
 <ul>
 <li>remember: $\cos (\alpha - \beta ) = \cos \alpha \cos \beta  \ + \ \sin \alpha \sin \beta$</li>
 </ul>
+
 <p>This Fourier-feature kernel is a stationary function, meaning it is translation-invariant:</p>
 <div class="math-container">$$h_\gamma( (v_1 +k )  -  (v_2 +k ) ) = h_\gamma (v_1  -  v_2 )
     $$
 </div>
+
 <p>Coordinate-based MLPs use dense and uniform coordinate points as input. These must be <em>isotropic</em> to ensure global performance, meaning features should be extracted in all directions, not just specific ones.</p>
 <p>This is why stationary properties that are location-invariant can improve performance. Positional encoding treats all equally distant relations from the coordinate system uniformly, enabling effective high-dimensional space reconstruction.</p>
-<h3 id="sec3.2">3.2. NTK Kernel with Fourier-Featuring</h3>
+<h3 id="toc-heading-10"><span id="sec3.2"></span>3.2. NTK Kernel with Fourier-Featuring</h3>
 <p>The NTK Fourier-featured kernel is:</p>
 <p>$$K( \phi \circ \gamma (x) , \ \phi \circ \gamma (y) )
 $$</p>
@@ -385,7 +376,8 @@ $$</p>
 <div class="math-container">
     $$f = ( h_\text{NTK} \circ h_\gamma ) * \sum_{i=1}^n w_i \delta _{v_i}$$
 </div>
-<p>where $\delta$ represents the direction delta.</p> 
+
+<p>where $\delta$ represents the direction delta.</p>
 <p>This expression indicates:</p>
 <ol>
 <li>A stationary filter $h_\gamma$ extracts information in a <strong><em>location-invariant</em></strong> manner.</li>
@@ -431,14 +423,7 @@ $$</p>
                         </div>
                     </section>
     
-                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/change-of-basis/" aria-label="Previous Post: Change of Basis">
-                    <span class="post-nav-kicker">
-                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
-                    </span>
-                    <strong>Change of Basis</strong>
-                </a>
-    
+                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation"><span class="post-nav-spacer" aria-hidden="true"></span>
                 <a class="post-nav-card is-next" href="/blogs/posts/instant-ngp-review-re-implementation/" aria-label="Next Post: Instant-NGP Review &amp; Re-Implementation">
                     <span class="post-nav-kicker">
                         Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
@@ -1116,10 +1101,10 @@ $$</p>
 };
     </script>
 
-    <script src="/blogs/js/theme-toggle.js"></script>
-    <script src="/blogs/js/scroll-progress.js"></script>
-    <script src="/blogs/js/blog-shell.js"></script>
-    <script src="/blogs/js/post-page.js"></script>
+    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
+    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
     <script>
         initBlogShell({
             formSelector: '#post-nav-search-form',

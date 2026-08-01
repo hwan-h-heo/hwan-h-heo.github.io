@@ -10,8 +10,8 @@
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <!-- Blog styles -->
-        <link href="css/blog.css" rel="stylesheet" />
-        <link href="/assets/css/site-icons.css" rel="stylesheet" />
+        <link href="css/blog.css?v=c0cd75f473" rel="stylesheet" />
+        <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -28,11 +28,11 @@
                 } catch (error) {}
             })();
         </script>
-    <script src="/assets/js/site-icons.js"></script>
-    <script src="../js/sidebar-controller.js"></script>
-    <link href="css/sidebar.css" rel="stylesheet">
-    <link href="../css/sidebar-nav.css" rel="stylesheet">
-    <link href="css/typography.css" rel="stylesheet">
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
+    <script src="../js/sidebar-controller.js?v=5614640768"></script>
+    <link href="css/sidebar.css?v=975e92b635" rel="stylesheet">
+    <link href="../css/sidebar-nav.css?v=9306b5ba05" rel="stylesheet">
+    <link href="css/typography.css?v=5dcb5db2e1" rel="stylesheet">
             <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/" />
         <link rel="alternate" type="application/rss+xml" title="Hwan Heo's Blog" href="/blogs/feed.xml" />
         <meta property="og:type" content="website" />
@@ -108,13 +108,13 @@
             </div>
         </nav>
 
-        <header class="masthead blog-home-hero" style="background-image: url('../assets/image_fx_.jpg'); background-position: center 34%; background-size: cover;">
+        <header class="masthead blog-home-hero" style="background-image: url('../assets/image_fx_.webp'); background-position: center 34%; background-size: cover;">
             <div class="blog-shell blog-hero-shell">
                 <div class="blog-home-hero-grid">
                     <div class="blog-home-hero-copy">
-                        <span class="blog-home-kicker" data-i18n="heroKicker">Hwan's Blog</span>
-                        <h1 data-i18n="heroTitle">Research notes for 3D AI systems</h1>
-                        <p data-i18n="heroIntro">3D generation, computer vision, graphics, CUDA inference, and the implementation details that usually stay between commits.</p>
+                        <span class="blog-home-kicker" data-i18n="heroKicker" lang="en">Hwan's Blog</span>
+                        <h1 data-i18n="heroTitle" lang="en">Research notes for 3D AI systems</h1>
+                        <p data-i18n="heroIntro" lang="en">3D generation, computer vision, graphics, CUDA inference, and the implementation details that usually stay between commits.</p>
                     </div>
                 </div>
             </div>
@@ -124,21 +124,21 @@
             <section id="blog-home-feature" class="blog-home-feature" aria-live="polite">
             <article class="blog-feature-card" data-post-id="260727_sparse_3d">
                 <div class="blog-feature-label">
-                    <span>Featured</span>
+                    <span data-feature-label>Featured</span>
                 </div>
                 <a class="blog-feature-cover" href="/blogs/posts/optimizing-sparse-3d-generation-inference/" aria-label="Read What the Compiler Missed in Sparse 3D Inference">
                     <img src="/assets/generated/blog-covers/260727_sparse_3d.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/260727_sparse_3d.webp" alt="What the Compiler Missed in Sparse 3D Inference cover image" loading="eager" decoding="async" fetchpriority="high">
                 </a>
                 <div class="blog-feature-copy">
                     <div class="blog-feature-meta">
-                        <span>3D AI</span>
-                        <time datetime="2026-07-27">July 27, 2026</time>
+                        <span data-feature-series>3D AI</span>
                     </div>
-                    <h2><a href="/blogs/posts/optimizing-sparse-3d-generation-inference/">What the Compiler Missed in Sparse 3D Inference</a></h2>
-                    <p>Why generic compiler paths underperform on dynamic sparse 3D generative models—and how null-context attention removal and model-aware CUDA kernels cut inference</p>
+                    <h2 lang="en"><a href="/blogs/posts/optimizing-sparse-3d-generation-inference/">What the Compiler Missed in Sparse 3D Inference</a></h2>
+                    <p lang="en">Why generic compiler paths underperform on dynamic sparse 3D generative models—and how null-context attention removal and model-aware CUDA kernels cut inference</p>
+                    <time class="blog-feature-date" datetime="2026-07-27">July 27, 2026</time>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a><span class="post-tag">CUDA</span></div>
                     <a class="blog-feature-read" href="/blogs/posts/optimizing-sparse-3d-generation-inference/" aria-label="Read What the Compiler Missed in Sparse 3D Inference">
-                        <span>Read post</span>
+                        <span data-feature-read-label>Read post</span>
                         <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </a>
                 </div>
@@ -187,8 +187,8 @@
                     <div class="post-card-eyebrow">
                         <span>3D AI</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/">VARCO 3D: A Year in Review — 2025 Retrospective</a></h3>
-                    <p class="post-subtitle">How a fast-follower team tracked the evolution of 3D AI to build an in-house generative 3D service—from VecSet VAEs to voxel-conditioned 3D DiTs.</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/">VARCO 3D: A Year in Review — 2025 Retrospective</a></h3>
+                    <p class="post-subtitle" lang="en">How a fast-follower team tracked the evolution of 3D AI to build an in-house generative 3D service—from VecSet VAEs to voxel-conditioned 3D DiTs.</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
                     <p class="post-meta">
                         <time datetime="2026-01-15">January 15, 2026</time>
@@ -209,8 +209,8 @@
                     <div class="post-card-eyebrow">
                         <span>3D AI</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/">From Flow Matching to Optimal Transport: A Physics-based View of Generative Models</a></h3>
-                    <p class="post-subtitle">Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/">From Flow Matching to Optimal Transport: A Physics-based View of Generative Models</a></h3>
+                    <p class="post-subtitle" lang="en">Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
                     <p class="post-meta">
                         <time datetime="2025-08-10">August 10, 2025</time>
@@ -231,8 +231,8 @@
                     <div class="post-card-eyebrow">
                         <span>3D AI</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/">Building Large 3D Generative Model (2) VAE and DiT Deep Dive</a></h3>
-                    <p class="post-subtitle">VAE and DiT Architecture for Vecset vs. Sparse-Voxel</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/">Building Large 3D Generative Model (2) VAE and DiT Deep Dive</a></h3>
+                    <p class="post-subtitle" lang="en">VAE and DiT Architecture for Vecset vs. Sparse-Voxel</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
                     <p class="post-meta">
                         <time datetime="2025-07-10">July 10, 2025</time>
@@ -253,8 +253,8 @@
                     <div class="post-card-eyebrow">
                         <span>3D AI</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/">Building Large 3D Generative Model (1) Data pre-processing</a></h3>
-                    <p class="post-subtitle">Watertight Mesh Conversion and Salient Edge Sampling</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/">Building Large 3D Generative Model (1) Data pre-processing</a></h3>
+                    <p class="post-subtitle" lang="en">Watertight Mesh Conversion and Salient Edge Sampling</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
                     <p class="post-meta">
                         <time datetime="2025-07-02">July 2, 2025</time>
@@ -275,8 +275,8 @@
                     <div class="post-card-eyebrow">
                         <span>3D in Web</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/3d-model-viewer-in-web/">3D Model Viewer in Web</a></h3>
-                    <p class="post-subtitle">Custom Threejs 3D Model Viewer</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/3d-model-viewer-in-web/">3D Model Viewer in Web</a></h3>
+                    <p class="post-subtitle" lang="en">Custom Threejs 3D Model Viewer</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/web-3d/">Web 3D</a><a class="post-tag" href="/blogs/tags/three-js/">Three.js</a></div>
                     <p class="post-meta">
                         <time datetime="2025-03-10">March 10, 2025</time>
@@ -297,8 +297,8 @@
                     <div class="post-card-eyebrow">
                         <span>3D AI</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/an-era-of-3d-generation/">An Era of 3D Generation</a></h3>
-                    <p class="post-subtitle">From ShapeVAE to Trellis and Hunyuan3D</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/an-era-of-3d-generation/">An Era of 3D Generation</a></h3>
+                    <p class="post-subtitle" lang="en">From ShapeVAE to Trellis and Hunyuan3D</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
                     <p class="post-meta">
                         <time datetime="2025-03-02">March 2, 2025</time>
@@ -319,8 +319,8 @@
                     <div class="post-card-eyebrow">
                         <span>Radiance Fields &amp; Gaussian Splatting</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/neural-rendering-beyond-photography/">Neural Rendering Beyond Photography</a></h3>
-                    <p class="post-subtitle">NeRF for Tomography &amp; Tip for NeRF Viewer</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/neural-rendering-beyond-photography/">Neural Rendering Beyond Photography</a></h3>
+                    <p class="post-subtitle" lang="en">NeRF for Tomography &amp; Tip for NeRF Viewer</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                     <p class="post-meta">
                         <time datetime="2025-01-06">January 6, 2025</time>
@@ -341,8 +341,8 @@
                     <div class="post-card-eyebrow">
                         <span>3D in Web</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/add-gaussian-splatting-to-your-website/">Add Gaussian Splatting to Your Website</a></h3>
-                    <p class="post-subtitle">Tutorial for GS Scene w/ Three-js</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/add-gaussian-splatting-to-your-website/">Add Gaussian Splatting to Your Website</a></h3>
+                    <p class="post-subtitle" lang="en">Tutorial for GS Scene w/ Three-js</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/web-3d/">Web 3D</a><a class="post-tag" href="/blogs/tags/three-js/">Three.js</a></div>
                     <p class="post-meta">
                         <time datetime="2024-09-17">September 17, 2024</time>
@@ -363,8 +363,8 @@
                     <div class="post-card-eyebrow">
                         <span>Radiance Fields &amp; Gaussian Splatting</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian/">Don&#39;t Rasterize, But Ray Trace 3D Gaussian</a></h3>
-                    <p class="post-subtitle">In-Depth Review of 3D Gaussian Ray Tracing by NVIDIA</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian/">Don&#39;t Rasterize, But Ray Trace 3D Gaussian</a></h3>
+                    <p class="post-subtitle" lang="en">In-Depth Review of 3D Gaussian Ray Tracing by NVIDIA</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                     <p class="post-meta">
                         <time datetime="2024-08-23">August 23, 2024</time>
@@ -385,8 +385,8 @@
                     <div class="post-card-eyebrow">
                         <span>Radiance Fields &amp; Gaussian Splatting</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/">A Comprehensive Analysis of Gaussian Splatting Rasterization</a></h3>
-                    <p class="post-subtitle">A ground-up guide to Gaussian Splatting and differentiable rasterization, tracing the mathematics through its CUDA implementation—from projection and covariance</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/">A Comprehensive Analysis of Gaussian Splatting Rasterization</a></h3>
+                    <p class="post-subtitle" lang="en">A ground-up guide to Gaussian Splatting and differentiable rasterization, tracing the mathematics through its CUDA implementation—from projection and covariance</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                     <p class="post-meta">
                         <time datetime="2024-08-05">August 5, 2024</time>
@@ -407,8 +407,8 @@
                     <div class="post-card-eyebrow">
                         <span>Radiance Fields &amp; Gaussian Splatting</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/radiance-fields-from-deep-based-structure-from-motion/">Radiance Fields from Deep-based Structure-from-Motion</a></h3>
-                    <p class="post-subtitle">Comparison of VGGSfM &amp; MAsT3R</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/radiance-fields-from-deep-based-structure-from-motion/">Radiance Fields from Deep-based Structure-from-Motion</a></h3>
+                    <p class="post-subtitle" lang="en">Comparison of VGGSfM &amp; MAsT3R</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                     <p class="post-meta">
                         <time datetime="2024-07-21">July 21, 2024</time>
@@ -429,8 +429,8 @@
                     <div class="post-card-eyebrow">
                         <span>Radiance Fields &amp; Gaussian Splatting</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting/">Under the 3D: Geometrically Accurate 2D Gaussian Splatting</a></h3>
-                    <p class="post-subtitle">Understanding 2D GS&#39;s Algorithm</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting/">Under the 3D: Geometrically Accurate 2D Gaussian Splatting</a></h3>
+                    <p class="post-subtitle" lang="en">Understanding 2D GS&#39;s Algorithm</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                     <p class="post-meta">
                         <time datetime="2024-06-02">June 2, 2024</time>
@@ -451,8 +451,8 @@
                     <div class="post-card-eyebrow">
                         <span>3D AI</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/is-diffusions-estimated-depth-really-good/">Is Diffusion&#39;s Estimated Depth Really Good?</a></h3>
-                    <p class="post-subtitle">Making Mesh from Estimated Depth Map by Diffusion</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/is-diffusions-estimated-depth-really-good/">Is Diffusion&#39;s Estimated Depth Really Good?</a></h3>
+                    <p class="post-subtitle" lang="en">Making Mesh from Estimated Depth Map by Diffusion</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
                     <p class="post-meta">
                         <time datetime="2024-04-26">April 26, 2024</time>
@@ -473,8 +473,8 @@
                     <div class="post-card-eyebrow">
                         <span>3D AI</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/can-sora-understand-3d/">Can Sora Understand 3D?</a></h3>
-                    <p class="post-subtitle">Radiance Fields Reconstruction from Video Generative AI</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/can-sora-understand-3d/">Can Sora Understand 3D?</a></h3>
+                    <p class="post-subtitle" lang="en">Radiance Fields Reconstruction from Video Generative AI</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
                     <p class="post-meta">
                         <time datetime="2024-02-26">February 26, 2024</time>
@@ -495,8 +495,8 @@
                     <div class="post-card-eyebrow">
                         <span>Radiance Fields &amp; Gaussian Splatting</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/can-nerf-be-used-in-game/">Can NeRF be used in Game?</a></h3>
-                    <p class="post-subtitle">Explore Limitations of NeRF</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/can-nerf-be-used-in-game/">Can NeRF be used in Game?</a></h3>
+                    <p class="post-subtitle" lang="en">Explore Limitations of NeRF</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                     <p class="post-meta">
                         <time datetime="2023-11-30">November 30, 2023</time>
@@ -517,8 +517,8 @@
                     <div class="post-card-eyebrow">
                         <span>Radiance Fields &amp; Gaussian Splatting</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/instant-ngp-review-re-implementation/">Instant-NGP Review &amp; Re-Implementation</a></h3>
-                    <p class="post-subtitle">Review of Instant-NGP and PyTorch Re-Implementation</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/instant-ngp-review-re-implementation/">Instant-NGP Review &amp; Re-Implementation</a></h3>
+                    <p class="post-subtitle" lang="en">Review of Instant-NGP and PyTorch Re-Implementation</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                     <p class="post-meta">
                         <time datetime="2023-02-02">February 2, 2023</time>
@@ -539,8 +539,8 @@
                     <div class="post-card-eyebrow">
                         <span>Radiance Fields &amp; Gaussian Splatting</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/">Why Positional Encoding Makes NeRF more Powerful</a></h3>
-                    <p class="post-subtitle">Review of Fourier Features Let Networks Learn High-Frequency Functions</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/">Why Positional Encoding Makes NeRF more Powerful</a></h3>
+                    <p class="post-subtitle" lang="en">Review of Fourier Features Let Networks Learn High-Frequency Functions</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                     <p class="post-meta">
                         <time datetime="2021-11-28">November 28, 2021</time>
@@ -565,8 +565,8 @@
                     <div class="post-card-eyebrow">
                         <span>Computer Graphics</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/sdf-and-eikonal-equation/">SDF and Eikonal Equation</a></h3>
-                    <p class="post-subtitle">Why signed distance field induces eikonal equation</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/sdf-and-eikonal-equation/">SDF and Eikonal Equation</a></h3>
+                    <p class="post-subtitle" lang="en">Why signed distance field induces eikonal equation</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/graphics/">Graphics</a></div>
                     <p class="post-meta">
                         <time datetime="2025-08-23">August 23, 2025</time>
@@ -587,8 +587,8 @@
                     <div class="post-card-eyebrow">
                         <span>Computer Graphics</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/generalized-winding-number/">Generalized Winding Number</a></h3>
-                    <p class="post-subtitle">How to make a robust SDF using GWN from Mesh</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/generalized-winding-number/">Generalized Winding Number</a></h3>
+                    <p class="post-subtitle" lang="en">How to make a robust SDF using GWN from Mesh</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/graphics/">Graphics</a></div>
                     <p class="post-meta">
                         <time datetime="2025-08-09">August 9, 2025</time>
@@ -609,8 +609,8 @@
                     <div class="post-card-eyebrow">
                         <span>Linear Algebra for Deep Learning</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/change-of-basis/">Change of Basis</a></h3>
-                    <p class="post-subtitle">Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/change-of-basis/">Change of Basis</a></h3>
+                    <p class="post-subtitle" lang="en">Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/linear-algebra/">Linear Algebra</a></div>
                     <p class="post-meta">
                         <time datetime="2021-09-10">September 10, 2021</time>
@@ -631,8 +631,8 @@
                     <div class="post-card-eyebrow">
                         <span>Linear Algebra for Deep Learning</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/linear-system/">Linear System</a></h3>
-                    <p class="post-subtitle">Linear System, Linear Transformation, and its Intuitions</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/linear-system/">Linear System</a></h3>
+                    <p class="post-subtitle" lang="en">Linear System, Linear Transformation, and its Intuitions</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/linear-algebra/">Linear Algebra</a></div>
                     <p class="post-meta">
                         <time datetime="2021-09-09">September 9, 2021</time>
@@ -653,8 +653,8 @@
                     <div class="post-card-eyebrow">
                         <span>Classical Computer Vision</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/3d-stereo-vision-and-epipolar-geometry/">3D Stereo Vision and Epipolar Geometry</a></h3>
-                    <p class="post-subtitle">Camera Projection, Stereo, and Epipolar Geometry</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/3d-stereo-vision-and-epipolar-geometry/">3D Stereo Vision and Epipolar Geometry</a></h3>
+                    <p class="post-subtitle" lang="en">Camera Projection, Stereo, and Epipolar Geometry</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/computer-vision/">Computer Vision</a></div>
                     <p class="post-meta">
                         <time datetime="2021-06-02">June 2, 2021</time>
@@ -675,8 +675,8 @@
                     <div class="post-card-eyebrow">
                         <span>Classical Computer Vision</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/homography-and-image-alignment/">Homography and Image Alignment</a></h3>
-                    <p class="post-subtitle">Image Transformation, Homography, and Correspondence Matching</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/homography-and-image-alignment/">Homography and Image Alignment</a></h3>
+                    <p class="post-subtitle" lang="en">Image Transformation, Homography, and Correspondence Matching</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/computer-vision/">Computer Vision</a></div>
                     <p class="post-meta">
                         <time datetime="2021-05-02">May 2, 2021</time>
@@ -697,8 +697,8 @@
                     <div class="post-card-eyebrow">
                         <span>Classical Computer Vision</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/feature-extraction-and-detection/">Feature Extraction and Detection</a></h3>
-                    <p class="post-subtitle">Image Gradient, Sobel Filter, LoG, and Detection</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/feature-extraction-and-detection/">Feature Extraction and Detection</a></h3>
+                    <p class="post-subtitle" lang="en">Image Gradient, Sobel Filter, LoG, and Detection</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/computer-vision/">Computer Vision</a></div>
                     <p class="post-meta">
                         <time datetime="2021-04-02">April 2, 2021</time>
@@ -719,8 +719,8 @@
                     <div class="post-card-eyebrow">
                         <span>Classical Computer Vision</span>
                     </div>
-                    <h3 class="post-title"><a href="/blogs/posts/image-filter-and-morphology/">Image Filter and Morphology</a></h3>
-                    <p class="post-subtitle">Various Image Filters and Morphology (Erosion &amp; Dilation)</p>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/image-filter-and-morphology/">Image Filter and Morphology</a></h3>
+                    <p class="post-subtitle" lang="en">Various Image Filters and Morphology (Erosion &amp; Dilation)</p>
                     <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/computer-vision/">Computer Vision</a></div>
                     <p class="post-meta">
                         <time datetime="2021-03-02">March 2, 2021</time>
@@ -739,56 +739,56 @@
                     <article class="series-group" data-series-id="3d-generation">
                         <div class="series-card-header">
                             <span class="series-card-kicker">Series</span>
-                            <h3 class="series-title">
+                            <h3 class="series-title" lang="en">
                                 <a href="/blogs/series/3d-generation/">
-                                    <span>3D AI</span>
+                                    <span data-series-title>3D AI</span>
                                     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up-right"></use></svg>
                                 </a>
                             </h3>
                             <div class="series-card-meta">
-                                <span>8 items</span>
-                                <span>Latest <time datetime="2026-07-27">Jul 2026</time></span>
+                                <span data-series-count>8 items</span>
+                                <span><span data-series-latest-label>Latest</span> <time datetime="2026-07-27">Jul 2026</time></span>
                             </div>
                         </div>
                         <ol class="series-post-list">
                             
-                        <li>
-                            <a href="/blogs/posts/optimizing-sparse-3d-generation-inference/">What the Compiler Missed in Sparse 3D Inference</a>
+                        <li data-series-post-id="260727_sparse_3d">
+                            <a href="/blogs/posts/optimizing-sparse-3d-generation-inference/" lang="en">What the Compiler Missed in Sparse 3D Inference</a>
                             <span class="post-meta-sm"><time datetime="2026-07-27">Jul 2026</time></span>
                         </li>
                 
-                        <li>
-                            <a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/">VARCO 3D: A Year in Review — 2025 Retrospective</a>
+                        <li data-series-post-id="260115_Varco3D">
+                            <a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" lang="en">VARCO 3D: A Year in Review — 2025 Retrospective</a>
                             <span class="post-meta-sm"><time datetime="2026-01-15">Jan 2026</time></span>
                         </li>
                 
-                        <li>
-                            <a href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/">From Flow Matching to Optimal Transport: A Physics-based View of Generative Models</a>
+                        <li data-series-post-id="250810_flow">
+                            <a href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/" lang="en">From Flow Matching to Optimal Transport: A Physics-based View of Generative Models</a>
                             <span class="post-meta-sm"><time datetime="2025-08-10">Aug 2025</time></span>
                         </li>
                 
-                        <li>
-                            <a href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/">Building Large 3D Generative Model (2) VAE and DiT Deep Dive</a>
+                        <li data-series-post-id="250710_building_large_3d_2">
+                            <a href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/" lang="en">Building Large 3D Generative Model (2) VAE and DiT Deep Dive</a>
                             <span class="post-meta-sm"><time datetime="2025-07-10">Jul 2025</time></span>
                         </li>
                 
-                        <li>
-                            <a href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/">Building Large 3D Generative Model (1) Data pre-processing</a>
+                        <li data-series-post-id="250702_building_large_3d_1">
+                            <a href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/" lang="en">Building Large 3D Generative Model (1) Data pre-processing</a>
                             <span class="post-meta-sm"><time datetime="2025-07-02">Jul 2025</time></span>
                         </li>
                 
-                        <li>
-                            <a href="/blogs/posts/an-era-of-3d-generation/">An Era of 3D Generation</a>
+                        <li data-series-post-id="250302_3d_latent_diffusion">
+                            <a href="/blogs/posts/an-era-of-3d-generation/" lang="en">An Era of 3D Generation</a>
                             <span class="post-meta-sm"><time datetime="2025-03-02">Mar 2025</time></span>
                         </li>
                 
-                        <li>
-                            <a href="/blogs/posts/is-diffusions-estimated-depth-really-good/">Is Diffusion&#39;s Estimated Depth Really Good?</a>
+                        <li data-series-post-id="240426_diffusion_depth">
+                            <a href="/blogs/posts/is-diffusions-estimated-depth-really-good/" lang="en">Is Diffusion&#39;s Estimated Depth Really Good?</a>
                             <span class="post-meta-sm"><time datetime="2024-04-26">Apr 2024</time></span>
                         </li>
                 
-                        <li>
-                            <a href="/blogs/posts/can-sora-understand-3d/">Can Sora Understand 3D?</a>
+                        <li data-series-post-id="240226_sora">
+                            <a href="/blogs/posts/can-sora-understand-3d/" lang="en">Can Sora Understand 3D?</a>
                             <span class="post-meta-sm"><time datetime="2024-02-26">Feb 2024</time></span>
                         </li>
                 
@@ -798,26 +798,26 @@
                     <article class="series-group" data-series-id="graphics">
                         <div class="series-card-header">
                             <span class="series-card-kicker">Series</span>
-                            <h3 class="series-title">
+                            <h3 class="series-title" lang="en">
                                 <a href="/blogs/series/graphics/">
-                                    <span>Computer Graphics</span>
+                                    <span data-series-title>Computer Graphics</span>
                                     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up-right"></use></svg>
                                 </a>
                             </h3>
                             <div class="series-card-meta">
-                                <span>2 items</span>
-                                <span>Latest <time datetime="2025-08-23">Aug 2025</time></span>
+                                <span data-series-count>2 items</span>
+                                <span><span data-series-latest-label>Latest</span> <time datetime="2025-08-23">Aug 2025</time></span>
                             </div>
                         </div>
                         <ol class="series-post-list">
                             
-                        <li>
-                            <a href="/blogs/posts/sdf-and-eikonal-equation/">SDF and Eikonal Equation</a>
+                        <li data-series-post-id="250823_sdf">
+                            <a href="/blogs/posts/sdf-and-eikonal-equation/" lang="en">SDF and Eikonal Equation</a>
                             <span class="post-meta-sm"><time datetime="2025-08-23">Aug 2025</time></span>
                         </li>
                 
-                        <li>
-                            <a href="/blogs/posts/generalized-winding-number/">Generalized Winding Number</a>
+                        <li data-series-post-id="250809_gwn">
+                            <a href="/blogs/posts/generalized-winding-number/" lang="en">Generalized Winding Number</a>
                             <span class="post-meta-sm"><time datetime="2025-08-09">Aug 2025</time></span>
                         </li>
                 
@@ -827,26 +827,26 @@
                     <article class="series-group" data-series-id="web-3d">
                         <div class="series-card-header">
                             <span class="series-card-kicker">Series</span>
-                            <h3 class="series-title">
+                            <h3 class="series-title" lang="en">
                                 <a href="/blogs/series/web-3d/">
-                                    <span>3D in Web</span>
+                                    <span data-series-title>3D in Web</span>
                                     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up-right"></use></svg>
                                 </a>
                             </h3>
                             <div class="series-card-meta">
-                                <span>2 items</span>
-                                <span>Latest <time datetime="2025-03-10">Mar 2025</time></span>
+                                <span data-series-count>2 items</span>
+                                <span><span data-series-latest-label>Latest</span> <time datetime="2025-03-10">Mar 2025</time></span>
                             </div>
                         </div>
                         <ol class="series-post-list">
                             
-                        <li>
-                            <a href="/blogs/posts/3d-model-viewer-in-web/">3D Model Viewer in Web</a>
+                        <li data-series-post-id="250310_model_viewer">
+                            <a href="/blogs/posts/3d-model-viewer-in-web/" lang="en">3D Model Viewer in Web</a>
                             <span class="post-meta-sm"><time datetime="2025-03-10">Mar 2025</time></span>
                         </li>
                 
-                        <li>
-                            <a href="/blogs/posts/add-gaussian-splatting-to-your-website/">Add Gaussian Splatting to Your Website</a>
+                        <li data-series-post-id="240917_3djs">
+                            <a href="/blogs/posts/add-gaussian-splatting-to-your-website/" lang="en">Add Gaussian Splatting to Your Website</a>
                             <span class="post-meta-sm"><time datetime="2024-09-17">Sep 2024</time></span>
                         </li>
                 
@@ -856,56 +856,56 @@
                     <article class="series-group" data-series-id="nerf-and-gs">
                         <div class="series-card-header">
                             <span class="series-card-kicker">Series</span>
-                            <h3 class="series-title">
+                            <h3 class="series-title" lang="en">
                                 <a href="/blogs/series/nerf-and-gs/">
-                                    <span>Radiance Fields &amp; Gaussian Splatting</span>
+                                    <span data-series-title>Radiance Fields &amp; Gaussian Splatting</span>
                                     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up-right"></use></svg>
                                 </a>
                             </h3>
                             <div class="series-card-meta">
-                                <span>8 items</span>
-                                <span>Latest <time datetime="2025-01-06">Jan 2025</time></span>
+                                <span data-series-count>8 items</span>
+                                <span><span data-series-latest-label>Latest</span> <time datetime="2025-01-06">Jan 2025</time></span>
                             </div>
                         </div>
                         <ol class="series-post-list">
                             
-                        <li>
-                            <a href="/blogs/posts/neural-rendering-beyond-photography/">Neural Rendering Beyond Photography</a>
+                        <li data-series-post-id="250106_tomography">
+                            <a href="/blogs/posts/neural-rendering-beyond-photography/" lang="en">Neural Rendering Beyond Photography</a>
                             <span class="post-meta-sm"><time datetime="2025-01-06">Jan 2025</time></span>
                         </li>
                 
-                        <li>
-                            <a href="/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian/">Don&#39;t Rasterize, But Ray Trace 3D Gaussian</a>
+                        <li data-series-post-id="240823_grt">
+                            <a href="/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian/" lang="en">Don&#39;t Rasterize, But Ray Trace 3D Gaussian</a>
                             <span class="post-meta-sm"><time datetime="2024-08-23">Aug 2024</time></span>
                         </li>
                 
-                        <li>
-                            <a href="/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/">A Comprehensive Analysis of Gaussian Splatting Rasterization</a>
+                        <li data-series-post-id="240805_gs">
+                            <a href="/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/" lang="en">A Comprehensive Analysis of Gaussian Splatting Rasterization</a>
                             <span class="post-meta-sm"><time datetime="2024-08-05">Aug 2024</time></span>
                         </li>
                 
-                        <li>
-                            <a href="/blogs/posts/radiance-fields-from-deep-based-structure-from-motion/">Radiance Fields from Deep-based Structure-from-Motion</a>
+                        <li data-series-post-id="240721_sfm">
+                            <a href="/blogs/posts/radiance-fields-from-deep-based-structure-from-motion/" lang="en">Radiance Fields from Deep-based Structure-from-Motion</a>
                             <span class="post-meta-sm"><time datetime="2024-07-21">Jul 2024</time></span>
                         </li>
                 
-                        <li>
-                            <a href="/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting/">Under the 3D: Geometrically Accurate 2D Gaussian Splatting</a>
+                        <li data-series-post-id="240602_2dgs">
+                            <a href="/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting/" lang="en">Under the 3D: Geometrically Accurate 2D Gaussian Splatting</a>
                             <span class="post-meta-sm"><time datetime="2024-06-02">Jun 2024</time></span>
                         </li>
                 
-                        <li>
-                            <a href="/blogs/posts/can-nerf-be-used-in-game/">Can NeRF be used in Game?</a>
+                        <li data-series-post-id="231130_nerf_in_game">
+                            <a href="/blogs/posts/can-nerf-be-used-in-game/" lang="en">Can NeRF be used in Game?</a>
                             <span class="post-meta-sm"><time datetime="2023-11-30">Nov 2023</time></span>
                         </li>
                 
-                        <li>
-                            <a href="/blogs/posts/instant-ngp-review-re-implementation/">Instant-NGP Review &amp; Re-Implementation</a>
+                        <li data-series-post-id="230202_ngp">
+                            <a href="/blogs/posts/instant-ngp-review-re-implementation/" lang="en">Instant-NGP Review &amp; Re-Implementation</a>
                             <span class="post-meta-sm"><time datetime="2023-02-02">Feb 2023</time></span>
                         </li>
                 
-                        <li>
-                            <a href="/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/">Why Positional Encoding Makes NeRF more Powerful</a>
+                        <li data-series-post-id="211128_fourier">
+                            <a href="/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/" lang="en">Why Positional Encoding Makes NeRF more Powerful</a>
                             <span class="post-meta-sm"><time datetime="2021-11-28">Nov 2021</time></span>
                         </li>
                 
@@ -915,26 +915,26 @@
                     <article class="series-group" data-series-id="linear-algebra">
                         <div class="series-card-header">
                             <span class="series-card-kicker">Series</span>
-                            <h3 class="series-title">
+                            <h3 class="series-title" lang="en">
                                 <a href="/blogs/series/linear-algebra/">
-                                    <span>Linear Algebra for Deep Learning</span>
+                                    <span data-series-title>Linear Algebra for Deep Learning</span>
                                     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up-right"></use></svg>
                                 </a>
                             </h3>
                             <div class="series-card-meta">
-                                <span>2 items</span>
-                                <span>Latest <time datetime="2021-09-10">Sep 2021</time></span>
+                                <span data-series-count>2 items</span>
+                                <span><span data-series-latest-label>Latest</span> <time datetime="2021-09-10">Sep 2021</time></span>
                             </div>
                         </div>
                         <ol class="series-post-list">
                             
-                        <li>
-                            <a href="/blogs/posts/change-of-basis/">Change of Basis</a>
+                        <li data-series-post-id="210910_lin_alg_2">
+                            <a href="/blogs/posts/change-of-basis/" lang="en">Change of Basis</a>
                             <span class="post-meta-sm"><time datetime="2021-09-10">Sep 2021</time></span>
                         </li>
                 
-                        <li>
-                            <a href="/blogs/posts/linear-system/">Linear System</a>
+                        <li data-series-post-id="210909_lin_alg_1">
+                            <a href="/blogs/posts/linear-system/" lang="en">Linear System</a>
                             <span class="post-meta-sm"><time datetime="2021-09-09">Sep 2021</time></span>
                         </li>
                 
@@ -944,36 +944,36 @@
                     <article class="series-group" data-series-id="computer-vision">
                         <div class="series-card-header">
                             <span class="series-card-kicker">Series</span>
-                            <h3 class="series-title">
+                            <h3 class="series-title" lang="en">
                                 <a href="/blogs/series/computer-vision/">
-                                    <span>Classical Computer Vision</span>
+                                    <span data-series-title>Classical Computer Vision</span>
                                     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up-right"></use></svg>
                                 </a>
                             </h3>
                             <div class="series-card-meta">
-                                <span>4 items</span>
-                                <span>Latest <time datetime="2021-06-02">Jun 2021</time></span>
+                                <span data-series-count>4 items</span>
+                                <span><span data-series-latest-label>Latest</span> <time datetime="2021-06-02">Jun 2021</time></span>
                             </div>
                         </div>
                         <ol class="series-post-list">
                             
-                        <li>
-                            <a href="/blogs/posts/3d-stereo-vision-and-epipolar-geometry/">3D Stereo Vision and Epipolar Geometry</a>
+                        <li data-series-post-id="210602_cv4">
+                            <a href="/blogs/posts/3d-stereo-vision-and-epipolar-geometry/" lang="en">3D Stereo Vision and Epipolar Geometry</a>
                             <span class="post-meta-sm"><time datetime="2021-06-02">Jun 2021</time></span>
                         </li>
                 
-                        <li>
-                            <a href="/blogs/posts/homography-and-image-alignment/">Homography and Image Alignment</a>
+                        <li data-series-post-id="210502_cv3">
+                            <a href="/blogs/posts/homography-and-image-alignment/" lang="en">Homography and Image Alignment</a>
                             <span class="post-meta-sm"><time datetime="2021-05-02">May 2021</time></span>
                         </li>
                 
-                        <li>
-                            <a href="/blogs/posts/feature-extraction-and-detection/">Feature Extraction and Detection</a>
+                        <li data-series-post-id="210402_cv2">
+                            <a href="/blogs/posts/feature-extraction-and-detection/" lang="en">Feature Extraction and Detection</a>
                             <span class="post-meta-sm"><time datetime="2021-04-02">Apr 2021</time></span>
                         </li>
                 
-                        <li>
-                            <a href="/blogs/posts/image-filter-and-morphology/">Image Filter and Morphology</a>
+                        <li data-series-post-id="210302_cv1">
+                            <a href="/blogs/posts/image-filter-and-morphology/" lang="en">Image Filter and Morphology</a>
                             <span class="post-meta-sm"><time datetime="2021-03-02">Mar 2021</time></span>
                         </li>
                 
@@ -1002,11 +1002,11 @@
                 </div>
             </div>
         </footer>
-        <script src="./js/site-data-client.js"></script>
-        <script src="./js/blog-cover-media.js"></script>
-        <script src="./js/blog-shell.js"></script>
-        <script src="./js/theme-toggle.js"></script>
-        <script src="./js/main-list.js"></script>
+        <script src="./js/site-data-client.js?v=fd5ff44d2c"></script>
+        <script src="./js/blog-cover-media.js?v=f16969bf34"></script>
+        <script src="./js/blog-shell.js?v=7849cf9818"></script>
+        <script src="./js/theme-toggle.js?v=32f6914d64"></script>
+        <script src="./js/main-list.js?v=0bcf2a0678"></script>
         <script>
             initBlogShell({ formSelector: '#blog-home-search-form', inputSelector: '#blog-home-search-input' });
         </script>

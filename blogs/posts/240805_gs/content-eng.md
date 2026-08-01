@@ -3,37 +3,8 @@ date: August 08, 2024
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<nav class="toc">
-    <ul>
-        <li><a href="#sec1"> 3D Gaussian as Primitive Kernel</a></li>
-        <li>
-            <a href="#sec2"> Splatting (Projection of Primitives)</a>
-        </li>
-        <ul>
-            <li>
-                <a href="#sec2.1"> Projection </a>
-            </li>
-            <li>
-                <a href="#sec2.2"> Density of the projected Gaussian </a>
-            </li>
-        </ul>
-        <li><a href="#sec3"> Parallel Rasterization</a></li>
-        <li>
-            <a href="#sec4"> MISC</a>
-        </li>
-        <ul>
-            <li>
-                <a href="#sec4.1"> Camera Model </a>
-            </li>
-            <li>
-                <a href="#sec4.2"> Mimic Luma AI </a>
-            </li>
-        </ul>
-        <li><a href="#closing">Closing</a></li>
-    </ul>
-</nav>
+## <span id="intro"></span>Introduction
 
-<h2 id="intro">Introduction</h2>
 <figure>
     <img src="./240805_gs/assets/teaser.gif" alt="Gaussian Splatting Teaser by Luma AI" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 1.</strong> 3D GS by Luma AI</figcaption>
@@ -44,7 +15,8 @@ author: Hwan Heo
     This article aims to explore 3D Gaussian Splatting from the perspective of rasterization, providing an in-depth understanding of its underlying mechanisms.
 </p>
 
-<h2 id="sec1">1. 3D Gaussian as Primitive Kernel</h2>
+## <span id="sec1"></span>1. 3D Gaussian as Primitive Kernel
+
 <figure>
     <img src="./240805_gs/assets/gs.jpg" alt="3D Gaussian as Primitive Kernel" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 2.</strong> NeRF vs 3D GS, source: <span style="text-decoration: underline;"><a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">Kate's medium</a></span></figcaption>
@@ -169,8 +141,10 @@ cov3D[5] = Sigma[2][2];
     <li> <em>cov3D</em>: Since the covariance matrix is symmetric, we only need to store the right upper triangle.</li>
 </ul>
 
-<h2 id="sec2">2. Splatting (Projection of Primitives)</h2>
-<h3 id="sec2.1">2.1. Projection</h3>
+## <span id="sec2"></span>2. Splatting (Projection of Primitives)
+
+### <span id="sec2.1"></span>2.1. Projection
+
 <figure>
     <img src="./240805_gs/assets/splatting.jpg" alt="Splatting of primitives" style="width:55%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 3.</strong> Projection of 3D Gaussian, <br/> source: <span style="text-decoration: underline;"><a href="https://dl.acm.org/doi/10.1145/3355089.3356513"><em>Differentiable Surface Splatting for Point-based Geometry Processing </em></a></span> </figcaption>
@@ -272,7 +246,8 @@ glm::mat3 Vrk = glm::mat3(
 glm::mat3 cov = glm::transpose(T) * glm::transpose(Vrk) * T;
 ```
 
-<h3 id="sec2.2">2.2. Density of the Projected Gaussian </h3>
+### <span id="sec2.2"></span>2.2. Density of the Projected Gaussian
+
 <p class="lang eng">
     For a point $p$ in 3D space, the density $f_i(p)$ of the $i$th Gaussian can be defined as follows:
 </p>
@@ -320,7 +295,7 @@ return { float(cov[0][0]), float(cov[0][1]), float(cov[1][1]) };
     which is the same as finding the inverse of the following inverse matrix, $(A=(RS)^{\rm T})$
 </p>
 
-<p> $$ A^{\rm T}A+\lambda \mathbf{I} $$</p>
+$$ A^{\rm T}A+\lambda \mathbf{I} $$
 
 <p class="lang eng">
     Since the covariance matrix is <em>positive semidefinite</em>, adding a small $\lambda$ ensures that the covariance matrix 
@@ -408,7 +383,8 @@ float lambda2 = mid - sqrt(max(0.1f, mid * mid - det));
 float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));
 ```
 
-<h2 id="sec3">3. Parallel Rasterization </h2>
+## <span id="sec3"></span>3. Parallel Rasterization
+
 <div class="lang eng">
     <p>
         Having established the Gaussian kernel and its projection into image space, we can proceed with rasterizing the 3D scene. 
@@ -513,9 +489,10 @@ __shared__ float4 collected_conic_opacity[BLOCK_SIZE];</code></pre>
     In other words, since NeRF samples rays, it queries the MLP for each different point sampled by $r(t)$ (3D), whereas 3D GS queries the MLP for the same point $x$ (2D).
 </p>
 
-<h2 id="sec4"> 4. Miscellaneous </h2>
+## <span id="sec4"></span>4. Miscellaneous
 
-<h3 id="sec4.1"> 4.1. Camera Model </h3>
+### <span id="sec4.1"></span>4.1. Camera Model
+
 <div class="lang eng">
     <p>
         In the current implementation, the matrix $J$ serves as an approximation of the perspective projection 
@@ -558,7 +535,8 @@ glm::mat3 J = glm::mat3(
     </p>
 </div>
 
-<h3 id="sec4.2"> 4.2. Mimic Luma AI </h3>
+### <span id="sec4.2"></span>4.2. Mimic Luma AI
+
 <div class="lang eng">
     <p>
         The article's teaser video showcases a rendering by Luma AI. 
@@ -583,7 +561,8 @@ glm::mat3 J = glm::mat3(
     </tr>
 </table>
 
-<h2 id="closing">Closing</h2>
+## <span id="closing"></span>Closing
+
 <div class="lang eng">
     <p>
         In this article, we have explored the intricacies of 3D Gaussian Splatting within the context of 

@@ -1,8 +1,5 @@
 document.addEventListener('DOMContentLoaded', async function() {
-    const icons = window.SiteIcons;
-    const postsContainer = document.querySelector('#posts-tab');
     const seriesContainer = document.querySelector('#series-tab');
-    const notesContainer = document.querySelector('#notes-tab');
     const featureContainer = document.querySelector('#blog-home-feature');
     const langToggleButton = document.getElementById('lang-toggle-main');
     const tabControls = Array.from(document.querySelectorAll('[role="tab"][data-tab-target]'));
@@ -56,6 +53,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const coverMedia = window.blogCoverMedia;
     const siteData = await loadSiteData();
     const sortedPosts = [...siteData.posts].sort((a, b) => new Date(b.date) - new Date(a.date));
+    const postById = new Map(sortedPosts.map((post) => [post.id, post]));
 
     const labels = {
         eng: {
@@ -70,10 +68,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             featuredLabel: 'Featured',
             readPost: 'Read post',
             items: 'items',
-            latest: 'Latest',
-            noPosts: 'No posts yet.',
-            noNotes: 'No notes yet.',
-            noSeries: 'No series yet.'
+            latest: 'Latest'
         },
         kor: {
             heroKicker: "Hwan's Blog",
@@ -87,24 +82,12 @@ document.addEventListener('DOMContentLoaded', async function() {
             featuredLabel: 'Featured',
             readPost: '글 읽기',
             items: 'items',
-            latest: 'Latest',
-            noPosts: '아직 게시글이 없습니다.',
-            noNotes: '아직 노트가 없습니다.',
-            noSeries: '아직 시리즈가 없습니다.'
+            latest: 'Latest'
         }
     };
 
     function copy(lang, key) {
         return labels[lang]?.[key] || labels.eng[key] || '';
-    }
-
-    function escapeHtml(value) {
-        return String(value || '')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
     }
 
     function formatDate(dateString, lang) {
@@ -124,43 +107,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
 
-    function createArchiveSlug(value) {
-        return String(value || '')
-            .toLowerCase()
-            .replace(/&/g, 'and')
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/-+/g, '-')
-            .replace(/^-|-$/g, '');
-    }
-
-    function getSeriesRoute(seriesId) {
-        return `/blogs/series/${createArchiveSlug(seriesId)}/`;
-    }
-
     function getSeriesTitle(post, lang) {
         return siteData.series[post.series]?.[lang] || siteData.series[post.series]?.eng || 'Series';
     }
 
-    function renderTags(post) {
-        return (post.tags || [])
-            .map((tag) => `<span class="post-tag">${escapeHtml(tag)}</span>`)
-            .join('');
-    }
-
-    function renderCoverImage(post, title, options = {}) {
-        const source = post.cover || '/assets/blog_bg.jpeg';
-        const keepAnimated = post.animatedPreview === true && coverMedia?.isAnimatedCover(source);
-        const preview = coverMedia?.getBlogCoverPreviewUrl(post.id) || source;
-        const autoplaySource = keepAnimated
-            ? ` data-autoplay-src="${escapeHtml(source)}"`
-            : '';
-        const animatedSource = !keepAnimated && coverMedia?.isAnimatedCover(source)
-            ? ` data-animated-src="${escapeHtml(source)}"`
-            : '';
-        const loading = options.eager ? 'eager' : 'lazy';
-        const fetchPriority = options.eager ? ' fetchpriority="high"' : '';
-
-        return `<img src="${escapeHtml(preview)}" data-blog-cover data-preview-src="${escapeHtml(preview)}"${autoplaySource}${animatedSource} alt="${escapeHtml(`${title} cover image`)}" loading="${loading}" decoding="async"${fetchPriority}>`;
+    function getTextLang(value, lang) {
+        return lang === 'kor' && /[\u1100-\u11ff\u3130-\u318f\uac00-\ud7af]/.test(String(value || '')) ? 'ko' : 'en';
     }
 
     function setText(selector, value) {
@@ -204,174 +156,150 @@ document.addEventListener('DOMContentLoaded', async function() {
         return sortedPosts.find((post) => post.category === 'post') || sortedPosts[0];
     }
 
-    function createPostPreviewHTML(post, lang) {
+    function updatePostPreview(card, post, lang) {
         const title = getPostTitle(post, lang);
-        const subtitle = getPostDescription(post, lang);
-        const seriesTitle = getSeriesTitle(post, lang);
-        const tagsHtml = renderTags(post);
+        const description = getPostDescription(post, lang);
+        const url = getPostUrl(post, lang);
+        const coverLink = card.querySelector('.post-card-cover');
+        const titleElement = card.querySelector('.post-title');
+        const titleLink = card.querySelector('.post-title a');
+        const coverImage = card.querySelector('img[data-blog-cover]');
+        const subtitle = card.querySelector('.post-subtitle');
+        const eyebrow = card.querySelector('.post-card-eyebrow span');
+        const time = card.querySelector('.post-meta time');
 
-        if (!title) {
-            return '';
+        if (coverLink) {
+            coverLink.href = url;
+            coverLink.setAttribute('aria-label', `${copy(lang, 'readPost')}: ${title}`);
         }
-
-        return `
-        <article class="post-preview">
-            <div class="post-card-link">
-                <a href="${escapeHtml(getPostUrl(post, lang))}" class="post-card-cover" aria-label="${escapeHtml(copy(lang, 'readPost'))}: ${escapeHtml(title)}">
-                    ${renderCoverImage(post, title)}
-                </a>
-                <div class="post-card-body">
-                    <div class="post-card-eyebrow">
-                        <span>${escapeHtml(seriesTitle)}</span>
-                    </div>
-                    <h3 class="post-title"><a href="${escapeHtml(getPostUrl(post, lang))}">${escapeHtml(title)}</a></h3>
-                    ${subtitle ? `<p class="post-subtitle">${escapeHtml(subtitle)}</p>` : ''}
-                    ${tagsHtml ? `<div class="post-tag-row">${tagsHtml}</div>` : ''}
-                    <p class="post-meta">
-                        <time datetime="${escapeHtml(post.date)}">${escapeHtml(formatDate(post.date, lang))}</time>
-                    </p>
-                </div>
-            </div>
-        </article>
-        `;
+        if (titleLink) {
+            titleLink.href = url;
+            titleLink.textContent = title;
+        }
+        if (titleElement) {
+            titleElement.lang = getTextLang(title, lang);
+        }
+        if (coverImage) {
+            coverImage.alt = `${title} cover image`;
+        }
+        if (subtitle) {
+            subtitle.textContent = description;
+            subtitle.hidden = !description;
+            subtitle.lang = getTextLang(description, lang);
+        }
+        if (eyebrow) {
+            eyebrow.textContent = getSeriesTitle(post, lang);
+        }
+        if (time) {
+            time.dateTime = post.date;
+            time.textContent = formatDate(post.date, lang);
+        }
     }
 
-    function renderFeatured(lang) {
-        if (!featureContainer) {
+    function updateFeaturedPost(lang) {
+        const card = featureContainer?.querySelector('.blog-feature-card[data-post-id]');
+        const post = card ? postById.get(card.dataset.postId) : null;
+        if (!card || !post) {
             return;
         }
 
-        const featuredPost = getFeaturedPost();
-        if (!featuredPost) {
-            featureContainer.innerHTML = '';
-            return;
-        }
+        const title = getPostTitle(post, lang);
+        const description = getPostDescription(post, lang);
+        const url = getPostUrl(post, lang);
+        const coverLink = card.querySelector('.blog-feature-cover');
+        const titleElement = card.querySelector('.blog-feature-copy h2');
+        const titleLink = card.querySelector('.blog-feature-copy h2 a');
+        const readLink = card.querySelector('.blog-feature-read');
+        const coverImage = card.querySelector('img[data-blog-cover]');
+        const descriptionElement = card.querySelector('.blog-feature-copy > p');
+        const time = card.querySelector('.blog-feature-date');
 
-        const title = getPostTitle(featuredPost, lang);
-        const subtitle = getPostDescription(featuredPost, lang);
-        const seriesTitle = getSeriesTitle(featuredPost, lang);
-        const tagsHtml = renderTags(featuredPost);
-        const url = getPostUrl(featuredPost, lang);
+        card.querySelector('[data-feature-label]')?.replaceChildren(copy(lang, 'featuredLabel'));
+        card.querySelector('[data-feature-series]')?.replaceChildren(getSeriesTitle(post, lang));
+        card.querySelector('[data-feature-read-label]')?.replaceChildren(copy(lang, 'readPost'));
 
-        featureContainer.innerHTML = `
-            <article class="blog-feature-card">
-                <div class="blog-feature-label">
-                    <span>${escapeHtml(copy(lang, 'featuredLabel'))}</span>
-                </div>
-                <a class="blog-feature-cover" href="${escapeHtml(url)}" aria-label="${escapeHtml(copy(lang, 'readPost'))}: ${escapeHtml(title)}">
-                    ${renderCoverImage(featuredPost, title, { eager: true })}
-                </a>
-                <div class="blog-feature-copy">
-                    <div class="blog-feature-meta">
-                        <span>${escapeHtml(seriesTitle)}</span>
-                        <time datetime="${escapeHtml(featuredPost.date)}">${escapeHtml(formatDate(featuredPost.date, lang))}</time>
-                    </div>
-                    <h2><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h2>
-                    ${subtitle ? `<p>${escapeHtml(subtitle)}</p>` : ''}
-                    ${tagsHtml ? `<div class="post-tag-row">${tagsHtml}</div>` : ''}
-                    <a class="blog-feature-read" href="${escapeHtml(url)}">
-                        <span>${escapeHtml(copy(lang, 'readPost'))}</span>
-                        ${icons.render('arrow-right')}
-                    </a>
-                </div>
-            </article>
-        `;
-    }
-
-    function renderAllPosts(lang) {
-        if (!postsContainer) {
-            return;
-        }
-
-        const allPostsHTML = sortedPosts
-            .filter((post) => post.category === 'post' && post.id !== getFeaturedPost()?.id)
-            .map((post) => createPostPreviewHTML(post, lang))
-            .join('');
-
-        postsContainer.innerHTML = allPostsHTML || `<p class="blog-home-empty">${escapeHtml(copy(lang, 'noPosts'))}</p>`;
-    }
-
-    function renderNotes(lang) {
-        if (!notesContainer) {
-            return;
-        }
-
-        const notesHTML = sortedPosts
-            .filter((post) => post.category === 'note')
-            .map((post) => createPostPreviewHTML(post, lang))
-            .join('');
-
-        notesContainer.innerHTML = notesHTML || `<p class="blog-home-empty">${escapeHtml(copy(lang, 'noNotes'))}</p>`;
-    }
-
-    function renderSeries(lang) {
-        if (!seriesContainer) {
-            return;
-        }
-
-        const postsBySeries = {};
-        sortedPosts.forEach((post) => {
-            if (!post.series) {
-                return;
+        [coverLink, titleLink, readLink].forEach((link) => {
+            if (link) {
+                link.href = url;
             }
-            if (!postsBySeries[post.series]) {
-                postsBySeries[post.series] = [];
-            }
-            postsBySeries[post.series].push(post);
         });
-
-        const seriesHTML = Object.entries(postsBySeries)
-            .sort(([, firstPosts], [, secondPosts]) => new Date(secondPosts[0].date) - new Date(firstPosts[0].date))
-            .map(([seriesId, posts]) => {
-                const seriesTitle = siteData.series[seriesId]?.[lang] || siteData.series[seriesId]?.eng || 'Series';
-                const latestPost = posts[0];
-                const seriesRoute = getSeriesRoute(seriesId);
-                const itemsHtml = posts.map((post) => {
-                    const title = getPostTitle(post, lang);
-                    if (!title) {
-                        return '';
-                    }
-
-                    return `
-                        <li>
-                            <a href="${escapeHtml(getPostUrl(post, lang))}">${escapeHtml(title)}</a>
-                            <span class="post-meta-sm">${escapeHtml(formatShortDate(post.date, lang))}</span>
-                        </li>
-                    `;
-                }).join('');
-
-                return `
-                    <article class="series-group">
-                        <div class="series-card-header">
-                            <span class="series-card-kicker">Series</span>
-                            <h3 class="series-title">
-                                <a href="${escapeHtml(seriesRoute)}">
-                                    <span>${escapeHtml(seriesTitle)}</span>
-                                    ${icons.render('arrow-up-right')}
-                                </a>
-                            </h3>
-                            <div class="series-card-meta">
-                                <span>${posts.length} ${escapeHtml(copy(lang, 'items'))}</span>
-                                <span>${escapeHtml(copy(lang, 'latest'))} ${escapeHtml(formatShortDate(latestPost.date, lang))}</span>
-                            </div>
-                        </div>
-                        <ol class="series-post-list">
-                            ${itemsHtml}
-                        </ol>
-                    </article>
-                `;
-            }).join('');
-
-        seriesContainer.innerHTML = seriesHTML || `<p class="blog-home-empty">${escapeHtml(copy(lang, 'noSeries'))}</p>`;
+        if (coverLink) {
+            coverLink.setAttribute('aria-label', `${copy(lang, 'readPost')}: ${title}`);
+        }
+        if (titleLink) {
+            titleLink.textContent = title;
+        }
+        if (titleElement) {
+            titleElement.lang = getTextLang(title, lang);
+        }
+        if (readLink) {
+            readLink.setAttribute('aria-label', `${copy(lang, 'readPost')}: ${title}`);
+        }
+        if (coverImage) {
+            coverImage.alt = `${title} cover image`;
+        }
+        if (descriptionElement) {
+            descriptionElement.textContent = description;
+            descriptionElement.hidden = !description;
+            descriptionElement.lang = getTextLang(description, lang);
+        }
+        if (time) {
+            time.dateTime = post.date;
+            time.textContent = formatDate(post.date, lang);
+        }
     }
 
-    function renderAllTabs(lang) {
+    function updateSeriesGroups(lang) {
+        seriesContainer?.querySelectorAll('.series-group[data-series-id]').forEach((group) => {
+            const posts = sortedPosts.filter((post) => post.series === group.dataset.seriesId);
+            const latestPost = posts[0];
+            const seriesTitle = siteData.series[group.dataset.seriesId]?.[lang]
+                || siteData.series[group.dataset.seriesId]?.eng
+                || 'Series';
+
+            const seriesTitleElement = group.querySelector('[data-series-title]');
+            seriesTitleElement?.replaceChildren(seriesTitle);
+            if (seriesTitleElement) {
+                seriesTitleElement.closest('.series-title')?.setAttribute('lang', getTextLang(seriesTitle, lang));
+            }
+            group.querySelector('[data-series-count]')?.replaceChildren(`${posts.length} ${copy(lang, 'items')}`);
+            group.querySelector('[data-series-latest-label]')?.replaceChildren(copy(lang, 'latest'));
+
+            const latestTime = group.querySelector('.series-card-meta time');
+            if (latestTime && latestPost) {
+                latestTime.dateTime = latestPost.date;
+                latestTime.textContent = formatShortDate(latestPost.date, lang);
+            }
+
+            group.querySelectorAll('.series-post-list [data-series-post-id]').forEach((item) => {
+                const post = postById.get(item.dataset.seriesPostId);
+                const link = item.querySelector('a');
+                const time = item.querySelector('time');
+                if (!post || !link) {
+                    return;
+                }
+                const postTitle = getPostTitle(post, lang);
+                link.href = getPostUrl(post, lang);
+                link.textContent = postTitle;
+                link.lang = getTextLang(postTitle, lang);
+                if (time) {
+                    time.dateTime = post.date;
+                    time.textContent = formatShortDate(post.date, lang);
+                }
+            });
+        });
+    }
+
+    function updateRenderedContent(lang) {
         updateStaticCopy(lang);
-        renderFeatured(lang);
-        renderAllPosts(lang);
-        renderNotes(lang);
-        renderSeries(lang);
-        coverMedia?.initializeBlogCoverMedia(document);
+        updateFeaturedPost(lang);
+        document.querySelectorAll('.post-preview[data-post-id]').forEach((card) => {
+            const post = postById.get(card.dataset.postId);
+            if (post) {
+                updatePostPreview(card, post, lang);
+            }
+        });
+        updateSeriesGroups(lang);
     }
 
     if (langToggleButton) {
@@ -379,9 +307,10 @@ document.addEventListener('DOMContentLoaded', async function() {
             const currentLang = localStorage.getItem('language') || 'eng';
             const nextLang = currentLang === 'eng' ? 'kor' : 'eng';
             localStorage.setItem('language', nextLang);
-            renderAllTabs(nextLang);
+            updateRenderedContent(nextLang);
         });
     }
 
-    renderAllTabs(localStorage.getItem('language') || 'eng');
+    updateRenderedContent(localStorage.getItem('language') || 'eng');
+    coverMedia?.initializeBlogCoverMedia(document);
 });

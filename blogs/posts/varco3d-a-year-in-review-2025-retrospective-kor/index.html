@@ -29,12 +29,12 @@
     <title>3D 생성형 AI 서비스; Varco3D 개발기 | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css" rel="stylesheet" />
-    <link href="/blogs/css/typography.css" rel="stylesheet" />
-    <link href="/blogs/css/post.css" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/css/site-icons.css" rel="stylesheet" />
-    <script src="/assets/js/site-icons.js"></script>
+    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
+    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -260,20 +260,14 @@
 </ol>
 <p>SDS 연구가 발전하며 따라 색감이나 Janus problem 등은 어느 정도 완화되었으나, 기하학적 품질과 속도 문제는 여전히 난제로 남았다. 특히 2024년 당시 SOTA 였던 &#39;Dreamcraft3D&#39;의 결과물조차 Polygonal Mesh 로 변환했을 때의 처참한 Geometry 품질은 SDS의 한계를 극명하게 보여주었다.
 <img src='/blogs/posts/260115_Varco3D/assets/remote-f1d893b774d4.png' width=70% alt="3D 생성형 AI 서비스; Varco3D 개발기 — 1.1 Non-Native 3D Generation, figure 2" loading="lazy" decoding="async"></p>
-<p>이러한 문제의 원인은 SDS의 optimization objective 에서 찾을 수 있다. </p>
-<p>
-$$ \nabla_{\theta} \mathcal{L}_{SDS} \approx \mathbb{E}_{t, \epsilon} \left[ w(t) ( \underbrace{\epsilon_{\phi}(x; y, t) - \epsilon}_{\text{Guidance Term (Residual)}} ) \frac{\partial x}{\partial \theta} \right]
+<p>이러한 문제의 원인은 SDS의 optimization objective 에서 찾을 수 있다.</p>
+<p>$$ \nabla_{\theta} \mathcal{L}_{SDS} \approx \mathbb{E}_{t, \epsilon} \left[ w(t) ( \underbrace{\epsilon_{\phi}(x; y, t) - \epsilon}_{\text{Guidance Term (Residual)}} ) \frac{\partial x}{\partial \theta} \right]
 \\
 \text{where } \theta : \text{3D model, } x : \text{rendered image} \\ {}
-$$
-</p>
-
-<p>
-$$ 
+$$</p>
+<p>$$ 
 \frac{\partial C}{\partial \theta} = \underbrace{\frac{\partial C}{\partial c} \frac{\partial c}{\partial \theta}}_{\text{Color update}} + \underbrace{\frac{\partial C}{\partial \sigma} \frac{\partial \sigma}{\partial \theta}}_{\text{Geometry update}} \\ {} \\ \rightarrow \Delta \sigma \propto (\epsilon_{\phi} - \epsilon) \cdot {\partial C}{\partial \sigma}
-$$
-</p>
-
+$$</p>
 <p>SDS loss로 3D 모델을 업데이트할 때, chain rule을 따라가 보면 texture와 geometry의 update term이 분리되지 않음을 알 수 있다. 이로 인해 2D 모델의 high-frequency noise가 geometry update에 그대로 전달되며, 텍스처를 입히지 않은 메시의 표면이 매우 거칠게 표현되는 결과를 초래한다.</p>
 <blockquote>
 <p><strong>Noisy Geometry 에 대한 제언</strong></p>
@@ -531,11 +525,11 @@ $$
                     </section>
     
                     <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/sdf-and-eikonal-equation-kor/" aria-label="Previous Post: SDF 와 Eikonal Equation 의 관계는?">
+                <a class="post-nav-card is-older" href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models-kor/" aria-label="Previous Post: From Flow Matching to Optimal Transport: A Physics-based View of Generative Models">
                     <span class="post-nav-kicker">
                         <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
                     </span>
-                    <strong>SDF 와 Eikonal Equation 의 관계는?</strong>
+                    <strong>From Flow Matching to Optimal Transport: A Physics-base...</strong>
                 </a>
     
                 <a class="post-nav-card is-next" href="/blogs/posts/optimizing-sparse-3d-generation-inference-kor/" aria-label="Next Post: 컴파일러가 놓친 Sparse 3D Forward 최적화">
@@ -1215,10 +1209,10 @@ $$
 };
     </script>
 
-    <script src="/blogs/js/theme-toggle.js"></script>
-    <script src="/blogs/js/scroll-progress.js"></script>
-    <script src="/blogs/js/blog-shell.js"></script>
-    <script src="/blogs/js/post-page.js"></script>
+    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
+    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
     <script>
         initBlogShell({
             formSelector: '#post-nav-search-form',

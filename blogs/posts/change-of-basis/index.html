@@ -29,12 +29,12 @@
     <title>Change of Basis | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css" rel="stylesheet" />
-    <link href="/blogs/css/typography.css" rel="stylesheet" />
-    <link href="/blogs/css/post.css" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/css/site-icons.css" rel="stylesheet" />
-    <script src="/assets/js/site-icons.js"></script>
+    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
+    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -273,26 +273,17 @@ $$
 </li>
 </ul>
 <p>Let&#39;s construct the SVD according to its definition while keeping in mind the meaning of each symmetric matrix.</p>
-<p>
-$$
+<p>$$
 A = U \Sigma V^T \\ U, V : \text{each orthonormal}
-$$
-</p>
-
+$$</p>
 <p>Accordingly, if we represent $A^TA$ and $AA^T$:</p>
-<p>
-$$
+<p>$$
 A^T A = V \Sigma^T \Sigma V^T \\ A A^T = U \Sigma \Sigma^T U^T
-$$
-</p>
-
+$$</p>
 <p>Here, $V$ is the matrix of orthogonal eigenvectors of $A^TA$, and $U$ is the matrix of orthogonal eigenvectors of $AA^T$. Let&#39;s examine the meaning of each part more closely using the first equation. Let&#39;s multiply both sides by the matrix $V$ on the right.</p>
-<p>
-$$
+<p>$$
 A^TA v_j = \sigma_j^2 v_j \quad ( \text{from } A^TA V = V \Sigma^T \Sigma )
-$$
-</p>
-
+$$</p>
 <ol>
 <li><p>$AA^T (Av_j) = \sigma_j^2 (Av_j)$:
 By the definition of an eigenvector, $Av_j$ is an eigenvector of $AA^T$. (Here, $v_j$ is one of the columns of $V$, an eigenvector of $A^TA$).</p>
@@ -301,12 +292,9 @@ By the definition of an eigenvector, $Av_j$ is an eigenvector of $AA^T$. (Here, 
 This means $Av_j / \sigma_j$ is a unit eigenvector of $AA^T$, which we call $u_j$. ($u_j \in U$). Therefore,</p>
 </li>
 </ol>
-<p>
-$$
+<p>$$
 Av_j = \sigma_j u_j \\ \rightarrow AV = U \Sigma \\ \rightarrow A = U \Sigma V^T
-$$
-</p>
-
+$$</p>
 <p>Through this, we can see that SVD is defined through the symmetric square matrix $A^TA$ derived from a non-square matrix. Geometrically, this has a meaning similar to eigen-decomposition: since $U$ and $V$ are both square matrices composed of mutually orthonormal columns, they represent rotation transformations. $\Sigma$ represents a scaling transformation with the square roots of the eigenvalues of $A^TA$ (the singular values) as its diagonal elements. Although $U$ and $V$ <strong>may have different dimensions</strong>, they both share the essential property of being rotation transformations.</p>
 <h3 id="toc-heading-5">3.5. Moore-Penrose Pseudo-inverse Matrix</h3>
 <p>Let&#39;s look at the derivation process in detail.</p>
@@ -315,42 +303,27 @@ $$
 Ax = b
 $$</p>
 <p>If $A$ is a non-square or non-singular matrix, we cannot find a general solution using an inverse matrix. Therefore, just as we did with SVD, we can derive it by creating a symmetric and square matrix from $A$ that is easier to handle.</p>
-<p>
-$$
+<p>$$
 A^TA x = A^T b \\ \rightarrow x = (A^T A)^{-1} A^T b
-$$
-</p>
-
-<p>
-$$
+$$</p>
+<p>$$
 (A^TA)^{-1} A^T = \{ (V \Sigma^T U^T) (U \Sigma V^T) \}^{-1} V \Sigma^T U^T \\ = (V \Sigma^T \Sigma V^T)^{-1} V \Sigma^T U^T \\ = V (\Sigma^T \Sigma)^{-1} V^T V \Sigma^T U^T \\ = V (\Sigma^T \Sigma)^{-1} \Sigma^T U^T
-$$
-</p>
-
+$$</p>
 <p><em>(Note: The result $V \text{diag}(\sigma^{-1}) U^T$ is for the pseudo-inverse of A, not the full expression $(A^TA)^{-1}A^T$. The pseudo-inverse $A^+$ is $V \Sigma^+ U^T$, where $\Sigma^+$ is $\Sigma$ with its non-zero elements inverted.)</em></p>
 <p>The pseudo-inverse matrix is a matrix whose singular values are the reciprocals of the singular values of A.
 The expression at the beginning actually originates from the problem of considering L2 regularization in a least squares solution context.</p>
-<p>
-$$
+<p>$$
 \frac{d}{dx} \left( \| Ax - b\|_2^2 + \alpha \| x\|_2^2 \right) = 0 \\ \rightarrow (A^TA + \alpha I)x = A^Tb \\ \rightarrow \hat{x} = (A^TA + \alpha I)^{-1} A^T b
-$$
-</p>
-
+$$</p>
 <p>There is a geometric approach to explain why the described least squares solution has the minimum $\|x\|_2$ norm, but it is difficult to illustrate with diagrams, so I will omit it. The concept is not too difficult, on the level of high school geometry and vectors (though it&#39;s no longer high school level...).</p>
 <h2 id="toc-heading-6">4. Trace Operator &amp; Norm</h2>
 <h3 id="toc-heading-7">4.1. Norm</h3>
-<p>
-$$
+<p>$$
 \|x \|_p = \left(\sum_i |x_i|^p\right)^{\frac{1}{p}}
-$$
-</p>
-
-<p>
-$$
+$$</p>
+<p>$$
 \|A\|_F = \sqrt{\sum_{i,j} A_{i,j}^2}
-$$
-</p>
-
+$$</p>
 <h3 id="toc-heading-8">4.2. Trace Operator</h3>
 <p>$$
 \text{tr}(A) = \sum_i A_{i,i}
@@ -398,39 +371,27 @@ Instead, I will briefly describe the commonly used covariance matrix and explore
 $$
 <em>(Note: The formula often uses $1/n$ or $1/(n-1)$. Let&#39;s assume the data is centered.)</em></p>
 <p>In the above equation, let $X = A - \vec{\mu}$. Then, eigen-decomposition is possible.</p>
-<p>
-$$
+<p>$$
 X^TX = V \Lambda V^{-1} \\ = V \Lambda V^T \quad (\because X^TX \text{ is symmetric})
-$$
-</p>
-
+$$</p>
 <p><em>From this, we know the matrix of eigenvectors V is orthogonal, so $V^{-1}=V^T$.</em>
 Therefore, the eigenbasis of the covariance matrix is mutually orthogonal. Since the dot product between the basis vectors that make up the covariance matrix is 0, they are also said to be uncorrelated.</p>
 <p>The reason PCA proceeds with feature extraction in the direction that maximizes this is that the covariance matrix constructed from the data represents how spread out the data is. That is, by proceeding in a direction that preserves the maximum variance, the loss of information is minimized even when dimensionality reduction occurs (lossy compression).</p>
 <h3 id="toc-heading-11">5.2. Principal Component Analysis:</h3>
 <p>We can examine the relationship between PCA and eigen-decomposition through the final derived form of the encoder matrix in the following equation. According to the derivation in the Deep Learning book, PCA is equivalent to:</p>
-<p>
-$$
+<p>$$
 \arg\max_d \text{Tr}(d^T X^TXd) \\ \text{where } d^T d = 1
-$$
-</p>
-
+$$</p>
 <p>It can be easily seen that $d^TX^TXd$ defines a quadratic form.
 To add a brief comment on the formula, the constraint $\|d\|=1$ is imposed because when solving the maximization problem, the objective function value would simply increase by increasing the magnitude of the vector d.</p>
 <p>Since $X^TX$ is a symmetric matrix, we can find an eigen-decomposition $X^TX = V\Lambda V^T$. Let $d = Vd&#39;$, then:</p>
-<p>
-$$
+<p>$$
 d^TX^TXd = (Vd&#39;)^T (V \Lambda V^T) (Vd&#39;) \\ = d&#39;^T (V^T V \Lambda V^T V) d&#39; \\ = d&#39;^T \Lambda d&#39;
-$$
-</p>
-
+$$</p>
 <p>This equation represents an ellipsoid in the span formed by the eigenbasis, and it means we are choosing the largest axis among those that form this ellipse. To be more specific, let&#39;s derive the ellipse equation:</p>
-<p>
-$$
+<p>$$
 \begin{bmatrix} a_1 &amp; ... &amp; a_n \end{bmatrix} \begin{bmatrix} \lambda_1 &amp; &amp; 0\\ \vdots &amp; \ddots &amp; \vdots \\ 0 &amp; &amp; \lambda_n \\ \end{bmatrix} \begin{bmatrix} a_1 \\ \vdots \\ a_n \\ \end{bmatrix} \\ = \lambda_1 (a_1)^2 + \lambda_2 (a_2)^2 + ... + \lambda_n (a_n)^2 \\ \text{where } d&#39;^T = \begin{bmatrix} a_1 &amp; ... &amp; a_n \end{bmatrix}
-$$
-</p>
-
+$$</p>
 <p>Thus, we can confirm that it is an ellipse in the coordinate system formed by the eigenbasis.</p>
 <p>Besides the geometric explanation, we can also briefly show mathematically why the maximum value occurs when $d$ is an eigenvector. Let&#39;s see. If d is an eigenvector of $X^TX$:</p>
 <p>
@@ -488,11 +449,11 @@ $$
                     <strong>Linear System</strong>
                 </a>
     
-                <a class="post-nav-card is-next" href="/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/" aria-label="Next Post: Why Positional Encoding Makes NeRF more Powerful">
+                <a class="post-nav-card is-explore" href="/blogs/posts/optimizing-sparse-3d-generation-inference/" aria-label="Explore Series: 3D AI">
                     <span class="post-nav-kicker">
-                        Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
+                        Explore Series <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
-                    <strong>Why Positional Encoding Makes NeRF more Powerful</strong>
+                    <strong>3D AI</strong>
                 </a>
     </nav></div>
                 </div>
@@ -1165,10 +1126,10 @@ $$
 };
     </script>
 
-    <script src="/blogs/js/theme-toggle.js"></script>
-    <script src="/blogs/js/scroll-progress.js"></script>
-    <script src="/blogs/js/blog-shell.js"></script>
-    <script src="/blogs/js/post-page.js"></script>
+    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
+    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
     <script>
         initBlogShell({
             formSelector: '#post-nav-search-form',

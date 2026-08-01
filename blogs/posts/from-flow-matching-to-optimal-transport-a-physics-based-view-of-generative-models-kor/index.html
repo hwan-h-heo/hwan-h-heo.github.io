@@ -29,12 +29,12 @@
     <title>From Flow Matching to Optimal Transport: A Physics-based View of Generative Models (Korean) | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css" rel="stylesheet" />
-    <link href="/blogs/css/typography.css" rel="stylesheet" />
-    <link href="/blogs/css/post.css" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/css/site-icons.css" rel="stylesheet" />
-    <script src="/assets/js/site-icons.js"></script>
+    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
+    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -367,12 +367,9 @@ $$</p>
 $$</p>
 <p>이 방정식은 &quot;<em>확률은 갑자기 생기거나 사라지지 않고, 오직 흐름을 통해서만 그 밀도가 변한다</em>&quot; 는 <strong>확률 질량 보존 법칙</strong>을 수학적으로 표현한 것이다.</p>
 <p><em><strong>Deterministic drift</strong></em> (ODE) 와 더불어, 브라운 운동 같은 무작위적인 노이즈 (diffusion) 을 고려하는 일반적인 편미분 방정식이 <strong><a href="https://en.wikipedia.org/wiki/Fokker%E2%80%93Planck_equation">Fokker-Planck Equation</a></strong> 로 알려져 있는데,</p>
-<p>
-$$
+<p>$$
 \frac{\partial p_t(x)}{\partial t} = \underbrace{-\nabla \cdot [f(x,t)p_t(x)]}_{\text{Drift (flow)}} + \underbrace{\frac{1}{2}\sum_{i,j} \frac{\partial^2}{\partial x_i \partial x_j} [[g(t)g(t)^T]_{ij} p_t(x)]}_{\text{Diffusion}}
-$$
-</p>
-
+$$</p>
 <p>Continuous Normalizing Flow (CNF)는 diffusion 항이 없는 ($g=0$), 순수한 deterministic 형태이므로, CNF 가 따르는 확률 분포의 dynamics 은 <strong><em>Fokker-Planck Equation 의 특수한 경우인 Continuity Equation</em></strong> 라고도 볼 수 있다.</p>
 <hr>
 <h4>2.2.2. Derivation of Log-Likelihood</h4>
@@ -422,15 +419,12 @@ $$
 \frac{d \log p_t(x_t)}{dt} = \frac{\partial \log p_t(x_t)}{\partial t} + u_t(x_t) \cdot \nabla_x \log p_t(x_t) \quad \cdots \text{(eqn. 1)}
 $$</p>
 <p>방금 얻은 결과인 eqn2 를 대입해보자.</p>
-<p>
-$$
+<p>$$
 \begin{aligned}
 \frac{d \log p_t(x_t)}{dt} &amp;= \underbrace{\left[-(\nabla \log p_t) \cdot u_t - (\nabla \cdot u_t)\right]}_{\text{from (eqn. 2)}} + u_t \cdot \nabla \log p_t
 \\ &amp;= - \nabla \cdot u_t(x_t)
 \end{aligned}
-$$
-</p>
-
+$$</p>
 <p>결과적으로 우리는 다음과 같은 매우 간결한 최종 eqn 을 얻게 되었다.</p>
 <p>$$
 \frac{d \log p_t(x_t)}{dt} = - \nabla \cdot u_t(x_t)
@@ -473,12 +467,9 @@ divergence 의 정의와 동일한 것을 알 수 있다. </p>
 <h2 id="toc-heading-7">3. Flow Matching</h2>
 <p>Continuous Normalizing Flow (CNF)는 Jacobian determinant 을 trace 의 적분으로 대체하여 계산을 용이하게 만들었지만, 여전히 심각한 문제, 바로 <strong><em>느린 학습 속도</em></strong> 가 남아있다. Log-likelihood 를 계산하기 위해서는 매 학습 단계마다 ODE 를 풀어야 했고, 이는 본질적으로 diffusion model 의 느린 샘플링 과정을 매번 반복하는 것과 유사했다.</p>
 <p>Neural Network 로 velocity field $v_\theta(x_t, t)$ 를 학습시키기 위한 이상적인 loss function 은 다음과 같다.</p>
-<p>
-$$
+<p>$$
 \mathcal{L} = \mathbb{E}_{t \sim \mathcal{U}, x_t \sim p_t} [\|v_\theta(x_t, t) - u_t(x_t)\|^2]
-$$
-</p>
-
+$$</p>
 <p>이 loss function 은 시간 $t$의 샘플 $x_t$ 를 보고, 그 지점에서의 실제 속도장 $u_t(x_t)$ 를 예측하는 regression 문제이다. </p>
 <ul>
 <li>$v_\theta(x_t, t)$: 우리가 학습시킬 Network 가 예측한 velocity vector field</li>
@@ -562,15 +553,11 @@ $$</p>
 <p><strong><em>[2] 따라서, 전체 loss function 은 conditional loss function 과 동등하다.</em></strong></p>
 </blockquote>
 <p>첫 번째 사실로부터, 우리가 풀고 싶었던 이상적이지만 계산 불가능한 loss function 이, 계산 가능한 conditional loss function 과 동등하다는 것이 증명된다.</p>
-<p>
-$$
+<p>$$
 \mathcal{L}_{\text{marginal}} = \mathbb{E}_{t, x_t} [\|v_\theta - u_t\|^2] \\ \iff \\ \mathcal{L}_{\text{CFM}} = \mathbb{E}_{t, x_1, x_t|x_1} [\|v_\theta - u_t(\cdot|x_1)\|^2] + C
-$$
-</p>
-
+$$</p>
 <p>두 loss 가 동등한 이유는 loss function 을 전개했을 때 나타나는 inner product 항을 살펴보면 명확해진다.</p>
-<p>
-$$
+<p>$$
 \begin{aligned}
 \mathbb{E}_{x_t \sim p_t} [\langle v_\theta(x_t), u_t(x_t) \rangle] &amp;= \int \left[ v_\theta(x_t) \cdot  \boxed{u_t(x_t)} \ \right ]p_t(x_t) dx_t \\
 &amp;= \int \left[ v_\theta(x_t) \cdot \boxed{\int u_t(x_t|x_1) p_t(x_1|x_t) dx_1 } \right ]p_t(x_t) dx_t \\
@@ -578,9 +565,7 @@ $$
 &amp;= \iint v_\theta(x_t) \cdot u_t(x_t|x_1) \boxed{p(x_1, x_t)} dx_1 dx_t \\
 &amp;= \mathbb{E}_{(x_1, x_t) \sim p(x_1, x_t)} [\langle v_\theta(x_t), u_t(x_t|x_1) \rangle]
 \end{aligned}
-$$
-</p>
-
+$$</p>
 <p>이는 알 수 없는 $u_t$에 대한 regression problem 을, 우리가 직접 설계하여 정답을 알고 있는 $u_t(\cdot|x_1)$에 대한 regression problem 로 완벽하게 대체할 수 있음을 의미한다.</p>
 <img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-63e35c0aefb1.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.1.2. Conditional Flow Matching" loading="lazy" decoding="async">
 
@@ -636,12 +621,9 @@ $
 이다.</li>
 </ul>
 <p>이제 CFM 의 loss function 에 이를 대입하면 Rectified Flow 의 최종 목표 함수가 완성된다.</p>
-<p>
-$$
+<p>$$
 \mathcal{L} = \mathbb{E}_{t \sim U, x_0 \sim p_0, x_1 \sim p_1} \left[ \left\| v_\theta((1-t)x_0 + tx_1, t) - (x_1 - x_0) \right\|^2 \right]
-$$
-</p>
-
+$$</p>
 <p>신경망은 중간 지점 $x_t$를 보고, 최종 목적지에서 출발지를 뺀 방향 벡터 ($x_1 - x_0$) 를 맞추는 <em><strong>아주 간단한 regression 문제</strong></em> 를 풀게 된다. 이 단순함이 비약적인 학습 속도와 안정성을 가져온다.</p>
 <p>마지막으로 Rectified Flow 은 또다른 장점이 존재한다. </p>
 <p>한 번의 학습으로 얻어진 coupling $(Z_0, Z_1)$ 은 초기 노이즈와 데이터의 독립적인 coupling $(X_0, X_1)$ 보다 이미 훨씬 정돈된 (less entangled) 상태이다. 만약 우리가 이 $(Z_0, Z_1)$ 을 새로운 &#39;데이터&#39;로 삼아 다시 한번 Rectified Flow 를 학습시키면 어떻게 될까? Rectified Flow 연구진은 이 <em><strong>&#39;Reflow&#39;</strong></em> 과정을 반복할수록 샘플들의 이동 경로가 기하급수적으로 직선에 가까워짐을 보였다.
@@ -908,12 +890,9 @@ $$</li>
 </ol>
 <p><em>cf.</em> 여기서 Exp / Log 의 이름은 우리가 scalar function 에서 수행하는 exp, log 연산이 아니라, linear differential equation 의 해로써의 ‘exp’, 그리고 그에 대한 invert ‘log’ 로써의 이름에 가깝다 (Lie Group ↔ Algebra 간에 사용하는 exp/log map 과 같은 개념). Manifold 위에서의 ‘뺄셈’과 ‘덧셈’의 일반화 된 정의에 가깝다고 해석하는 것이 좋다.  </p>
 <p>이제 이 두 가지를 결합하면, Manifold 위에서의 <strong>Geodesic Conditional Flow</strong> 가 완성된다.</p>
-<p>
-$$
+<p>$$
 \psi_t(x_0|x_1) = \text{exp}_{x_0} (t \cdot \text{log}_{x_0}(x_1))
-$$
-</p>
-
+$$</p>
 <p>이것이 바로 진정한 의미의 <strong>Rectified Flow</strong> 이다. 모델은 이제 Euclidean 공간의 직선이 아닌,  Manifold  위의 최단 경로인 <strong>Geodesic 을 따라 흐르도록</strong> 학습된다.</p>
 <p>이제 자유 입자의 Action 을 Manifold 위에서 재정의하면, 총 운동 에너지를 Riemannian Metric $g$ 를 이용해 계산하고 이를 시간에 대해 적분하는 형태가 된다. 그리고 이 Action 을 최소화하는 경로는, 정의에 따라, 바로 <em><strong>Geodesic</strong></em> 이다.</p>
 <p>따라서 Rectified Flow의 &#39;직선 경로&#39; 라는 아이디어는 유클리드 공간에 국한된 특수한 경우가 아니었다. 그것은 <strong>&quot;주어진 기하학적 구조 (Manifold, metric) 하에서 에너지 소모 (Action)가 가장 적은 경로를 따른다&quot;</strong> 는 더 깊고 일반적인 물리적 원리의 한 단면을 반영한다. $$\ddot{x}=0$$ 이라는 단순한 방정식은, Manifold 위에서는 더 복잡한 geodesic equation 으로 대체되지만 그 근본 원리는 동일하다.</p>
@@ -1011,18 +990,18 @@ $$
                     </section>
     
                     <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/generalized-winding-number-kor/" aria-label="Previous Post: Generalized Winding Number">
+                <a class="post-nav-card is-older" href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive-kor/" aria-label="Previous Post: Large 3D Generative Model 구축하기 (2) VAE and DiT 분석">
                     <span class="post-nav-kicker">
                         <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
                     </span>
-                    <strong>Generalized Winding Number</strong>
+                    <strong>Large 3D Generative Model 구축하기 (2) VAE and DiT 분석</strong>
                 </a>
     
-                <a class="post-nav-card is-next" href="/blogs/posts/sdf-and-eikonal-equation-kor/" aria-label="Next Post: SDF 와 Eikonal Equation 의 관계는?">
+                <a class="post-nav-card is-next" href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/" aria-label="Next Post: 3D 생성형 AI 서비스; Varco3D 개발기">
                     <span class="post-nav-kicker">
                         Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
-                    <strong>SDF 와 Eikonal Equation 의 관계는?</strong>
+                    <strong>3D 생성형 AI 서비스; Varco3D 개발기</strong>
                 </a>
     </nav></div>
                 </div>
@@ -1695,10 +1674,10 @@ $$
 };
     </script>
 
-    <script src="/blogs/js/theme-toggle.js"></script>
-    <script src="/blogs/js/scroll-progress.js"></script>
-    <script src="/blogs/js/blog-shell.js"></script>
-    <script src="/blogs/js/post-page.js"></script>
+    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
+    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
     <script>
         initBlogShell({
             formSelector: '#post-nav-search-form',

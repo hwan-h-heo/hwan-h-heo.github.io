@@ -28,14 +28,14 @@
     <title>Feature Extraction and Detection | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css" rel="stylesheet" />
-    <link href="/blogs/css/typography.css" rel="stylesheet" />
-    <link href="/blogs/css/post.css" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/css/site-icons.css" rel="stylesheet" />
-    <script src="/assets/js/site-icons.js"></script>
+    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
+    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
-    <link href="/blogs/css/code-copy.css" rel="stylesheet" />
+    <link href="/blogs/css/code-copy.css?v=97949adbc2" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -440,11 +440,8 @@ $$ E(u,v) = \sum_{x,y \in W} [I(x+u, y+v) - I(x,y)]^2
 $$
 where <code>W</code> is the sliding window. </p>
 <p>Using a first-order Taylor expansion, this can be approximated as:</p>
-<p>
-$$ E(u,v) \approx \sum_{W} [I_x u + I_y v]^2 = [u, v] \left( \sum_{W} \begin{bmatrix} I_x^2 &amp; I_x I_y \\ I_x I_y &amp; I_y^2 \end{bmatrix} \right) \begin{bmatrix} u \\ v \end{bmatrix}
-$$
-</p>
-
+<p>$$ E(u,v) \approx \sum_{W} [I_x u + I_y v]^2 = [u, v] \left( \sum_{W} \begin{bmatrix} I_x^2 &amp; I_x I_y \\ I_x I_y &amp; I_y^2 \end{bmatrix} \right) \begin{bmatrix} u \\ v \end{bmatrix}
+$$</p>
 <p>This can be written compactly as:
 $$ E(u,v) \approx [u, v] H \begin{bmatrix} u \\ v \end{bmatrix}
 $$
@@ -1234,11 +1231,11 @@ plt.show()
     </script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
-    <script src="/blogs/js/code-copy.js"></script>
-    <script src="/blogs/js/theme-toggle.js"></script>
-    <script src="/blogs/js/scroll-progress.js"></script>
-    <script src="/blogs/js/blog-shell.js"></script>
-    <script src="/blogs/js/post-page.js"></script>
+    <script src="/blogs/js/code-copy.js?v=e6b60656e4"></script>
+    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
+    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
     <script>
         initBlogShell({
             formSelector: '#post-nav-search-form',

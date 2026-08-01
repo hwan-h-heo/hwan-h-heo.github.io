@@ -29,12 +29,12 @@
     <title>Generalized Winding Number (Korean) | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css" rel="stylesheet" />
-    <link href="/blogs/css/typography.css" rel="stylesheet" />
-    <link href="/blogs/css/post.css" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/css/site-icons.css" rel="stylesheet" />
-    <script src="/assets/js/site-icons.js"></script>
+    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
+    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -214,12 +214,9 @@ SDF 는 그 이름과 같이, &#39;부호를 가진 거리 함수&#39; 인데, <
 <p>이 직관을 토대로, 이를 좀 더 수학적인 용어로 확장해보겠다.</p>
 <h3 id="toc-heading-4">2. Definition w/ Cauchy Integral</h3>
 <p>복소평면에서 닫힌 경로 $\gamma$ 와 이 경로 위에 있지 않은 점 $a$ 에 대한 와인딩 넘버 $n(\gamma, a)$ 는 다음과 같은 코시 적분으로 정의된다.</p>
-<p>
-$$
+<p>$$
 n(\gamma, a) = \frac{1}{2\pi i} \oint_\gamma \frac{1}{z-a} dz
-$$
-</p>
-
+$$</p>
 <p>이 적분 값은 항상 정수가 되며, 이는 $\gamma$ 가 점 $a$ 를 몇 번 감았는지를 나타낸다.</p>
 <hr>
 <h4>왜 코시 적분으로 와인딩 넘버를 정의할 수 있을까?</h4>
@@ -248,20 +245,14 @@ $$
 <hr>
 <h3 id="toc-heading-6">1. Discreatization of Winding Numver</h3>
 <p>위에서 살펴본 winding number 의 정의에 대하여, 일반성을 잃지 않고 기준점 $p$ 를 원점으로 가정할 때, winding number 는 <em>spherical coordinates 의 각도 변화를 적분하여</em> 정의할 수 있을 것이다.</p>
-<p>
-$$
+<p>$$
 w(p) = \frac{1}{2\pi} \int_C d\theta
-$$
-</p>
-
+$$</p>
 <p>직관적으로 이는 곡선 $C$ 를 $p$ 주위의 단위 원 (unit circle)에 투영했을 때, 그 투영된 경로의 부호를 고려한 길이를 $2\pi$ 로 나눈 값과 같다.</p>
 <p>만약 곡선 $C$ 가 여러 개의 선분으로 이루어진 polyline, piecewise linear 라면, 이 적분은 각 선분이 만드는 각도의 합으로 정확하게 이산화될 수 있다.</p>
-<p>
-$$
+<p>$$
 w(p) = \frac{1}{2\pi} \sum_{i=1}^n \theta_i
-$$
-</p>
-
+$$</p>
 <p>여기서 $\theta_i$는 곡선의 연속된 두 정점 $c_i, c_{i+1}$ 과 점 $p$가 이루는 signed angle 이다.</p>
 <h3 id="toc-heading-7">2. Winding Number in 3D: Solid Angle</h3>
 <p>Winding Number 는 3차원으로 즉시 일반화될 수 있다. 이때 2D space 에서의 <strong>각도(angle)</strong> 는 3D의 <strong>입체각 (solid angle, $\Omega$)</strong> 으로 대체된다. 
@@ -269,12 +260,9 @@ $$
 <img src='/blogs/posts/250809_gwn/assets/remote-74dfc1934801.png' width=40% alt="Generalized Winding Number — 2. Winding Number in 3D: Solid Angle" loading="lazy" decoding="async">
 
 <p>점 $p$ 에 대한 닫힌 서피스 $S$ 의 winding number 는 $p$ 에서 $S$ 가 만드는 총 solid angle 을 구 전체의 solid angle 인 $4\pi$로 나눈 값으로 정의된다.</p>
-<p>
-$$
+<p>$$
 \omega(p) = \frac{1}{4\pi} \int_{S} \frac{(x-p) \cdot \mathbf{n}_x}{\|x-p\|^3} dA
-$$
-</p>
-
+$$</p>
 <ul>
 <li><p>이 수식에서 $p$ 는 winding number 를 계산하고자 하는 3차원 공간상의 한 점, $S$ : closed surface (mesh), $x$ : surface $S$ 위의 한 점, $\mathbf{n}_x$ : 점 $x$ 에서의 normal vector 를 나타낸다. </p>
 </li>
@@ -315,12 +303,9 @@ $$
 </li>
 </ul>
 <p>이 역시 서피스가 삼각형 메시로 구성되어 있다면, 각 삼각형이 만드는 입체각 $\Omega_f$의 합으로 정확하게 discreatize 될 수 있을 것이다.</p>
-<p>
-$$
+<p>$$
 w(p) = \sum_{f=1}^m \frac{1}{4\pi} \Omega_f(p)
-$$
-</p>
-
+$$</p>
 <p>여기서 $\Omega(p, T)$는 점 $p$에서 삼각형 $T$가 이루는 입체각을 의미한다.</p>
 <aside>
 💡 <strong id="strong-2" > Summary </strong> : 코시 적분 공식으로 어렵게 정의되어 있지만, 점 $p$ 를 중심으로하는 단위원에 mesh 의 모든 face 를 사영하여 나오는 겉넓이가 전체에서 어느 비율을 차지하는지를 계산한다고 생각하면 된다. 이 때 2D 에서의 winding number 가 <em id="em-1" >반시계방향</em> 으로 감긴 값을 positive 로 계산했듯이, GWN 에서는 표면의 겉면(Normal 방향)이 보이면 양수, 뒷면이 보이면 음수로 계산되어 합산되는 원리이다. 즉 mesh surface 위라면 이 값은 0.5 에, mesh 내부라면 1에 가깝게, mesh 외부라면 0 에 가까운 값을 갖게될 것이다. 
@@ -351,12 +336,9 @@ $$ f(p) = \omega(p) - 0.5$$
 <li><p><strong>SDF 결합</strong>: 위 두 단계에서 얻은 부호와 거리를 결합하여 최종 SDF 값을 얻는다.</p>
 </li>
 </ol>
-<p>
-$$
+<p>$$
 \text{SDF}(p) = \text{sign}(0.5-w(p)) \times \text{distance}(p, S)
-$$
-</p>
-
+$$</p>
 <hr>
 <h3 id="toc-heading-10">Why GWN?</h3>
 <p>GWN의 가장 큰 힘은 <strong>Robustness</strong> 에 있다. 입력 메시가 <strong>열려 있거나(open), 비다양체(non-manifold)이거나, 그 외의 문제가 있어도</strong> 의미 있는 값을 계산해낸다.</p>
@@ -423,19 +405,12 @@ $$
                         </div>
                     </section>
     
-                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive-kor/" aria-label="Previous Post: Large 3D Generative Model 구축하기 (2) VAE and DiT 분석">
-                    <span class="post-nav-kicker">
-                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
-                    </span>
-                    <strong>Large 3D Generative Model 구축하기 (2) VAE and DiT 분석</strong>
-                </a>
-    
-                <a class="post-nav-card is-next" href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models-kor/" aria-label="Next Post: From Flow Matching to Optimal Transport: A Physics-based View of Generative Models">
+                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation"><span class="post-nav-spacer" aria-hidden="true"></span>
+                <a class="post-nav-card is-next" href="/blogs/posts/sdf-and-eikonal-equation-kor/" aria-label="Next Post: SDF 와 Eikonal Equation 의 관계는?">
                     <span class="post-nav-kicker">
                         Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
-                    <strong>From Flow Matching to Optimal Transport: A Physics-base...</strong>
+                    <strong>SDF 와 Eikonal Equation 의 관계는?</strong>
                 </a>
     </nav></div>
                 </div>
@@ -1108,10 +1083,10 @@ $$
 };
     </script>
 
-    <script src="/blogs/js/theme-toggle.js"></script>
-    <script src="/blogs/js/scroll-progress.js"></script>
-    <script src="/blogs/js/blog-shell.js"></script>
-    <script src="/blogs/js/post-page.js"></script>
+    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
+    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
     <script>
         initBlogShell({
             formSelector: '#post-nav-search-form',

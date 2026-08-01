@@ -29,12 +29,12 @@
     <title>Under the 3D: Geometrically Accurate 2D Gaussian Splatting | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css" rel="stylesheet" />
-    <link href="/blogs/css/typography.css" rel="stylesheet" />
-    <link href="/blogs/css/post.css" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/css/site-icons.css" rel="stylesheet" />
-    <script src="/assets/js/site-icons.js"></script>
+    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
+    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -219,7 +219,7 @@
     </div>
                 </div>
                 <div class="post-reading-column main-content">
-                    <button id="copyButton" type="button" aria-label="Copy post link">
+                    <nav class="toc" aria-label="Table of contents"><div class="toc-title">On This Page</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Introduction" aria-label="Introduction"><span class="toc-link-text">Introduction</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-1" title="Challenges in Mesh Reconstruction for Radiance Fields" aria-label="Challenges in Mesh Reconstruction for Radiance Fields"><span class="toc-link-text">Challenges in Mesh Reconstruction for Radiance Fields</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="1. Background" aria-label="1. Background"><span class="toc-link-text">1. Background</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="1.1. 3D Gaussian Splatting" aria-label="1.1. 3D Gaussian Splatting"><span class="toc-link-text">1.1. 3D Gaussian Splatting</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="1.2. Surface Reconstruction Problem in 3D GS" aria-label="1.2. Surface Reconstruction Problem in 3D GS"><span class="toc-link-text">1.2. Surface Reconstruction Problem in 3D GS</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="1.3. SuGaR: Surface-Aligned Gaussian Splatting" aria-label="1.3. SuGaR: Surface-Aligned Gaussian Splatting"><span class="toc-link-text">1.3. SuGaR: Surface-Aligned Gaussian Splatting</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-6" title="2. 2D Gaussian Splatting" aria-label="2. 2D Gaussian Splatting"><span class="toc-link-text">2. 2D Gaussian Splatting</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="2.1. 2D Gaussian Modeling (Gaussian Surfels)" aria-label="2.1. 2D Gaussian Modeling (Gaussian Surfels)"><span class="toc-link-text">2.1. 2D Gaussian Modeling (Gaussian Surfels)</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.2. Splatting" aria-label="2.2. Splatting"><span class="toc-link-text">2.2. Splatting</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-9" title="2.3. Training 2D GS" aria-label="2.3. Training 2D GS"><span class="toc-link-text">2.3. Training 2D GS</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-10" title="3. Experimens &amp; Custom Viewer" aria-label="3. Experimens &amp; Custom Viewer"><span class="toc-link-text">3. Experimens &amp; Custom Viewer</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-11" title="3.1. Qualitative Results" aria-label="3.1. Qualitative Results"><span class="toc-link-text">3.1. Qualitative Results</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-12" title="3.2. Custom Viser Viewer for 2D Gaussian Splatting" aria-label="3.2. Custom Viser Viewer for 2D Gaussian Splatting"><span class="toc-link-text">3.2. Custom Viser Viewer for 2D Gaussian Splatting</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-13" title="4. Conclusion" aria-label="4. Conclusion"><span class="toc-link-text">4. Conclusion</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
@@ -241,31 +241,7 @@
     </div>
 </div>
 
-<nav class="toc">
-    <ul>
-        <li><a href="#intro"> Introduction </a></li>
-        <li><a href="#1-preliminary"> Background </a></li>
-        <ul>
-            <li><a href="#1-1-3d-gaussian-splatting"> 3D Gaussian Splatting </a></li>
-            <li><a href="#1-2-surface-reconstruction-problem-in-3d-gs"> Surface Reconstruction Problem </a></li>
-            <li><a href="#1-3-sugar-surface-aligned-gaussian-splatting"> Surface-Aligned Gaussian Splatting </a></li>
-        </ul>
-        <li><a href="#2-2d-gaussian-splatting"> 2D Gaussian Splatting </a></li>
-        <ul>
-            <li><a href="#2-1-2d-gaussian-modeling-gaussian-surfels-"> 2D Gaussian Modeling </a></li>
-            <li><a href="#2-2-splatting"> 2D-to-2D Projection </a></li>
-            <li><a href="#2-3-training-2d-gs"> Training 2D GS </a></li>
-        </ul>
-        <li><a href="#3-experimens-custom-viser-viewer"> Experimens &amp; Custom Viser Viewer </a></li>
-        <ul>
-            <li><a href="#3-1-qualitative-results-custom-object-reconstruction"> Qualitative Results </a></li>
-            <li><a href="#3-2-custom-viser-viewer-for-2d-gaussian-splatting"> Custom Viser Viewer for 2D GS </a></li>
-        </ul>
-        <li><a href="#4-conclusion"> Conclusion </a></li>
-    </ul>
-</nav>
-
-<h2 id="intro"> Introduction </h2>
+<h2 id="toc-heading-0"><span id="intro"></span>Introduction</h2>
 <blockquote class="lang eng">
     <p>
         This article provides an in-depth review of the paper "2D Gaussian Splatting for Geometrically Accurate Radiance Fields," 
@@ -281,7 +257,7 @@
     </figcaption>
 </figure>
 
-<h3 id="recap-radiance-fields-mesh-recon-" class="lang eng"> Challenges in Mesh Reconstruction for Radiance Fields </h3>
+<h3 id="toc-heading-1"><span id="recap-radiance-fields-mesh-recon-" class="lang eng"></span>Challenges in Mesh Reconstruction for Radiance Fields</h3>
 <p class="lang eng"> 
     In a previous discussion (<span style="text-decoration: underline;"><a href="https://ncsoft.github.io/ncresearch/b515d0241ebe9af4a549e991ae0efc4a90f0f65e">Can NeRF be used in game production? (kor)</a></span>), 
     I highlighted the ongoing challenges in the practical application of Radiance Fields technologies. 
@@ -304,8 +280,8 @@
 
 <hr/>
 
-<h2 id="1-preliminary">1. Background </h2>
-<h3 id="1-1-3d-gaussian-splatting"> 1.1. 3D Gaussian Splatting</h3>
+<h2 id="toc-heading-2"><span id="1-preliminary"></span>1. Background</h2>
+<h3 id="toc-heading-3"><span id="1-1-3d-gaussian-splatting"></span>1.1. 3D Gaussian Splatting</h3>
 <p><img src="/blogs/posts/240602_2dgs/assets/image-7.png" alt="Under the 3D: Geometrically Accurate 2D Gaussian Splatting — 1.1. 3D Gaussian Splatting" width="100%" loading="lazy" decoding="async"></p>
 
 <div class="lang eng">
@@ -355,8 +331,7 @@
     </ol>
 </div>
 
-<h3 id="1-2-surface-reconstruction-problem-in-3d-gs"> 1.2. Surface Reconstruction Problem in 3D GS</h3>
-
+<h3 id="toc-heading-4"><span id="1-2-surface-reconstruction-problem-in-3d-gs"></span>1.2. Surface Reconstruction Problem in 3D GS</h3>
 <div class="lang eng">
     <p>
         Despite the advantages, 3D GS presents significant challenges in surface reconstruction. 
@@ -397,8 +372,7 @@
     </p>
 </div>
 
-<h3 id="1-3-sugar-surface-aligned-gaussian-splatting"> 1.3. SuGaR: Surface-Aligned Gaussian Splatting</h3>
-
+<h3 id="toc-heading-5"><span id="1-3-sugar-surface-aligned-gaussian-splatting"></span>1.3. SuGaR: Surface-Aligned Gaussian Splatting</h3>
 <div class="lang eng">
     <p>
         <a href="https://anttwo.github.io/sugar/">SuGaR</a> (Surface-Aligned Gaussian Splatting) is a previous work that addresses some of the surface reconstruction challenges 
@@ -420,8 +394,8 @@
     contribute to surface reconstruction difficulties, often resulting in meshes with suboptimal geometry in custom scenes.
 </p>
 
-<h2 id="2-2d-gaussian-splatting">2. 2D Gaussian Splatting</h2>
-<h3 id="2-1-2d-gaussian-modeling-gaussian-surfels-"> 2.1. 2D Gaussian Modeling (Gaussian Surfels)</h3>
+<h2 id="toc-heading-6"><span id="2-2d-gaussian-splatting"></span>2. 2D Gaussian Splatting</h2>
+<h3 id="toc-heading-7"><span id="2-1-2d-gaussian-modeling-gaussian-surfels-"></span>2.1. 2D Gaussian Modeling (Gaussian Surfels)</h3>
 <p><img src ='/blogs/posts/240602_2dgs/assets/image-6.png' width=100% alt="Under the 3D: Geometrically Accurate 2D Gaussian Splatting — 2.1. 2D Gaussian Modeling (Gaussian Surfels)" loading="lazy" decoding="async"></p>
 <div class="lang eng">
     <p>
@@ -474,9 +448,8 @@
     and spherical harmonics coefficients for opacity and non-Lambertian color.
 </p>
 
-<h3 id="2-2-splatting"> 2.2. Splatting </h3>
-<h4 id="2-2-1-accurate-2d-to-2d-projection-in-homogeneous-coordinates"> 2D-to-2D Projection </h4>
-
+<h3 id="toc-heading-8"><span id="2-2-splatting"></span>2.2. Splatting</h3>
+<h4><span id="2-2-1-accurate-2d-to-2d-projection-in-homogeneous-coordinates"></span>2D-to-2D Projection</h4>
 <div class="lang eng">
     <p>
         In principle, a 2D Gaussian can be used as a 3D GS projection by simply setting the third scale dimension to zero. 
@@ -514,8 +487,7 @@
     However, the inverse transform can introduce numerical instabilities, leading to optimization challenges.
 </p>
 
-<h4 id="2-2-2-ray-splat-intersection"> Ray-Splat Intersection w/ Homography</h4>
-
+<h4><span id="2-2-2-ray-splat-intersection"></span>Ray-Splat Intersection w/ Homography</h4>
 <div class="lang eng">
     <p>
         The authors resolve the ray-splat intersection problem by identifying the intersection of three non-parallel planes. 
@@ -557,14 +529,14 @@
 </div>
 <img src='/blogs/posts/240602_2dgs/assets/image-2.jpeg' width="100%" alt="Under the 3D: Geometrically Accurate 2D Gaussian Splatting — Ray-Splat Intersection w/ Homography" loading="lazy" decoding="async">
 
-<h3 id="2-3-training-2d-gs"> 2.3. Training 2D GS </h3>
-<
+<h3 id="toc-heading-9"><span id="2-3-training-2d-gs"></span>2.3. Training 2D GS</h3>
+<p>&lt;</p>
 <p class="lang eng">
     In addition to the image rendering loss defined through 2D projection and rasterization, 
     the training process for 2D GS incorporates two additional regularization losses: Depth Distortion Loss and Normal Consistency Loss.
 </p>
-<h4 id="2-3-1-depth-distortion"> Depth Distortion Regularization </h4>
 
+<h4><span id="2-3-1-depth-distortion"></span>Depth Distortion Regularization</h4>
 <div class="lang eng">
     <p>
         Unlike NeRF, where volume rendering accounts for distance differences between intersecting splats, 3D GS does not, 
@@ -612,9 +584,8 @@
     \end{aligned}
     $$
 </div>
-<p> 
-    where $A_i = \sum_{j=0}^{i} \omega_j$, $D_i = \sum_{j=0}^{i} \omega_j m_j$, and $D_i^2 = \sum_{j=0}^{i} \omega_j m_j^2$
-</p>
+
+<p>where $A_i = \sum_{j=0}^{i} \omega_j$, $D_i = \sum_{j=0}^{i} \omega_j m_j$, and $D_i^2 = \sum_{j=0}^{i} \omega_j m_j^2$</p>
 <p class="lang eng">
     Also, the implementation of this loss shows that, 
     each of the terms is either an accumulation of opacity or an accumulation of opacity $\times$ depth.
@@ -633,8 +604,7 @@
     In the 2D GS implementations, this is handled by the rasterizer.
 </p>
 
-<h4 id="2-3-2-normal-consistency"> Normal Consistency Regularization </h4>
-
+<h4><span id="2-3-2-normal-consistency"></span>Normal Consistency Regularization</h4>
 <div class="lang eng">
     <p>
         In addition to distortion loss, 2D GS presents normal consistency loss, 
@@ -687,9 +657,8 @@
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure:</strong> Normal vs Depth2Normal, captured in my custom viewer </figcaption>
 </figure>
 
-<h2 id="3-experimens-custom-viser-viewer">3. Experimens &amp; Custom Viewer</h2>
-<h3 id="3-1-qualitative-results-custom-object-reconstruction">3.1. Qualitative Results </h3>
-
+<h2 id="toc-heading-10"><span id="3-experimens-custom-viser-viewer"></span>3. Experimens &amp; Custom Viewer</h2>
+<h3 id="toc-heading-11"><span id="3-1-qualitative-results-custom-object-reconstruction"></span>3.1. Qualitative Results</h3>
 <p class="lang eng">
     Although the quantitative results on Novel view synthesis may not appear impressive in comparison 
     to previous studies, the true value of 2D GS lies in its qualitative evaluation and practical testing. 
@@ -732,8 +701,7 @@
     </blockquote>
 </div>
 
-<h3 id="3-2-custom-viser-viewer-for-2d-gaussian-splatting">3.2. Custom Viser Viewer for 2D Gaussian Splatting</h3>
-
+<h3 id="toc-heading-12"><span id="3-2-custom-viser-viewer-for-2d-gaussian-splatting"></span>3.2. Custom Viser Viewer for 2D Gaussian Splatting</h3>
 <div class="lang eng">
     <p>
         <del>One limitation of 2D GS is the lack of an official viewer. </del>
@@ -751,11 +719,10 @@
         making it easier to monitor scene training and generate rendering camera paths.
     </p>
 </div>
-<h4 id="-github-project-link-https-github-com-hwanhuh-2d-gs-viser-viewer-tree-main-">⭐ <a href="https://github.com/hwanhuh/2D-GS-Viser-Viewer/tree/main">Github Project Link</a></h4>
+
+<h4><span id="-github-project-link-https-github-com-hwanhuh-2d-gs-viser-viewer-tree-main-"></span>⭐ <a href="https://github.com/hwanhuh/2D-GS-Viser-Viewer/tree/main">Github Project Link</a></h4>
 <p><video class="post-media" autoplay loop muted playsinline preload="metadata" poster="/blogs/posts/240602_2dgs/assets/viser_train-poster.jpg" aria-label="2D Gaussian Splatting training result" style="width: 100%"><source src="/blogs/posts/240602_2dgs/assets/viser_train.mp4" type="video/mp4"></video></p>
-
-<h2 id="4-conclusion">4. Conclusion</h2>
-
+<h2 id="toc-heading-13"><span id="4-conclusion"></span>4. Conclusion</h2>
 <div class="lang eng">
     <p>
         In conclusion, the introduction of 2D Gaussian Splatting marks a significant advancement in the practical use 
@@ -793,11 +760,11 @@
                     </section>
     
                     <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/is-diffusions-estimated-depth-really-good/" aria-label="Previous Post: Is Diffusion&#39;s Estimated Depth Really Good?">
+                <a class="post-nav-card is-older" href="/blogs/posts/can-nerf-be-used-in-game/" aria-label="Previous Post: Can NeRF be used in Game?">
                     <span class="post-nav-kicker">
                         <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
                     </span>
-                    <strong>Is Diffusion&#39;s Estimated Depth Really Good?</strong>
+                    <strong>Can NeRF be used in Game?</strong>
                 </a>
     
                 <a class="post-nav-card is-next" href="/blogs/posts/radiance-fields-from-deep-based-structure-from-motion/" aria-label="Next Post: Radiance Fields from Deep-based Structure-from-Motion">
@@ -1477,10 +1444,10 @@
 };
     </script>
 
-    <script src="/blogs/js/theme-toggle.js"></script>
-    <script src="/blogs/js/scroll-progress.js"></script>
-    <script src="/blogs/js/blog-shell.js"></script>
-    <script src="/blogs/js/post-page.js"></script>
+    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
+    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
     <script>
         initBlogShell({
             formSelector: '#post-nav-search-form',

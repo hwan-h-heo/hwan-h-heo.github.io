@@ -28,12 +28,12 @@
     <title>Radiance Fields from Deep-based Structure-from-Motion | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css" rel="stylesheet" />
-    <link href="/blogs/css/typography.css" rel="stylesheet" />
-    <link href="/blogs/css/post.css" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/css/site-icons.css" rel="stylesheet" />
-    <script src="/assets/js/site-icons.js"></script>
+    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
+    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
 
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
@@ -216,7 +216,7 @@
     </div>
                 </div>
                 <div class="post-reading-column main-content">
-                    <button id="copyButton" type="button" aria-label="Copy post link">
+                    <nav class="toc" aria-label="Table of contents"><div class="toc-title">On This Page</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="1. Introduction" aria-label="1. Introduction"><span class="toc-link-text">1. Introduction</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-1" title="What is Structure-from-Motion?" aria-label="What is Structure-from-Motion?"><span class="toc-link-text">What is Structure-from-Motion?</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-2" title="COLMAP: The Gold Standard in SfM" aria-label="COLMAP: The Gold Standard in SfM"><span class="toc-link-text">COLMAP: The Gold Standard in SfM</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-3" title="2. Deep Learning-Based Camera Pose Reconstruction" aria-label="2. Deep Learning-Based Camera Pose Reconstruction"><span class="toc-link-text">2. Deep Learning-Based Camera Pose Reconstruction</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="VGGSfM: Visual Geometry Grounded Deep Structure from Motion" aria-label="VGGSfM: Visual Geometry Grounded Deep Structure from Motion"><span class="toc-link-text">VGGSfM: Visual Geometry Grounded Deep Structure from Motion</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="MASt3R: Grounding Image Matching in 3D with MASt3R" aria-label="MASt3R: Grounding Image Matching in 3D with MASt3R"><span class="toc-link-text">MASt3R: Grounding Image Matching in 3D with MASt3R</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-6" title="3. Radiance Fields from Deep-based SfM" aria-label="3. Radiance Fields from Deep-based SfM"><span class="toc-link-text">3. Radiance Fields from Deep-based SfM</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="PointCloud Reconstruction" aria-label="PointCloud Reconstruction"><span class="toc-link-text">PointCloud Reconstruction</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="Radiance Fields Reconstruction" aria-label="Radiance Fields Reconstruction"><span class="toc-link-text">Radiance Fields Reconstruction</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-9" title="Closing" aria-label="Closing"><span class="toc-link-text">Closing</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
@@ -238,55 +238,29 @@
     </div>
 </div>
 
-<nav class="toc">
-    <ul>
-        <li><a href="#intro"> Introduction </a></li>
-        <ul>
-            <li><a href="#sfm"> What is SfM?</a></li>
-            <li><a href="#colmap"> about COLMAP</a></li>
-        </ul>
-        <li>
-            <a href="#sec2"> Deep Learning-Based Camera Pose Reconstruction </a>
-        </li>
-        <ul>
-            <li><a href="#sec2.1">VGGSfM</a></li>
-            <li><a href="#sec2.2"> MASt3R</a></li>
-        </ul>
-        <li><a href="#sec3"> Radiance Fields from Deep-based SfM </a></li>
-        <li>
-            <a href="#closing"> Closing </a>
-        </li>
-    </ul>
-</nav>
-
-<h2 id="intro"> 1. Introduction</h2>
-<h3 id="sfm"> What is Structure-from-Motion? </h3>
+<h2 id="toc-heading-0"><span id="intro"></span>1. Introduction</h2>
+<h3 id="toc-heading-1"><span id="sfm"></span>What is Structure-from-Motion?</h3>
 <figure>
     <img src="/blogs/posts/240721_sfm/assets/sfm.jpg" alt="Structure-from-Motion" width="100%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 1.</strong> Structure-from-Motion, source: Privacy Preserving Structure-from-Motion</figcaption>
 </figure>
-<p>
-    Structure from Motion (SfM) is a computer vision technique that reconstructs 3D structures 
-    from 2D images. It's widely used in various fields such as drone mapping, robotics, 
-    and virtual reality. The primary goal of SfM is to estimate both the camera positions and 
-    the 3D point cloud from multiple overlapping images.
-</p>
 
-<h3 id="colmap">COLMAP: The Gold Standard in SfM</h3>
+<p>Structure from Motion (SfM) is a computer vision technique that reconstructs 3D structures
+    from 2D images. It&#39;s widely used in various fields such as drone mapping, robotics, 
+    and virtual reality. The primary goal of SfM is to estimate both the camera positions and 
+    the 3D point cloud from multiple overlapping images.</p>
+<h3 id="toc-heading-2"><span id="colmap"></span>COLMAP: The Gold Standard in SfM</h3>
 <figure>
     <img src="/blogs/posts/240721_sfm/assets/colmap.jpg" alt="colmap" width="100%" loading="lazy" decoding="async">
     <br/>
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 2.</strong> COLMAP, source: <span style="text-decoration: underline;"><a href="https://colmap.github.io/">COLMAP</a></span></figcaption>
 </figure>
-<p>
-    COLMAP is a widely recognized software for Structure from Motion (SfM) and Multi-View Stereo (MVS), 
-    playing a crucial role in the 3D reconstruction community. 
-</p>
-<p>
-    Developed by Johannes L. Schönberger, COLMAP has become the gold standard 
+
+<p>COLMAP is a widely recognized software for Structure from Motion (SfM) and Multi-View Stereo (MVS),
+    playing a crucial role in the 3D reconstruction community.</p>
+<p>Developed by Johannes L. Schönberger, COLMAP has become the gold standard
     for 3D reconstruction tasks due to its robustness, accuracy, and versatility.
-    It offers several robust features:
-</p>
+    It offers several robust features:</p>
 <h4>How COLMAP Works</h4>
 <br/>
 <img src="/blogs/posts/240721_sfm/assets/colmap_pipe.jpg" alt="colmap pipeline" width="100%" loading="lazy" decoding="async">
@@ -309,19 +283,14 @@
     <li><strong>Time-Consuming:</strong> The reconstruction process, especially dense reconstruction, can be time-consuming, making it less suitable for real-time applications.</li>
 </ul>
 
-<h2 id="sec2">2. Deep Learning-Based Camera Pose Reconstruction</h2>
-<p>
-    To overcome the limitations of traditional SfM methods like COLMAP, 
+<h2 id="toc-heading-3"><span id="sec2"></span>2. Deep Learning-Based Camera Pose Reconstruction</h2>
+<p>To overcome the limitations of traditional SfM methods like COLMAP,
     recent developments have introduced deep learning-based approaches for camera pose reconstruction. 
-    In the later of this post, we’ll compare two notable methods: <strong>VGGSfM</strong> and <strong>MASt3R</strong>, 
-    evaluating their performance and discussing their strengths and weaknesses.
-</p>
-
-<h3 id="sec2.1"> VGGSfM: Visual Geometry Grounded Deep Structure from Motion </h3>
-<p>
-    VGGSfM is a deep-learning-based approach to Structure-from-Motion (SfM) that offers a significant advancement over traditional methods like COLMAP. Unlike conventional SfM, 
-    which relies on a sequential, non-differentiable process, VGGSfM employs an end-to-end differentiable pipeline. 
-</p>
+    In the later of this post, we’ll compare two notable methods: <strong>VGGSfM</strong> and <strong>MASt3R</strong>,
+    evaluating their performance and discussing their strengths and weaknesses.</p>
+<h3 id="toc-heading-4"><span id="sec2.1"></span>VGGSfM: Visual Geometry Grounded Deep Structure from Motion</h3>
+<p>VGGSfM is a deep-learning-based approach to Structure-from-Motion (SfM) that offers a significant advancement over traditional methods like COLMAP. Unlike conventional SfM,
+    which relies on a sequential, non-differentiable process, VGGSfM employs an end-to-end differentiable pipeline.</p>
 <figure>
     <img src="/blogs/posts/240721_sfm/assets/vgg.jpg" alt="vggsfm overview" width="100%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 3.</strong> Overview of VGGSfM</figcaption>
@@ -335,12 +304,10 @@
     In contrast, while COLMAP remains a powerful tool, its reliance on traditional techniques limits its adaptability and performance in comparison to VGGSfM.
 </p>
 
-<h3 id="sec2.2"> MASt3R: Grounding Image Matching in 3D with MASt3R </h3>
-<p>
-    MASt3R (Matching And Stereo 3D Reconstruction) is a cutting-edge framework designed to enhance 3D scene reconstruction and dense image matching, 
-    particularly in challenging conditions with extreme viewpoint changes. It builds on the <span style="text-decoration: underline;"><a href="https://github.com/naver/dust3r">DUSt3R</a></span> 
-    architecture by employing a shared Vision Transformer (ViT) encoder and cross-attention decoders to capture spatial relationships and 3D geometry between image pairs. 
-</p>
+<h3 id="toc-heading-5"><span id="sec2.2"></span>MASt3R: Grounding Image Matching in 3D with MASt3R</h3>
+<p>MASt3R (Matching And Stereo 3D Reconstruction) is a cutting-edge framework designed to enhance 3D scene reconstruction and dense image matching,
+    particularly in challenging conditions with extreme viewpoint changes. It builds on the <span style="text-decoration: underline;"><a href="https://github.com/naver/dust3r">DUSt3R</a></span>
+    architecture by employing a shared Vision Transformer (ViT) encoder and cross-attention decoders to capture spatial relationships and 3D geometry between image pairs.</p>
 <figure>
     <img src="/blogs/posts/240721_sfm/assets/mast3r.jpg" alt="mast3r overview" width="100%" onclick="window.open(this.src)" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;">
@@ -348,21 +315,15 @@
         framework, MASt3R's contributions are highlighted in <span style="color:blue">blue</span>.
     </figcaption>
 </figure>
-<p>
-    MASt3R predicts dense 3D pointmaps and local feature maps, 
+
+<p>MASt3R predicts dense 3D pointmaps and local feature maps,
     using a coarse-to-fine matching strategy to achieve high accuracy in matching. Its use of a fast nearest-neighbor algorithm and iterative fine-tuning ensures robust performance. 
-    Compared to traditional 2D methods like those in COLMAP, MASt3R's 3D-centric approach excels in environments requiring precise visual localization and mapping.
-</p>
-
-<h2 id="sec3"> 3. Radiance Fields from Deep-based SfM</h2>
-<p>
-    To validate geometric feasibility of wild deep-based Structure-from-Motion methodologies, 
+    Compared to traditional 2D methods like those in COLMAP, MASt3R&#39;s 3D-centric approach excels in environments requiring precise visual localization and mapping.</p>
+<h2 id="toc-heading-6"><span id="sec3"></span>3. Radiance Fields from Deep-based SfM</h2>
+<p>To validate geometric feasibility of wild deep-based Structure-from-Motion methodologies,
     we will show the radiance fields reconsturction from VGGSfM and MASt3R. 
-    The objective is to compare their performances and understand the advantages and limitations of each approach.
-</p>
-
-<h3 id="sec3.1"> PointCloud Reconstruction</h3>
-
+    The objective is to compare their performances and understand the advantages and limitations of each approach.</p>
+<h3 id="toc-heading-7"><span id="sec3.1"></span>PointCloud Reconstruction</h3>
 <table>
     <tr>
         <th>VGGSfM</th>
@@ -382,7 +343,7 @@
     </tr>
 </table>
 
-<h3 id="sec3.2"> Radiance Fields Reconstruction</h3>
+<h3 id="toc-heading-8"><span id="sec3.2"></span>Radiance Fields Reconstruction</h3>
 <table>
     <tr>
         <th>VGGSfM</th>
@@ -403,12 +364,10 @@
 </table>
 <br/>
 
-<h4> Summary </h4>
-<p>
-    MASt3R is not suitable for inverse rendering but provides denser and more diverse point cloud reconstructions compared to VGGSfM.
-    VGGSfM's accurate camera pose reconstruction, utilizing Bundle Adjustment, makes it more suitable for inverse rendering. 
-    Specifically, VGGSfM's camera pose has less than 0.01 angular distance error compared to COLMAP, while MASt3R's pose has over 0.1 angular distance error.
-</p>
+<h4>Summary</h4>
+<p>MASt3R is not suitable for inverse rendering but provides denser and more diverse point cloud reconstructions compared to VGGSfM.
+    VGGSfM&#39;s accurate camera pose reconstruction, utilizing Bundle Adjustment, makes it more suitable for inverse rendering. 
+    Specifically, VGGSfM&#39;s camera pose has less than 0.01 angular distance error compared to COLMAP, while MASt3R&#39;s pose has over 0.1 angular distance error.</p>
 <ul>
     <li>
         Both methods are more robust than COLMAP. In my experiment, COLMAP fails to reconstruct all the above datasets.
@@ -421,27 +380,22 @@
 </ul>
 <br/>
 
-<h4> Further Camera Pose Refinement </h4>
+<h4>Further Camera Pose Refinement</h4>
 <div class="video-container">
     <video controls style="width: 100%;">
         <source src="/blogs/posts/240721_sfm/assets/further_pose_opt.mp4" type="video/mp4">
     </video>
 </div>
-<p>
-    As discussed in <span style="text-decoration: underline;"><a href="https://instantsplat.github.io/">InstantSplat</a></span>, MASt3R (and VGGSfM) poses 
-    can serve as a good initial point of the camera pose optimization during radiance fields training (BARF-likes method). 
-    Below is the toy experiment of MASt3R + further camera pose optimization (Using Splatfacto):
-</p>
 
-<h2 id="closing">Closing</h2>
-<p>
-    This post compared two 3D point cloud reconstruction methods, VGGSfM and MASt3R. VGGSfM excels in camera pose reconstruction, 
+<p>As discussed in <span style="text-decoration: underline;"><a href="https://instantsplat.github.io/">InstantSplat</a></span>, MASt3R (and VGGSfM) poses
+    can serve as a good initial point of the camera pose optimization during radiance fields training (BARF-likes method). 
+    Below is the toy experiment of MASt3R + further camera pose optimization (Using Splatfacto):</p>
+<h2 id="toc-heading-9"><span id="closing"></span>Closing</h2>
+<p>This post compared two 3D point cloud reconstruction methods, VGGSfM and MASt3R. VGGSfM excels in camera pose reconstruction,
     making it more suitable for inverse rendering, while MASt3R provides denser point clouds but is less appropriate for inverse rendering tasks. 
-    Both methods offer robustness over COLMAP and can yield better results in certain scenes, although they require further parameter tuning and optimization.
-</p>
-<p>
-    GitHub Repository: <span style="text-decoration: underline;"><a href="https://github.com/hwanhuh/Radiance-Fields-from-VGGSfM-Mast3r">[Link]</a></span>
-</p>
+    Both methods offer robustness over COLMAP and can yield better results in certain scenes, although they require further parameter tuning and optimization.</p>
+<p>GitHub Repository: <span style="text-decoration: underline;"><a href="https://github.com/hwanhuh/Radiance-Fields-from-VGGSfM-Mast3r">[Link]</a></span></p>
+
                 </div>
                 <div class="post-reading-column">
                     
@@ -1165,10 +1119,10 @@
 };
     </script>
 
-    <script src="/blogs/js/theme-toggle.js"></script>
-    <script src="/blogs/js/scroll-progress.js"></script>
-    <script src="/blogs/js/blog-shell.js"></script>
-    <script src="/blogs/js/post-page.js"></script>
+    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
+    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
     <script>
         initBlogShell({
             formSelector: '#post-nav-search-form',

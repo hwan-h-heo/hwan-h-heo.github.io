@@ -29,12 +29,12 @@
     <title>SDF 와 Eikonal Equation 의 관계는? | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css" rel="stylesheet" />
-    <link href="/blogs/css/typography.css" rel="stylesheet" />
-    <link href="/blogs/css/post.css" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/css/site-icons.css" rel="stylesheet" />
-    <script src="/assets/js/site-icons.js"></script>
+    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
+    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -232,26 +232,21 @@ f(x_2) - f(x_1) &amp; \ge d(x_2, \partial\Omega) - \|x_1-p_2\| \\ &amp;= \|x_2-p
 \end{aligned}
 $$
 </p>
-위의 관계는 삼각부등식을 이용하여 다음과 같은 형태로 정리된다. 
-<p>
-$$
+위의 관계는 삼각부등식을 이용하여 다음과 같은 형태로 정리된다.
+
+<p>$$
 \begin{aligned}
 f(x_2) - f(x_1) &amp;\ge -\|(x_2-p_2) - (x_1-p_2)\| \\ &amp; = -\|x_2-x_1\| \\  \therefore |f(x_1) - f(x_2)| &amp; \le \|x_1-x_2\|
 \end{aligned}
-$$
-</p>
-
+$$</p>
 <p><em>cf.</em> $ \|a\|-\|b\| \ge -\|a-b\| $ </p>
 <p>이는 함수 $f$가 Lipschitz constant 1을 갖는 <strong><a href="https://en.wikipedia.org/wiki/Lipschitz_continuity">1-Lipschitz Continuous Function</a></strong> 임을 의미한다. (즉, 두 점 사이의 거리가 1 이상으로 증가하지 않는 함수이다)</p>
 <p>만약 $f$가 점 $x$에서 미분 가능하다면, gradient 의 정의에 의해 다음이 성립한다.</p>
-<p>
-$$
+<p>$$
 \begin{aligned}
 |\nabla f(x) \cdot v| &amp; = \lim_{t \to 0} \frac{|f(x+tv) - f(x)|}{t} \\ &amp; \le \lim_{t \to 0} \frac{\|tv\|}{t} = \|v\|
 \end{aligned}
-$$
-</p>
-
+$$</p>
 <p>이제 unit vector $v = \frac{\nabla f(x)}{\|\nabla f(x)\|}$ 에 대해 ($\nabla f(x) \neq 0$ 라면),
 $$\left | \nabla f(x) \cdot \frac{\nabla f(x)}{\|\nabla f(x)\|} \right | = \frac{\|\nabla f(x)\|^2}{\|\nabla f(x)\|} = \|\nabla f(x)\|$$
 따라서 
@@ -263,15 +258,11 @@ $$\|\nabla f(x)\| \le \left \|\frac{\nabla f(x)}{\|\nabla f(x)\|} \right \| = 1$
 <p>우선, $f$ 가 미분 가능한 점 $$x \in \mathbb{R}^n \setminus \partial\Omega$$ 를 생각하자. 또한 $x$에서 경계 $\partial\Omega$ 까지의 거리를 최소화하는 <strong>유일한</strong> 최근접점 $p \in \partial\Omega$ 가 존재한다고 가정한다. (이러한 점들은 &#39;medial axis&#39;를 제외한 대부분의 공간에 해당한다.)</p>
 <p>이제 $p$ 에서 $x$ 를 향하는, 즉 경계로부터 가장 빠르게 멀어지는 방향을 나타내는 단위 벡터 $$ n = \frac{x-p}{\|x-p\|} $$ 을 생각할 수 있다.</p>
 <p>이 방향으로의 directional derivative 를 고려하기 위해, 충분히 작은 양수 $t &gt; 0$ 에 대한 점 $x+tn$ 을 생각할 수 있다. $x$ 의 최근접점 $p$ 가 유일하다는 가정 하에, 충분히 작은 $t$ 에 대해서 $x+tn$의 최근접점 역시 $p$가 된다. 따라서 거리 함수 값은 다음과 같이 계산된다.</p>
-<p>
-$$
+<p>$$
 \begin{aligned}
 d(x+tn, \partial\Omega) &amp;= \|(x+tn) - p\| \\ &amp;= \|(x-p) + tn\| \\ &amp; = \|\|x-p\|n + tn\| \\ &amp; = (\|x-p\|+t) = d(x, \partial\Omega)+t
 \end{aligned}
-$$
-</p>
-
-
+$$</p>
 <p>이를 SDF의 정의에 따라 부호를 고려하여 정리하면 다음과 같다.</p>
 <ul>
 <li>만약 $x \in \Omega^c$ $(f &gt; 0)$ 이면, $f(x) = d(x, \partial\Omega)$ 이므로, $$ f(x+tn) = d(x, \partial\Omega)+t = f(x)+t$$ </li>
@@ -319,14 +310,11 @@ $$ \nabla f(x) = \nabla d(x, \partial\Omega) = \frac{x-p}{\|x-p\|} $$</p>
 $$ \nabla f(x) = -\nabla d(x, \partial\Omega) = -\frac{x-p}{\|x-p\|} $$</p>
 <h3 id="toc-heading-8">2.2. Gradient&#39;s Norm</h3>
 <p>두 경우 모두, gradient $\nabla f(x)$ 는 단위 벡터이거나 단위 벡터에 -1을 곱한 형태이다. 따라서 gradient 의 Euclidean norm 을 계산하면 다음과 같다.</p>
-<p>
-$$ 
+<p>$$ 
 \begin{aligned}
 \|\nabla f(x)\| &amp;= \left\| \pm \frac{x-p}{\|x-p\|} \right\| \\ &amp; = \frac{\|x-p\|}{\|x-p\|} = 1 
 \end{aligned}
-$$
-</p>
-
+$$</p>
 <p>이는 $f$가 미분 가능한 모든 점에서 Eikonal equation 을 만족함을 보인다.</p>
 <hr>
 <h2 id="toc-heading-9">Discussion</h2>
@@ -377,18 +365,18 @@ $$
                     </section>
     
                     <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models-kor/" aria-label="Previous Post: From Flow Matching to Optimal Transport: A Physics-based View of Generative Models">
+                <a class="post-nav-card is-older" href="/blogs/posts/generalized-winding-number-kor/" aria-label="Previous Post: Generalized Winding Number">
                     <span class="post-nav-kicker">
                         <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
                     </span>
-                    <strong>From Flow Matching to Optimal Transport: A Physics-base...</strong>
+                    <strong>Generalized Winding Number</strong>
                 </a>
     
-                <a class="post-nav-card is-next" href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/" aria-label="Next Post: 3D 생성형 AI 서비스; Varco3D 개발기">
+                <a class="post-nav-card is-explore" href="/blogs/posts/optimizing-sparse-3d-generation-inference-kor/" aria-label="Explore Series: 3D AI">
                     <span class="post-nav-kicker">
-                        Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
+                        Explore Series <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
-                    <strong>3D 생성형 AI 서비스; Varco3D 개발기</strong>
+                    <strong>3D AI</strong>
                 </a>
     </nav></div>
                 </div>
@@ -1061,10 +1049,10 @@ $$
 };
     </script>
 
-    <script src="/blogs/js/theme-toggle.js"></script>
-    <script src="/blogs/js/scroll-progress.js"></script>
-    <script src="/blogs/js/blog-shell.js"></script>
-    <script src="/blogs/js/post-page.js"></script>
+    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
+    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
     <script>
         initBlogShell({
             formSelector: '#post-nav-search-form',

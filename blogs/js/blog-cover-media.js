@@ -10,7 +10,6 @@
     }
 })(typeof window !== 'undefined' ? window : null, function() {
     const initializedImages = new WeakSet();
-    const initializedCardRoots = new WeakSet();
 
     function sanitizeFilePart(value) {
         return String(value || '')
@@ -41,9 +40,9 @@
         }
 
         const previewSource = image.dataset.previewSrc || image.getAttribute('src');
-        const interactionTarget = image.closest('.post-preview')
-            || image.closest('.blog-feature-card')
-            || image.closest('.portfolio-blog-preview-link')
+        const interactionTarget = image.closest('.post-card-cover')
+            || image.closest('.blog-feature-cover')
+            || image.closest('.portfolio-blog-preview-cover-link')
             || image.closest('a')
             || image;
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -132,48 +131,6 @@
         interactionTarget.addEventListener('focusout', showPreviewCover);
     }
 
-    function initializeBlogCardInteractions(container) {
-        const rootElement = container && typeof container.addEventListener === 'function'
-            ? container
-            : document;
-        if (initializedCardRoots.has(rootElement)) {
-            return;
-        }
-
-        initializedCardRoots.add(rootElement);
-        rootElement.addEventListener('click', (event) => {
-            if (event.defaultPrevented || event.button !== 0) {
-                return;
-            }
-
-            const card = event.target.closest('.post-preview, .blog-feature-card');
-            if (!card || !rootElement.contains(card)) {
-                return;
-            }
-
-            if (event.target.closest('a, button, input, textarea, select, label, [role="button"]')) {
-                return;
-            }
-
-            const selection = window.getSelection?.();
-            if (selection && !selection.isCollapsed) {
-                return;
-            }
-
-            const primaryLink = card.querySelector('.post-title a, .blog-feature-copy h2 a, .post-card-cover');
-            if (!primaryLink) {
-                return;
-            }
-
-            if (event.metaKey || event.ctrlKey || event.shiftKey) {
-                window.open(primaryLink.href, '_blank', 'noopener');
-                return;
-            }
-
-            window.location.assign(primaryLink.href);
-        });
-    }
-
     function initializeBlogCoverMedia(container) {
         const rootElement = container && typeof container.querySelectorAll === 'function'
             ? container
@@ -185,17 +142,14 @@
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
                 initializeBlogCoverMedia(document);
-                initializeBlogCardInteractions(document);
             }, { once: true });
         } else {
             initializeBlogCoverMedia(document);
-            initializeBlogCardInteractions(document);
         }
     }
 
     return {
         getBlogCoverPreviewUrl,
-        initializeBlogCardInteractions,
         initializeBlogCoverMedia,
         isAnimatedCover
     };

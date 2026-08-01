@@ -51,11 +51,9 @@ Based on this intuition, let's extend this to more mathematical terms.
 
 In the complex plane, the winding number $n(\gamma, a)$ for a closed path $\gamma$ and a point $a$ not on the path is defined by the following Cauchy integral:
 
-<p>
 $$
 n(\gamma, a) = \frac{1}{2\pi i} \oint_\gamma \frac{1}{z-a} dz
 $$
-</p>
 
 This integral value is always an integer, representing how many times $\gamma$ wraps around point $a$.
 
@@ -95,21 +93,17 @@ The concept of winding number in a 2D plane extended to 3D space and general sur
 
 Regarding the definition of winding number examined above, without loss of generality, if we assume the reference point $p$ is the origin, the winding number can be defined by *integrating the angle change in spherical coordinates*.
 
-<p>
 $$
 w(p) = \frac{1}{2\pi} \int_C d\theta
 $$
-</p>
 
 Intuitively, this is equivalent to projecting the curve $C$ onto a unit circle around $p$, and dividing the signed length of that projected path by $2\pi$.
 
 If curve $C$ is a polyline composed of several segments, or piecewise linear, this integral can be precisely discretized into the sum of the angles formed by each segment.
 
-<p>
 $$
 w(p) = \frac{1}{2\pi} \sum_{i=1}^n \theta_i
 $$
-</p>
 
 Here, $\theta_i$ is the signed angle formed by two consecutive vertices $c_i, c_{i+1}$ on the curve and the point $p$.
 
@@ -122,11 +116,9 @@ The solid angle is a measure of how much space a surface occupies when viewed fr
 
 The winding number of a closed surface $S$ with respect to point $p$ is defined as the total solid angle subtended by $S$ at $p$, divided by the solid angle of the entire sphere, $4\pi$.
 
-<p>
 $$
 \omega(p) = \frac{1}{4\pi} \int_{S} \frac{(x-p) \cdot \mathbf{n}_x}{\|x-p\|^3} dA
 $$
-</p>
 
 - In this formula, $p$ is a point in 3D space for which the winding number is being calculated, $S$: closed surface (mesh), $x$: a point on the surface $S$, $\mathbf{n}_x$: the normal vector at point $x$. 
 
@@ -173,11 +165,9 @@ $$
 
 Similarly, if the surface is composed of a triangle mesh, it can be precisely discretized into the sum of the solid angles $\Omega_f$ created by each triangle.
 
-<p>
 $$
 w(p) = \sum_{f=1}^m \frac{1}{4\pi} \Omega_f(p)
 $$
-</p>
 
 Here, $\Omega(p, T)$ denotes the solid angle subtended by triangle $T$ at point $p$.
 
@@ -209,11 +199,9 @@ As we saw earlier, $w(p)$ is 0.5 on the mesh surface, so the isosurface of the i
 2. **Distance Calculation**: Separate from the sign, calculate the geometrical shortest distance from point $p$ to the mesh $S$. (This can be efficiently calculated using a BVH.)
 3. **SDF Combination**: Combine the sign and distance obtained from the above two steps to get the final SDF value.
 
-<p>
 $$
 \text{SDF}(p) = \text{sign}(0.5-w(p)) \times \text{distance}(p, S)
 $$
-</p>
 
 ---
 

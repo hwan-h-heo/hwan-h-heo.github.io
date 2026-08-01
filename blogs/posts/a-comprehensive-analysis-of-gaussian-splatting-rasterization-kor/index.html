@@ -29,14 +29,14 @@
     <title>Gaussian Splatting Rasterization 완벽 분석 | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css" rel="stylesheet" />
-    <link href="/blogs/css/typography.css" rel="stylesheet" />
-    <link href="/blogs/css/post.css" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/css/site-icons.css" rel="stylesheet" />
-    <script src="/assets/js/site-icons.js"></script>
+    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
+    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
-    <link href="/blogs/css/code-copy.css" rel="stylesheet" />
+    <link href="/blogs/css/code-copy.css?v=97949adbc2" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -181,7 +181,7 @@
     </div>
                 </div>
                 <div class="post-reading-column main-content">
-                    <button id="copyButton" type="button" aria-label="Copy post link">
+                    <nav class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Introduction" aria-label="Introduction"><span class="toc-link-text">Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="1. 3D Gaussian as Primitive Kernel" aria-label="1. 3D Gaussian as Primitive Kernel"><span class="toc-link-text">1. 3D Gaussian as Primitive Kernel</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="2. Splatting (Projection of Primitives)" aria-label="2. Splatting (Projection of Primitives)"><span class="toc-link-text">2. Splatting (Projection of Primitives)</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="2.1. Projection" aria-label="2.1. Projection"><span class="toc-link-text">2.1. Projection</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="2.2. Density of the Projected Gaussian" aria-label="2.2. Density of the Projected Gaussian"><span class="toc-link-text">2.2. Density of the Projected Gaussian</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-5" title="3. Parallel Rasterization" aria-label="3. Parallel Rasterization"><span class="toc-link-text">3. Parallel Rasterization</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-6" title="4. Miscellaneous" aria-label="4. Miscellaneous"><span class="toc-link-text">4. Miscellaneous</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="4.1. Camera Model" aria-label="4.1. Camera Model"><span class="toc-link-text">4.1. Camera Model</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="4.2. Mimic Luma AI" aria-label="4.2. Mimic Luma AI"><span class="toc-link-text">4.2. Mimic Luma AI</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-9" title="Closing" aria-label="Closing"><span class="toc-link-text">Closing</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
@@ -203,37 +203,7 @@
     </div>
 </div>
 
-<nav class="toc">
-    <ul>
-        <li><a href="#sec1"> 3D Gaussian as Primitive Kernel</a></li>
-        <li>
-            <a href="#sec2"> Splatting (Projection of Primitives)</a>
-        </li>
-        <ul>
-            <li>
-                <a href="#sec2.1"> Projection </a>
-            </li>
-            <li>
-                <a href="#sec2.2"> Density of the projected Gaussian </a>
-            </li>
-        </ul>
-        <li><a href="#sec3"> Parallel Rasterization</a></li>
-        <li>
-            <a href="#sec4"> MISC</a>
-        </li>
-        <ul>
-            <li>
-                <a href="#sec4.1"> Camera Model </a>
-            </li>
-            <li>
-                <a href="#sec4.2"> Mimic Luma AI </a>
-            </li>
-        </ul>
-        <li><a href="#closing">Closing</a></li>
-    </ul>
-</nav>
-
-<h2 id="intro">Introduction</h2>
+<h2 id="toc-heading-0"><span id="intro"></span>Introduction</h2>
 <figure>
     <img src="/blogs/posts/240805_gs/assets/teaser.gif" alt="Gaussian Splatting Teaser by Luma AI" width="100%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 1.</strong> 3D GS by Luma AI</figcaption>
@@ -244,7 +214,7 @@
     오늘은 이 rasterization 관점에서 3D Gaussin Splatting 을 (최대한) 완벽하게 이해해보는 시간을 갖도록 해보자.
 </p>
 
-<h2 id="sec1">1. 3D Gaussian as Primitive Kernel</h2>
+<h2 id="toc-heading-1"><span id="sec1"></span>1. 3D Gaussian as Primitive Kernel</h2>
 <figure>
     <img src="/blogs/posts/240805_gs/assets/gs.jpg" alt="3D Gaussian as Primitive Kernel" width="100%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 2.</strong> NeRF vs 3D GS, source: <span style="text-decoration: underline;"><a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">Kate's medium</a></span></figcaption>
@@ -376,8 +346,8 @@ cov3D[5] = Sigma[2][2];
     <li> <em>cov3D</em>: symmetric 이므로, right upper triangle 만 저장해도 된다. </li>
 </ul>
 
-<h2 id="sec2">2. Splatting (Projection of Primitives)</h2>
-<h3 id="sec2.1">2.1. Projection</h3>
+<h2 id="toc-heading-2"><span id="sec2"></span>2. Splatting (Projection of Primitives)</h2>
+<h3 id="toc-heading-3"><span id="sec2.1"></span>2.1. Projection</h3>
 <figure>
     <img src="/blogs/posts/240805_gs/assets/splatting.jpg" alt="Splatting of primitives" style="width:55%" loading="lazy" decoding="async">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 3.</strong> Projection of 3D Gaussian, <br/> source: <span style="text-decoration: underline;"><a href="https://dl.acm.org/doi/10.1145/3355089.3356513"><em>Differentiable Surface Splatting for Point-based Geometry Processing </em></a></span> </figcaption>
@@ -478,8 +448,7 @@ glm::mat3 Vrk = glm::mat3(
 
 glm::mat3 cov = glm::transpose(T) * glm::transpose(Vrk) * T;
 </code></pre>
-<h3 id="sec2.2">2.2. Density of the Projected Gaussian </h3>
-
+<h3 id="toc-heading-4"><span id="sec2.2"></span>2.2. Density of the Projected Gaussian</h3>
 <p class="lang kor" >
     실제 rendering 시에는 Gaussian density 값과 opacity 값을 곱하여 사용하기 때문에, 3D 공간 위의 점 $p$ 에 대해, 
     $i$th Gaussian 의 density $f_i(p)$ 를 다음과 같이 정의할 수 있다.
@@ -523,8 +492,8 @@ return { float(cov[0][0]), float(cov[0][1]), float(cov[1][1]) };
 <p class="lang kor" >
     이는 아래 식의 inverse matrix 를 구하는 것과 동일한 것을 알 수 있다 $(A=(RS)^{\rm T})$. 
 </p>
-<p> $$ A^{\rm T}A+\lambda \mathbf{I} $$</p>
 
+<p>$$ A^{\rm T}A+\lambda \mathbf{I} $$</p>
 <p class="lang kor" >
     covariance matrix 가 positive semidefinite 이기 때문에, 
     small $\lambda$ 를 더해주면 다음과 같이 covariance matrix 가 positive definite 이 되므로
@@ -608,8 +577,7 @@ float lambda2 = mid - sqrt(max(0.1f, mid * mid - det));
 
 float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));
 </code></pre>
-<h2 id="sec3">3. Parallel Rasterization </h2>
-
+<h2 id="toc-heading-5"><span id="sec3"></span>3. Parallel Rasterization</h2>
 <div class="lang kor" >
     <p>
         Gaussian kernel 의 정의와, 이 kernel 이 image space 상에 어떻게 projection 되는지 알고 있으므로, 이제 우리는
@@ -728,10 +696,8 @@ __shared__ float4 collected_conic_opacity[BLOCK_SIZE];</code></pre>
     즉 NeRF 에서는 ray 를 sampling 하기 때문에 $r(t)$ 로 sampling 된 각각 다른 point 를 MLP 에 query 하지만, 3D GS 는 모두 똑같은 점 $x$ 를 query 하는 것을 볼 수 있다.
 </p>
 
-<h2 id="sec4"> 4. Miscellaneous </h2>
-
-<h3 id="sec4.1"> 4.1. Camera Model </h3>
-
+<h2 id="toc-heading-6"><span id="sec4"></span>4. Miscellaneous</h2>
+<h3 id="toc-heading-7"><span id="sec4.1"></span>4.1. Camera Model</h3>
 <div class="lang kor" >
     <p>
         현재 구현상으로는 $J$ 가 pinhole camera model 의 perspective projection 으로 구현되었기 때문에 다른 camera model 로 rendering 이 불가능하지만, 
@@ -769,8 +735,7 @@ glm::mat3 J = glm::mat3(
     </p>
 </div>
 
-<h3 id="sec4.2"> 4.2. Mimic Luma AI </h3>
-
+<h3 id="toc-heading-8"><span id="sec4.2"></span>4.2. Mimic Luma AI</h3>
 <div class="lang kor" >
     <p>
         글 Teaser 의 동영상은 NeRFStudio 팀이 창업한 Luma AI 의 rendering 영상인데, 꽤나 팬시해서 따라해보았다.
@@ -795,8 +760,7 @@ glm::mat3 J = glm::mat3(
     </tr>
 </table>
 
-<h2 id="closing">Closing</h2>
-
+<h2 id="toc-heading-9"><span id="closing"></span>Closing</h2>
 <div class="lang kor" >
     <p>
         알고리즘의 많은 부분을 MLP 에 맡기는 NeRF 의 경우, Linear Algebra 나 Computer Graphics 관점에서 코드가 어떻게 짜여져 있는지 분석하는 것이 쉬운 편인데, 3D Gaussian Splatting 의 경우 explicit 한 primitive 를 
@@ -1534,11 +1498,11 @@ glm::mat3 J = glm::mat3(
     </script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
-    <script src="/blogs/js/code-copy.js"></script>
-    <script src="/blogs/js/theme-toggle.js"></script>
-    <script src="/blogs/js/scroll-progress.js"></script>
-    <script src="/blogs/js/blog-shell.js"></script>
-    <script src="/blogs/js/post-page.js"></script>
+    <script src="/blogs/js/code-copy.js?v=e6b60656e4"></script>
+    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
+    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
     <script>
         initBlogShell({
             formSelector: '#post-nav-search-form',

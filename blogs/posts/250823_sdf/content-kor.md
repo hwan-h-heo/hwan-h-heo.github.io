@@ -76,14 +76,13 @@ f(x_2) - f(x_1) & \ge d(x_2, \partial\Omega) - \|x_1-p_2\| \\ &= \|x_2-p_2\| - \
 \end{aligned}
 $$
 </p>
-위의 관계는 삼각부등식을 이용하여 다음과 같은 형태로 정리된다. 
-<p>
+위의 관계는 삼각부등식을 이용하여 다음과 같은 형태로 정리된다.
+
 $$
 \begin{aligned}
 f(x_2) - f(x_1) &\ge -\|(x_2-p_2) - (x_1-p_2)\| \\ & = -\|x_2-x_1\| \\  \therefore |f(x_1) - f(x_2)| & \le \|x_1-x_2\|
 \end{aligned}
 $$
-</p>
 
 *cf.* $ \|a\|-\|b\| \ge -\|a-b\| $ 
 
@@ -92,13 +91,11 @@ $$
 
 만약 $f$가 점 $x$에서 미분 가능하다면, gradient 의 정의에 의해 다음이 성립한다.
 
-<p>
 $$
 \begin{aligned}
 |\nabla f(x) \cdot v| & = \lim_{t \to 0} \frac{|f(x+tv) - f(x)|}{t} \\ & \le \lim_{t \to 0} \frac{\|tv\|}{t} = \|v\|
 \end{aligned}
 $$
-</p>
 
 이제 unit vector $v = \frac{\nabla f(x)}{\|\nabla f(x)\|}$ 에 대해 ($\nabla f(x) \neq 0$ 라면),
 $$\left | \nabla f(x) \cdot \frac{\nabla f(x)}{\|\nabla f(x)\|} \right | = \frac{\|\nabla f(x)\|^2}{\|\nabla f(x)\|} = \|\nabla f(x)\|$$
@@ -118,14 +115,12 @@ $$\|\nabla f(x)\| \le \left \|\frac{\nabla f(x)}{\|\nabla f(x)\|} \right \| = 1$
 이제 $p$ 에서 $x$ 를 향하는, 즉 경계로부터 가장 빠르게 멀어지는 방향을 나타내는 단위 벡터 $$ n = \frac{x-p}{\|x-p\|} $$ 을 생각할 수 있다.
 
 이 방향으로의 directional derivative 를 고려하기 위해, 충분히 작은 양수 $t > 0$ 에 대한 점 $x+tn$ 을 생각할 수 있다. $x$ 의 최근접점 $p$ 가 유일하다는 가정 하에, 충분히 작은 $t$ 에 대해서 $x+tn$의 최근접점 역시 $p$가 된다. 따라서 거리 함수 값은 다음과 같이 계산된다.
-<p>
+
 $$
 \begin{aligned}
 d(x+tn, \partial\Omega) &= \|(x+tn) - p\| \\ &= \|(x-p) + tn\| \\ & = \|\|x-p\|n + tn\| \\ & = (\|x-p\|+t) = d(x, \partial\Omega)+t
 \end{aligned}
 $$
-</p>
-
 
 이를 SDF의 정의에 따라 부호를 고려하여 정리하면 다음과 같다.
 - 만약 $x \in \Omega^c$ $(f > 0)$ 이면, $f(x) = d(x, \partial\Omega)$ 이므로, $$ f(x+tn) = d(x, \partial\Omega)+t = f(x)+t$$ 
@@ -188,13 +183,11 @@ $$ \nabla f(x) = -\nabla d(x, \partial\Omega) = -\frac{x-p}{\|x-p\|} $$
 
 두 경우 모두, gradient $\nabla f(x)$ 는 단위 벡터이거나 단위 벡터에 -1을 곱한 형태이다. 따라서 gradient 의 Euclidean norm 을 계산하면 다음과 같다.
 
-<p>
 $$ 
 \begin{aligned}
 \|\nabla f(x)\| &= \left\| \pm \frac{x-p}{\|x-p\|} \right\| \\ & = \frac{\|x-p\|}{\|x-p\|} = 1 
 \end{aligned}
 $$
-</p>
 
 이는 $f$가 미분 가능한 모든 점에서 Eikonal equation 을 만족함을 보인다.
 

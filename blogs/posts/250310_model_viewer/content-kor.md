@@ -4,29 +4,12 @@ author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
 <!-- 2. TOC(목차) 추가 -->
-<nav class="toc">
-    <ul>
-        <li><a href="#h2-3"> Introduction </a><ul></ul></li>
-        <li><a href="#h2-1"> Google Model Viewer </a>
-            <ul>
-                <li><a href="#h3-1"> Basic Usage </a></li>
-                <li><a href="#h3-2"> Geometry Rendering </a></li>
-            </ul>
-        </li>
-        <li><a href="#h2-2"> Threejs-Based Custom Viewer </a>
-            <ul>
-                <li><a href="#h3-3"> Basic Usage </a></li>
-                <li><a href="#h3-4"> Custom Viewer </a></li>
-                <li><a href="#h3-5"> Key Takeaways </a></li>
-            </ul>
-        </li>
-        <li><a href='#conclusion'>Conclusion</a></li>
-    </ul>
-</nav>
+
 
 <!-- <img src='./250310_model_viewer/assets/image.gif' width=100%> -->
 
-<h2 id="h2-3" > Introduction </h2>
+## <span id="h2-3"></span>Introduction
+
 <p id="p-1"  class="lang kor" >
     하는 일이 3D Domain 에 편중되어 있다보니, 사내에서 보고를 위한 간단한 데모를 제작할 때나, 혹은 논문 project page 를 만드는 등 web page 에서 3D Model 을 rendering 해서 보여줄 일이 가끔 있다.
 </p>
@@ -43,13 +26,15 @@ author: Hwan Heo
 </p>
 
 
-<h2 id="h2-1" > Google Model Viewer </h2>
+## <span id="h2-1"></span>Google Model Viewer
 
 <p id="p-5"  class="lang kor" >
     <a id="a-1"  href='https://modelviewer.dev/'>Model Viewer</a> 는 구글에서 배포하는 간단한 3D Model viewing 용 패키지이다.
     간단한 3D model viewer 를 필요할 때는 손쉽게 사용이 가능하며, <a id="a-1"  href='https://ncsoft.github.io/CaPa/'>CaPa</a> project page 의 3D model viewer 도 google model viewer 를 이용해 만들었다.
 </p>
-<h3 id="h3-1" > Basic Usage </h3>
+
+### <span id="h3-1"></span>Basic Usage
+
 <p id="p-7"  class="lang kor" >
     cdn 으로 다음과 같이 html file 에서 import 한 후,
 </p>
@@ -95,7 +80,8 @@ author: Hwan Heo
     skybox-image="https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/spruit_sunrise_1k_HDR.hdr" >
 </model-viewer>
 
-<h3 id="h3-2" > Geometry Rendering </h3>
+### <span id="h3-2"></span>Geometry Rendering
+
 <p id="p-12"  class="lang kor" >
     이처럼 간단한 3D model viewer 로는 더할 나위가 없지만, model viewer 는 기본 shader 를 수정하기가 힘들고, 기본 texture rendering 외에 다른 타입 (Normal, Geometry, Wireframe) 등을 지원하지 않아서, texture 외의 detail 한 mesh 요소를 눈으로 확인하기가 힘들다.
 </p>
@@ -147,11 +133,14 @@ function show_geometry(){
 </model-viewer>
 
 
-<h2 id="h2-2" > Threejs-Based Custom Viewer </h2>
+## <span id="h2-2"></span>Threejs-Based Custom Viewer
+
 <p id="p-16"  class="lang kor" >
     위에서 살펴본 model viewer 만으로 rendering 할 수 없는 normal, wireframe rendering 등을 구현하기 위해서는 threejs 를 사용해서 직접 model viewer class 를 구현해야 한다.
 </p>
-<h3 id="h3-3" > Basic Usage </h3>
+
+### <span id="h3-3"></span>Basic Usage
+
 <pre id="pre-2" ><code class='language-html'>&lt;script type=&quot;importmap&quot;&gt;
     {
         &quot;imports&quot;: {
@@ -187,12 +176,15 @@ controls = new OrbitControls(this.camera, this.renderer.domElement);
 <pre id="pre-5"><code class='language-javascript'>loader = new GLTFLoader();
 loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined, (error) => { console.error('Loading Error:', error); });</code></pre>
 
-<h3 id="h3-4">Custom Viewer Implementation</h3>
+### <span id="h3-4"></span>Custom Viewer Implementation
+
 <p id="p-21" class="lang kor" > Three.js를 사용한 커스텀 뷰어는 Google Model Viewer에 비해 훨씬 더 많은 유연성을 제공한다. 이를 통해 Diffuse, Mesh, Wireframe, Normal 등 다양한 렌더링 모드를 구현할 수 있다.  </p>
 <p id="p-22" class="lang kor" >
     Threejs 의 Mesh Texture 는 <code>MeshStandardMaterial</code> 에 PBR material 형태로 정의되어 있는데, Normal, Geometry, Wireframe 등의 rendering 은 material mapping 만 적절히 해주는 것으로 구현 가능하다.
 </p>
-<h4 id="h4-1" > Normal Map </h4>
+
+#### <span id="h4-1"></span>Normal Map
+
 <p id="p-23" class="lang kor" >
     예를 들어 Normal map 의 경우에는 threejs 에서 제공하는 <code>THREE.MeshNormalMaterial()</code> 을 mesh material 로 설정하는 것으로 rendering 할 수 있다.
 </p>
@@ -207,7 +199,8 @@ loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined
 <br/>
 
 
-<h4 id="h4-2" > Wireframe </h4>
+#### <span id="h4-2"></span>Wireframe
+
 <p id="p-24"  class="lang kor" >
     Wireframe 의 경우에는  <code>THREE.MeshNormalMaterial()</code> 에서 <code>wireframe: true</code> 로 설정하면 wireframe mesh 가 나오긴 하지만, 이 모드는 원본 texture 랑 geometry 가 사라져서 가시성이 떨어진다.
 </p>
@@ -228,7 +221,9 @@ loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined
 });
 </code></pre>
 <br/>
-<h4 id="h4-3" > Custom Model Viewer </h4>
+
+#### <span id="h4-3"></span>Custom Model Viewer
+
 <p id="p-26"  class="lang kor" >
     3D Model 에 따라 이 기능들을 항상 재구현 하기엔 좀 귀찮으므로, 앞서 설명한 기능들과 더불어 성격이 다른 pre-defined skybox env map 설정 및 제거,모델의 위치와 회전을 조정할 수 있는 UI 패널 등을 추가한 <code>SimpleModelViewer</code> class 를 만들어보았다.
 </p>
@@ -957,13 +952,16 @@ export { SimpleModelViewer };
 </simple-model-viewer>
 <p id="p-28"  class="lang kor" > <code>auto-rotate</code> 로 mesh 의 Y축 회전을 계속 진행하는 기본 동작을 추가할 수 있고, <code>angle-per-second</code> 로 속도를 조정할 수 있다. 초기 카메라 위치는 <code>camera-orbit</code> attribute 로 설정 가능하다. </p>
 <p id="p-29"  class="lang kor" > <code>Control Panel</code> 같은 기본 UI 도 toggle 가능하게 구성하여, model viewer 와 비슷한 사용성에 더 넓은 기능 범위를 더한 3D Model Viewer 로 만들었다.  </p>
-<h3 id="h3-5">Key Takeaways</h3>
+
+### <span id="h3-5"></span>Key Takeaways
+
 <ul class="lang kor" >
     <li><strong>Google Model Viewer</strong>: 빠르고 쉬운 설정이 장점이나, 렌더링 모드와 커스터마이징에 한계가 있다.</li>
     <li><strong>Three.js Custom Viewer</strong>: 유연성과 세밀한 제어가 강점이지만, 설정이 복잡하고 시간이 더 걸린다.</li> 
     <li>프로젝트 요구사항에 따라 간편함과 유연성 중 적절한 선택이 필요하다.</li> 
 </ul>
-<h2 id="conclusion">Conclusion</h2>
+
+## <span id="conclusion"></span>Conclusion
 
 <p id="p-30" class="lang kor" > 
     Google Model Viewer는 빠르고 간편하게 3D 모델을 웹에 삽입할 수 있는 훌륭한 도구다. 하지만 더 세밀한 제어나 다양한 렌더링 모드가 필요할 때는 Three.js를 사용한 커스텀 뷰어가 더 적합하다. 

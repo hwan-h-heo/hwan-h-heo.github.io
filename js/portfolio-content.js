@@ -45,6 +45,7 @@
 
     function renderProject(project, index = 0) {
         const selected = isSelectedProject(project, index);
+        const allOrder = Number.isFinite(Number(project.allOrder)) ? Number(project.allOrder) : index;
         const targetAttrs = project.external ? ' target="_blank" rel="noopener noreferrer"' : '';
         const externalIcon = project.external ? ` ${icons.render('box-arrow-up-right')}` : '';
         const eyebrowHtml = project.typeLabel
@@ -60,23 +61,27 @@
         const hidden = selected ? '' : ' hidden';
 
         return `
-            <article class="portfolio-project-item" data-selected="${selected ? 'true' : 'false'}"${hidden}>
-                <a class="portfolio-project-link" href="${escapeHtml(project.url)}"${targetAttrs}>
+            <article class="portfolio-project-item" data-selected="${selected ? 'true' : 'false'}" data-selected-order="${index}" data-all-order="${allOrder}"${hidden}>
+                <div class="portfolio-project-layout">
+                    <a class="portfolio-project-cover-link" href="${escapeHtml(project.url)}"${targetAttrs} aria-label="View ${escapeHtml(project.title)}">
                     <span class="portfolio-project-cover">
                         ${renderMedia(project)}
                         ${spinnerHtml}
                     </span>
-                    <span class="portfolio-project-body">
+                    </a>
+                    <div class="portfolio-project-body">
                         ${eyebrowHtml}
-                        <span class="portfolio-project-title">${escapeHtml(project.title)}${externalIcon}</span>
+                        <a class="portfolio-project-title-link" href="${escapeHtml(project.url)}"${targetAttrs}>
+                            <span class="portfolio-project-title">${escapeHtml(project.title)}${externalIcon}</span>
+                        </a>
                         <span class="portfolio-project-summary">${escapeHtml(project.summary)}</span>
                         <span class="portfolio-project-tags">${tagsHtml}</span>
                         <span class="portfolio-project-meta">
                             <span>${escapeHtml(project.organization)} / ${escapeHtml(project.period)}</span>
                             ${accoladeHtml}
                         </span>
-                    </span>
-                </a>
+                    </div>
+                </div>
             </article>
         `;
     }
@@ -132,8 +137,14 @@
         const resolvedView = view === 'all' ? 'all' : 'selected';
         section.dataset.portfolioView = resolvedView;
 
+        const projectList = section.querySelector('.portfolio-project-list');
+        const orderKey = resolvedView === 'all' ? 'allOrder' : 'selectedOrder';
+        const projectItems = Array.from(section.querySelectorAll('.portfolio-project-item'))
+            .sort((first, second) => Number(first.dataset[orderKey]) - Number(second.dataset[orderKey]));
+        projectItems.forEach((item) => projectList?.appendChild(item));
+
         const visibleItems = [];
-        section.querySelectorAll('.portfolio-project-item').forEach((item) => {
+        projectItems.forEach((item) => {
             item.hidden = resolvedView === 'selected' && item.dataset.selected !== 'true';
             item.classList.remove('is-last-visible');
             if (!item.hidden) {

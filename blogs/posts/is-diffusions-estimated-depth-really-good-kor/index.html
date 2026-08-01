@@ -29,14 +29,14 @@
     <title>Diffusion 으로 추정한 Depth 진짜 좋나요? | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css" rel="stylesheet" />
-    <link href="/blogs/css/typography.css" rel="stylesheet" />
-    <link href="/blogs/css/post.css" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
-    <link href="/assets/css/site-icons.css" rel="stylesheet" />
-    <script src="/assets/js/site-icons.js"></script>
+    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
+    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
-    <link href="/blogs/css/code-copy.css" rel="stylesheet" />
+    <link href="/blogs/css/code-copy.css?v=97949adbc2" rel="stylesheet" />
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
     <script>
@@ -208,7 +208,7 @@
     </div>
                 </div>
                 <div class="post-reading-column main-content">
-                    <button id="copyButton" type="button" aria-label="Copy post link">
+                    <nav class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="1. Introduction" aria-label="1. Introduction"><span class="toc-link-text">1. Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="2. Generating 3D Vertices and Faces from Depth Maps" aria-label="2. Generating 3D Vertices and Faces from Depth Maps"><span class="toc-link-text">2. Generating 3D Vertices and Faces from Depth Maps</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="3. Texturing the Mesh from Depth Maps" aria-label="3. Texturing the Mesh from Depth Maps"><span class="toc-link-text">3. Texturing the Mesh from Depth Maps</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-3" title="4. Results &amp; Analysis" aria-label="4. Results &amp; Analysis"><span class="toc-link-text">4. Results &amp; Analysis</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-4" title="Closing" aria-label="Closing"><span class="toc-link-text">Closing</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
@@ -230,22 +230,7 @@
     </div>
 </div>
 
-<nav class="toc">
-    <ul>
-        <li><a href="#sec1"> Introduction </a></li>
-        <li>
-            <a href="#sec2"> Generating 3D Vertices and Faces from Depth Maps </a>
-        </li>
-        <li><a href="#sec3"> Texturing the Mesh from Depth Maps </a></li>
-        <li>
-            <a href="#sec4"> Result & Analysis </a>
-        </li>
-        <li><a href="#closing"> Closing </a></li>
-    </ul>
-</nav>
-
-<h2 id="sec1">1. Introduction </h2>
-
+<h2 id="toc-heading-0"><span id="sec1"></span>1. Introduction</h2>
 <p class="lang kor" >
     2D Diffusion 의 성공 이후로, Diffusion Model 의 막강한 성능에 힘입어 depth, normal map 등의 geometric information 을 diffusion 으로 추론하려는 연구가 이어지고 있다.
 </p>
@@ -262,14 +247,13 @@
     등이 그 예시인데, 결과를 볼 때 꽤나 잘 되는 것 같으면서도, 이게 실제로 geometric 하게 depth 를 얼마나 잘 예측했나가 바로 와닿지는 않는다.
 </p>
 <img src="/blogs/posts/240426_diffusion_depth/assets/teaser.jpeg" alt="Marigold's teaser" width="100%" loading="lazy" decoding="async">
-<p><em>Figure credit: <a href="https://marigoldmonodepth.github.io/">Depth estimation result from Marigold<a></a></em></p>
 
+<p><em>Figure credit: <a href="https://marigoldmonodepth.github.io/">Depth estimation result from Marigold<a></a></em></p>
 <p class="lang kor" >
     백문이 불여일견, 오늘은 DepthMap 을 통해 pointclouds 나 mesh 를 생성하고, 현재 Marigold 등의 SOTA depth estimation 모델의 성능이 어떠한지 정성적으로 평가해보자.
 </p>
 
-<h2 id="sec2">2. Generating 3D Vertices and Faces from Depth Maps</h2>
-
+<h2 id="toc-heading-1"><span id="sec2"></span>2. Generating 3D Vertices and Faces from Depth Maps</h2>
 <p class="lang kor" >
     우선 depth estimation 의 baseline 으로는 위에서 언급한 Marigold 를 사용한다. light model 이긴 해도 huggingface 에서 demo 도 제공해주고 있어 성능 및 사용의 용이성이 모두 높아 선정하였다. 
     <a href="https://huggingface.co/spaces/prs-eth/marigold-lcm">(Hugging Face Demo)</a>
@@ -376,8 +360,7 @@
     병렬화나 고속화 등을 고려하지 않고 for 문으로 일괄 처리하기 때문에 High-Resolution Input 에 대해서 이 부분의 시간이 많이 걸린다.
 </p>
 
-<h2 id="sec3">3. Texturing the Mesh from Depth Maps</h2>
-
+<h2 id="toc-heading-2"><span id="sec3"></span>3. Texturing the Mesh from Depth Maps</h2>
 <p class="lang kor" >
     Texturing... 은 원래 3D asset 생성 과정에서 굉장히 중요한 문제지만, 현재 우리가 하고 있는 task 에 한정해서는 
     vertex 개수가 image size 와 동일하기 때문에 이미지 pixel color 를 그대로 vertex color 로 사용하여도 문제가 없다.
@@ -409,8 +392,7 @@
     laplacian smoothing 에서 iteration 3 이상은 추천하지 않는다.
 </p>
 
-<h2 id="sec4"> 4. Results & Analysis</h2>
-
+<h2 id="toc-heading-3"><span id="sec4"></span>4. Results &amp; Analysis</h2>
 <p class="lang kor" > 
     Marigold Demo 에 있는 네 가지 사진을 이용해 Textured Mesh 를 만들어 보았다.
 </p>
@@ -443,14 +425,13 @@
 </p>
 
 <img src="/blogs/posts/240426_diffusion_depth/assets/butterfly.jpg" alt="Marigold's teaser" width="100%" loading="lazy" decoding="async">
-<p><em>Left: front view / Right: side view of the mesh</em></p>
 
+<p><em>Left: front view / Right: side view of the mesh</em></p>
 <p class="lang kor" >
     또한 위의 front 결과를 확대해서 보면, 몸통의 줄무늬 때문에 부분부분 background 로 추론되었다. Depth map 자체가 극단적인 discontinuity 를 갖기 때문에, 이러한 경우에 estimation 이 더 어려운 것으로 보인다.
 </p>
 
-<h2 id="closing"> Closing </h2>
-
+<h2 id="toc-heading-4"><span id="closing"></span>Closing</h2>
 <p class="lang kor" >
     Diffusion 등 generation 기법을 이용해 생성된 depthmap 이 정성적으로 어느 정도의 quality 를 갖는지 볼 수 있도록 Depth map 으로부터 textured-mesh 를 생성하는 방법에 대해 논의해보았다.
 </p>
@@ -500,19 +481,12 @@
                         </div>
                     </section>
     
-                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/change-of-basis-kor/" aria-label="Previous Post: Change of Basis">
-                    <span class="post-nav-kicker">
-                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
-                    </span>
-                    <strong>Change of Basis</strong>
-                </a>
-    
-                <a class="post-nav-card is-next" href="/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting-kor/" aria-label="Next Post: 2D Gaussian Splatting 톺아보기">
+                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation"><span class="post-nav-spacer" aria-hidden="true"></span>
+                <a class="post-nav-card is-next" href="/blogs/posts/an-era-of-3d-generation-kor/" aria-label="Next Post: 3D 생성 모델의 시대">
                     <span class="post-nav-kicker">
                         Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
-                    <strong>2D Gaussian Splatting 톺아보기</strong>
+                    <strong>3D 생성 모델의 시대</strong>
                 </a>
     </nav></div>
                 </div>
@@ -1186,11 +1160,11 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
-    <script src="/blogs/js/code-copy.js"></script>
-    <script src="/blogs/js/theme-toggle.js"></script>
-    <script src="/blogs/js/scroll-progress.js"></script>
-    <script src="/blogs/js/blog-shell.js"></script>
-    <script src="/blogs/js/post-page.js"></script>
+    <script src="/blogs/js/code-copy.js?v=e6b60656e4"></script>
+    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
+    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
     <script>
         initBlogShell({
             formSelector: '#post-nav-search-form',

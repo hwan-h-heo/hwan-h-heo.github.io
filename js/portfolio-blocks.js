@@ -89,10 +89,12 @@
         }
 
         const linkHtml = links.map((link) => {
-            const externalAttrs = /^https?:\/\//i.test(link.url || '')
+            const isExternal = /^https?:\/\//i.test(link.url || '');
+            const externalAttrs = isExternal
                 ? ' target="_blank" rel="noopener noreferrer"'
                 : '';
             const icon = link.icon || 'arrow-up-right';
+            const destinationIcon = isExternal ? 'box-arrow-up-right' : 'arrow-up-right';
 
             return `
                 <a class="about-contact-link" href="${escapeHtml(link.url)}"${externalAttrs}>
@@ -101,7 +103,7 @@
                         <strong>${escapeHtml(link.label)}</strong>
                         <small>${escapeHtml(link.value)}</small>
                     </span>
-                    ${icons.render('arrow-up-right', { className: 'about-contact-arrow' })}
+                    ${icons.render(destinationIcon, { className: 'about-contact-arrow' })}
                 </a>
             `;
         }).join('');

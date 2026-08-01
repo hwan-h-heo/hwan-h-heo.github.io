@@ -46,14 +46,12 @@ https://www.deeplearningbook.org/contents/linear_algebra.html -->
     
 ### 3.2. **Eigen-Decomposition**
 
-basis 의 변화라는 관점에서 eigendecomposition 을 살펴보자. 
+basis 의 변화라는 관점에서 eigendecomposition 을 살펴보자.
 
-<p>
 $$
 A \vec v = \lambda \vec v \ 
 (= \lambda {\rm I}  \vec v ) \\ \rightarrow (A- \lambda \rm I) {\it \vec v} = 0
 $$
-</p>
 
 - 위 식을 만족시키는 상수 $\lambda$ 의 값을 eigenvalue, 벡터 $\vec v$를 eigenvector 라고 한다. 즉 자기 자신을 선형변환 했을 때, 오직 scale 만 바뀌는 벡터가 eigenvector, 바뀌는 scale 정도가 eigenvalue 로 정의된다.
 
@@ -129,41 +127,33 @@ $$
 1. $A^TA$ : $n \times n$  symmetric matrix, 즉 eigenbasis 가 each orthogonal & independent 하며, basis 는 $A$의 column dimension을 rank로 갖는 를 span 으로 갖는다. 
 2. $AA^T$ : $m \times m$ symmetric matrix 이다. span의 rank가 $A$ 의 row dimension 이 된다. 
 
-각 symmetric matrix 의 의미를 잘 떠올리면서 정의에 따라 SVD 를 구성해보자. 
+각 symmetric matrix 의 의미를 잘 떠올리면서 정의에 따라 SVD 를 구성해보자.
 
-<p>
 $$
 A= U \Sigma V^T \\ U, V : \text{each orthonormal}
 $$
-</p>
 
-이고, 이에 따라 $A^TA$ 와 $AA^T$ 를 나타내보면, 
+이고, 이에 따라 $A^TA$ 와 $AA^T$ 를 나타내보면,
 
-<p>
 $$
 A^T A = V \Sigma ^T \Sigma V^T \\ A A^T = U \Sigma  \Sigma^T U^T 
 $$
-</p>
 
-이다. 즉 $\Sigma ^T \Sigma$ 는 $A^TA$ 의 each orthogonal 한 eigenbasis 의 행렬이며, $U$ 는 $AA^T$ 에서 그렇다. 위에서 첫번째 식을 이용해 각각의 의미를 좀 더 살펴보도록 하겠다. 양변의 오른쪽에 행렬 $V$를 곱해보자. 
+이다. 즉 $\Sigma ^T \Sigma$ 는 $A^TA$ 의 each orthogonal 한 eigenbasis 의 행렬이며, $U$ 는 $AA^T$ 에서 그렇다. 위에서 첫번째 식을 이용해 각각의 의미를 좀 더 살펴보도록 하겠다. 양변의 오른쪽에 행렬 $V$를 곱해보자.
 
-<p>
 $$
 A^TA v_j = \sigma _j^2 v_j  \ (A^TA V = V \Sigma^T \Sigma)
 $$
-</p>
 
 1. $AA^T (Av_j ) = \sigma _j^2 (Av_j)$  : 
 eigenvector 의 정의에 의해 $Av_j$  는 $AA^T$의  eigenvector 이다. (이때, $v_j$는 $V$의 한 column인 $A^TA$의 eigenvector 중 하나이다)
 
 2. $v_j^T A^TAv_j = \sigma_j^2 v_j^T v_j \quad \rightarrow \quad (Av_j)^T (Av_j) = \sigma_j^2$
-즉 $Av / \sigma$ 는 $AA^T$의 unit eigenvector $u$ 이다. ($u \in U$ ) 따라서, 
+즉 $Av / \sigma$ 는 $AA^T$의 unit eigenvector $u$ 이다. ($u \in U$ ) 따라서,
 
-<p>
 $$
 Av_j= \sigma _j u_j \\ \rightarrow AV = U \Sigma \\  \rightarrow A = U \Sigma V^T  
 $$
-</p>
 
 위를 통해 SVD 가 non square matrix 로부터 비롯되는 symmetric square matrix $A^TA$를 통해서 정의됨을 알 수 있다. 이는 기하학적으로도 eigen-decomposition과 유사한 의미를 갖는데, $U, V$ 가 모두 each orthonormal 한 column 으로 이루어진 square matrix 이기 때문에 이는 회전변환의 의미를, $\Sigma$는 $A^TA$의 eigenvalue 를 diagonal element 로 갖는 scaling 변환의 의미를 갖는다. $U$와 $V$는 서로  **dimension 이 다를 수 있지만**, 둘 다 회전 변환이라는 본질적인 성질을 공유한다.
 
@@ -177,26 +167,20 @@ $$
 
 라는 선형방정식에서, $A$ 가 non square 혹은 non singular matrix 일 경우에는 역행렬을 통한 일반해를 구할 수 없다. 따라서 위의 SVD 에서 했던 것처럼, $A$를 통해 다루기 편한 symmetric 이고 square 인 matrix 를 만드는 것으로 이를 유도할 수 있다.
 
-<p>
 $$
 A^TA x = A^T b \\ \rightarrow x = (A^T A)^{-1} A^T b
 $$
-</p>
 
-<p>
 $$
 (A^TA)^{-1} A^T  = \{ (V \Sigma ^T U^T) (U \Sigma V^T) \}^{-1} V \Sigma^T U^T \\ = V (\Sigma ^T \Sigma )^{-1} \Sigma ^T U^T  \\ = V diag (\sigma ^{-1} ) U^T
 $$
-</p>
 
 즉 pseudo inverse matrix 는 $A^TA$의 eigenvalue의 역수로 정의되는 값을 singular value 로 가지는 행렬이다. 
-앞쪽에 등장하는식은 원래 least square solution 의 상황에서 L2 regularization 을 고려한 문제에서 비롯된 공식이다. 
+앞쪽에 등장하는식은 원래 least square solution 의 상황에서 L2 regularization 을 고려한 문제에서 비롯된 공식이다.
 
-<p>
 $$
 {d \over dx} {\| Ax - b\| ^2 _2 + \alpha \| x\| ^2 _2 }  \\ = (A^TA + \alpha I )x \\ \rightarrow \hat x =  (A^TA + \alpha I )^{-1} A^T b
 $$
-</p>
 
 기술되어 있는 least square solution 이 $\min \|x \|_2$ 인 해를 갖는 이유를 기하학적으로 접근하는 방식도 있으나 그림을 그리기 어려운 관계로 이는 생략하겠다. 
 고등 기하와벡터 정도의 내용으로 그리 어렵진 않다. (이젠 고등이 아닌...)
@@ -209,11 +193,9 @@ $$
 \|x \|_p = (\sum _i x_i ^p ) ^{1 \over p }
 $$
 
-<p>
 $$
 \| A {\|}_F = \sqrt{ \sum_{i, j} A_{i,j}^2}
 $$
-</p>
 
 ### 4.2. Trace Operator
 
@@ -229,33 +211,25 @@ trace operator 에는 여러가지 흥미로운 성질들이 존재한다. 일�
 
 3. Cyclic moving :  $tr(AB) = tr(BA)$
 
-<p>
 $$
 \sum_i (AB)_{i,i} = \sum _i \sum _j a_{i,j} b_{j,i} = \sum_j \sum _i b_{j,i}a_{i,j} = \sum _j (BA) _{j,j}
 $$
-</p>
 
-4. $tr(A)= \sum \lambda$  
+4. $tr(A)= \sum \lambda$
 
-<p>
 $$
 tr(A) = tr(V diag(\lambda)V^{-1} ) \\ = tr(V^{-1} V diag(\lambda)) \\ = tr(diag(\lambda)) \\  = \sum \lambda
 $$
-</p>
 
 5. Frobenious Norm : $\|A\|_F ^2 = tr(AA^T) = tr(A^TA)$
 
-<p>
 $$
 AV = U\Sigma \\ \rightarrow \| AV \|_F ^2= \| U\Sigma \| _F^2 \\ \rightarrow \|A \| _F ^2= \| \Sigma \| _F ^2 = \sum \sigma ^2
 $$
-</p>
 
-<p>
 $$
 A^TA = V (\Sigma ^T \Sigma ) V^T \\ \therefore tr(A^TA) = tr(AA^T) = \sum \sigma ^2 \\ \|A \|_F = \sqrt { tr(A^TA) }
 $$
-</p>
 
 ## 5. Principal Component Analysis
 
@@ -268,13 +242,11 @@ $$
 cov(A) = {1 \over n} (A - \vec \mu ) ^T (A- \vec  \mu)
 $$
 
-위 식에서 $A- \vec \mu = X$ 라 하자. 그렇다면, 이를 통해 eigen-decomposition 이 가능하다. 
+위 식에서 $A- \vec \mu = X$ 라 하자. 그렇다면, 이를 통해 eigen-decomposition 이 가능하다.
 
-<p>
 $$
 X^TX = V^{-1} \Sigma V \\ = V^T \Sigma V^{-T} \quad (\because X^TX : \text {symmetric}) \\ \rightarrow VV^T \Sigma (V^TV) ^{-1} = \Sigma \\ \therefore VV^T = I 
 $$
-</p>
 
 따라서 위 등식이 성립하고, 이는 즉 covariance matrix 의 eigenbasis 는 서로 orthogonal 하다는 의미이다. covariance matrix 를 이루는 basis 가 서로 내적값이 0이므로, 이를 uncorrelated 되었다고도 한다. 
 
@@ -284,26 +256,21 @@ PCA 에서 이를 최대화 하는 방향으로 feature extraction 을 진행하
 
 encoder matrix 의 최종 derivation form 인 아래 식을 통해서 PCA 와 eigen-decomposition 간의 관계를 살펴볼 수 있다. DL book의 유도에 따르면 PCA는 곧,
 
-<p>
 $$
 \argmax _d \ Tr(d^T X^TXd) \quad \text{where } d^T d = 1
 $$
-</p>
 
 이라는 형태가 나오는데,  $d^TX^TXd$ 는 $X^TX$ induced ellipsoid 임을 간단하게 알 수 있다.
 수식에서 간단한 첨언을 하면, 제약조건으로써 제시하고 있는 $\|D \|_F = I$ 이라는 수식은 maximization 문제를 풀 때, 단순히 D 행렬의 크기만을 키우면 objective function 값이 커지기 때문에 이 값에 제약을 둔 것이다.  
 
-$X^TX$ 는 symmetric matrix 이므로,  $X ^TX = P^T AP$ 를 만족하는 eigendecomposition diagonal matrix $A$ 를 만들 수 있다. 따라서, $Pd' = d$  인 $d'$  에 대하여,  
+$X^TX$ 는 symmetric matrix 이므로,  $X ^TX = P^T AP$ 를 만족하는 eigendecomposition diagonal matrix $A$ 를 만들 수 있다. 따라서, $Pd' = d$  인 $d'$  에 대하여,
 
-<p>
 $$
 d^TX^TXd = (Pd')^T X^TX (Pd') \quad  \quad \quad  \\  = d'^T (P^TX^TXP)d' 
 $$
-</p>
 
-를 만족하고, $P^TX^TXP$ 는 eigenvalue 를 diagonal element 로 가지는 matrix 가 된다. 즉 eigenbasis 로 이루어지는 span 상의 ellipsoid plane 을 의미하고, 이 ellipse 를 이루는 axis 중에 가장 큰 것을 고른다는 의미가 된다. 구체적으로 ellipse 식을 구해보자면, 
+를 만족하고, $P^TX^TXP$ 는 eigenvalue 를 diagonal element 로 가지는 matrix 가 된다. 즉 eigenbasis 로 이루어지는 span 상의 ellipsoid plane 을 의미하고, 이 ellipse 를 이루는 axis 중에 가장 큰 것을 고른다는 의미가 된다. 구체적으로 ellipse 식을 구해보자면,
 
-<p>
 $$
 \begin{bmatrix} 
 a_1 &  &... &  & a_n \\
@@ -325,18 +292,15 @@ a_n \\
 a_1 &  &... &  & a_n \\
 \end{bmatrix} 
 $$
-</p>
 
 즉, eigenbasis 로 이루어진 coordinate system 의 ellipse 임을 확인할 수 있다. 
 
-기하학적인 설명 이외에 $d$ 가 eigenvector 일 때, eigenvalue 가 max 값인 이유또한 수식적으로 간단하게 유도해볼 수 있다. 다음을 보자. 
+기하학적인 설명 이외에 $d$ 가 eigenvector 일 때, eigenvalue 가 max 값인 이유또한 수식적으로 간단하게 유도해볼 수 있다. 다음을 보자.
 
-<p>
 $$
 \ d^T X^TX d  \quad \text{where } d^T d = 1 \\ = d^T (\lambda d ) \\ = \lambda \  d^Td \ \ \\ = \lambda  
 \quad 
 $$
-</p>
 
 따라서 $d$ 가 eigenvector 일 때, 해당 식의 값이 eigenvalue 값과 동일하고, 따라서 최대 eigenvalue 에 해당하는 eigenvector 를 찾는 것이 PCA 임을 확인할 수 있다. 즉 $cov(X^TX)$  의 최대 eigenvalue 에 해당하는 eigenvector 를 찾는 작업이 곧 PCA 이다. 
 
