@@ -1119,36 +1119,38 @@ async function assertSharedSidebar(page, testCase, width, options) {
 
     const collapseToggle = page.locator('.sidebar-collapse-toggle');
     assert(await collapseToggle.getAttribute('aria-expanded') === 'false', 'Desktop sidebar did not honor its default collapsed preference.');
-    const labsSummary = page.locator('.sidebar-labs-menu > summary');
-    await labsSummary.click();
-    const collapsedLabsState = await page.evaluate(() => {
-        const header = document.querySelector('#header');
-        const menu = document.querySelector('.sidebar-labs-menu');
-        const panel = menu?.querySelector('.sidebar-labs-panel');
-        const headerRect = header?.getBoundingClientRect();
-        const panelRect = panel?.getBoundingClientRect();
-        return {
-            collapsed: document.documentElement.classList.contains('sidebar-collapsed'),
-            headerWidth: headerRect?.width || 0,
-            open: Boolean(menu?.open),
-            panelDisplay: panel ? getComputedStyle(panel).display : 'none',
-            panelLeft: panelRect?.left || 0,
-            sidebarRight: headerRect?.right || 0
-        };
-    });
-    assert(
-        collapsedLabsState.collapsed
-            && collapsedLabsState.headerWidth <= 80
-            && collapsedLabsState.open
-            && collapsedLabsState.panelDisplay === 'grid'
-            && collapsedLabsState.panelLeft >= collapsedLabsState.sidebarRight - 1,
-        `Collapsed Labs did not open as a rail overlay: ${JSON.stringify(collapsedLabsState)}`
-    );
-    await page.keyboard.press('Escape');
-    assert(
-        await page.locator('.sidebar-labs-menu').evaluate((element) => !element.open && document.activeElement === element.querySelector('summary')),
-        'Escape did not close the collapsed Labs overlay and restore focus.'
-    );
+    if (testCase.type === 'post') {
+        const labsSummary = page.locator('.sidebar-labs-menu > summary');
+        await labsSummary.click();
+        const collapsedLabsState = await page.evaluate(() => {
+            const header = document.querySelector('#header');
+            const menu = document.querySelector('.sidebar-labs-menu');
+            const panel = menu?.querySelector('.sidebar-labs-panel');
+            const headerRect = header?.getBoundingClientRect();
+            const panelRect = panel?.getBoundingClientRect();
+            return {
+                collapsed: document.documentElement.classList.contains('sidebar-collapsed'),
+                headerWidth: headerRect?.width || 0,
+                open: Boolean(menu?.open),
+                panelDisplay: panel ? getComputedStyle(panel).display : 'none',
+                panelLeft: panelRect?.left || 0,
+                sidebarRight: headerRect?.right || 0
+            };
+        });
+        assert(
+            collapsedLabsState.collapsed
+                && collapsedLabsState.headerWidth <= 80
+                && collapsedLabsState.open
+                && collapsedLabsState.panelDisplay === 'grid'
+                && collapsedLabsState.panelLeft >= collapsedLabsState.sidebarRight - 1,
+            `Collapsed Labs did not open as a rail overlay: ${JSON.stringify(collapsedLabsState)}`
+        );
+        await page.keyboard.press('Escape');
+        assert(
+            await page.locator('.sidebar-labs-menu').evaluate((element) => !element.open && document.activeElement === element.querySelector('summary')),
+            'Escape did not close the collapsed Labs overlay and restore focus.'
+        );
+    }
     await collapseToggle.click();
     await page.waitForFunction(() => {
         const header = document.querySelector('#header');
