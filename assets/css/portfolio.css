@@ -177,10 +177,11 @@ body {
   font-family: var(--default-font);
   font-size: 1rem;
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.65;
   color: var(--default-color);
   text-align: left;
   background-color: var(--background-color);
+  text-rendering: optimizeLegibility;
   text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
 }
@@ -201,7 +202,10 @@ h5,
 h6 {
   margin-top: 0;
   margin-bottom: 0.5rem;
+  color: var(--heading-color);
+  font-family: var(--heading-font);
   font-weight: 500;
+  letter-spacing: 0;
   line-height: 1.2;
 }
 
@@ -323,10 +327,8 @@ button:not(:disabled) {
 @media (min-width: 1400px) {
   .portfolio-shell { max-width: 1320px; }
 }
-body { color: var(--default-color); background-color: var(--background-color); font-family: var(--default-font); }
 a { color: var(--accent-color); text-decoration: none; transition: 0.3s; }
 a:hover { color: color-mix(in srgb, var(--accent-color), transparent 25%); text-decoration: none; }
-h1, h2, h3, h4, h5, h6 { color: var(--heading-color); font-family: var(--heading-font); }
 .header {
   position: fixed;
   top: 0;
@@ -1353,23 +1355,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   bottom: 15px;
 }
 
-/* Current portfolio typography, layout, and motion. */
-body {
-  font-family: var(--default-font);
-  line-height: 1.65;
-  text-rendering: optimizeLegibility;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--heading-font);
-  letter-spacing: 0;
-}
-
+/* Current portfolio layout and motion. */
 .hero {
   position: relative;
   display: flex;
@@ -1718,11 +1704,6 @@ h6 {
     opacity: 0.3;
     transform: translateY(0.12rem);
   }
-}
-
-.about .about-intro,
-.about .about-bio {
-  max-width: 760px;
 }
 
 .portfolio-section-heading {

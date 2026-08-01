@@ -11,34 +11,32 @@
  */
 
 :root {
---blog-reset-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "NanumGothic";
---blog-reset-mono: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
---blog-body-font-family: Lora, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
---blog-body-font-size: 1rem;
---blog-body-font-weight: 400;
---blog-body-line-height: 1.5;
---blog-body-color: #212529;
---blog-body-bg: #fff;
---blog-border-color: #dee2e6;
---blog-link-color: #212529;
---blog-link-hover-color: #0085A1;
---blog-code-color: #d63384;
---blog-highlight-bg: #fff3cd;
---blog-color-heading: #1c2a36;
---blog-color-ink: #24313d;
---blog-color-text: #43515d;
---blog-color-muted: #72808c;
---blog-color-subtle: #8b98a3;
---blog-color-line: #dce5ee;
---blog-color-line-soft: rgba(220, 229, 238, 0.84);
---blog-color-accent: #159c78;
---blog-color-accent-strong: #0d6f5a;
---blog-focus-ring: rgba(21, 156, 120, 0.42);
---blog-reading-column-max: 46.375rem;
---blog-reading-rail-gap: 1.3125rem;
---blog-reading-rail-offset: calc((var(--blog-reading-column-max) / 2) + var(--blog-reading-rail-gap));
---blog-reading-rail-width: 17rem;
---blog-share-control-size: 2.25rem;
+    --blog-reset-mono: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --blog-body-font-family: Lora, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --blog-body-font-size: 1.1rem;
+    --blog-body-font-weight: 400;
+    --blog-body-line-height: 1.5;
+    --blog-body-color: #212529;
+    --blog-body-bg: #fff;
+    --blog-link-color: #212529;
+    --blog-link-hover-color: #0085a1;
+    --blog-code-color: #d63384;
+    --blog-highlight-bg: #fff3cd;
+    --blog-color-heading: #1c2a36;
+    --blog-color-ink: #24313d;
+    --blog-color-text: #43515d;
+    --blog-color-muted: #72808c;
+    --blog-color-subtle: #8b98a3;
+    --blog-color-line: #dce5ee;
+    --blog-color-line-soft: rgba(220, 229, 238, 0.84);
+    --blog-color-accent: #159c78;
+    --blog-color-accent-strong: #0d6f5a;
+    --blog-focus-ring: rgba(21, 156, 120, 0.42);
+    --blog-reading-column-max: 46.375rem;
+    --blog-reading-rail-gap: 1.3125rem;
+    --blog-reading-rail-offset: calc((var(--blog-reading-column-max) / 2) + var(--blog-reading-rail-gap));
+    --blog-reading-rail-width: 17rem;
+    --blog-share-control-size: 2.25rem;
 }
 
 html[data-theme="dark"] {
@@ -71,27 +69,11 @@ border: 0 !important;
 :root { scroll-behavior: smooth; }
 }
 body { margin: 0px; font-family: var(--blog-body-font-family); font-size: var(--blog-body-font-size); font-weight: var(--blog-body-font-weight); line-height: var(--blog-body-line-height); color: var(--blog-body-color); text-align: left; background-color: var(--blog-body-bg); text-size-adjust: 100%; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
-.hangul-text {
-font-family: 'NanumGothic';
-font-size: 1.1rem;
-font-weight: var(--blog-body-font-weight);
-line-height: var(--blog-body-line-height);
-color: var(--blog-body-color);
-text-align: left;
-background-color: var(--blog-body-bg);
--webkit-text-size-adjust: 100%;
--webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
 .math-container {
 width: 100%;
 overflow-x: auto;
 padding: 10px;
 box-sizing: border-box;
-}
-
-.MathJax_Display {
-width: 100%;
-white-space: normal !important;
 }
 
 .video-container {
@@ -117,7 +99,8 @@ margin: 1rem 0;
 color: inherit;
 border: 0;
 border-top: 1px solid;
-opacity: 0.25;
+border-color: #dee2e6;
+opacity: 1;
 }
 
 h6, h5, h4, h3, h2, h1 {
@@ -173,8 +156,7 @@ font-size: 1rem;
 }
 
 p {
-margin-top: 0;
-margin-bottom: 1rem;
+margin: 2rem 0;
 }
 
 abbr[title] {
@@ -579,15 +561,6 @@ padding-bottom: 0;
 }
 
 .post-media { max-width: 100%; height: auto; display: block; margin: auto; }
-body { font-size: 1.1rem; }
-
-hr {
-border-color: #dee2e6;
-opacity: 1;
-}
-p {
-margin: 2rem 0;
-}
 p a {
 text-decoration: underline;
 }
@@ -835,15 +808,6 @@ color: #0085A1;
 
 #mainNav .post-nav-theme-toggle .site-icon {
     display: block;
-    line-height: 1;
-}
-
-#mainNav .post-nav-actions > li.post-nav-action > a.post-nav-language-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 2.08rem;
-    padding: 0 0.72rem;
     line-height: 1;
 }
 
@@ -1154,30 +1118,6 @@ html { overflow-y: scroll; }
     padding-top: 0;
 }
 
-:root { --default-font: "Roboto",  system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; --heading-font: "Raleway",  sans-serif; --nav-font: "Poppins",  sans-serif; }
-:root { --background-color: #ffffff; --default-color: #272829; --heading-color: #050d18; --accent-color: #149ddd; --surface-color: #ffffff; --contrast-color: #ffffff; }
-:root { --nav-color: #a8a9b4; --nav-hover-color: #ffffff; --nav-mobile-background-color: #040b14; --nav-dropdown-background-color: #040b14; --nav-dropdown-color: #a8a9b4; --nav-dropdown-hover-color: #ffffff; }
-.dark-background { --background-color: #040b14; --default-color: #ffffff; --heading-color: #ffffff; --surface-color: #151f2b; --contrast-color: #ffffff; }
-.header { color: var(--default-color); background-color: var(--background-color); position: fixed; top: 0px; left: 0px; bottom: 0px; padding: 0px 15px; width: 300px; transition: 0.3s ease; overflow-y: auto; z-index: 997; border-right: 1px solid color-mix(in srgb, var(--default-color), transparent 90%); }
-.header .profile-img img { margin: 15px auto; display: block; width: 120px; border: 8px solid color-mix(in srgb, var(--default-color), transparent 85%); }
-.header .logo { line-height: 1; margin-bottom: 15px; }
-.header .logo h1 { font-size: 24px; margin: 0px; font-weight: 700; color: var(--heading-color); }
-.header .social-links { margin: 0px 0px 20px; }
-.header .social-links a { font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: color-mix(in srgb, var(--default-color), transparent 90%); color: var(--default-color); margin: 0px 2px; border-radius: 50%; text-align: center; width: 40px; height: 40px; transition: 0.3s; }
-@media (min-width: 1200px) {
-.header ~ main { margin-left: 300px; }
-}
-@media (max-width: 1199px) {
-.header { left: -100%; }
-}
-.header .header-toggle { color: var(--contrast-color); background-color: var(--accent-color); font-size: 22px; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; position: fixed; top: 15px; right: 15px; z-index: 9999; transition: background-color 0.3s; }
-.navmenu { padding: 0px; z-index: 9997; }
-.navmenu ul { list-style: none; padding: 0px 0px 20px; margin: 0px; }
-.navmenu a, .navmenu a:focus { color: var(--nav-color); padding: 15px 10px; font-family: var(--nav-font); font-size: 16px; font-weight: 400; display: flex; align-items: center; white-space: nowrap; transition: 0.3s; width: 100%; }
-.navmenu a .navicon, .navmenu a:focus .navicon { font-size: 20px; margin-right: 10px; }
-.navmenu a:hover, .navmenu .active, .navmenu .active:focus { color: var(--nav-hover-color); }
-.navmenu a:hover .navicon, .navmenu .active .navicon, .navmenu .active:focus .navicon { color: var(--accent-color); }
-
 .share_modal {
     display: none;
     position: fixed;
@@ -1401,14 +1341,6 @@ html { overflow-y: scroll; }
         transform: none;
     }
 }
-html {
-    overflow-y: scroll;
-}
-.custom-badge {
-    display: inline-block;
-    padding: 0.5em 1em; 
-    font-size: 14px; 
-}
 .post-card-cover img,
 .blog-feature-cover img {
     position: absolute;
@@ -1433,18 +1365,6 @@ html {
     flex-wrap: wrap;
     gap: 0.35rem;
     margin-top: 0.6rem;
-}
-
-.post-tag {
-    display: inline-flex;
-    align-items: center;
-    border: 1px solid rgba(21, 184, 134, 0.28);
-    color: #117b5f;
-    border-radius: 999px;
-    padding: 0.12rem 0.5rem;
-    font-size: 0.72rem;
-    line-height: 1.4;
-    background: rgba(21, 184, 134, 0.06);
 }
 
 .blog-home-page {
@@ -2193,6 +2113,8 @@ html[lang="ko"] .blog-home-hero p {
 }
 
 .blog-home-page .post-tag {
+    display: inline-flex;
+    align-items: center;
     padding: 0;
     border: 0;
     border-radius: 0;
@@ -2428,7 +2350,7 @@ html[lang="ko"] .blog-home-hero p {
     }
 
     .blog-feature-read {
-        margin-top: 0.75rem;
+        margin-top: 0.58rem;
     }
 
     .blog-home-hero h1 {
@@ -2531,10 +2453,6 @@ html[lang="ko"] .blog-home-hero p {
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 1;
         font-size: 0.84rem;
-    }
-
-    .blog-feature-read {
-        margin-top: 0.58rem;
     }
 
     .blog-home-page .series-group {
@@ -2985,6 +2903,9 @@ html[data-theme="dark"].blog-topbar-scrolled .blog-home-page .sidebar-mobile-tog
 }
 
 #mainNav .post-nav-actions > li.post-nav-action > a.post-nav-language-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     min-width: 2rem;
     height: 2.08rem;
     padding: 0 0.12rem;
@@ -2994,6 +2915,7 @@ html[data-theme="dark"].blog-topbar-scrolled .blog-home-page .sidebar-mobile-tog
     font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0;
+    line-height: 1;
     text-transform: none;
 }
 

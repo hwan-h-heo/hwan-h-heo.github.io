@@ -12,10 +12,6 @@ simple-model-viewer {
     height: 100vh; 
     margin-bottom: 3px;
 }
-.wp-block-image figcaption {
-    font-size: 4px;
-    color: #000000;
-}
 .post-image-lightbox-trigger {
     display: block;
     width: 100%;
@@ -150,13 +146,6 @@ width: 50%;
 height: 50%;
 margin-bottom: 20px;
 }
-#controls {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    z-index: 100;
-}
-
 .main-content h2,
 .main-content h3 {
     scroll-margin-top: 6.5rem;
