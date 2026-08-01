@@ -209,6 +209,18 @@
             return Array.from(item.children).find((child) => child.tagName === 'A') || item.querySelector('a');
         }
 
+        function normalizeLegacyTocLists() {
+            toc.querySelectorAll('ul > ul, ul > ol, ol > ul, ol > ol').forEach((list) => {
+                const parentItem = list.previousElementSibling;
+                if (!parentItem?.matches('li')) {
+                    return;
+                }
+
+                parentItem.appendChild(list);
+                list.classList.add('toc-sublist');
+            });
+        }
+
         function initTocItems() {
             tocItems = Array.from(toc.querySelectorAll('li')).map((item) => {
                 const anchor = getDirectAnchor(item);
@@ -273,6 +285,7 @@
             updateSublistHeights();
         });
         updateTocVisibility();
+        normalizeLegacyTocLists();
         initTocItems();
         updateSublistHeights();
         if (document.fonts?.ready) {

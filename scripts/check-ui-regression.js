@@ -105,6 +105,13 @@ function createCases(siteData) {
             widths: [390, 1440]
         },
         {
+            id: 'legacy-toc-post',
+            path: getPostRoute(requirePost(siteData, '211128_fourier'), 'eng'),
+            type: 'legacy-toc-post',
+            coreSelectors: ['#mainNav', '.masthead', '.main-content'],
+            widths: [1440]
+        },
+        {
             id: 'project',
             path: '/projects/varco3d/',
             type: 'project',
@@ -397,6 +404,7 @@ async function assertSiteIcons(page, testCase) {
             post: '[data-theme-toggle] .site-icon',
             'disclosure-post': '[data-theme-toggle] .site-icon',
             'lightbox-post': '[data-theme-toggle] .site-icon',
+            'legacy-toc-post': '[data-theme-toggle] .site-icon',
             viewer: '#navmenu .navicon',
             editor: '.toolbar-actions .site-icon'
         }[pageType];
@@ -622,6 +630,35 @@ async function assertPostInteractions(page, testCase, width, options) {
     }
 }
 
+async function assertLegacyToc(page) {
+    const initialState = await page.evaluate(() => {
+        const childLink = document.querySelector('.toc a[href="#sec2.1"]');
+        const childItem = childLink?.closest('li');
+        const parentItem = childItem?.parentElement?.closest('li');
+        return {
+            hasParent: Boolean(parentItem),
+            nestedDirectly: childItem?.parentElement?.parentElement === parentItem,
+            orphanLists: document.querySelectorAll('.toc > ul > ul, .toc > ol > ul').length
+        };
+    });
+    assert(initialState.hasParent && initialState.nestedDirectly, 'Legacy TOC subitems were not attached to their parent item.');
+    assert(initialState.orphanLists === 0, 'Legacy TOC still contains orphaned nested lists.');
+
+    await page.evaluate(() => {
+        const target = document.getElementById('sec2.1');
+        if (target) {
+            window.scrollTo(0, target.getBoundingClientRect().top + window.scrollY - 180);
+        }
+    });
+    await page.waitForFunction(() => {
+        const childItem = document.querySelector('.toc a[href="#sec2.1"]')?.closest('li');
+        const parentItem = childItem?.parentElement?.closest('li');
+        return childItem?.classList.contains('is-current')
+            && parentItem?.classList.contains('is-expanded')
+            && childItem.parentElement.getBoundingClientRect().height > 0;
+    });
+}
+
 async function assertDisclosure(page, testCase, width, options) {
     if (![390, 1440].includes(width)) {
         return;
@@ -776,6 +813,9 @@ async function runInteractions(page, testCase, width, options) {
     }
     if (testCase.type === 'lightbox-post') {
         await assertLightbox(page, testCase, width, options);
+    }
+    if (testCase.type === 'legacy-toc-post') {
+        await assertLegacyToc(page);
     }
     if (testCase.type === 'editor') {
         await assertEditorIcons(page, width);
