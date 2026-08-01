@@ -653,6 +653,25 @@ html[lang="ko"] header.masthead .post-heading h2 {
     word-break: keep-all;
 }
 
+html[lang="ko"] .blog-home-page .blog-feature-copy h2,
+html[lang="ko"] .blog-home-page .post-card-body .post-title,
+html[lang="ko"] .blog-home-page .series-title,
+html[lang="ko"] .blog-home-page .series-post-list a {
+    letter-spacing: 0;
+}
+
+html[lang="ko"] .blog-home-page .blog-feature-copy h2[lang="en"],
+html[lang="ko"] .blog-home-page .post-card-body .post-title[lang="en"],
+html[lang="ko"] .blog-home-page .series-title[lang="en"] {
+    font-family: var(--blog-heading);
+    word-break: normal;
+}
+
+html[lang="ko"] .blog-home-page .series-post-list a[lang="en"] {
+    font-family: var(--blog-sans);
+    word-break: normal;
+}
+
 html[lang="ko"] .main-content,
 .main-content.is-korean-content {
     font-family: var(--blog-korean);

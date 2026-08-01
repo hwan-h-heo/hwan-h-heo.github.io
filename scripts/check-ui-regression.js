@@ -540,20 +540,74 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
         return;
     }
 
-    const initialHeroTitle = await page.locator('[data-i18n="heroTitle"]').textContent();
+    const initialTitleState = await page.evaluate(() => {
+        const heroTitle = document.querySelector('[data-i18n="heroTitle"]');
+        const heroIntro = document.querySelector('[data-i18n="heroIntro"]');
+        const heroIntroStyle = getComputedStyle(heroIntro);
+        const heroIntroRange = document.createRange();
+        heroIntroRange.selectNodeContents(heroIntro);
+        return {
+            heroIntroFontFamily: heroIntroStyle.fontFamily,
+            heroIntroLetterSpacing: heroIntroStyle.letterSpacing,
+            heroIntroText: heroIntro.textContent,
+            heroIntroWidth: heroIntroRange.getBoundingClientRect().width,
+            heroTitle: heroTitle?.textContent || '',
+            heroWidth: heroTitle?.getBoundingClientRect().width || 0,
+            postTitles: Object.fromEntries(Array.from(document.querySelectorAll('.post-preview[data-post-id]')).map((card) => {
+                const title = card.querySelector('.post-title');
+                const style = getComputedStyle(title);
+                return [card.dataset.postId, {
+                    fontFamily: style.fontFamily,
+                    letterSpacing: style.letterSpacing,
+                    text: title.textContent.trim()
+                }];
+            }))
+        };
+    });
     await page.evaluate(() => {
         window.__blogStaticPreview = document.querySelector('.post-preview[data-post-id]');
     });
     await page.locator('#lang-toggle-main').click();
-    const koreanState = await page.evaluate(() => ({
-        button: document.querySelector('#lang-toggle-main')?.textContent.trim(),
-        preservedStaticPreview: window.__blogStaticPreview === document.querySelector('.post-preview[data-post-id]'),
-        lang: document.documentElement.lang,
-        title: document.querySelector('[data-i18n="heroTitle"]')?.textContent
-    }));
+    const koreanState = await page.evaluate((initialPostTitles) => {
+        const stableTitleIssues = Array.from(document.querySelectorAll('.post-preview[data-post-id]')).flatMap((card) => {
+            const title = card.querySelector('.post-title');
+            const initial = initialPostTitles[card.dataset.postId];
+            if (!initial || initial.text !== title.textContent.trim()) {
+                return [];
+            }
+            const style = getComputedStyle(title);
+            return style.fontFamily === initial.fontFamily && style.letterSpacing === initial.letterSpacing
+                ? []
+                : [card.dataset.postId];
+        });
+        const heroIntro = document.querySelector('[data-i18n="heroIntro"]');
+        const heroIntroStyle = getComputedStyle(heroIntro);
+        const heroIntroRange = document.createRange();
+        heroIntroRange.selectNodeContents(heroIntro);
+        return {
+            button: document.querySelector('#lang-toggle-main')?.textContent.trim(),
+            preservedStaticPreview: window.__blogStaticPreview === document.querySelector('.post-preview[data-post-id]'),
+            lang: document.documentElement.lang,
+            title: document.querySelector('[data-i18n="heroTitle"]')?.textContent,
+            featureLang: document.querySelector('.blog-feature-copy h2')?.lang,
+            heroIntroFontFamily: heroIntroStyle.fontFamily,
+            heroIntroLetterSpacing: heroIntroStyle.letterSpacing,
+            heroIntroText: heroIntro.textContent,
+            heroIntroWidth: heroIntroRange.getBoundingClientRect().width,
+            heroWidth: document.querySelector('[data-i18n="heroTitle"]')?.getBoundingClientRect().width || 0,
+            stableTitleIssues
+        };
+    }, initialTitleState.postTitles);
     assert(koreanState.lang === 'ko' && koreanState.button === 'A', 'Blog language toggle did not switch to Korean.');
     assert(koreanState.preservedStaticPreview, 'Blog language toggle replaced the server-rendered preview markup.');
-    assert(koreanState.title && initialHeroTitle, 'Blog language toggle left the hero copy empty.');
+    assert(koreanState.title && initialTitleState.heroTitle, 'Blog language toggle left the hero copy empty.');
+    assert(koreanState.featureLang === 'ko', 'Blog language toggle did not identify the translated featured title as Korean.');
+    assert(koreanState.heroIntroText === initialTitleState.heroIntroText, 'Blog language toggle changed the fixed English hero intro.');
+    assert(koreanState.heroIntroFontFamily === initialTitleState.heroIntroFontFamily, 'Blog language toggle changed the hero-intro font.');
+    assert(koreanState.heroIntroLetterSpacing === initialTitleState.heroIntroLetterSpacing, 'Blog language toggle changed the hero-intro tracking.');
+    assert(Math.abs(koreanState.heroIntroWidth - initialTitleState.heroIntroWidth) < 0.5, 'Blog language toggle changed the hero-intro text width.');
+    assert(koreanState.stableTitleIssues.length === 0, `Blog language toggle restyled unchanged titles: ${koreanState.stableTitleIssues.join(', ')}`);
+    assert(Math.abs(koreanState.heroWidth - initialTitleState.heroWidth) < 0.5, 'Blog language toggle changed the fixed English hero-title width.');
     await page.locator('#lang-toggle-main').click();
 
     const themeToggle = page.locator('[data-theme-toggle]').first();

@@ -65,6 +65,10 @@ function getLanguageMeta(lang) {
     return LANGUAGE_META[lang] || LANGUAGE_META.eng;
 }
 
+function getTextHtmlLang(value, lang = 'eng') {
+    return lang === 'kor' && /[\u1100-\u11ff\u3130-\u318f\uac00-\ud7af]/.test(String(value || '')) ? 'ko' : 'en';
+}
+
 function getPostTitle(post, lang = 'eng') {
     return post[`title_${lang}`] || post.title_eng || post.id;
 }
@@ -197,8 +201,8 @@ function renderPostPreview(post, lang, siteData) {
                     <div class="post-card-eyebrow">
                         <span>${escapeHtml(seriesTitle)}</span>
                     </div>
-                    <h3 class="post-title"><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h3>
-                    ${description ? `<p class="post-subtitle">${escapeHtml(description)}</p>` : ''}
+                    <h3 class="post-title" lang="${escapeHtml(getTextHtmlLang(title, lang))}"><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h3>
+                    ${description ? `<p class="post-subtitle" lang="${escapeHtml(getTextHtmlLang(description, lang))}">${escapeHtml(description)}</p>` : ''}
                     ${tagsHtml ? `<div class="post-tag-row">${tagsHtml}</div>` : ''}
                     <p class="post-meta">
                         <time datetime="${escapeHtml(post.date)}">${escapeHtml(formatDate(post.date, lang))}</time>
@@ -235,10 +239,10 @@ function renderFeaturedPost(siteData, lang = 'eng') {
                 <div class="blog-feature-copy">
                     <div class="blog-feature-meta">
                         <span data-feature-series>${escapeHtml(seriesTitle)}</span>
-                        <time datetime="${escapeHtml(featuredPost.date)}">${escapeHtml(formatDate(featuredPost.date, lang))}</time>
                     </div>
-                    <h2><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h2>
-                    ${description ? `<p>${escapeHtml(description)}</p>` : ''}
+                    <h2 lang="${escapeHtml(getTextHtmlLang(title, lang))}"><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h2>
+                    ${description ? `<p lang="${escapeHtml(getTextHtmlLang(description, lang))}">${escapeHtml(description)}</p>` : ''}
+                    <time class="blog-feature-date" datetime="${escapeHtml(featuredPost.date)}">${escapeHtml(formatDate(featuredPost.date, lang))}</time>
                     ${tagsHtml ? `<div class="post-tag-row">${tagsHtml}</div>` : ''}
                     <a class="blog-feature-read" href="${escapeHtml(url)}" aria-label="Read ${escapeHtml(title)}">
                         <span data-feature-read-label>Read post</span>
@@ -273,7 +277,7 @@ function renderSeriesGroups(siteData, lang = 'eng') {
                 const title = getPostTitle(post, lang);
                 return `
                         <li data-series-post-id="${escapeHtml(post.id)}">
-                            <a href="${escapeHtml(getPostLanguageRoute(post, lang))}">${escapeHtml(title)}</a>
+                            <a href="${escapeHtml(getPostLanguageRoute(post, lang))}" lang="${escapeHtml(getTextHtmlLang(title, lang))}">${escapeHtml(title)}</a>
                             <span class="post-meta-sm"><time datetime="${escapeHtml(post.date)}">${escapeHtml(formatShortDate(post.date, lang))}</time></span>
                         </li>
                 `;
@@ -284,7 +288,7 @@ function renderSeriesGroups(siteData, lang = 'eng') {
                     <article class="series-group" data-series-id="${escapeHtml(seriesId)}">
                         <div class="series-card-header">
                             <span class="series-card-kicker">Series</span>
-                            <h3 class="series-title">
+                            <h3 class="series-title" lang="${escapeHtml(getTextHtmlLang(seriesTitle, lang))}">
                                 <a href="${escapeHtml(seriesRoute)}">
                                     <span data-series-title>${escapeHtml(seriesTitle)}</span>
                                     ${renderSiteIcon('arrow-up-right')}

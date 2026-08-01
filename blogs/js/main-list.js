@@ -111,6 +111,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         return siteData.series[post.series]?.[lang] || siteData.series[post.series]?.eng || 'Series';
     }
 
+    function getTextLang(value, lang) {
+        return lang === 'kor' && /[\u1100-\u11ff\u3130-\u318f\uac00-\ud7af]/.test(String(value || '')) ? 'ko' : 'en';
+    }
+
     function setText(selector, value) {
         const element = document.querySelector(selector);
         if (element) {
@@ -157,6 +161,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const description = getPostDescription(post, lang);
         const url = getPostUrl(post, lang);
         const coverLink = card.querySelector('.post-card-cover');
+        const titleElement = card.querySelector('.post-title');
         const titleLink = card.querySelector('.post-title a');
         const coverImage = card.querySelector('img[data-blog-cover]');
         const subtitle = card.querySelector('.post-subtitle');
@@ -171,12 +176,16 @@ document.addEventListener('DOMContentLoaded', async function() {
             titleLink.href = url;
             titleLink.textContent = title;
         }
+        if (titleElement) {
+            titleElement.lang = getTextLang(title, lang);
+        }
         if (coverImage) {
             coverImage.alt = `${title} cover image`;
         }
         if (subtitle) {
             subtitle.textContent = description;
             subtitle.hidden = !description;
+            subtitle.lang = getTextLang(description, lang);
         }
         if (eyebrow) {
             eyebrow.textContent = getSeriesTitle(post, lang);
@@ -198,11 +207,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         const description = getPostDescription(post, lang);
         const url = getPostUrl(post, lang);
         const coverLink = card.querySelector('.blog-feature-cover');
+        const titleElement = card.querySelector('.blog-feature-copy h2');
         const titleLink = card.querySelector('.blog-feature-copy h2 a');
         const readLink = card.querySelector('.blog-feature-read');
         const coverImage = card.querySelector('img[data-blog-cover]');
         const descriptionElement = card.querySelector('.blog-feature-copy > p');
-        const time = card.querySelector('.blog-feature-meta time');
+        const time = card.querySelector('.blog-feature-date');
 
         card.querySelector('[data-feature-label]')?.replaceChildren(copy(lang, 'featuredLabel'));
         card.querySelector('[data-feature-series]')?.replaceChildren(getSeriesTitle(post, lang));
@@ -219,6 +229,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (titleLink) {
             titleLink.textContent = title;
         }
+        if (titleElement) {
+            titleElement.lang = getTextLang(title, lang);
+        }
         if (readLink) {
             readLink.setAttribute('aria-label', `${copy(lang, 'readPost')}: ${title}`);
         }
@@ -228,6 +241,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (descriptionElement) {
             descriptionElement.textContent = description;
             descriptionElement.hidden = !description;
+            descriptionElement.lang = getTextLang(description, lang);
         }
         if (time) {
             time.dateTime = post.date;
@@ -243,7 +257,11 @@ document.addEventListener('DOMContentLoaded', async function() {
                 || siteData.series[group.dataset.seriesId]?.eng
                 || 'Series';
 
-            group.querySelector('[data-series-title]')?.replaceChildren(seriesTitle);
+            const seriesTitleElement = group.querySelector('[data-series-title]');
+            seriesTitleElement?.replaceChildren(seriesTitle);
+            if (seriesTitleElement) {
+                seriesTitleElement.closest('.series-title')?.setAttribute('lang', getTextLang(seriesTitle, lang));
+            }
             group.querySelector('[data-series-count]')?.replaceChildren(`${posts.length} ${copy(lang, 'items')}`);
             group.querySelector('[data-series-latest-label]')?.replaceChildren(copy(lang, 'latest'));
 
@@ -260,8 +278,10 @@ document.addEventListener('DOMContentLoaded', async function() {
                 if (!post || !link) {
                     return;
                 }
+                const postTitle = getPostTitle(post, lang);
                 link.href = getPostUrl(post, lang);
-                link.textContent = getPostTitle(post, lang);
+                link.textContent = postTitle;
+                link.lang = getTextLang(postTitle, lang);
                 if (time) {
                     time.dateTime = post.date;
                     time.textContent = formatShortDate(post.date, lang);
