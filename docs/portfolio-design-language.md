@@ -273,6 +273,10 @@ use underline motion only. Do not translate their text or icons on hover.
 - Use one-column project and blog previews below the existing mobile breakpoint.
 - Keep image aspect ratio stable.
 - Avoid viewport-scaled font sizes outside established `clamp()` ranges.
+- On compact project and article pages, reduce breadcrumbs to the useful section
+  ancestor when the full trail would compete with the sidebar control or title.
+- Long-form TOC and share controls are desktop-only reading rails. Anchor both
+  to the shared reading-column tokens so they remain outside the article body.
 
 ## Change Checklist
 

@@ -7,6 +7,7 @@ const { chromium } = require('playwright');
 const { SITE_URL } = require('../blogs/lib/site-config');
 const { loadSiteData } = require('../blogs/lib/site-data');
 const { buildPublicRoutes } = require('../blogs/lib/site-routes');
+const { findUnversionedStaticAssetReferences } = require('../blogs/lib/static-asset-versioning');
 
 const repoRoot = path.join(__dirname, '..');
 const distRoot = path.join(repoRoot, 'blogs', 'dist');
@@ -469,6 +470,13 @@ async function main() {
     const options = parseArguments(process.argv.slice(2));
     if (!options.baseUrl && !fs.existsSync(path.join(distRoot, 'index.html'))) {
         throw new Error('blogs/dist is missing. Run npm run build before check:render.');
+    }
+
+    const unversionedAssets = findUnversionedStaticAssetReferences({ distDir: distRoot });
+    if (unversionedAssets.length > 0) {
+        throw new Error(
+            `Rendered HTML contains unversioned local CSS/JS references:\n${unversionedAssets.join('\n')}`
+        );
     }
 
     const localServer = options.baseUrl ? null : await startStaticServer();

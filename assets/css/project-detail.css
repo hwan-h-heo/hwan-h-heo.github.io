@@ -734,6 +734,20 @@
 }
 
 @media (max-width: 768px) {
+  .portfolio-details-page .page-title .breadcrumbs li:first-child,
+  .portfolio-details-page .page-title .breadcrumbs .current {
+    display: none;
+  }
+
+  .portfolio-details-page .page-title .breadcrumbs li:nth-child(2) {
+    margin-left: 2.75rem;
+    padding-left: 0;
+  }
+
+  .portfolio-details-page .page-title .breadcrumbs li:nth-child(2)::before {
+    display: none;
+  }
+
   .portfolio-details-page .portfolio-details.section {
     padding: 3.3rem 0 4.5rem;
   }

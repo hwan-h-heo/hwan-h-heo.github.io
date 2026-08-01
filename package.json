@@ -18,6 +18,7 @@
     "check:render": "node scripts/check-rendered-site.js",
     "check:ui": "node scripts/check-ui-regression.js",
     "capture:ui": "node scripts/check-ui-regression.js --screenshots-dir=artifacts/ui-regression",
+    "optimize:media": "node scripts/optimize-static-media.js",
     "validate:seo": "node scripts/validate-seo-output.js",
     "verify": "npm run check:content && npm run check:assets && npm run audit:assets && npm run build && npm run validate:seo && npm run check:legacy-ui && npm run check:render && npm run check:ui",
     "verify:production": "node scripts/check-rendered-site.js --production",

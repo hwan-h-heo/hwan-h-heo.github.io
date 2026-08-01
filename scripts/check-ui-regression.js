@@ -291,6 +291,19 @@ async function inspectLayout(page, testCase, width) {
             }
         });
 
+        document.querySelectorAll('.visually-hidden').forEach((element) => {
+            const styles = getComputedStyle(element);
+            const rect = element.getBoundingClientRect();
+            const clipped = styles.clip !== 'auto' || styles.clipPath !== 'none';
+            if (styles.position !== 'absolute'
+                || styles.overflow !== 'hidden'
+                || rect.width > 2
+                || rect.height > 2
+                || !clipped) {
+                issues.push(`${describe(element)} is not visually hidden`);
+            }
+        });
+
         const pairs = [
             ['#portfolio-projects .portfolio-project-link', '.portfolio-project-cover', '.portfolio-project-body'],
             ['#portfolio-blog-posts .portfolio-blog-preview-item', '.portfolio-blog-preview-cover', '.portfolio-blog-preview-body'],
@@ -509,13 +522,18 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
     }
 
     const initialHeroTitle = await page.locator('[data-i18n="heroTitle"]').textContent();
+    await page.evaluate(() => {
+        window.__blogStaticPreview = document.querySelector('.post-preview[data-post-id]');
+    });
     await page.locator('#lang-toggle-main').click();
     const koreanState = await page.evaluate(() => ({
         button: document.querySelector('#lang-toggle-main')?.textContent.trim(),
+        preservedStaticPreview: window.__blogStaticPreview === document.querySelector('.post-preview[data-post-id]'),
         lang: document.documentElement.lang,
         title: document.querySelector('[data-i18n="heroTitle"]')?.textContent
     }));
     assert(koreanState.lang === 'ko' && koreanState.button === 'A', 'Blog language toggle did not switch to Korean.');
+    assert(koreanState.preservedStaticPreview, 'Blog language toggle replaced the server-rendered preview markup.');
     assert(koreanState.title && initialHeroTitle, 'Blog language toggle left the hero copy empty.');
     await page.locator('#lang-toggle-main').click();
 

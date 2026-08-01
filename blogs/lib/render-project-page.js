@@ -239,6 +239,7 @@ ${renderProjectNavItems(projectNav)}
         <nav class="breadcrumbs" aria-label="Breadcrumb">
           <ol>
             <li><a href="../../">Home</a></li>
+            <li><a href="../../#portfolio">Projects</a></li>
             <li class="current">${escapeHtml(title)}</li>
           </ol>
         </nav>

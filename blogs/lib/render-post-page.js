@@ -159,7 +159,7 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
         'computer vision',
         'machine learning'
     ].join(', ');
-    const coverImage = post.cover || '/assets/image_fx_.jpg';
+    const coverImage = post.cover || '/assets/image_fx_.webp';
     const tagHtml = (post.tags || []).length
         ? `<div class="post-tags">${renderTags(post, siteData)}</div>`
         : '';

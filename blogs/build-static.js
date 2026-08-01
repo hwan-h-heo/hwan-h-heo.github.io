@@ -8,6 +8,7 @@ const { generateBlogCoverPreviews } = require('./lib/blog-cover-assets');
 const { normalizeContentImageAccessibility } = require('./lib/content-image-accessibility');
 const { loadSiteData } = require('./lib/site-data');
 const { SITE_URL } = require('./lib/site-config');
+const { versionStaticAssetReferences } = require('./lib/static-asset-versioning');
 const { renderPostPage } = require('./lib/render-post-page');
 const { renderStaticBlogIndex } = require('./lib/render-blog-index');
 const { renderArchivePage } = require('./lib/render-archive-page');
@@ -933,6 +934,7 @@ async function buildSite() {
     generateFeed();
     generateRobotsTxt();
     generateSupportFiles();
+    versionStaticAssetReferences({ distDir });
 
     console.log('\nBuild completed successfully.');
     console.log(`Total posts generated: ${siteData.posts.length}`);
@@ -974,6 +976,7 @@ async function buildIncremental(options = {}) {
     generateFeed();
     generateRobotsTxt();
     generateSupportFiles();
+    versionStaticAssetReferences({ distDir });
 
     console.log('\nIncremental build completed successfully.');
     console.log(`Changed files: ${serializeChangedFiles(changedFiles) || '(none)'}`);

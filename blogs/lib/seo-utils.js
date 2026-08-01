@@ -227,21 +227,21 @@ function renderFeaturedPost(siteData, lang = 'eng') {
     return `
             <article class="blog-feature-card" data-post-id="${escapeHtml(featuredPost.id)}">
                 <div class="blog-feature-label">
-                    <span>Featured</span>
+                    <span data-feature-label>Featured</span>
                 </div>
                 <a class="blog-feature-cover" href="${escapeHtml(url)}" aria-label="Read ${escapeHtml(title)}">
                     ${renderBlogCoverImage(featuredPost, title, { eager: true })}
                 </a>
                 <div class="blog-feature-copy">
                     <div class="blog-feature-meta">
-                        <span>${escapeHtml(seriesTitle)}</span>
+                        <span data-feature-series>${escapeHtml(seriesTitle)}</span>
                         <time datetime="${escapeHtml(featuredPost.date)}">${escapeHtml(formatDate(featuredPost.date, lang))}</time>
                     </div>
                     <h2><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h2>
                     ${description ? `<p>${escapeHtml(description)}</p>` : ''}
                     ${tagsHtml ? `<div class="post-tag-row">${tagsHtml}</div>` : ''}
                     <a class="blog-feature-read" href="${escapeHtml(url)}" aria-label="Read ${escapeHtml(title)}">
-                        <span>Read post</span>
+                        <span data-feature-read-label>Read post</span>
                         ${renderSiteIcon('arrow-right')}
                     </a>
                 </div>
@@ -272,7 +272,7 @@ function renderSeriesGroups(siteData, lang = 'eng') {
             const itemsHtml = posts.map((post) => {
                 const title = getPostTitle(post, lang);
                 return `
-                        <li>
+                        <li data-series-post-id="${escapeHtml(post.id)}">
                             <a href="${escapeHtml(getPostLanguageRoute(post, lang))}">${escapeHtml(title)}</a>
                             <span class="post-meta-sm"><time datetime="${escapeHtml(post.date)}">${escapeHtml(formatShortDate(post.date, lang))}</time></span>
                         </li>
@@ -286,13 +286,13 @@ function renderSeriesGroups(siteData, lang = 'eng') {
                             <span class="series-card-kicker">Series</span>
                             <h3 class="series-title">
                                 <a href="${escapeHtml(seriesRoute)}">
-                                    <span>${escapeHtml(seriesTitle)}</span>
+                                    <span data-series-title>${escapeHtml(seriesTitle)}</span>
                                     ${renderSiteIcon('arrow-up-right')}
                                 </a>
                             </h3>
                             <div class="series-card-meta">
-                                <span>${posts.length} items</span>
-                                <span>Latest <time datetime="${escapeHtml(latestPost.date)}">${escapeHtml(formatShortDate(latestPost.date, lang))}</time></span>
+                                <span data-series-count>${posts.length} items</span>
+                                <span><span data-series-latest-label>Latest</span> <time datetime="${escapeHtml(latestPost.date)}">${escapeHtml(formatShortDate(latestPost.date, lang))}</time></span>
                             </div>
                         </div>
                         <ol class="series-post-list">
@@ -420,7 +420,76 @@ function renderPostNavCard({ href, type, label, title }) {
     `;
 }
 
+function renderSeriesPostNavigation(siteData, post, lang) {
+    if (!post.series) {
+        return '';
+    }
+
+    const postsInSeries = siteData.posts
+        .filter((entry) => entry.series === post.series && entry.languages.includes(lang))
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
+    const currentIndex = postsInSeries.findIndex((entry) => entry.id === post.id);
+
+    if (postsInSeries.length <= 1 || currentIndex < 0) {
+        return '';
+    }
+
+    const olderPost = postsInSeries[currentIndex + 1] || null;
+    const newerPost = postsInSeries[currentIndex - 1] || null;
+    let navHtml = '<nav class="post-nav-grid" aria-label="Post navigation">';
+
+    if (olderPost) {
+        navHtml += renderPostNavCard({
+            href: getPostLanguageRoute(olderPost, lang),
+            type: 'older',
+            label: 'Previous Post',
+            title: getPostTitle(olderPost, lang)
+        });
+    } else if (newerPost) {
+        navHtml += '<span class="post-nav-spacer" aria-hidden="true"></span>';
+    }
+
+    if (newerPost) {
+        navHtml += renderPostNavCard({
+            href: getPostLanguageRoute(newerPost, lang),
+            type: 'next',
+            label: 'Next Post',
+            title: getPostTitle(newerPost, lang)
+        });
+    } else {
+        const recommendation = Object.keys(siteData.series || {})
+            .filter((seriesId) => seriesId !== post.series)
+            .map((seriesId) => ({
+                seriesId,
+                post: siteData.posts
+                    .filter((entry) => entry.series === seriesId && entry.languages.includes(lang))
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))[0] || null
+            }))
+            .filter((entry) => entry.post)
+            .sort((a, b) => new Date(b.post.date) - new Date(a.post.date))[0];
+
+        if (recommendation) {
+            navHtml += renderPostNavCard({
+                href: getPostLanguageRoute(recommendation.post, lang),
+                type: 'explore',
+                label: 'Explore Series',
+                title: getSeriesTitle(siteData, recommendation.seriesId, lang)
+            });
+        } else if (olderPost) {
+            navHtml += '<span class="post-nav-spacer" aria-hidden="true"></span>';
+        }
+    }
+
+    navHtml += '</nav>';
+    return navHtml;
+}
+
 function renderChronologicalPostNavigation(siteData, post, lang = 'eng') {
+    const seriesNavigation = renderSeriesPostNavigation(siteData, post, lang);
+    if (seriesNavigation) {
+        return seriesNavigation;
+    }
+
     const adjacent = getAdjacentLanguagePosts(siteData, post, lang);
     const labels = lang === 'kor'
         ? { older: 'Previous Post', newer: 'Next Post' }
