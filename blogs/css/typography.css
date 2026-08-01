@@ -79,16 +79,11 @@ samp {
     letter-spacing: -0.01em;
 }
 
-header.masthead .page-heading .subheading,
-header.masthead .site-heading .subheading,
 header.masthead .post-heading .subheading,
 header.masthead .post-heading .meta {
     font-family: var(--blog-sans);
 }
 
-header.masthead .site-heading h1,
-header.masthead .site-heading h2,
-header.masthead .site-heading h3,
 header.masthead .post-heading h1,
 header.masthead .post-heading h2 {
     font-family: var(--blog-heading);

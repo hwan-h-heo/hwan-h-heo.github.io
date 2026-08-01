@@ -311,13 +311,6 @@
   }
 }
 
-.portfolio-details .project-readable {
-  width: min(100%, 760px);
-  max-width: 760px;
-  margin-right: auto;
-  margin-left: auto;
-}
-
 .portfolio-details .portfolio-description {
   padding-top: 0;
 }
@@ -551,8 +544,7 @@
 }
 
 .portfolio-details img[width],
-.portfolio-details .project-centered-media img,
-.portfolio-details .gif-container img {
+.portfolio-details .project-centered-media img {
   display: block;
   margin-right: auto;
   margin-left: auto;
@@ -708,24 +700,6 @@
   font-size: 1rem;
   font-weight: 700;
   line-height: 1.38;
-}
-
-.portfolio-details-page .feature-img {
-  max-width: 100%;
-  height: auto;
-}
-
-.portfolio-details-page .gif-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.portfolio-details-page .gif-container img {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  margin: 0 auto;
 }
 
 .portfolio-details-page .project-footer-owner {

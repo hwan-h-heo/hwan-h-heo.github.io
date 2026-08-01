@@ -388,14 +388,6 @@ button:not(:disabled),
 cursor: pointer;
 }
 
-.custom-btn {
-color: #d3d3d3 !important; /* Text color */
-border: none !important; /* Remove border */
-}
-.custom-btn:hover {
-color: #343a40 !important; /* Slightly darker gray for hover */
-}
-
 .blog-shell {
 width: 100%;
 padding-right: 1.5rem;
@@ -998,28 +990,8 @@ opacity: 0.5;
 html:not([data-theme="dark"]) header.masthead:not(.blog-home-hero):before {
 opacity: 0.58;
 }
-header.masthead .page-heading,
-header.masthead .post-heading,
-header.masthead .site-heading {
+header.masthead .post-heading {
 color: #fff;
-}
-header.masthead .page-heading,
-header.masthead .site-heading {
-text-align: center;
-}
-header.masthead .page-heading h1, header.masthead .page-heading .h1,
-header.masthead .site-heading h1,
-header.masthead .site-heading .h1 {
-font-size: 3rem;
-}
-header.masthead .page-heading .subheading,
-header.masthead .site-heading .subheading {
-font-size: 1.5rem;
-font-weight: 300;
-line-height: 1.1;
-display: block;
-margin-top: 0.625rem;
-font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 header.masthead .post-heading h1, header.masthead .post-heading .h1 {
 font-size: 2.25rem;
@@ -1052,11 +1024,6 @@ header.masthead {
     padding-top: 4.5rem;
     padding-bottom: 3rem;
 }
-header.masthead .page-heading h1, header.masthead .page-heading .h1,
-header.masthead .site-heading h1,
-header.masthead .site-heading .h1 {
-    font-size: 5rem;
-}
 header.masthead .post-heading h1, header.masthead .post-heading .h1 {
     font-size: 2.5rem;
 }
@@ -1064,22 +1031,6 @@ header.masthead .post-heading .subheading {
     font-size: 1.875rem;
 }
 }
-
-.section-heading {
-font-size: 2.25rem;
-font-weight: 700;
-margin-top: 3.75rem;
-}
-
-.caption {
-font-size: 0.875rem;
-font-style: italic;
-display: block;
-margin: 0;
-padding: 0.625rem;
-text-align: center;
-}
-  
 
 .post-preview > a {
 color: #212529;
@@ -1370,11 +1321,9 @@ html { overflow-y: scroll; }
 .blog-home-page {
     --blog-home-ink: #111827;
     --blog-home-muted: #5b6472;
-    --blog-home-soft: #eef2f5;
     --blog-home-line: rgba(17, 24, 39, 0.1);
     --blog-home-accent: #159c78;
     --blog-home-accent-dark: #0d6f5a;
-    --blog-home-warm: #b86b37;
     color: var(--blog-home-ink);
     background: #f6f7f4;
 }
@@ -1540,7 +1489,6 @@ html { overflow-y: scroll; }
     text-transform: uppercase;
 }
 
-.blog-home-kicker-dark,
 .series-card-kicker {
     color: var(--blog-home-accent-dark);
 }

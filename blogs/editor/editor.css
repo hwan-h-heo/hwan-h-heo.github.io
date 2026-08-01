@@ -1,10 +1,8 @@
 :root {
     --bg: #eef3f8;
-    --bg-warm: #f8fafc;
     --panel: rgba(255, 255, 255, 0.8);
     --panel-strong: rgba(255, 255, 255, 0.96);
     --border: rgba(15, 23, 42, 0.08);
-    --border-strong: rgba(15, 23, 42, 0.12);
     --text: #0f172a;
     --muted: #64748b;
     --accent: #0f766e;
@@ -16,7 +14,6 @@
     --shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
     --shadow-soft: 0 10px 24px rgba(15, 23, 42, 0.06);
     --radius-xl: 24px;
-    --radius-lg: 18px;
     --radius-md: 14px;
     --sidebar-width: 360px;
     --editor-pane-size: 52%;
@@ -1340,8 +1337,7 @@ textarea {
 }
 
 .diagnostic-item,
-.outline-button,
-.snippet-button {
+.outline-button {
     border: 1px solid var(--border);
     border-radius: 14px;
     background: rgba(255, 255, 255, 0.88);
@@ -1393,8 +1389,7 @@ textarea {
     line-height: 1.5;
 }
 
-.outline-button,
-.snippet-button {
+.outline-button {
     width: 100%;
     padding: 10px 12px;
     color: var(--text);
@@ -1406,22 +1401,19 @@ textarea {
         box-shadow 0.15s ease;
 }
 
-.outline-button:hover,
-.snippet-button:hover {
+.outline-button:hover {
     transform: translateY(-1px);
     border-color: rgba(15, 118, 110, 0.28);
     box-shadow: var(--shadow-soft);
 }
 
-.outline-button strong,
-.snippet-button strong {
+.outline-button strong {
     display: block;
     margin-bottom: 3px;
     font-size: 12px;
 }
 
-.outline-button span,
-.snippet-button span {
+.outline-button span {
     display: block;
     color: var(--muted);
     font-size: 11px;
@@ -1433,17 +1425,11 @@ textarea {
     width: calc(100% - 18px);
 }
 
-.outline-empty,
-.helper-empty {
+.outline-empty {
     margin: 0;
     color: var(--muted);
     font-size: 11.5px;
     line-height: 1.5;
-}
-
-.snippet-grid {
-    display: grid;
-    gap: 8px;
 }
 
 @media (max-width: 1320px) {
