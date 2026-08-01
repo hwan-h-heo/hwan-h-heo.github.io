@@ -178,11 +178,9 @@ $$
 
 _**Deterministic drift**_ (ODE) 와 더불어, 브라운 운동 같은 무작위적인 노이즈 (diffusion) 을 고려하는 일반적인 편미분 방정식이 **[Fokker-Planck Equation](https://en.wikipedia.org/wiki/Fokker%E2%80%93Planck_equation)** 로 알려져 있는데,
 
-<p>
 $$
 \frac{\partial p_t(x)}{\partial t} = \underbrace{-\nabla \cdot [f(x,t)p_t(x)]}_{\text{Drift (flow)}} + \underbrace{\frac{1}{2}\sum_{i,j} \frac{\partial^2}{\partial x_i \partial x_j} [[g(t)g(t)^T]_{ij} p_t(x)]}_{\text{Diffusion}}
 $$
-</p>
 
 Continuous Normalizing Flow (CNF)는 diffusion 항이 없는 ($g=0$), 순수한 deterministic 형태이므로, CNF 가 따르는 확률 분포의 dynamics 은 **_Fokker-Planck Equation 의 특수한 경우인 Continuity Equation_** 라고도 볼 수 있다.
 
@@ -250,14 +248,13 @@ $$
 $$
 
 방금 얻은 결과인 eqn2 를 대입해보자.
-<p>
+
 $$
 \begin{aligned}
 \frac{d \log p_t(x_t)}{dt} &= \underbrace{\left[-(\nabla \log p_t) \cdot u_t - (\nabla \cdot u_t)\right]}_{\text{from (eqn. 2)}} + u_t \cdot \nabla \log p_t
 \\ &= - \nabla \cdot u_t(x_t)
 \end{aligned}
 $$
-</p>
 
 결과적으로 우리는 다음과 같은 매우 간결한 최종 eqn 을 얻게 되었다.
 
@@ -314,11 +311,9 @@ Continuous Normalizing Flow (CNF)는 Jacobian determinant 을 trace 의 적분�
 
 Neural Network 로 velocity field $v_\theta(x_t, t)$ 를 학습시키기 위한 이상적인 loss function 은 다음과 같다.
 
-<p>
 $$
 \mathcal{L} = \mathbb{E}_{t \sim \mathcal{U}, x_t \sim p_t} [\|v_\theta(x_t, t) - u_t(x_t)\|^2]
 $$
-</p>
 
 이 loss function 은 시간 $t$의 샘플 $x_t$ 를 보고, 그 지점에서의 실제 속도장 $u_t(x_t)$ 를 예측하는 regression 문제이다. 
 
@@ -415,14 +410,12 @@ $$
 
 첫 번째 사실로부터, 우리가 풀고 싶었던 이상적이지만 계산 불가능한 loss function 이, 계산 가능한 conditional loss function 과 동등하다는 것이 증명된다.
 
-<p>
 $$
 \mathcal{L}_{\text{marginal}} = \mathbb{E}_{t, x_t} [\|v_\theta - u_t\|^2] \\ \iff \\ \mathcal{L}_{\text{CFM}} = \mathbb{E}_{t, x_1, x_t|x_1} [\|v_\theta - u_t(\cdot|x_1)\|^2] + C
 $$
-</p>
 
 두 loss 가 동등한 이유는 loss function 을 전개했을 때 나타나는 inner product 항을 살펴보면 명확해진다.
-<p>
+
 $$
 \begin{aligned}
 \mathbb{E}_{x_t \sim p_t} [\langle v_\theta(x_t), u_t(x_t) \rangle] &= \int \left[ v_\theta(x_t) \cdot  \boxed{u_t(x_t)} \ \right ]p_t(x_t) dx_t \\
@@ -432,7 +425,6 @@ $$
 &= \mathbb{E}_{(x_1, x_t) \sim p(x_1, x_t)} [\langle v_\theta(x_t), u_t(x_t|x_1) \rangle]
 \end{aligned}
 $$
-</p>
 
 이는 알 수 없는 $u_t$에 대한 regression problem 을, 우리가 직접 설계하여 정답을 알고 있는 $u_t(\cdot|x_1)$에 대한 regression problem 로 완벽하게 대체할 수 있음을 의미한다.
 
@@ -502,11 +494,10 @@ $
 이다.
 
 이제 CFM 의 loss function 에 이를 대입하면 Rectified Flow 의 최종 목표 함수가 완성된다.
-<p>
+
 $$
 \mathcal{L} = \mathbb{E}_{t \sim U, x_0 \sim p_0, x_1 \sim p_1} \left[ \left\| v_\theta((1-t)x_0 + tx_1, t) - (x_1 - x_0) \right\|^2 \right]
 $$
-</p>
 
 신경망은 중간 지점 $x_t$를 보고, 최종 목적지에서 출발지를 뺀 방향 벡터 ($x_1 - x_0$) 를 맞추는 _**아주 간단한 regression 문제**_ 를 풀게 된다. 이 단순함이 비약적인 학습 속도와 안정성을 가져온다.
 
@@ -894,11 +885,9 @@ $$
 
 이제 이 두 가지를 결합하면, Manifold 위에서의 **Geodesic Conditional Flow** 가 완성된다.
 
-<p>
 $$
 \psi_t(x_0|x_1) = \text{exp}_{x_0} (t \cdot \text{log}_{x_0}(x_1))
 $$
-</p>
 
 이것이 바로 진정한 의미의 **Rectified Flow** 이다. 모델은 이제 Euclidean 공간의 직선이 아닌,  Manifold  위의 최단 경로인 **Geodesic 을 따라 흐르도록** 학습된다.
 

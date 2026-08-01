@@ -3,37 +3,8 @@ date: August 08, 2024
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<nav class="toc">
-    <ul>
-        <li><a href="#sec1"> 3D Gaussian as Primitive Kernel</a></li>
-        <li>
-            <a href="#sec2"> Splatting (Projection of Primitives)</a>
-        </li>
-        <ul>
-            <li>
-                <a href="#sec2.1"> Projection </a>
-            </li>
-            <li>
-                <a href="#sec2.2"> Density of the projected Gaussian </a>
-            </li>
-        </ul>
-        <li><a href="#sec3"> Parallel Rasterization</a></li>
-        <li>
-            <a href="#sec4"> MISC</a>
-        </li>
-        <ul>
-            <li>
-                <a href="#sec4.1"> Camera Model </a>
-            </li>
-            <li>
-                <a href="#sec4.2"> Mimic Luma AI </a>
-            </li>
-        </ul>
-        <li><a href="#closing">Closing</a></li>
-    </ul>
-</nav>
+## <span id="intro"></span>Introduction
 
-<h2 id="intro">Introduction</h2>
 <figure>
     <img src="./240805_gs/assets/teaser.gif" alt="Gaussian Splatting Teaser by Luma AI" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 1.</strong> 3D GS by Luma AI</figcaption>
@@ -44,7 +15,8 @@ author: Hwan Heo
     오늘은 이 rasterization 관점에서 3D Gaussin Splatting 을 (최대한) 완벽하게 이해해보는 시간을 갖도록 해보자.
 </p>
 
-<h2 id="sec1">1. 3D Gaussian as Primitive Kernel</h2>
+## <span id="sec1"></span>1. 3D Gaussian as Primitive Kernel
+
 <figure>
     <img src="./240805_gs/assets/gs.jpg" alt="3D Gaussian as Primitive Kernel" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 2.</strong> NeRF vs 3D GS, source: <span style="text-decoration: underline;"><a href="https://towardsdatascience.com/a-comprehensive-overview-of-gaussian-splatting-e7d570081362">Kate's medium</a></span></figcaption>
@@ -178,8 +150,10 @@ cov3D[5] = Sigma[2][2];
     <li> <em>cov3D</em>: symmetric 이므로, right upper triangle 만 저장해도 된다. </li>
 </ul>
 
-<h2 id="sec2">2. Splatting (Projection of Primitives)</h2>
-<h3 id="sec2.1">2.1. Projection</h3>
+## <span id="sec2"></span>2. Splatting (Projection of Primitives)
+
+### <span id="sec2.1"></span>2.1. Projection
+
 <figure>
     <img src="./240805_gs/assets/splatting.jpg" alt="Splatting of primitives" style="width:55%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 3.</strong> Projection of 3D Gaussian, <br/> source: <span style="text-decoration: underline;"><a href="https://dl.acm.org/doi/10.1145/3355089.3356513"><em>Differentiable Surface Splatting for Point-based Geometry Processing </em></a></span> </figcaption>
@@ -282,7 +256,7 @@ glm::mat3 Vrk = glm::mat3(
 glm::mat3 cov = glm::transpose(T) * glm::transpose(Vrk) * T;
 ```
 
-<h3 id="sec2.2">2.2. Density of the Projected Gaussian </h3>
+### <span id="sec2.2"></span>2.2. Density of the Projected Gaussian
 
 <p class="lang kor" >
     실제 rendering 시에는 Gaussian density 값과 opacity 값을 곱하여 사용하기 때문에, 3D 공간 위의 점 $p$ 에 대해, 
@@ -329,7 +303,8 @@ return { float(cov[0][0]), float(cov[0][1]), float(cov[1][1]) };
 <p class="lang kor" >
     이는 아래 식의 inverse matrix 를 구하는 것과 동일한 것을 알 수 있다 $(A=(RS)^{\rm T})$. 
 </p>
-<p> $$ A^{\rm T}A+\lambda \mathbf{I} $$</p>
+
+$$ A^{\rm T}A+\lambda \mathbf{I} $$
 
 <p class="lang kor" >
     covariance matrix 가 positive semidefinite 이기 때문에, 
@@ -417,7 +392,7 @@ float lambda2 = mid - sqrt(max(0.1f, mid * mid - det));
 float my_radius = ceil(3.f * sqrt(max(lambda1, lambda2)));
 ```
 
-<h2 id="sec3">3. Parallel Rasterization </h2>
+## <span id="sec3"></span>3. Parallel Rasterization
 
 <div class="lang kor" >
     <p>
@@ -537,9 +512,9 @@ __shared__ float4 collected_conic_opacity[BLOCK_SIZE];</code></pre>
     즉 NeRF 에서는 ray 를 sampling 하기 때문에 $r(t)$ 로 sampling 된 각각 다른 point 를 MLP 에 query 하지만, 3D GS 는 모두 똑같은 점 $x$ 를 query 하는 것을 볼 수 있다.
 </p>
 
-<h2 id="sec4"> 4. Miscellaneous </h2>
+## <span id="sec4"></span>4. Miscellaneous
 
-<h3 id="sec4.1"> 4.1. Camera Model </h3>
+### <span id="sec4.1"></span>4.1. Camera Model
 
 <div class="lang kor" >
     <p>
@@ -578,7 +553,7 @@ glm::mat3 J = glm::mat3(
     </p>
 </div>
 
-<h3 id="sec4.2"> 4.2. Mimic Luma AI </h3>
+### <span id="sec4.2"></span>4.2. Mimic Luma AI
 
 <div class="lang kor" >
     <p>
@@ -604,7 +579,7 @@ glm::mat3 J = glm::mat3(
     </tr>
 </table>
 
-<h2 id="closing">Closing</h2>
+## <span id="closing"></span>Closing
 
 <div class="lang kor" >
     <p>

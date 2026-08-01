@@ -43,20 +43,16 @@ Stable Diffusion으로 대표되는 2D 이미지 생성 모델의 성공은 '2D 
 SDS 연구가 발전하며 따라 색감이나 Janus problem 등은 어느 정도 완화되었으나, 기하학적 품질과 속도 문제는 여전히 난제로 남았다. 특히 2024년 당시 SOTA 였던 'Dreamcraft3D'의 결과물조차 Polygonal Mesh 로 변환했을 때의 처참한 Geometry 품질은 SDS의 한계를 극명하게 보여주었다.
 <img src='./assets/remote-f1d893b774d4.png' width=70%>
 
-이러한 문제의 원인은 SDS의 optimization objective 에서 찾을 수 있다. 
+이러한 문제의 원인은 SDS의 optimization objective 에서 찾을 수 있다.
 
-<p>
 $$ \nabla_{\theta} \mathcal{L}_{SDS} \approx \mathbb{E}_{t, \epsilon} \left[ w(t) ( \underbrace{\epsilon_{\phi}(x; y, t) - \epsilon}_{\text{Guidance Term (Residual)}} ) \frac{\partial x}{\partial \theta} \right]
 \\
 \text{where } \theta : \text{3D model, } x : \text{rendered image} \\ {}
 $$
-</p>
 
-<p>
 $$ 
 \frac{\partial C}{\partial \theta} = \underbrace{\frac{\partial C}{\partial c} \frac{\partial c}{\partial \theta}}_{\text{Color update}} + \underbrace{\frac{\partial C}{\partial \sigma} \frac{\partial \sigma}{\partial \theta}}_{\text{Geometry update}} \\ {} \\ \rightarrow \Delta \sigma \propto (\epsilon_{\phi} - \epsilon) \cdot {\partial C}{\partial \sigma}
 $$
-</p>
 
 SDS loss로 3D 모델을 업데이트할 때, chain rule을 따라가 보면 texture와 geometry의 update term이 분리되지 않음을 알 수 있다. 이로 인해 2D 모델의 high-frequency noise가 geometry update에 그대로 전달되며, 텍스처를 입히지 않은 메시의 표면이 매우 거칠게 표현되는 결과를 초래한다.
 

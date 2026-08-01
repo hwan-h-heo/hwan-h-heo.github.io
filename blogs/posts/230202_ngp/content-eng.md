@@ -3,36 +3,24 @@ date: Febrary 02, 2023
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<nav class="toc">
-    <ul>
-        <li><a href="#intro"> Introduction </a></li>
-        <li><a href="#sec2"> Background </a></li>
-        <li>
-            <a href="#sec3"> Method </a>
-        </li>
-        <ul>
-            <li><a href="#sec3.1"> Multi-Level Decomposition </a></li>
-            <li><a href="#sec3.2"> Hash Grids Encoding </a></li>
-            <li><a href="#sec3.3"> Multi-Resolution Hash Encoding </a></li>
-        </ul>
-        <li><a href="#conclusion"> Closing </a></li>
-    </ul>
-</nav>
+## <span id="tl-dr"></span>TL; DR
 
-<h2 id="tl-dr">TL; DR</h2>
-<p>
-    Let's delve into the Instant Neural Graphics Primitive with a Multi-Resolution Hash Encoding, and re-implement this with PyTorch!
-</p>
+Let's delve into the Instant Neural Graphics Primitive with a Multi-Resolution Hash Encoding, and re-implement this with PyTorch!
+
 <figure>
     <img src="./230202_ngp/assets/ngp_nerf.gif" alt="Gaussian RT" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"> <strong>Figure 1.</strong> NGP-NeRF </figcaption>
 </figure>
 
-<h2 id="intro"> 1.Introduction</h2>
-<p> Neural Radiance Fields (NeRF) are a powerful method for 3D scene reconstruction, but they come with significant drawbacks, primarily in terms of slow training and rendering speeds. 
-    To address these issues, various studies have explored voxel-based approaches. While these methods can reduce computation time, they often suffer from limited speed improvements or performance trade-offs. </p>
-<p>Instant Neural Graphics Primitives (Instant-NGP) offers a breakthrough by utilizing multi-resolution decomposition and hashing, achieving state-of-the-art performance with remarkable speed. </p>
-<p>In this article, I review the core of Instant-NGP and provide a PyTorch implementation of its core components.</p>
+## <span id="intro"></span>1.Introduction
+
+Neural Radiance Fields (NeRF) are a powerful method for 3D scene reconstruction, but they come with significant drawbacks, primarily in terms of slow training and rendering speeds.
+    To address these issues, various studies have explored voxel-based approaches. While these methods can reduce computation time, they often suffer from limited speed improvements or performance trade-offs.
+
+Instant Neural Graphics Primitives (Instant-NGP) offers a breakthrough by utilizing multi-resolution decomposition and hashing, achieving state-of-the-art performance with remarkable speed.
+
+In this article, I review the core of Instant-NGP and provide a PyTorch implementation of its core components.
+
 <ul>
     <li>
         <p>
@@ -41,18 +29,25 @@ author: Hwan Heo
     </li>
 </ul>
 
-<h2 id="sec2"> 2. Background</h2>
-<h3 id="sec2.1">Positional Encoding</h3>
-<p>For high-fidelity scene reconstruction, NeRF typically uses sinusoidal positional encoding:
+## <span id="sec2"></span>2. Background
+
+### <span id="sec2.1"></span>Positional Encoding
+
+For high-fidelity scene reconstruction, NeRF typically uses sinusoidal positional encoding:
 $$
 \gamma(p) = \big (\sin(2^0 \pi p), \cos(2^0 \pi p), \dots, \sin(2^{L-1} \pi p), \cos(2^{L-1} \pi p) \big)
-$$</p>
-<p>There are alternative encodings, such as Integrated Positional Encoding (IPE) in <a href="https://velog.io/@gjghks950/Mip-NeRF-A-Multiscale-Representation-for-Anti-Aliasing-Neural-Radiance-Fields-Paper-Review">Mip-NeRF</a>, but the fundamental principle remains the same: the information is encoded according to different frequencies.</p>
-<p>However, NeRF requires the inference of MLPs—typically 8 layers with 256 or 512 hidden dimensions—for every point in the rendering process. This is one of the primary reasons for NeRF&#39;s slow speed.</p>
+$$
 
-<h3 id="sec2.2"> Voxel-based Methods</h3>
-<p>One of the main approaches to address these drawbacks is to reduce the computational burden of inference and training by pre-computing and storing data at a few key locations.</p>
-<p>This involves:</p>
+There are alternative encodings, such as Integrated Positional Encoding (IPE) in [Mip-NeRF](https://velog.io/@gjghks950/Mip-NeRF-A-Multiscale-Representation-for-Anti-Aliasing-Neural-Radiance-Fields-Paper-Review), but the fundamental principle remains the same: the information is encoded according to different frequencies.
+
+However, NeRF requires the inference of MLPs—typically 8 layers with 256 or 512 hidden dimensions—for every point in the rendering process. This is one of the primary reasons for NeRF&#39;s slow speed.
+
+### <span id="sec2.2"></span>Voxel-based Methods
+
+One of the main approaches to address these drawbacks is to reduce the computational burden of inference and training by pre-computing and storing data at a few key locations.
+
+This involves:
+
 <ol>
 <li>Learning a parametric encoding for the vertices of a 3D voxel grid by introducing learnable parameters, rather than using a fixed positional encoding.</li>
 <li>Using linear interpolation to approximate points between vertices, thereby improving speed (as shown in <span style="text-decoration: underline;"><a href="https://alexyu.net/plenoxels/">Plenoxels (CVPR 2022)</a></span>).</li>
@@ -61,16 +56,22 @@ $$</p>
     <img src="./230202_ngp/assets/plenoxel.png" alt="Gaussian RT" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"> <strong>Figure 2.</strong> Voxel-Based NeRF, source: Plenoxels </figcaption>
 </figure>
-<p>However, voxel-based methods have the disadvantage of requiring significantly more memory compared to NeRF, and they often involve complex training processes, including various regularization techniques.</p>
 
-<h2 id="sec3"> 3. Method </h2>
-<h3 if="overview"> Overview </h3>
-<p>Instant-NGP uses a similar approach to existing voxel-based methods by mapping parametric encodings to the vertices of a voxel. However, it introduces several key differences:</p>
+However, voxel-based methods have the disadvantage of requiring significantly more memory compared to NeRF, and they often involve complex training processes, including various regularization techniques.
+
+## <span id="sec3"></span>3. Method
+
+### <span if="overview"></span>Overview
+
+Instant-NGP uses a similar approach to existing voxel-based methods by mapping parametric encodings to the vertices of a voxel. However, it introduces several key differences:
+
 <ol>
 <li><strong>Multi-level Decomposition</strong><br/> The scene is divided into multiple levels, with each level storing information that focuses on different parts of the scene geometry.</li><br/>
 <li><strong>Hash Function</strong><br/> As the resolution of voxels increases, the number of points that need to be stored grows cubically. Instead of storing all points on a one-to-one basis, a hash function is used to reduce the memory required.</li>
 </ol>
-<p>The following figure visualizes the forward process of Multi-Resolution Hash Encoding:</p>
+
+The following figure visualizes the forward process of Multi-Resolution Hash Encoding:
+
 <figure>
     <img src="./230202_ngp/assets/ngp.png" alt="Gaussian RT" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"> <strong>Figure 3.</strong> Multi-Resolution Hash Encoding </figcaption>
@@ -82,11 +83,15 @@ $$</p>
 <li>For any point in space, its encoding is determined by a linear interpolation between the features of all corner vertices of the hypercube to which the point belongs.</li><br/>
 <li>This interpolated value is combined with the view-direction encoding and used as input to the decoding network $m(\mathbf{y}; \phi)$.</li>
 </ul>
-<p>Instant-NGP maximizes the capabilities of parametric encoding and multi-level decomposition, allowing for an extremely shallow decoding network—typically a 2-layer network with 64 hidden dimensions. This leads to much faster point-wise inference and convergence compared to other NeRF models while still achieving SOTA performance.</p>
-<p>The next step involves volume rendering using ray casting, similar to other NeRF-like models.</p>
-                        
-<h3 id="sec3.1"> 3.1. Multi-Level Decomposition</h3>
-<p>For a total of $L$ levels, the resolution $N_{l}$ of a voxel at level $l$ is determined as a value between $[N_{\text{min}}, N_{\text{max}}]$, defined as follows:</p>
+
+Instant-NGP maximizes the capabilities of parametric encoding and multi-level decomposition, allowing for an extremely shallow decoding network—typically a 2-layer network with 64 hidden dimensions. This leads to much faster point-wise inference and convergence compared to other NeRF models while still achieving SOTA performance.
+
+The next step involves volume rendering using ray casting, similar to other NeRF-like models.
+
+### <span id="sec3.1"></span>3.1. Multi-Level Decomposition
+
+For a total of $L$ levels, the resolution $N_{l}$ of a voxel at level $l$ is determined as a value between $[N_{\text{min}}, N_{\text{max}}]$, defined as follows:
+
 <div class="math-container">
     $$
             N_{l} 
@@ -100,14 +105,11 @@ $$</p>
     $$
 </div>
 
-<p>
-    To optimize memory usage, rather than declaring a feature table that directly corresponds to each voxel resolution $N_l$, a fixed-size feature table of size $T$ is declared. 
+To optimize memory usage, rather than declaring a feature table that directly corresponds to each voxel resolution $N_l$, a fixed-size feature table of size $T$ is declared.
     If the grid size is smaller than $T$, a feature table matching the voxel size is declared to maintain a one-to-one correspondence.
-</p>
-<p>
-    In the following PyTorch custom implementation, the per-level scale $b$ is calculated using the formula above, 
+
+In the following PyTorch custom implementation, the per-level scale $b$ is calculated using the formula above,
     and the feature tables are initialized accordingly based on whether the voxel size is smaller than $T$ or not.
-</p>
 
 ```python
 self.one2one = []
@@ -130,14 +132,19 @@ for i in range(self.n_levels):
     <li><code>self.units</code> stores the voxel size per level.</li>
 </ul>
 
-<h3 id="sec3.2"> 3.2. Hash Grids Encoding </h3>
-<p>For encoding a point $\mathbf{x} \in \mathbb{R}^{d}$ at each level $l$, the point is first mapped onto a hypercube of size 1 at each level:</p>
+### <span id="sec3.2"></span>3.2. Hash Grids Encoding
+
+For encoding a point $\mathbf{x} \in \mathbb{R}^{d}$ at each level $l$, the point is first mapped onto a hypercube of size 1 at each level:
+
 <div class="math-container">
     $$ \mathbf{x}_{l} : = \mathbf{x}_{l} \cdot N_{l}
     $$
 </div>
-<p>This places the point within a hypercube defined by its diagonal vertices $\lfloor \mathbf{x}_{l} \rfloor$ and $\lceil \mathbf{x}_{l} \rceil$.</p>
-<p>Subsequently, this hypercube is mapped to the feature table using a hash function:</p>
+
+This places the point within a hypercube defined by its diagonal vertices $\lfloor \mathbf{x}_{l} \rfloor$ and $\lceil \mathbf{x}_{l} \rceil$.
+
+Subsequently, this hypercube is mapped to the feature table using a hash function:
+
 <div class="math-container">
     $$ 
         h(x)= 
@@ -147,18 +154,24 @@ for i in range(self.n_levels):
         \quad \text{mod } T
     $$
 </div>
-<p>where $\pi_i$ are large prime numbers (<em>e.g.,</em> $[1, 2 654 435 761, 805 459 861]$).</p>
-<p>After the feature mapping for all $2^d$ vertices is completed, the relative positions within the hypercube are used to interpolate each vertex feature, resulting in the final encoding for level $l$.</p>
 
-<h4 id="hash-grids-trilinear-interpolation"> Hash Grids & Tri-linear Interpolation </h4>
-<p>Assume the forward process of Instant-NGP receives $N$ points as input. For a typical NeRF dataset, these points are 3D, so the input shape will be $[N,\ 3]$.</p>
-<p>Our goal is to compute:</p>
+where $\pi_i$ are large prime numbers (*e.g.,* $[1, 2 654 435 761, 805 459 861]$).
+
+After the feature mapping for all $2^d$ vertices is completed, the relative positions within the hypercube are used to interpolate each vertex feature, resulting in the final encoding for level $l$.
+
+#### <span id="hash-grids-trilinear-interpolation"></span>Hash Grids & Tri-linear Interpolation
+
+Assume the forward process of Instant-NGP receives $N$ points as input. For a typical NeRF dataset, these points are 3D, so the input shape will be $[N,\ 3]$.
+
+Our goal is to compute:
+
 <ul>
 <li>The $2^d$ level-wise corner vertex coordinates of the points $\mathbf{x}$ (<em>i.e.,</em> total $l \times 2^d$ vertices).</li>
 <li>The level-wise trilinear interpolation weights for these points.</li>
 </ul>
 
-<p>Let&#39;s implement this step by step!</p>
+Let&#39;s implement this step by step!
+
 <ol>
 <li>
     First, for a given level $l$, distribute the points $\mathbf{x}$ over voxels with grid size $N_l$ and calculate corner vertices by adding offsets ($[0,0,0] \sim [1,1,1]$) to $\lfloor \mathbf{x}_{l} \rfloor$.
@@ -186,7 +199,8 @@ weights = (1 - torch.abs(x_ - corners)).prod(dim=-1, keepdim=True) + self.eps
 ```
 </li>
 </ol>
-<p>These processes can be wrapped in a following function.</p>
+
+These processes can be wrapped in a following function.
 
 ```python
 def hash_grids(self, x):
@@ -227,8 +241,10 @@ def hash_grids(self, x):
 ```
 <br/>
 
-<h4 id="table-mapping"> Hash Table Mapping</h4>
-<p>The method for table mapping varies depending on whether there is a one-to-one correspondence. Using <code>self.one2one</code> declared in <a href="#sec3.1"><strong>3.1</strong></a>, we handle the two cases:</p>
+#### <span id="table-mapping"></span>Hash Table Mapping
+
+The method for table mapping varies depending on whether there is a one-to-one correspondence. Using `self.one2one` declared in [**3.1**](#sec3.1), we handle the two cases:
+
 <ol>
     <li>
         <p>For one-to-one correspondence, the index is directly derived from the coordinates.</p>
@@ -256,7 +272,8 @@ else:
 ```
 </li>
 </ol>
-<p>The entire mapping process can also be wrapped into a single function.</p>
+
+The entire mapping process can also be wrapped into a single function.
 
 ```python
 def table_mapping(self, c):
@@ -282,8 +299,9 @@ def table_mapping(self, c):
     return ids_all # [L * [N*8]]
 ```
 
-<h3 id="sec3.3"> 3.3. Multi-Resolution Hash Encoding</h3>
-<p>We index the feature table to get the feature values for each level declared as <code>nn.Embedding</code>, perform trilinear interpolation, and then concatenate them by level to obtain the final encoding.</p>
+### <span id="sec3.3"></span>3.3. Multi-Resolution Hash Encoding
+
+We index the feature table to get the feature values for each level declared as `nn.Embedding`, perform trilinear interpolation, and then concatenate them by level to obtain the final encoding.
 
 ```python
 def hash_enc(self, corners, weights):
@@ -311,17 +329,22 @@ def hash_enc(self, corners, weights):
     
     return level_embedd_all.reshape(weights.size(0), self.n_levels * self.feat_dim) 
 ```
-<p>For input $\mathbf{x}$ of shape $[N,\ 3]$, we obtain the multi-resolution hash encoding result.</p>
+
+For input $\mathbf{x}$ of shape $[N,\ 3]$, we obtain the multi-resolution hash encoding result.
 
 ```python
 corners_all, weights_all = self.hash_grids(x)
 encodings = self.hash_enc(corners_all, weights_all)
 ```
 
-<h2 id="conclusion"> Closing </h2>
-<p>The implementation above demonstrates that by matching the input dimension size, the code can be compatible with any NeRF-like model decoding network.</p>
-<p>This flexibility allows us to combine other NeRF models with Multi-Resolution Hash Encoding using this code easily.</p>
-<p>However, the implementation may not be as fast as the original Instant-NGP due to several reasons:</p>
+## <span id="conclusion"></span>Closing
+
+The implementation above demonstrates that by matching the input dimension size, the code can be compatible with any NeRF-like model decoding network.
+
+This flexibility allows us to combine other NeRF models with Multi-Resolution Hash Encoding using this code easily.
+
+However, the implementation may not be as fast as the original Instant-NGP due to several reasons:
+
 <ol>
 <li>The PyTorch implementation, unlike the original CUDA/C++ version, incurs additional execution time.</li>
 <li>Instant-NGP utilizes the <a href="https://github.com/NVlabs/tiny-cuda-nn">tcnn library</a> for the decoding network, further optimizing inference speed.</li>

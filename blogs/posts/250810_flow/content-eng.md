@@ -170,11 +170,9 @@ This equation mathematically expresses the **law of conservation of probability 
 
 In addition to **_deterministic drift_** (ODE), a more general partial differential equation that considers random noise like Brownian motion is known as the **[Fokker-Planck Equation](https://en.wikipedia.org/wiki/Fokker%E2%80%93Planck_equation)**.
 
-<p>
 $$
 \frac{\partial p_t(x)}{\partial t} = \underbrace{-\nabla \cdot [f(x,t)p_t(x)]}_{\text{Drift (flow)}} + \underbrace{\frac{1}{2}\sum_{i,j} \frac{\partial^2}{\partial x_i \partial x_j} [[g(t)g(t)^T]_{ij} p_t(x)]}_{\text{Diffusion}}
 $$
-</p>
 
 Since a Continuous Normalizing Flow (CNF) is a purely deterministic form with no diffusion term ($g=0$), the dynamics of the probability distribution followed by a CNF can be seen as a **_special case of the Fokker-Planck Equation, namely the Continuity Equation_**.
 
@@ -235,14 +233,13 @@ Finally, let's substitute the result we just obtained (eqn. 2) back into eqn. 1:
 $$
 \frac{d \log p_t(x_t)}{dt} = \frac{\partial \log p_t(x_t)}{\partial t} + u_t(x_t) \cdot \nabla_x \log p_t(x_t) \quad \cdots \text{(eqn. 1)}
 $$
-<p>
+
 $$
 \begin{aligned}
 \frac{d \log p_t(x_t)}{dt} &= \underbrace{\left[-(\nabla \log p_t) \cdot u_t - (\nabla \cdot u_t)\right]}_{\text{from (eqn. 2)}} + u_t \cdot \nabla \log p_t
 \\ &= - \nabla \cdot u_t(x_t)
 \end{aligned}
 $$
-</p>
 
 As a result, we have arrived at the following very concise final equation:
 
@@ -299,11 +296,9 @@ While Continuous Normalizing Flow (CNF) facilitated computation by replacing the
 
 The ideal loss function for training a velocity field $v_\theta(x_t, t)$ with a Neural Network is as follows:
 
-<p>
 $$
 \mathcal{L} = \mathbb{E}_{t \sim \mathcal{U}, x_t \sim p_t} [\|v_\theta(x_t, t) - u_t(x_t)\|^2]
 $$
-</p>
 
 This loss function is a regression problem that predicts the actual velocity field $u_t(x_t)$ at a point, given a sample $x_t$ at time $t$.
 
@@ -378,7 +373,6 @@ $$
 $$
 using Bayes' rule, we can see that the following holds.
 
-<p>
 $$
 \begin{aligned}
 \frac{\partial p_t(x_t)}{\partial t} &= \boxed{\frac{\partial}{\partial t} \int p_{t|1}(x_t | x_1)} \  p_1 (x_1) dx_1 \\
@@ -386,7 +380,6 @@ $$
 &= - \nabla \cdot \left ( \boxed{  \int u_t(x_t | x_1)) \frac{p_{t|1}(x_t | x_1) p_1 (x_1)}{p_t(x_t)} dx_1 } \ p_t(x_t) \right ) \\ &= - \nabla \cdot \bigg [ \boxed{u_t(x_t)} \  p_{t}(x_t ) \bigg ]
 \end{aligned}
 $$
-</p>
 
 In other words, the marginal vector field $u_t(x_t)$ at a point $x_t$ is equal to the average of all possible conditional vector fields $u_t(x_t|x_1)$ that pass through that point.
 $$
@@ -397,14 +390,12 @@ $$
 
 From the first fact, it is proven that the ideal but computationally infeasible loss function we wanted to solve is equivalent to the computable conditional loss function.
 
-<p>
 $$
 \mathcal{L}_{\text{marginal}} = \mathbb{E}_{t, x_t} [\|v_\theta - u_t\|^2] \\ \iff \\ \mathcal{L}_{\text{CFM}} = \mathbb{E}_{t, x_1, x_t|x_1} [\|v_\theta - u_t(\cdot|x_1)\|^2] + C
 $$
-</p>
 
 The reason the two losses are equivalent becomes clear when we examine the inner product term that appears when expanding the loss function.
-<p>
+
 $$
 \begin{aligned}
 \mathbb{E}_{x_t \sim p_t} [\langle v_\theta(x_t), u_t(x_t) \rangle] &= \int \left[ v_\theta(x_t) \cdot  \boxed{u_t(x_t)} \ \right ]p_t(x_t) dx_t \\
@@ -414,7 +405,6 @@ $$
 &= \mathbb{E}_{(x_1, x_t) \sim p(x_1, x_t)} [\langle v_\theta(x_t), u_t(x_t|x_1) \rangle]
 \end{aligned}
 $$
-</p>
 
 This means we can perfectly replace the regression problem for the unknown $u_t$ with a regression problem for $u_t(\cdot|x_1)$, which we have designed and for which we know the answer.
 
@@ -480,11 +470,10 @@ $  u_t(x_t|x_0, x_1) = \frac{dx_t}{dt} = x_1 - x_0
 $
 
 Now, substituting this into the CFM loss function completes the final objective function for Rectified Flow.
-<p>
+
 $$
 \mathcal{L} = \mathbb{E}_{t \sim U, x_0 \sim p_0, x_1 \sim p_1} \left[ \left\| v_\theta((1-t)x_0 + tx_1, t) - (x_1 - x_0) \right\|^2 \right]
 $$
-</p>
 
 The neural network learns to solve a _**very simple regression problem**_: given an intermediate point $x_t$, predict the direction vector from the start point to the destination ($x_1 - x_0$). This simplicity brings about dramatic improvements in training speed and stability.
 
@@ -863,11 +852,9 @@ $$
 
 Combining these two, we complete the **Geodesic Conditional Flow** on a Manifold.
 
-<p>
 $$
 \psi_t(x_0|x_1) = \text{exp}_{x_0} (t \cdot \text{log}_{x_0}(x_1))
 $$
-</p>
 
 This is the true meaning of **Rectified Flow**. The model is now trained to **flow along the Geodesic**, the shortest path on the Manifold, not a straight line in Euclidean space.
 

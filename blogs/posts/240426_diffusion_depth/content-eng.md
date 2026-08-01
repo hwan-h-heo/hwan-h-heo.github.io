@@ -3,21 +3,8 @@ date: April 26, 2024
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<nav class="toc">
-    <ul>
-        <li><a href="#sec1"> Introduction </a></li>
-        <li>
-            <a href="#sec2"> Generating 3D Vertices and Faces from Depth Maps </a>
-        </li>
-        <li><a href="#sec3"> Texturing the Mesh from Depth Maps </a></li>
-        <li>
-            <a href="#sec4"> Result & Analysis </a>
-        </li>
-        <li><a href="#closing"> Closing </a></li>
-    </ul>
-</nav>
+## <span id="sec1"></span>1. Introduction
 
-<h2 id="sec1">1. Introduction </h2>
 <p class="lang eng">
     The success of 2D diffusion models has inspired researchers to explore the diffusion process of 
     geometric information, such as depth and normal maps. 
@@ -42,14 +29,17 @@ author: Hwan Heo
     precision warrants further scrutiny.
 </p>
 <img src="./240426_diffusion_depth/assets/teaser.jpeg" alt="Marigold's teaser" width="100%">
-<p><em>Figure credit: <a href="https://marigoldmonodepth.github.io/">Depth estimation result from Marigold<a></a></em></p>
+
+<em>Figure credit: <a href="https://marigoldmonodepth.github.io/">Depth estimation result from Marigold<a></a></em>
+
 <p class="lang eng"> 
     In this article, we employ DepthMap to generate point clouds and meshes, 
     aiming to qualitatively evaluate the performance of state-of-the-art depth estimation models, 
     such as Marigold.
 </p>
 
-<h2 id="sec2">2. Generating 3D Vertices and Faces from Depth Maps</h2>
+## <span id="sec2"></span>2. Generating 3D Vertices and Faces from Depth Maps
+
 <p class="lang eng">
     Our initial step involves using the Marigold model as a baseline for depth estimation. 
     Despite its relatively lightweight architecture, Marigold is known for its high performance 
@@ -173,7 +163,8 @@ def get_mesh_from_depth(outname, scale=None):
     as it is currently executed in a non-parallelized manner using a <em>for</em> loop.
 </p>
 
-<h2 id="sec3">3. Texturing the Mesh from Depth Maps</h2>
+## <span id="sec3"></span>3. Texturing the Mesh from Depth Maps
+
 <p class="lang eng">
     Texturing is a critical aspect of 3D asset creation. For the task at hand, 
     using the image pixel colors as vertex colors is effective, given that the number of vertices corresponds to the image size.
@@ -209,7 +200,8 @@ def make_textured_mesh(outname, scale=None):
     as it significantly increases the number of faces, particularly with FHD inputs.
 </p>
 
-<h2 id="sec4"> 4. Results & Analysis</h2>
+## <span id="sec4"></span>4. Results & Analysis
+
 <p class="lang eng">
     We generated textured meshes using four images from the Marigold Demo.
     The results are shown below:
@@ -246,14 +238,16 @@ def make_textured_mesh(outname, scale=None):
 
 
 <img src="./240426_diffusion_depth/assets/butterfly.jpg" alt="Marigold's teaser" width="100%">
-<p><em>Left: front view / Right: side view of the mesh</em></p>
+
+*Left: front view / Right: side view of the mesh*
 
 <p class="lang eng">
     Zooming in on the front view reveals that the stripes on the torso were incorrectly inferred as part of the background. 
     The extreme discontinuities in the depth map exacerbate the difficulty of accurate estimation in such cases.
 </p>
 
-<h2 id="closing"> Closing </h2>
+## <span id="closing"></span>Closing
+
 <p class="lang eng">
     In this study, we explored the process of generating textured meshes from depth maps to qualitatively assess 
     the depth estimation quality of diffusion-based models and other generative techniques.

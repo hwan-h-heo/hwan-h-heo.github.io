@@ -46,10 +46,8 @@ The full camera projection matrix $P$ maps 3D world coordinates to 2D pixel coor
 
 **2. Intrinsic Matrix `K`**: These parameters are internal to the camera and define how it projects 3D camera coordinates onto the 2D image plane in pixel units.
 
-<p>
 $$ K = \begin{bmatrix} \alpha_x & s & c_x \\ 0 & \alpha_y & c_y \\ 0 & 0 & 1 \end{bmatrix}
 $$
-</p>
 
 - **Focal Lengths ($\alpha_x, \alpha_y$)**: Focal length $f$ scaled by the pixel size: $\alpha_x = f \cdot s_x$, $\alpha_y = f \cdot s_y$.
 
@@ -59,10 +57,8 @@ $$
 
 The full projection equation is:
 
-<p>
 $$ \mathbf{x}_\text{image} = P \mathbf{X}_\text{world} = K [R|t] \mathbf{X}_\text{world}
 $$
-</p>
 
 ---
 

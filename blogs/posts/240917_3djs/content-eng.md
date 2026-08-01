@@ -3,21 +3,8 @@ date: September 17, 2024
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<nav class="toc">
-    <ul>
-        <li>
-            <a href="#tl-dr"> TL; DR</a>
-        </li>
-        <li><a href="#step"> Step-by-Step</a></li>
-        <ul>
-            <li><a href="#step1"> Step1: CDN setting</a></li>
-            <li><a href="#step2"> Step2: HTML Structures</a></li>
-            <li><a href="#step3"> Example Result</a></li>
-        </ul>
-    </ul>
-</nav>
+## <span id="tl-dr"></span>TL; DR
 
-<h2 id="tl-dr">TL; DR</h2>
 <p class="lang eng"> 
     <em>(short article)</em> <br/>
     In this tutorial, I’ll guide you how to integrate 3D Gaussian splatting into your website. 
@@ -26,9 +13,9 @@ author: Hwan Heo
 <p class="lang eng"> 
     Don’t worry if you're not a web expert—just follow along and copy-paste the code provided! 
 </p>
-<h3>
-    About the Project
-</h3>
+
+### About the Project
+
 <p class="lang eng">
     We’ll be using the <span style="text-decoration: underline;"><a href="https://github.com/mkkellogg/GaussianSplats3D"> 3D Gaussian Splatting for Three.js </a></span> by mkkellogg. 
     This package allows you to render point clouds as smooth, Gaussian splats in a 3D environment using Three.js. 
@@ -36,11 +23,12 @@ author: Hwan Heo
     Now, let’s walk through the setup process.
 </p>
 
-<h2 id="step">
-    Step-by-Step
-</h2>
+## <span id="step"></span>Step-by-Step
+
 <hr/>
-<h3 id="step1">Step 1: Project Setup (CDN-based)</h3>
+
+### <span id="step1"></span>Step 1: Project Setup (CDN-based)
+
 <p class="lang eng">
     For those not familiar with package management or setting up a local development environment, you can use a CDN to load the necessary libraries directly into your HTML file. Here’s how you can set up Three.js and GaussianSplats3D using CDN links:
 </p>
@@ -54,7 +42,8 @@ author: Hwan Heo
 }
 &lt;/script&gt; </code></pre>
 
-<h3 id="step2">Step 2: HTML Structure</h3>
+### <span id="step2"></span>Step 2: HTML Structure
+
 <p class="lang eng">
 We will now initialize the WebGL renderer, set the camera’s position, and use the GaussianSplats3D viewer to load a 3D model (in .ply or .ksplat format, for example). 
 </p>
@@ -156,9 +145,9 @@ function update() {
         Set <code>'sharedMemoryForWorkers': false</code> for preventing CORS error.
     </li>
 </ul>
-<h3 id="step3">
-    Example Result of Custom GS Scene
-</h3>
+
+### <span id="step3"></span>Example Result of Custom GS Scene
+
 <div style="margin-bottom: -20vh;">
     <p class="lang eng">
         Here is the result of the above code. 
@@ -170,7 +159,8 @@ function update() {
     <canvas id="threeCanvas"></canvas>
 </div>
 
-<h2>Closing</h2>
+## Closing
+
 <p class="lang eng"> 
     For researchers, this topic might not be of direct interest to everyone. 
     However, in an era where personal projects and portfolios are increasingly important, 

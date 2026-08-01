@@ -91,9 +91,8 @@ $$
     
 ### 2.2. **Non-square matrix case**
 
-**2.2.1.**  
+**2.2.1.**
 
-<p>
 $$
 \begin{bmatrix} 
 a & b \\
@@ -101,21 +100,19 @@ c & d   \\
 e & f   \\
 \end{bmatrix} 
 $$
-</p>
 
 - 3x2 행렬로 column space 가 평면을 이루고 있다. (서로 independent 라고 가정하자). 여기서 주의해야할 점은, 위 변환을 통해 2차원 상의 점이 3차원 상의 점으로 변환되지만, 그 점들이 이루는 공간은 3차원 상의 평면이라는 점이다. 
 
 - 단순히 span 의 차원이 2라는 것과는 조금 다른 의미가 된다. Column space가 2차 직교 좌표계로 축소되는것이 아닌, 3차원 상의 hyperplane이 되는 것이다.
 
 **2.2.2.**
-<p>
+
 $$
 \begin{bmatrix}
 a & b & c\\
 d & e & f   \\
 \end{bmatrix} 
 $$
-</p>
 
 - 3차원 상의 점을 2차원의 점으로 사상하는 변환인데, basis vector 가 3개 이지만, column space 자체가 2차원이기 때문에 full rank가 아니다. 즉 span 이 축소되며, 3차원에서 2차원 위의 점으로 사영된다는 의미로 해석할 수 있다.  다시 말해 $m \times n$ matrix 에서 $m < n$ 인 경우에, 이 변환은 고차원 상의 점을 저차원으로 사영하는 변환이 된다. 
 
@@ -199,9 +196,8 @@ Determinant를 통해 square matrix 인 경우 선형방정식계의 해를 구�
 
 <img src='./210909_lin_alg_1/assets/image-3.png'>
 
-예를 들어 아래와 같은 2차 정사각 행렬의 선형방정식계가 있을 때, 
+예를 들어 아래와 같은 2차 정사각 행렬의 선형방정식계가 있을 때,
 
-<p>
 $$
 \begin{bmatrix} 
 a & c \\
@@ -217,10 +213,9 @@ y  \\
 \beta  \\
 \end{bmatrix} 
 $$
-</p>
 
-각각의 column 을 차례대로 $(x,y)$ 인 변환으로 대체하였을 때의 determinant 값을 이용하여 편리하게 위 linear system 의 해를 구할 수 있게 된다. 아래 방식은 전산적으로 linear equations 의 해답을 구할 때 이용하게 된다. 
-<p>
+각각의 column 을 차례대로 $(x,y)$ 인 변환으로 대체하였을 때의 determinant 값을 이용하여 편리하게 위 linear system 의 해를 구할 수 있게 된다. 아래 방식은 전산적으로 linear equations 의 해답을 구할 때 이용하게 된다.
+
 $$
 y = { det{\begin{bmatrix} 
 a & \alpha \\
@@ -237,7 +232,6 @@ a & c \\
 b & d \\
 \end{bmatrix} }}, 
 $$
-</p>
 
 차원이 확장돼도 마찬가지로 부피를 변화시키는 양으로 determinant 가 정의되기 때문에, 동일한 방식으로 고차원에서도 linear equations 의 해를 구할 수 있다. 또한 역행렬이 존재하지 않을 때 determinant 값이 0이 되어 분수에서 분모가 0이 될 수 없으므로 마찬가지로 해가 존재하지 않음을 알 수 있다.  
 

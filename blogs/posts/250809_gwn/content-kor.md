@@ -51,11 +51,9 @@ Winding Number 는 특정 점을 기준으로 ***닫힌 곡선이 얼마나 많�
 
 복소평면에서 닫힌 경로 $\gamma$ 와 이 경로 위에 있지 않은 점 $a$ 에 대한 와인딩 넘버 $n(\gamma, a)$ 는 다음과 같은 코시 적분으로 정의된다.
 
-<p>
 $$
 n(\gamma, a) = \frac{1}{2\pi i} \oint_\gamma \frac{1}{z-a} dz
 $$
-</p>
 
 이 적분 값은 항상 정수가 되며, 이는 $\gamma$ 가 점 $a$ 를 몇 번 감았는지를 나타낸다.
 
@@ -93,21 +91,17 @@ $$
 
 위에서 살펴본 winding number 의 정의에 대하여, 일반성을 잃지 않고 기준점 $p$ 를 원점으로 가정할 때, winding number 는 *spherical coordinates 의 각도 변화를 적분하여* 정의할 수 있을 것이다.
 
-<p>
 $$
 w(p) = \frac{1}{2\pi} \int_C d\theta
 $$
-</p>
 
 직관적으로 이는 곡선 $C$ 를 $p$ 주위의 단위 원 (unit circle)에 투영했을 때, 그 투영된 경로의 부호를 고려한 길이를 $2\pi$ 로 나눈 값과 같다.
 
 만약 곡선 $C$ 가 여러 개의 선분으로 이루어진 polyline, piecewise linear 라면, 이 적분은 각 선분이 만드는 각도의 합으로 정확하게 이산화될 수 있다.
 
-<p>
 $$
 w(p) = \frac{1}{2\pi} \sum_{i=1}^n \theta_i
 $$
-</p>
 
 여기서 $\theta_i$는 곡선의 연속된 두 정점 $c_i, c_{i+1}$ 과 점 $p$가 이루는 signed angle 이다.
 
@@ -120,11 +114,9 @@ Winding Number 는 3차원으로 즉시 일반화될 수 있다. 이때 2D space
 
 점 $p$ 에 대한 닫힌 서피스 $S$ 의 winding number 는 $p$ 에서 $S$ 가 만드는 총 solid angle 을 구 전체의 solid angle 인 $4\pi$로 나눈 값으로 정의된다.
 
-<p>
 $$
 \omega(p) = \frac{1}{4\pi} \int_{S} \frac{(x-p) \cdot \mathbf{n}_x}{\|x-p\|^3} dA
 $$
-</p>
 
 - 이 수식에서 $p$ 는 winding number 를 계산하고자 하는 3차원 공간상의 한 점, $S$ : closed surface (mesh), $x$ : surface $S$ 위의 한 점, $\mathbf{n}_x$ : 점 $x$ 에서의 normal vector 를 나타낸다. 
 
@@ -171,11 +163,9 @@ $$
 
 이 역시 서피스가 삼각형 메시로 구성되어 있다면, 각 삼각형이 만드는 입체각 $\Omega_f$의 합으로 정확하게 discreatize 될 수 있을 것이다.
 
-<p>
 $$
 w(p) = \sum_{f=1}^m \frac{1}{4\pi} \Omega_f(p)
 $$
-</p>
 
 여기서 $\Omega(p, T)$는 점 $p$에서 삼각형 $T$가 이루는 입체각을 의미한다.
 
@@ -209,11 +199,9 @@ $$ f(p) = \omega(p) - 0.5$$
 2. **거리 계산**: 부호와 별개로, 점 $p$에서 메시 $S$ 까지의 기하학적인 최단 거리를 계산한다. (이는 BVH 를 사용하여 효율적으로 계산할 수 있다.)
 3. **SDF 결합**: 위 두 단계에서 얻은 부호와 거리를 결합하여 최종 SDF 값을 얻는다.
 
-<p>
 $$
 \text{SDF}(p) = \text{sign}(0.5-w(p)) \times \text{distance}(p, S)
 $$
-</p>
 
 ---
 

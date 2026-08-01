@@ -47,18 +47,14 @@ As SDS research progressed, issues like color saturation and the Janus problem w
 
 The cause of these problems can be traced to SDS's optimization objective.
 
-<p>
 $$ \nabla_{\theta} \mathcal{L}_{SDS} \approx \mathbb{E}_{t, \epsilon} \left[ w(t) ( \underbrace{\epsilon_{\phi}(x; y, t) - \epsilon}_{\text{Guidance Term (Residual)}} ) \frac{\partial x}{\partial \theta} \right]
 \\
 \text{where } \theta : \text{3D model, } x : \text{rendered image} \\ {}
 $$
-</p>
 
-<p>
 $$ 
 \frac{\partial C}{\partial \theta} = \underbrace{\frac{\partial C}{\partial c} \frac{\partial c}{\partial \theta}}_{\text{Color update}} + \underbrace{\frac{\partial C}{\partial \sigma} \frac{\partial \sigma}{\partial \theta}}_{\text{Geometry update}} \\ {} \\ \rightarrow \Delta \sigma \propto (\epsilon_{\phi} - \epsilon) \cdot \frac{\partial C}{\partial \sigma}
 $$
-</p>
 
 When updating a 3D model with SDS loss, following the chain rule reveals that the update terms for texture and geometry are not separated. As a result, high-frequency noise from the 2D model is directly transferred to the geometry update, causing the mesh surface to appear extremely rough when viewed without texture.
 

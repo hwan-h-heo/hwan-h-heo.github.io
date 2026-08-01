@@ -3,10 +3,6 @@ date: March 02, 2025
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<nav class="toc">
-    <ul><li><a href="#h2-1">Preliminary: What is Latent?</a><ul></ul></li><li><a href="#h2-2">ShapeVAE</a><ul><li><a href="#h3-1">Challenges for ShapeVAE</a></li></ul></li><li><a href="#h2-3">Trellis</a><ul><li><a href="#h3-2">Structured Latent</a></li><li><a href="#h3-3">3D Generation</a></li></ul></li><li><a href="#h2-4">Hunyuan3D-v2</a><ul><li><a href="#h3-4">Hunyuan-ShapeVAE</a></li><li><a href="#h3-5">Hunyuan3D-DiT</a></li><li><a href="#h3-6">Hunyuan3D-Paint</a></li></ul></li><li><a href="#h2-6"> Trellis vs Hunyuan? </a><ul></ul></li><li><a href="#h2-5">Closing</a><ul></ul></li></ul>
-</nav>
-
 <figure id="figure-0" >
   <video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/teaser-poster.jpg" aria-label="3D latent diffusion teaser" style="width: 100%">
     <source src="./250302_3d_latent_diffusion/assets/teaser.mp4" type="video/mp4">
@@ -19,7 +15,9 @@ author: Hwan Heo
 <p id="p-5">The expansion of generative models extends beyond 2D to the realms of video and 3D. In 2024, video generation models such as Sora, DreamMachine (Ray), and Veo have demonstrated the potential for modality expansion. </p>
 <p id="p-6">In recent days, beyond video, latent diffusion-based models are also proving their capabilities in the 3D domain.</p>
 <p id="p-7">This article delves into the concept of <em id="em-2"><strong id="strong-2">3D Latent Diffusion</strong></em> and analyzes its core component, <em id="em-3"><strong id="strong-3">ShapeVAE</strong></em>, examining how it overcomes the limitations of traditional Score Distillation Sampling (SDS) and NeRF-based Large Reconstruction Models (LRMs). Furthermore, we will compare and contrast the state-of-the-art 3D generation models, Trellis and Hunyuan3D, providing an in-depth exploration of their design differences, strengths, and weaknesses.</p>
-<h2 id="h2-1">Preliminary: What is Latent?</h2>
+
+## <span id="h2-1"></span>Preliminary: What is Latent?
+
 <table id="table-1">
 <thead>
 <tr>
@@ -59,7 +57,9 @@ $$</p>
 <p id="p-14">Here, the RBF and Gaussian primitives each have learnable parameters (e.g., mean, variance) that are optimized during the learning process.</p>
 <p id="p-15">Shifting our perspective slightly, these basis functions (primitives) can be considered a type of <em id="em-4">'latent vector'</em> that compresses the meaning of the data distribution.  The entire collection can be viewed as a <em id="em-5">'latent vector set'</em>.</p>
 <p id="p-16">RBF networks, 3D Gaussian Splatting, etc., define their basis representations in a human-crafted manner. However, if we learn the basis functions in a learnable way for a given data distribution, this becomes <em id="em-6"><strong id="strong-4">Representation Learning</strong></em> in the context of Deep Learning.</p>
-<h2 id="h2-2">1. ShapeVAE: Representation Learning for 3D Shape</h2>
+
+## <span id="h2-2"></span>1. ShapeVAE: Representation Learning for 3D Shape
+
 <blockquote id="blockquote-1">
 <p id="p-17">Goal: Representation Learning for 3D Shape</p>
 </blockquote>
@@ -137,7 +137,9 @@ DETR and Perceiver are fundamentally designed for tasks like detection and class
 <p id="p-37">While there are differences in the structure used for the encoder/decoder (Perceiver ↔︎ Diffusion Transformer) and whether additional losses are added for multi-modal alignment in the latent space (CraftsMan), the fundamental role of ShapeVAE remains consistent.</p>
 <p id="p-38">With a well-trained latent space derived from rich data, we can expect that, leveraging the power of Latent Diffusion Models, a generative model for 3D shapes (a 3D Latent Diffusion Model) can be trained.</p>
 <hr id="hr-3" />
-<h3 id="h3-1">Challenges for ShapeVAE</h3>
+
+### <span id="h3-1"></span>Challenges for ShapeVAE
+
 <p id="p-39">However, until recently, 3D generation has not shown the same remarkable results as 2D and video generation. The reasons for this slower progress include:</p>
 <ul id="ul-11">
 <li id="li-22"><strong id="strong-22">Versatility &amp; Diversity of Data</strong>: The amount of data is extremely limited compared to 2D. Objaverse, one of the larger datasets, contains around 8 million assets, and even its expanded XL version only has around 100 million, significantly less than 2D datasets (LAION-5B has 5 billion...). High-quality datasets are even more scarce.</li>
@@ -165,10 +167,14 @@ DETR and Perceiver are fundamentally designed for tasks like detection and class
 <li id="li-28">Not faithfully following the guidance (input image or text)</li>
 </ol>
 <p id="p-48">remained difficult to solve...</p>
-<h2 id="h2-3">2. Trellis</h2>
+
+## <span id="h2-3"></span>2. Trellis
+
 <p id="p-49">Paper: <a id="a-8" href="https://trellis3d.github.io/">Trellis: Structured 3D Latents for Scalable and Versatile 3D Generation</a></p>
 <p id="p-50">Trellis is a state-of-the-art 3D Latent Diffusion model announced by Microsoft in late 2024.  It significantly outperforms previous ShapeVAE-based approaches in terms of instruction following and stability, and has the advantage of generating both shape and texture end-to-end.  Let's analyze the design that enabled it to achieve state-of-the-art quality.</p>
-<h3 id="h3-2">2.1. Structured Latent Representation</h3>
+
+### <span id="h3-2"></span>2.1. Structured Latent Representation
+
 <p id="p-52">The authors propose a representation called <em id="em-14"><strong id="strong-27">SLAT</strong></em> (Structured Latent Representation):</p>
 <p id="p-53">
 $$ \mathbf{z} = \{(\mathbf{z}_i, \mathbf{p}_i)\}_{i=1}^{L}, \quad \mathbf{z}_i \in \mathbb{R}^{C}, \quad \mathbf{p}_i \in \{0, 1, \dots, N-1\}^3,
@@ -188,7 +194,9 @@ $$</p>
 
 
 <p id="p-61">The VAE structure itself is the same as the original ShapeVAE. Since the latent space is well-defined, the decoder can be changed to fine-tune the output to generate 3D Gaussian Splattings (GSs), Radiance Fields (NeRFs), or Meshes. Therefore, Trellis can predict outputs in a format-agnostic manner, including GSs, NeRFs, and Meshes. (The actual inference branch uses both GS and Mesh branches).</p>
-<h3 id="h3-3">2.2. SLAT Generation</h3>
+
+### <span id="h3-3"></span>2.2. SLAT Generation
+
 <blockquote id="blockquote-4">
 <p id="p-62">Q.  So, can new assets be generated by simply inputting a random sample from a Standard Gaussian Distribution in the latent space, as in ShapeVAE?</p>
 </blockquote>
@@ -233,11 +241,15 @@ $$</li>
 <p id="p-77">It demonstrates outputs of impressive quality.  On the <a id="a-11" href="https://trellis3d.github.io/">project page</a> and <a id="a-12" href="https://huggingface.co/spaces/JeffreyXiang/TRELLIS">Demo</a>, you can see results that are even better than the paper captures.</p>
 <p id="p-78">A drawback is that it doesn't yet completely follow instructions (input guidance) perfectly, and perhaps because the default branch of the decoder is GSs, the quality of the generated mesh isn't always excellent.</p>
 <hr id="hr-4" />
-<h2 id="h2-4">3. Hunyuan3D-v2</h2>
+
+## <span id="h2-4"></span>3. Hunyuan3D-v2
+
 <p id="p-79">Paper: <a id="a-13" href="https://3d-models.hunyuan.tencent.com/">Hunyuan3D 2.0: Scaling Diffusion Models for High Resolution Textured 3D Assets Generation</a></p>
 <p id="p-80">After the emergence of Trellis, it seemed that Trellis would firmly hold the throne of SOTA 3D Generation for some time. However, Hunyuan3D-v2 from China has appeared, surpassing Trellis in terms of Mesh Quality and Instruction Following.</p>
 <p id="p-81">Unlike Trellis, Hunyuan3Dv2 is not end-to-end but follows a two-stage approach like Rodin or CaPa: 1) Mesh Generation 2) Texture Generation. The <em id="em-24"><strong id="strong-38">Mesh Generation</strong></em> quality is truly <em id="em-25"><strong id="strong-39">SUPERIOR</strong></em>. Let's analyze it in detail.</p>
-<h3 id="h3-4">3.1. Hunyuan-ShapeVAE</h3>
+
+### <span id="h3-4"></span>3.1. Hunyuan-ShapeVAE
+
 <p id="p-82">The design of Hunyuan's ShapeVAE is not very different from vanilla ShapeVAE, but there are some significant differences:</p>
 <ol id="ol-6">
 <li id="li-39"><p id="p-83"><strong id="strong-40">Point Sampling</strong>: When training ShapeVAE, point clouds are usually obtained from the ground truth mesh through uniform sampling. However, this often leads to the loss of fine details. Therefore, Hunyuan uses a point sampling strategy that focuses more on edges and corners, in addition to uniform sampling. This approach is similar to that of the recently proposed <a id="a-14" href="https://aruichen.github.io/Dora/">Dora</a>.</p>
@@ -254,7 +266,9 @@ $$</li>
 <ul id="ul-16">
 <li id="li-42">Figure: Hunyuan-ShapeVAE</li>
 </ul>
-<h3 id="h3-5">3.2. Hunyuan3D-DiT</h3>
+
+### <span id="h3-5"></span>3.2. Hunyuan3D-DiT
+
 <p id="p-90">The core of Hunyuan3D-DiT is the novel architecture design of the 3D generation stage.</p>
 <p id="p-91">Previous studies, including Trellis, used Transformers not significantly different from the general DiT structure. However, Hunyuan uses a <em id="em-26"><strong id="strong-43">'double- and single-stream' design</strong></em> like Flux.</p>
 <p id="p-92">Although there is no official technical report for Flux, according to the released development version code, it processes information from the text ↔︎ image modalities in a <strong id="strong-44">double-stream</strong> manner. This is considered the main reason why Flux achieves better instruction-following performance compared to SDXL.</p>
@@ -314,7 +328,9 @@ $$</li>
 $$ \mathcal{L} = \mathbb{E}_{t, x_0, x_1} \left[ || u_\theta(x_t, c, t) - u_t ||_2^2 \right]
 $$</p>
 <p id="p-99">Among the mentioned training details, it is noteworthy that unlike ViT-based approaches that typically add positional embedding (PE) to each patch, Hunyuan removed PE. This is to prevent specific latents from being assigned to 'fixed locations' during shape generation.</p>
-<h3 id="h3-6">3.3. Hunyuan3D-paint</h3>
+
+### <span id="h3-6"></span>3.3. Hunyuan3D-paint
+
 <p id="p-100">Since Hunyuan uses a 2-stage approach like CLAY/CaPa, it uses <em id="em-29"><strong id="strong-55">Geometry-guided Multi-View Generation</strong></em> for texture synthesis. However, it is not simply a combination of MVDream/ImageDream series models + MV-Depth/Normal ControlNet. Instead, it incorporates several novel strategies to improve quality.</p>
 <p id="p-101">First, Hunyuan starts by pointing out the problems with existing methods. MVDream and ImageDream try to achieve <em id="em-30">Multi-View Synchronization in the generation branch using 'noisy features'</em> while tuning the Stable Diffusion model for Multi-View. This can lead to the <em id="em-31"><strong id="strong-56">loss of original details</strong></em> in the reference image. Indeed, looking at the MV output of ImageDream or Unique3D, even the front view often shows degraded quality compared to the input image.</p>
 <table id="table-2">
@@ -404,7 +420,8 @@ $$</p>
 </tbody>
 </table>
 
-<h2 id="h2-6" > 4. Trellis vs Hunyuan? </h2>
+## <span id="h2-6"></span>4. Trellis vs Hunyuan?
+
 <table id="table-13"  class="table ">
 <thead>
 <tr>
@@ -459,7 +476,8 @@ $$</p>
 </figure>
 
 
-<h2 id="h2-5">Closing</h2>
+## <span id="h2-5"></span>Closing
+
 <p id="p-122">Thus far, I have provided a detailed analysis tracing the evolution of state-of-the-art 3D Latent Diffusion, from the fundamental concepts of ShapeVAE to Trellis and Hunyuan3D.</p>
 <p id="p-123">While the open-source community did not achieve remarkable progress in the 3D field for some time after the emergence of CLAY, recent studies have showcased innovative designs and reached state-of-the-art quality, further fueling anticipation for generative models in the 3D domain.</p>
 <p id="p-124">Personally, Hunyuan's application of proven designs from Flux, MV-Adapter, and other works to the 3D generation scheme is particularly impressive. It reinforces the notion that to conduct impactful research, one must remain attentive to research trends in other fields.</p>

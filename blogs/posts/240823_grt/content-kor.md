@@ -3,48 +3,8 @@ date: August 23, 2024
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<nav class="toc">
-    <ul>
-        <li>
-            <a href="#introduction"> Introduction</a>
-        </li>
-        <li><a href="#preliminary"> Background</a></li>
-        <ul>
-            <li>
-                <a href="#parameterization"> 3D Gaussian Modeling </a>
-            </li>
-            <li>
-                <a href="#hardware-accelerated-ray-tracing"> About Ray Tracing </a>
-            </li>
-        </ul>
-        <li>
-            <a href="#method"> 3D Gaussian Ray Tracing </a>
-        </li>
-        <ul>
-            <li>
-                <a href="#bounding-primitives"> Bounding Primitives </a>
-            </li>
-            <li>
-                <a href="#ray-tracing-renderer"> Ray Tracing Renderer </a>
-            </li>
-            <li>
-                <a href="#ray-gaussian-intersection"> Ray Gaussian Intersection </a>
-            </li>
-        </ul>
-        <li><a href="#experiments"> Experiments </a></li>
-        <ul>
-            <li>
-                <a href="#quantitative-results"> Quantitative Results </a>
-            </li>
-            <li>
-                <a href="#qualitative-results"> Qualitative Results </a>
-            </li>
-        </ul>
-        <li><a href="#conclusion"> Closing </a></li>
-    </ul>
-</nav>
+## <span id="tl-dr"></span>TL; DR
 
-<h2 id="tl-dr">TL; DR</h2>
 <p class="lang kor" >3D Gaussian Splatting 은 강력하고 매력적인 기술이지만, rasterization 을 사용하기 때문에 생기는 여러 문제가 있다. 최근 공개된 3D Gaussian Ray Tracing (이하 3D GRT) 은 Ray Tracing 기술을 3D Gaussian 에 접목시켜 이러한 단점을 많이 해결한 모습을 보여주었다. 이 글을 통해 3D GRT 를 자세하게 알아보자! </p>
 <ul>
     <li> project page: <span style="text-decoration: underline;"><a href="https://gaussiantracer.github.io/"> Link </a></span> </li>
@@ -54,8 +14,10 @@ author: Hwan Heo
     <figcaption style="text-align: center; font-size: 15px;"><strong></strong> 3D Gaussian Ray Tracing</figcaption>
 </figure>
 
-<h2 id="introduction"> 1. Introduction</h2>
-<h3 id="challenges-in-3d-gaussian-splatting">Challenges in 3D Gaussian Splatting</h3>
+## <span id="introduction"></span>1. Introduction
+
+### <span id="challenges-in-3d-gaussian-splatting"></span>Challenges in 3D Gaussian Splatting
+
 <p class="lang kor" >3D Gaussian Splatting 은 well-designed tile-based rasterizer 를 이용해 high-fidelity novel-view synthesis 와 real-time rendering 을 달성한 연구이다. </p>
 <p class="lang kor" >Next-photogramerry 로까지 불리며 각광받고 있는 연구분야지만, 아직 과도기이기 때문에 극복해야할 문제가 많이 남아있다. </p>
 <p class="lang kor" >그 중 대표적인 것이 바로 Rasterization 사용으로 인한 문제들이다. </p>
@@ -96,8 +58,10 @@ author: Hwan Heo
 <p class="lang kor" >1), 2) 등에 대해서는 RadSplat 에서 Zip-NeRF 로 Radiance Fields 를 먼저 학습한 후, NeRF scene 에서 perfect &amp; calibrated pinhole image 를 rendering 하여 3D GS 의 training data 로 사용하면서 우회한 바 있다. </p>
 <p class="lang kor" >하지만 이 학습 방법은 2-stage 기 때문에 효율적이지 못하며, 근본적으로 rasterization 이기 때문에 갖는 3) 은 여전히 challenge 로 남아있다. </p>
 
-<h2 id="preliminary"> 2. Background </h2>
-<h3 id="parameterization">2.1. Parameterization</h3>
+## <span id="preliminary"></span>2. Background
+
+### <span id="parameterization"></span>2.1. Parameterization
+
 <p class="lang kor" >Primitive kernel 은 original 3D GS 와 같이 3D 공간에서 covariance matrix 를 통해 정의된다. </p>
 <div class="math-container">
     $$G(x) = \exp \left( {- \frac{1}{2} x^{\rm T} \Sigma^{-1} x} \right )$$
@@ -122,12 +86,14 @@ rgb[idx * C + 2] = result.z;</code></pre>
 
 <p class="lang kor" >이 방법을 사용하면 rendering 속도는 극대화되지만, 3D GS 의 약점 중 하나인 illumination effect modeling 에 더 약점을 보이는 설계가 된다. 3D GRT 에서는 이를 방지하기 위해 SH2RGB 에서 ray direction 을 사용한다고 한다. </p>
 
-<h3 id="hardware-accelerated-ray-tracing"> 2.2. Hardware-Accelerated Ray Tracing</h3>
+### <span id="hardware-accelerated-ray-tracing"></span>2.2. Hardware-Accelerated Ray Tracing
+
 <p class="lang kor" >NVIDIA 계열 GPU 는 ray tracing 을 위한 RT cores 가 따로 설계되어 있어, ray 와 particle 의 intersection 은 RT core 가 담당하고, shading 에 해당하는 더 계산량이 높은 작업은 SMs 에게 할당하는 식으로 최적화 되어 있다.</p>
 <p class="lang kor" >이렇게 설계된 기존 Ray Tracer 들을 사용할 수도 있지만, 이는 주로 opaque particle 을 렌더링하는데 초점이 맞추어 설계되어 있다. 즉, ray traversal 과정에서 예상되는 hit count 가 낮으며, SMs RT 코어 간의 상호 작용이 최소화된다.</p>
 <p class="lang kor" >하지만 3D Gaussian 의 경우 semitransparent 하기 때문에 이러한 Ray Tracer 가 효율적이지 않고, 따라서 3D Gaussian 을 위한 적절한 Ray Tracing 알고리즘을 설계해야한다. </p>
 
-<h2 id="method"> 3. 3D Gaussian Ray Tracing </h2>
+## <span id="method"></span>3. 3D Gaussian Ray Tracing
+
 <figure>
     <button class="post-image-lightbox-trigger" type="button" data-image-lightbox-target="#fig1-lightbox" aria-controls="fig1-lightbox" aria-haspopup="dialog" aria-label="그림 1 방법 개요 크게 보기">
         <img class="post-media" src="./240823_grt/assets/fig1.png" width="100%" alt="3D Gaussian Ray Tracing 방법 개요">
@@ -153,7 +119,8 @@ rgb[idx * C + 2] = result.z;</code></pre>
     각 요소에 유의하며 3D GRT 설계를 따라가보자.
 </p>
 
-<h3 id="bounding-primitives"> 3.1. Bounding Primitives</h3>
+### <span id="bounding-primitives"></span>3.1. Bounding Primitives
+
 <p class="lang kor" >간략하게 BVH (<span style="text-decoration: underline;"><a href="https://en.wikipedia.org/wiki/Bounding_volume_hierarchy">Bounding Volume Hierarchy</a></span>) 부터 짚고 넘어가자. </p>
 <figure>
     <img class="post-media" src="./240823_grt/assets/fig3.png" width="90%">
@@ -167,7 +134,8 @@ rgb[idx * C + 2] = result.z;</code></pre>
 </figure>
 <p class="lang kor" > 저자에 의하면, NVIDIA OptiX 에서는 미리 정의된 3가지 타입 1) triangle, 2) sphere and 3) AABBs 은 모두 3D Gaussian 에 적절하지 않다고 한다. 3) 의 AABB 를 이용하는 경우를 생각해보면, 계산은 간단하지만 false positive proxy hit 이 많아지기 때문에 trade-off 가 있다 (see Fig. 4).</p>
 
-<h4 id="stretched-polyhedron-proxy"> Stretched Polyhedron Proxy</h4>
+#### <span id="stretched-polyhedron-proxy"></span>Stretched Polyhedron Proxy
+
 <figure>
     <img class="post-media" src="./240823_grt/assets/fig4.png" width="90%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 4.</strong> Proxy Primitives</figcaption>
@@ -180,11 +148,9 @@ rgb[idx * C + 2] = result.z;</code></pre>
 </ul>
 <p class="lang kor" >Unit sphere 를 내접하는 icosahedron 에 대하여, 3D Gaussian 에 대한 minimum responce alpha (0.01 로 설정) 값을 통해 각 vertex 를 다음과 같이 transform 하여 proxy geometry 를 계산한다. </p>
 
-<p>
 $$
 v \leftarrow v \sqrt{2 \log (\sigma / \alpha_{\min})} \ {\rm SR^T} + \mu 
 $$
-</p>
 
 <p class="lang kor" >논문에 공식만 턱 나와 있어서 당황스러울 수 있는데, 차근차근 분석해보자. </p>
 <ol class="lang kor" >
@@ -213,7 +179,8 @@ $$
 
 <p class="lang kor" >Adaptive Clamping 는 opacity 까지 scaling 에 함께 활용하기 때문에, 거의 투명하지만 크기는 큰 particle 에 대해서는 실제 proxy primitive 가 작게 설정되는 등의 이점이 존재한다. </p>
 
-<h3 id="ray-tracing-renderer"> 3.2. Ray Tracing Renderer</h3>
+### <span id="ray-tracing-renderer"></span>3.2. Ray Tracing Renderer
+
 <figure>
     <img class="post-media" src="./240823_grt/assets/fig5.png" width="100%">
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 5.</strong> Ray Tracing </figcaption>
@@ -236,14 +203,16 @@ $$
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 6. Next $k$ closest hit Ray Tracer:</strong> on each round of tracing, the next $k$ closest hit particles are collected and sorted into depth order along the ray, the radiance is computed in-order, and the ray is cast again to process the next chunk.  </figcaption>
 </figure>
 
-<h3 id="ray-gaussian-intersection"> 3.3. Ray-Gaussian Intersection</h3>
+### <span id="ray-gaussian-intersection"></span>3.3. Ray-Gaussian Intersection
 
 <p class="lang kor" >우리는 이제 어떻게 각 particle 의 contribution 을 계산할 것인가를 결정해야 한다. 3D GRT 에서는 이를 입자가 최대 response 가지는 analytic solution 을 제시하여 해결한다. </p>
 <div class="math-container">
     $$ \tau_{\max} = \frac{(\mu - \mathbf{o})^{\rm T} \Sigma^{-1} \mathbf{d}}{\mathbf{d}^{\rm T} \Sigma^{-1} \mathbf{d} } = \frac{-\mathbf{o}_g^{\rm T} \mathbf{d}_g}{\mathbf{d}_g^{\rm T}\mathbf{d}_g}
     $$
 </div>
-<p> where $ \mathbf{o}_g = {\rm S^{-1}R^T}(\mathbf{o} - \mu),  d_g = {\rm S^{-1}R^T} \mathbf{d}$. </p>
+
+where $ \mathbf{o}_g = {\rm S^{-1}R^T}(\mathbf{o} - \mu),  d_g = {\rm S^{-1}R^T} \mathbf{d}$.
+
 <figure>
     <img class="post-media" src="./240823_grt/assets/inter.png" width="40%">
 </figure>
@@ -276,8 +245,9 @@ $$
     <p class="lang kor" >Ray tracing 은 proxy hit 순서로 진행되기 때문에 실제로 ray 에 대한 particle 들의 maximum responce 의 순서와는 약간 다를 수 있지만, 이 approximation 이 성능 저하를 초래하지 않았다고 한다. </p>
 </div>
 
-<h2 id="experiments"> 4. Experiments</h2>
-<h3 id="quantitative-results"> 4.1. Quantitative Results</h3>
+## <span id="experiments"></span>4. Experiments
+
+### <span id="quantitative-results"></span>4.1. Quantitative Results
 
 <p class="lang kor" >정량적, 정성적 평가 모두 훌륭하게 제시되어 있다. (역시 갓비디아…) </p>
 <p class="lang kor" >3D GS 와 NVS quantitative results 는 거의 차이나지 않으며, fps 는 조금 느리지만 여전히 real-time 을 달성한다. </p>
@@ -291,7 +261,7 @@ $$
 </figure>
 <br/>
 
-<h4 id="ablation-study-and-ray-tracer-design"> Ablation Study</h4>
+#### <span id="ablation-study-and-ray-tracer-design"></span>Ablation Study
 
 <p class="lang kor" >
     Ablation study 로는 제안한 Next $k$-closest Ray Tracer 와 SLAB, MLAT 등 기존 ray tracer 들과의 비교 (Fig. 8 top left), 
@@ -303,7 +273,8 @@ $$
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 9.</strong> Ablation Study </figcaption>
 </figure>
 <br/>
-<h4> Particle Kernel Design </h4>
+
+#### Particle Kernel Design
 
 <p class="lang kor" >
     설계된 Ray Tracer 에 대해 particle kernel 이 꼭 3D Gaussian 일 필요는 없으므로, 저자들은 다음 네 개의 kernel design 에 대한 실험도 진행하였다.
@@ -356,7 +327,7 @@ $$
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 11.</strong> Ray hit count for left: 3D G, right: GG  </figcaption>
 </figure>
 
-<h3 id="qualitative-results"> 4.2. Qualitative Results</h3>
+### <span id="qualitative-results"></span>4.2. Qualitative Results
 
 <p class="lang kor" >Qualitative Results 에서는 앞서 지적한 rasterization 의 한계점을 타파한 모습들을 보여준다. 다양한 camera model 에 대한 rendering 및 light effect 를 모델링하는 모습을 통해 3D GRT 가 효과적으로 구현되었음을 입증한다. </p>
 <figure>
@@ -368,7 +339,7 @@ $$
     <figcaption style="text-align: center; font-size: 15px;"><strong>Figure 13.</strong> 3D GRT's reconstruction capability for non-pinhole camera </figcaption>
 </figure>
 
-<h2 id="conclusion"> 5. Conclusion</h2>
+## <span id="conclusion"></span>5. Conclusion
 
 <div class="lang kor" >
     <p>역시 갓비디아… 역작 논문인 것 같다. </p>

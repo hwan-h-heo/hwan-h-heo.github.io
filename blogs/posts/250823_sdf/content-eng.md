@@ -74,13 +74,12 @@ f(x_2) - f(x_1) & \ge d(x_2, \partial\Omega) - \|x_1-p_2\| \\ &= \|x_2-p_2\| - \
 $$
 </p>
 Using the reverse triangle inequality, this can be simplified as follows:
-<p>
+
 $$
 \begin{aligned}
 f(x_2) - f(x_1) &\ge -\|(x_2-p_2) - (x_1-p_2)\| \\ & = -\|x_2-x_1\| \\  \therefore |f(x_1) - f(x_2)| & \le \|x_1-x_2\|
 \end{aligned}
 $$
-</p>
 
 *cf.* $ \|a\|-\|b\| \ge -\|a-b\| $ 
 
@@ -88,13 +87,11 @@ This shows that the function $f$ is a **[1-Lipschitz Continuous Function](https:
 
 If $f$ is differentiable at a point $x$, then by the definition of the gradient, we have:
 
-<p>
 $$
 \begin{aligned}
 |\nabla f(x) \cdot v| & = \lim_{t \to 0} \frac{|f(x+tv) - f(x)|}{t} \\ & \le \lim_{t \to 0} \frac{\|tv\|}{t} = \|v\|
 \end{aligned}
 $$
-</p>
 
 Now, let's choose the unit vector $v = \frac{\nabla f(x)}{\|\nabla f(x)\|}$ (assuming $\nabla f(x) \neq 0$):
 $$\left | \nabla f(x) \cdot \frac{\nabla f(x)}{\|\nabla f(x)\|} \right | = \frac{\|\nabla f(x)\|^2}{\|\nabla f(x)\|} = \|\nabla f(x)\|$$
@@ -113,13 +110,12 @@ Let's consider a point $x \in \mathbb{R}^n \setminus \partial\Omega$ where $f$ i
 Now, consider the unit vector $$ n = \frac{x-p}{\|x-p\|} $$, which points from $p$ to $x$, representing the direction of fastest movement away from the boundary.
 
 To analyze the directional derivative in this direction, consider the point $x+tn$ for a sufficiently small positive number $t > 0$. Under the assumption that $p$ is the unique closest point to $x$, for a small enough $t$, the closest point to $x+tn$ will also be $p$. Therefore, the distance function value is calculated as:
-<p>
+
 $$
 \begin{aligned}
 d(x+tn, \partial\Omega) &= \|(x+tn) - p\| \\ &= \|(x-p) + tn\| \\ & = \|\|x-p\|n + tn\| \\ & = (\|x-p\|+t) = d(x, \partial\Omega)+t
 \end{aligned}
 $$
-</p>
 
 Applying the sign from the SDF definition, we get the following:
 - If $x \in \Omega^c$ $(f > 0)$, then $f(x) = d(x, \partial\Omega)$, so $$ f(x+tn) = d(x, \partial\Omega)+t = f(x)+t$$ 
@@ -180,13 +176,11 @@ $$ \nabla f(x) = -\nabla d(x, \partial\Omega) = -\frac{x-p}{\|x-p\|} $$
 
 In both cases, the gradient $\nabla f(x)$ is either a unit vector or a unit vector multiplied by -1. Therefore, calculating the Euclidean norm of the gradient yields:
 
-<p>
 $$ 
 \begin{aligned}
 \|\nabla f(x)\| &= \left\| \pm \frac{x-p}{\|x-p\|} \right\| \\ & = \frac{\|x-p\|}{\|x-p\|} = 1 
 \end{aligned}
 $$
-</p>
 
 This shows that $f$ satisfies the Eikonal equation at all points where it is differentiable.
 

@@ -3,38 +3,26 @@ date: September 17, 2024
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<nav class="toc">
-    <ul>
-        <li>
-            <a href="#tl-dr"> TL; DR</a>
-        </li>
-        <li><a href="#step"> Step-by-Step</a></li>
-        <ul>
-            <li><a href="#step1"> Step1: CDN setting</a></li>
-            <li><a href="#step2"> Step2: HTML Structures</a></li>
-            <li><a href="#step3"> Example Result</a></li>
-        </ul>
-    </ul>
-</nav>
+## <span id="tl-dr"></span>TL; DR
 
-<h2 id="tl-dr">TL; DR</h2>
 <p class="lang kor" >
     html 웹페이지에 학습시킨 3D Gaussian Splatting scene 을 띄우는 방법을 알아보자.
     웹알못이어도 상관없이 따라 하기만 하면 된다!
 </p>
-<h3>
-    About the Project
-</h3>
+
+### About the Project
+
 <p class="lang kor" >
     Three-js 을 이용해 구현된 <span style="text-decoration: underline;"><a href="https://github.com/mkkellogg/GaussianSplats3D"> 3D Gaussian Splatting for Three.js </a></span> 을 이용할 것이다. 
     웹잘알이면 패키지 document 만 참고하면 될 듯 하다.
 </p>
 
-<h2 id="step">
-    Step-by-Step
-</h2>
+## <span id="step"></span>Step-by-Step
+
 <hr/>
-<h3 id="step1">Step 1: Project Setup (CDN-based)</h3>
+
+### <span id="step1"></span>Step 1: Project Setup (CDN-based)
+
 <p class="lang kor" >
     npm 등으로 threejs 와 GaussianSplats3D package 를 설치하는 것이 일반적이지만, (저자처럼) 웹에 친숙하지 않은 것을 가정하고 쓰는 글이기 때문에 
     CDN 을 이용해서 package 를 로드하여 사용하는 방법을 기술한다. 
@@ -50,7 +38,8 @@ author: Hwan Heo
 }
 &lt;/script&gt; </code></pre>
 
-<h3 id="step2">Step 2: HTML Structure</h3>
+### <span id="step2"></span>Step 2: HTML Structure
+
 <p class="lang kor" >
 필요 패키지를 로드하면 이제 description 에 맞게 3D GS scene 을 세팅하여 WebGL renderer 를 불러오면 된다. 
 3D GS ply scene 이면 모두 로드 가능하며, 본인의 3D GS scene 에 맡게 카메라나 GS 의 position, rotation 등을 수정하면 된다. 
@@ -146,9 +135,9 @@ function update() {
         CORS error 방지를 위해  <code>'sharedMemoryForWorkers': false</code> 로 설정하였다. 
     </li>
 </ul>
-<h3 id="step3">
-    Example Result of Custom GS Scene
-</h3>
+
+### <span id="step3"></span>Example Result of Custom GS Scene
+
 <div style="margin-bottom: -20vh;">
     <p class="lang kor" >
         위 방법을 이용해 로드된 3D Gaussian Splatting scene 이다. 
@@ -160,7 +149,8 @@ function update() {
     <canvas id="threeCanvas"></canvas>
 </div>
 
-<h2>Closing</h2>
+## Closing
+
 <p class="lang kor" >
     연구자라면 이 article 이 관심 없는 주제일지도 모르지만, 
     자기 pr 의 시대에 직접 학습시킨 gaussian splatting scene 을 개인 webpage 에 add 하는 방법 또한 누군가에게는 도움이 될 거라고 믿으며 글을 작성하였다.

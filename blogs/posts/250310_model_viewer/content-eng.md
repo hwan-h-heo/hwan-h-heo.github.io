@@ -4,29 +4,12 @@ author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
 <!-- 2. TOC(목차) 추가 -->
-<nav class="toc">
-    <ul>
-        <li><a href="#h2-3"> Introduction </a><ul></ul></li>
-        <li><a href="#h2-1"> Google Model Viewer </a>
-            <ul>
-                <li><a href="#h3-1"> Basic Usage </a></li>
-                <li><a href="#h3-2"> Geometry Rendering </a></li>
-            </ul>
-        </li>
-        <li><a href="#h2-2"> Threejs-Based Custom Viewer </a>
-            <ul>
-                <li><a href="#h3-3"> Basic Usage </a></li>
-                <li><a href="#h3-4"> Custom Viewer </a></li>
-                <li><a href="#h3-5"> Key Takeaways </a></li>
-            </ul>
-        </li>
-        <li><a href='#conclusion'>Conclusion</a></li>
-    </ul>
-</nav>
+
 
 <!-- <img src='./250310_model_viewer/assets/image.gif' width=100%> -->
 
-<h2 id="h2-3" > Introduction </h2>
+## <span id="h2-3"></span>Introduction
+
 <p id="p-1" class='lang eng'> Since my work tends to revolve around the 3D domain,
     I occasionally find myself needing to render 3D models on web pages—whether it’s for a quick demo to present internally or to build a project page for a research paper. </p>
 <p id="p-2" class='lang eng'> For someone like me who isn’t deeply familiar with web development, there are two straightforward options: </p>
@@ -37,10 +20,12 @@ author: Hwan Heo
 </p>
 
 
-<h2 id="h2-1" > Google Model Viewer </h2>
+## <span id="h2-1"></span>Google Model Viewer
+
 <p id="p-5" class='lang eng'> <a id="a-1" href='https://modelviewer.dev/'>Model Viewer</a> is a handy 3D model viewing package provided by Google. It’s a breeze to use whenever I need a simple viewer, and I’ve even employed it for the 3D model viewer on the <a id="a-1" href='https://ncsoft.github.io/CaPa/'>CaPa</a> project page. </p>
 
-<h3 id="h3-1" > Basic Usage </h3>
+### <span id="h3-1"></span>Basic Usage
+
 <p id="p-7" class='lang eng'> You can easily import it into an HTML file via CDN like this: </p>
 
 <pre id="pre-2" ><code id="model-viewer-cdn" class="language-html">&lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js&quot;&gt;&lt;/script&gt;
@@ -84,7 +69,8 @@ author: Hwan Heo
     skybox-image="https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/spruit_sunrise_1k_HDR.hdr" >
 </model-viewer>
 
-<h3 id="h3-2" > Geometry Rendering </h3>
+### <span id="h3-2"></span>Geometry Rendering
+
 <p id="p-12" class='lang eng'> For a basic 3D model viewer, it’s hard to beat Google Model Viewer. However, it’s tricky to modify its default shaders, and it doesn’t support alternative rendering types like Normal, Geometry, or Wireframe. This makes it tough to visually inspect detailed mesh elements beyond the base texture. </p>
 <p id="p-13" class='lang eng'> That said, you can work around this limitation to some extent by removing the texture and using a gradient equirectangular image as the environment. This leverages PBR rendering to reflect the gradient, creating an effect that mimics mesh geometry rendering. </p>
 <figure id="figure-1" >
@@ -128,9 +114,12 @@ function show_geometry(){
 </model-viewer>
 
 
-<h2 id="h2-2" > Threejs-Based Custom Viewer </h2>
+## <span id="h2-2"></span>Threejs-Based Custom Viewer
+
 <p id="p-16" class='lang eng'> To implement rendering modes like Normal or Wireframe that Google Model Viewer can’t handle, you’ll need to roll up your sleeves and build a custom model viewer class using Three.js. </p>
-<h3 id="h3-3" > Basic Usage </h3>
+
+### <span id="h3-3"></span>Basic Usage
+
 <pre id="pre-2" ><code class='language-html'>&lt;script type=&quot;importmap&quot;&gt;
     {
         &quot;imports&quot;: {
@@ -158,10 +147,13 @@ controls = new OrbitControls(this.camera, this.renderer.domElement);
 <pre id="pre-5"><code class='language-javascript'>loader = new GLTFLoader();
 loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined, (error) => { console.error('Loading Error:', error); });</code></pre>
 
-<h3 id="h3-4">Custom Viewer Implementation</h3>
+### <span id="h3-4"></span>Custom Viewer Implementation
+
 <p id="p-21" class='lang eng'> A Three.js-based custom viewer offers far greater flexibility compared to Google Model Viewer. It allows you to implement diverse rendering modes like Diffuse, Mesh, Wireframe, and Normal with ease. </p>
 <p id="p-22" class='lang eng'> In Three.js, mesh textures are defined as PBR materials using <code>MeshStandardMaterial</code>. Rendering modes like Normal, Geometry, or Wireframe can be achieved by simply adjusting the material mappings. </p>
-<h4 id="h4-1" > Normal Map </h4>
+
+#### <span id="h4-1"></span>Normal Map
+
 <p id="p-23" class='lang eng'> For example, to render a Normal map, you can set the mesh material to <code>THREE.MeshNormalMaterial()</code>, which Three.js provides out of the box: </p>
 <pre id="pre-5" ><code class="language-javascript">if (model) {
     model.traverse((child) => {
@@ -174,7 +166,8 @@ loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined
 <br/>
 
 
-<h4 id="h4-2" > Wireframe </h4>
+#### <span id="h4-2"></span>Wireframe
+
 <p id="p-24" class='lang eng'> For Wireframe, setting <code>wireframe: true</code> in <code>THREE.MeshBasicMaterial()</code> will display the wireframe, but this hides the original texture and geometry, reducing visibility. </p>
 <p id="p-25" class='lang eng'> A better approach is to create a separate wireframe mesh as a copy and add it as a child of the original mesh. This way, you can render the wireframe alongside the original texture and geometry: </p>
 <pre id="pre-6" ><code class="language-javascript">model.traverse((child) => {
@@ -191,7 +184,9 @@ loader.load('your_3d_model.glb', (gltf) => { scene.add(gltf.scene); }, undefined
 });
 </code></pre>
 <br/>
-<h4 id="h4-3" > Custom Model Viewer </h4>
+
+#### <span id="h4-3"></span>Custom Model Viewer
+
 <p id="p-26" class='lang eng'> Reimplementing these features for every 3D model can get tedious, so I've built a lightweight <code>SimpleModelViewer</code> that brings together the best of both worlds: ease of use like Google Model Viewer, with the flexibility of Three.js. It includes pre-defined skybox environment map settings, the ability to remove them, and a UI panel for adjusting model position and rotation. </p>
 <simple-model-viewer 
     src="https://huggingface.co/spaces/hhhwan/custom_gs/resolve/main/glbs/omni.glb" 
@@ -914,13 +909,16 @@ export { SimpleModelViewer };
 </simple-model-viewer>
 <p id="p-28" class='lang eng'> With <code>auto-rotate</code>, a basic motion that continuously updates the mesh's Y-axis rotation can be added. This speed is adjustable via <code>angle-per-second</code>, and the initial camera position is also configurable using the <code>camera-orbit</code> attribute.</p> 
 <p id="p-29" class='lang eng'> By incorporating toggleable settings for features like the <code>Control Panel</code>, I’ve developed a 3D Model Viewer that, while similar to Model Viewer, offers a broader range of functionalities. </p>
-<h3 id="h3-5">Key Takeaways</h3>
+
+### <span id="h3-5"></span>Key Takeaways
+
 <ul class='lang eng'>
     <li><strong>Google Model Viewer</strong>: Quick and easy setup is its strength, but it’s limited in rendering modes and customization.</li> 
     <li><strong>Three.js Custom Viewer</strong>: Offers flexibility and fine-grained control, though it requires more complex setup and time.</li>
     <li>Choose based on your project’s needs—simplicity or versatility.</li> 
 </ul>
-<h2 id="conclusion">Conclusion</h2>
+
+## <span id="conclusion"></span>Conclusion
 
 <p id="p-30" class='lang eng'> Google Model Viewer is a fantastic tool for quickly and easily embedding 3D models on the web. However, when you need finer control or a variety of rendering modes, a Three.js-based custom viewer is the way to go. </p> 
 <p id="p-31" class='lang eng'> In this project, I used Three.js to build a custom viewer supporting Diffuse, Mesh, Wireframe, and Normal rendering modes, complete with a panel for adjusting model position and rotation. This gives users the flexibility to manipulate models and explore different visual effects. </p> 

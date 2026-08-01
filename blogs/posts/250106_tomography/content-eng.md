@@ -3,44 +3,33 @@ date: January 06, 2025
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<nav class="toc">
-    <ul>
-        <li><a href="#introduction">Introduction</a></li>
-        <li><a href="#tomography-vs-photography">Tomography vs. Photography</a>
-            <ul>
-                <li><a href="#photography">Photography</a></li>
-                <li><a href="#tomography">Tomography</a></li>
-            </ul>
-        </li>
-        <li><a href="#modeling">Modeling</a></li>
-        <li><a href="#quick-viewer-development-tip"> Viewer Tip</a>
-            <ul>
-                <li><a href="#viser-viewer">Viser Viewer</a></li>
-                <li><a href="#marching-cube-extraction">Marching Cube Extraction</a></li>
-            </ul>
-        </li>
-        <li><a href="#concluding-remarks">Concluding Remarks</a></li>
-    </ul>
-</nav>
-
 <p class="lang eng">
     <strong> TL; DR. </strong>
     In this article, we will explore how to apply radiance fields technique (NeRF and Gaussian Splatting) beyond photometric domain. 
     Also, I will post the short tip for the quick development of the NeRF / GS viewer which has no official viewer.
 </p>
-<h2 id="introduction">Introduction</h2>
+
+## <span id="introduction"></span>Introduction
+
 <p class="lang eng">Recently, I had the serendipitous opportunity to explore how Neural Rendering could be applied within the medical domain, specifically in Tomography (X-ray), referencing <a href='https://github.com/caiyuanhao1998/SAX-NeRF'>SAX-NeRF</a>.</p>
 <p class="lang eng">Unlike photography, which captures the reflection of visible light, tomography constructs images based on signals that have penetrated a substance. In tracing the authors' investigative process of how to adapt the standard Neural Rendering setting for Tomography, I was able to deepen my abstract intuition and comprehension of Neural Rendering.</p>
 <p class="lang eng">In this post, I aim to elucidate the foundational intuitions behind Neural Rendering, NeRF, and GS through a personal review of SAX-NeRF. Additionally, I will offer insights into a technique for creating a simple web viewer using viser when an official viewer is unavailable.</p>
-<h2 id="tomography-vs-photography">1. Tomography vs. Photography</h2>
+
+## <span id="tomography-vs-photography"></span>1. Tomography vs. Photography
+
 <img class="post-media" src="./250106_tomography/assets/image1.png" width="100%" alt="Tomography vs Photography" />
-<h3 id="photography">1.1. Photography</h3>
+
+### <span id="photography"></span>1.1. Photography
+
 <p class="lang eng">- What are the underlying physical principles of the act of <code>'seeing'</code>?</p>
 <p class="lang eng">'Seeing' physically denotes the process where light emitted from a source interacts with an object, causing the object's surface to absorb or reflect specific wavelengths (or energy) of light. The unabsorbed, reflected light then reaches the observer's eye (or detection device), leading to visual perception.</p>
 <p class="lang eng">This process encompasses the interaction between light and an object (absorption and reflection) and the subsequent transmission of the interaction's result to the observer's visual system.</p>
 <p class="lang eng">Neural Rendering and Novel View Synthesis primarily focus on scenes <code>'observed within the visible light spectrum'</code>. Consequently, the standard NeRF rendering equation (emission-absorption ray casting) mathematically represents the intuition behind the act of 'seeing'.</p>
-<p>$$ C(r) = \int_{t_n}^{t_f} T(t) \cdot \sigma ({\rm \textbf{r}}(t))  \cdot c({\rm \textbf{r}}(t), {\rm \textbf{d}} ) \ dt  $$</p>
-<p>$$ \text{where }T(t) = \text{exp} \bigg( - \int_{t_n}^{t}\sigma ({\rm \textbf{r}}(s)) ds \bigg ) $$</p>
+
+$$ C(r) = \int_{t_n}^{t_f} T(t) \cdot \sigma ({\rm \textbf{r}}(t))  \cdot c({\rm \textbf{r}}(t), {\rm \textbf{d}} ) \ dt  $$
+
+$$ \text{where }T(t) = \text{exp} \bigg( - \int_{t_n}^{t}\sigma ({\rm \textbf{r}}(s)) ds \bigg ) $$
+
 <p class="lang eng">In this equation, $C(r)$ represents the final accumulated color along a ray. The constituent components of the equation are interpreted as follows:</p>
 <ul class="lang eng">
     <li>$\textbf{r}(t)$ : Represents the ray of light.</li>
@@ -52,7 +41,8 @@ author: Hwan Heo
 <p class="lang eng">Thus, NeRF's rendering equation mathematically formalizes the process of visual object perception. By integrating all elements of the physical light-object interaction (absorption, reflection, transparency, etc.), NeRF calculates the cumulative contribution of light along the ray path to ultimately generate an image.</p>
 <img class="post-media" src="./250106_tomography/assets/image3.png" alt="NeRF Image Generation" />
 
-<h3 id="tomography">1.2. Tomography</h3>
+### <span id="tomography"></span>1.2. Tomography
+
 <p class="lang eng">So, what considerations are necessary for applying Neural Rendering to domains outside the visible light spectrum?</p>
 <p class="lang eng">A quintessential example in this domain is Tomography, including X-ray and CT scans. Tomography utilizes X-rays, which have shorter wavelengths (and higher energy) than visible light. Instead of reflection, the process is based on the <strong><em>penetration</em></strong> of X-rays through an object and the <strong><em>attenuation</em></strong> of the light's intensity by the object's internal density. This contrasts with the reflection-based nature of visible light, and the internal structure of the object is reconstructed by analyzing the intensity of the light that passes through and reaches the detector.</p>
 <img class="post-media" src="./250106_tomography/assets/image5.png" alt="Tomography Process" />
@@ -64,21 +54,29 @@ author: Hwan Heo
 </ul>
 <p class="lang eng">The resemblance of the exponential term is notable. It exhibits an identical form to the Accumulated Transmittance equation used in NeRF modeling. In fact, both terms share the fundamental assumption that the degree of intensity reduction is proportional to both the current light intensity and the opacity at the current point.</p>
 <p class="lang eng">The underlying intuition regarding light intensity in this modeling is further elucidated by the following derivation:</p>
-<p> <strong> * Derivation of Beer-Lambert Law</strong>  (which mirrors the derivation of Accumulated Transmittance)</p>
-<p>$$ I_\text{gt}(\mathbf{r}) = I_o \cdot \exp \left ( - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt \right ) $$</p>
-<p>$$ \rightarrow \ln(I_\text{gt}(\mathbf{r}) ) - \ln (I_o) = - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt $$</p>
-<p>$$ \rightarrow \int_{t_n}^{t_f } \frac{1}{I(\mathbf{r}(t))} dI(\mathbf{r}(t)) = - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt $$</p>
-<p>$$ \rightarrow \frac{1}{I(\mathbf{r}(t))} dI(\mathbf{r}(t)) = -\rho(\mathbf{r}(t)) dt $$</p>
-<p>$$ \therefore \frac{d}{dt}I(t) = -I(t)\cdot \rho(t) $$</p>
+
+<strong> * Derivation of Beer-Lambert Law</strong>  (which mirrors the derivation of Accumulated Transmittance)
+
+$$ I_\text{gt}(\mathbf{r}) = I_o \cdot \exp \left ( - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt \right ) $$
+
+$$ \rightarrow \ln(I_\text{gt}(\mathbf{r}) ) - \ln (I_o) = - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt $$
+
+$$ \rightarrow \int_{t_n}^{t_f } \frac{1}{I(\mathbf{r}(t))} dI(\mathbf{r}(t)) = - \int_{t_n}^{t_f} \rho(\mathbf{r}(t)) dt $$
+
+$$ \rightarrow \frac{1}{I(\mathbf{r}(t))} dI(\mathbf{r}(t)) = -\rho(\mathbf{r}(t)) dt $$
+
+$$ \therefore \frac{d}{dt}I(t) = -I(t)\cdot \rho(t) $$
+
 <p class="lang eng">The reconstruction of a NeRF model from Tomography data necessitates the substitution of the conventional emission-absorption ray casting with a rendering equation grounded in the Beer-Lambert Law.</p>
 <p class="lang eng">The ultimate intensity rendering term is expressed in a discretized form, analogous to that in NeRF, as follows:</p>
-<p>
+
 $$ I_{pred}(\mathbf{r}) = I_0 \cdot \exp\left(-\sum_{i=1}^{N} \rho_i \delta_i\right) 
 $$
-</p>
+
 <img class="post-media" src="./250106_tomography/assets/image6.png" alt="Tomography Intensity Rendering" />
 
-<h2 id="modeling">2. Modeling</h2>
+## <span id="modeling"></span>2. Modeling
+
 <p class="lang eng">Returning our focus to NeRF, while variations such as Hash Grid NeRF and TensoRF exist, the fundamental principle of NeRF is to parameterize and represent a 3D scene.</p>
 <p class="lang eng">When this parameterization is achieved through an MLP, it is classified within the NeRF family, whereas the utilization of explicit 3D Gaussians or 2D Gaussian surfels aligns it with the Gaussian Splatting methodology.</p>
 <p class="lang eng">Conventionally, these parameter models are designed to receive a 3D Cartesian Coordinate $(x,y,z)$ as input, subsequently producing the density and color $(\sigma, c)$ at the specified location.</p>
@@ -88,8 +86,10 @@ $$
 <img class="post-media" src="./250106_tomography/assets/image8.png" alt="Tomography NeRF Modeling" />
 <p class="lang eng">Subsequently, SAX-NeRF introduces an alternative design, favoring a Transformer architecture over an MLP to accommodate X-Ray specific attributes, and incorporating ray-wise locality inductive bias within the attention mechanism. However, considering this aspect to be of secondary importance to the central discussion, I will proceed without further elaboration. Readers seeking further details are encouraged to consult the original publication.</p>
 
-<h2 id="quick-viewer-development-tip">3. Quick Viewer Development Tip</h2>
-<h3 id="viser-viewer">3.1. Viser Viewer</h3>
+## <span id="quick-viewer-development-tip"></span>3. Quick Viewer Development Tip
+
+### <span id="viser-viewer"></span>3.1. Viser Viewer
+
 <p class="lang eng">While the code for SAX-NeRF is publicly available, it lacks an official viewer. Consequently, the basic visualization code provided is limited, necessitating the implementation of a viewer for more interactive exploration of the results.</p>
 <p class="lang eng"><em>To interactively visualize a NeRF/GS model, certain key elements are required:</em></p>
 <ol class="lang eng">
@@ -278,11 +278,13 @@ if __name__ == "__main__":
 </details>
 <br/>
 
-<p><strong>Captured Results:</strong></p>
+**Captured Results:**
+
 <img class="post-media" src="./250106_tomography/assets/viewer_capture.gif" alt="viewer capture" />
 <p class="lang eng">As demonstrated, a viewer for a new NeRF / GS model can be quickly created with minimal coding. I initially considered uploading this to GitHub, but due to its simplicity, I will only include it in this blog post.</p>
 
-<h3 id="marching-cube-extraction">3.2. Marching Cube Extraction</h3>
+### <span id="marching-cube-extraction"></span>3.2. Marching Cube Extraction
+
 <p class="lang eng">Another method for interactively examining a NeRF / GS scene is by using scalar field to polygonal mesh conversion algorithms, such as marching cubes.</p>
 <img class="post-media" src="./250106_tomography/assets/image10.png" style="width: 70%;" alt="Marching Cubes" />
 <p class="lang eng">However, it is important to note that standard NeRF or GS models, which are not specifically designed for surface reconstruction like 2D GS or SDF, may not align perfectly with conventional mesh conversion algorithms. The density field obtained from NeRF or GS represents a volumetric density rather than a clear surface. Therefore, the extracted mesh might appear noisy or require careful tuning of the isosurface value.</p>
@@ -333,6 +335,8 @@ mesh.export("output.obj")
 </details>
 <br/>
 <img class="post-media" src="./250106_tomography/assets/foot_gif.gif" alt="foot capture" />
-<h2 id="concluding-remarks">Concluding Remarks</h2>
+
+## <span id="concluding-remarks"></span>Concluding Remarks
+
 <p class="lang eng">Through the exploration of SAX-NeRF, we've seen how the foundational principles of Neural Rendering can be adapted beyond the realm of traditional photography. By understanding the underlying physical phenomena, such as the Beer-Lambert Law in tomography, we can modify the rendering equation and model architecture to suit different imaging modalities. This adaptation underscores the abstract nature of Neural Rendering and its potential applicability across various scientific domains.</p>
 <p class="lang eng">Ultimately, the ability to apply Neural Rendering to diverse data types and the ease with which we can now visualize these results opens up exciting possibilities for future research and applications across various fields.</p>

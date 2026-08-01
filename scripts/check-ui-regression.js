@@ -105,10 +105,21 @@ function createCases(siteData) {
             widths: [390, 1440]
         },
         {
-            id: 'legacy-toc-post',
+            id: 'nested-toc-fourier',
             path: getPostRoute(requirePost(siteData, '211128_fourier'), 'eng'),
-            type: 'legacy-toc-post',
+            type: 'nested-toc-post',
             coreSelectors: ['#mainNav', '.masthead', '.main-content'],
+            tocParent: '2. Background',
+            tocTarget: '2.1. Kernel Trick',
+            widths: [1440]
+        },
+        {
+            id: 'nested-toc-nerf-game',
+            path: getPostRoute(requirePost(siteData, '231130_nerf_in_game'), 'eng'),
+            type: 'nested-toc-post',
+            coreSelectors: ['#mainNav', '.masthead', '.main-content'],
+            tocParent: '2. NeRF & Illumination Control',
+            tocTarget: "NeRF's Inability to Separate Lighting Effects",
             widths: [1440]
         },
         {
@@ -404,7 +415,7 @@ async function assertSiteIcons(page, testCase) {
             post: '[data-theme-toggle] .site-icon',
             'disclosure-post': '[data-theme-toggle] .site-icon',
             'lightbox-post': '[data-theme-toggle] .site-icon',
-            'legacy-toc-post': '[data-theme-toggle] .site-icon',
+            'nested-toc-post': '[data-theme-toggle] .site-icon',
             viewer: '#navmenu .navicon',
             editor: '.toolbar-actions .site-icon'
         }[pageType];
@@ -630,33 +641,38 @@ async function assertPostInteractions(page, testCase, width, options) {
     }
 }
 
-async function assertLegacyToc(page) {
-    const initialState = await page.evaluate(() => {
-        const childLink = document.querySelector('.toc a[href="#sec2.1"]');
+async function assertNestedToc(page, testCase) {
+    const initialState = await page.evaluate(({ parentText, targetText }) => {
+        const links = Array.from(document.querySelectorAll('.toc a'));
+        const childLink = links.find((link) => link.textContent.trim() === targetText);
         const childItem = childLink?.closest('li');
         const parentItem = childItem?.parentElement?.closest('li');
         return {
             hasParent: Boolean(parentItem),
             nestedDirectly: childItem?.parentElement?.parentElement === parentItem,
-            orphanLists: document.querySelectorAll('.toc > ul > ul, .toc > ol > ul').length
+            parentMatches: parentItem?.querySelector(':scope > a')?.textContent.trim() === parentText,
+            targetId: childLink?.getAttribute('href')?.slice(1) || ''
         };
-    });
-    assert(initialState.hasParent && initialState.nestedDirectly, 'Legacy TOC subitems were not attached to their parent item.');
-    assert(initialState.orphanLists === 0, 'Legacy TOC still contains orphaned nested lists.');
+    }, { parentText: testCase.tocParent, targetText: testCase.tocTarget });
+    assert(
+        initialState.hasParent && initialState.nestedDirectly && initialState.parentMatches,
+        `${testCase.id} TOC subitem is not attached to its expected parent.`
+    );
+    assert(initialState.targetId, `${testCase.id} TOC target is missing.`);
 
-    await page.evaluate(() => {
-        const target = document.getElementById('sec2.1');
+    await page.evaluate((targetId) => {
+        const target = document.getElementById(targetId);
         if (target) {
             window.scrollTo(0, target.getBoundingClientRect().top + window.scrollY - 180);
         }
-    });
-    await page.waitForFunction(() => {
-        const childItem = document.querySelector('.toc a[href="#sec2.1"]')?.closest('li');
+    }, initialState.targetId);
+    await page.waitForFunction((targetId) => {
+        const childItem = document.querySelector(`.toc a[href="#${CSS.escape(targetId)}"]`)?.closest('li');
         const parentItem = childItem?.parentElement?.closest('li');
         return childItem?.classList.contains('is-current')
             && parentItem?.classList.contains('is-expanded')
             && childItem.parentElement.getBoundingClientRect().height > 0;
-    });
+    }, initialState.targetId);
 }
 
 async function assertDisclosure(page, testCase, width, options) {
@@ -814,8 +830,8 @@ async function runInteractions(page, testCase, width, options) {
     if (testCase.type === 'lightbox-post') {
         await assertLightbox(page, testCase, width, options);
     }
-    if (testCase.type === 'legacy-toc-post') {
-        await assertLegacyToc(page);
+    if (testCase.type === 'nested-toc-post') {
+        await assertNestedToc(page, testCase);
     }
     if (testCase.type === 'editor') {
         await assertEditorIcons(page, width);
