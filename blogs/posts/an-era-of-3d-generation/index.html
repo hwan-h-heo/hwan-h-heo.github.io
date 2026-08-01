@@ -29,12 +29,14 @@
     <title>An Era of 3D Generation | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
-    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
-    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/blogs/css/blog.css?v=c4319681dd" rel="stylesheet" />
+    <link href="/blogs/css/sidebar.css?v=975e92b635" rel="stylesheet" />
+    <link href="/css/sidebar-nav.css?v=17f2552cf5" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5e2acfdea5" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=efef9e6e9b" rel="stylesheet" />
     <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
     <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
+    <script src="/js/sidebar-controller.js?v=b1204606e7"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -56,170 +58,129 @@
             })();
         </script>
 </head>
-<body>
-    <nav class="post-site-nav" id="mainNav">
-        <div class="blog-shell post-nav-shell">
-            <div class="post-nav-brand-group">
-                <a class="post-nav-brand" href="/blogs/">Hwan's Blog</a>
-                <a class="post-nav-portfolio-link" href="/">
-                    Portfolio <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
-                </a>
-            </div>
-            <button class="post-nav-toggle" type="button" data-nav-toggle data-open-label="Open menu" data-close-label="Close menu" aria-controls="postNavPanel" aria-expanded="false" aria-label="Open menu">
-                <span class="post-nav-menu-icon" aria-hidden="true"></span>
-            </button>
-            <div class="post-nav-panel" id="postNavPanel">
-                <ul class="post-nav-actions">
-                    <li class="post-nav-action post-nav-search-item">
-                        <form id="post-nav-search-form" class="post-nav-search" role="search">
-                            <label class="visually-hidden" for="post-nav-search-input">Search blog posts</label>
-                            <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
-                            <button type="submit" aria-label="Search">
-                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
-                            </button>
-                        </form>
-                    </li>
-                    <li class="post-nav-action post-nav-theme-item"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><svg class="site-icon theme-toggle-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg></button></li>
-                    <li class="post-nav-action post-nav-language-item"><a href="/blogs/posts/an-era-of-3d-generation-kor/" class="post-nav-language-link" data-language-target="kor" aria-label="한국어로 전환" title="한국어로 전환">가</a></li>
-                </ul>
-            </div>
+<body class="blog-post-page">
+    <header id="header" class="header blog-sidebar dark-background">
+        <div class="profile-img">
+            <img src="/assets/icon.webp" alt="Portrait illustration of Hwan Heo">
         </div>
-    </nav>
 
-    <header class="masthead" style="background-image: url('/blogs/posts/250302_3d_latent_diffusion/assets/teaser-poster.jpg')">
-        <div class="blog-shell post-hero-shell">
-            <div class="post-reading-row">
-                <div class="post-reading-column">
-                    <div class="post-heading">
-                        <br/>
-                        <h1>An Era of 3D Generation</h1>
-                        <span class="meta">
-                            Posted on <time datetime="2025-03-02">March 2, 2025</time>
-                            <span style="margin: 0 8px;">•</span>
-                            <svg class="site-icon post-reading-time-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-clock"></use></svg>22 min read
-                        </span>
-                        <div class="post-tags"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
-                        <hr/>
-                    </div>
+        <a href="/blogs/" class="logo">
+            <span class="sitename">Hwan's Blog</span>
+        </a>
+
+        <div class="social-links">
+            <a href="https://github.com/hwanhuh" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
+            <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
+            <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
+            <a href="mailto:hwan.heo.ai@gmail.com" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
+        </div>
+
+        <nav id="navmenu" class="navmenu" aria-label="Blog navigation">
+            <ul>
+                <li>
+                    <a href="/blogs/" class="active" aria-current="location">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house"></use></svg>
+                        <span>Blog Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/" class="sidebar-external-link">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-briefcase"></use></svg>
+                        <span>Portfolio</span>
+                        <svg class="site-icon sidebar-external-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-labs">
+            <details class="sidebar-labs-menu">
+                <summary>
+                    <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-tools"></use></svg>
+                    <span>Labs</span>
+                    <svg class="site-icon sidebar-labs-chevron" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
+                </summary>
+                <div class="sidebar-labs-panel">
+                    <a href="/blogs/3DViewer/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg><span>3D Viewer</span></a>
+                    <a href="/blogs/editor/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg><span>Editor</span></a>
                 </div>
-            </div>
+            </details>
         </div>
     </header>
 
-    <article class="post-article">
-        <div class="blog-shell">
-            <div class="post-reading-row">
-                <div class="post-reading-column">
-                    
-                    <nav class="breadcrumbs" aria-label="Breadcrumb">
-                        <ol>
-                            <li><a href="/">Portfolio</a></li>
-                            <li><a href="/blogs/">Blog</a></li>
-                            <li><a href="/blogs/series/3d-generation/">3D AI</a></li>
-                            <li aria-current="page">An Era of 3D Generation</li>
-                        </ol>
-                    </nav>
-    
-                    <div id="series-container">
-            <details class="series-card">
-                <summary class="series-summary">
-                    <span class="series-icon" aria-hidden="true"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-collection"></use></svg></span>
-                    <span class="series-summary-copy">
-                        <span class="series-kicker">Series</span>
-                        <strong>3D AI</strong>
-                    </span>
-                    <span class="series-meta">6 / 8</span>
-                    <span class="series-toggle">
-                        <span>8 posts</span>
-                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
-                    </span>
-                </summary>
-                <div class="series-body">
-                    <ol class="series-list">
-                <li class="series-post">
-                    <a href="/blogs/posts/optimizing-sparse-3d-generation-inference/">
-                        <span class="series-post-index">01</span>
-                        <span class="series-post-copy">
-                            <strong>What the Compiler Missed in Sparse 3D Inference</strong>
-                            <span>2026.07.27</span>
-                        </span>
-                    </a>
-                </li>
-        
-                <li class="series-post">
-                    <a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/">
-                        <span class="series-post-index">02</span>
-                        <span class="series-post-copy">
-                            <strong>VARCO 3D: A Year in Review — 2025 Retrospective</strong>
-                            <span>2026.01.15</span>
-                        </span>
-                    </a>
-                </li>
-        
-                <li class="series-post">
-                    <a href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/">
-                        <span class="series-post-index">03</span>
-                        <span class="series-post-copy">
-                            <strong>From Flow Matching to Optimal Transport: A Physics-based View of Generative Models</strong>
-                            <span>2025.08.10</span>
-                        </span>
-                    </a>
-                </li>
-        
-                <li class="series-post">
-                    <a href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/">
-                        <span class="series-post-index">04</span>
-                        <span class="series-post-copy">
-                            <strong>Building Large 3D Generative Model (2) VAE and DiT Deep Dive</strong>
-                            <span>2025.07.10</span>
-                        </span>
-                    </a>
-                </li>
-        
-                <li class="series-post">
-                    <a href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/">
-                        <span class="series-post-index">05</span>
-                        <span class="series-post-copy">
-                            <strong>Building Large 3D Generative Model (1) Data pre-processing</strong>
-                            <span>2025.07.02</span>
-                        </span>
-                    </a>
-                </li>
-        
-                    <li class="series-post is-current" aria-current="page">
-                        <span class="series-post-index">06</span>
-                        <span class="series-post-copy">
-                            <strong>An Era of 3D Generation</strong>
-                            <span>2025.03.02</span>
-                        </span>
-                    </li>
-            
-                <li class="series-post">
-                    <a href="/blogs/posts/is-diffusions-estimated-depth-really-good/">
-                        <span class="series-post-index">07</span>
-                        <span class="series-post-copy">
-                            <strong>Is Diffusion&#39;s Estimated Depth Really Good?</strong>
-                            <span>2024.04.26</span>
-                        </span>
-                    </a>
-                </li>
-        
-                <li class="series-post">
-                    <a href="/blogs/posts/can-sora-understand-3d/">
-                        <span class="series-post-index">08</span>
-                        <span class="series-post-copy">
-                            <strong>Can Sora Understand 3D?</strong>
-                            <span>2024.02.26</span>
-                        </span>
-                    </a>
-                </li>
-        </ol>
+    <main class="main blog-post-main">
+        <nav class="post-site-nav" id="mainNav" aria-label="Post utilities">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-utility-column">
+                        <a class="post-nav-home" href="/blogs/" aria-label="Back to Blog Home">
+                            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg>
+                            <span>Blog Home</span>
+                        </a>
+                        <ul class="post-nav-actions">
+                            <li class="post-nav-action post-nav-search-item">
+                                <form id="post-nav-search-form" class="post-nav-search" role="search" data-collapsible-search>
+                                    <label class="visually-hidden" for="post-nav-search-input">Search blog posts</label>
+                                    <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
+                                    <button type="submit" aria-label="Search" aria-controls="post-nav-search-input" aria-expanded="false">
+                                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
+                                    </button>
+                                </form>
+                            </li>
+                            <li class="post-nav-action"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><svg class="site-icon theme-toggle-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg></button></li>
+                            <li class="post-nav-action"><a href="/blogs/posts/an-era-of-3d-generation-kor/" class="post-nav-language-link" data-language-target="kor" aria-label="한국어로 전환" title="한국어로 전환">가</a></li>
+                        </ul>
+                    </div>
                 </div>
-            </details>
-    </div>
+            </div>
+        </nav>
+
+        <header class="masthead post-masthead">
+            <div class="blog-shell post-hero-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-hero-column">
+                        <div class="post-heading">
+                            <div class="post-hero-series">
+                                <span class="post-hero-series-label">Series</span>
+                                <span class="post-hero-series-separator" aria-hidden="true">/</span>
+                                <a href="/blogs/series/3d-generation/">3D AI</a>
+                            </div>
+                            <h1>An Era of 3D Generation</h1>
+                        </div>
+                    </div>
                 </div>
-                <div class="post-reading-column main-content">
-                    <nav class="toc" aria-label="Table of contents"><div class="toc-title">On This Page</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Preliminary: What is Latent?" aria-label="Preliminary: What is Latent?"><span class="toc-link-text">Preliminary: What is Latent?</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="1. ShapeVAE: Representation Learning for 3D Shape" aria-label="1. ShapeVAE: Representation Learning for 3D Shape"><span class="toc-link-text">1. ShapeVAE: Representation Learning for 3D Shape</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-2" title="Challenges for ShapeVAE" aria-label="Challenges for ShapeVAE"><span class="toc-link-text">Challenges for ShapeVAE</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-3" title="2. Trellis" aria-label="2. Trellis"><span class="toc-link-text">2. Trellis</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="2.1. Structured Latent Representation" aria-label="2.1. Structured Latent Representation"><span class="toc-link-text">2.1. Structured Latent Representation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="2.2. SLAT Generation" aria-label="2.2. SLAT Generation"><span class="toc-link-text">2.2. SLAT Generation</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-6" title="3. Hunyuan3D-v2" aria-label="3. Hunyuan3D-v2"><span class="toc-link-text">3. Hunyuan3D-v2</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="3.1. Hunyuan-ShapeVAE" aria-label="3.1. Hunyuan-ShapeVAE"><span class="toc-link-text">3.1. Hunyuan-ShapeVAE</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="3.2. Hunyuan3D-DiT" aria-label="3.2. Hunyuan3D-DiT"><span class="toc-link-text">3.2. Hunyuan3D-DiT</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-9" title="3.3. Hunyuan3D-paint" aria-label="3.3. Hunyuan3D-paint"><span class="toc-link-text">3.3. Hunyuan3D-paint</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-10" title="4. Trellis vs Hunyuan?" aria-label="4. Trellis vs Hunyuan?"><span class="toc-link-text">4. Trellis vs Hunyuan?</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-11" title="Closing" aria-label="Closing"><span class="toc-link-text">Closing</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
+            </div>
+        </header>
+
+        <article class="post-article">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-hero-column post-intro-column">
+                        <div class="post-intro-layout">
+                            <div class="post-intro-copy">
+                                <p class="post-intro-deck">Tracing 3D latent diffusion from ShapeVAE to TRELLIS and Hunyuan3D, and comparing how modern systems represent and generate shape.</p>
+                                <div class="post-intro-topics" aria-label="Topics"><div class="post-tags"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div></div>
+                            </div>
+                            <aside class="post-article-info" aria-label="Article details">
+                                <ul>
+                                    <li data-post-detail="author">
+                                        <strong>Author</strong>
+                                        <span>Hwan Heo</span>
+                                    </li>
+                                    <li data-post-detail="published">
+                                        <strong>Published</strong>
+                                        <time datetime="2025-03-02">March 2, 2025</time>
+                                    </li>
+                                    <li data-post-detail="reading">
+                                        <strong>Reading</strong>
+                                        <span class="post-detail-reading">22 min read</span>
+                                    </li>
+                                </ul>
+                            </aside>
+                        </div>
+                    </div>
+                    <div class="post-reading-column main-content">
+                        <nav class="toc" aria-label="Table of contents"><div class="toc-title">On This Page</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Abstract" aria-label="Abstract"><span class="toc-link-text">Abstract</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="Preliminary: What is Latent?" aria-label="Preliminary: What is Latent?"><span class="toc-link-text">Preliminary: What is Latent?</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="1. ShapeVAE: Representation Learning for 3D Shape" aria-label="1. ShapeVAE: Representation Learning for 3D Shape"><span class="toc-link-text">1. ShapeVAE: Representation Learning for 3D Shape</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="Challenges for ShapeVAE" aria-label="Challenges for ShapeVAE"><span class="toc-link-text">Challenges for ShapeVAE</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-4" title="2. Trellis" aria-label="2. Trellis"><span class="toc-link-text">2. Trellis</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="2.1. Structured Latent Representation" aria-label="2.1. Structured Latent Representation"><span class="toc-link-text">2.1. Structured Latent Representation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="2.2. SLAT Generation" aria-label="2.2. SLAT Generation"><span class="toc-link-text">2.2. SLAT Generation</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-7" title="3. Hunyuan3D-v2" aria-label="3. Hunyuan3D-v2"><span class="toc-link-text">3. Hunyuan3D-v2</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="3.1. Hunyuan-ShapeVAE" aria-label="3.1. Hunyuan-ShapeVAE"><span class="toc-link-text">3.1. Hunyuan-ShapeVAE</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-9" title="3.2. Hunyuan3D-DiT" aria-label="3.2. Hunyuan3D-DiT"><span class="toc-link-text">3.2. Hunyuan3D-DiT</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="3.3. Hunyuan3D-paint" aria-label="3.3. Hunyuan3D-paint"><span class="toc-link-text">3.3. Hunyuan3D-paint</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-11" title="4. Trellis vs Hunyuan?" aria-label="4. Trellis vs Hunyuan?"><span class="toc-link-text">4. Trellis vs Hunyuan?</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-12" title="Closing" aria-label="Closing"><span class="toc-link-text">Closing</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
@@ -241,6 +202,7 @@
     </div>
 </div>
 
+<h2 id="toc-heading-0">Abstract</h2>
 <figure id="figure-0" >
   <video class="post-media" autoplay loop muted playsinline preload="metadata" poster="/blogs/posts/250302_3d_latent_diffusion/assets/teaser-poster.jpg" aria-label="3D latent diffusion teaser" style="width: 100%">
     <source src="/blogs/posts/250302_3d_latent_diffusion/assets/teaser.mp4" type="video/mp4">
@@ -254,7 +216,7 @@
 <p id="p-6">In recent days, beyond video, latent diffusion-based models are also proving their capabilities in the 3D domain.</p>
 <p id="p-7">This article delves into the concept of <em id="em-2"><strong id="strong-2">3D Latent Diffusion</strong></em> and analyzes its core component, <em id="em-3"><strong id="strong-3">ShapeVAE</strong></em>, examining how it overcomes the limitations of traditional Score Distillation Sampling (SDS) and NeRF-based Large Reconstruction Models (LRMs). Furthermore, we will compare and contrast the state-of-the-art 3D generation models, Trellis and Hunyuan3D, providing an in-depth exploration of their design differences, strengths, and weaknesses.</p>
 
-<h2 id="toc-heading-0"><span id="h2-1"></span>Preliminary: What is Latent?</h2>
+<h2 id="toc-heading-1"><span id="h2-1"></span>Preliminary: What is Latent?</h2>
 <table id="table-1">
 <thead>
 <tr>
@@ -295,7 +257,7 @@ $$</p>
 <p id="p-15">Shifting our perspective slightly, these basis functions (primitives) can be considered a type of <em id="em-4">'latent vector'</em> that compresses the meaning of the data distribution.  The entire collection can be viewed as a <em id="em-5">'latent vector set'</em>.</p>
 <p id="p-16">RBF networks, 3D Gaussian Splatting, etc., define their basis representations in a human-crafted manner. However, if we learn the basis functions in a learnable way for a given data distribution, this becomes <em id="em-6"><strong id="strong-4">Representation Learning</strong></em> in the context of Deep Learning.</p>
 
-<h2 id="toc-heading-1"><span id="h2-2"></span>1. ShapeVAE: Representation Learning for 3D Shape</h2>
+<h2 id="toc-heading-2"><span id="h2-2"></span>1. ShapeVAE: Representation Learning for 3D Shape</h2>
 <blockquote id="blockquote-1">
 <p id="p-17">Goal: Representation Learning for 3D Shape</p>
 </blockquote>
@@ -374,7 +336,7 @@ DETR and Perceiver are fundamentally designed for tasks like detection and class
 <p id="p-38">With a well-trained latent space derived from rich data, we can expect that, leveraging the power of Latent Diffusion Models, a generative model for 3D shapes (a 3D Latent Diffusion Model) can be trained.</p>
 <hr id="hr-3" />
 
-<h3 id="toc-heading-2"><span id="h3-1"></span>Challenges for ShapeVAE</h3>
+<h3 id="toc-heading-3"><span id="h3-1"></span>Challenges for ShapeVAE</h3>
 <p id="p-39">However, until recently, 3D generation has not shown the same remarkable results as 2D and video generation. The reasons for this slower progress include:</p>
 <ul id="ul-11">
 <li id="li-22"><strong id="strong-22">Versatility &amp; Diversity of Data</strong>: The amount of data is extremely limited compared to 2D. Objaverse, one of the larger datasets, contains around 8 million assets, and even its expanded XL version only has around 100 million, significantly less than 2D datasets (LAION-5B has 5 billion...). High-quality datasets are even more scarce.</li>
@@ -403,11 +365,11 @@ DETR and Perceiver are fundamentally designed for tasks like detection and class
 </ol>
 <p id="p-48">remained difficult to solve...</p>
 
-<h2 id="toc-heading-3"><span id="h2-3"></span>2. Trellis</h2>
+<h2 id="toc-heading-4"><span id="h2-3"></span>2. Trellis</h2>
 <p id="p-49">Paper: <a id="a-8" href="https://trellis3d.github.io/">Trellis: Structured 3D Latents for Scalable and Versatile 3D Generation</a></p>
 <p id="p-50">Trellis is a state-of-the-art 3D Latent Diffusion model announced by Microsoft in late 2024.  It significantly outperforms previous ShapeVAE-based approaches in terms of instruction following and stability, and has the advantage of generating both shape and texture end-to-end.  Let's analyze the design that enabled it to achieve state-of-the-art quality.</p>
 
-<h3 id="toc-heading-4"><span id="h3-2"></span>2.1. Structured Latent Representation</h3>
+<h3 id="toc-heading-5"><span id="h3-2"></span>2.1. Structured Latent Representation</h3>
 <p id="p-52">The authors propose a representation called <em id="em-14"><strong id="strong-27">SLAT</strong></em> (Structured Latent Representation):</p>
 <p id="p-53">
 $$ \mathbf{z} = \{(\mathbf{z}_i, \mathbf{p}_i)\}_{i=1}^{L}, \quad \mathbf{z}_i \in \mathbb{R}^{C}, \quad \mathbf{p}_i \in \{0, 1, \dots, N-1\}^3,
@@ -428,7 +390,7 @@ $$</p>
 
 <p id="p-61">The VAE structure itself is the same as the original ShapeVAE. Since the latent space is well-defined, the decoder can be changed to fine-tune the output to generate 3D Gaussian Splattings (GSs), Radiance Fields (NeRFs), or Meshes. Therefore, Trellis can predict outputs in a format-agnostic manner, including GSs, NeRFs, and Meshes. (The actual inference branch uses both GS and Mesh branches).</p>
 
-<h3 id="toc-heading-5"><span id="h3-3"></span>2.2. SLAT Generation</h3>
+<h3 id="toc-heading-6"><span id="h3-3"></span>2.2. SLAT Generation</h3>
 <blockquote id="blockquote-4">
 <p id="p-62">Q.  So, can new assets be generated by simply inputting a random sample from a Standard Gaussian Distribution in the latent space, as in ShapeVAE?</p>
 </blockquote>
@@ -474,12 +436,12 @@ $$</li>
 <p id="p-78">A drawback is that it doesn't yet completely follow instructions (input guidance) perfectly, and perhaps because the default branch of the decoder is GSs, the quality of the generated mesh isn't always excellent.</p>
 <hr id="hr-4" />
 
-<h2 id="toc-heading-6"><span id="h2-4"></span>3. Hunyuan3D-v2</h2>
+<h2 id="toc-heading-7"><span id="h2-4"></span>3. Hunyuan3D-v2</h2>
 <p id="p-79">Paper: <a id="a-13" href="https://3d-models.hunyuan.tencent.com/">Hunyuan3D 2.0: Scaling Diffusion Models for High Resolution Textured 3D Assets Generation</a></p>
 <p id="p-80">After the emergence of Trellis, it seemed that Trellis would firmly hold the throne of SOTA 3D Generation for some time. However, Hunyuan3D-v2 from China has appeared, surpassing Trellis in terms of Mesh Quality and Instruction Following.</p>
 <p id="p-81">Unlike Trellis, Hunyuan3Dv2 is not end-to-end but follows a two-stage approach like Rodin or CaPa: 1) Mesh Generation 2) Texture Generation. The <em id="em-24"><strong id="strong-38">Mesh Generation</strong></em> quality is truly <em id="em-25"><strong id="strong-39">SUPERIOR</strong></em>. Let's analyze it in detail.</p>
 
-<h3 id="toc-heading-7"><span id="h3-4"></span>3.1. Hunyuan-ShapeVAE</h3>
+<h3 id="toc-heading-8"><span id="h3-4"></span>3.1. Hunyuan-ShapeVAE</h3>
 <p id="p-82">The design of Hunyuan's ShapeVAE is not very different from vanilla ShapeVAE, but there are some significant differences:</p>
 <ol id="ol-6">
 <li id="li-39"><p id="p-83"><strong id="strong-40">Point Sampling</strong>: When training ShapeVAE, point clouds are usually obtained from the ground truth mesh through uniform sampling. However, this often leads to the loss of fine details. Therefore, Hunyuan uses a point sampling strategy that focuses more on edges and corners, in addition to uniform sampling. This approach is similar to that of the recently proposed <a id="a-14" href="https://aruichen.github.io/Dora/">Dora</a>.</p>
@@ -497,7 +459,7 @@ $$</li>
 <li id="li-42">Figure: Hunyuan-ShapeVAE</li>
 </ul>
 
-<h3 id="toc-heading-8"><span id="h3-5"></span>3.2. Hunyuan3D-DiT</h3>
+<h3 id="toc-heading-9"><span id="h3-5"></span>3.2. Hunyuan3D-DiT</h3>
 <p id="p-90">The core of Hunyuan3D-DiT is the novel architecture design of the 3D generation stage.</p>
 <p id="p-91">Previous studies, including Trellis, used Transformers not significantly different from the general DiT structure. However, Hunyuan uses a <em id="em-26"><strong id="strong-43">'double- and single-stream' design</strong></em> like Flux.</p>
 <p id="p-92">Although there is no official technical report for Flux, according to the released development version code, it processes information from the text ↔︎ image modalities in a <strong id="strong-44">double-stream</strong> manner. This is considered the main reason why Flux achieves better instruction-following performance compared to SDXL.</p>
@@ -558,7 +520,7 @@ $$ \mathcal{L} = \mathbb{E}_{t, x_0, x_1} \left[ || u_\theta(x_t, c, t) - u_t ||
 $$</p>
 <p id="p-99">Among the mentioned training details, it is noteworthy that unlike ViT-based approaches that typically add positional embedding (PE) to each patch, Hunyuan removed PE. This is to prevent specific latents from being assigned to 'fixed locations' during shape generation.</p>
 
-<h3 id="toc-heading-9"><span id="h3-6"></span>3.3. Hunyuan3D-paint</h3>
+<h3 id="toc-heading-10"><span id="h3-6"></span>3.3. Hunyuan3D-paint</h3>
 <p id="p-100">Since Hunyuan uses a 2-stage approach like CLAY/CaPa, it uses <em id="em-29"><strong id="strong-55">Geometry-guided Multi-View Generation</strong></em> for texture synthesis. However, it is not simply a combination of MVDream/ImageDream series models + MV-Depth/Normal ControlNet. Instead, it incorporates several novel strategies to improve quality.</p>
 <p id="p-101">First, Hunyuan starts by pointing out the problems with existing methods. MVDream and ImageDream try to achieve <em id="em-30">Multi-View Synchronization in the generation branch using 'noisy features'</em> while tuning the Stable Diffusion model for Multi-View. This can lead to the <em id="em-31"><strong id="strong-56">loss of original details</strong></em> in the reference image. Indeed, looking at the MV output of ImageDream or Unique3D, even the front view often shows degraded quality compared to the input image.</p>
 <table id="table-2">
@@ -648,7 +610,7 @@ $$</p>
 </tbody>
 </table>
 
-<h2 id="toc-heading-10"><span id="h2-6"></span>4. Trellis vs Hunyuan?</h2>
+<h2 id="toc-heading-11"><span id="h2-6"></span>4. Trellis vs Hunyuan?</h2>
 <table id="table-13"  class="table ">
 <thead>
 <tr>
@@ -703,14 +665,26 @@ $$</p>
 </figure>
 
 
-<h2 id="toc-heading-11"><span id="h2-5"></span>Closing</h2>
+<h2 id="toc-heading-12"><span id="h2-5"></span>Closing</h2>
 <p id="p-122">Thus far, I have provided a detailed analysis tracing the evolution of state-of-the-art 3D Latent Diffusion, from the fundamental concepts of ShapeVAE to Trellis and Hunyuan3D.</p>
 <p id="p-123">While the open-source community did not achieve remarkable progress in the 3D field for some time after the emergence of CLAY, recent studies have showcased innovative designs and reached state-of-the-art quality, further fueling anticipation for generative models in the 3D domain.</p>
 <p id="p-124">Personally, Hunyuan's application of proven designs from Flux, MV-Adapter, and other works to the 3D generation scheme is particularly impressive. It reinforces the notion that to conduct impactful research, one must remain attentive to research trends in other fields.</p>
 <p id="p-125">Finally, recent research, led by MeshAnything, is attracting attention by focusing on the auto-regressive generation of mesh faces to create what are termed "Artistic-Created Meshes" (these studies also utilize the ShapeVAE latent space). However, due to its auto-regressive nature, this approach is time-consuming, and the quality is not yet satisfactory; therefore, it seems prudent to observe its development for the time being.</p>
-                </div>
-                <div class="post-reading-column">
-                    
+                    </div>
+                    <div class="post-reading-column post-end-matter">
+                        <section class="post-author-note" aria-labelledby="post-author-name">
+                            <img class="post-author-portrait" src="/assets/profile4-author.png" alt="Hwan Heo" loading="lazy">
+                            <div class="post-author-copy">
+                                <span class="post-author-kicker">Written by</span>
+                                <h2 id="post-author-name">Hwan Heo</h2>
+                                <p>Lead 3D AI Research Engineer building production systems across large-scale 3D generation, CUDA inference, and graphics pipelines.</p>
+                                <div class="post-author-links" aria-label="Author links">
+                                    <a href="mailto:hwan.heo.ai@gmail.com">Email</a>
+                                    <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                                </div>
+                            </div>
+                        </section>
+                        
                     <section class="related-posts" aria-labelledby="related-posts-heading">
                         <h2 id="related-posts-heading">Related Posts</h2>
                         <div class="related-post-grid">
@@ -732,7 +706,7 @@ $$</p>
                         </div>
                     </section>
     
-                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
+                        <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
                 <a class="post-nav-card is-older" href="/blogs/posts/is-diffusions-estimated-depth-really-good/" aria-label="Previous Post: Is Diffusion&#39;s Estimated Depth Really Good?">
                     <span class="post-nav-kicker">
                         <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
@@ -747,20 +721,25 @@ $$</p>
                     <strong>Building Large 3D Generative Model (1) Data pre-processing</strong>
                 </a>
     </nav></div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </article>
+        </article>
 
-    <footer class="blog-post-footer">
-        <div class="blog-shell">
-            <div class="post-reading-row">
-                <div class="post-reading-column">
-                    <div class="blog-footer-note">Copyright © Hwan Heo</div>
+        <button id="scroll-top" class="scroll-top button_top post-scroll-top" type="button" aria-label="Back to top">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up"></use></svg>
+        </button>
+
+        <footer class="blog-post-footer">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column">
+                        <div class="blog-footer-note">Copyright © Hwan Heo</div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        </footer>
+    </main>
 
     <script>
         window.siteData = {
@@ -818,8 +797,8 @@ $$</p>
       "id": "250823_sdf",
       "title_eng": "SDF and Eikonal Equation",
       "title_kor": "SDF 와 Eikonal Equation 의 관계는?",
-      "subtitle_eng": "Why signed distance field induces eikonal equation",
-      "subtitle_kor": "Eikonal equation 의 해가 왜 signed distance field 인지 알아보자",
+      "subtitle_eng": "A rigorous derivation of why a signed distance field satisfies the Eikonal equation, from its geometric definition to gradient bounds.",
+      "subtitle_kor": "Signed distance field의 기하학적 정의에서 출발해, gradient의 크기가 왜 Eikonal equation을 만족하는지 엄밀하게 유도한다.",
       "description_eng": "Why signed distance field induces eikonal equation",
       "description_kor": "Eikonal equation 의 해가 왜 signed distance field 인지 알아보자",
       "tags": [
@@ -842,7 +821,7 @@ $$</p>
       "title_eng": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
       "title_kor": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
       "subtitle_eng": "Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow",
-      "subtitle_kor": "Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구",
+      "subtitle_kor": "Rectified Flow의 생성 경로가 왜 직선으로 수렴하는지, 물리학과 기하학, optimal transport의 관점에서 살펴본다.",
       "description_eng": "Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow",
       "description_kor": "Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구",
       "tags": [
@@ -865,8 +844,8 @@ $$</p>
       "id": "250809_gwn",
       "title_eng": "Generalized Winding Number",
       "title_kor": "Generalized Winding Number",
-      "subtitle_eng": "How to make a robust SDF using GWN from Mesh",
-      "subtitle_kor": "Mesh 에서 GWN 을 이용하여 견고한 SDF 를 계산하는 방법",
+      "subtitle_eng": "How Generalized Winding Numbers turn imperfect meshes into robust inside–outside tests for signed distance field construction.",
+      "subtitle_kor": "불완전하거나 열린 mesh에서도 Generalized Winding Number로 inside/outside를 판별하고 견고한 SDF를 계산하는 방법을 살펴본다.",
       "description_eng": "How to make a robust SDF using GWN from Mesh",
       "description_kor": "Mesh 에서 GWN 을 이용하여 견고한 SDF 를 계산하는 방법",
       "tags": [
@@ -888,8 +867,8 @@ $$</p>
       "id": "250710_building_large_3d_2",
       "title_eng": "Building Large 3D Generative Model (2) VAE and DiT Deep Dive",
       "title_kor": "Large 3D Generative Model 구축하기 (2) VAE and DiT 분석",
-      "subtitle_eng": "VAE and DiT Architecture for Vecset vs. Sparse-Voxel",
-      "subtitle_kor": "VAE and DiT 구조 분석 for Vecset vs. Sparse-Voxel",
+      "subtitle_eng": "Comparing vecset and sparse-voxel VAE–DiT architectures, from 3D representation and compression to shape-generation design.",
+      "subtitle_kor": "Vecset과 sparse voxel이 3D shape을 표현하는 방식부터 VAE와 DiT 구조, 생성 모델 설계의 차이까지 비교한다.",
       "description_eng": "VAE and DiT Architecture for Vecset vs. Sparse-Voxel",
       "description_kor": "VAE and DiT 구조 분석 for Vecset vs. Sparse-Voxel",
       "tags": [
@@ -912,8 +891,8 @@ $$</p>
       "id": "250702_building_large_3d_1",
       "title_eng": "Building Large 3D Generative Model (1) Data pre-processing",
       "title_kor": "Large 3D Generative Model 구축하기 (1) 데이터 전처리",
-      "subtitle_eng": "Watertight Mesh Conversion and Salient Edge Sampling",
-      "subtitle_kor": "Watertight Mesh 변환과 Salient Edge Sampling",
+      "subtitle_eng": "Preparing training-ready 3D data through watertight mesh conversion, surface sampling, and salient-edge-aware preprocessing.",
+      "subtitle_kor": "대규모 3D 생성 모델의 학습 데이터를 위해 watertight mesh 변환, surface sampling, salient edge 추출 과정을 정리한다.",
       "description_eng": "Watertight Mesh Conversion and Salient Edge Sampling",
       "description_kor": "Watertight Mesh 변환과 Salient Edge Sampling",
       "tags": [
@@ -936,8 +915,8 @@ $$</p>
       "id": "250310_model_viewer",
       "title_eng": "3D Model Viewer in Web",
       "title_kor": "커스텀 3D 웹뷰어 만들기",
-      "subtitle_eng": "Custom Threejs 3D Model Viewer",
-      "subtitle_kor": "커스텀 Three.js 3D 모델 뷰어",
+      "subtitle_eng": "Comparing Google model-viewer with a custom Three.js pipeline for embedding, controlling, and presenting 3D assets on the web.",
+      "subtitle_kor": "Google model-viewer와 직접 만든 Three.js viewer를 비교하며, 웹에서 3D asset을 안정적으로 보여주는 방법을 정리한다.",
       "description_eng": "Custom Threejs 3D Model Viewer",
       "description_kor": "커스텀 Three.js 3D 모델 뷰어",
       "tags": [
@@ -960,8 +939,8 @@ $$</p>
       "id": "250302_3d_latent_diffusion",
       "title_eng": "An Era of 3D Generation",
       "title_kor": "3D 생성 모델의 시대",
-      "subtitle_eng": "From ShapeVAE to Trellis and Hunyuan3D",
-      "subtitle_kor": "ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것",
+      "subtitle_eng": "Tracing 3D latent diffusion from ShapeVAE to TRELLIS and Hunyuan3D, and comparing how modern systems represent and generate shape.",
+      "subtitle_kor": "ShapeVAE에서 TRELLIS와 Hunyuan3D까지, 3D latent diffusion이 shape을 표현하고 생성하는 방식을 비교한다.",
       "description_eng": "From ShapeVAE to Trellis and Hunyuan3D",
       "description_kor": "ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것",
       "tags": [
@@ -984,8 +963,8 @@ $$</p>
       "id": "250106_tomography",
       "title_eng": "Neural Rendering Beyond Photography",
       "title_kor": "X-Ray 와 NeRF",
-      "subtitle_eng": "NeRF for Tomography & Tip for NeRF Viewer",
-      "subtitle_kor": "의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁",
+      "subtitle_eng": "Applying NeRF and Gaussian Splatting beyond photography to X-ray tomography, plus a lightweight viewer workflow built with Viser.",
+      "subtitle_kor": "NeRF와 Gaussian Splatting을 X-ray tomography에 적용하는 원리를 살펴보고, Viser 기반 viewer 제작 팁까지 정리한다.",
       "description_eng": "NeRF for Tomography & Tip for NeRF Viewer",
       "description_kor": "의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁",
       "tags": [
@@ -1008,8 +987,8 @@ $$</p>
       "id": "240917_3djs",
       "title_eng": "Add Gaussian Splatting to Your Website",
       "title_kor": "웹사이트에 3D GS 삽입하기",
-      "subtitle_eng": "Tutorial for GS Scene w/ Three-js",
-      "subtitle_kor": "Three-js 이용한 custom GS scene 웹뷰어 tutorial",
+      "subtitle_eng": "A practical Three.js guide to embedding an interactive Gaussian Splatting scene in a website, with no web-graphics background required.",
+      "subtitle_kor": "Three.js를 이용해 웹사이트에 interactive Gaussian Splatting scene을 삽입하고 제어하는 과정을 단계별로 정리한다.",
       "description_eng": "Tutorial for GS Scene w/ Three-js",
       "description_kor": "Three-js 이용한 custom GS scene 웹뷰어 tutorial",
       "tags": [
@@ -1032,8 +1011,8 @@ $$</p>
       "id": "240823_grt",
       "title_eng": "Don't Rasterize, But Ray Trace 3D Gaussian",
       "title_kor": "3D Gaussian Ray Tracing 톺아보기",
-      "subtitle_eng": "In-Depth Review of 3D Gaussian Ray Tracing by NVIDIA",
-      "subtitle_kor": "3D Gaussian Ray Tracing 분석하기",
+      "subtitle_eng": "How NVIDIA’s 3D Gaussian Ray Tracing replaces splat rasterization with differentiable ray tracing—and what that changes.",
+      "subtitle_kor": "NVIDIA의 3D Gaussian Ray Tracing이 splat rasterization을 differentiable ray tracing으로 바꾸는 방식과 장점을 분석한다.",
       "description_eng": "In-Depth Review of 3D Gaussian Ray Tracing by NVIDIA",
       "description_kor": "3D Gaussian Ray Tracing 분석하기",
       "tags": [
@@ -1079,7 +1058,7 @@ $$</p>
     {
       "id": "240721_sfm",
       "title_eng": "Radiance Fields from Deep-based Structure-from-Motion",
-      "subtitle_eng": "Comparison of VGGSfM & MAsT3R",
+      "subtitle_eng": "Comparing VGGSfM and MASt3R as learned Structure-from-Motion pipelines for camera estimation and radiance-field reconstruction.",
       "description_eng": "Comparison of VGGSfM & MAsT3R",
       "description_kor": "Comparison of VGGSfM & MAsT3R",
       "tags": [
@@ -1101,8 +1080,8 @@ $$</p>
       "id": "240602_2dgs",
       "title_eng": "Under the 3D: Geometrically Accurate 2D Gaussian Splatting",
       "title_kor": "2D Gaussian Splatting 톺아보기",
-      "subtitle_eng": "Understanding 2D GS's Algorithm",
-      "subtitle_kor": "3D GS 의 mesh recon 어려움과 이를 해결한 2D GS",
+      "subtitle_eng": "How 2D Gaussian Splatting replaces volumetric blobs with oriented disks to improve surface geometry and mesh reconstruction.",
+      "subtitle_kor": "2D Gaussian Splatting이 volumetric blob 대신 oriented disk를 사용해 surface geometry와 mesh reconstruction을 개선하는 원리를 살펴본다.",
       "description_eng": "Understanding 2D GS's Algorithm",
       "description_kor": "3D GS 의 mesh recon 어려움과 이를 해결한 2D GS",
       "tags": [
@@ -1125,7 +1104,7 @@ $$</p>
       "id": "240426_diffusion_depth",
       "title_eng": "Is Diffusion's Estimated Depth Really Good?",
       "title_kor": "Diffusion 으로 추정한 Depth 진짜 좋나요?",
-      "subtitle_eng": "Making Mesh from Estimated Depth Map by Diffusion",
+      "subtitle_eng": "Evaluating diffusion-estimated depth by turning Marigold predictions into textured meshes and inspecting their geometric consistency.",
       "subtitle_kor": "Diffusion 으로 추정한 Depth Map 을 이용해 Textured Mesh 만들어보기 (feat. Marigold)",
       "description_eng": "Making Mesh from Estimated Depth Map by Diffusion",
       "description_kor": "Diffusion 으로 추정한 Depth Map 을 이용해 Textured Mesh 만들어보기 (feat. Marigold)",
@@ -1149,7 +1128,7 @@ $$</p>
       "id": "240226_sora",
       "title_eng": "Can Sora Understand 3D?",
       "title_kor": "Sora 가 상상하는 3D World",
-      "subtitle_eng": "Radiance Fields Reconstruction from Video Generative AI",
+      "subtitle_eng": "Testing whether video generation models encode enough 3D consistency to reconstruct radiance fields from their synthesized views.",
       "subtitle_kor": "Video Generative AI 로부터 NeRF reconstruction 해보기",
       "description_eng": "Radiance Fields Reconstruction from Video Generative AI",
       "description_kor": "Video Generative AI 로부터 NeRF reconstruction 해보기",
@@ -1172,7 +1151,7 @@ $$</p>
       "id": "231130_nerf_in_game",
       "title_eng": "Can NeRF be used in Game?",
       "title_kor": "NeRF 를 게임 제작에서 이용할 수 있을까?",
-      "subtitle_eng": "Explore Limitations of NeRF",
+      "subtitle_eng": "Examining the quality, rendering, and production constraints that limit NeRF in games—and the workarounds available today.",
       "subtitle_kor": "NeRF 의 단점을 살펴보자",
       "description_eng": "Explore Limitations of NeRF",
       "description_kor": "NeRF 의 단점을 살펴보자",
@@ -1195,7 +1174,7 @@ $$</p>
       "id": "230202_ngp",
       "title_eng": "Instant-NGP Review & Re-Implementation",
       "title_kor": "Instant-NGP 리뷰 및 재구현",
-      "subtitle_eng": "Review of Instant-NGP and PyTorch Re-Implementation",
+      "subtitle_eng": "Reviewing Instant-NGP’s multi-resolution hash encoding and rebuilding its NeRF pipeline step by step in PyTorch.",
       "subtitle_kor": "Review of Instant-NGP and PyTorch Re-Implementation",
       "description_eng": "Review of Instant-NGP and PyTorch Re-Implementation",
       "description_kor": "Review of Instant-NGP and PyTorch Re-Implementation",
@@ -1242,7 +1221,7 @@ $$</p>
       "title_eng": "Change of Basis",
       "title_kor": "Change of Basis",
       "subtitle_eng": "Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)",
-      "subtitle_kor": "대각화와 고윳값, 특이값 분해, Principal Component Analysis (PCA)",
+      "subtitle_kor": "대각화와 고윳값, SVD와 PCA를 통해 좌표계 변환이 복잡한 선형대수 문제를 어떻게 단순화하는지 살펴본다.",
       "description_eng": "Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)",
       "description_kor": "대각화와 고윳값, 특이값 분해, Principal Component Analysis (PCA)",
       "tags": [
@@ -1264,8 +1243,8 @@ $$</p>
       "id": "210909_lin_alg_1",
       "title_eng": "Linear System",
       "title_kor": "Linear System",
-      "subtitle_eng": "Linear System, Linear Transformation, and its Intuitions",
-      "subtitle_kor": "선형시스템과 선형변환, 이에 대한 직관들",
+      "subtitle_eng": "Building intuition for linear systems and transformations through matrices, basis vectors, and geometric mappings.",
+      "subtitle_kor": "행렬과 기저벡터의 관점에서 선형시스템과 선형변환이 공간을 어떻게 바꾸는지 직관적으로 살펴본다.",
       "description_eng": "Linear System, Linear Transformation, and its Intuitions",
       "description_kor": "선형시스템과 선형변환, 이에 대한 직관들",
       "tags": [
@@ -1287,7 +1266,7 @@ $$</p>
       "id": "210602_cv4",
       "title_eng": "3D Stereo Vision and Epipolar Geometry",
       "title_kor": "3D Stereo Vision and Epipolar Geometry",
-      "subtitle_eng": "Camera Projection, Stereo, and Epipolar Geometry",
+      "subtitle_eng": "From camera projection to stereo correspondence, deriving the epipolar geometry used to recover 3D structure from two views.",
       "subtitle_kor": "Camera Projection, Stereo, and Epipolar Geometry",
       "description_eng": "Camera Projection, Stereo, and Epipolar Geometry",
       "description_kor": "Camera Projection, Stereo, and Epipolar Geometry",
@@ -1309,7 +1288,7 @@ $$</p>
       "id": "210502_cv3",
       "title_eng": "Homography and Image Alignment",
       "title_kor": "Homography and Image Alignment",
-      "subtitle_eng": "Image Transformation, Homography, and Correspondence Matching",
+      "subtitle_eng": "How image transformations, homographies, feature correspondences, and alignment connect in practical computer vision pipelines.",
       "subtitle_kor": "Image Transformation, Homography, and Correspondence Matching",
       "description_eng": "Image Transformation, Homography, and Correspondence Matching",
       "description_kor": "Image Transformation, Homography, and Correspondence Matching",
@@ -1331,7 +1310,7 @@ $$</p>
       "id": "210402_cv2",
       "title_eng": "Feature Extraction and Detection",
       "title_kor": "Feature Extraction and Detection",
-      "subtitle_eng": "Image Gradient, Sobel Filter, LoG, and Detection",
+      "subtitle_eng": "A practical tour of image gradients, Sobel and LoG filters, and the feature detection principles built on top of them.",
       "subtitle_kor": "Image Gradient, Sobel Filter, LoG, and Detection",
       "description_eng": "Image Gradient, Sobel Filter, LoG, and Detection",
       "description_kor": "Image Gradient, Sobel Filter, LoG, and Detection",
@@ -1353,7 +1332,7 @@ $$</p>
       "id": "210302_cv1",
       "title_eng": "Image Filter and Morphology",
       "title_kor": "Image Filter and Morphology",
-      "subtitle_eng": "Various Image Filters and Morphology (Erosion & Dilation)",
+      "subtitle_eng": "A practical introduction to spatial image filters and morphology, including erosion, dilation, opening, and closing.",
       "subtitle_kor": "다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여",
       "description_eng": "Various Image Filters and Morphology (Erosion & Dilation)",
       "description_kor": "다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여",
@@ -1418,14 +1397,13 @@ $$</p>
     </script>
 
     <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
-    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
-    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/blog-shell.js?v=456de34605"></script>
     <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
-    <script>
-        initBlogShell({
-            formSelector: '#post-nav-search-form',
-            inputSelector: '#post-nav-search-input'
-        });
-    </script>
+        <script>
+            initBlogShell({
+                formSelector: '#post-nav-search-form',
+                inputSelector: '#post-nav-search-input'
+            });
+        </script>
 </body>
 </html>

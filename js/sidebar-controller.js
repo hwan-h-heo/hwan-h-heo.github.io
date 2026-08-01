@@ -4,6 +4,8 @@
     const STORAGE_KEY = 'site-sidebar-collapsed';
     const CONTENT_FADE_DURATION = 100;
     const SIDEBAR_TRANSITION_DURATION = 480;
+    const MOBILE_SCROLL_THRESHOLD = 8;
+    const MOBILE_SCROLL_TOP_ZONE = 64;
 
     function createIconButton(className, iconName, label, controls) {
         const button = document.createElement('button');
@@ -54,6 +56,9 @@
         const documentRoot = document.documentElement;
         let collapseChangeTimer;
         let collapseRevealTimer;
+        let mobileScrollFrame;
+        let mobileScrollReferenceY = Math.max(0, window.scrollY);
+        const collapsedLabsMenu = header.querySelector('.sidebar-labs-menu');
 
         const mobileToggle = createIconButton(
             'sidebar-mobile-toggle',
@@ -82,6 +87,16 @@
 
         function isCollapsed() {
             return documentRoot.classList.contains('sidebar-collapsed');
+        }
+
+        function closeCollapsedLabsMenu(restoreFocus = false) {
+            if (!collapsedLabsMenu?.open) {
+                return;
+            }
+            collapsedLabsMenu.open = false;
+            if (restoreFocus) {
+                collapsedLabsMenu.querySelector('summary')?.focus();
+            }
         }
 
         function hideCollapsedTooltip(target) {
@@ -166,6 +181,7 @@
 
         function applyCollapsed(collapsed) {
             hideCollapsedTooltip();
+            closeCollapsedLabsMenu();
             documentRoot.classList.toggle('sidebar-collapsed', collapsed);
             updateCollapseButton(collapsed);
 
@@ -226,6 +242,9 @@
             hideCollapsedTooltip();
             header.classList.toggle('header-show', open);
             documentRoot.classList.toggle('sidebar-mobile-open', open);
+            if (open) {
+                mobileToggle.classList.remove('is-scroll-hidden');
+            }
             mobileToggle.setAttribute('aria-expanded', String(open));
             mobileToggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
             mobileToggle.setAttribute('title', open ? 'Close navigation' : 'Open navigation');
@@ -236,10 +255,45 @@
             if (desktopMedia.matches) {
                 setMobileOpen(false);
                 setCollapsed(readCollapsedPreference(), false);
+                mobileToggle.classList.remove('is-scroll-hidden');
             } else {
                 setMobileOpen(false);
             }
+            mobileScrollReferenceY = Math.max(0, window.scrollY);
         }
+
+        function updateMobileToggleForScroll() {
+            mobileScrollFrame = null;
+            const currentScrollY = Math.max(0, window.scrollY);
+
+            if (desktopMedia.matches || header.classList.contains('header-show')) {
+                mobileToggle.classList.remove('is-scroll-hidden');
+                mobileScrollReferenceY = currentScrollY;
+                return;
+            }
+
+            if (currentScrollY <= MOBILE_SCROLL_TOP_ZONE) {
+                mobileToggle.classList.remove('is-scroll-hidden');
+                mobileScrollReferenceY = currentScrollY;
+                return;
+            }
+
+            const scrollDelta = currentScrollY - mobileScrollReferenceY;
+            if (Math.abs(scrollDelta) < MOBILE_SCROLL_THRESHOLD) {
+                return;
+            }
+
+            mobileToggle.classList.toggle('is-scroll-hidden', scrollDelta > 0);
+            mobileScrollReferenceY = currentScrollY;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (mobileScrollFrame) {
+                return;
+            }
+
+            mobileScrollFrame = window.requestAnimationFrame(updateMobileToggleForScroll);
+        }, { passive: true });
 
         collapseToggle.addEventListener('click', () => {
             setCollapsed(!isCollapsed());
@@ -270,6 +324,10 @@
                 }
 
                 event.preventDefault();
+                if (summary.parentElement.matches('.sidebar-labs-menu')) {
+                    summary.parentElement.open = !summary.parentElement.open;
+                    return;
+                }
                 setCollapsed(false, true, () => {
                     summary.parentElement.open = true;
                     summary.focus();
@@ -278,6 +336,14 @@
         });
 
         document.addEventListener('pointerdown', (event) => {
+            if (
+                desktopMedia.matches
+                && isCollapsed()
+                && collapsedLabsMenu?.open
+                && !collapsedLabsMenu.contains(event.target)
+            ) {
+                closeCollapsedLabsMenu();
+            }
             if (
                 !desktopMedia.matches
                 && header.classList.contains('header-show')
@@ -289,6 +355,10 @@
         });
 
         document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && collapsedLabsMenu?.open) {
+                closeCollapsedLabsMenu(true);
+                return;
+            }
             if (event.key === 'Escape' && header.classList.contains('header-show')) {
                 setMobileOpen(false);
                 mobileToggle.focus();
@@ -297,6 +367,8 @@
 
         window.addEventListener('resize', () => {
             hideCollapsedTooltip();
+            closeCollapsedLabsMenu();
+            mobileScrollReferenceY = Math.max(0, window.scrollY);
         });
         header.addEventListener('scroll', () => {
             hideCollapsedTooltip();

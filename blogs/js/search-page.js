@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const searchTerm = rawSearchTerm.toLowerCase();
     const coverMedia = window.blogCoverMedia;
     let filteredPosts = [];
+    let postContentCache = {};
     let siteData;
 
     const copy = {
@@ -21,12 +22,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             prompt: 'Enter a search term to browse the archive.',
             noResults: 'No results found for',
             result: 'result',
-            resultsCount: 'results',
-            post: 'Post',
-            note: 'Note',
-            languages: 'Languages',
-            english: 'English',
-            korean: 'Korean'
+            resultsCount: 'results'
         },
         kor: {
             kicker: '검색',
@@ -38,12 +34,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             prompt: '검색어를 입력해 글을 찾아보세요.',
             noResults: '검색 결과가 없습니다:',
             result: '개 결과',
-            resultsCount: '개 결과',
-            post: '포스트',
-            note: '노트',
-            languages: '언어',
-            english: '영문',
-            korean: '국문'
+            resultsCount: '개 결과'
         }
     };
 
@@ -89,18 +80,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         return series?.[language] || series?.eng || post.series || '';
     }
 
-    function renderLanguageLinks(post, language) {
-        return post.languages.map((postLanguage) => {
-            const label = postLanguage === 'kor' ? copy[language].korean : copy[language].english;
-            const url = window.siteDataClient.getPostUrl(post, postLanguage);
-            return `<a href="${escapeHtml(url)}" hreflang="${postLanguage === 'kor' ? 'ko' : 'en'}">${escapeHtml(label)}</a>`;
-        }).join(', ');
-    }
-
     function renderTags(post) {
         return (post.tags || []).map((tag) => {
             return `<a class="post-tag" href="/blogs/tags/${escapeHtml(tagSlug(tag))}/">${escapeHtml(tag)}</a>`;
-        }).join('');
+        }).join('<span class="post-tag-separator" aria-hidden="true">·</span>');
     }
 
     function renderSearchResults(language) {
@@ -109,6 +92,21 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
 
         const languageCopy = copy[language];
+        filteredPosts = !searchTerm
+            ? []
+            : siteData.posts.filter((post) => {
+                if (!post.languages.includes(language)) {
+                    return false;
+                }
+                const metadataMatch = [
+                    post[`title_${language}`],
+                    post[`subtitle_${language}`],
+                    post[`description_${language}`]
+                ].some((value) => String(value || '').toLowerCase().includes(searchTerm));
+                const tagMatch = (post.tags || []).some((tag) => tag.toLowerCase().includes(searchTerm));
+                const contentMatch = postContentCache[post.id]?.[language]?.includes(searchTerm);
+                return metadataMatch || tagMatch || contentMatch;
+            });
         if (!searchTerm) {
             resultCount.textContent = '';
             resultsContainer.innerHTML = `<p class="blog-search-state">${languageCopy.prompt}</p>`;
@@ -134,7 +132,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             const description = window.siteDataClient.getPostDescription(post, language);
             const url = window.siteDataClient.getPostUrl(post, language);
             const seriesTitle = getSeriesTitle(post, language);
-            const categoryLabel = post.category === 'note' ? languageCopy.note : languageCopy.post;
             const source = post.cover || '/assets/blog_bg.jpeg';
             const keepAnimated = post.animatedPreview === true && coverMedia?.isAnimatedCover(source);
             const preview = coverMedia?.getBlogCoverPreviewUrl(post.id) || source;
@@ -151,18 +148,15 @@ document.addEventListener('DOMContentLoaded', async function() {
                         </a>
                         <div class="post-card-body">
                             <div class="post-card-eyebrow">
-                                <span>${escapeHtml(categoryLabel)}</span>
                                 <span>${escapeHtml(seriesTitle)}</span>
+                                <span aria-hidden="true">/</span>
+                                <time datetime="${escapeHtml(post.date)}">${escapeHtml(formatDate(post.date, language))}</time>
                             </div>
                             <h3 class="post-title"><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h3>
                             ${description ? `<p class="post-subtitle">${escapeHtml(description)}</p>` : ''}
                             ${post.tags?.length ? `<div class="post-tag-row">${renderTags(post)}</div>` : ''}
                         </div>
                     </div>
-                    <p class="post-meta">
-                        ${escapeHtml(seriesTitle)} / <time datetime="${escapeHtml(post.date)}">${escapeHtml(formatDate(post.date, language))}</time> /
-                        ${escapeHtml(languageCopy.languages)}: ${renderLanguageLinks(post, language)}
-                    </p>
                 </article>
             `;
         }).join('');
@@ -217,7 +211,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     siteData = await loadSiteData();
 
     if (searchTerm) {
-        const postContentCache = {};
+        postContentCache = {};
         await Promise.all(siteData.posts.map(async (post) => {
             try {
                 const contents = await Promise.all(post.languages.map(async (language) => {
@@ -225,26 +219,14 @@ document.addEventListener('DOMContentLoaded', async function() {
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status} for ${language}`);
                     }
-                    return response.text();
+                    return [language, (await response.text()).toLowerCase()];
                 }));
-                postContentCache[post.id] = contents.join('\n').toLowerCase();
+                postContentCache[post.id] = Object.fromEntries(contents);
             } catch (error) {
                 console.warn(`Failed to fetch markdown for ${post.id}:`, error);
-                postContentCache[post.id] = '';
+                postContentCache[post.id] = {};
             }
         }));
-
-        filteredPosts = siteData.posts.filter((post) => {
-            const metadataMatch = Object.entries(post).some(([key, value]) => {
-                return (
-                    (key.startsWith('title_') || key.startsWith('subtitle_') || key.startsWith('description_'))
-                    && String(value).toLowerCase().includes(searchTerm)
-                );
-            });
-            const tagMatch = (post.tags || []).some((tag) => tag.toLowerCase().includes(searchTerm));
-            const contentMatch = postContentCache[post.id]?.includes(searchTerm);
-            return metadataMatch || tagMatch || contentMatch;
-        });
     }
 
     applyLanguage(getStoredLanguage());

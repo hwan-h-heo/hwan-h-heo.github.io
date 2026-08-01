@@ -29,12 +29,14 @@
     <title>What the Compiler Missed in Sparse 3D Inference | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
-    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
-    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/blogs/css/blog.css?v=c4319681dd" rel="stylesheet" />
+    <link href="/blogs/css/sidebar.css?v=975e92b635" rel="stylesheet" />
+    <link href="/css/sidebar-nav.css?v=17f2552cf5" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5e2acfdea5" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=efef9e6e9b" rel="stylesheet" />
     <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
     <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
+    <script src="/js/sidebar-controller.js?v=b1204606e7"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
     <link href="/blogs/css/code-copy.css?v=97949adbc2" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
@@ -58,170 +60,129 @@
             })();
         </script>
 </head>
-<body>
-    <nav class="post-site-nav" id="mainNav">
-        <div class="blog-shell post-nav-shell">
-            <div class="post-nav-brand-group">
-                <a class="post-nav-brand" href="/blogs/">Hwan's Blog</a>
-                <a class="post-nav-portfolio-link" href="/">
-                    Portfolio <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
-                </a>
-            </div>
-            <button class="post-nav-toggle" type="button" data-nav-toggle data-open-label="Open menu" data-close-label="Close menu" aria-controls="postNavPanel" aria-expanded="false" aria-label="Open menu">
-                <span class="post-nav-menu-icon" aria-hidden="true"></span>
-            </button>
-            <div class="post-nav-panel" id="postNavPanel">
-                <ul class="post-nav-actions">
-                    <li class="post-nav-action post-nav-search-item">
-                        <form id="post-nav-search-form" class="post-nav-search" role="search">
-                            <label class="visually-hidden" for="post-nav-search-input">Search blog posts</label>
-                            <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
-                            <button type="submit" aria-label="Search">
-                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
-                            </button>
-                        </form>
-                    </li>
-                    <li class="post-nav-action post-nav-theme-item"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><svg class="site-icon theme-toggle-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg></button></li>
-                    <li class="post-nav-action post-nav-language-item"><a href="/blogs/posts/optimizing-sparse-3d-generation-inference-kor/" class="post-nav-language-link" data-language-target="kor" aria-label="한국어로 전환" title="한국어로 전환">가</a></li>
-                </ul>
-            </div>
+<body class="blog-post-page">
+    <header id="header" class="header blog-sidebar dark-background">
+        <div class="profile-img">
+            <img src="/assets/icon.webp" alt="Portrait illustration of Hwan Heo">
         </div>
-    </nav>
 
-    <header class="masthead" style="background-image: url('/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png')">
-        <div class="blog-shell post-hero-shell">
-            <div class="post-reading-row">
-                <div class="post-reading-column">
-                    <div class="post-heading">
-                        <br/>
-                        <h1>What the Compiler Missed in Sparse 3D Inference</h1>
-                        <span class="meta">
-                            Posted on <time datetime="2026-07-27">July 27, 2026</time>
-                            <span style="margin: 0 8px;">•</span>
-                            <svg class="site-icon post-reading-time-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-clock"></use></svg>32 min read
-                        </span>
-                        <div class="post-tags"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a><span class="post-tag">CUDA</span></div>
-                        <hr/>
-                    </div>
+        <a href="/blogs/" class="logo">
+            <span class="sitename">Hwan's Blog</span>
+        </a>
+
+        <div class="social-links">
+            <a href="https://github.com/hwanhuh" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
+            <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
+            <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
+            <a href="mailto:hwan.heo.ai@gmail.com" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
+        </div>
+
+        <nav id="navmenu" class="navmenu" aria-label="Blog navigation">
+            <ul>
+                <li>
+                    <a href="/blogs/" class="active" aria-current="location">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house"></use></svg>
+                        <span>Blog Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/" class="sidebar-external-link">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-briefcase"></use></svg>
+                        <span>Portfolio</span>
+                        <svg class="site-icon sidebar-external-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-labs">
+            <details class="sidebar-labs-menu">
+                <summary>
+                    <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-tools"></use></svg>
+                    <span>Labs</span>
+                    <svg class="site-icon sidebar-labs-chevron" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
+                </summary>
+                <div class="sidebar-labs-panel">
+                    <a href="/blogs/3DViewer/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg><span>3D Viewer</span></a>
+                    <a href="/blogs/editor/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg><span>Editor</span></a>
                 </div>
-            </div>
+            </details>
         </div>
     </header>
 
-    <article class="post-article">
-        <div class="blog-shell">
-            <div class="post-reading-row">
-                <div class="post-reading-column">
-                    
-                    <nav class="breadcrumbs" aria-label="Breadcrumb">
-                        <ol>
-                            <li><a href="/">Portfolio</a></li>
-                            <li><a href="/blogs/">Blog</a></li>
-                            <li><a href="/blogs/series/3d-generation/">3D AI</a></li>
-                            <li aria-current="page">What the Compiler Missed in Sparse 3D Inference</li>
-                        </ol>
-                    </nav>
-    
-                    <div id="series-container">
-            <details class="series-card">
-                <summary class="series-summary">
-                    <span class="series-icon" aria-hidden="true"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-collection"></use></svg></span>
-                    <span class="series-summary-copy">
-                        <span class="series-kicker">Series</span>
-                        <strong>3D AI</strong>
-                    </span>
-                    <span class="series-meta">1 / 8</span>
-                    <span class="series-toggle">
-                        <span>8 posts</span>
-                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
-                    </span>
-                </summary>
-                <div class="series-body">
-                    <ol class="series-list">
-                    <li class="series-post is-current" aria-current="page">
-                        <span class="series-post-index">01</span>
-                        <span class="series-post-copy">
-                            <strong>What the Compiler Missed in Sparse 3D Inference</strong>
-                            <span>2026.07.27</span>
-                        </span>
-                    </li>
-            
-                <li class="series-post">
-                    <a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/">
-                        <span class="series-post-index">02</span>
-                        <span class="series-post-copy">
-                            <strong>VARCO 3D: A Year in Review — 2025 Retrospective</strong>
-                            <span>2026.01.15</span>
-                        </span>
-                    </a>
-                </li>
-        
-                <li class="series-post">
-                    <a href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/">
-                        <span class="series-post-index">03</span>
-                        <span class="series-post-copy">
-                            <strong>From Flow Matching to Optimal Transport: A Physics-based View of Generative Models</strong>
-                            <span>2025.08.10</span>
-                        </span>
-                    </a>
-                </li>
-        
-                <li class="series-post">
-                    <a href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive/">
-                        <span class="series-post-index">04</span>
-                        <span class="series-post-copy">
-                            <strong>Building Large 3D Generative Model (2) VAE and DiT Deep Dive</strong>
-                            <span>2025.07.10</span>
-                        </span>
-                    </a>
-                </li>
-        
-                <li class="series-post">
-                    <a href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing/">
-                        <span class="series-post-index">05</span>
-                        <span class="series-post-copy">
-                            <strong>Building Large 3D Generative Model (1) Data pre-processing</strong>
-                            <span>2025.07.02</span>
-                        </span>
-                    </a>
-                </li>
-        
-                <li class="series-post">
-                    <a href="/blogs/posts/an-era-of-3d-generation/">
-                        <span class="series-post-index">06</span>
-                        <span class="series-post-copy">
-                            <strong>An Era of 3D Generation</strong>
-                            <span>2025.03.02</span>
-                        </span>
-                    </a>
-                </li>
-        
-                <li class="series-post">
-                    <a href="/blogs/posts/is-diffusions-estimated-depth-really-good/">
-                        <span class="series-post-index">07</span>
-                        <span class="series-post-copy">
-                            <strong>Is Diffusion&#39;s Estimated Depth Really Good?</strong>
-                            <span>2024.04.26</span>
-                        </span>
-                    </a>
-                </li>
-        
-                <li class="series-post">
-                    <a href="/blogs/posts/can-sora-understand-3d/">
-                        <span class="series-post-index">08</span>
-                        <span class="series-post-copy">
-                            <strong>Can Sora Understand 3D?</strong>
-                            <span>2024.02.26</span>
-                        </span>
-                    </a>
-                </li>
-        </ol>
+    <main class="main blog-post-main">
+        <nav class="post-site-nav" id="mainNav" aria-label="Post utilities">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-utility-column">
+                        <a class="post-nav-home" href="/blogs/" aria-label="Back to Blog Home">
+                            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg>
+                            <span>Blog Home</span>
+                        </a>
+                        <ul class="post-nav-actions">
+                            <li class="post-nav-action post-nav-search-item">
+                                <form id="post-nav-search-form" class="post-nav-search" role="search" data-collapsible-search>
+                                    <label class="visually-hidden" for="post-nav-search-input">Search blog posts</label>
+                                    <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
+                                    <button type="submit" aria-label="Search" aria-controls="post-nav-search-input" aria-expanded="false">
+                                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
+                                    </button>
+                                </form>
+                            </li>
+                            <li class="post-nav-action"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><svg class="site-icon theme-toggle-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg></button></li>
+                            <li class="post-nav-action"><a href="/blogs/posts/optimizing-sparse-3d-generation-inference-kor/" class="post-nav-language-link" data-language-target="kor" aria-label="한국어로 전환" title="한국어로 전환">가</a></li>
+                        </ul>
+                    </div>
                 </div>
-            </details>
-    </div>
+            </div>
+        </nav>
+
+        <header class="masthead post-masthead">
+            <div class="blog-shell post-hero-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-hero-column">
+                        <div class="post-heading">
+                            <div class="post-hero-series">
+                                <span class="post-hero-series-label">Series</span>
+                                <span class="post-hero-series-separator" aria-hidden="true">/</span>
+                                <a href="/blogs/series/3d-generation/">3D AI</a>
+                            </div>
+                            <h1>What the Compiler Missed in Sparse 3D Inference</h1>
+                        </div>
+                    </div>
                 </div>
-                <div class="post-reading-column main-content">
-                    <nav class="toc" aria-label="Table of contents"><div class="toc-title">On This Page</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Opening the Loop" aria-label="Opening the Loop"><span class="toc-link-text">Opening the Loop</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="1. Why Sparse 3D Resists the Usual Optimization Playbook" aria-label="1. Why Sparse 3D Resists the Usual Optimization Playbook"><span class="toc-link-text">1. Why Sparse 3D Resists the Usual Optimization Playbook</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-2" title="1.1. Sparsity Turns the Workload into a Moving Target" aria-label="1.1. Sparsity Turns the Workload into a Moving Target"><span class="toc-link-text">1.1. Sparsity Turns the Workload into a Moving Target</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="1.2. The Blind Spot in General-Purpose Optimization" aria-label="1.2. The Blind Spot in General-Purpose Optimization"><span class="toc-link-text">1.2. The Blind Spot in General-Purpose Optimization</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-4" title="2. Null-Context Attention Is Work We Never Had to Do" aria-label="2. Null-Context Attention Is Work We Never Had to Do"><span class="toc-link-text">2. Null-Context Attention Is Work We Never Had to Do</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="2.1. Killing the Zero Tensor" aria-label="2.1. Killing the Zero Tensor"><span class="toc-link-text">2.1. Killing the Zero Tensor</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="2.2. In Null Attention, the Query Does Not Matter" aria-label="2.2. In Null Attention, the Query Does Not Matter"><span class="toc-link-text">2.2. In Null Attention, the Query Does Not Matter</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="2.3. From a Compatible Reference Path to a Canonical Cache" aria-label="2.3. From a Compatible Reference Path to a Canonical Cache"><span class="toc-link-text">2.3. From a Compatible Reference Path to a Canonical Cache</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.4. Putting the Shortcut on the Stopwatch" aria-label="2.4. Putting the Shortcut on the Stopwatch"><span class="toc-link-text">2.4. Putting the Shortcut on the Stopwatch</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-9" title="3. Fusing the Gaps the Compiler Missed" aria-label="3. Fusing the Gaps the Compiler Missed"><span class="toc-link-text">3. Fusing the Gaps the Compiler Missed</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="3.1. What Fusion Actually Removes" aria-label="3.1. What Fusion Actually Removes"><span class="toc-link-text">3.1. What Fusion Actually Removes</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-11" title="3.2. Letting an AI Agent Write CUDA, One Candidate at a Time" aria-label="3.2. Letting an AI Agent Write CUDA, One Candidate at a Time"><span class="toc-link-text">3.2. Letting an AI Agent Write CUDA, One Candidate at a Time</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-12" title="4. The Fused Kernels That Survived Production" aria-label="4. The Fused Kernels That Survived Production"><span class="toc-link-text">4. The Fused Kernels That Survived Production</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-13" title="4.1. Q/K RMSNorm, RoPE, and QKV Without the Extra Detour" aria-label="4.1. Q/K RMSNorm, RoPE, and QKV Without the Extra Detour"><span class="toc-link-text">4.1. Q/K RMSNorm, RoPE, and QKV Without the Extra Detour</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-14" title="4.2. Sparse LayerNorm Meets AdaLN in One Pass" aria-label="4.2. Sparse LayerNorm Meets AdaLN in One Pass"><span class="toc-link-text">4.2. Sparse LayerNorm Meets AdaLN in One Pass</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-15" title="4.3. The Leave-One-Out Truth Table" aria-label="4.3. The Leave-One-Out Truth Table"><span class="toc-link-text">4.3. The Leave-One-Out Truth Table</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-16" title="5. When a Faster GELU Kernel Was the Wrong Boundary" aria-label="5. When a Faster GELU Kernel Was the Wrong Boundary"><span class="toc-link-text">5. When a Faster GELU Kernel Was the Wrong Boundary</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-17" title="5.1. Replacing a Kernel Is Not Yet Fusion" aria-label="5.1. Replacing a Kernel Is Not Yet Fusion"><span class="toc-link-text">5.1. Replacing a Kernel Is Not Yet Fusion</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-18" title="5.2. Moving the Boundary into the cuBLASLt Epilogue" aria-label="5.2. Moving the Boundary into the cuBLASLt Epilogue"><span class="toc-link-text">5.2. Moving the Boundary into the cuBLASLt Epilogue</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-19" title="6. Dynamic-token production benchmark" aria-label="6. Dynamic-token production benchmark"><span class="toc-link-text">6. Dynamic-token production benchmark</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-20" title="6.1. Denoise Latency on Real Payloads" aria-label="6.1. Denoise Latency on Real Payloads"><span class="toc-link-text">6.1. Denoise Latency on Real Payloads</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-21" title="6.2. Two Kinds of Optimization the Profiler Reveals" aria-label="6.2. Two Kinds of Optimization the Profiler Reveals"><span class="toc-link-text">6.2. Two Kinds of Optimization the Profiler Reveals</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-22" title="7. Numerical Contracts for Fast Paths" aria-label="7. Numerical Contracts for Fast Paths"><span class="toc-link-text">7. Numerical Contracts for Fast Paths</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-23" title="7.1. Tensor Shape Is Part of the Contract" aria-label="7.1. Tensor Shape Is Part of the Contract"><span class="toc-link-text">7.1. Tensor Shape Is Part of the Contract</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-24" title="7.2. Why the Direct M=1 Cache Did Not Make the Cut" aria-label="7.2. Why the Direct M=1 Cache Did Not Make the Cut"><span class="toc-link-text">7.2. Why the Direct M=1 Cache Did Not Make the Cut</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-25" title="7.3. Canonical Cache, Bitwise-Exact After Qualification" aria-label="7.3. Canonical Cache, Bitwise-Exact After Qualification"><span class="toc-link-text">7.3. Canonical Cache, Bitwise-Exact After Qualification</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-26" title="7.4. Why the cuBLASLt GELU Epilogue Cannot Promise Bitwise Exactness" aria-label="7.4. Why the cuBLASLt GELU Epilogue Cannot Promise Bitwise Exactness"><span class="toc-link-text">7.4. Why the cuBLASLt GELU Epilogue Cannot Promise Bitwise Exactness</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-27" title="7.5. One Optimization, One Contract" aria-label="7.5. One Optimization, One Contract"><span class="toc-link-text">7.5. One Optimization, One Contract</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-28" title="Conclusion" aria-label="Conclusion"><span class="toc-link-text">Conclusion</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
+            </div>
+        </header>
+
+        <article class="post-article">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-hero-column post-intro-column">
+                        <div class="post-intro-layout">
+                            <div class="post-intro-copy">
+                                <p class="post-intro-deck">Why generic compiler paths underperform on dynamic sparse 3D generative models—and how null-context attention removal and model-aware CUDA kernels cut inference latency.</p>
+                                <div class="post-intro-topics" aria-label="Topics"><div class="post-tags"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a><span class="post-tag-separator" aria-hidden="true">·</span><span class="post-tag">CUDA</span></div></div>
+                            </div>
+                            <aside class="post-article-info" aria-label="Article details">
+                                <ul>
+                                    <li data-post-detail="author">
+                                        <strong>Author</strong>
+                                        <span>Hwan Heo</span>
+                                    </li>
+                                    <li data-post-detail="published">
+                                        <strong>Published</strong>
+                                        <time datetime="2026-07-27">July 27, 2026</time>
+                                    </li>
+                                    <li data-post-detail="reading">
+                                        <strong>Reading</strong>
+                                        <span class="post-detail-reading">32 min read</span>
+                                    </li>
+                                </ul>
+                            </aside>
+                        </div>
+                    </div>
+                    <div class="post-reading-column main-content">
+                        <nav class="toc" aria-label="Table of contents"><div class="toc-title">On This Page</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Abstract" aria-label="Abstract"><span class="toc-link-text">Abstract</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="Opening the Loop" aria-label="Opening the Loop"><span class="toc-link-text">Opening the Loop</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="1. Why Sparse 3D Resists the Usual Optimization Playbook" aria-label="1. Why Sparse 3D Resists the Usual Optimization Playbook"><span class="toc-link-text">1. Why Sparse 3D Resists the Usual Optimization Playbook</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="1.1. Sparsity Turns the Workload into a Moving Target" aria-label="1.1. Sparsity Turns the Workload into a Moving Target"><span class="toc-link-text">1.1. Sparsity Turns the Workload into a Moving Target</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="1.2. The Blind Spot in General-Purpose Optimization" aria-label="1.2. The Blind Spot in General-Purpose Optimization"><span class="toc-link-text">1.2. The Blind Spot in General-Purpose Optimization</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-5" title="2. Null-Context Attention Is Work We Never Had to Do" aria-label="2. Null-Context Attention Is Work We Never Had to Do"><span class="toc-link-text">2. Null-Context Attention Is Work We Never Had to Do</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="2.1. Killing the Zero Tensor" aria-label="2.1. Killing the Zero Tensor"><span class="toc-link-text">2.1. Killing the Zero Tensor</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="2.2. In Null Attention, the Query Does Not Matter" aria-label="2.2. In Null Attention, the Query Does Not Matter"><span class="toc-link-text">2.2. In Null Attention, the Query Does Not Matter</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.3. From a Compatible Reference Path to a Canonical Cache" aria-label="2.3. From a Compatible Reference Path to a Canonical Cache"><span class="toc-link-text">2.3. From a Compatible Reference Path to a Canonical Cache</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-9" title="2.4. Putting the Shortcut on the Stopwatch" aria-label="2.4. Putting the Shortcut on the Stopwatch"><span class="toc-link-text">2.4. Putting the Shortcut on the Stopwatch</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-10" title="3. Fusing the Gaps the Compiler Missed" aria-label="3. Fusing the Gaps the Compiler Missed"><span class="toc-link-text">3. Fusing the Gaps the Compiler Missed</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-11" title="3.1. What Fusion Actually Removes" aria-label="3.1. What Fusion Actually Removes"><span class="toc-link-text">3.1. What Fusion Actually Removes</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-12" title="3.2. Letting an AI Agent Write CUDA, One Candidate at a Time" aria-label="3.2. Letting an AI Agent Write CUDA, One Candidate at a Time"><span class="toc-link-text">3.2. Letting an AI Agent Write CUDA, One Candidate at a Time</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-13" title="4. The Fused Kernels That Survived Production" aria-label="4. The Fused Kernels That Survived Production"><span class="toc-link-text">4. The Fused Kernels That Survived Production</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-14" title="4.1. Q/K RMSNorm, RoPE, and QKV Without the Extra Detour" aria-label="4.1. Q/K RMSNorm, RoPE, and QKV Without the Extra Detour"><span class="toc-link-text">4.1. Q/K RMSNorm, RoPE, and QKV Without the Extra Detour</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-15" title="4.2. Sparse LayerNorm Meets AdaLN in One Pass" aria-label="4.2. Sparse LayerNorm Meets AdaLN in One Pass"><span class="toc-link-text">4.2. Sparse LayerNorm Meets AdaLN in One Pass</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-16" title="4.3. The Leave-One-Out Truth Table" aria-label="4.3. The Leave-One-Out Truth Table"><span class="toc-link-text">4.3. The Leave-One-Out Truth Table</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-17" title="5. When a Faster GELU Kernel Was the Wrong Boundary" aria-label="5. When a Faster GELU Kernel Was the Wrong Boundary"><span class="toc-link-text">5. When a Faster GELU Kernel Was the Wrong Boundary</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-18" title="5.1. Replacing a Kernel Is Not Yet Fusion" aria-label="5.1. Replacing a Kernel Is Not Yet Fusion"><span class="toc-link-text">5.1. Replacing a Kernel Is Not Yet Fusion</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-19" title="5.2. Moving the Boundary into the cuBLASLt Epilogue" aria-label="5.2. Moving the Boundary into the cuBLASLt Epilogue"><span class="toc-link-text">5.2. Moving the Boundary into the cuBLASLt Epilogue</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-20" title="6. Dynamic-token production benchmark" aria-label="6. Dynamic-token production benchmark"><span class="toc-link-text">6. Dynamic-token production benchmark</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-21" title="6.1. Denoise Latency on Real Payloads" aria-label="6.1. Denoise Latency on Real Payloads"><span class="toc-link-text">6.1. Denoise Latency on Real Payloads</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-22" title="6.2. Two Kinds of Optimization the Profiler Reveals" aria-label="6.2. Two Kinds of Optimization the Profiler Reveals"><span class="toc-link-text">6.2. Two Kinds of Optimization the Profiler Reveals</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-23" title="7. Numerical Contracts for Fast Paths" aria-label="7. Numerical Contracts for Fast Paths"><span class="toc-link-text">7. Numerical Contracts for Fast Paths</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-24" title="7.1. Tensor Shape Is Part of the Contract" aria-label="7.1. Tensor Shape Is Part of the Contract"><span class="toc-link-text">7.1. Tensor Shape Is Part of the Contract</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-25" title="7.2. Why the Direct M=1 Cache Did Not Make the Cut" aria-label="7.2. Why the Direct M=1 Cache Did Not Make the Cut"><span class="toc-link-text">7.2. Why the Direct M=1 Cache Did Not Make the Cut</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-26" title="7.3. Canonical Cache, Bitwise-Exact After Qualification" aria-label="7.3. Canonical Cache, Bitwise-Exact After Qualification"><span class="toc-link-text">7.3. Canonical Cache, Bitwise-Exact After Qualification</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-27" title="7.4. Why the cuBLASLt GELU Epilogue Cannot Promise Bitwise Exactness" aria-label="7.4. Why the cuBLASLt GELU Epilogue Cannot Promise Bitwise Exactness"><span class="toc-link-text">7.4. Why the cuBLASLt GELU Epilogue Cannot Promise Bitwise Exactness</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-28" title="7.5. One Optimization, One Contract" aria-label="7.5. One Optimization, One Contract"><span class="toc-link-text">7.5. One Optimization, One Contract</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-29" title="Conclusion" aria-label="Conclusion"><span class="toc-link-text">Conclusion</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
@@ -243,11 +204,10 @@
     </div>
 </div>
 
-<blockquote>
+<h2 id="toc-heading-0">Abstract</h2>
 <p>Sparse 3D Generation is difficult to optimize. The number of active tokens changes for every input, and that variability limits the effectiveness of general-purpose optimization tools such as TensorRT and <code>torch.compile</code>.</p>
 <p>This article describes how, in VARCO3D 2.0, we <strong>replaced unconditional cross-attention with a fixed-vector path</strong> and fused memory-bound tensor paths with custom CUDA kernels and cuBLASLt epilogues, reducing 15-step denoise latency on A100 BF16 by <strong><code>25.66%</code></strong> on an equal-weighted average across assets. It also separates a bitwise-exact null-context path from tolerance-qualified fusion paths and lays out the numerical contract for validating and falling back in production.</p>
-</blockquote>
-<h2 id="toc-heading-0">Opening the Loop</h2>
+<h2 id="toc-heading-1">Opening the Loop</h2>
 <p>For an AI researcher, inference optimization usually sits closer to productization engineering than to the main line of research itself.</p>
 <p>My own center of gravity had also been designing model architectures and representations, then improving quality. I often built tools that were directly needed in the research loop, such as viewers, experimental web applications, and profiling utilities, but I thought of custom CUDA extensions and runtime optimization as areas to tackle together with ML Engineers who are comfortable with advanced CUDA programming.</p>
 <p>AI agents lower the barrier to entry in this area.</p>
@@ -288,8 +248,8 @@ But the following two sentences do not mean the same thing.</p>
 <li>Directly fuse the memory round trips in local tensor paths that the compiler could not fuse.</li>
 </ol>
 <hr>
-<h2 id="toc-heading-1">1. Why Sparse 3D Resists the Usual Optimization Playbook</h2>
-<h3 id="toc-heading-2">1.1. Sparsity Turns the Workload into a Moving Target</h3>
+<h2 id="toc-heading-2">1. Why Sparse 3D Resists the Usual Optimization Playbook</h2>
+<h3 id="toc-heading-3">1.1. Sparsity Turns the Workload into a Moving Target</h3>
 <p>If you double the resolution of a 3D grid, the number of voxels increases eightfold.</p>
 <p>$$
 (2N)^3 = 8N^3
@@ -328,7 +288,7 @@ $$</p>
 <li>The amount of memory reserved by the allocator</li>
 </ul>
 <p>In other words, dynamic shape does not merely change the size of a single tensor. Attention, GEMM, memory, and control flow all change together.</p>
-<h3 id="toc-heading-3">1.2. The Blind Spot in General-Purpose Optimization</h3>
+<h3 id="toc-heading-4">1.2. The Blind Spot in General-Purpose Optimization</h3>
 <p>In a 2D diffusion model, the latent shape is generally fixed over a sampling trajectory. LLMs also have dynamic sequence lengths, but their execution model has largely settled around KV cache, paged attention, and continuous batching.</p>
 <p>Sparse 3D does not yet have a comparable standard runtime. But this was not a vague judgment that the problem was simply hard. I reviewed each path against representative blocks and actual profiler traces.</p>
 <table>
@@ -365,8 +325,8 @@ $$</p>
 </ol>
 <p>The result of reviewing general-purpose tools was not a dead end, but a starting point that made the problem smaller.</p>
 <hr>
-<h2 id="toc-heading-4">2. Null-Context Attention Is Work We Never Had to Do</h2>
-<h3 id="toc-heading-5">2.1. Killing the Zero Tensor</h3>
+<h2 id="toc-heading-5">2. Null-Context Attention Is Work We Never Had to Do</h2>
+<h3 id="toc-heading-6">2.1. Killing the Zero Tensor</h3>
 <p>Modern image-to-3D generation models often extract input image features from DINO-family VFMs and inject them into the 3D denoiser through cross-attention. If the image condition is dropped out during training, CFG similar to that used in 2D generative models can be applied at inference time.</p>
 <p>The difference, however, is that instead of feeding an empty text string into a text encoder, as in 2D generation, to produce a negative condition, the unconditional branch explicitly uses a <code>zero valued tensor</code> as follows.</p>
 <pre><code class="language-python">uncond_context = torch.zeros_like(cond_context)
@@ -387,7 +347,7 @@ $$</p>
 <blockquote>
 <p>When a condition whose values are all 0 is fed into attention, what is actually being computed?</p>
 </blockquote>
-<h3 id="toc-heading-6">2.2. In Null Attention, the Query Does Not Matter</h3>
+<h3 id="toc-heading-7">2.2. In Null Attention, the Query Does Not Matter</h3>
 <p>Let us use a row-vector convention, where each row of a tensor is a token. The condition-side value projection can be written as follows.</p>
 <p>$$
 V = ZW_V + \mathbf{1}_L b_V^\top,
@@ -443,7 +403,7 @@ $$</p>
   <figcaption>Illustration of the zero-context case. The optimization applies more generally whenever all transformed value rows are identical; the context does not need to be numerically zero.</figcaption>
 </figure>
 
-<h3 id="toc-heading-7">2.3. From a Compatible Reference Path to a Canonical Cache</h3>
+<h3 id="toc-heading-8">2.3. From a Compatible Reference Path to a Canonical Cache</h3>
 <p>The existing batched CFG path constructed the conditional and unconditional branches with the same token length.</p>
 <pre><code class="language-text">[conditional context, full zero-valued context]
 → Q/K/V projection
@@ -486,7 +446,7 @@ unconditional:
 <li>Applying and validating minimal patches to public repositories</li>
 </ul>
 <p>The Agent&#39;s largest contribution was not only in writing kernels on my behalf. It was in lowering the cost of falsification: when one hypothesis failed, it could be discarded, and other shapes and fallbacks could be tested quickly.</p>
-<h3 id="toc-heading-8">2.4. Putting the Shortcut on the Stopwatch</h3>
+<h3 id="toc-heading-9">2.4. Putting the Shortcut on the Stopwatch</h3>
 <h4>VARCO 3D 2.0</h4>
 <p>Fusion and null-context were independently toggled on and off across the same 10 payloads.</p>
 <table>
@@ -552,7 +512,7 @@ Because many recent image-to-3D models, like ours, use zero image tokens in the 
 <p>Therefore, applicability should be judged not by whether &quot;the negative condition is zero,&quot; but by whether <strong>the value rows after the condition-side transform are actually identical</strong>.</p>
 <p>These results confirmed that null-context optimization is not just an accidental implementation property of VARCO3D. At the same time, because the applicability conditions are mathematically clear, it could be excluded from stages where they do not hold.</p>
 <hr>
-<h2 id="toc-heading-9">3. Fusing the Gaps the Compiler Missed</h2>
+<h2 id="toc-heading-10">3. Fusing the Gaps the Compiler Missed</h2>
 <p>Branches that can be removed mathematically, as with null-context, are rare. Most active paths depend on the actual latent and timestep. After semantic elimination, the next tool I needed was the profiler.</p>
 <p>The earlier compiler probe had already shown that roughly <code>87.6%</code> of cumulative CUDA kernel time was spent in FlashAttention and cuBLAS/cuBLASLt GEMM. The two largest regions were using <code>flash_attn</code> and <code>flex_gemm</code>, and building a new attention kernel or GEMM from scratch was outside the scope of this work.</p>
 <p>But &quot;most of the time is already spent in optimized kernels&quot; is not the same as &quot;there are no execution paths left to reduce.&quot;</p>
@@ -562,7 +522,7 @@ Because many recent image-to-3D models, like ours, use zero image tokens in the 
 <li>Local chains where the Python dispatcher and small CUDA launches repeat</li>
 </ul>
 <p>If full <code>torch.compile</code> had worked reliably, these pointwise chains and intermediate materializations are mostly where Inductor would have aimed. If sparse metadata and a custom backend make it difficult to compile the entire graph, then the answer is to directly fuse local paths whose role and inputs/outputs are clear.</p>
-<h3 id="toc-heading-10">3.1. What Fusion Actually Removes</h3>
+<h3 id="toc-heading-11">3.1. What Fusion Actually Removes</h3>
 <p>When a PyTorch operation runs on the GPU, each operation leads to one or more CUDA kernel launches.</p>
 <pre><code class="language-python">y = x * scale
 z = y + shift
@@ -589,7 +549,7 @@ out = z * gate
 <li>Python and ATen dispatch overhead</li>
 </ul>
 <p>In this model, patterns involving sparse batch indexing were more important targets than simple contiguous elementwise operations.</p>
-<h3 id="toc-heading-11">3.2. Letting an AI Agent Write CUDA, One Candidate at a Time</h3>
+<h3 id="toc-heading-12">3.2. Letting an AI Agent Write CUDA, One Candidate at a Time</h3>
 <p>Using an AI Agent makes it possible to implement CUDA candidates quickly. At the same time, if multiple optimizations are introduced at once, it becomes impossible to tell which change actually reduced latency. So each cycle handled exactly one candidate.</p>
 <pre><code class="language-text">Real workload profile
 → choose one candidate
@@ -610,8 +570,8 @@ out = z * gate
 </ol>
 <p>Once these criteria were in place, the Agent could iterate quickly through the implementation loop.</p>
 <hr>
-<h2 id="toc-heading-12">4. The Fused Kernels That Survived Production</h2>
-<h3 id="toc-heading-13">4.1. Q/K RMSNorm, RoPE, and QKV Without the Extra Detour</h3>
+<h2 id="toc-heading-13">4. The Fused Kernels That Survived Production</h2>
+<h3 id="toc-heading-14">4.1. Q/K RMSNorm, RoPE, and QKV Without the Extra Detour</h3>
 <p>The following operations were repeated before Transformer <code>self-attention</code>.</p>
 <pre><code class="language-text">Split Q/K
 → RMSNorm
@@ -637,7 +597,7 @@ out = z * gate
 <li>8 calls each to <code>view_as_complex</code> and <code>view_as_real</code></li>
 </ul>
 <p>What became faster here was not just a single RMSNorm. The entire tensor lifecycle of attention preprocessing became shorter.</p>
-<h3 id="toc-heading-14">4.2. Sparse LayerNorm Meets AdaLN in One Pass</h3>
+<h3 id="toc-heading-15">4.2. Sparse LayerNorm Meets AdaLN in One Pass</h3>
 <p>The existing path looked like this.</p>
 <pre><code class="language-python">normalized = layer_norm(x)
 scale_token = scale[batch_ids]
@@ -654,7 +614,7 @@ out = normalized * scale_token + shift_token
 <li>Separate affine output</li>
 </ul>
 <p>This candidate had a smaller absolute effect than Q/K fusion, but it reduced latency consistently across the token range.</p>
-<h3 id="toc-heading-15">4.3. The Leave-One-Out Truth Table</h3>
+<h3 id="toc-heading-16">4.3. The Leave-One-Out Truth Table</h3>
 <p>The table below shows the leave-one-out results from disabling only one candidate while leaving all other adopted fusions enabled. A positive number means the run became slower when that candidate was disabled.</p>
 <table>
 <thead>
@@ -705,8 +665,8 @@ out = normalized * scale_token + shift_token
 <p>The <code>layer_norm</code> candidate replaced independent normalization on the residual path with a dedicated kernel, and <code>sparse_batch_mul_add</code> simplified batch-indexed modulation and the residual affine chain into a single kernel. <code>qk_rms_norm_cross_inplace</code> reduced cross-attention preprocessing, but because the gain did not reproduce on larger payloads, I did not count it as evidence for the baseline speedup.</p>
 <p>In this process, the fact that the profiler&#39;s operation count went down had to be considered separately from the fact that product latency went down. GELU was the candidate where that distinction appeared most clearly.</p>
 <hr>
-<h2 id="toc-heading-16">5. When a Faster GELU Kernel Was the Wrong Boundary</h2>
-<h3 id="toc-heading-17">5.1. Replacing a Kernel Is Not Yet Fusion</h3>
+<h2 id="toc-heading-17">5. When a Faster GELU Kernel Was the Wrong Boundary</h2>
+<h3 id="toc-heading-18">5.1. Replacing a Kernel Is Not Yet Fusion</h3>
 <p>Let us briefly return to the <code>gelu</code> mentioned in the profiler table above.</p>
 <p>The basis for this optimization, of course, was the profiler.
 In the kernel-call analysis, a standalone <code>aten::gelu</code> appeared 48 times per step.</p>
@@ -733,7 +693,7 @@ In other words, simply replacing the GELU formula with a fast CUDA kernel did no
 <blockquote>
 <p>If GELU itself is not slow, which boundary needs to disappear for the path to actually get faster?</p>
 </blockquote>
-<h3 id="toc-heading-18">5.2. Moving the Boundary into the cuBLASLt Epilogue</h3>
+<h3 id="toc-heading-19">5.2. Moving the Boundary into the cuBLASLt Epilogue</h3>
 <p>The existing MLP path was as follows.</p>
 <pre><code class="language-text">Linear(N → M)
 → store BF16 activation
@@ -760,8 +720,8 @@ In other words, simply replacing the GELU formula with a fast CUDA kernel did no
 </blockquote>
 <p>However, with the cuBLASLt epilogue, we cannot assume that the BF16 rounding boundary, GELU approximation, and internal evaluation order are the same as in the existing eager path. Therefore, I did not classify this path as a bitwise-exact optimization, and managed it with a separate tolerance test and model-level regression.</p>
 <hr>
-<h2 id="toc-heading-19">6. Dynamic-token production benchmark</h2>
-<h3 id="toc-heading-20">6.1. Denoise Latency on Real Payloads</h3>
+<h2 id="toc-heading-20">6. Dynamic-token production benchmark</h2>
+<h3 id="toc-heading-21">6.1. Denoise Latency on Real Payloads</h3>
 <p>We reused the same manifest across 10 production assets whose active token counts ranged from <code>3,664–30,227</code>. All latency numbers are CUDA-synchronized 15-step denoise wall times, measured repeatedly after warm-up. The GPU was an NVIDIA A100-SXM4-80GB, the model dtype was BF16, and the stack used PyTorch 2.7.1+cu128 with CUDA 12.8.</p>
 <p>The comparison paths were as follows.</p>
 <ul>
@@ -801,7 +761,7 @@ In other words, simply replacing the GELU formula with a fast CUDA kernel did no
 </tr>
 </tbody></table>
 <p>The final combined path reduced equal-weight average per-asset latency by <code>25.66%</code> relative to pure eager. The canonical cache itself also delivered additional improvement over the previous byte-exact null implementation: <code>0.53%</code> on the null-only path and <code>1.78%</code> when combined with fusion.</p>
-<h3 id="toc-heading-21">6.2. Two Kinds of Optimization the Profiler Reveals</h3>
+<h3 id="toc-heading-22">6.2. Two Kinds of Optimization the Profiler Reveals</h3>
 <table>
 <thead>
 <tr>
@@ -844,7 +804,7 @@ In other words, simply replacing the GELU formula with a fast CUDA kernel did no
 <p>The fusion group reduced CUDA launches by <code>72.18%</code> relative to eager, and moved 720 standalone GELU calls into the cuBLASLt epilogue.</p>
 <p>By contrast, the earlier exact null path increased the total launch count because of the copy and indexing launches needed to construct the compact unconditional workload, but it reduced both the FlashAttention workload and wall time. This is why launch count alone is not enough to judge performance. The canonical cache later trimmed the remaining output-projection and reconstruction paths further, as reflected in the additional latency gains in Section 6.1.</p>
 <hr>
-<h2 id="toc-heading-22">7. Numerical Contracts for Fast Paths</h2>
+<h2 id="toc-heading-23">7. Numerical Contracts for Fast Paths</h2>
 <p>Mathematically identical functions do not always produce the same floating-point bit pattern. In BF16 GEMM in particular, tensor shape, library dispatch, reduction order, and rounding boundaries can change the last bits of the result.</p>
 <p>In this post, <code>bitwise-exact</code> or <code>byte-exact</code> means that <strong>the raw BF16 bit patterns of target tensors with the same shape are all identical when viewed contiguously</strong>. It does not mean simple equality of real values, nor byte equality of the serialized final mesh file.</p>
 <p>Validation is done by reinterpreting the BF16 tensors as integer views and comparing them.</p>
@@ -861,7 +821,7 @@ def bf16_bits_equal(a: torch.Tensor, b: torch.Tensor) -&gt; bool:
     return torch.equal(a_bits, b_bits)
 </code></pre>
 <p>On the null-context path, I used the tensor after the output projection of the target cross-attention block and the paired denoiser output as the verification boundaries.</p>
-<h3 id="toc-heading-23">7.1. Tensor Shape Is Part of the Contract</h3>
+<h3 id="toc-heading-24">7.1. Tensor Shape Is Part of the Contract</h3>
 <p>Let the existing batched CFG output projection be:</p>
 <p>$$
 Y = XW_O + \mathbf{1}_{2N}b_O^\top,
@@ -895,7 +855,7 @@ $$</p>
 $$</p>
 <p><code>M=1</code> can dispatch to GEMV or to another implementation in the skinny-GEMM family. In general, cuBLAS/cuBLASLt may choose the algorithm and tile configuration based on $M$, $N$, $K$, dtype, layout, and alignment; in BF16, differences in accumulation and rounding order can surface in the final bits.</p>
 <p>This explanation is a possible mechanism for the mismatch I observed. The actual adoption decision did not depend on assuming that a particular kernel family or algorithm ID was the same. It depended only on the raw-bit qualification result.</p>
-<h3 id="toc-heading-24">7.2. Why the Direct M=1 Cache Did Not Make the Cut</h3>
+<h3 id="toc-heading-25">7.2. Why the Direct M=1 Cache Did Not Make the Cut</h3>
 <p>The most direct implementation is to project just one row at startup.</p>
 <pre><code class="language-text">input:  [1, D] = b_V
 linear: [1, D] W_O + b_O
@@ -903,7 +863,7 @@ cache:  [1, D]
 </code></pre>
 <p>However, this path was not bitwise-exact with the unconditional row of the reference <code>[2N,D]</code> GEMM. Even if the difference is small, it can accumulate through the residual path at every denoiser step, and the goal of this optimization was not &quot;similar quality&quot;; it was to run the existing exact null path with a shorter execution path.</p>
 <p>Therefore, I did not accept the direct <code>M=1</code> result under a tolerance. Instead, I searched for a calibration shape that produced the same raw bits as the production reference.</p>
-<h3 id="toc-heading-25">7.3. Canonical Cache, Bitwise-Exact After Qualification</h3>
+<h3 id="toc-heading-26">7.3. Canonical Cache, Bitwise-Exact After Qualification</h3>
 <p>At startup, construct a canonical input whose every row is $b_V$.</p>
 <p>$$
 X_{\mathrm{canonical}} =
@@ -950,7 +910,7 @@ $$</p>
 <li>Target layer configuration changes</li>
 </ul>
 <p>The self-test is not a mathematical proof over every possible shape and future environment. It is a gate for the fast path, checking whether the expected numerical behavior is reproduced within the configured validation scope of the current worker.</p>
-<h3 id="toc-heading-26">7.4. Why the cuBLASLt GELU Epilogue Cannot Promise Bitwise Exactness</h3>
+<h3 id="toc-heading-27">7.4. Why the cuBLASLt GELU Epilogue Cannot Promise Bitwise Exactness</h3>
 <p>The existing eager path stores the GEMM output as BF16 and then applies GELU.</p>
 <p>$$
 y =
@@ -975,7 +935,7 @@ $$</p>
 <li>Optimized path that preserves the existing BF16 rounding boundary</li>
 <li>Full sequential reference path</li>
 </ol>
-<h3 id="toc-heading-27">7.5. One Optimization, One Contract</h3>
+<h3 id="toc-heading-28">7.5. One Optimization, One Contract</h3>
 <p>I did not use &quot;no quality regression&quot; and &quot;every optimization is byte-exact&quot; to mean the same thing.</p>
 <table>
 <thead>
@@ -1019,7 +979,7 @@ $$</p>
 </ul>
 <p>The custom extension was not JIT-compiled in the serving worker. It was distributed as a prebuilt wheel built under the same conditions as the production environment.</p>
 <hr>
-<h2 id="toc-heading-28">Conclusion</h2>
+<h2 id="toc-heading-29">Conclusion</h2>
 <p>The Agent&#39;s first answer was not wrong. The representative block had been split into <code>13</code> graphs and <code>12</code> graph breaks, and most of the CUDA kernel time in the representative profiler was already in FlashAttention and GEMM. Deprioritizing full <code>torch.compile</code> and a TensorRT port was a reasonable call.</p>
 <p>This work continued not because I rejected that answer, but because I changed the granularity of the question.</p>
 <blockquote>
@@ -1043,9 +1003,21 @@ $$</p>
 <p>The era in which going further required knowing everything is gradually passing. Instead, what matters more is knowing what you do not know, deciding what must be verified, and judging how far you can take responsibility.</p>
 <p>If you can set that standard, even unfamiliar territory is no longer entirely someone else&#39;s work.</p>
 
-                </div>
-                <div class="post-reading-column">
-                    
+                    </div>
+                    <div class="post-reading-column post-end-matter">
+                        <section class="post-author-note" aria-labelledby="post-author-name">
+                            <img class="post-author-portrait" src="/assets/profile4-author.png" alt="Hwan Heo" loading="lazy">
+                            <div class="post-author-copy">
+                                <span class="post-author-kicker">Written by</span>
+                                <h2 id="post-author-name">Hwan Heo</h2>
+                                <p>Lead 3D AI Research Engineer building production systems across large-scale 3D generation, CUDA inference, and graphics pipelines.</p>
+                                <div class="post-author-links" aria-label="Author links">
+                                    <a href="mailto:hwan.heo.ai@gmail.com">Email</a>
+                                    <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                                </div>
+                            </div>
+                        </section>
+                        
                     <section class="related-posts" aria-labelledby="related-posts-heading">
                         <h2 id="related-posts-heading">Related Posts</h2>
                         <div class="related-post-grid">
@@ -1081,7 +1053,7 @@ $$</p>
                         </div>
                     </section>
     
-                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
+                        <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
                 <a class="post-nav-card is-older" href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/" aria-label="Previous Post: VARCO 3D: A Year in Review — 2025 Retrospective">
                     <span class="post-nav-kicker">
                         <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
@@ -1096,20 +1068,25 @@ $$</p>
                     <strong>Computer Graphics</strong>
                 </a>
     </nav></div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </article>
+        </article>
 
-    <footer class="blog-post-footer">
-        <div class="blog-shell">
-            <div class="post-reading-row">
-                <div class="post-reading-column">
-                    <div class="blog-footer-note">Copyright © Hwan Heo</div>
+        <button id="scroll-top" class="scroll-top button_top post-scroll-top" type="button" aria-label="Back to top">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up"></use></svg>
+        </button>
+
+        <footer class="blog-post-footer">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column">
+                        <div class="blog-footer-note">Copyright © Hwan Heo</div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        </footer>
+    </main>
 
     <script>
         window.siteData = {
@@ -1167,8 +1144,8 @@ $$</p>
       "id": "250823_sdf",
       "title_eng": "SDF and Eikonal Equation",
       "title_kor": "SDF 와 Eikonal Equation 의 관계는?",
-      "subtitle_eng": "Why signed distance field induces eikonal equation",
-      "subtitle_kor": "Eikonal equation 의 해가 왜 signed distance field 인지 알아보자",
+      "subtitle_eng": "A rigorous derivation of why a signed distance field satisfies the Eikonal equation, from its geometric definition to gradient bounds.",
+      "subtitle_kor": "Signed distance field의 기하학적 정의에서 출발해, gradient의 크기가 왜 Eikonal equation을 만족하는지 엄밀하게 유도한다.",
       "description_eng": "Why signed distance field induces eikonal equation",
       "description_kor": "Eikonal equation 의 해가 왜 signed distance field 인지 알아보자",
       "tags": [
@@ -1191,7 +1168,7 @@ $$</p>
       "title_eng": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
       "title_kor": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
       "subtitle_eng": "Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow",
-      "subtitle_kor": "Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구",
+      "subtitle_kor": "Rectified Flow의 생성 경로가 왜 직선으로 수렴하는지, 물리학과 기하학, optimal transport의 관점에서 살펴본다.",
       "description_eng": "Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow",
       "description_kor": "Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구",
       "tags": [
@@ -1214,8 +1191,8 @@ $$</p>
       "id": "250809_gwn",
       "title_eng": "Generalized Winding Number",
       "title_kor": "Generalized Winding Number",
-      "subtitle_eng": "How to make a robust SDF using GWN from Mesh",
-      "subtitle_kor": "Mesh 에서 GWN 을 이용하여 견고한 SDF 를 계산하는 방법",
+      "subtitle_eng": "How Generalized Winding Numbers turn imperfect meshes into robust inside–outside tests for signed distance field construction.",
+      "subtitle_kor": "불완전하거나 열린 mesh에서도 Generalized Winding Number로 inside/outside를 판별하고 견고한 SDF를 계산하는 방법을 살펴본다.",
       "description_eng": "How to make a robust SDF using GWN from Mesh",
       "description_kor": "Mesh 에서 GWN 을 이용하여 견고한 SDF 를 계산하는 방법",
       "tags": [
@@ -1237,8 +1214,8 @@ $$</p>
       "id": "250710_building_large_3d_2",
       "title_eng": "Building Large 3D Generative Model (2) VAE and DiT Deep Dive",
       "title_kor": "Large 3D Generative Model 구축하기 (2) VAE and DiT 분석",
-      "subtitle_eng": "VAE and DiT Architecture for Vecset vs. Sparse-Voxel",
-      "subtitle_kor": "VAE and DiT 구조 분석 for Vecset vs. Sparse-Voxel",
+      "subtitle_eng": "Comparing vecset and sparse-voxel VAE–DiT architectures, from 3D representation and compression to shape-generation design.",
+      "subtitle_kor": "Vecset과 sparse voxel이 3D shape을 표현하는 방식부터 VAE와 DiT 구조, 생성 모델 설계의 차이까지 비교한다.",
       "description_eng": "VAE and DiT Architecture for Vecset vs. Sparse-Voxel",
       "description_kor": "VAE and DiT 구조 분석 for Vecset vs. Sparse-Voxel",
       "tags": [
@@ -1261,8 +1238,8 @@ $$</p>
       "id": "250702_building_large_3d_1",
       "title_eng": "Building Large 3D Generative Model (1) Data pre-processing",
       "title_kor": "Large 3D Generative Model 구축하기 (1) 데이터 전처리",
-      "subtitle_eng": "Watertight Mesh Conversion and Salient Edge Sampling",
-      "subtitle_kor": "Watertight Mesh 변환과 Salient Edge Sampling",
+      "subtitle_eng": "Preparing training-ready 3D data through watertight mesh conversion, surface sampling, and salient-edge-aware preprocessing.",
+      "subtitle_kor": "대규모 3D 생성 모델의 학습 데이터를 위해 watertight mesh 변환, surface sampling, salient edge 추출 과정을 정리한다.",
       "description_eng": "Watertight Mesh Conversion and Salient Edge Sampling",
       "description_kor": "Watertight Mesh 변환과 Salient Edge Sampling",
       "tags": [
@@ -1285,8 +1262,8 @@ $$</p>
       "id": "250310_model_viewer",
       "title_eng": "3D Model Viewer in Web",
       "title_kor": "커스텀 3D 웹뷰어 만들기",
-      "subtitle_eng": "Custom Threejs 3D Model Viewer",
-      "subtitle_kor": "커스텀 Three.js 3D 모델 뷰어",
+      "subtitle_eng": "Comparing Google model-viewer with a custom Three.js pipeline for embedding, controlling, and presenting 3D assets on the web.",
+      "subtitle_kor": "Google model-viewer와 직접 만든 Three.js viewer를 비교하며, 웹에서 3D asset을 안정적으로 보여주는 방법을 정리한다.",
       "description_eng": "Custom Threejs 3D Model Viewer",
       "description_kor": "커스텀 Three.js 3D 모델 뷰어",
       "tags": [
@@ -1309,8 +1286,8 @@ $$</p>
       "id": "250302_3d_latent_diffusion",
       "title_eng": "An Era of 3D Generation",
       "title_kor": "3D 생성 모델의 시대",
-      "subtitle_eng": "From ShapeVAE to Trellis and Hunyuan3D",
-      "subtitle_kor": "ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것",
+      "subtitle_eng": "Tracing 3D latent diffusion from ShapeVAE to TRELLIS and Hunyuan3D, and comparing how modern systems represent and generate shape.",
+      "subtitle_kor": "ShapeVAE에서 TRELLIS와 Hunyuan3D까지, 3D latent diffusion이 shape을 표현하고 생성하는 방식을 비교한다.",
       "description_eng": "From ShapeVAE to Trellis and Hunyuan3D",
       "description_kor": "ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것",
       "tags": [
@@ -1333,8 +1310,8 @@ $$</p>
       "id": "250106_tomography",
       "title_eng": "Neural Rendering Beyond Photography",
       "title_kor": "X-Ray 와 NeRF",
-      "subtitle_eng": "NeRF for Tomography & Tip for NeRF Viewer",
-      "subtitle_kor": "의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁",
+      "subtitle_eng": "Applying NeRF and Gaussian Splatting beyond photography to X-ray tomography, plus a lightweight viewer workflow built with Viser.",
+      "subtitle_kor": "NeRF와 Gaussian Splatting을 X-ray tomography에 적용하는 원리를 살펴보고, Viser 기반 viewer 제작 팁까지 정리한다.",
       "description_eng": "NeRF for Tomography & Tip for NeRF Viewer",
       "description_kor": "의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁",
       "tags": [
@@ -1357,8 +1334,8 @@ $$</p>
       "id": "240917_3djs",
       "title_eng": "Add Gaussian Splatting to Your Website",
       "title_kor": "웹사이트에 3D GS 삽입하기",
-      "subtitle_eng": "Tutorial for GS Scene w/ Three-js",
-      "subtitle_kor": "Three-js 이용한 custom GS scene 웹뷰어 tutorial",
+      "subtitle_eng": "A practical Three.js guide to embedding an interactive Gaussian Splatting scene in a website, with no web-graphics background required.",
+      "subtitle_kor": "Three.js를 이용해 웹사이트에 interactive Gaussian Splatting scene을 삽입하고 제어하는 과정을 단계별로 정리한다.",
       "description_eng": "Tutorial for GS Scene w/ Three-js",
       "description_kor": "Three-js 이용한 custom GS scene 웹뷰어 tutorial",
       "tags": [
@@ -1381,8 +1358,8 @@ $$</p>
       "id": "240823_grt",
       "title_eng": "Don't Rasterize, But Ray Trace 3D Gaussian",
       "title_kor": "3D Gaussian Ray Tracing 톺아보기",
-      "subtitle_eng": "In-Depth Review of 3D Gaussian Ray Tracing by NVIDIA",
-      "subtitle_kor": "3D Gaussian Ray Tracing 분석하기",
+      "subtitle_eng": "How NVIDIA’s 3D Gaussian Ray Tracing replaces splat rasterization with differentiable ray tracing—and what that changes.",
+      "subtitle_kor": "NVIDIA의 3D Gaussian Ray Tracing이 splat rasterization을 differentiable ray tracing으로 바꾸는 방식과 장점을 분석한다.",
       "description_eng": "In-Depth Review of 3D Gaussian Ray Tracing by NVIDIA",
       "description_kor": "3D Gaussian Ray Tracing 분석하기",
       "tags": [
@@ -1428,7 +1405,7 @@ $$</p>
     {
       "id": "240721_sfm",
       "title_eng": "Radiance Fields from Deep-based Structure-from-Motion",
-      "subtitle_eng": "Comparison of VGGSfM & MAsT3R",
+      "subtitle_eng": "Comparing VGGSfM and MASt3R as learned Structure-from-Motion pipelines for camera estimation and radiance-field reconstruction.",
       "description_eng": "Comparison of VGGSfM & MAsT3R",
       "description_kor": "Comparison of VGGSfM & MAsT3R",
       "tags": [
@@ -1450,8 +1427,8 @@ $$</p>
       "id": "240602_2dgs",
       "title_eng": "Under the 3D: Geometrically Accurate 2D Gaussian Splatting",
       "title_kor": "2D Gaussian Splatting 톺아보기",
-      "subtitle_eng": "Understanding 2D GS's Algorithm",
-      "subtitle_kor": "3D GS 의 mesh recon 어려움과 이를 해결한 2D GS",
+      "subtitle_eng": "How 2D Gaussian Splatting replaces volumetric blobs with oriented disks to improve surface geometry and mesh reconstruction.",
+      "subtitle_kor": "2D Gaussian Splatting이 volumetric blob 대신 oriented disk를 사용해 surface geometry와 mesh reconstruction을 개선하는 원리를 살펴본다.",
       "description_eng": "Understanding 2D GS's Algorithm",
       "description_kor": "3D GS 의 mesh recon 어려움과 이를 해결한 2D GS",
       "tags": [
@@ -1474,7 +1451,7 @@ $$</p>
       "id": "240426_diffusion_depth",
       "title_eng": "Is Diffusion's Estimated Depth Really Good?",
       "title_kor": "Diffusion 으로 추정한 Depth 진짜 좋나요?",
-      "subtitle_eng": "Making Mesh from Estimated Depth Map by Diffusion",
+      "subtitle_eng": "Evaluating diffusion-estimated depth by turning Marigold predictions into textured meshes and inspecting their geometric consistency.",
       "subtitle_kor": "Diffusion 으로 추정한 Depth Map 을 이용해 Textured Mesh 만들어보기 (feat. Marigold)",
       "description_eng": "Making Mesh from Estimated Depth Map by Diffusion",
       "description_kor": "Diffusion 으로 추정한 Depth Map 을 이용해 Textured Mesh 만들어보기 (feat. Marigold)",
@@ -1498,7 +1475,7 @@ $$</p>
       "id": "240226_sora",
       "title_eng": "Can Sora Understand 3D?",
       "title_kor": "Sora 가 상상하는 3D World",
-      "subtitle_eng": "Radiance Fields Reconstruction from Video Generative AI",
+      "subtitle_eng": "Testing whether video generation models encode enough 3D consistency to reconstruct radiance fields from their synthesized views.",
       "subtitle_kor": "Video Generative AI 로부터 NeRF reconstruction 해보기",
       "description_eng": "Radiance Fields Reconstruction from Video Generative AI",
       "description_kor": "Video Generative AI 로부터 NeRF reconstruction 해보기",
@@ -1521,7 +1498,7 @@ $$</p>
       "id": "231130_nerf_in_game",
       "title_eng": "Can NeRF be used in Game?",
       "title_kor": "NeRF 를 게임 제작에서 이용할 수 있을까?",
-      "subtitle_eng": "Explore Limitations of NeRF",
+      "subtitle_eng": "Examining the quality, rendering, and production constraints that limit NeRF in games—and the workarounds available today.",
       "subtitle_kor": "NeRF 의 단점을 살펴보자",
       "description_eng": "Explore Limitations of NeRF",
       "description_kor": "NeRF 의 단점을 살펴보자",
@@ -1544,7 +1521,7 @@ $$</p>
       "id": "230202_ngp",
       "title_eng": "Instant-NGP Review & Re-Implementation",
       "title_kor": "Instant-NGP 리뷰 및 재구현",
-      "subtitle_eng": "Review of Instant-NGP and PyTorch Re-Implementation",
+      "subtitle_eng": "Reviewing Instant-NGP’s multi-resolution hash encoding and rebuilding its NeRF pipeline step by step in PyTorch.",
       "subtitle_kor": "Review of Instant-NGP and PyTorch Re-Implementation",
       "description_eng": "Review of Instant-NGP and PyTorch Re-Implementation",
       "description_kor": "Review of Instant-NGP and PyTorch Re-Implementation",
@@ -1591,7 +1568,7 @@ $$</p>
       "title_eng": "Change of Basis",
       "title_kor": "Change of Basis",
       "subtitle_eng": "Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)",
-      "subtitle_kor": "대각화와 고윳값, 특이값 분해, Principal Component Analysis (PCA)",
+      "subtitle_kor": "대각화와 고윳값, SVD와 PCA를 통해 좌표계 변환이 복잡한 선형대수 문제를 어떻게 단순화하는지 살펴본다.",
       "description_eng": "Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)",
       "description_kor": "대각화와 고윳값, 특이값 분해, Principal Component Analysis (PCA)",
       "tags": [
@@ -1613,8 +1590,8 @@ $$</p>
       "id": "210909_lin_alg_1",
       "title_eng": "Linear System",
       "title_kor": "Linear System",
-      "subtitle_eng": "Linear System, Linear Transformation, and its Intuitions",
-      "subtitle_kor": "선형시스템과 선형변환, 이에 대한 직관들",
+      "subtitle_eng": "Building intuition for linear systems and transformations through matrices, basis vectors, and geometric mappings.",
+      "subtitle_kor": "행렬과 기저벡터의 관점에서 선형시스템과 선형변환이 공간을 어떻게 바꾸는지 직관적으로 살펴본다.",
       "description_eng": "Linear System, Linear Transformation, and its Intuitions",
       "description_kor": "선형시스템과 선형변환, 이에 대한 직관들",
       "tags": [
@@ -1636,7 +1613,7 @@ $$</p>
       "id": "210602_cv4",
       "title_eng": "3D Stereo Vision and Epipolar Geometry",
       "title_kor": "3D Stereo Vision and Epipolar Geometry",
-      "subtitle_eng": "Camera Projection, Stereo, and Epipolar Geometry",
+      "subtitle_eng": "From camera projection to stereo correspondence, deriving the epipolar geometry used to recover 3D structure from two views.",
       "subtitle_kor": "Camera Projection, Stereo, and Epipolar Geometry",
       "description_eng": "Camera Projection, Stereo, and Epipolar Geometry",
       "description_kor": "Camera Projection, Stereo, and Epipolar Geometry",
@@ -1658,7 +1635,7 @@ $$</p>
       "id": "210502_cv3",
       "title_eng": "Homography and Image Alignment",
       "title_kor": "Homography and Image Alignment",
-      "subtitle_eng": "Image Transformation, Homography, and Correspondence Matching",
+      "subtitle_eng": "How image transformations, homographies, feature correspondences, and alignment connect in practical computer vision pipelines.",
       "subtitle_kor": "Image Transformation, Homography, and Correspondence Matching",
       "description_eng": "Image Transformation, Homography, and Correspondence Matching",
       "description_kor": "Image Transformation, Homography, and Correspondence Matching",
@@ -1680,7 +1657,7 @@ $$</p>
       "id": "210402_cv2",
       "title_eng": "Feature Extraction and Detection",
       "title_kor": "Feature Extraction and Detection",
-      "subtitle_eng": "Image Gradient, Sobel Filter, LoG, and Detection",
+      "subtitle_eng": "A practical tour of image gradients, Sobel and LoG filters, and the feature detection principles built on top of them.",
       "subtitle_kor": "Image Gradient, Sobel Filter, LoG, and Detection",
       "description_eng": "Image Gradient, Sobel Filter, LoG, and Detection",
       "description_kor": "Image Gradient, Sobel Filter, LoG, and Detection",
@@ -1702,7 +1679,7 @@ $$</p>
       "id": "210302_cv1",
       "title_eng": "Image Filter and Morphology",
       "title_kor": "Image Filter and Morphology",
-      "subtitle_eng": "Various Image Filters and Morphology (Erosion & Dilation)",
+      "subtitle_eng": "A practical introduction to spatial image filters and morphology, including erosion, dilation, opening, and closing.",
       "subtitle_kor": "다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여",
       "description_eng": "Various Image Filters and Morphology (Erosion & Dilation)",
       "description_kor": "다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여",
@@ -1769,14 +1746,13 @@ $$</p>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="/blogs/js/code-copy.js?v=e6b60656e4"></script>
     <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
-    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
-    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/blog-shell.js?v=456de34605"></script>
     <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
-    <script>
-        initBlogShell({
-            formSelector: '#post-nav-search-form',
-            inputSelector: '#post-nav-search-input'
-        });
-    </script>
+        <script>
+            initBlogShell({
+                formSelector: '#post-nav-search-form',
+                inputSelector: '#post-nav-search-input'
+            });
+        </script>
 </body>
 </html>

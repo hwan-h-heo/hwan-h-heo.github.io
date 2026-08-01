@@ -54,6 +54,22 @@ samp {
     letter-spacing: -0.015em;
 }
 
+.main-content mjx-container[display="true"] {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+}
+
+.main-content .katex-display {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+}
+
 .header {
     font-family: var(--default-font);
     line-height: 1.65;
@@ -91,7 +107,7 @@ header.masthead .post-heading h2 {
 }
 
 @media (min-width: 992px) {
-    header.masthead .post-heading {
+    header.masthead:not(.post-masthead) .post-heading {
         width: min(86vw, 58rem);
         max-width: calc(100vw - 4rem);
         margin-left: 50%;
@@ -212,7 +228,7 @@ header.masthead .post-heading .meta {
     width: 3px;
     height: 1.05em;
     border-radius: 999px;
-    background: linear-gradient(180deg, #15b886, #2a7fb8);
+    background: var(--blog-color-accent);
 }
 
 .main-content strong {
@@ -582,9 +598,9 @@ header.masthead .post-heading .meta {
     border: 1px solid #dbe4ee;
     border-collapse: separate;
     border-spacing: 0;
-    border-radius: 12px;
+    border-radius: 4px;
     background: #fff;
-    box-shadow: 0 12px 26px rgba(39, 49, 59, 0.045);
+    box-shadow: none;
     overflow: hidden;
     font-size: 0.88rem;
     line-height: 1.55;
@@ -744,6 +760,17 @@ html[lang="ko"] .post-card-body .post-subtitle {
 
 html[data-theme="dark"] .main-content {
     color: #c9d3df;
+}
+
+html[data-theme="dark"] header.masthead.post-masthead {
+    border: 0;
+    background: #0e1117;
+}
+
+html[data-theme="dark"] .blog-post-page #mainNav,
+html[data-theme="dark"] .blog-post-page #mainNav.is-fixed {
+    border: 0;
+    background: #0e1117;
 }
 
 html[data-theme="dark"] .main-content h1,
@@ -928,7 +955,7 @@ html[data-theme="dark"] .main-content .caption {
 html[data-theme="dark"] .main-content table {
     border-color: #263241;
     background: #111820;
-    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.2);
+    box-shadow: none;
 }
 
 html[data-theme="dark"] .main-content th,

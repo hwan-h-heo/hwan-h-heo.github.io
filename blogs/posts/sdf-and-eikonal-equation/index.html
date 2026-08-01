@@ -29,12 +29,14 @@
     <title>SDF and Eikonal Equation | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
-    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
-    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/blogs/css/blog.css?v=c4319681dd" rel="stylesheet" />
+    <link href="/blogs/css/sidebar.css?v=975e92b635" rel="stylesheet" />
+    <link href="/css/sidebar-nav.css?v=17f2552cf5" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5e2acfdea5" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=efef9e6e9b" rel="stylesheet" />
     <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
     <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
+    <script src="/js/sidebar-controller.js?v=b1204606e7"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -56,110 +58,129 @@
             })();
         </script>
 </head>
-<body>
-    <nav class="post-site-nav" id="mainNav">
-        <div class="blog-shell post-nav-shell">
-            <div class="post-nav-brand-group">
-                <a class="post-nav-brand" href="/blogs/">Hwan's Blog</a>
-                <a class="post-nav-portfolio-link" href="/">
-                    Portfolio <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
-                </a>
-            </div>
-            <button class="post-nav-toggle" type="button" data-nav-toggle data-open-label="Open menu" data-close-label="Close menu" aria-controls="postNavPanel" aria-expanded="false" aria-label="Open menu">
-                <span class="post-nav-menu-icon" aria-hidden="true"></span>
-            </button>
-            <div class="post-nav-panel" id="postNavPanel">
-                <ul class="post-nav-actions">
-                    <li class="post-nav-action post-nav-search-item">
-                        <form id="post-nav-search-form" class="post-nav-search" role="search">
-                            <label class="visually-hidden" for="post-nav-search-input">Search blog posts</label>
-                            <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
-                            <button type="submit" aria-label="Search">
-                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
-                            </button>
-                        </form>
-                    </li>
-                    <li class="post-nav-action post-nav-theme-item"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><svg class="site-icon theme-toggle-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg></button></li>
-                    <li class="post-nav-action post-nav-language-item"><a href="/blogs/posts/sdf-and-eikonal-equation-kor/" class="post-nav-language-link" data-language-target="kor" aria-label="한국어로 전환" title="한국어로 전환">가</a></li>
-                </ul>
-            </div>
+<body class="blog-post-page">
+    <header id="header" class="header blog-sidebar dark-background">
+        <div class="profile-img">
+            <img src="/assets/icon.webp" alt="Portrait illustration of Hwan Heo">
         </div>
-    </nav>
 
-    <header class="masthead" style="background-image: url('/blogs/posts/250823_sdf/assets/remote-12d4629724c7.png')">
-        <div class="blog-shell post-hero-shell">
-            <div class="post-reading-row">
-                <div class="post-reading-column">
-                    <div class="post-heading">
-                        <br/>
-                        <h1>SDF and Eikonal Equation</h1>
-                        <span class="meta">
-                            Posted on <time datetime="2025-08-23">August 23, 2025</time>
-                            <span style="margin: 0 8px;">•</span>
-                            <svg class="site-icon post-reading-time-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-clock"></use></svg>9 min read
-                        </span>
-                        <div class="post-tags"><a class="post-tag" href="/blogs/tags/graphics/">Graphics</a></div>
-                        <hr/>
-                    </div>
+        <a href="/blogs/" class="logo">
+            <span class="sitename">Hwan's Blog</span>
+        </a>
+
+        <div class="social-links">
+            <a href="https://github.com/hwanhuh" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
+            <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
+            <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
+            <a href="mailto:hwan.heo.ai@gmail.com" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
+        </div>
+
+        <nav id="navmenu" class="navmenu" aria-label="Blog navigation">
+            <ul>
+                <li>
+                    <a href="/blogs/" class="active" aria-current="location">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house"></use></svg>
+                        <span>Blog Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/" class="sidebar-external-link">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-briefcase"></use></svg>
+                        <span>Portfolio</span>
+                        <svg class="site-icon sidebar-external-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-labs">
+            <details class="sidebar-labs-menu">
+                <summary>
+                    <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-tools"></use></svg>
+                    <span>Labs</span>
+                    <svg class="site-icon sidebar-labs-chevron" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
+                </summary>
+                <div class="sidebar-labs-panel">
+                    <a href="/blogs/3DViewer/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg><span>3D Viewer</span></a>
+                    <a href="/blogs/editor/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg><span>Editor</span></a>
                 </div>
-            </div>
+            </details>
         </div>
     </header>
 
-    <article class="post-article">
-        <div class="blog-shell">
-            <div class="post-reading-row">
-                <div class="post-reading-column">
-                    
-                    <nav class="breadcrumbs" aria-label="Breadcrumb">
-                        <ol>
-                            <li><a href="/">Portfolio</a></li>
-                            <li><a href="/blogs/">Blog</a></li>
-                            <li><a href="/blogs/series/graphics/">Computer Graphics</a></li>
-                            <li aria-current="page">SDF and Eikonal Equation</li>
-                        </ol>
-                    </nav>
-    
-                    <div id="series-container">
-            <details class="series-card">
-                <summary class="series-summary">
-                    <span class="series-icon" aria-hidden="true"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-collection"></use></svg></span>
-                    <span class="series-summary-copy">
-                        <span class="series-kicker">Series</span>
-                        <strong>Computer Graphics</strong>
-                    </span>
-                    <span class="series-meta">1 / 2</span>
-                    <span class="series-toggle">
-                        <span>2 posts</span>
-                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
-                    </span>
-                </summary>
-                <div class="series-body">
-                    <ol class="series-list">
-                    <li class="series-post is-current" aria-current="page">
-                        <span class="series-post-index">01</span>
-                        <span class="series-post-copy">
-                            <strong>SDF and Eikonal Equation</strong>
-                            <span>2025.08.23</span>
-                        </span>
-                    </li>
-            
-                <li class="series-post">
-                    <a href="/blogs/posts/generalized-winding-number/">
-                        <span class="series-post-index">02</span>
-                        <span class="series-post-copy">
-                            <strong>Generalized Winding Number</strong>
-                            <span>2025.08.09</span>
-                        </span>
-                    </a>
-                </li>
-        </ol>
+    <main class="main blog-post-main">
+        <nav class="post-site-nav" id="mainNav" aria-label="Post utilities">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-utility-column">
+                        <a class="post-nav-home" href="/blogs/" aria-label="Back to Blog Home">
+                            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg>
+                            <span>Blog Home</span>
+                        </a>
+                        <ul class="post-nav-actions">
+                            <li class="post-nav-action post-nav-search-item">
+                                <form id="post-nav-search-form" class="post-nav-search" role="search" data-collapsible-search>
+                                    <label class="visually-hidden" for="post-nav-search-input">Search blog posts</label>
+                                    <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
+                                    <button type="submit" aria-label="Search" aria-controls="post-nav-search-input" aria-expanded="false">
+                                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
+                                    </button>
+                                </form>
+                            </li>
+                            <li class="post-nav-action"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><svg class="site-icon theme-toggle-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg></button></li>
+                            <li class="post-nav-action"><a href="/blogs/posts/sdf-and-eikonal-equation-kor/" class="post-nav-language-link" data-language-target="kor" aria-label="한국어로 전환" title="한국어로 전환">가</a></li>
+                        </ul>
+                    </div>
                 </div>
-            </details>
-    </div>
+            </div>
+        </nav>
+
+        <header class="masthead post-masthead">
+            <div class="blog-shell post-hero-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-hero-column">
+                        <div class="post-heading">
+                            <div class="post-hero-series">
+                                <span class="post-hero-series-label">Series</span>
+                                <span class="post-hero-series-separator" aria-hidden="true">/</span>
+                                <a href="/blogs/series/graphics/">Computer Graphics</a>
+                            </div>
+                            <h1>SDF and Eikonal Equation</h1>
+                        </div>
+                    </div>
                 </div>
-                <div class="post-reading-column main-content">
-                    <nav class="toc" aria-label="Table of contents"><div class="toc-title">On This Page</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Introduction" aria-label="Introduction"><span class="toc-link-text">Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="From SDF to the Eikonal Equation" aria-label="From SDF to the Eikonal Equation"><span class="toc-link-text">From SDF to the Eikonal Equation</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="Proof 1" aria-label="Proof 1"><span class="toc-link-text">Proof 1</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="1.1. Supremum of the SDF Gradient" aria-label="1.1. Supremum of the SDF Gradient"><span class="toc-link-text">1.1. Supremum of the SDF Gradient</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="1.2. Infimum of the SDF Gradient" aria-label="1.2. Infimum of the SDF Gradient"><span class="toc-link-text">1.2. Infimum of the SDF Gradient</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="1.3. Conclusion" aria-label="1.3. Conclusion"><span class="toc-link-text">1.3. Conclusion</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-6" title="Proof 2" aria-label="Proof 2"><span class="toc-link-text">Proof 2</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="2.1. Gradient Calculation" aria-label="2.1. Gradient Calculation"><span class="toc-link-text">2.1. Gradient Calculation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.2. Gradient&#39;s Norm" aria-label="2.2. Gradient&#39;s Norm"><span class="toc-link-text">2.2. Gradient&#39;s Norm</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-9" title="Discussion" aria-label="Discussion"><span class="toc-link-text">Discussion</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
+            </div>
+        </header>
+
+        <article class="post-article">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-hero-column post-intro-column">
+                        <div class="post-intro-layout">
+                            <div class="post-intro-copy">
+                                <p class="post-intro-deck">A rigorous derivation of why a signed distance field satisfies the Eikonal equation, from its geometric definition to gradient bounds.</p>
+                                <div class="post-intro-topics" aria-label="Topics"><div class="post-tags"><a class="post-tag" href="/blogs/tags/graphics/">Graphics</a></div></div>
+                            </div>
+                            <aside class="post-article-info" aria-label="Article details">
+                                <ul>
+                                    <li data-post-detail="author">
+                                        <strong>Author</strong>
+                                        <span>Hwan Heo</span>
+                                    </li>
+                                    <li data-post-detail="published">
+                                        <strong>Published</strong>
+                                        <time datetime="2025-08-23">August 23, 2025</time>
+                                    </li>
+                                    <li data-post-detail="reading">
+                                        <strong>Reading</strong>
+                                        <span class="post-detail-reading">9 min read</span>
+                                    </li>
+                                </ul>
+                            </aside>
+                        </div>
+                    </div>
+                    <div class="post-reading-column main-content">
+                        <nav class="toc" aria-label="Table of contents"><div class="toc-title">On This Page</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="TL; DR" aria-label="TL; DR"><span class="toc-link-text">TL; DR</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="Introduction" aria-label="Introduction"><span class="toc-link-text">Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="From SDF to the Eikonal Equation" aria-label="From SDF to the Eikonal Equation"><span class="toc-link-text">From SDF to the Eikonal Equation</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-3" title="Proof 1" aria-label="Proof 1"><span class="toc-link-text">Proof 1</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="1.1. Supremum of the SDF Gradient" aria-label="1.1. Supremum of the SDF Gradient"><span class="toc-link-text">1.1. Supremum of the SDF Gradient</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="1.2. Infimum of the SDF Gradient" aria-label="1.2. Infimum of the SDF Gradient"><span class="toc-link-text">1.2. Infimum of the SDF Gradient</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="1.3. Conclusion" aria-label="1.3. Conclusion"><span class="toc-link-text">1.3. Conclusion</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-7" title="Proof 2" aria-label="Proof 2"><span class="toc-link-text">Proof 2</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.1. Gradient Calculation" aria-label="2.1. Gradient Calculation"><span class="toc-link-text">2.1. Gradient Calculation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-9" title="2.2. Gradient&#39;s Norm" aria-label="2.2. Gradient&#39;s Norm"><span class="toc-link-text">2.2. Gradient&#39;s Norm</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-10" title="Discussion" aria-label="Discussion"><span class="toc-link-text">Discussion</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
@@ -181,10 +202,10 @@
     </div>
 </div>
 
-<h4>TL;DR</h4>
+<h2 id="toc-heading-0">TL; DR</h2>
 <p>Let&#39;s explore the derivation and proof of the relationship between a Signed Distance Field (SDF) and the Eikonal Equation.
 While I&#39;ve written a similar post on velog before, this article aims to provide a more rigorous treatment of the subject.</p>
-<h2 id="toc-heading-0">Introduction</h2>
+<h2 id="toc-heading-1">Introduction</h2>
 <p>A <strong>SDF</strong> (Signed Distance Function) is a representation that, for each point in space, provides the shortest distance to a surface. The set of points where this distance value is zero—the zero-level set or isosurface—defines the actual surface.</p>
 <p><img src="/blogs/posts/250823_sdf/assets/remote-12d4629724c7.png" alt="SDF and Eikonal Equation — Introduction" loading="lazy" decoding="async"></p>
 <p>SDFs are critical not only in modern fields like 3D generative AI and neural surface reconstruction but also in classical computer graphics for tasks such as physical simulation, animation, and mesh repair for watertightness.</p>
@@ -196,7 +217,7 @@ and the Eikonal regularization term (or Eikonal loss) derived from it:</p>
 $$</p>
 <p>where $\theta$ represents the MLP&#39;s parameters. In this post, we will explore why an SDF can be defined by this Eikonal equation.</p>
 <hr>
-<h2 id="toc-heading-1">From SDF to the Eikonal Equation</h2>
+<h2 id="toc-heading-2">From SDF to the Eikonal Equation</h2>
 <p>First, let&#39;s establish a rigorous definition of an SDF.</p>
 <p>For a set $\Omega \subset \mathbb{R}^n$ and its boundary $\partial\Omega$, the Signed Distance Function (SDF) $f: \mathbb{R}^n \to \mathbb{R}$ is defined as follows:</p>
 <p id="p-2">$$ f(x) = \begin{cases} d(x, \partial\Omega) &amp; \text{if } x \in \Omega^c \\ 0 &amp; \text{if } x \in \partial\Omega \\ -d(x, \partial\Omega) &amp; \text{if } x \in \Omega \end{cases}
@@ -207,12 +228,12 @@ $$</p>
 <p>$$ \|\nabla f(x)\| = 1
 $$</p>
 <hr>
-<h2 id="toc-heading-2">Proof 1</h2>
+<h2 id="toc-heading-3">Proof 1</h2>
 <blockquote>
 <p><em>Proof using Lipschitz Continuity</em></p>
 </blockquote>
 <p>This proof will rigorously use the triangle inequality to show that $f$ is a function with a Lipschitz constant of 1. From this, we will first derive the supremum of the gradient ($\|\nabla f\| \le 1$). The infimum ($\|\nabla f\| \ge 1$) will then be proven by considering the direction in which the SDF value changes most rapidly.</p>
-<h3 id="toc-heading-3">1.1. Supremum of the SDF Gradient</h3>
+<h3 id="toc-heading-4">1.1. Supremum of the SDF Gradient</h3>
 <!--$$\|\nabla f(x)\| \le 1--&gt;
 &lt;!--$$-->
 
@@ -252,7 +273,7 @@ Therefore,
 $$\|\nabla f(x)\| \le \left \|\frac{\nabla f(x)}{\|\nabla f(x)\|} \right \| = 1$$ 
 which implies $\|\nabla f(x)\| \le 1$.</p>
 <hr>
-<h3 id="toc-heading-4">1.2. Infimum of the SDF Gradient</h3>
+<h3 id="toc-heading-5">1.2. Infimum of the SDF Gradient</h3>
 <p>Next, we will prove that $\|\nabla f(x)\| \ge 1$ to establish the lower bound (infimum) of the gradient&#39;s magnitude.</p>
 <p>Let&#39;s consider a point $x \in \mathbb{R}^n \setminus \partial\Omega$ where $f$ is differentiable. We also assume there exists a <strong>unique</strong> closest point $p \in \partial\Omega$ to $x$. (Such points constitute most of the space, excluding the &#39;medial axis&#39;.)</p>
 <p>Now, consider the unit vector $$ n = \frac{x-p}{\|x-p\|} $$, which points from $p$ to $x$, representing the direction of fastest movement away from the boundary.</p>
@@ -282,13 +303,13 @@ $$</p>
 <p>In both cases, $|\nabla f(x) \cdot n| = 1$.
 From the Cauchy-Schwarz inequality, $|\nabla f(x) \cdot n| \le \|\nabla f(x)\| \|n\|$, and the fact that $\|n\|=1$, we can conclude:</p>
 <p>$$ 1 \le \|\nabla f(x)\| $$</p>
-<h3 id="toc-heading-5">1.3. Conclusion</h3>
+<h3 id="toc-heading-6">1.3. Conclusion</h3>
 <p>From $\|\nabla f(x)\| \le 1$ proven in section 1.1 and $\|\nabla f(x)\| \ge 1$ proven in section 1.2, it follows that for all points $x$ where $f$ is differentiable, the Eikonal equation holds:</p>
 <p>$$
 \|\nabla f(x)\| = 1
 $$</p>
 <hr>
-<h2 id="toc-heading-6">Proof 2</h2>
+<h2 id="toc-heading-7">Proof 2</h2>
 <blockquote>
 <p><em>Proof using Geometric Properties of Distance Function</em></p>
 </blockquote>
@@ -298,7 +319,7 @@ $$</p>
 $$ \nabla d(x, S) = \frac{x-p}{\|x-p\|} $$</p>
 <p>This theorem is derived from the geometric fact that the level sets of the distance function are sets of points equidistant from $S$. The gradient is perpendicular to these level sets and points in the direction of the fastest increase in value. This direction is precisely the unit vector from $p$ to $x$.</p>
 </blockquote>
-<h3 id="toc-heading-7">2.1. Gradient Calculation</h3>
+<h3 id="toc-heading-8">2.1. Gradient Calculation</h3>
 <p>As in the first proof, we assume a point $x \in \mathbb{R}^n \setminus \partial\Omega$ where $f$ is differentiable, and a unique closest point $p$ on $\partial\Omega$. We can calculate $\nabla f(x)$ by considering two cases.</p>
 <p><strong>Case 1: $x \in \Omega^c$</strong></p>
 <p>In this case, by the definition of an SDF, $f(x) = d(x, \partial\Omega)$. Applying the theorem directly gives:
@@ -306,7 +327,7 @@ $$ \nabla f(x) = \nabla d(x, \partial\Omega) = \frac{x-p}{\|x-p\|} $$</p>
 <p><strong>Case 2: $x \in \Omega$</strong></p>
 <p>In this case, $f(x) = -d(x, \partial\Omega)$, so the gradient is:
 $$ \nabla f(x) = -\nabla d(x, \partial\Omega) = -\frac{x-p}{\|x-p\|} $$</p>
-<h3 id="toc-heading-8">2.2. Gradient&#39;s Norm</h3>
+<h3 id="toc-heading-9">2.2. Gradient&#39;s Norm</h3>
 <p>In both cases, the gradient $\nabla f(x)$ is either a unit vector or a unit vector multiplied by -1. Therefore, calculating the Euclidean norm of the gradient yields:</p>
 <p>$$ 
 \begin{aligned}
@@ -315,7 +336,7 @@ $$ \nabla f(x) = -\nabla d(x, \partial\Omega) = -\frac{x-p}{\|x-p\|} $$</p>
 $$</p>
 <p>This shows that $f$ satisfies the Eikonal equation at all points where it is differentiable.</p>
 <hr>
-<h2 id="toc-heading-9">Discussion</h2>
+<h2 id="toc-heading-10">Discussion</h2>
 <p><strong>Rigor and Assumptions</strong>: Both proofs rely on the assumptions of <strong>differentiability</strong> of $f$ and the <strong>uniqueness of the closest point</strong>. In reality, an SDF is not differentiable at all points in space. The set of non-differentiable points is called the <a href="https://en.wikipedia.org/wiki/Medial_axis">&#39;medial axis&#39;</a> or &#39;skeleton&#39;, which corresponds to the set of points that are equidistant to two or more points on $\partial\Omega$. However, since this set has a Lebesgue measure of 0, it is most accurate to state that an SDF satisfies the Eikonal equation <em><strong>almost everywhere</strong></em>.</p>
 <p>The Eikonal loss plays a critical role by forcing the scalar field output by the network to be more than just an implicit function; it compels the field to represent a true physical &#39;distance&#39; in space. This ensures that the level sets remain stable and allows for the direct and accurate calculation of the surface normal vectors via the gradient, which is essential for high-quality rendering and geometric analysis.</p>
 <p>In 3D reconstruction using Implicit Neural Networks (INNs), such as in NeRF, SDFs are often learned to reconstruct surfaces. Calculating the Eikonal loss term in this context requires the second derivative of the MLP. However, the <code>tcnn</code> library, which is essential for training INNs, does not officially support second derivatives. Consequently, SDF methods that use a hash-grid (or feature-grid) representation compute the gradient not analytically but numerically, using <em><strong>finite differences</strong></em> to obtain a <em><strong>numerical gradient</strong></em>.</p>
@@ -331,9 +352,21 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
 
 <p><em>Ref</em>: <a href="https://arxiv.org/pdf/2409.01774">Boundary regularity for the distance functions, and the eikonal equation</a></p>
 
-                </div>
-                <div class="post-reading-column">
-                    
+                    </div>
+                    <div class="post-reading-column post-end-matter">
+                        <section class="post-author-note" aria-labelledby="post-author-name">
+                            <img class="post-author-portrait" src="/assets/profile4-author.png" alt="Hwan Heo" loading="lazy">
+                            <div class="post-author-copy">
+                                <span class="post-author-kicker">Written by</span>
+                                <h2 id="post-author-name">Hwan Heo</h2>
+                                <p>Lead 3D AI Research Engineer building production systems across large-scale 3D generation, CUDA inference, and graphics pipelines.</p>
+                                <div class="post-author-links" aria-label="Author links">
+                                    <a href="mailto:hwan.heo.ai@gmail.com">Email</a>
+                                    <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                                </div>
+                            </div>
+                        </section>
+                        
                     <section class="related-posts" aria-labelledby="related-posts-heading">
                         <h2 id="related-posts-heading">Related Posts</h2>
                         <div class="related-post-grid">
@@ -369,7 +402,7 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
                         </div>
                     </section>
     
-                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
+                        <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
                 <a class="post-nav-card is-older" href="/blogs/posts/generalized-winding-number/" aria-label="Previous Post: Generalized Winding Number">
                     <span class="post-nav-kicker">
                         <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
@@ -384,20 +417,25 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
                     <strong>3D AI</strong>
                 </a>
     </nav></div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </article>
+        </article>
 
-    <footer class="blog-post-footer">
-        <div class="blog-shell">
-            <div class="post-reading-row">
-                <div class="post-reading-column">
-                    <div class="blog-footer-note">Copyright © Hwan Heo</div>
+        <button id="scroll-top" class="scroll-top button_top post-scroll-top" type="button" aria-label="Back to top">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up"></use></svg>
+        </button>
+
+        <footer class="blog-post-footer">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column">
+                        <div class="blog-footer-note">Copyright © Hwan Heo</div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        </footer>
+    </main>
 
     <script>
         window.siteData = {
@@ -455,8 +493,8 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "id": "250823_sdf",
       "title_eng": "SDF and Eikonal Equation",
       "title_kor": "SDF 와 Eikonal Equation 의 관계는?",
-      "subtitle_eng": "Why signed distance field induces eikonal equation",
-      "subtitle_kor": "Eikonal equation 의 해가 왜 signed distance field 인지 알아보자",
+      "subtitle_eng": "A rigorous derivation of why a signed distance field satisfies the Eikonal equation, from its geometric definition to gradient bounds.",
+      "subtitle_kor": "Signed distance field의 기하학적 정의에서 출발해, gradient의 크기가 왜 Eikonal equation을 만족하는지 엄밀하게 유도한다.",
       "description_eng": "Why signed distance field induces eikonal equation",
       "description_kor": "Eikonal equation 의 해가 왜 signed distance field 인지 알아보자",
       "tags": [
@@ -479,7 +517,7 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "title_eng": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
       "title_kor": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
       "subtitle_eng": "Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow",
-      "subtitle_kor": "Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구",
+      "subtitle_kor": "Rectified Flow의 생성 경로가 왜 직선으로 수렴하는지, 물리학과 기하학, optimal transport의 관점에서 살펴본다.",
       "description_eng": "Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow",
       "description_kor": "Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구",
       "tags": [
@@ -502,8 +540,8 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "id": "250809_gwn",
       "title_eng": "Generalized Winding Number",
       "title_kor": "Generalized Winding Number",
-      "subtitle_eng": "How to make a robust SDF using GWN from Mesh",
-      "subtitle_kor": "Mesh 에서 GWN 을 이용하여 견고한 SDF 를 계산하는 방법",
+      "subtitle_eng": "How Generalized Winding Numbers turn imperfect meshes into robust inside–outside tests for signed distance field construction.",
+      "subtitle_kor": "불완전하거나 열린 mesh에서도 Generalized Winding Number로 inside/outside를 판별하고 견고한 SDF를 계산하는 방법을 살펴본다.",
       "description_eng": "How to make a robust SDF using GWN from Mesh",
       "description_kor": "Mesh 에서 GWN 을 이용하여 견고한 SDF 를 계산하는 방법",
       "tags": [
@@ -525,8 +563,8 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "id": "250710_building_large_3d_2",
       "title_eng": "Building Large 3D Generative Model (2) VAE and DiT Deep Dive",
       "title_kor": "Large 3D Generative Model 구축하기 (2) VAE and DiT 분석",
-      "subtitle_eng": "VAE and DiT Architecture for Vecset vs. Sparse-Voxel",
-      "subtitle_kor": "VAE and DiT 구조 분석 for Vecset vs. Sparse-Voxel",
+      "subtitle_eng": "Comparing vecset and sparse-voxel VAE–DiT architectures, from 3D representation and compression to shape-generation design.",
+      "subtitle_kor": "Vecset과 sparse voxel이 3D shape을 표현하는 방식부터 VAE와 DiT 구조, 생성 모델 설계의 차이까지 비교한다.",
       "description_eng": "VAE and DiT Architecture for Vecset vs. Sparse-Voxel",
       "description_kor": "VAE and DiT 구조 분석 for Vecset vs. Sparse-Voxel",
       "tags": [
@@ -549,8 +587,8 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "id": "250702_building_large_3d_1",
       "title_eng": "Building Large 3D Generative Model (1) Data pre-processing",
       "title_kor": "Large 3D Generative Model 구축하기 (1) 데이터 전처리",
-      "subtitle_eng": "Watertight Mesh Conversion and Salient Edge Sampling",
-      "subtitle_kor": "Watertight Mesh 변환과 Salient Edge Sampling",
+      "subtitle_eng": "Preparing training-ready 3D data through watertight mesh conversion, surface sampling, and salient-edge-aware preprocessing.",
+      "subtitle_kor": "대규모 3D 생성 모델의 학습 데이터를 위해 watertight mesh 변환, surface sampling, salient edge 추출 과정을 정리한다.",
       "description_eng": "Watertight Mesh Conversion and Salient Edge Sampling",
       "description_kor": "Watertight Mesh 변환과 Salient Edge Sampling",
       "tags": [
@@ -573,8 +611,8 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "id": "250310_model_viewer",
       "title_eng": "3D Model Viewer in Web",
       "title_kor": "커스텀 3D 웹뷰어 만들기",
-      "subtitle_eng": "Custom Threejs 3D Model Viewer",
-      "subtitle_kor": "커스텀 Three.js 3D 모델 뷰어",
+      "subtitle_eng": "Comparing Google model-viewer with a custom Three.js pipeline for embedding, controlling, and presenting 3D assets on the web.",
+      "subtitle_kor": "Google model-viewer와 직접 만든 Three.js viewer를 비교하며, 웹에서 3D asset을 안정적으로 보여주는 방법을 정리한다.",
       "description_eng": "Custom Threejs 3D Model Viewer",
       "description_kor": "커스텀 Three.js 3D 모델 뷰어",
       "tags": [
@@ -597,8 +635,8 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "id": "250302_3d_latent_diffusion",
       "title_eng": "An Era of 3D Generation",
       "title_kor": "3D 생성 모델의 시대",
-      "subtitle_eng": "From ShapeVAE to Trellis and Hunyuan3D",
-      "subtitle_kor": "ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것",
+      "subtitle_eng": "Tracing 3D latent diffusion from ShapeVAE to TRELLIS and Hunyuan3D, and comparing how modern systems represent and generate shape.",
+      "subtitle_kor": "ShapeVAE에서 TRELLIS와 Hunyuan3D까지, 3D latent diffusion이 shape을 표현하고 생성하는 방식을 비교한다.",
       "description_eng": "From ShapeVAE to Trellis and Hunyuan3D",
       "description_kor": "ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것",
       "tags": [
@@ -621,8 +659,8 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "id": "250106_tomography",
       "title_eng": "Neural Rendering Beyond Photography",
       "title_kor": "X-Ray 와 NeRF",
-      "subtitle_eng": "NeRF for Tomography & Tip for NeRF Viewer",
-      "subtitle_kor": "의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁",
+      "subtitle_eng": "Applying NeRF and Gaussian Splatting beyond photography to X-ray tomography, plus a lightweight viewer workflow built with Viser.",
+      "subtitle_kor": "NeRF와 Gaussian Splatting을 X-ray tomography에 적용하는 원리를 살펴보고, Viser 기반 viewer 제작 팁까지 정리한다.",
       "description_eng": "NeRF for Tomography & Tip for NeRF Viewer",
       "description_kor": "의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁",
       "tags": [
@@ -645,8 +683,8 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "id": "240917_3djs",
       "title_eng": "Add Gaussian Splatting to Your Website",
       "title_kor": "웹사이트에 3D GS 삽입하기",
-      "subtitle_eng": "Tutorial for GS Scene w/ Three-js",
-      "subtitle_kor": "Three-js 이용한 custom GS scene 웹뷰어 tutorial",
+      "subtitle_eng": "A practical Three.js guide to embedding an interactive Gaussian Splatting scene in a website, with no web-graphics background required.",
+      "subtitle_kor": "Three.js를 이용해 웹사이트에 interactive Gaussian Splatting scene을 삽입하고 제어하는 과정을 단계별로 정리한다.",
       "description_eng": "Tutorial for GS Scene w/ Three-js",
       "description_kor": "Three-js 이용한 custom GS scene 웹뷰어 tutorial",
       "tags": [
@@ -669,8 +707,8 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "id": "240823_grt",
       "title_eng": "Don't Rasterize, But Ray Trace 3D Gaussian",
       "title_kor": "3D Gaussian Ray Tracing 톺아보기",
-      "subtitle_eng": "In-Depth Review of 3D Gaussian Ray Tracing by NVIDIA",
-      "subtitle_kor": "3D Gaussian Ray Tracing 분석하기",
+      "subtitle_eng": "How NVIDIA’s 3D Gaussian Ray Tracing replaces splat rasterization with differentiable ray tracing—and what that changes.",
+      "subtitle_kor": "NVIDIA의 3D Gaussian Ray Tracing이 splat rasterization을 differentiable ray tracing으로 바꾸는 방식과 장점을 분석한다.",
       "description_eng": "In-Depth Review of 3D Gaussian Ray Tracing by NVIDIA",
       "description_kor": "3D Gaussian Ray Tracing 분석하기",
       "tags": [
@@ -716,7 +754,7 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
     {
       "id": "240721_sfm",
       "title_eng": "Radiance Fields from Deep-based Structure-from-Motion",
-      "subtitle_eng": "Comparison of VGGSfM & MAsT3R",
+      "subtitle_eng": "Comparing VGGSfM and MASt3R as learned Structure-from-Motion pipelines for camera estimation and radiance-field reconstruction.",
       "description_eng": "Comparison of VGGSfM & MAsT3R",
       "description_kor": "Comparison of VGGSfM & MAsT3R",
       "tags": [
@@ -738,8 +776,8 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "id": "240602_2dgs",
       "title_eng": "Under the 3D: Geometrically Accurate 2D Gaussian Splatting",
       "title_kor": "2D Gaussian Splatting 톺아보기",
-      "subtitle_eng": "Understanding 2D GS's Algorithm",
-      "subtitle_kor": "3D GS 의 mesh recon 어려움과 이를 해결한 2D GS",
+      "subtitle_eng": "How 2D Gaussian Splatting replaces volumetric blobs with oriented disks to improve surface geometry and mesh reconstruction.",
+      "subtitle_kor": "2D Gaussian Splatting이 volumetric blob 대신 oriented disk를 사용해 surface geometry와 mesh reconstruction을 개선하는 원리를 살펴본다.",
       "description_eng": "Understanding 2D GS's Algorithm",
       "description_kor": "3D GS 의 mesh recon 어려움과 이를 해결한 2D GS",
       "tags": [
@@ -762,7 +800,7 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "id": "240426_diffusion_depth",
       "title_eng": "Is Diffusion's Estimated Depth Really Good?",
       "title_kor": "Diffusion 으로 추정한 Depth 진짜 좋나요?",
-      "subtitle_eng": "Making Mesh from Estimated Depth Map by Diffusion",
+      "subtitle_eng": "Evaluating diffusion-estimated depth by turning Marigold predictions into textured meshes and inspecting their geometric consistency.",
       "subtitle_kor": "Diffusion 으로 추정한 Depth Map 을 이용해 Textured Mesh 만들어보기 (feat. Marigold)",
       "description_eng": "Making Mesh from Estimated Depth Map by Diffusion",
       "description_kor": "Diffusion 으로 추정한 Depth Map 을 이용해 Textured Mesh 만들어보기 (feat. Marigold)",
@@ -786,7 +824,7 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "id": "240226_sora",
       "title_eng": "Can Sora Understand 3D?",
       "title_kor": "Sora 가 상상하는 3D World",
-      "subtitle_eng": "Radiance Fields Reconstruction from Video Generative AI",
+      "subtitle_eng": "Testing whether video generation models encode enough 3D consistency to reconstruct radiance fields from their synthesized views.",
       "subtitle_kor": "Video Generative AI 로부터 NeRF reconstruction 해보기",
       "description_eng": "Radiance Fields Reconstruction from Video Generative AI",
       "description_kor": "Video Generative AI 로부터 NeRF reconstruction 해보기",
@@ -809,7 +847,7 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "id": "231130_nerf_in_game",
       "title_eng": "Can NeRF be used in Game?",
       "title_kor": "NeRF 를 게임 제작에서 이용할 수 있을까?",
-      "subtitle_eng": "Explore Limitations of NeRF",
+      "subtitle_eng": "Examining the quality, rendering, and production constraints that limit NeRF in games—and the workarounds available today.",
       "subtitle_kor": "NeRF 의 단점을 살펴보자",
       "description_eng": "Explore Limitations of NeRF",
       "description_kor": "NeRF 의 단점을 살펴보자",
@@ -832,7 +870,7 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "id": "230202_ngp",
       "title_eng": "Instant-NGP Review & Re-Implementation",
       "title_kor": "Instant-NGP 리뷰 및 재구현",
-      "subtitle_eng": "Review of Instant-NGP and PyTorch Re-Implementation",
+      "subtitle_eng": "Reviewing Instant-NGP’s multi-resolution hash encoding and rebuilding its NeRF pipeline step by step in PyTorch.",
       "subtitle_kor": "Review of Instant-NGP and PyTorch Re-Implementation",
       "description_eng": "Review of Instant-NGP and PyTorch Re-Implementation",
       "description_kor": "Review of Instant-NGP and PyTorch Re-Implementation",
@@ -879,7 +917,7 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "title_eng": "Change of Basis",
       "title_kor": "Change of Basis",
       "subtitle_eng": "Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)",
-      "subtitle_kor": "대각화와 고윳값, 특이값 분해, Principal Component Analysis (PCA)",
+      "subtitle_kor": "대각화와 고윳값, SVD와 PCA를 통해 좌표계 변환이 복잡한 선형대수 문제를 어떻게 단순화하는지 살펴본다.",
       "description_eng": "Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)",
       "description_kor": "대각화와 고윳값, 특이값 분해, Principal Component Analysis (PCA)",
       "tags": [
@@ -901,8 +939,8 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "id": "210909_lin_alg_1",
       "title_eng": "Linear System",
       "title_kor": "Linear System",
-      "subtitle_eng": "Linear System, Linear Transformation, and its Intuitions",
-      "subtitle_kor": "선형시스템과 선형변환, 이에 대한 직관들",
+      "subtitle_eng": "Building intuition for linear systems and transformations through matrices, basis vectors, and geometric mappings.",
+      "subtitle_kor": "행렬과 기저벡터의 관점에서 선형시스템과 선형변환이 공간을 어떻게 바꾸는지 직관적으로 살펴본다.",
       "description_eng": "Linear System, Linear Transformation, and its Intuitions",
       "description_kor": "선형시스템과 선형변환, 이에 대한 직관들",
       "tags": [
@@ -924,7 +962,7 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "id": "210602_cv4",
       "title_eng": "3D Stereo Vision and Epipolar Geometry",
       "title_kor": "3D Stereo Vision and Epipolar Geometry",
-      "subtitle_eng": "Camera Projection, Stereo, and Epipolar Geometry",
+      "subtitle_eng": "From camera projection to stereo correspondence, deriving the epipolar geometry used to recover 3D structure from two views.",
       "subtitle_kor": "Camera Projection, Stereo, and Epipolar Geometry",
       "description_eng": "Camera Projection, Stereo, and Epipolar Geometry",
       "description_kor": "Camera Projection, Stereo, and Epipolar Geometry",
@@ -946,7 +984,7 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "id": "210502_cv3",
       "title_eng": "Homography and Image Alignment",
       "title_kor": "Homography and Image Alignment",
-      "subtitle_eng": "Image Transformation, Homography, and Correspondence Matching",
+      "subtitle_eng": "How image transformations, homographies, feature correspondences, and alignment connect in practical computer vision pipelines.",
       "subtitle_kor": "Image Transformation, Homography, and Correspondence Matching",
       "description_eng": "Image Transformation, Homography, and Correspondence Matching",
       "description_kor": "Image Transformation, Homography, and Correspondence Matching",
@@ -968,7 +1006,7 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "id": "210402_cv2",
       "title_eng": "Feature Extraction and Detection",
       "title_kor": "Feature Extraction and Detection",
-      "subtitle_eng": "Image Gradient, Sobel Filter, LoG, and Detection",
+      "subtitle_eng": "A practical tour of image gradients, Sobel and LoG filters, and the feature detection principles built on top of them.",
       "subtitle_kor": "Image Gradient, Sobel Filter, LoG, and Detection",
       "description_eng": "Image Gradient, Sobel Filter, LoG, and Detection",
       "description_kor": "Image Gradient, Sobel Filter, LoG, and Detection",
@@ -990,7 +1028,7 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "id": "210302_cv1",
       "title_eng": "Image Filter and Morphology",
       "title_kor": "Image Filter and Morphology",
-      "subtitle_eng": "Various Image Filters and Morphology (Erosion & Dilation)",
+      "subtitle_eng": "A practical introduction to spatial image filters and morphology, including erosion, dilation, opening, and closing.",
       "subtitle_kor": "다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여",
       "description_eng": "Various Image Filters and Morphology (Erosion & Dilation)",
       "description_kor": "다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여",
@@ -1055,14 +1093,13 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
     </script>
 
     <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
-    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
-    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/blog-shell.js?v=456de34605"></script>
     <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
-    <script>
-        initBlogShell({
-            formSelector: '#post-nav-search-form',
-            inputSelector: '#post-nav-search-input'
-        });
-    </script>
+        <script>
+            initBlogShell({
+                formSelector: '#post-nav-search-form',
+                inputSelector: '#post-nav-search-input'
+            });
+        </script>
 </body>
 </html>

@@ -1,7 +1,9 @@
 
-> Sparse 3D Generation is difficult to optimize. The number of active tokens changes for every input, and that variability limits the effectiveness of general-purpose optimization tools such as TensorRT and `torch.compile`.
->
-> This article describes how, in VARCO3D 2.0, we **replaced unconditional cross-attention with a fixed-vector path** and fused memory-bound tensor paths with custom CUDA kernels and cuBLASLt epilogues, reducing 15-step denoise latency on A100 BF16 by **`25.66%`** on an equal-weighted average across assets. It also separates a bitwise-exact null-context path from tolerance-qualified fusion paths and lays out the numerical contract for validating and falling back in production.
+## Abstract
+
+Sparse 3D Generation is difficult to optimize. The number of active tokens changes for every input, and that variability limits the effectiveness of general-purpose optimization tools such as TensorRT and `torch.compile`.
+
+This article describes how, in VARCO3D 2.0, we **replaced unconditional cross-attention with a fixed-vector path** and fused memory-bound tensor paths with custom CUDA kernels and cuBLASLt epilogues, reducing 15-step denoise latency on A100 BF16 by **`25.66%`** on an equal-weighted average across assets. It also separates a bitwise-exact null-context path from tolerance-qualified fusion paths and lays out the numerical contract for validating and falling back in production.
 
 ## Opening the Loop
 

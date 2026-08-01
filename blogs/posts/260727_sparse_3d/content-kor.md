@@ -1,5 +1,7 @@
 
-> Sparse 3D Generation은 최적화가 까다롭다. 입력마다 active token 수가 달라지고, 그 변화가 TensorRT, `torch.compile` 같은 범용 최적화 도구의 효과를 제한한다. 이 글에서는 VARCO3D 2.0의 **unconditional cross-attention을 고정 벡터 경로로 치환**하고, memory-bound tensor path를 custom CUDA kernel과 cuBLASLt epilogue로 fusion하여 A100 BF16 환경의 15-step denoise latency를 asset별 동일 가중 평균 기준 **`25.66%`** 줄인 과정을 설명한다. 또한 bitwise-exact null-context path와 tolerance-qualified fusion path를 분리하고, production에서 이를 검증하고 fallback하는 numerical contract를 정리한다.
+## Abstract
+
+Sparse 3D Generation은 최적화가 까다롭다. 입력마다 active token 수가 달라지고, 그 변화가 TensorRT, `torch.compile` 같은 범용 최적화 도구의 효과를 제한한다. 이 글에서는 VARCO3D 2.0의 **unconditional cross-attention을 고정 벡터 경로로 치환**하고, memory-bound tensor path를 custom CUDA kernel과 cuBLASLt epilogue로 fusion하여 A100 BF16 환경의 15-step denoise latency를 asset별 동일 가중 평균 기준 **`25.66%`** 줄인 과정을 설명한다. 또한 bitwise-exact null-context path와 tolerance-qualified fusion path를 분리하고, production에서 이를 검증하고 fallback하는 numerical contract를 정리한다.
 
 ## 들어가며
 

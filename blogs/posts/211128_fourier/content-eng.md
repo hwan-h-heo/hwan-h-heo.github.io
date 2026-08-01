@@ -3,7 +3,7 @@ date: November 28, 2021
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-### <span id="tl-dr"></span>TL;DR
+## <span id="tl-dr"></span>TL; DR
 
 In this article, we explore why positional encoding increases NeRF's high-fidelity reconstruction ability via exploring the paper: <em>Fourier Features Let Networks Learn High-Frequency Functions in Low-Dimensional Domains </em>
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구. Normalizing Flow 부터 Continuous Normalizing Flow 와 Conditional Flow Matching, 그리고 Rectitifed Flow 가 왜 Linear Path 를 채택하는지" />
+    <meta name="description" content="Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구. Normalizing Flow부터 Continuous Normalizing Flow, Conditional Flow Matching까지 살펴보고, Rectified Flow가 왜 linear path를 채택하는지" />
     <meta name="keywords" content="post, 3d-generation, 3D Generation, Generative AI, 3D graphics, computer vision, machine learning" />
     <meta name="author" content="Hwan Heo" />
     <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models-kor/" />
@@ -13,7 +13,7 @@
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://hwan-h-heo.github.io/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models-kor/" />
     <meta property="og:title" content="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models (Korean)" />
-    <meta property="og:description" content="Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구. Normalizing Flow 부터 Continuous Normalizing Flow 와 Conditional Flow Matching, 그리고 Rectitifed Flow 가 왜 Linear Path 를 채택하는지" />
+    <meta property="og:description" content="Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구. Normalizing Flow부터 Continuous Normalizing Flow, Conditional Flow Matching까지 살펴보고, Rectified Flow가 왜 linear path를 채택하는지" />
     <meta property="og:image" content="https://hwan-h-heo.github.io/blogs/posts/250810_flow/assets/remote-40629d4b233a.png" />
     <meta property="og:site_name" content="HwanHeo's Blog" />
     <meta property="article:published_time" content="2025-08-10T00:00:00.000Z" />
@@ -22,19 +22,21 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://hwan-h-heo.github.io/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models-kor/" />
     <meta name="twitter:title" content="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models (Korean)" />
-    <meta name="twitter:description" content="Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구. Normalizing Flow 부터 Continuous Normalizing Flow 와 Conditional Flow Matching, 그리고 Rectitifed Flow 가 왜 Linear Path 를 채택하는지" />
+    <meta name="twitter:description" content="Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구. Normalizing Flow부터 Continuous Normalizing Flow, Conditional Flow Matching까지 살펴보고, Rectified Flow가 왜 linear path를 채택하는지" />
     <meta name="twitter:image" content="https://hwan-h-heo.github.io/blogs/posts/250810_flow/assets/remote-40629d4b233a.png" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"From Flow Matching to Optimal Transport: A Physics-based View of Generative Models","description":"Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구. Normalizing Flow 부터 Continuous Normalizing Flow 와 Conditional Flow Matching, 그리고 Rectitifed Flow 가 왜 Linear Path 를 채택하는지","url":"https://hwan-h-heo.github.io/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models-kor/","mainEntityOfPage":"https://hwan-h-heo.github.io/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models-kor/","image":["https://hwan-h-heo.github.io/blogs/posts/250810_flow/assets/remote-40629d4b233a.png"],"author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"publisher":{"@type":"Person","name":"Hwan Heo"},"datePublished":"2025-08-10","dateModified":"2025-08-10","inLanguage":"ko"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"From Flow Matching to Optimal Transport: A Physics-based View of Generative Models","description":"Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구. Normalizing Flow부터 Continuous Normalizing Flow, Conditional Flow Matching까지 살펴보고, Rectified Flow가 왜 linear path를 채택하는지","url":"https://hwan-h-heo.github.io/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models-kor/","mainEntityOfPage":"https://hwan-h-heo.github.io/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models-kor/","image":["https://hwan-h-heo.github.io/blogs/posts/250810_flow/assets/remote-40629d4b233a.png"],"author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"publisher":{"@type":"Person","name":"Hwan Heo"},"datePublished":"2025-08-10","dateModified":"2025-08-10","inLanguage":"ko"}</script>
 
     <title>From Flow Matching to Optimal Transport: A Physics-based View of Generative Models (Korean) | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css?v=c0cd75f473" rel="stylesheet" />
-    <link href="/blogs/css/typography.css?v=5dcb5db2e1" rel="stylesheet" />
-    <link href="/blogs/css/post.css?v=94d3920cb4" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet" />
+    <link href="/blogs/css/blog.css?v=c4319681dd" rel="stylesheet" />
+    <link href="/blogs/css/sidebar.css?v=975e92b635" rel="stylesheet" />
+    <link href="/css/sidebar-nav.css?v=17f2552cf5" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5e2acfdea5" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=efef9e6e9b" rel="stylesheet" />
     <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
     <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
+    <script src="/js/sidebar-controller.js?v=b1204606e7"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -56,160 +58,129 @@
             })();
         </script>
 </head>
-<body>
-    <nav class="post-site-nav" id="mainNav">
-        <div class="blog-shell post-nav-shell">
-            <div class="post-nav-brand-group">
-                <a class="post-nav-brand" href="/blogs/">Hwan's Blog</a>
-                <a class="post-nav-portfolio-link" href="/">
-                    Portfolio <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
-                </a>
-            </div>
-            <button class="post-nav-toggle" type="button" data-nav-toggle data-open-label="메뉴 열기" data-close-label="메뉴 닫기" aria-controls="postNavPanel" aria-expanded="false" aria-label="메뉴 열기">
-                <span class="post-nav-menu-icon" aria-hidden="true"></span>
-            </button>
-            <div class="post-nav-panel" id="postNavPanel">
-                <ul class="post-nav-actions">
-                    <li class="post-nav-action post-nav-search-item">
-                        <form id="post-nav-search-form" class="post-nav-search" role="search">
-                            <label class="visually-hidden" for="post-nav-search-input">블로그 글 검색</label>
-                            <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
-                            <button type="submit" aria-label="검색">
-                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
-                            </button>
-                        </form>
-                    </li>
-                    <li class="post-nav-action post-nav-theme-item"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><svg class="site-icon theme-toggle-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg></button></li>
-                    <li class="post-nav-action post-nav-language-item"><a href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/" class="post-nav-language-link" data-language-target="eng" aria-label="Switch to English" title="Switch to English">A</a></li>
-                </ul>
-            </div>
+<body class="blog-post-page">
+    <header id="header" class="header blog-sidebar dark-background">
+        <div class="profile-img">
+            <img src="/assets/icon.webp" alt="Portrait illustration of Hwan Heo">
         </div>
-    </nav>
 
-    <header class="masthead" style="background-image: url('/blogs/posts/250810_flow/assets/remote-40629d4b233a.png')">
-        <div class="blog-shell post-hero-shell">
-            <div class="post-reading-row">
-                <div class="post-reading-column">
-                    <div class="post-heading">
-                        <br/>
-                        <h1>From Flow Matching to Optimal Transport: A Physics-based View of Generative Models</h1>
-                        <span class="meta">
-                            Posted on <time datetime="2025-08-10">August 10, 2025</time>
-                            <span style="margin: 0 8px;">•</span>
-                            <svg class="site-icon post-reading-time-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-clock"></use></svg>33 min read
-                        </span>
-                        <div class="post-tags"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
-                        <hr/>
-                    </div>
+        <a href="/blogs/" class="logo">
+            <span class="sitename">Hwan's Blog</span>
+        </a>
+
+        <div class="social-links">
+            <a href="https://github.com/hwanhuh" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
+            <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
+            <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
+            <a href="mailto:hwan.heo.ai@gmail.com" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
+        </div>
+
+        <nav id="navmenu" class="navmenu" aria-label="Blog navigation">
+            <ul>
+                <li>
+                    <a href="/blogs/" class="active" aria-current="location">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house"></use></svg>
+                        <span>Blog Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/" class="sidebar-external-link">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-briefcase"></use></svg>
+                        <span>Portfolio</span>
+                        <svg class="site-icon sidebar-external-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-labs">
+            <details class="sidebar-labs-menu">
+                <summary>
+                    <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-tools"></use></svg>
+                    <span>Labs</span>
+                    <svg class="site-icon sidebar-labs-chevron" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
+                </summary>
+                <div class="sidebar-labs-panel">
+                    <a href="/blogs/3DViewer/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg><span>3D Viewer</span></a>
+                    <a href="/blogs/editor/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg><span>Editor</span></a>
                 </div>
-            </div>
+            </details>
         </div>
     </header>
 
-    <article class="post-article">
-        <div class="blog-shell">
-            <div class="post-reading-row">
-                <div class="post-reading-column">
-                    
-                    <nav class="breadcrumbs" aria-label="Breadcrumb">
-                        <ol>
-                            <li><a href="/">Portfolio</a></li>
-                            <li><a href="/blogs/">Blog</a></li>
-                            <li><a href="/blogs/series/3d-generation/">3D AI</a></li>
-                            <li aria-current="page">From Flow Matching to Optimal Transport: A Physics-based View of Generative Models</li>
-                        </ol>
-                    </nav>
-    
-                    <div id="series-container">
-            <details class="series-card">
-                <summary class="series-summary">
-                    <span class="series-icon" aria-hidden="true"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-collection"></use></svg></span>
-                    <span class="series-summary-copy">
-                        <span class="series-kicker">Series</span>
-                        <strong>3D AI</strong>
-                    </span>
-                    <span class="series-meta">3 / 7</span>
-                    <span class="series-toggle">
-                        <span>7 posts</span>
-                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
-                    </span>
-                </summary>
-                <div class="series-body">
-                    <ol class="series-list">
-                <li class="series-post">
-                    <a href="/blogs/posts/optimizing-sparse-3d-generation-inference-kor/">
-                        <span class="series-post-index">01</span>
-                        <span class="series-post-copy">
-                            <strong>컴파일러가 놓친 Sparse 3D Forward 최적화</strong>
-                            <span>2026.07.27</span>
-                        </span>
-                    </a>
-                </li>
-        
-                <li class="series-post">
-                    <a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/">
-                        <span class="series-post-index">02</span>
-                        <span class="series-post-copy">
-                            <strong>3D 생성형 AI 서비스; Varco3D 개발기</strong>
-                            <span>2026.01.15</span>
-                        </span>
-                    </a>
-                </li>
-        
-                    <li class="series-post is-current" aria-current="page">
-                        <span class="series-post-index">03</span>
-                        <span class="series-post-copy">
-                            <strong>From Flow Matching to Optimal Transport: A Physics-based View of Generative Models</strong>
-                            <span>2025.08.10</span>
-                        </span>
-                    </li>
-            
-                <li class="series-post">
-                    <a href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive-kor/">
-                        <span class="series-post-index">04</span>
-                        <span class="series-post-copy">
-                            <strong>Large 3D Generative Model 구축하기 (2) VAE and DiT 분석</strong>
-                            <span>2025.07.10</span>
-                        </span>
-                    </a>
-                </li>
-        
-                <li class="series-post">
-                    <a href="/blogs/posts/building-large-3d-generative-model-1-data-pre-processing-kor/">
-                        <span class="series-post-index">05</span>
-                        <span class="series-post-copy">
-                            <strong>Large 3D Generative Model 구축하기 (1) 데이터 전처리</strong>
-                            <span>2025.07.02</span>
-                        </span>
-                    </a>
-                </li>
-        
-                <li class="series-post">
-                    <a href="/blogs/posts/an-era-of-3d-generation-kor/">
-                        <span class="series-post-index">06</span>
-                        <span class="series-post-copy">
-                            <strong>3D 생성 모델의 시대</strong>
-                            <span>2025.03.02</span>
-                        </span>
-                    </a>
-                </li>
-        
-                <li class="series-post">
-                    <a href="/blogs/posts/is-diffusions-estimated-depth-really-good-kor/">
-                        <span class="series-post-index">07</span>
-                        <span class="series-post-copy">
-                            <strong>Diffusion 으로 추정한 Depth 진짜 좋나요?</strong>
-                            <span>2024.04.26</span>
-                        </span>
-                    </a>
-                </li>
-        </ol>
+    <main class="main blog-post-main">
+        <nav class="post-site-nav" id="mainNav" aria-label="Post utilities">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-utility-column">
+                        <a class="post-nav-home" href="/blogs/" aria-label="Back to Blog Home">
+                            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg>
+                            <span>Blog Home</span>
+                        </a>
+                        <ul class="post-nav-actions">
+                            <li class="post-nav-action post-nav-search-item">
+                                <form id="post-nav-search-form" class="post-nav-search" role="search" data-collapsible-search>
+                                    <label class="visually-hidden" for="post-nav-search-input">블로그 글 검색</label>
+                                    <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
+                                    <button type="submit" aria-label="검색" aria-controls="post-nav-search-input" aria-expanded="false">
+                                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
+                                    </button>
+                                </form>
+                            </li>
+                            <li class="post-nav-action"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><svg class="site-icon theme-toggle-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg></button></li>
+                            <li class="post-nav-action"><a href="/blogs/posts/from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models/" class="post-nav-language-link" data-language-target="eng" aria-label="Switch to English" title="Switch to English">A</a></li>
+                        </ul>
+                    </div>
                 </div>
-            </details>
-    </div>
+            </div>
+        </nav>
+
+        <header class="masthead post-masthead">
+            <div class="blog-shell post-hero-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-hero-column">
+                        <div class="post-heading">
+                            <div class="post-hero-series">
+                                <span class="post-hero-series-label">Series</span>
+                                <span class="post-hero-series-separator" aria-hidden="true">/</span>
+                                <a href="/blogs/series/3d-generation/">3D AI</a>
+                            </div>
+                            <h1>From Flow Matching to Optimal Transport: A Physics-based View of Generative Models</h1>
+                        </div>
+                    </div>
                 </div>
-                <div class="post-reading-column main-content">
-                    <nav class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Part A. Flow Matching" aria-label="Part A. Flow Matching"><span class="toc-link-text">Part A. Flow Matching</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="1. Normalizing Flow" aria-label="1. Normalizing Flow"><span class="toc-link-text">1. Normalizing Flow</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-2" title="1.1. What is Flow" aria-label="1.1. What is Flow"><span class="toc-link-text">1.1. What is Flow</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="1.2. Likelihood of Normalizing Flow" aria-label="1.2. Likelihood of Normalizing Flow"><span class="toc-link-text">1.2. Likelihood of Normalizing Flow</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-4" title="2. Continuous Normalizing Flow" aria-label="2. Continuous Normalizing Flow"><span class="toc-link-text">2. Continuous Normalizing Flow</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="2.1. Continuous Flow" aria-label="2.1. Continuous Flow"><span class="toc-link-text">2.1. Continuous Flow</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="2.2. Likelihood of CNF" aria-label="2.2. Likelihood of CNF"><span class="toc-link-text">2.2. Likelihood of CNF</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-7" title="3. Flow Matching" aria-label="3. Flow Matching"><span class="toc-link-text">3. Flow Matching</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="3.1. Conditional Flow Matching" aria-label="3.1. Conditional Flow Matching"><span class="toc-link-text">3.1. Conditional Flow Matching</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-9" title="3.2. Final Training Algorithm" aria-label="3.2. Final Training Algorithm"><span class="toc-link-text">3.2. Final Training Algorithm</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="3.3. Rectified Flow" aria-label="3.3. Rectified Flow"><span class="toc-link-text">3.3. Rectified Flow</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-11" title="Part B. Rectified Flow and Optimal Transport" aria-label="Part B. Rectified Flow and Optimal Transport"><span class="toc-link-text">Part B. Rectified Flow and Optimal Transport</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-12" title="4. Optimal Transport" aria-label="4. Optimal Transport"><span class="toc-link-text">4. Optimal Transport</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-13" title="4.1. What is Optimal Transport" aria-label="4.1. What is Optimal Transport"><span class="toc-link-text">4.1. What is Optimal Transport</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-14" title="4.2. Dynamic Optimal Port" aria-label="4.2. Dynamic Optimal Port"><span class="toc-link-text">4.2. Dynamic Optimal Port</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-15" title="5. Classical Mechnics" aria-label="5. Classical Mechnics"><span class="toc-link-text">5. Classical Mechnics</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-16" title="5.1. What is Action" aria-label="5.1. What is Action"><span class="toc-link-text">5.1. What is Action</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-17" title="5.2. Euler-Lagrange Equation" aria-label="5.2. Euler-Lagrange Equation"><span class="toc-link-text">5.2. Euler-Lagrange Equation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-18" title="5.3. Action in Optimal Transport" aria-label="5.3. Action in Optimal Transport"><span class="toc-link-text">5.3. Action in Optimal Transport</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-19" title="5.4. Why Recitifed-Flow is Linear?" aria-label="5.4. Why Recitifed-Flow is Linear?"><span class="toc-link-text">5.4. Why Recitifed-Flow is Linear?</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-20" title="6. Rectified Flow on Manifolf" aria-label="6. Rectified Flow on Manifolf"><span class="toc-link-text">6. Rectified Flow on Manifolf</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-21" title="6.1. Dynamics on a Manifold" aria-label="6.1. Dynamics on a Manifold"><span class="toc-link-text">6.1. Dynamics on a Manifold</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-22" title="6.2. Flow Matching on a Manifold" aria-label="6.2. Flow Matching on a Manifold"><span class="toc-link-text">6.2. Flow Matching on a Manifold</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-23" title="6.3. Geodesic Flow" aria-label="6.3. Geodesic Flow"><span class="toc-link-text">6.3. Geodesic Flow</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-24" title="7. Last Dicussion: Why Linear?" aria-label="7. Last Dicussion: Why Linear?"><span class="toc-link-text">7. Last Dicussion: Why Linear?</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
+            </div>
+        </header>
+
+        <article class="post-article">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-hero-column post-intro-column">
+                        <div class="post-intro-layout">
+                            <div class="post-intro-copy">
+                                <p class="post-intro-deck">Rectified Flow의 생성 경로가 왜 직선으로 수렴하는지, 물리학과 기하학, optimal transport의 관점에서 살펴본다.</p>
+                                <div class="post-intro-topics" aria-label="주제"><div class="post-tags"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div></div>
+                            </div>
+                            <aside class="post-article-info" aria-label="글 정보">
+                                <ul>
+                                    <li data-post-detail="author">
+                                        <strong>작성자</strong>
+                                        <span>Hwan Heo</span>
+                                    </li>
+                                    <li data-post-detail="published">
+                                        <strong>발행</strong>
+                                        <time datetime="2025-08-10">August 10, 2025</time>
+                                    </li>
+                                    <li data-post-detail="reading">
+                                        <strong>읽는 시간</strong>
+                                        <span class="post-detail-reading">33 min read</span>
+                                    </li>
+                                </ul>
+                            </aside>
+                        </div>
+                    </div>
+                    <div class="post-reading-column main-content">
+                        <nav class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Abstract" aria-label="Abstract"><span class="toc-link-text">Abstract</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="Introduction" aria-label="Introduction"><span class="toc-link-text">Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="Part A. Flow Matching" aria-label="Part A. Flow Matching"><span class="toc-link-text">Part A. Flow Matching</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-3" title="1. Normalizing Flow" aria-label="1. Normalizing Flow"><span class="toc-link-text">1. Normalizing Flow</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="1.1. What is Flow" aria-label="1.1. What is Flow"><span class="toc-link-text">1.1. What is Flow</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="1.2. Likelihood of Normalizing Flow" aria-label="1.2. Likelihood of Normalizing Flow"><span class="toc-link-text">1.2. Likelihood of Normalizing Flow</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-6" title="2. Continuous Normalizing Flow" aria-label="2. Continuous Normalizing Flow"><span class="toc-link-text">2. Continuous Normalizing Flow</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="2.1. Continuous Flow" aria-label="2.1. Continuous Flow"><span class="toc-link-text">2.1. Continuous Flow</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.2. Likelihood of CNF" aria-label="2.2. Likelihood of CNF"><span class="toc-link-text">2.2. Likelihood of CNF</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-9" title="3. Flow Matching" aria-label="3. Flow Matching"><span class="toc-link-text">3. Flow Matching</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="3.1. Conditional Flow Matching" aria-label="3.1. Conditional Flow Matching"><span class="toc-link-text">3.1. Conditional Flow Matching</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-11" title="3.2. Final Training Algorithm" aria-label="3.2. Final Training Algorithm"><span class="toc-link-text">3.2. Final Training Algorithm</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-12" title="3.3. Rectified Flow" aria-label="3.3. Rectified Flow"><span class="toc-link-text">3.3. Rectified Flow</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-13" title="Part B. Rectified Flow and Optimal Transport" aria-label="Part B. Rectified Flow and Optimal Transport"><span class="toc-link-text">Part B. Rectified Flow and Optimal Transport</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-14" title="4. Optimal Transport" aria-label="4. Optimal Transport"><span class="toc-link-text">4. Optimal Transport</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-15" title="4.1. What is Optimal Transport" aria-label="4.1. What is Optimal Transport"><span class="toc-link-text">4.1. What is Optimal Transport</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-16" title="4.2. Dynamic Optimal Port" aria-label="4.2. Dynamic Optimal Port"><span class="toc-link-text">4.2. Dynamic Optimal Port</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-17" title="5. Classical Mechnics" aria-label="5. Classical Mechnics"><span class="toc-link-text">5. Classical Mechnics</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-18" title="5.1. What is Action" aria-label="5.1. What is Action"><span class="toc-link-text">5.1. What is Action</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-19" title="5.2. Euler-Lagrange Equation" aria-label="5.2. Euler-Lagrange Equation"><span class="toc-link-text">5.2. Euler-Lagrange Equation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-20" title="5.3. Action in Optimal Transport" aria-label="5.3. Action in Optimal Transport"><span class="toc-link-text">5.3. Action in Optimal Transport</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-21" title="5.4. Why Recitifed-Flow is Linear?" aria-label="5.4. Why Recitifed-Flow is Linear?"><span class="toc-link-text">5.4. Why Recitifed-Flow is Linear?</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-22" title="6. Rectified Flow on Manifolf" aria-label="6. Rectified Flow on Manifolf"><span class="toc-link-text">6. Rectified Flow on Manifolf</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-23" title="6.1. Dynamics on a Manifold" aria-label="6.1. Dynamics on a Manifold"><span class="toc-link-text">6.1. Dynamics on a Manifold</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-24" title="6.2. Flow Matching on a Manifold" aria-label="6.2. Flow Matching on a Manifold"><span class="toc-link-text">6.2. Flow Matching on a Manifold</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-25" title="6.3. Geodesic Flow" aria-label="6.3. Geodesic Flow"><span class="toc-link-text">6.3. Geodesic Flow</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-26" title="7. Last Dicussion: Why Linear?" aria-label="7. Last Dicussion: Why Linear?"><span class="toc-link-text">7. Last Dicussion: Why Linear?</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
@@ -231,14 +202,10 @@
     </div>
 </div>
 
-<ul>
-<li><p><strong>Normalizing Flow</strong> 부터 <strong>Continuous Normalizing Flow</strong> 와 <strong>Conditional Flow Matching</strong>, 그리고 <strong>Rectitifed Flow 가 왜 Linear Path 를 채택하는지</strong> 수학적, 물리적으로 상세하게 이해해보자. </p>
-</li>
-<li><p>Flow Matching 은 그 이론적 깊이 때문에 쉽게 접근할 수 있는 설명 자료가 아직 부족합니다. 많은 연구자, 개발자들이 &#39;왜 하필 직선 경로가 효과적인가?&#39; 라는 근본적인 질문에 대한 깊이 있는 직관을 갖기는 어렵습니다. 이 글은 그런 실정에서 수학, 물리학, 그리고 최신 논문에 흩어져 있는 Flow Matching 의 핵심 아이디어들을 하나의 유기적인 이야기로 엮어내어, Flow Matching 의 &#39;Why&#39; 에 대한 직관을 얻어 가는 것을 목표로 삼고 씌여졌습니다.</p>
-</li>
-</ul>
-<hr>
-<h4>Introduction</h4>
+<h2 id="toc-heading-0">Abstract</h2>
+<p><strong>Normalizing Flow</strong>부터 <strong>Continuous Normalizing Flow</strong>, <strong>Conditional Flow Matching</strong>까지 살펴보고, <strong>Rectified Flow가 왜 linear path를 채택하는지</strong> 수학적·물리적으로 이해해본다.</p>
+<p>Flow Matching은 이론적 깊이 때문에 쉽게 접근할 수 있는 설명 자료가 아직 부족하다. 이 글은 수학, 물리학, 최신 논문에 흩어진 핵심 아이디어를 하나의 흐름으로 엮어, “왜 직선 경로가 효과적인가?”라는 근본적인 질문에 대한 직관을 만드는 것을 목표로 한다.</p>
+<h2 id="toc-heading-1">Introduction</h2>
 <p>최근 생성 모델의 흐름은 크게 두 가지 접근법으로 나눌 수 있다. </p>
 <p>하나는 노이즈에서부터 점차 이미지를 생성해나가는 <strong>Diffusion Model</strong> 이고, 다른 하나는 노이즈와 이미지를 직접적으로 잇는 <strong>Flow</strong> 기반 모델이다.</p>
 <img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-37fd8aba8f3c.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — Introduction" loading="lazy" decoding="async">
@@ -252,10 +219,10 @@
 </ul>
 <p>이 단순하고 강력한 아이디어를 기반으로 한 <em><strong>Rectified Flow</strong></em> 는 등장과 함께 가장 주목받는 state-of-the-art 생성 프레임워크 중 하나로 자리 잡았다. Rectified Flow 는 노이즈 $z_0$ 와 target $z_1$ 사이의 무수히 많은 가능한 ODE 경로 중, 가장 단순한 <strong>직선 경로</strong>를 가정한다. 이 덕분에 학습은 안정화되고 샘플링 속도는 비약적으로 빨라졌다.</p>
 <p>이번 글에서는 이 ODE 기반 생성 모델의 한 축을 담당하는 <strong>Flow Matching</strong> 에 대해 먼저 알아보며, 그 중 한 형태인 <strong>Rectified Flow</strong> 가 왜 그토록 단순하고 강력한 <em>&#39;직선 경로&#39;</em> 를 채택했는지 파헤치기 위해 <strong>Optimal Transport</strong> 이론까지 깊이 살펴보도록 하겠다.</p>
-<h2 id="toc-heading-0">Part A. Flow Matching</h2>
+<h2 id="toc-heading-2">Part A. Flow Matching</h2>
 <hr>
-<h2 id="toc-heading-1">1. Normalizing Flow</h2>
-<h3 id="toc-heading-2">1.1. What is Flow</h3>
+<h2 id="toc-heading-3">1. Normalizing Flow</h2>
+<h3 id="toc-heading-4">1.1. What is Flow</h3>
 <p>Flow 기반 모델의 아이디어는 단순하고 우아하다.</p>
 <blockquote>
 <p><em>&quot;쉽게 다룰 수 있는 단순한 확률 분포 (<em>e.g.,</em> gaussian distribution) 를, 어떤 복잡하지만 근사하고 싶은 실제 데이터 분포로 &#39;변환&#39;하는 함수를 학습할 수 있을까?&quot;</em></p>
@@ -272,7 +239,7 @@ $$
 관계를 만족하는 <em><strong>continuous, differentiable, invertible</strong></em> 한 mapping function $\phi$ 를 찾는 것이다. </p>
 <p>이 목표를 달성하려면, 변환된 샘플 $x_1$이 데이터 분포 $p_1$에 속할 확률, 즉 <strong>likelihood $p_1(x_1)$</strong> 을 계산하고 이를 최대화해야 한다. </p>
 <hr>
-<h3 id="toc-heading-3">1.2. Likelihood of Normalizing Flow</h3>
+<h3 id="toc-heading-5">1.2. Likelihood of Normalizing Flow</h3>
 <p>이제 <strong><a href="https://en.wikipedia.org/wiki/Change_of_variables">Change of Variables Theorem</a></strong> 를 이용하여 $x_1$ 과 $x_0$ 의 관계를 정리하면, 변환 $\phi$ 전후의  infinitesimal probability 이 동일해야한다는 관계를 얻는다 (probability mass).</p>
 <p>$$
 p_1(x_1)|dx_1| = p_0(x_0)|dx_0|
@@ -299,8 +266,8 @@ $$</p>
 <li><strong>계산 비용</strong>: Jacobian determinant 의 계산 비용$\mathcal{O}(D^3)$ 이 너무 커서 고차원 데이터에는 적용하기 어렵다.</li>
 </ol>
 <hr>
-<h2 id="toc-heading-4">2. Continuous Normalizing Flow</h2>
-<h3 id="toc-heading-5">2.1. Continuous Flow</h3>
+<h2 id="toc-heading-6">2. Continuous Normalizing Flow</h2>
+<h3 id="toc-heading-7">2.1. Continuous Flow</h3>
 <p>이 문제를 해결하기 위해,</p>
 <blockquote>
 <p><em>&quot;하나의 거대한 변환 함수 $\phi$ 대신, 아주 작은 변화들을 무한히 연결한 &#39;Flow&#39; 로 생각하면 어떨까?&quot;</em> </p>
@@ -326,7 +293,7 @@ $$
 $$</p>
 <p>여기서 $u_t(x_t)$는 시간 $t$ 와 위치 $x_t$ 가 주어졌을 때, 해당 위치의 확률 밀도 &#39;입자&#39;가 어느 방향과 속도로 움직여야 하는지 정의하는 <strong>velocity vector field</strong> 이다. 이제 우리의 목표는 변환 함수 $\phi$ 대신, 이 velocity field $u_t$를 신경망으로 학습하는 것이 된다.</p>
 <hr>
-<h3 id="toc-heading-6">2.2. Likelihood of CNF</h3>
+<h3 id="toc-heading-8">2.2. Likelihood of CNF</h3>
 <p>Continuous Flow 을 도입하면서 얻는 가장 극적인 이점은 <strong>likelihood</strong> 계산 방식의 근본적인 변화이다. 기존의 이산적 변환에서는 계산이 거의 불가능했던 <strong>Jacobian determinant</strong> 이, 연속적인 흐름에서는 훨씬 다루기 쉬운 <strong>divergence 의 적분</strong> 으로 대체된다. </p>
 <p>이 원리를 이해하기 위해, 먼저 <em><strong>확률을 하나의 &#39;fluid&#39; 로 바라보는 관점</strong></em> 에서 시작해보자.</p>
 <hr>
@@ -464,7 +431,7 @@ divergence 의 정의와 동일한 것을 알 수 있다. </p>
 <p>즉, 유체의 부피 변화 (팽창/수축) 가 아닌, <strong>rotation</strong> 이나 <strong>shear</strong> 을 유발한다. 애초에 우리가 determinant 로 구하고 싶은 것은 <em><strong>선형 변환 간의 부피의 변화율</strong></em> 이었으므로 이러한 off-diagonal 들은 여기에 기여하지 않는다는 것을 알 수 있다.</p>
 <p>결론적으로, 이산적 변환에서 필요했던 <strong>Jacobian determinant</strong> 계산이 continuous flow 에서는 <strong>Jacobian trace</strong> 계산으로 바뀌었다. Determinant 은 모든 원소에 의존하며 계산량이 $\mathcal{O}(D^3)$이지만, trace 은 대각 원소들만의 합이므로 계산이 훨씬 간단하다.</p>
 <hr>
-<h2 id="toc-heading-7">3. Flow Matching</h2>
+<h2 id="toc-heading-9">3. Flow Matching</h2>
 <p>Continuous Normalizing Flow (CNF)는 Jacobian determinant 을 trace 의 적분으로 대체하여 계산을 용이하게 만들었지만, 여전히 심각한 문제, 바로 <strong><em>느린 학습 속도</em></strong> 가 남아있다. Log-likelihood 를 계산하기 위해서는 매 학습 단계마다 ODE 를 풀어야 했고, 이는 본질적으로 diffusion model 의 느린 샘플링 과정을 매번 반복하는 것과 유사했다.</p>
 <p>Neural Network 로 velocity field $v_\theta(x_t, t)$ 를 학습시키기 위한 이상적인 loss function 은 다음과 같다.</p>
 <p>$$
@@ -478,7 +445,7 @@ $$</p>
 <p>이는 구조적으로 <strong><em>DDPM 의 GT noise regression 문제와도 유사</em></strong> 하지만, 결정적인 차이가 존재한다. &quot;전체 데이터 분포 $p_0$ 를 $p_1$ 으로 변환하는 <strong>&#39;GT&#39; marginal velocity field $u_t(x_t)$ 를 애초에 알지 못한다</strong>&quot;는 사실이다.</p>
 <p>이 velocity field 는 시간 $t$ 에서의 전체 데이터 분포 $p_t(x)$ 의 변화를 나타내는 복잡한 양으로, 직접 계산하는 것이 불가능하다. </p>
 <hr>
-<h3 id="toc-heading-8">3.1. Conditional Flow Matching</h3>
+<h3 id="toc-heading-10">3.1. Conditional Flow Matching</h3>
 <p>이 막다른 길을 뚫기 위해 <strong>Conditional Flow Matching, (CFM)</strong> 라는 트릭이 등장한다. CFM 의 핵심 아이디어는 다음과 같이 요약된다.</p>
 <blockquote>
 <p>*&quot;분포 전체의 경로 $p_t(x)$를 따라가는 복잡한 &#39;marginal vector field&#39; $u_t(x)$를 직접 학습하는 대신, <strong>개별 샘플 쌍 ($z_0$, $z_1$)을 잇는 간단한 &#39;conditional vector field&#39; $u_t(x|z_1)$을 모방하도록 Network 를 학습시키자.</strong>&quot;*</p>
@@ -582,7 +549,7 @@ $$</p>
 
 <p>이 덕분에 우리는 복잡한 분포에서 샘플링할 필요 없이, 간단한 덧셈과 곱셈만으로 학습에 필요한 데이터 $x_t$를 생성할 수 있다.</p>
 <hr>
-<h3 id="toc-heading-9">3.2. Final Training Algorithm</h3>
+<h3 id="toc-heading-11">3.2. Final Training Algorithm</h3>
 <img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-eb0c00175b28.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.2. Final Training Algorithm" loading="lazy" decoding="async">
 
 
@@ -603,7 +570,7 @@ $</li>
 
 
 <hr>
-<h3 id="toc-heading-10">3.3. Rectified Flow</h3>
+<h3 id="toc-heading-12">3.3. Rectified Flow</h3>
 <p>CFM 의 틀 안에서, 우리는 어떤 <strong><em>&#39;Conditional Path&#39;</em></strong> 든 자유롭게 설계할 수 있다. 여기서 Rectified Flow는 가장 단순하고 직관적인 선택을 한다.</p>
 <blockquote>
 <p>*&quot;노이즈 $x_0$ 와 데이터 $x_1$ 사이를 잇는 가장 간단한 경로는 <strong>직선</strong>이다.&quot;*</p>
@@ -634,23 +601,23 @@ $$</p>
 <p><em><strong>&quot;수많은 가능한 경로 중에, 왜 하필 이 &#39;직선&#39; 경로가 이토록 효과적인가?&quot;</strong></em></p>
 </blockquote>
 <p>단순히 계산이 편하다는 공학적 타협일까? 아니면 그 이면에 더 깊은 수학적, 물리적 원리가 숨어있는 것일까?</p>
-<h2 id="toc-heading-11">Part B. Rectified Flow and Optimal Transport</h2>
+<h2 id="toc-heading-13">Part B. Rectified Flow and Optimal Transport</h2>
 <p>앞선 질문에 답하기 위해, 우리는 하나의 가정을 설정하고, 그 가정이 어떤 결론으로 이어지는지 고찰해 보고자 한다. 바로 생성 모델이 <em>노이즈에서 데이터로 가는 경로를 찾는 &#39;비용 (Cost)&#39; 을, 물리학에서 입자들이 움직이는 &#39;총 운동 에너지 (Total Kinetic Energy)&#39; 와 동일하다고 가정</em> 하는 것이다. </p>
 <p>이는 수학적으로 두 분포 사이의 L2 Wasserstein 거리를 최소화하는 Dynamic Optimal Transport 문제와 깊은 관련이 있는데, 이를 이해하기 위해 물리학의 <strong>Least Action Principle (최소 작용의 원리)</strong> 와 수학의 <strong>Optimal Transport</strong> 을 통해 그 근본 원리를 파헤쳐보자.</p>
 <hr>
-<h2 id="toc-heading-12">4. Optimal Transport</h2>
-<h3 id="toc-heading-13">4.1. What is Optimal Transport</h3>
+<h2 id="toc-heading-14">4. Optimal Transport</h2>
+<h3 id="toc-heading-15">4.1. What is Optimal Transport</h3>
 <p>먼저 <a href="https://en.wikipedia.org/wiki/Transportation_theory_(mathematics)">optimal transport</a> 를 직관적으로 이해해보자. 여기 흙이 쌓여있는 언덕 ($X$, 소스 분포)이 있고, 이 흙을 모두 파내서 어딘가에 있는 구덩이 ($Y$, 타겟 분포)를 메워야 한다고 상상해보자.</p>
 <img style='width:100%' src="/blogs/posts/250810_flow/assets/remote-526387c8d0ca.png" width="100%" alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 4.1. What is Optimal Transport" loading="lazy" decoding="async">
 
 <p>이때 &quot;가장 효율적으로&quot; 흙을 옮기려면 어떻게 해야 할까? </p>
 <p>&#39;효율적&#39;이라는 것은 총 이동 비용(Cost)을 최소화하는 것을 의미한다. 최적 수송은 바로 이 문제, 즉 한 확률 분포 (흙더미)를 다른 확률 분포 (구덩이)로 변환하는 데 필요한 <strong>최소 비용의 Transport Plan</strong>을 찾는 수학 이론이다.</p>
-<h3 id="toc-heading-14">4.2. Dynamic Optimal Port</h3>
+<h3 id="toc-heading-16">4.2. Dynamic Optimal Port</h3>
 <p>전통적인 OT는 &#39;어디의 흙을 어디로 보낼 것인가&#39;라는 최종 매핑 (mapping)에 집중한다. 하지만 생성 모델에서는 샘플이 점차 변해가는 <strong>경로 (path)</strong> 자체가 더 중요하며, 이는 <strong>동적 최적 수송 (Dynamic Optimal Transport)</strong> 의 영역이다. Dynamic OT에서는 시간 $t$ 에 따른 분포의 변화 $p_t$ 와 그 경로를 만드는 <strong>velocity field</strong> $v_t$ 를 고려한다.</p>
 <p>Rectified Flow의 &#39;직선 경로&#39;를 단순한 수학적 트릭이 아닌, 근본적인 원리로 이해하기 위해서는 물리학의 <strong><a href="https://en.wikipedia.org/wiki/Action_principles">Principle of Least Action</a></strong> 를 이해할 필요가 있다.</p>
 <hr>
-<h2 id="toc-heading-15">5. Classical Mechnics</h2>
-<h3 id="toc-heading-16">5.1. What is Action</h3>
+<h2 id="toc-heading-17">5. Classical Mechnics</h2>
+<h3 id="toc-heading-18">5.1. What is Action</h3>
 <p>고전 역학에서, 어떤 물체가 한 지점에서 다른 지점으로 이동할 때, 가능한 수많은 경로 중에서 <strong>Action, $S$ 이라는 물리량을 최소화하는 경로를 선택</strong>하며, 이것이 바로 <strong><a href="https://en.wikipedia.org/wiki/Action_principles">Principle of Least Action</a></strong> 이다. </p>
 <p>이 액션은 <strong>Lagrangian, $L$ 이라는 양을 시간에 따라 적분</strong>한 값으로 정의되며,</p>
 <p>$$
@@ -678,7 +645,7 @@ $$</p>
 <p>최소 작용 원리에 따르면, 입자는 이 action $S$를 최소화하는 경로를 따라 움직인다. 적분 안의 값이 항상 양수이므로, 이 값을 최소화하는 가장 직관적인 방법은 속도($||\dot{x}||$)를 일정하게 유지하며 최단 거리, 즉 <strong>직선으로 움직이는 것</strong>일 것이다.</p>
 <p>실제로 위 액션을 최소화하는 경로를 찾기 위한 미분방정식을 풀어보면, 가속도($\ddot{x}$)가 0이라는 결과가 나온다 ($m\ddot{x} = 0$). 이는 곧 <strong>등속 직선 운동</strong>을 의미한다.</p>
 <hr>
-<h3 id="toc-heading-17">5.2. Euler-Lagrange Equation</h3>
+<h3 id="toc-heading-19">5.2. Euler-Lagrange Equation</h3>
 <p><a href="https://en.wikipedia.org/wiki/Euler%E2%80%93Lagrange_equation">Euler-Lagrange Equation</a> 이란, action 을 최소화 (혹은 stationary 하게, 즉, 극값이나 saddle point!) 하게 만드는 조건에 대한 미분방정식이다. </p>
 <p>이는 변분법으로 유도할 수 있으며, 아래와 같이 정의된다:<br>$$
 \frac{\partial L}{\partial x} - \frac{d}{dt}\left(\frac{\partial L}{\partial \dot{x}}\right) = 0
@@ -722,7 +689,7 @@ $$
 $$</p>
 <p>즉 이는 가속도가 0인, <strong>등속 직선 운동(uniform linear motion)</strong> 을 의미하게 된다. </p>
 <hr>
-<h3 id="toc-heading-18">5.3. Action in Optimal Transport</h3>
+<h3 id="toc-heading-20">5.3. Action in Optimal Transport</h3>
 <h4>5.3.1. Action in Probability Distribution</h4>
 <p>이제 이 개념을 단일 입자에서 <strong>무수히 많은 입자들의 집합</strong>, 즉 <strong>확률 분포</strong>로 확장해 보자.</p>
 <ul>
@@ -812,7 +779,7 @@ $$</li>
 $$\frac{1}{2}\nabla(A \cdot A) = (A \cdot \nabla)A + A \times (\nabla \times A)
 $$</p>
 <hr>
-<h3 id="toc-heading-19">5.4. Why Recitifed-Flow is Linear?</h3>
+<h3 id="toc-heading-21">5.4. Why Recitifed-Flow is Linear?</h3>
 <p>$$
 \ddot{x}(t) = 0
 $$</p>
@@ -821,7 +788,7 @@ $$</p>
 <img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-40629d4b233a.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 5.4. Why Recitifed-Flow is Linear?" loading="lazy" decoding="async"></p>
 <p>따라서 Rectified Flow가 채택한 &#39;직선 경로&#39; $z_t = (1-t)z_0 + t z_1$ 는 임의의 선택이 아니라, <strong>물리 법칙과 수학적 최적화에 근거한 가장 자연스럽고 효율적인 경로</strong>라고 해석할 수 있다.</p>
 <hr>
-<h2 id="toc-heading-20">6. Rectified Flow on Manifolf</h2>
+<h2 id="toc-heading-22">6. Rectified Flow on Manifolf</h2>
 <p>Part B에서 우리는 최소 작용의 원리를 통해 Rectified Flow의 &#39;직선 경로&#39;가 물리적으로 최적의 경로임을 보였다. 자유 공간에서 Action 을 최소화하는 경로는 등속 직선 운동이라는 결론은 명쾌하고 아름답다.</p>
 <p>하지만 여기서 의문이 하나 남는다. </p>
 <blockquote>
@@ -833,7 +800,7 @@ $$</p>
 <p>Riemannian Manifold $(M, g)$는 각 지점 $x$가 국소적으로는 Euclidean Space 처럼 보이는 공간 $M$ 과, 각 지점의 <strong>Tangent Space $T_M$</strong> 위에서 거리와 각도를 측정하는 <strong>Riemannian Metric $g$</strong> 로 구성된다. </p>
 <p>이제 우리의 핵심 방정식들이 이 휘어진 공간 위에서 어떻게 변하는지 살펴보자.</p>
 <hr>
-<h3 id="toc-heading-21">6.1. Dynamics on a Manifold</h3>
+<h3 id="toc-heading-23">6.1. Dynamics on a Manifold</h3>
 <p>Part A에서 우리는 확률 분포의 동역학이 <strong>Continuity Equation</strong> 으로 기술됨을 보았다.</p>
 <ul>
 <li><strong>Euclidean Space:</strong> $${\frac{\partial p_t(x)}{\partial t} = - \nabla \cdot (p_t(x) u_t(x))}$$</li>
@@ -848,7 +815,7 @@ $$</p>
 $$</p>
 <p>이는 Continuous Normalizing Flow 의 핵심 메커니즘이 데이터의 기하학적 구조가 Euclid Space 가 아니더라도 여전히 유효함을 의미한다. 우리는 여전히 velocity field <code>u</code>의 divergence 을 통해 log-likelihood 를 계산할 수 있다.</p>
 <hr>
-<h3 id="toc-heading-22">6.2. Flow Matching on a Manifold</h3>
+<h3 id="toc-heading-24">6.2. Flow Matching on a Manifold</h3>
 <p>이제 매칭할 목표인 Loss 함수를 재정의해야 한다. </p>
 <p>Euclidean Space 에서는 두 벡터의 차이를 L2 norm으로 측정했다. Manifold  에서는 이 역할을 Riemannian Metric $g$가 정의하는 내적 $⟨·,·⟩_g$ 이 대신한다.</p>
 <p>따라서, Riemannian Conditional Flow Matching <strong>(RCFM)</strong> 의 Loss 함수는 다음과 같다.</p>
@@ -861,7 +828,7 @@ $$
 
 <p>L2 norm 의문에 대한 핵심적인 답변이 바로 여기에 있다. L2 norm 은 Riemannian Metric $g$ 가 Euclidean metric 인 특수한 경우일 뿐이며, Flow Matching framework 는 데이터에 더 적합한 기하학적 구조를 반영하는 <strong>어떤 metric $g$ 도 수용할 수 있다.</strong></p>
 <hr>
-<h3 id="toc-heading-23">6.3. Geodesic Flow</h3>
+<h3 id="toc-heading-25">6.3. Geodesic Flow</h3>
 <p>마지막 질문은 이것이다: Euclidean Space 의 &#39;직선 경로&#39;는 Manifold  위에서 무엇으로 대체되는가? 정답은 <a href="https://en.wikipedia.org/wiki/Geodesic"><em><strong>Geodesic</strong></em></a>, 휘어진 공간 위에서 두 점을 잇는 최단 경로이다 (비행기의 최단 항로 또한 geodesic 이다).</p>
 <p>Rectified Flow의 linear interpolation 을 다시 한번 분해해보자.
 $$
@@ -897,7 +864,7 @@ $$</p>
 <p>이제 자유 입자의 Action 을 Manifold 위에서 재정의하면, 총 운동 에너지를 Riemannian Metric $g$ 를 이용해 계산하고 이를 시간에 대해 적분하는 형태가 된다. 그리고 이 Action 을 최소화하는 경로는, 정의에 따라, 바로 <em><strong>Geodesic</strong></em> 이다.</p>
 <p>따라서 Rectified Flow의 &#39;직선 경로&#39; 라는 아이디어는 유클리드 공간에 국한된 특수한 경우가 아니었다. 그것은 <strong>&quot;주어진 기하학적 구조 (Manifold, metric) 하에서 에너지 소모 (Action)가 가장 적은 경로를 따른다&quot;</strong> 는 더 깊고 일반적인 물리적 원리의 한 단면을 반영한다. $$\ddot{x}=0$$ 이라는 단순한 방정식은, Manifold 위에서는 더 복잡한 geodesic equation 으로 대체되지만 그 근본 원리는 동일하다.</p>
 <hr>
-<h2 id="toc-heading-24">7. Last Dicussion: Why Linear?</h2>
+<h2 id="toc-heading-26">7. Last Dicussion: Why Linear?</h2>
 <h4>Q. Rectified Flow의 미스터리: 왜 &#39;틀린&#39; 직선 경로가 작동하는가?</h4>
 <p>앞서 살펴본 것처럼 우리가 추구하는 가장 이상적인 변환 경로는 manifold 위에서의 최단 거리인 <strong>Geodesic</strong> 이다. 이는 유클리드 공간의 덧셈/뺄셈을 manifold의 언어인 <code>exp/log</code> 맵으로 일반화한 것이며, Rectified Flow의 &#39;궁극적인&#39; 형태라고 할 수 있다.</p>
 <p>$$ \psi_t(x_0|x_1) = \exp_{x_0}(t \cdot \log_{x_0}(x_1)) $$</p>
@@ -951,9 +918,21 @@ $$
 <li><a href="https://arxiv.org/abs/2209.14577">Rectified Flow: A Marginal Preserving Approach to Optimal Transport</a></li>
 </ul>
 
-                </div>
-                <div class="post-reading-column">
-                    
+                    </div>
+                    <div class="post-reading-column post-end-matter">
+                        <section class="post-author-note" aria-labelledby="post-author-name">
+                            <img class="post-author-portrait" src="/assets/profile4-author.png" alt="Hwan Heo" loading="lazy">
+                            <div class="post-author-copy">
+                                <span class="post-author-kicker">Written by</span>
+                                <h2 id="post-author-name">Hwan Heo</h2>
+                                <p>대규모 3D 생성 모델부터 CUDA 추론 최적화와 그래픽스 파이프라인까지, 실제 제품으로 이어지는 3D AI 시스템을 만듭니다.</p>
+                                <div class="post-author-links" aria-label="Author links">
+                                    <a href="mailto:hwan.heo.ai@gmail.com">Email</a>
+                                    <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                                </div>
+                            </div>
+                        </section>
+                        
                     <section class="related-posts" aria-labelledby="related-posts-heading">
                         <h2 id="related-posts-heading">Related Posts</h2>
                         <div class="related-post-grid">
@@ -989,7 +968,7 @@ $$
                         </div>
                     </section>
     
-                    <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
+                        <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
                 <a class="post-nav-card is-older" href="/blogs/posts/building-large-3d-generative-model-2-vae-and-dit-deep-dive-kor/" aria-label="Previous Post: Large 3D Generative Model 구축하기 (2) VAE and DiT 분석">
                     <span class="post-nav-kicker">
                         <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
@@ -1004,20 +983,25 @@ $$
                     <strong>3D 생성형 AI 서비스; Varco3D 개발기</strong>
                 </a>
     </nav></div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </article>
+        </article>
 
-    <footer class="blog-post-footer">
-        <div class="blog-shell">
-            <div class="post-reading-row">
-                <div class="post-reading-column">
-                    <div class="blog-footer-note">Copyright © Hwan Heo</div>
+        <button id="scroll-top" class="scroll-top button_top post-scroll-top" type="button" aria-label="Back to top">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up"></use></svg>
+        </button>
+
+        <footer class="blog-post-footer">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column">
+                        <div class="blog-footer-note">Copyright © Hwan Heo</div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        </footer>
+    </main>
 
     <script>
         window.siteData = {
@@ -1075,8 +1059,8 @@ $$
       "id": "250823_sdf",
       "title_eng": "SDF and Eikonal Equation",
       "title_kor": "SDF 와 Eikonal Equation 의 관계는?",
-      "subtitle_eng": "Why signed distance field induces eikonal equation",
-      "subtitle_kor": "Eikonal equation 의 해가 왜 signed distance field 인지 알아보자",
+      "subtitle_eng": "A rigorous derivation of why a signed distance field satisfies the Eikonal equation, from its geometric definition to gradient bounds.",
+      "subtitle_kor": "Signed distance field의 기하학적 정의에서 출발해, gradient의 크기가 왜 Eikonal equation을 만족하는지 엄밀하게 유도한다.",
       "description_eng": "Why signed distance field induces eikonal equation",
       "description_kor": "Eikonal equation 의 해가 왜 signed distance field 인지 알아보자",
       "tags": [
@@ -1099,7 +1083,7 @@ $$
       "title_eng": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
       "title_kor": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
       "subtitle_eng": "Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow",
-      "subtitle_kor": "Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구",
+      "subtitle_kor": "Rectified Flow의 생성 경로가 왜 직선으로 수렴하는지, 물리학과 기하학, optimal transport의 관점에서 살펴본다.",
       "description_eng": "Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow",
       "description_kor": "Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구",
       "tags": [
@@ -1122,8 +1106,8 @@ $$
       "id": "250809_gwn",
       "title_eng": "Generalized Winding Number",
       "title_kor": "Generalized Winding Number",
-      "subtitle_eng": "How to make a robust SDF using GWN from Mesh",
-      "subtitle_kor": "Mesh 에서 GWN 을 이용하여 견고한 SDF 를 계산하는 방법",
+      "subtitle_eng": "How Generalized Winding Numbers turn imperfect meshes into robust inside–outside tests for signed distance field construction.",
+      "subtitle_kor": "불완전하거나 열린 mesh에서도 Generalized Winding Number로 inside/outside를 판별하고 견고한 SDF를 계산하는 방법을 살펴본다.",
       "description_eng": "How to make a robust SDF using GWN from Mesh",
       "description_kor": "Mesh 에서 GWN 을 이용하여 견고한 SDF 를 계산하는 방법",
       "tags": [
@@ -1145,8 +1129,8 @@ $$
       "id": "250710_building_large_3d_2",
       "title_eng": "Building Large 3D Generative Model (2) VAE and DiT Deep Dive",
       "title_kor": "Large 3D Generative Model 구축하기 (2) VAE and DiT 분석",
-      "subtitle_eng": "VAE and DiT Architecture for Vecset vs. Sparse-Voxel",
-      "subtitle_kor": "VAE and DiT 구조 분석 for Vecset vs. Sparse-Voxel",
+      "subtitle_eng": "Comparing vecset and sparse-voxel VAE–DiT architectures, from 3D representation and compression to shape-generation design.",
+      "subtitle_kor": "Vecset과 sparse voxel이 3D shape을 표현하는 방식부터 VAE와 DiT 구조, 생성 모델 설계의 차이까지 비교한다.",
       "description_eng": "VAE and DiT Architecture for Vecset vs. Sparse-Voxel",
       "description_kor": "VAE and DiT 구조 분석 for Vecset vs. Sparse-Voxel",
       "tags": [
@@ -1169,8 +1153,8 @@ $$
       "id": "250702_building_large_3d_1",
       "title_eng": "Building Large 3D Generative Model (1) Data pre-processing",
       "title_kor": "Large 3D Generative Model 구축하기 (1) 데이터 전처리",
-      "subtitle_eng": "Watertight Mesh Conversion and Salient Edge Sampling",
-      "subtitle_kor": "Watertight Mesh 변환과 Salient Edge Sampling",
+      "subtitle_eng": "Preparing training-ready 3D data through watertight mesh conversion, surface sampling, and salient-edge-aware preprocessing.",
+      "subtitle_kor": "대규모 3D 생성 모델의 학습 데이터를 위해 watertight mesh 변환, surface sampling, salient edge 추출 과정을 정리한다.",
       "description_eng": "Watertight Mesh Conversion and Salient Edge Sampling",
       "description_kor": "Watertight Mesh 변환과 Salient Edge Sampling",
       "tags": [
@@ -1193,8 +1177,8 @@ $$
       "id": "250310_model_viewer",
       "title_eng": "3D Model Viewer in Web",
       "title_kor": "커스텀 3D 웹뷰어 만들기",
-      "subtitle_eng": "Custom Threejs 3D Model Viewer",
-      "subtitle_kor": "커스텀 Three.js 3D 모델 뷰어",
+      "subtitle_eng": "Comparing Google model-viewer with a custom Three.js pipeline for embedding, controlling, and presenting 3D assets on the web.",
+      "subtitle_kor": "Google model-viewer와 직접 만든 Three.js viewer를 비교하며, 웹에서 3D asset을 안정적으로 보여주는 방법을 정리한다.",
       "description_eng": "Custom Threejs 3D Model Viewer",
       "description_kor": "커스텀 Three.js 3D 모델 뷰어",
       "tags": [
@@ -1217,8 +1201,8 @@ $$
       "id": "250302_3d_latent_diffusion",
       "title_eng": "An Era of 3D Generation",
       "title_kor": "3D 생성 모델의 시대",
-      "subtitle_eng": "From ShapeVAE to Trellis and Hunyuan3D",
-      "subtitle_kor": "ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것",
+      "subtitle_eng": "Tracing 3D latent diffusion from ShapeVAE to TRELLIS and Hunyuan3D, and comparing how modern systems represent and generate shape.",
+      "subtitle_kor": "ShapeVAE에서 TRELLIS와 Hunyuan3D까지, 3D latent diffusion이 shape을 표현하고 생성하는 방식을 비교한다.",
       "description_eng": "From ShapeVAE to Trellis and Hunyuan3D",
       "description_kor": "ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것",
       "tags": [
@@ -1241,8 +1225,8 @@ $$
       "id": "250106_tomography",
       "title_eng": "Neural Rendering Beyond Photography",
       "title_kor": "X-Ray 와 NeRF",
-      "subtitle_eng": "NeRF for Tomography & Tip for NeRF Viewer",
-      "subtitle_kor": "의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁",
+      "subtitle_eng": "Applying NeRF and Gaussian Splatting beyond photography to X-ray tomography, plus a lightweight viewer workflow built with Viser.",
+      "subtitle_kor": "NeRF와 Gaussian Splatting을 X-ray tomography에 적용하는 원리를 살펴보고, Viser 기반 viewer 제작 팁까지 정리한다.",
       "description_eng": "NeRF for Tomography & Tip for NeRF Viewer",
       "description_kor": "의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁",
       "tags": [
@@ -1265,8 +1249,8 @@ $$
       "id": "240917_3djs",
       "title_eng": "Add Gaussian Splatting to Your Website",
       "title_kor": "웹사이트에 3D GS 삽입하기",
-      "subtitle_eng": "Tutorial for GS Scene w/ Three-js",
-      "subtitle_kor": "Three-js 이용한 custom GS scene 웹뷰어 tutorial",
+      "subtitle_eng": "A practical Three.js guide to embedding an interactive Gaussian Splatting scene in a website, with no web-graphics background required.",
+      "subtitle_kor": "Three.js를 이용해 웹사이트에 interactive Gaussian Splatting scene을 삽입하고 제어하는 과정을 단계별로 정리한다.",
       "description_eng": "Tutorial for GS Scene w/ Three-js",
       "description_kor": "Three-js 이용한 custom GS scene 웹뷰어 tutorial",
       "tags": [
@@ -1289,8 +1273,8 @@ $$
       "id": "240823_grt",
       "title_eng": "Don't Rasterize, But Ray Trace 3D Gaussian",
       "title_kor": "3D Gaussian Ray Tracing 톺아보기",
-      "subtitle_eng": "In-Depth Review of 3D Gaussian Ray Tracing by NVIDIA",
-      "subtitle_kor": "3D Gaussian Ray Tracing 분석하기",
+      "subtitle_eng": "How NVIDIA’s 3D Gaussian Ray Tracing replaces splat rasterization with differentiable ray tracing—and what that changes.",
+      "subtitle_kor": "NVIDIA의 3D Gaussian Ray Tracing이 splat rasterization을 differentiable ray tracing으로 바꾸는 방식과 장점을 분석한다.",
       "description_eng": "In-Depth Review of 3D Gaussian Ray Tracing by NVIDIA",
       "description_kor": "3D Gaussian Ray Tracing 분석하기",
       "tags": [
@@ -1336,7 +1320,7 @@ $$
     {
       "id": "240721_sfm",
       "title_eng": "Radiance Fields from Deep-based Structure-from-Motion",
-      "subtitle_eng": "Comparison of VGGSfM & MAsT3R",
+      "subtitle_eng": "Comparing VGGSfM and MASt3R as learned Structure-from-Motion pipelines for camera estimation and radiance-field reconstruction.",
       "description_eng": "Comparison of VGGSfM & MAsT3R",
       "description_kor": "Comparison of VGGSfM & MAsT3R",
       "tags": [
@@ -1358,8 +1342,8 @@ $$
       "id": "240602_2dgs",
       "title_eng": "Under the 3D: Geometrically Accurate 2D Gaussian Splatting",
       "title_kor": "2D Gaussian Splatting 톺아보기",
-      "subtitle_eng": "Understanding 2D GS's Algorithm",
-      "subtitle_kor": "3D GS 의 mesh recon 어려움과 이를 해결한 2D GS",
+      "subtitle_eng": "How 2D Gaussian Splatting replaces volumetric blobs with oriented disks to improve surface geometry and mesh reconstruction.",
+      "subtitle_kor": "2D Gaussian Splatting이 volumetric blob 대신 oriented disk를 사용해 surface geometry와 mesh reconstruction을 개선하는 원리를 살펴본다.",
       "description_eng": "Understanding 2D GS's Algorithm",
       "description_kor": "3D GS 의 mesh recon 어려움과 이를 해결한 2D GS",
       "tags": [
@@ -1382,7 +1366,7 @@ $$
       "id": "240426_diffusion_depth",
       "title_eng": "Is Diffusion's Estimated Depth Really Good?",
       "title_kor": "Diffusion 으로 추정한 Depth 진짜 좋나요?",
-      "subtitle_eng": "Making Mesh from Estimated Depth Map by Diffusion",
+      "subtitle_eng": "Evaluating diffusion-estimated depth by turning Marigold predictions into textured meshes and inspecting their geometric consistency.",
       "subtitle_kor": "Diffusion 으로 추정한 Depth Map 을 이용해 Textured Mesh 만들어보기 (feat. Marigold)",
       "description_eng": "Making Mesh from Estimated Depth Map by Diffusion",
       "description_kor": "Diffusion 으로 추정한 Depth Map 을 이용해 Textured Mesh 만들어보기 (feat. Marigold)",
@@ -1406,7 +1390,7 @@ $$
       "id": "240226_sora",
       "title_eng": "Can Sora Understand 3D?",
       "title_kor": "Sora 가 상상하는 3D World",
-      "subtitle_eng": "Radiance Fields Reconstruction from Video Generative AI",
+      "subtitle_eng": "Testing whether video generation models encode enough 3D consistency to reconstruct radiance fields from their synthesized views.",
       "subtitle_kor": "Video Generative AI 로부터 NeRF reconstruction 해보기",
       "description_eng": "Radiance Fields Reconstruction from Video Generative AI",
       "description_kor": "Video Generative AI 로부터 NeRF reconstruction 해보기",
@@ -1429,7 +1413,7 @@ $$
       "id": "231130_nerf_in_game",
       "title_eng": "Can NeRF be used in Game?",
       "title_kor": "NeRF 를 게임 제작에서 이용할 수 있을까?",
-      "subtitle_eng": "Explore Limitations of NeRF",
+      "subtitle_eng": "Examining the quality, rendering, and production constraints that limit NeRF in games—and the workarounds available today.",
       "subtitle_kor": "NeRF 의 단점을 살펴보자",
       "description_eng": "Explore Limitations of NeRF",
       "description_kor": "NeRF 의 단점을 살펴보자",
@@ -1452,7 +1436,7 @@ $$
       "id": "230202_ngp",
       "title_eng": "Instant-NGP Review & Re-Implementation",
       "title_kor": "Instant-NGP 리뷰 및 재구현",
-      "subtitle_eng": "Review of Instant-NGP and PyTorch Re-Implementation",
+      "subtitle_eng": "Reviewing Instant-NGP’s multi-resolution hash encoding and rebuilding its NeRF pipeline step by step in PyTorch.",
       "subtitle_kor": "Review of Instant-NGP and PyTorch Re-Implementation",
       "description_eng": "Review of Instant-NGP and PyTorch Re-Implementation",
       "description_kor": "Review of Instant-NGP and PyTorch Re-Implementation",
@@ -1499,7 +1483,7 @@ $$
       "title_eng": "Change of Basis",
       "title_kor": "Change of Basis",
       "subtitle_eng": "Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)",
-      "subtitle_kor": "대각화와 고윳값, 특이값 분해, Principal Component Analysis (PCA)",
+      "subtitle_kor": "대각화와 고윳값, SVD와 PCA를 통해 좌표계 변환이 복잡한 선형대수 문제를 어떻게 단순화하는지 살펴본다.",
       "description_eng": "Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)",
       "description_kor": "대각화와 고윳값, 특이값 분해, Principal Component Analysis (PCA)",
       "tags": [
@@ -1521,8 +1505,8 @@ $$
       "id": "210909_lin_alg_1",
       "title_eng": "Linear System",
       "title_kor": "Linear System",
-      "subtitle_eng": "Linear System, Linear Transformation, and its Intuitions",
-      "subtitle_kor": "선형시스템과 선형변환, 이에 대한 직관들",
+      "subtitle_eng": "Building intuition for linear systems and transformations through matrices, basis vectors, and geometric mappings.",
+      "subtitle_kor": "행렬과 기저벡터의 관점에서 선형시스템과 선형변환이 공간을 어떻게 바꾸는지 직관적으로 살펴본다.",
       "description_eng": "Linear System, Linear Transformation, and its Intuitions",
       "description_kor": "선형시스템과 선형변환, 이에 대한 직관들",
       "tags": [
@@ -1544,7 +1528,7 @@ $$
       "id": "210602_cv4",
       "title_eng": "3D Stereo Vision and Epipolar Geometry",
       "title_kor": "3D Stereo Vision and Epipolar Geometry",
-      "subtitle_eng": "Camera Projection, Stereo, and Epipolar Geometry",
+      "subtitle_eng": "From camera projection to stereo correspondence, deriving the epipolar geometry used to recover 3D structure from two views.",
       "subtitle_kor": "Camera Projection, Stereo, and Epipolar Geometry",
       "description_eng": "Camera Projection, Stereo, and Epipolar Geometry",
       "description_kor": "Camera Projection, Stereo, and Epipolar Geometry",
@@ -1566,7 +1550,7 @@ $$
       "id": "210502_cv3",
       "title_eng": "Homography and Image Alignment",
       "title_kor": "Homography and Image Alignment",
-      "subtitle_eng": "Image Transformation, Homography, and Correspondence Matching",
+      "subtitle_eng": "How image transformations, homographies, feature correspondences, and alignment connect in practical computer vision pipelines.",
       "subtitle_kor": "Image Transformation, Homography, and Correspondence Matching",
       "description_eng": "Image Transformation, Homography, and Correspondence Matching",
       "description_kor": "Image Transformation, Homography, and Correspondence Matching",
@@ -1588,7 +1572,7 @@ $$
       "id": "210402_cv2",
       "title_eng": "Feature Extraction and Detection",
       "title_kor": "Feature Extraction and Detection",
-      "subtitle_eng": "Image Gradient, Sobel Filter, LoG, and Detection",
+      "subtitle_eng": "A practical tour of image gradients, Sobel and LoG filters, and the feature detection principles built on top of them.",
       "subtitle_kor": "Image Gradient, Sobel Filter, LoG, and Detection",
       "description_eng": "Image Gradient, Sobel Filter, LoG, and Detection",
       "description_kor": "Image Gradient, Sobel Filter, LoG, and Detection",
@@ -1610,7 +1594,7 @@ $$
       "id": "210302_cv1",
       "title_eng": "Image Filter and Morphology",
       "title_kor": "Image Filter and Morphology",
-      "subtitle_eng": "Various Image Filters and Morphology (Erosion & Dilation)",
+      "subtitle_eng": "A practical introduction to spatial image filters and morphology, including erosion, dilation, opening, and closing.",
       "subtitle_kor": "다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여",
       "description_eng": "Various Image Filters and Morphology (Erosion & Dilation)",
       "description_kor": "다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여",
@@ -1675,14 +1659,13 @@ $$
     </script>
 
     <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
-    <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
-    <script src="/blogs/js/blog-shell.js?v=7849cf9818"></script>
+    <script src="/blogs/js/blog-shell.js?v=456de34605"></script>
     <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
-    <script>
-        initBlogShell({
-            formSelector: '#post-nav-search-form',
-            inputSelector: '#post-nav-search-input'
-        });
-    </script>
+        <script>
+            initBlogShell({
+                formSelector: '#post-nav-search-form',
+                inputSelector: '#post-nav-search-input'
+            });
+        </script>
 </body>
 </html>

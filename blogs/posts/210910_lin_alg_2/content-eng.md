@@ -7,14 +7,12 @@ author: Hwan Heo
 
 https://www.deeplearningbook.org/contents/linear_algebra.html -->
 
-...continued from [the previous post](./?id=210909_lin_alg_1).
+## TL; DR
 
-#### TL;DR
+Continued from [the previous post](./?id=210909_lin_alg_1).
 
 This article focuses on the geometric interpretation of linear transformations through the change of basis, exploring various matrix decompositions and their meanings.
 Through this, we will understand that the essence of linear transformation lies in its interaction with the coordinate system (basis), and a good understanding of this naturally connects to various decomposition methods and their applications in deep learning.
-
----
 
 ## 3. Change of Basis
 
