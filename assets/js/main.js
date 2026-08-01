@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
  * Portfolio Hover Media Play (with Loading Spinner)
  * ------------------------------------------------------------------- */
 function initPortfolioBoxes(root = document) {
-  const portfolioBoxes = root.querySelectorAll('.portfolio-project-link:not([data-portfolio-bound])');
+  const portfolioBoxes = root.querySelectorAll('.portfolio-project-cover-link:not([data-portfolio-bound])');
   const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
   portfolioBoxes.forEach(box => {

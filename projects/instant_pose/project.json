@@ -7,12 +7,14 @@
   ],
   "layout": "case-study",
   "overview": [
-    "We traced the failure of joint camera-pose refinement with multi-resolution hash encoding to oscillating coordinate gradients across hash-grid cells, then redesigned the backward interpolation path with smooth weights while retaining the original trilinear forward pass. This enabled stable SE(3) pose refinement without giving up Instant-NGP's fast convergence."
+    "We traced the failure of joint camera-pose refinement with multi-resolution hash encoding to oscillating coordinate gradients across hash-grid cells, then redesigned the backward interpolation path with smooth weights while retaining the original trilinear forward pass.",
+    "The resulting method stabilizes SE(3) pose refinement, achieves state-of-the-art registration accuracy, and preserves hash encoding's efficiency, with training iterations running roughly 20× faster than BARF and GARF."
   ],
   "contributions": [
     "Identified oscillating coordinate gradients as the failure mode of hash-grid pose refinement.",
     "Designed smooth backward interpolation with a straight-through trilinear forward path.",
-    "Added level-wise curriculum training for stable coarse-to-fine registration."
+    "Added level-wise curriculum training for stable coarse-to-fine registration.",
+    "Achieved state-of-the-art camera registration with training iterations running roughly 20× faster than BARF and GARF."
   ],
   "details": [
     {
@@ -26,6 +28,10 @@
     {
       "label": "Organization",
       "value": "NAVER AI Lab, Korea University"
+    },
+    {
+      "label": "Efficiency",
+      "value": "Training iterations roughly 20× faster than BARF and GARF"
     },
     {
       "label": "Paper",

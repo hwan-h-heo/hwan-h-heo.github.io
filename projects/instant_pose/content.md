@@ -123,7 +123,8 @@ Red lines denote pose-error vectors between the ground-truth cameras and the opt
 
 <img class="project-compact-result" src="assets/training_time.png" alt="Training time per iteration">
 
-- Retains Instant-NGP's fast convergence.
+- Runs each training iteration roughly **20× faster** than the BARF and GARF pose-refinement baselines.
+- Retains Instant-NGP's fast convergence instead of trading registration stability for a slower positional encoding.
 - Retains the reconstruction accuracy of multi-resolution hash encoding.
 - Improves the stability of joint camera-pose refinement.
 

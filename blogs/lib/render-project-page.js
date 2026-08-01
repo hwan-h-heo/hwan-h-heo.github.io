@@ -9,6 +9,10 @@ function escapeHtml(value) {
         .replace(/'/g, '&#39;');
 }
 
+function renderInlineStrong(value) {
+    return escapeHtml(value).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+}
+
 function renderProjectSidebarNav(projectNav) {
     if (!projectNav || !Array.isArray(projectNav.items) || projectNav.items.length < 2) {
         return '';
@@ -89,20 +93,66 @@ function renderProjectHero(project) {
 
 function renderProjectDetailItem(detail) {
     const label = escapeHtml(detail && detail.label);
+    const links = Array.isArray(detail && detail.links)
+        ? detail.links.filter((link) => link && link.value)
+        : [];
     const value = escapeHtml(detail && detail.value);
     const url = detail && detail.url ? String(detail.url) : '';
     const externalAttrs = /^https?:\/\//i.test(url)
         ? ' target="_blank" rel="noopener noreferrer"'
         : '';
-    const valueHtml = url
-        ? `<a href="${escapeHtml(url)}"${externalAttrs}>${value}</a>`
-        : value;
+    const valueHtml = links.length
+        ? `<span class="project-detail-links">${links.map((link) => {
+            const linkUrl = link.url ? String(link.url) : '';
+            const linkExternalAttrs = /^https?:\/\//i.test(linkUrl)
+                ? ' target="_blank" rel="noopener noreferrer"'
+                : '';
+            return linkUrl
+                ? `<a href="${escapeHtml(linkUrl)}"${linkExternalAttrs}>${escapeHtml(link.value)}</a>`
+                : `<span>${escapeHtml(link.value)}</span>`;
+        }).join('')}</span>`
+        : url
+            ? `<a href="${escapeHtml(url)}"${externalAttrs}>${value}</a>`
+            : value;
 
     return `              <li><strong>${label}</strong>${valueHtml}</li>`;
 }
 
+function renderProjectOverviewMedia(media) {
+    if (!media || !media.src) {
+        return '';
+    }
+
+    const caption = media.caption ? escapeHtml(media.caption) : '';
+    const captionLinkLabel = media.captionLinkLabel
+        ? escapeHtml(media.captionLinkLabel)
+        : '';
+    const captionUrl = media.captionUrl ? String(media.captionUrl) : '';
+    const captionExternalAttrs = /^https?:\/\//i.test(captionUrl)
+        ? ' target="_blank" rel="noopener noreferrer"'
+        : '';
+    const captionLinkHtml = captionLinkLabel && captionUrl
+        ? `<a href="${escapeHtml(captionUrl)}"${captionExternalAttrs}>${captionLinkLabel}</a>`
+        : '';
+    const captionHtml = caption || captionLinkHtml
+        ? `<figcaption>${caption}${caption && captionLinkHtml ? ' ' : ''}${captionLinkHtml}</figcaption>`
+        : '';
+    const posterAttr = media.poster ? ` poster="${escapeHtml(media.poster)}"` : '';
+    const ariaLabelAttr = media.ariaLabel
+        ? ` aria-label="${escapeHtml(media.ariaLabel)}"`
+        : '';
+
+    return `<figure class="project-overview-media">
+                <video autoplay muted loop playsinline preload="metadata"${posterAttr}${ariaLabelAttr}>
+                  <source src="${escapeHtml(media.src)}" type="${escapeHtml(media.mimeType || 'video/mp4')}">
+                </video>
+                ${captionHtml}
+              </figure>`;
+}
+
 function renderCaseStudyDetailsInner(project, contentHtml, projectNav = null) {
     const overview = Array.isArray(project.overview) ? project.overview.filter(Boolean) : [];
+    const overviewMediaHtml = renderProjectOverviewMedia(project.overviewMedia);
     const contributions = Array.isArray(project.contributions)
         ? project.contributions.filter(Boolean)
         : [];
@@ -117,10 +167,11 @@ function renderCaseStudyDetailsInner(project, contentHtml, projectNav = null) {
             <div class="portfolio-description project-overview">
               <h2>Project Overview</h2>
               ${overview.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('\n              ')}
+              ${overviewMediaHtml}
               ${contributions.length ? `<div class="project-contributions">
                 <p>Core contributions</p>
                 <ul>
-${contributions.map((contribution) => `                  <li>${escapeHtml(contribution)}</li>`).join('\n')}
+${contributions.map((contribution) => `                  <li>${renderInlineStrong(contribution)}</li>`).join('\n')}
                 </ul>
               </div>` : ''}
             </div>

@@ -7,35 +7,36 @@
   ],
   "layout": "case-study",
   "overview": [
-    "VARCO 3D is NC AI's production 3D generative AI service for creating textured meshes from native 3D generation models and GPU-first geometry processing.",
-    "My work spans the full generation stack: mesh pre- and post-processing, designing and training 1B+ parameter in-house 3D generative models from scratch, and moving research-grade inference paths into production service."
+    "VARCO 3D is NC AI’s production 3D generative AI service for creating textured meshes using native 3D generation models and GPU-first geometry processing.",
+    "My work spans the full generation stack: training in-house 3D generative models with more than 1B parameters, optimizing their production inference paths, and building GPU-native mesh and texture-processing systems for asset delivery."
   ],
+  "overviewMedia": {
+    "src": "./assets/community-showcase.mp4",
+    "poster": "./assets/community-showcase-poster.webp",
+    "ariaLabel": "Recent VARCO 3D community creations transitioning from geometry to textured assets",
+    "caption": "Ten recent creations published on",
+    "captionLinkLabel": "VARCO 3D Explore.",
+    "captionUrl": "https://3d.varco.ai/explore"
+  },
   "contributions": [
-    "Designed and trained in-house 3D generative models at 1B+ parameter scale, covering the transition from VARCO 3D 1.0 to 2.0.",
-    "Analyzed the production forward path, removed null-context attention arithmetic, and fused memory-bound paths with custom CUDA kernels and cuBLASLt epilogues.",
-    "Implemented CUDA-based solid correction, QEM decimation, topology cleaning, and large-mesh UV unwrapping paths for production outputs.",
-    "Built a CUDA rasterizer based texture back-projection pipeline that maps multi-view generated images into UV texture space."
+    "Trained dense and sparse in-house 3D generative models with more than 1B parameters.",
+    "Reduced 15-step denoising latency by **25.66% without quantization** through forward-path analysis and CUDA kernel optimization.",
+    "Built a CUDA mesh pipeline that cleans, remeshes, and decimates geometry from **1M to 1K faces in approximately five seconds**.",
+    "Developed a tile-based UV unwrapper that processes meshes with more than **1M faces in under 30 seconds on average**, while maintaining **over 50% UV-space utilization even on challenging inputs**.",
+    "Implemented a CUDA multi-view texture-projection pipeline that generates an **8K texture map in approximately two seconds**."
   ],
   "details": [
     {
       "label": "Role",
-      "value": "3D Model and Production Pipeline R&D"
+      "value": "3D Generation and Production R&D"
     },
     {
       "label": "Organization",
       "value": "NC AI"
     },
     {
-      "label": "Category",
-      "value": "Commercial AI Service, 3D Generation"
-    },
-    {
-      "label": "Model Scale",
-      "value": "1B+ parameter in-house models"
-    },
-    {
-      "label": "Technology",
-      "value": "ShapeVAE, DiT, Sparse 3D, CUDA, cuBLASLt, QEM, UV Unwrapping"
+      "label": "Scale",
+      "value": "1B+ parameter models · 1M-face meshes · 8K textures"
     },
     {
       "label": "Service",
@@ -43,19 +44,17 @@
       "url": "https://3d.varco.ai/"
     },
     {
-      "label": "Technical Writing",
-      "value": "Sparse 3D Inference Optimization",
-      "url": "/blogs/posts/optimizing-sparse-3d-generation-inference/"
-    },
-    {
-      "label": "Retrospective",
-      "value": "VARCO 3D: A Year in Review",
-      "url": "/blogs/posts/varco3d-a-year-in-review-2025-retrospective/"
-    },
-    {
-      "label": "Related Project",
-      "value": "CaPa",
-      "url": "/projects/capa/"
+      "label": "Related Technical Writing",
+      "links": [
+        {
+          "value": "Sparse 3D Inference Optimization",
+          "url": "/blogs/posts/optimizing-sparse-3d-generation-inference/"
+        },
+        {
+          "value": "VARCO 3D: A Year in Review",
+          "url": "/blogs/posts/varco3d-a-year-in-review-2025-retrospective/"
+        }
+      ]
     }
   ],
   "description": "Case study of VARCO 3D, covering 1B+ native 3D model development, CUDA inference optimization, mesh processing, UV unwrapping, and texture delivery.",

@@ -238,7 +238,7 @@ async function waitForCase(page, testCase) {
 
     if (['portfolio', 'blog-home', 'blog-search'].includes(testCase.type)) {
         const dynamicSelector = {
-            portfolio: '#portfolio-projects .portfolio-project-link',
+            portfolio: '#portfolio-projects .portfolio-project-layout',
             'blog-home': '.blog-home-archive .post-preview',
             'blog-search': '#search-results-container .post-preview'
         }[testCase.type];
@@ -323,7 +323,7 @@ async function inspectLayout(page, testCase, width) {
         });
 
         const pairs = [
-            ['#portfolio-projects .portfolio-project-link', '.portfolio-project-cover', '.portfolio-project-body'],
+            ['#portfolio-projects .portfolio-project-layout', '.portfolio-project-cover', '.portfolio-project-body'],
             ['#portfolio-blog-posts .portfolio-blog-preview-item', '.portfolio-blog-preview-cover', '.portfolio-blog-preview-body'],
             ['.post-preview .post-card-link', '.post-card-cover', '.post-card-body']
         ];

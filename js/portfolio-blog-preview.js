@@ -16,6 +16,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     try {
         const { loadSiteData, getPostTitle, getPostDescription, getPostUrl } = window.siteDataClient;
         const coverMedia = window.blogCoverMedia;
+        const externalLinkIcon = window.SiteIcons.render('box-arrow-up-right', {
+            className: 'portfolio-blog-preview-external-icon'
+        });
         const siteData = await loadSiteData();
 
         const escapeHtml = (value) => String(value || '')
@@ -71,20 +74,24 @@ document.addEventListener('DOMContentLoaded', async function() {
 
                 return `
             <article class="portfolio-blog-preview-item">
-              <a href="${escapeHtml(getPostUrl(item.post, 'eng'))}" target="_blank" rel="noopener noreferrer" class="portfolio-blog-preview-link">
-                <span class="portfolio-blog-preview-cover">
-                  <img src="${escapeHtml(preview)}" data-blog-cover data-preview-src="${escapeHtml(preview)}"${autoplaySource}${animatedSource} alt="${escapeHtml(imageAlt)}" loading="lazy" decoding="async">
-                </span>
-                <span class="portfolio-blog-preview-body">
+              <div class="portfolio-blog-preview-layout">
+                <a href="${escapeHtml(getPostUrl(item.post, 'eng'))}" target="_blank" rel="noopener noreferrer" class="portfolio-blog-preview-cover-link" aria-label="Read ${escapeHtml(title)}">
+                  <span class="portfolio-blog-preview-cover">
+                    <img src="${escapeHtml(preview)}" data-blog-cover data-preview-src="${escapeHtml(preview)}"${autoplaySource}${animatedSource} alt="${escapeHtml(imageAlt)}" loading="lazy" decoding="async">
+                  </span>
+                </a>
+                <div class="portfolio-blog-preview-body">
                   <span class="portfolio-blog-preview-eyebrow">
                     <span>${escapeHtml(seriesTitle)}</span>
                   </span>
-                  <span class="portfolio-blog-preview-title">${escapeHtml(title)}</span>
-                  ${subtitle ? `<span class="portfolio-blog-preview-summary">${escapeHtml(subtitle)}</span>` : ''}
+                  <a href="${escapeHtml(getPostUrl(item.post, 'eng'))}" target="_blank" rel="noopener noreferrer" class="portfolio-blog-preview-title-link">
+                    <span class="portfolio-blog-preview-title">${escapeHtml(title)} ${externalLinkIcon}</span>
+                  </a>
+                  <span class="portfolio-blog-preview-summary">${escapeHtml(subtitle)}</span>
                   ${tagsHtml ? `<span class="portfolio-blog-preview-tags">${tagsHtml}</span>` : ''}
                   ${date ? `<span class="portfolio-blog-preview-meta">${escapeHtml(date)}</span>` : ''}
-                </span>
-              </a>
+                </div>
+              </div>
             </article>
         `;
             }).join('');

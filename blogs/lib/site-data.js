@@ -436,20 +436,6 @@ function validateSiteData(rawSiteData) {
         } else {
             validateLocalFileReference(item.teaserImage, errors, `featured portfolio post ${item.id}`, 'teaserImage');
         }
-        if (item.previewTags !== undefined) {
-            if (!Array.isArray(item.previewTags) || item.previewTags.length !== 2) {
-                errors.push(`Featured portfolio post "${item.id}" must define exactly two previewTags.`);
-            } else {
-                item.previewTags.forEach((tag) => {
-                    if (typeof tag !== 'string' || !tag.trim()) {
-                        errors.push(`Featured portfolio post "${item.id}" has an invalid preview tag.`);
-                    }
-                });
-                if (new Set(item.previewTags).size !== item.previewTags.length) {
-                    errors.push(`Featured portfolio post "${item.id}" must not define duplicate previewTags.`);
-                }
-            }
-        }
         if (featuredIds.has(item.id)) {
             errors.push(`Featured portfolio post "${item.id}" is duplicated.`);
         }

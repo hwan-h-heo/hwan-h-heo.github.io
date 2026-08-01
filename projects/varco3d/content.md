@@ -3,7 +3,7 @@
 The practical target of VARCO 3D is not just to synthesize geometry.
 The service path has to produce a textured mesh that is fast to generate, stable to post-process, and usable by downstream 3D workflows.
 
-I worked across three connected layers:
+I worked across three connected layers, from training 1B+ parameter models from scratch to shipping the GPU-native systems around them:
 
 1. **Native 3D generation** — train large in-house geometry models rather than relying on slow per-asset SDS optimization.
 2. **Production inference** — profile and rewrite the expensive denoising path so the model can run under service latency constraints.
@@ -33,6 +33,9 @@ Serving therefore needed model-aware profiling and custom CUDA work rather than 
 On the VARCO 3D 2.0 sparse denoiser, I profiled the forward path and identified null-context attention as arithmetic the model did not need to repeat.
 The optimized path replaces unconditional cross-attention with a fixed-vector path, then fuses memory-bound tensor operations through custom CUDA kernels and cuBLASLt epilogues.
 
+Across ten production assets with 3,664 to 30,227 active tokens, the combined path reduced CUDA-synchronized 15-step denoising latency by **25.66% on average** on A100 BF16.
+The gain came from forward-path and kernel optimization alone, without quantizing the model.
+
 This was not a benchmark-only shortcut.
 The optimized path entered production serving with numerical validation and fallback rules around the fused kernels.
 
@@ -42,18 +45,10 @@ The optimized path entered production serving with numerical validation and fall
 
 To extend geometry generation into textured-mesh delivery, I implemented and optimized the post-generation pipeline around GPU execution:
 
-- **CUDA-based QEM and topology cleaning** for stable simplification and production mesh repair.
+- **CUDA-based topology cleaning, remeshing, and QEM decimation** that robustly reduces meshes from 1M to 1K faces in about five seconds.
 - **Custom UDF kernels** for fast solid correction from generated geometry.
 - **Flood-fill acceleration kernels** to make occupancy and solidness correction practical at service scale.
-- **Optimized tile-based UV unwrapping** so algorithmic unwrap remains stable on million-face meshes.
-- **CUDA rasterizer based back-projection** that uses UV IDs to project multi-view generated images directly into texture-map space.
+- **Optimized tile-based UV unwrapping** that processes meshes with over 1M faces in under 30 seconds on average while keeping UV-space utilization above 50% even in worst-case inputs.
+- **CUDA rasterizer–based back-projection** with visibility-aware view selection and blending that projects multi-view generated images into an 8K UV texture map in approximately two seconds.
 
 This layer is where the generated result becomes a deployable asset: cleaned geometry, controlled face count, valid UVs, and texture maps produced without a slow CPU-bound handoff.
-
-## Result
-
-<video autoplay muted loop playsinline preload="metadata" poster="./assets/community-showcase-poster.webp" aria-label="Recent VARCO 3D community creations transitioning from geometry to textured assets">
-  <source src="./assets/community-showcase.mp4" type="video/mp4">
-</video>
-
-The geometry-to-texture reel uses ten recent public creations from [VARCO 3D Explore](https://3d.varco.ai/explore).

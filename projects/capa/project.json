@@ -7,13 +7,14 @@
   ],
   "layout": "case-study",
   "overview": [
-    "CaPa addressed the Janus problem in image-to-3D generation with Spatially Decoupled Attention, preventing duplicated features and conflicting details across generated views.",
-    "It was the first image-to-3D system to generate 4K textures. The result demonstrated the product potential of native 3D generation inside the company and became a turning point toward the in-house VARCO 3D service."
+    "CaPa is a fully feed-forward Carve-n-Paint system that separates mesh-compatible geometry generation from high-resolution texture synthesis.",
+    "Its model-agnostic Spatially Decoupled Attention prevents duplicated features across views without retraining the underlying 2D model, enabling the first image-to-3D pipeline to deliver complete 4K textured meshes in under 30 seconds. The result became a turning point toward the in-house VARCO 3D service."
   ],
   "contributions": [
-    "Designed Spatially Decoupled Attention to resolve cross-view Janus artifacts.",
-    "Built the Carve-n-Paint pipeline for complete 4K textured meshes in under 30 seconds.",
-    "Established the research direction that developed into VARCO 3D."
+    "Led the geometry and texture pipeline, delivering 4K textured meshes in under 30 seconds.",
+    "Trained an occupancy-based 3D latent diffusion model for mesh-compatible geometry.",
+    "Designed training-free Spatially Decoupled Attention to resolve cross-view Janus artifacts.",
+    "Built 3D-aware occlusion inpainting that restores hidden surfaces in about five seconds."
   ],
   "details": [
     {

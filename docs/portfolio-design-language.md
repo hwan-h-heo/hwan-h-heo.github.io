@@ -156,6 +156,10 @@ not depend on adding a serif family.
   with balanced whitespace rather than a background-color change or an
   additional divider.
 - Fixed-format elements need stable dimensions or aspect ratios.
+- A case-study overview may place one outcome-focused media figure between its
+  overview copy and contributions when the result is the clearest proof of the
+  work; do not repeat the same media later in the article. Keep its caption
+  muted and italic, and underline only the linked destination text.
 - Use whitespace to group related content before adding borders or containers.
 - Major narrative sections may have larger gaps than reference sections.
 - Avoid equal full-page treatment for every section.
@@ -188,11 +192,17 @@ Both preview types use the same order:
 1. Editorial label: project type or blog series
 2. Title
 3. Two-line description
-4. Institution and year, or publication date
-5. Up to two representative technology tags
-6. One meaningful accolade when available
+4. Up to two representative technology tags
+5. Institution and year, or publication date, with one meaningful accolade in
+   the same neutral metadata row when available
 
 Do not add a badge layer. Do not repeat the same classification in multiple
+rows.
+
+Preview rows are editorial reading surfaces, not full-row links. Only the media
+and title are primary links; the title link may fill the horizontal line box it
+occupies. Descriptions, tags, dates, organizations, and accolades remain normal
+selectable text. Apply the same rule to Blog home featured, archive, and search
 rows.
 
 ### Resume
@@ -216,12 +226,15 @@ Use a shared index/table grammar. Do not introduce a separate card system.
   underline grammar. They are text actions, never bordered buttons.
 - Blog preview eyebrows show the series only. `Post` and `Note` remain data
   categories for filtering, not visible metadata.
+- The Blog home featured row retains the series as a secondary kicker beneath
+  its indexed `Featured` label, but uses tighter type rhythm and a compact
+  `1.9:1` media crop on desktop and tablet (`2:1` on mobile).
 - Portfolio and Blog home technology tags share the same neutral inline text
   treatment and middle-dot separator. Preview tags do not use pills.
 - Blog home preview footers show the publication date only; do not repeat the
   series or language availability already communicated elsewhere.
-- Portfolio home preview descriptions reserve a two-line slot before tags and
-  metadata so short copy does not disturb row alignment. Dense Blog archive
+- Portfolio home preview descriptions clamp at two lines but follow their
+  natural height; they do not reserve an empty second line. Dense Blog archive
   rows follow their description's natural height.
 - Blog home archive rows mirror the Portfolio preview hierarchy and alignment,
   while retaining a more compact media rail for the denser archive context.
@@ -248,11 +261,17 @@ Rules:
 - Respect `prefers-reduced-motion`.
 - Keyboard focus must expose the same meaning as hover.
 
-Project and blog card hover has exactly three signals:
+Project and blog preview rows have no row-level hover state. Their two link
+regions respond independently:
 
-1. Media scales to `1.02` with a slight filter adjustment.
-2. Title moves from neutral ink to `--accent-editorial`.
-3. A small external arrow reveals in place.
+1. Hovering or focusing the media link scales its image to `1.02` with a slight
+   filter adjustment.
+2. Hovering or focusing the title link moves it to `--accent-editorial` and
+   reveals its destination icon. Use the boxed external-link icon for
+   `target="_blank"` and a simple directional arrow for same-tab links.
+
+Use the same destination mapping for trailing Contact icons. `mailto:` may keep
+the directional arrow; external profiles use the boxed external-link icon.
 
 Do not add a card lift, background fill, shadow, border-color flash, or summary
 animation to this state.

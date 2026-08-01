@@ -1085,7 +1085,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   padding-bottom: 0;
 }
 
-.portfolio-blog-section .portfolio-blog-preview-link {
+.portfolio-blog-section .portfolio-blog-preview-layout {
   position: relative;
   display: grid;
   grid-template-columns: minmax(220px, 360px) minmax(0, 1fr);
@@ -1093,12 +1093,18 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   align-items: stretch;
   width: 100%;
   min-width: 0;
+}
+
+.portfolio-blog-section .portfolio-blog-preview-cover-link,
+.portfolio-blog-section .portfolio-blog-preview-title-link {
+  display: block;
+  min-width: 0;
   color: inherit;
   text-decoration: none;
 }
 
-.portfolio-blog-section .portfolio-blog-preview-link:hover {
-  color: inherit;
+.portfolio-blog-section .portfolio-blog-preview-title-link {
+  width: 100%;
 }
 
 .portfolio-blog-section .portfolio-blog-preview-cover {
@@ -1135,7 +1141,8 @@ section, .section { color: var(--default-color); background-color: var(--backgro
     filter var(--motion-base) var(--ease-standard);
 }
 
-.portfolio-blog-section .portfolio-blog-preview-link:hover .portfolio-blog-preview-cover img {
+.portfolio-blog-section .portfolio-blog-preview-cover-link:hover .portfolio-blog-preview-cover img,
+.portfolio-blog-section .portfolio-blog-preview-cover-link:focus-visible .portfolio-blog-preview-cover img {
   transform: scale(1.02);
   filter: saturate(1.04) contrast(1.02);
 }
@@ -1174,7 +1181,6 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 
 .portfolio-blog-section .portfolio-blog-preview-summary {
   display: -webkit-box;
-  min-height: 3.16em;
   margin: 0.44rem 0 0;
   color: #526070;
   overflow: hidden;
@@ -1266,7 +1272,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
     padding: 1rem 0;
   }
 
-  .portfolio-blog-section .portfolio-blog-preview-link {
+  .portfolio-blog-section .portfolio-blog-preview-layout {
     grid-template-columns: 1fr;
     gap: 0.75rem;
     align-items: start;
@@ -1812,21 +1818,29 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   padding-bottom: 0;
 }
 
-.portfolio-project-link {
+.portfolio-project-layout {
   position: relative;
   display: grid;
   grid-template-columns: minmax(220px, 360px) minmax(0, 1fr);
   gap: 1.2rem;
   align-items: stretch;
+}
+
+.portfolio-project-cover-link,
+.portfolio-project-title-link {
+  display: block;
+  min-width: 0;
   color: inherit;
   text-decoration: none;
 }
 
-.portfolio-project-link:hover {
-  color: inherit;
+.portfolio-project-title-link {
+  width: 100%;
 }
 
 .portfolio-project-cover {
+  display: block;
+  width: 100%;
   position: relative;
   min-height: 132px;
   aspect-ratio: 16 / 9.4;
@@ -1855,10 +1869,12 @@ section, .section { color: var(--default-color); background-color: var(--backgro
     filter var(--motion-base) var(--ease-standard);
 }
 
-.portfolio-project-link:hover .portfolio-project-cover img,
-.portfolio-project-link:hover .portfolio-project-cover video,
-.portfolio-project-link.is-active .portfolio-project-cover img,
-.portfolio-project-link.is-active .portfolio-project-cover video {
+.portfolio-project-cover-link:hover .portfolio-project-cover img,
+.portfolio-project-cover-link:hover .portfolio-project-cover video,
+.portfolio-project-cover-link:focus-visible .portfolio-project-cover img,
+.portfolio-project-cover-link:focus-visible .portfolio-project-cover video,
+.portfolio-project-cover-link.is-active .portfolio-project-cover img,
+.portfolio-project-cover-link.is-active .portfolio-project-cover video {
   transform: scale(1.02);
   filter: saturate(1.04) contrast(1.02);
 }
@@ -1899,7 +1915,6 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   font-size: 0.82em;
 }
 
-.portfolio-blog-section .portfolio-blog-preview-title::after,
 .portfolio-project-title::after {
   content: "↗";
   display: inline-block;
@@ -1916,24 +1931,35 @@ section, .section { color: var(--default-color); background-color: var(--backgro
     transform 480ms var(--ease-emphasized);
 }
 
-.portfolio-blog-section .portfolio-blog-preview-link:hover .portfolio-blog-preview-title::after,
-.portfolio-blog-section .portfolio-blog-preview-link:focus-visible .portfolio-blog-preview-title::after,
-.portfolio-project-link:hover .portfolio-project-title::after,
-.portfolio-project-link:focus-visible .portfolio-project-title::after {
+.portfolio-blog-section .portfolio-blog-preview-external-icon {
+  display: inline-block;
+  margin-left: 0.34rem;
+  color: var(--accent-on-light);
+  font-size: 0.78em;
+  opacity: 0;
+  transform: translate(-4px, 4px);
+  transition:
+    opacity 480ms var(--ease-emphasized),
+    transform 480ms var(--ease-emphasized);
+}
+
+.portfolio-blog-section .portfolio-blog-preview-title-link:hover .portfolio-blog-preview-external-icon,
+.portfolio-blog-section .portfolio-blog-preview-title-link:focus-visible .portfolio-blog-preview-external-icon,
+.portfolio-project-title-link:hover .portfolio-project-title::after,
+.portfolio-project-title-link:focus-visible .portfolio-project-title::after {
   opacity: 1;
   transform: translate(0, 0);
 }
 
-.portfolio-blog-section .portfolio-blog-preview-link:hover .portfolio-blog-preview-title,
-.portfolio-blog-section .portfolio-blog-preview-link:focus-visible .portfolio-blog-preview-title,
-.portfolio-project-link:hover .portfolio-project-title,
-.portfolio-project-link:focus-visible .portfolio-project-title {
+.portfolio-blog-section .portfolio-blog-preview-title-link:hover .portfolio-blog-preview-title,
+.portfolio-blog-section .portfolio-blog-preview-title-link:focus-visible .portfolio-blog-preview-title,
+.portfolio-project-title-link:hover .portfolio-project-title,
+.portfolio-project-title-link:focus-visible .portfolio-project-title {
   color: var(--accent-editorial);
 }
 
 .portfolio-project-summary {
   display: -webkit-box;
-  min-height: 3.16em;
   margin-top: 0.44rem;
   color: #526070;
   overflow: hidden;
@@ -1956,7 +1982,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 }
 
 .portfolio-project-accolade {
-  color: var(--accent-on-light);
+  color: inherit;
   font-weight: 500;
 }
 
@@ -2314,7 +2340,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
     font-size: 0.64rem;
   }
 
-  .portfolio-project-link {
+  .portfolio-project-layout {
     grid-template-columns: 1fr;
     gap: 0.75rem;
   }
@@ -2434,7 +2460,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 
 @media (prefers-reduced-motion: reduce) {
   .portfolio-blog-section .portfolio-blog-preview-title,
-  .portfolio-blog-section .portfolio-blog-preview-title::after,
+  .portfolio-blog-section .portfolio-blog-preview-external-icon,
   .portfolio-project-title,
   .portfolio-project-title::after {
     transition: none;

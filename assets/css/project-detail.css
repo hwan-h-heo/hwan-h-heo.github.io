@@ -344,6 +344,32 @@
   line-height: 1.76;
 }
 
+.portfolio-details .project-overview-media {
+  margin: 1.5rem 0 0;
+}
+
+.portfolio-details .project-overview-media video {
+  width: 100%;
+  margin: 0;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.portfolio-details .project-overview-media figcaption {
+  margin-top: 0.5rem;
+  color: var(--project-muted);
+  font-size: 0.75rem;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.portfolio-details .project-overview-media figcaption a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--project-line);
+  text-underline-offset: 0.18em;
+}
+
 .portfolio-details .project-case-study-overview {
   margin-bottom: clamp(3.8rem, 6vw, 5.2rem);
 }
@@ -640,6 +666,11 @@
 .portfolio-details .portfolio-info a {
   color: var(--accent-on-light);
   font-weight: 600;
+}
+
+.portfolio-details .project-detail-links {
+  display: grid;
+  gap: 0.1rem;
 }
 
 .portfolio-details .project-page-nav {

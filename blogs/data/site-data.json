@@ -636,6 +636,7 @@
   "portfolioProjects": [
     {
       "id": "varco3d",
+      "allOrder": 0,
       "title": "VARCO 3D",
       "summary": "Led the production 3D generation stack—from 1B+ native models and CUDA inference to mesh processing, UV unwrapping, and texture delivery.",
       "url": "projects/varco3d/",
@@ -650,12 +651,14 @@
       "typeLabel": "Production R&D",
       "organization": "NC AI",
       "period": "2025–Present",
+      "accolade": "30K+ users · 300K+ assets generated",
       "image": "assets/thumbnails/varco3d_thumbnail.webp",
       "gif": "assets/varco3d_hero.webp",
       "alt": "VARCO 3D service teaser"
     },
     {
       "id": "capa",
+      "allOrder": 1,
       "title": "CaPa",
       "summary": "Designed Spatially Decoupled Attention to solve the Janus problem, enabling the first 4K-texture image-to-3D system and leading to VARCO 3D.",
       "url": "projects/capa/",
@@ -677,6 +680,7 @@
     },
     {
       "id": "instant-pose",
+      "allOrder": 5,
       "title": "Instant Pose for Hash-Grid NeRFs",
       "summary": "Identified unstable hash-grid coordinate gradients and designed a smooth backward interpolation path for fast camera-pose refinement, published at ICML 2023.",
       "url": "projects/instant_pose/",
@@ -697,6 +701,7 @@
     },
     {
       "id": "2dgs-viewer",
+      "allOrder": 3,
       "title": "2D GS Viewer",
       "summary": "Built a browser viewer to inspect, edit, train, and export 2D Gaussian Splatting scenes.",
       "url": "projects/2dgs_viewer/",
@@ -719,6 +724,7 @@
     },
     {
       "id": "deepsfm",
+      "allOrder": 2,
       "title": "Deep SfM for Radiance Fields",
       "summary": "Compared VGGSfM and MASt3R for camera recovery in Gaussian Splatting and radiance fields.",
       "url": "projects/deepsfm/",
@@ -740,6 +746,7 @@
     },
     {
       "id": "nerf-in-game",
+      "allOrder": 4,
       "title": "Neural Rendering in Game Engine",
       "summary": "Built a 360° capture-to-engine pipeline, optimizing neural rendering for Unity and Unreal.",
       "url": "projects/nerf_in_game/",
@@ -753,6 +760,7 @@
       "typeLabel": "Applied R&D",
       "organization": "NCSOFT",
       "period": "2023",
+      "accolade": "Published on NCSOFT Research",
       "image": "projects/nerf_in_game/teaser.jpg",
       "alt": "NeRF game teaser"
     }
@@ -868,19 +876,11 @@
   "featuredPortfolioPosts": [
     {
       "id": "260727_sparse_3d",
-      "previewTags": [
-        "Sparse 3D Generation",
-        "CUDA Inference"
-      ],
       "teaserImage": "/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png",
       "teaserAlt": "VARCO3D sparse 3D inference optimization result"
     },
     {
       "id": "260115_Varco3D",
-      "previewTags": [
-        "Generative AI",
-        "VAE/DiT"
-      ],
       "teaserImage": "/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif",
       "teaserAlt": "Varco3D retrospective teaser"
     },
