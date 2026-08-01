@@ -60,8 +60,77 @@
             return;
         }
 
+        const searchButton = searchForm.querySelector('button[type="submit"]');
+        const collapsible = searchForm.hasAttribute('data-collapsible-search');
+        const compactQuery = window.matchMedia('(max-width: 767.98px)');
+
+        function setExpanded(expanded) {
+            searchForm.classList.toggle('is-expanded', expanded);
+            searchButton?.setAttribute('aria-expanded', String(expanded));
+        }
+
+        function syncExpandableState() {
+            if (!collapsible) {
+                return;
+            }
+            if (!compactQuery.matches) {
+                searchForm.classList.remove('is-expanded');
+                searchButton?.removeAttribute('aria-expanded');
+                return;
+            }
+            setExpanded(Boolean(searchInput.value.trim()) || document.activeElement === searchInput);
+        }
+
+        if (collapsible) {
+            searchButton?.addEventListener('click', (event) => {
+                if (!compactQuery.matches || searchForm.classList.contains('is-expanded')) {
+                    return;
+                }
+                event.preventDefault();
+                setExpanded(true);
+                searchInput.focus();
+            });
+
+            searchInput.addEventListener('focus', () => {
+                if (compactQuery.matches) {
+                    setExpanded(true);
+                }
+            });
+
+            searchInput.addEventListener('keydown', (event) => {
+                if (event.key !== 'Escape' || !compactQuery.matches) {
+                    return;
+                }
+                event.preventDefault();
+                searchInput.value = '';
+                searchInput.blur();
+                setExpanded(false);
+                searchButton?.focus();
+            });
+
+            document.addEventListener('pointerdown', (event) => {
+                if (
+                    compactQuery.matches
+                    && !searchForm.contains(event.target)
+                    && !searchInput.value.trim()
+                ) {
+                    setExpanded(false);
+                }
+            });
+
+            compactQuery.addEventListener('change', syncExpandableState);
+            syncExpandableState();
+        }
+
         searchForm.addEventListener('submit', (event) => {
             event.preventDefault();
+
+            if (collapsible && compactQuery.matches && !searchForm.classList.contains('is-expanded')) {
+                setExpanded(true);
+                searchInput.focus();
+                return;
+            }
+
             const searchTerm = searchInput.value.trim();
 
             if (searchTerm) {

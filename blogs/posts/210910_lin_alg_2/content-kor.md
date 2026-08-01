@@ -7,13 +7,12 @@ author: Hwan Heo
 
 https://www.deeplearningbook.org/contents/linear_algebra.html -->
 
-- [이전 글](./?id=210909_lin_alg_1)에 이어...
+## TL; DR
 
-#### TL;DR
+[이전 글](./?id=210909_lin_alg_1)에 이어지는 글이다.
+
 이 글에서는 basis 변화를 통해 선형변환을 해석하는 기하학적 관점을 중심으로, 다양한 행렬 분해 (decomposition)와 그 의미를 살펴본다.
 이를 통해 선형변환의 본질은 좌표계 (basis) 와의 상호작용 속에 있고, 이를 잘 이해하면 다양한 분해 방식과 딥러닝에서의 응용까지 자연스럽게 연결된다는 것을 이해해보자.
-
----
 
 ## 3. Change of basis
 

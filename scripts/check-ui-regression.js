@@ -88,7 +88,7 @@ function createCases(siteData) {
             path: getPostRoute(requirePost(siteData, '250823_sdf'), 'eng'),
             type: 'post',
             coreSelectors: ['#mainNav', '.masthead', '.main-content'],
-            widths: responsiveWidths.blog
+            widths: [320, ...responsiveWidths.blog]
         },
         {
             id: 'disclosure-post',
@@ -630,45 +630,298 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
 
 async function assertPostNavigation(page, width) {
     const state = await page.evaluate(() => {
-        const toggle = document.querySelector('[data-nav-toggle]');
-        const panel = document.querySelector('#postNavPanel');
+        const bodyStyle = getComputedStyle(document.body);
+        const masthead = document.querySelector('.post-masthead');
+        const mastheadStyle = getComputedStyle(masthead);
+        const sidebar = document.querySelector('#header');
+        const sidebarToggle = document.querySelector('.sidebar-mobile-toggle');
+        const mainContent = document.querySelector('.main-content');
+        const introDeck = document.querySelector('.post-intro-deck');
+        const articleInfo = document.querySelector('.post-article-info');
+        const heroColumn = document.querySelector('.post-intro-column');
+        const title = document.querySelector('.post-masthead h1');
+        const seriesKicker = document.querySelector('.post-hero-series');
+        const seriesLink = document.querySelector('.post-hero-series a');
+        const heroTopic = document.querySelector('.post-intro-topics .post-tag');
+        const author = document.querySelector('.post-author-note');
+        const authorLinks = Array.from(document.querySelectorAll('.post-author-links a'))
+            .map((link) => link.textContent.trim());
+        const relatedPosts = document.querySelector('.related-posts');
+        const searchFormItem = document.querySelector('.post-nav-search-item');
+        const searchLinkItem = document.querySelector('.post-nav-search-link-item');
+        const searchForm = document.querySelector('.post-nav-search');
+        const searchButton = searchForm?.querySelector('button[type="submit"]');
+        const postHomeLink = document.querySelector('.post-nav-home');
+        const detailKeys = Array.from(document.querySelectorAll('[data-post-detail]'))
+            .map((element) => element.dataset.postDetail);
+        const detailAuthor = document.querySelector('[data-post-detail="author"] span')?.textContent.trim() || '';
+        const introRect = introDeck?.getBoundingClientRect();
+        const infoRect = articleInfo?.getBoundingClientRect();
+        const titleStyle = getComputedStyle(title);
+        const topicAfterDeck = Boolean(
+            introDeck && heroTopic
+            && (introDeck.compareDocumentPosition(heroTopic) & Node.DOCUMENT_POSITION_FOLLOWING)
+        );
         return {
-            panelVisible: getComputedStyle(panel).display !== 'none',
-            toggleVisible: getComputedStyle(toggle).display !== 'none'
+            authorAfterContent: Boolean(mainContent && author && (mainContent.compareDocumentPosition(author) & Node.DOCUMENT_POSITION_FOLLOWING)),
+            authorLinks,
+            breadcrumbsPresent: Boolean(document.querySelector('.breadcrumbs')),
+            detailKeys,
+            detailAuthor,
+            hasArticleDetailsHeading: Boolean(articleInfo?.querySelector('h2')),
+            hasLegacyHeroSummary: Boolean(document.querySelector('.post-hero-summary')),
+            heroWidth: heroColumn?.getBoundingClientRect().width || 0,
+            infoBelowDeck: Boolean(introRect && infoRect && infoRect.top >= introRect.bottom),
+            infoRightOfDeck: Boolean(introRect && infoRect && infoRect.left >= introRect.right),
+            introDeckText: introDeck?.textContent.trim() || '',
+            introHasAccentRule: getComputedStyle(introDeck, '::before').content !== 'none',
+            languageVisible: getComputedStyle(document.querySelector('[data-language-target]')).display !== 'none',
+            mainWidth: mainContent?.getBoundingClientRect().width || 0,
+            mastheadBackground: mastheadStyle.backgroundColor,
+            mastheadBorderBottom: mastheadStyle.borderBottomWidth,
+            pageBackground: bodyStyle.backgroundColor,
+            postHomeVisible: Boolean(postHomeLink && getComputedStyle(postHomeLink).display !== 'none'),
+            relatedPostsBorderTop: relatedPosts ? getComputedStyle(relatedPosts).borderTopWidth : '0px',
+            searchButtonExpanded: searchButton?.getAttribute('aria-expanded'),
+            searchFormExpanded: Boolean(searchForm?.classList.contains('is-expanded')),
+            searchFormVisible: Boolean(searchFormItem && getComputedStyle(searchFormItem).display !== 'none'),
+            searchFormWidth: searchForm?.getBoundingClientRect().width || 0,
+            searchLinkVisible: Boolean(searchLinkItem && getComputedStyle(searchLinkItem).display !== 'none'),
+            seriesEndPresent: Boolean(document.querySelector('#series-container, .post-end-series')),
+            seriesKickerText: seriesKicker?.textContent.trim() || '',
+            seriesLinkHref: seriesLink?.getAttribute('href') || '',
+            seriesLinkDecoration: seriesLink ? getComputedStyle(seriesLink).textDecorationLine : '',
+            sidebarRight: sidebar?.getBoundingClientRect().right || 0,
+            sidebarToggleVisible: getComputedStyle(sidebarToggle).display !== 'none',
+            themeVisible: getComputedStyle(document.querySelector('[data-theme-toggle]')).display !== 'none',
+            topicAfterDeck,
+            topicColor: heroTopic ? getComputedStyle(heroTopic).color : '',
+            topicDecoration: heroTopic ? getComputedStyle(heroTopic).textDecorationLine : '',
+            topicText: heroTopic?.textContent.trim() || '',
+            titleColor: titleStyle.color,
+            titleFontFamily: titleStyle.fontFamily,
+            titleFontWeight: titleStyle.fontWeight,
+            titleLetterSpacing: titleStyle.letterSpacing,
+            titleTextWrap: titleStyle.textWrap
         };
     });
 
-    if (width <= 991) {
-        assert(state.toggleVisible && !state.panelVisible, 'Mobile post navigation did not start collapsed.');
+    if (width <= 767) {
+        assert(
+            state.searchFormVisible
+                && !state.searchLinkVisible
+                && !state.searchFormExpanded
+                && state.searchButtonExpanded === 'false'
+                && state.searchFormWidth <= 34,
+            'Compact post search did not begin as an inline expandable icon.'
+        );
     } else {
-        assert(!state.toggleVisible && state.panelVisible, 'Desktop post navigation did not remain expanded.');
+        assert(
+            !state.searchLinkVisible && state.searchFormVisible && state.searchFormWidth > 100,
+            'Wide post utilities did not expose the search field.'
+        );
+    }
+    assert(state.themeVisible && state.languageVisible, 'Theme or language controls are missing from the post utility row.');
+    assert(state.mastheadBackground === state.pageBackground, 'Post masthead no longer shares the article background.');
+    assert(state.mastheadBorderBottom === '0px', 'Post masthead restored an unwanted bottom rule.');
+    assert(!state.breadcrumbsPresent, 'Post breadcrumbs should not interrupt the article opening.');
+    assert(!state.hasLegacyHeroSummary && state.introDeckText, 'Post subtitle is not in the editorial opening deck.');
+    assert(!state.introHasAccentRule, 'Post standfirst restored the decorative accent rule.');
+    assert(state.seriesKickerText.startsWith('Series') && state.seriesLinkHref.startsWith('/blogs/series/'), 'Post series hierarchy or link is missing above the title.');
+    assert(state.seriesLinkDecoration.includes('underline'), 'Post series link no longer signals that it is clickable.');
+    assert(state.topicText && state.topicColor !== state.titleColor, 'Post topics are not expressed as the semantic accent below the title.');
+    assert(state.topicDecoration.includes('underline'), 'Linked post topics no longer signal that they are clickable.');
+    assert(state.topicAfterDeck, 'Post topics are not positioned below the subtitle.');
+    assert(!state.seriesEndPresent, 'Post page restored the duplicated end-of-article series block.');
+    assert(
+        !state.hasArticleDetailsHeading
+            && ['author', 'published', 'reading'].every((key) => state.detailKeys.includes(key))
+            && state.detailAuthor === 'Hwan Heo',
+        'Post margin note is missing its concise author, publication, or reading metadata.'
+    );
+    assert(
+        state.titleFontFamily.includes('Manrope')
+            && state.titleFontWeight === '700'
+            && ['0px', 'normal'].includes(state.titleLetterSpacing)
+            && state.titleTextWrap === 'balance',
+        `Post title no longer matches project-detail typography: ${JSON.stringify({
+            fontFamily: state.titleFontFamily,
+            fontWeight: state.titleFontWeight,
+            letterSpacing: state.titleLetterSpacing
+        })}`
+    );
+    assert(state.authorAfterContent, 'Post author note is not ordered after the article.');
+    assert(
+        state.authorLinks.length === 2
+            && state.authorLinks.includes('Email')
+            && state.authorLinks.includes('LinkedIn'),
+        'Post author note no longer closes with the restrained Email and LinkedIn signature.'
+    );
+    assert(state.relatedPostsBorderTop === '0px', 'Related posts restored the hairline below the author note.');
+
+    if (width <= 767) {
+        assert(state.infoBelowDeck, 'Compact Article Details rail did not stack below the subtitle.');
+    } else {
+        assert(state.infoRightOfDeck, 'Wide Article Details rail did not sit beside the subtitle.');
+    }
+
+    if (width >= 992) {
+        assert(state.heroWidth > state.mainWidth + 40, 'Post opening no longer widens beyond the article reading measure.');
+    }
+
+    if (width < 1200) {
+        assert(
+            !state.sidebarToggleVisible && state.sidebarRight <= 2 && state.postHomeVisible,
+            'Compact post utility row did not replace the sidebar trigger with Blog Home.'
+        );
+    } else {
+        assert(
+            !state.sidebarToggleVisible && state.sidebarRight > 60 && !state.postHomeVisible,
+            'Desktop post sidebar or compact-only Blog Home state is incorrect.'
+        );
+    }
+}
+
+async function assertBlogArchiveUtilities(page, testCase, width) {
+    const state = await page.evaluate((pageType) => {
+        const back = document.querySelector('.blog-home-back');
+        const search = document.querySelector('.blog-home-search');
+        const count = document.querySelector('.blog-search-count');
+        const backStyle = getComputedStyle(back);
+        const searchStyle = getComputedStyle(search);
+        const countStyle = count ? getComputedStyle(count) : null;
+        return {
+            backBackground: backStyle.backgroundColor,
+            backBorderWidth: backStyle.borderTopWidth,
+            backDecoration: backStyle.textDecorationLine,
+            backRadius: backStyle.borderRadius,
+            countBackground: countStyle?.backgroundColor || '',
+            countBorderWidth: countStyle?.borderTopWidth || '',
+            countRadius: countStyle?.borderRadius || '',
+            directResultMeta: pageType === 'blog-search'
+                ? Boolean(document.querySelector('#search-results-container .post-preview > .post-meta'))
+                : false,
+            resultContextDate: pageType === 'blog-search'
+                ? Boolean(document.querySelector('#search-results-container .post-card-eyebrow time'))
+                : true,
+            visibleLanguageField: pageType === 'blog-search'
+                ? Array.from(document.querySelectorAll('#search-results-container .post-preview *'))
+                    .some((element) => ['Languages:', '언어:'].some((label) => element.textContent.trim().startsWith(label)))
+                : false,
+            searchBackground: searchStyle.backgroundColor,
+            searchBorderBottomWidth: searchStyle.borderBottomWidth,
+            searchBorderTopWidth: searchStyle.borderTopWidth,
+            searchRadius: searchStyle.borderRadius
+        };
+    }, testCase.type);
+
+    assert(
+        state.backBorderWidth === '0px'
+            && state.backRadius === '0px'
+            && state.backBackground === 'rgba(0, 0, 0, 0)'
+            && state.backDecoration.includes('underline'),
+        `${testCase.id} restored the legacy pill back control.`
+    );
+    assert(
+        state.searchBorderTopWidth === '0px'
+            && state.searchBorderBottomWidth !== '0px'
+            && state.searchRadius === '0px'
+            && state.searchBackground === 'rgba(0, 0, 0, 0)',
+        `${testCase.id} restored the legacy pill search field.`
+    );
+    if (testCase.type === 'blog-search') {
+        assert(
+            state.countBorderWidth === '0px'
+                && state.countRadius === '0px'
+                && state.countBackground === 'rgba(0, 0, 0, 0)',
+            'Search results restored the legacy pill count.'
+        );
+        assert(
+            !state.directResultMeta && state.resultContextDate && !state.visibleLanguageField,
+            'Search results restored the separated date or visible language metadata.'
+        );
+
+        if (width === 1440) {
+            const languageButton = page.locator('#lang-toggle-main');
+            if (await page.locator('html').getAttribute('lang') !== 'en') {
+                await languageButton.click();
+                await page.waitForFunction(() => document.documentElement.lang === 'en');
+            }
+            await languageButton.click();
+            await page.waitForFunction(() => document.documentElement.lang === 'ko');
+            const koreanTargets = await page.locator('#search-results-container .post-card-cover').evaluateAll((links) => (
+                links.map((link) => link.getAttribute('href') || '')
+            ));
+            assert(
+                koreanTargets.length > 0 && koreanTargets.every((href) => href.endsWith('-kor/')),
+                'Korean search results do not consistently continue into Korean articles.'
+            );
+            await languageButton.click();
+            await page.waitForFunction(() => document.documentElement.lang === 'en');
+            const englishTargets = await page.locator('#search-results-container .post-card-cover').evaluateAll((links) => (
+                links.map((link) => link.getAttribute('href') || '')
+            ));
+            assert(
+                englishTargets.length > 0 && englishTargets.every((href) => !href.endsWith('-kor/')),
+                'English search results do not consistently continue into English articles.'
+            );
+        }
     }
 }
 
 async function assertPostInteractions(page, testCase, width, options) {
     await assertPostNavigation(page, width);
 
-    if (width === 390 || width === 991) {
-        const toggle = page.locator('[data-nav-toggle]');
-        await toggle.click();
-        const openState = await page.evaluate(() => ({
-            expanded: document.querySelector('[data-nav-toggle]')?.getAttribute('aria-expanded'),
-            shown: document.querySelector('#postNavPanel')?.classList.contains('is-open'),
-            visible: getComputedStyle(document.querySelector('#postNavPanel')).display !== 'none'
+    if (width === 390) {
+        const initialUrl = page.url();
+        const searchForm = page.locator('#post-nav-search-form');
+        const searchInput = page.locator('#post-nav-search-input');
+        const searchButton = searchForm.locator('button[type="submit"]');
+        await searchButton.click();
+        await page.waitForFunction(() => {
+            const form = document.querySelector('#post-nav-search-form');
+            return form?.classList.contains('is-expanded') && form.getBoundingClientRect().width > 100;
+        });
+        const expandedState = await searchForm.evaluate((element) => ({
+            activeInput: document.activeElement === element.querySelector('input'),
+            ariaExpanded: element.querySelector('button')?.getAttribute('aria-expanded'),
+            width: element.getBoundingClientRect().width
         }));
-        assert(openState.expanded === 'true' && openState.shown && openState.visible, 'Mobile post navigation did not open.');
-        await captureScreenshot(page, testCase, width, 'nav-open', options);
-        await page.keyboard.press('Escape');
-        const closedState = await page.evaluate(() => ({
-            expanded: document.querySelector('[data-nav-toggle]')?.getAttribute('aria-expanded'),
-            focused: document.activeElement === document.querySelector('[data-nav-toggle]'),
-            shown: document.querySelector('#postNavPanel')?.classList.contains('is-open')
-        }));
-        assert(closedState.expanded === 'false' && !closedState.shown && closedState.focused, 'Escape did not close the mobile post navigation and restore focus.');
+        assert(page.url() === initialUrl, 'Opening compact post search navigated away from the article.');
+        assert(
+            expandedState.activeInput && expandedState.ariaExpanded === 'true' && expandedState.width > 100,
+            'Compact post search did not expand and focus its inline field.'
+        );
+        await searchInput.press('Escape');
+        await page.waitForFunction(() => !document.querySelector('#post-nav-search-form')?.classList.contains('is-expanded'));
+        assert(await searchButton.getAttribute('aria-expanded') === 'false', 'Escape did not collapse compact post search.');
+    }
+
+    if (width === 390 || width === 1440) {
+        await page.evaluate(() => {
+            const masthead = document.querySelector('.masthead');
+            const headerHeight = masthead?.offsetHeight || 260;
+            const pinStart = Math.max(96, Math.min(headerHeight * 0.5, headerHeight - 72));
+            window.scrollTo(0, pinStart + 12);
+        });
+        await page.waitForFunction(() => document.querySelector('#mainNav')?.classList.contains('is-fixed'));
+        const hiddenNavBottom = await page.locator('#mainNav').evaluate((element) => element.getBoundingClientRect().bottom);
+        assert(hiddenNavBottom <= 1, 'Post utility row flashes into view when first entering its fixed state.');
+        await page.evaluate(() => window.scrollTo(0, 0));
+        await page.waitForFunction(() => !document.querySelector('#mainNav')?.classList.contains('is-fixed'));
     }
 
     const languageLink = await page.locator('[data-language-target]').first().getAttribute('href');
     assert(languageLink && languageLink.endsWith('-kor/'), 'Post language link no longer points to the Korean counterpart.');
+
+    if (width === 390) {
+        const scrollTop = page.locator('#scroll-top');
+        assert(await scrollTop.evaluate((element) => getComputedStyle(element).display !== 'none'), 'Post back-to-top control is hidden on mobile.');
+        await page.evaluate(() => window.scrollTo(0, Math.min(700, document.documentElement.scrollHeight - innerHeight)));
+        await page.waitForFunction(() => document.querySelector('#scroll-top')?.classList.contains('active'));
+        await scrollTop.click();
+        await page.waitForFunction(() => window.scrollY < 2, null, { timeout: 5000 });
+    }
 
     if (width === 1440) {
         const themeToggle = page.locator('[data-theme-toggle]').first();
@@ -679,6 +932,20 @@ async function assertPostInteractions(page, testCase, width, options) {
         }));
         assert(themeState.theme === 'dark', 'Post theme toggle did not switch to dark mode.');
         assert(themeState.icon?.endsWith('#icon-sun'), 'Post theme toggle did not switch to the sun icon.');
+        await page.waitForFunction(() => {
+            const body = getComputedStyle(document.body).backgroundColor;
+            return body === getComputedStyle(document.querySelector('.post-masthead')).backgroundColor
+                && body === getComputedStyle(document.querySelector('#mainNav')).backgroundColor;
+        });
+        const darkSurfaceState = await page.evaluate(() => ({
+            body: getComputedStyle(document.body).backgroundColor,
+            masthead: getComputedStyle(document.querySelector('.post-masthead')).backgroundColor,
+            utilities: getComputedStyle(document.querySelector('#mainNav')).backgroundColor
+        }));
+        assert(
+            darkSurfaceState.body === darkSurfaceState.masthead && darkSurfaceState.body === darkSurfaceState.utilities,
+            `Dark post opening no longer reads as one continuous surface: ${JSON.stringify(darkSurfaceState)}`
+        );
         await themeToggle.click();
 
         const copyButton = page.locator('.copy-code-button').first();
@@ -690,7 +957,7 @@ async function assertPostInteractions(page, testCase, width, options) {
         }
 
         await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight / 2));
-        await page.waitForFunction(() => Number.parseFloat(document.querySelector('.scroll-progress-fill')?.style.width || '0') > 0);
+        assert(!await page.locator('.scroll-progress-bar').count(), 'Blog posts should not render the legacy scroll-progress line.');
         await page.evaluate(() => window.scrollTo(0, 0));
     }
 }
@@ -804,20 +1071,38 @@ async function assertLightbox(page, testCase, width, options) {
 }
 
 async function assertSharedSidebar(page, testCase, width, options) {
-    if (testCase.type !== 'project' || ![390, 1200].includes(width)) {
+    if (!['project', 'post'].includes(testCase.type) || ![390, 1200].includes(width)) {
         return;
     }
 
     if (width < 1200) {
+        if (testCase.type === 'post') {
+            const compactState = await page.evaluate(() => ({
+                homeVisible: getComputedStyle(document.querySelector('.post-nav-home')).display !== 'none',
+                toggleVisible: getComputedStyle(document.querySelector('.sidebar-mobile-toggle')).display !== 'none'
+            }));
+            assert(compactState.homeVisible && !compactState.toggleVisible, 'Compact post restored the conflicting mobile sidebar trigger.');
+            return;
+        }
         const toggle = page.locator('.sidebar-mobile-toggle');
         await toggle.click();
-        const openState = await page.evaluate(() => ({
-            expanded: document.querySelector('.sidebar-mobile-toggle')?.getAttribute('aria-expanded'),
-            headerOpen: document.querySelector('#header')?.classList.contains('header-show'),
-            icon: document.querySelector('.sidebar-mobile-toggle .site-icon use')?.getAttribute('href'),
-            rootOpen: document.documentElement.classList.contains('sidebar-mobile-open')
-        }));
-        assert(openState.expanded === 'true' && openState.headerOpen && openState.rootOpen, 'Shared mobile sidebar did not open.');
+        const openState = await page.evaluate(() => {
+            const header = document.querySelector('#header');
+            const nav = document.querySelector('#mainNav');
+            const toggleButton = document.querySelector('.sidebar-mobile-toggle');
+            return {
+                expanded: toggleButton?.getAttribute('aria-expanded'),
+                headerOpen: header?.classList.contains('header-show'),
+                headerZ: Number.parseInt(getComputedStyle(header).zIndex, 10) || 0,
+                icon: toggleButton?.querySelector('.site-icon use')?.getAttribute('href'),
+                navFixed: Boolean(nav?.classList.contains('is-fixed')),
+                navZ: nav ? Number.parseInt(getComputedStyle(nav).zIndex, 10) || 0 : 0,
+                overlayZ: Number.parseInt(getComputedStyle(document.body, '::before').zIndex, 10) || 0,
+                rootOpen: document.documentElement.classList.contains('sidebar-mobile-open'),
+                toggleZ: Number.parseInt(getComputedStyle(toggleButton).zIndex, 10) || 0
+            };
+        });
+        assert(openState.expanded === 'true' && openState.headerOpen && openState.rootOpen, `${testCase.id} mobile sidebar did not open.`);
         assert(openState.icon?.endsWith('#icon-x'), 'Shared mobile sidebar did not switch to its close icon.');
         await captureScreenshot(page, testCase, width, 'sidebar-open', options);
         await page.keyboard.press('Escape');
@@ -834,6 +1119,36 @@ async function assertSharedSidebar(page, testCase, width, options) {
 
     const collapseToggle = page.locator('.sidebar-collapse-toggle');
     assert(await collapseToggle.getAttribute('aria-expanded') === 'false', 'Desktop sidebar did not honor its default collapsed preference.');
+    const labsSummary = page.locator('.sidebar-labs-menu > summary');
+    await labsSummary.click();
+    const collapsedLabsState = await page.evaluate(() => {
+        const header = document.querySelector('#header');
+        const menu = document.querySelector('.sidebar-labs-menu');
+        const panel = menu?.querySelector('.sidebar-labs-panel');
+        const headerRect = header?.getBoundingClientRect();
+        const panelRect = panel?.getBoundingClientRect();
+        return {
+            collapsed: document.documentElement.classList.contains('sidebar-collapsed'),
+            headerWidth: headerRect?.width || 0,
+            open: Boolean(menu?.open),
+            panelDisplay: panel ? getComputedStyle(panel).display : 'none',
+            panelLeft: panelRect?.left || 0,
+            sidebarRight: headerRect?.right || 0
+        };
+    });
+    assert(
+        collapsedLabsState.collapsed
+            && collapsedLabsState.headerWidth <= 80
+            && collapsedLabsState.open
+            && collapsedLabsState.panelDisplay === 'grid'
+            && collapsedLabsState.panelLeft >= collapsedLabsState.sidebarRight - 1,
+        `Collapsed Labs did not open as a rail overlay: ${JSON.stringify(collapsedLabsState)}`
+    );
+    await page.keyboard.press('Escape');
+    assert(
+        await page.locator('.sidebar-labs-menu').evaluate((element) => !element.open && document.activeElement === element.querySelector('summary')),
+        'Escape did not close the collapsed Labs overlay and restore focus.'
+    );
     await collapseToggle.click();
     await page.waitForFunction(() => {
         const header = document.querySelector('#header');
@@ -852,7 +1167,7 @@ async function assertSharedSidebar(page, testCase, width, options) {
         };
     });
     assert(!expandedState.collapsed, 'Desktop sidebar did not expand.');
-    assert(expandedState.headerRight > 250 && expandedState.mainLeft >= expandedState.headerRight - 2, 'Expanded sidebar collides with project content.');
+    assert(expandedState.headerRight > 250 && expandedState.mainLeft >= expandedState.headerRight - 2, `Expanded sidebar collides with ${testCase.id} content.`);
     await captureScreenshot(page, testCase, width, 'sidebar-expanded', options);
     await collapseToggle.click();
     assert(await collapseToggle.getAttribute('aria-expanded') === 'false', 'Desktop sidebar did not collapse again.');
@@ -874,6 +1189,9 @@ async function assertEditorIcons(page, width) {
 async function runInteractions(page, testCase, width, options) {
     if (testCase.type === 'blog-home') {
         await assertBlogHomeInteractions(page, testCase, width, options);
+    }
+    if (['blog-search', 'blog-archive'].includes(testCase.type)) {
+        await assertBlogArchiveUtilities(page, testCase, width);
     }
     if (['post', 'disclosure-post', 'lightbox-post'].includes(testCase.type)) {
         await assertPostInteractions(page, testCase, width, options);

@@ -160,7 +160,7 @@ function renderTags(post, siteData = null) {
             }
             return `<span class="post-tag">${escapeHtml(tag)}</span>`;
         })
-        .join('');
+        .join('<span class="post-tag-separator" aria-hidden="true">·</span>');
 }
 
 function getFeaturedPost(siteData) {
@@ -601,21 +601,6 @@ function renderSeriesNavigation(siteData, post, lang = 'eng') {
     `;
 }
 
-function renderBreadcrumbs(siteData, post, lang = 'eng') {
-    const seriesTitle = post.series ? getSeriesTitle(siteData, post.series, lang) : '';
-    const seriesLink = post.series ? `<li><a href="${escapeHtml(getSeriesRoute(post.series))}">${escapeHtml(seriesTitle)}</a></li>` : '';
-    return `
-                    <nav class="breadcrumbs" aria-label="Breadcrumb">
-                        <ol>
-                            <li><a href="/">Portfolio</a></li>
-                            <li><a href="/blogs/">Blog</a></li>
-                            ${seriesLink}
-                            <li aria-current="page">${escapeHtml(getPostTitle(post, lang))}</li>
-                        </ol>
-                    </nav>
-    `;
-}
-
 function renderRelatedPosts(siteData, post, lang = 'eng') {
     const relatedItems = getRelatedItems(siteData, post, lang, 4);
     if (relatedItems.length === 0) {
@@ -678,7 +663,6 @@ module.exports = {
     getSeriesTitle,
     isValidDateString,
     renderChronologicalPostNavigation,
-    renderBreadcrumbs,
     renderFeaturedPost,
     renderLanguageLinks,
     renderPostPreview,

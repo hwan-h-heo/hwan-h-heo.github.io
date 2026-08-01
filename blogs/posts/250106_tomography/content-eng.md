@@ -3,11 +3,9 @@ date: January 06, 2025
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<p class="lang eng">
-    <strong> TL; DR. </strong>
-    In this article, we will explore how to apply radiance fields technique (NeRF and Gaussian Splatting) beyond photometric domain. 
-    Also, I will post the short tip for the quick development of the NeRF / GS viewer which has no official viewer.
-</p>
+## TL; DR
+
+This article explores how radiance field techniques such as NeRF and Gaussian Splatting can be applied beyond the photometric domain. It also includes a short practical guide to quickly building a viewer for Neural Rendering techniques that do not provide an official one.
 
 ## <span id="introduction"></span>Introduction
 

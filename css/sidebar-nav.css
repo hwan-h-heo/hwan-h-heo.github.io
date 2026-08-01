@@ -392,10 +392,11 @@
     transform: translate(0, -50%);
 }
 
-.sidebar-mobile-toggle.is-auto-hidden {
+.sidebar-mobile-toggle.is-auto-hidden,
+.sidebar-mobile-toggle.is-scroll-hidden {
     opacity: 0;
     pointer-events: none;
-    transform: translateY(-8px);
+    transform: translateY(calc(-100% - 12px));
 }
 
 #header.header {
@@ -523,9 +524,50 @@
     html.sidebar-collapsed .header .project-selector-toggle,
     html.sidebar-collapsed .header .project-selector-options,
     html.sidebar-collapsed .header .sidebar-labs-menu summary > span,
-    html.sidebar-collapsed .header .sidebar-labs-chevron,
+    html.sidebar-collapsed .header .sidebar-labs-chevron {
+        display: none;
+    }
+
     html.sidebar-collapsed .header .sidebar-labs-panel {
         display: none;
+    }
+
+    html.sidebar-collapsed #header.header:has(.sidebar-labs-menu[open]) {
+        overflow: visible;
+    }
+
+    html.sidebar-collapsed #header.header .sidebar-labs-menu {
+        position: relative;
+    }
+
+    html.sidebar-collapsed #header.header .sidebar-labs-menu[open] .sidebar-labs-panel {
+        position: absolute;
+        top: calc(100% + 7px);
+        right: auto;
+        bottom: auto;
+        left: calc(100% + 10px);
+        z-index: 1080;
+        display: grid;
+        width: 13rem;
+        margin: 0;
+        padding: 0.42rem;
+        border: 1px solid var(--site-sidebar-line);
+        border-radius: 8px;
+        background: rgba(8, 12, 18, 0.98);
+        box-shadow: 0 14px 34px rgba(0, 0, 0, 0.32);
+    }
+
+    html.sidebar-collapsed #header.header .sidebar-labs-menu[open] .sidebar-labs-panel a,
+    html.sidebar-collapsed #header.header .sidebar-labs-menu[open] .sidebar-labs-panel a:focus {
+        justify-content: flex-start;
+        width: auto;
+        min-height: 36px;
+        margin: 0;
+        padding: 0.48rem 0.56rem;
+        overflow: visible;
+        border-radius: 6px;
+        font-size: 0.78rem;
+        letter-spacing: 0;
     }
 
     html.sidebar-collapsed #header.header .project-nav-selector summary,
@@ -579,6 +621,11 @@
 
     .sidebar-mobile-toggle {
         display: inline-flex;
+        z-index: 1060;
+    }
+
+    html.sidebar-mobile-open .sidebar-mobile-toggle {
+        z-index: 1060;
     }
 
     .sidebar-collapse-toggle {
@@ -589,7 +636,7 @@
         left: min(-100%, -300px);
         width: min(var(--site-sidebar-width), calc(100vw - 48px));
         transform: none;
-        z-index: 1000;
+        z-index: 1050;
     }
 
     #header.header.header-show {
@@ -610,7 +657,7 @@
         content: '';
         position: fixed;
         inset: 0;
-        z-index: 999;
+        z-index: 1040;
         background: rgba(3, 8, 14, 0.52);
         backdrop-filter: blur(2px);
     }

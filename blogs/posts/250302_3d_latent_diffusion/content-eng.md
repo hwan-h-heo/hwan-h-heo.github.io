@@ -3,6 +3,8 @@ date: March 02, 2025
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
+## Abstract
+
 <figure id="figure-0" >
   <video class="post-media" autoplay loop muted playsinline preload="metadata" poster="./250302_3d_latent_diffusion/assets/teaser-poster.jpg" aria-label="3D latent diffusion teaser" style="width: 100%">
     <source src="./250302_3d_latent_diffusion/assets/teaser.mp4" type="video/mp4">

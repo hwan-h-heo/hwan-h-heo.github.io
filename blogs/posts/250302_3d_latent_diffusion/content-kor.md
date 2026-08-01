@@ -3,9 +3,9 @@ date: March 02, 2025
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<br/>
+## Abstract
 
-- 이 글은 ShapeVAE (3Dshape2vecset, michelangelo) 와 SOTA 3D Latent Diffusion 인 Trellis, Hunyuan3D 에 대한 상세한 Review 가 포함되어 있습니다. 
+이 글은 ShapeVAE (3DShape2VecSet, Michelangelo)와 SOTA 3D Latent Diffusion 모델인 Trellis, Hunyuan3D를 상세히 리뷰한다.
 
 ## 들어가며 
 

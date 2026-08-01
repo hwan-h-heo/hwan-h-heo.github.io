@@ -1,4 +1,5 @@
 const { SITE_URL } = require('./site-config');
+const { getSeriesRoute } = require('./site-routes');
 const { render: renderSiteIcon } = require('../../assets/js/site-icons');
 const {
     escapeHtml,
@@ -8,10 +9,9 @@ const {
     getPostDescription,
     getPostLanguageRoute,
     getPostTitle,
-    renderBreadcrumbs,
+    getSeriesTitle,
     renderChronologicalPostNavigation,
     renderRelatedPosts,
-    renderSeriesNavigation,
     renderTags,
     serializeStructuredData
 } = require('./seo-utils');
@@ -105,6 +105,57 @@ function renderConditionalBodyScripts(runtimeFeatures) {
     return scripts.join('\n');
 }
 
+function renderPostSidebar() {
+    return `    <header id="header" class="header blog-sidebar dark-background">
+        <div class="profile-img">
+            <img src="/assets/icon.webp" alt="Portrait illustration of Hwan Heo">
+        </div>
+
+        <a href="/blogs/" class="logo">
+            <span class="sitename">Hwan's Blog</span>
+        </a>
+
+        <div class="social-links">
+            <a href="https://github.com/hwanhuh" aria-label="GitHub">${renderSiteIcon('github')}</a>
+            <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" aria-label="LinkedIn">${renderSiteIcon('linkedin')}</a>
+            <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" aria-label="Google Scholar">${renderSiteIcon('mortarboard-fill')}</a>
+            <a href="mailto:hwan.heo.ai@gmail.com" aria-label="Email">${renderSiteIcon('envelope-fill')}</a>
+        </div>
+
+        <nav id="navmenu" class="navmenu" aria-label="Blog navigation">
+            <ul>
+                <li>
+                    <a href="/blogs/" class="active" aria-current="location">
+                        ${renderSiteIcon('house', { className: 'navicon' })}
+                        <span>Blog Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/" class="sidebar-external-link">
+                        ${renderSiteIcon('briefcase', { className: 'navicon' })}
+                        <span>Portfolio</span>
+                        ${renderSiteIcon('box-arrow-up-right', { className: 'sidebar-external-icon' })}
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-labs">
+            <details class="sidebar-labs-menu">
+                <summary>
+                    ${renderSiteIcon('tools', { className: 'navicon' })}
+                    <span>Labs</span>
+                    ${renderSiteIcon('chevron-down', { className: 'sidebar-labs-chevron' })}
+                </summary>
+                <div class="sidebar-labs-panel">
+                    <a href="/blogs/3DViewer/">${renderSiteIcon('box', { className: 'navicon' })}<span>3D Viewer</span></a>
+                    <a href="/blogs/editor/">${renderSiteIcon('pencil-square', { className: 'navicon' })}<span>Editor</span></a>
+                </div>
+            </details>
+        </div>
+    </header>`;
+}
+
 function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime, runtimeFeatures = {}, siteData }) {
     const activeRuntimeFeatures = {
         katex: Boolean(runtimeFeatures.katex),
@@ -141,13 +192,9 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
     const searchLabel = lang === 'kor' ? '블로그 글 검색' : 'Search blog posts';
     const searchPlaceholder = 'Search...';
     const searchButtonLabel = lang === 'kor' ? '검색' : 'Search';
-    const openMenuLabel = lang === 'kor' ? '메뉴 열기' : 'Open menu';
-    const closeMenuLabel = lang === 'kor' ? '메뉴 닫기' : 'Close menu';
     const alternateLinksHtml = getPostAlternates(post)
         .map((alternate) => `    <link rel="alternate" hreflang="${alternate.hreflang}" href="${alternate.href}" />`)
         .join('\n');
-    const breadcrumbsHtml = renderBreadcrumbs(siteData, post, lang);
-    const staticSeriesNavigation = renderSeriesNavigation(siteData, post, lang);
     const staticPostNavigation = renderChronologicalPostNavigation(siteData, post, lang);
     const relatedPostsHtml = renderRelatedPosts(siteData, post, lang);
 
@@ -159,10 +206,22 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
         'computer vision',
         'machine learning'
     ].join(', ');
-    const coverImage = post.cover || '/assets/image_fx_.webp';
+    const seriesTitle = post.series ? getSeriesTitle(siteData, post.series, lang) : 'Technical Writing';
+    const seriesHref = post.series ? getSeriesRoute(post.series) : '/blogs/';
+    const heroSummary = post[`subtitle_${lang}`] || post[`description_${lang}`] || metaDescription;
     const tagHtml = (post.tags || []).length
         ? `<div class="post-tags">${renderTags(post, siteData)}</div>`
         : '';
+    const authorCopy = lang === 'kor'
+        ? {
+            description: '대규모 3D 생성 모델부터 CUDA 추론 최적화와 그래픽스 파이프라인까지, 실제 제품으로 이어지는 3D AI 시스템을 만듭니다.'
+        }
+        : {
+            description: 'Lead 3D AI Research Engineer building production systems across large-scale 3D generation, CUDA inference, and graphics pipelines.'
+        };
+    const detailLabels = lang === 'kor'
+        ? { details: '글 정보', author: '작성자', published: '발행', reading: '읽는 시간', topics: '주제' }
+        : { details: 'Article details', author: 'Author', published: 'Published', reading: 'Reading', topics: 'Topics' };
 
     const structuredData = {
         '@context': 'https://schema.org',
@@ -238,11 +297,13 @@ ${alternateLinksHtml}
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link href="/blogs/css/blog.css" rel="stylesheet" />
+    <link href="/blogs/css/sidebar.css" rel="stylesheet" />
+    <link href="/css/sidebar-nav.css" rel="stylesheet" />
     <link href="/blogs/css/typography.css" rel="stylesheet" />
     <link href="/blogs/css/post.css" rel="stylesheet" />
-    <link href="/blogs/css/scroll-progress.css" rel="stylesheet" />
     <link href="/assets/css/site-icons.css" rel="stylesheet" />
     <script src="/assets/js/site-icons.js"></script>
+    <script src="/js/sidebar-controller.js"></script>
 ${renderConditionalHeadAssets(activeRuntimeFeatures)}
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
@@ -262,83 +323,117 @@ ${renderConditionalHeadAssets(activeRuntimeFeatures)}
             })();
         </script>
 </head>
-<body>
-    <nav class="post-site-nav" id="mainNav">
-        <div class="blog-shell post-nav-shell">
-            <div class="post-nav-brand-group">
-                <a class="post-nav-brand" href="/blogs/">Hwan's Blog</a>
-                <a class="post-nav-portfolio-link" href="/">
-                    Portfolio ${renderSiteIcon('box-arrow-up-right')}
-                </a>
-            </div>
-            <button class="post-nav-toggle" type="button" data-nav-toggle data-open-label="${openMenuLabel}" data-close-label="${closeMenuLabel}" aria-controls="postNavPanel" aria-expanded="false" aria-label="${openMenuLabel}">
-                <span class="post-nav-menu-icon" aria-hidden="true"></span>
-            </button>
-            <div class="post-nav-panel" id="postNavPanel">
-                <ul class="post-nav-actions">
-                    <li class="post-nav-action post-nav-search-item">
-                        <form id="post-nav-search-form" class="post-nav-search" role="search">
-                            <label class="visually-hidden" for="post-nav-search-input">${searchLabel}</label>
-                            <input id="post-nav-search-input" type="search" placeholder="${searchPlaceholder}" enterkeyhint="search" />
-                            <button type="submit" aria-label="${searchButtonLabel}">
-                                ${renderSiteIcon('search')}
-                            </button>
-                        </form>
-                    </li>
-                    <li class="post-nav-action post-nav-theme-item"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false">${renderSiteIcon('moon-stars', { className: 'theme-toggle-icon' })}</button></li>
-                    ${alternateHref ? `<li class="post-nav-action post-nav-language-item"><a href="${alternateHref}" class="post-nav-language-link" data-language-target="${alternateLang}" aria-label="${alternateLang === 'eng' ? 'Switch to English' : '한국어로 전환'}" title="${alternateLang === 'eng' ? 'Switch to English' : '한국어로 전환'}">${alternateLang === 'eng' ? 'A' : '가'}</a></li>` : ''}
-                </ul>
-            </div>
-        </div>
-    </nav>
+<body class="blog-post-page">
+${renderPostSidebar()}
 
-    <header class="masthead" style="background-image: url('${coverImage}')">
-        <div class="blog-shell post-hero-shell">
-            <div class="post-reading-row">
-                <div class="post-reading-column">
-                    <div class="post-heading">
-                        <br/>
-                        <h1>${escapeHtml(title)}</h1>
-                        <span class="meta">
-                            Posted on <time datetime="${escapeHtml(post.date)}">${date}</time>
-                            <span style="margin: 0 8px;">•</span>
-                            ${renderSiteIcon('clock', { className: 'post-reading-time-icon' })}${readingTime.text}
-                        </span>
-                        ${tagHtml}
-                        <hr/>
+    <main class="main blog-post-main">
+        <nav class="post-site-nav" id="mainNav" aria-label="Post utilities">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-utility-column">
+                        <a class="post-nav-home" href="/blogs/" aria-label="Back to Blog Home">
+                            ${renderSiteIcon('arrow-left')}
+                            <span>Blog Home</span>
+                        </a>
+                        <ul class="post-nav-actions">
+                            <li class="post-nav-action post-nav-search-item">
+                                <form id="post-nav-search-form" class="post-nav-search" role="search" data-collapsible-search>
+                                    <label class="visually-hidden" for="post-nav-search-input">${searchLabel}</label>
+                                    <input id="post-nav-search-input" type="search" placeholder="${searchPlaceholder}" enterkeyhint="search" />
+                                    <button type="submit" aria-label="${searchButtonLabel}" aria-controls="post-nav-search-input" aria-expanded="false">
+                                        ${renderSiteIcon('search')}
+                                    </button>
+                                </form>
+                            </li>
+                            <li class="post-nav-action"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false">${renderSiteIcon('moon-stars', { className: 'theme-toggle-icon' })}</button></li>
+                            ${alternateHref ? `<li class="post-nav-action"><a href="${alternateHref}" class="post-nav-language-link" data-language-target="${alternateLang}" aria-label="${alternateLang === 'eng' ? 'Switch to English' : '한국어로 전환'}" title="${alternateLang === 'eng' ? 'Switch to English' : '한국어로 전환'}">${alternateLang === 'eng' ? 'A' : '가'}</a></li>` : ''}
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-    </header>
+        </nav>
 
-    <article class="post-article">
-        <div class="blog-shell">
-            <div class="post-reading-row">
-                <div class="post-reading-column">
-                    ${breadcrumbsHtml}
-                    <div id="series-container">${staticSeriesNavigation}</div>
-                </div>
-                <div class="post-reading-column main-content">
-                    ${contentHtml}
-                </div>
-                <div class="post-reading-column">
-                    ${relatedPostsHtml}
-                    <div id="post-navigation" class="post-navigation-space">${staticPostNavigation}</div>
+        <header class="masthead post-masthead">
+            <div class="blog-shell post-hero-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-hero-column">
+                        <div class="post-heading">
+                            <div class="post-hero-series">
+                                <span class="post-hero-series-label">Series</span>
+                                <span class="post-hero-series-separator" aria-hidden="true">/</span>
+                                <a href="${escapeHtml(seriesHref)}">${escapeHtml(seriesTitle)}</a>
+                            </div>
+                            <h1>${escapeHtml(title)}</h1>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </article>
+        </header>
 
-    <footer class="blog-post-footer">
-        <div class="blog-shell">
-            <div class="post-reading-row">
-                <div class="post-reading-column">
-                    <div class="blog-footer-note">Copyright © Hwan Heo</div>
+        <article class="post-article">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-hero-column post-intro-column">
+                        <div class="post-intro-layout">
+                            <div class="post-intro-copy">
+                                <p class="post-intro-deck">${escapeHtml(heroSummary)}</p>
+                                ${tagHtml ? `<div class="post-intro-topics" aria-label="${detailLabels.topics}">${tagHtml}</div>` : ''}
+                            </div>
+                            <aside class="post-article-info" aria-label="${detailLabels.details}">
+                                <ul>
+                                    <li data-post-detail="author">
+                                        <strong>${detailLabels.author}</strong>
+                                        <span>Hwan Heo</span>
+                                    </li>
+                                    <li data-post-detail="published">
+                                        <strong>${detailLabels.published}</strong>
+                                        <time datetime="${escapeHtml(post.date)}">${date}</time>
+                                    </li>
+                                    <li data-post-detail="reading">
+                                        <strong>${detailLabels.reading}</strong>
+                                        <span class="post-detail-reading">${readingTime.text}</span>
+                                    </li>
+                                </ul>
+                            </aside>
+                        </div>
+                    </div>
+                    <div class="post-reading-column main-content">
+                        ${contentHtml}
+                    </div>
+                    <div class="post-reading-column post-end-matter">
+                        <section class="post-author-note" aria-labelledby="post-author-name">
+                            <img class="post-author-portrait" src="/assets/profile4-author.png" alt="Hwan Heo" loading="lazy">
+                            <div class="post-author-copy">
+                                <span class="post-author-kicker">Written by</span>
+                                <h2 id="post-author-name">Hwan Heo</h2>
+                                <p>${authorCopy.description}</p>
+                                <div class="post-author-links" aria-label="Author links">
+                                    <a href="mailto:hwan.heo.ai@gmail.com">Email</a>
+                                    <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                                </div>
+                            </div>
+                        </section>
+                        ${relatedPostsHtml}
+                        <div id="post-navigation" class="post-navigation-space">${staticPostNavigation}</div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        </article>
+
+        <button id="scroll-top" class="scroll-top button_top post-scroll-top" type="button" aria-label="Back to top">
+            ${renderSiteIcon('arrow-up')}
+        </button>
+
+        <footer class="blog-post-footer">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column">
+                        <div class="blog-footer-note">Copyright © Hwan Heo</div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
 
     <script>
         window.siteData = ${serializeForScript(clientSiteData)};
@@ -352,15 +447,14 @@ ${renderConditionalHeadAssets(activeRuntimeFeatures)}
     </script>
 ${renderConditionalBodyScripts(activeRuntimeFeatures)}
     <script src="/blogs/js/theme-toggle.js"></script>
-    <script src="/blogs/js/scroll-progress.js"></script>
     <script src="/blogs/js/blog-shell.js"></script>
     <script src="/blogs/js/post-page.js"></script>
-    <script>
-        initBlogShell({
-            formSelector: '#post-nav-search-form',
-            inputSelector: '#post-nav-search-input'
-        });
-    </script>
+        <script>
+            initBlogShell({
+                formSelector: '#post-nav-search-form',
+                inputSelector: '#post-nav-search-input'
+            });
+        </script>
 </body>
 </html>`;
 }

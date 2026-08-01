@@ -140,6 +140,9 @@ Rules:
 - Keep body line height around `1.58` to `1.78`.
 - Keep compact metadata around `0.72rem` to `0.84rem`.
 - Use `text-wrap: pretty` for display titles where supported.
+- Long-form blog `h4` headings use a short solid accent rail, never a gradient.
+- Long-form blog tables use a compact `4px` outer radius, hairline cell borders,
+  and no shadow so their hierarchy comes from typography and rules.
 
 The editorial quality comes from scale, weight, alignment, and rhythm. It does
 not depend on adding a serif family.
@@ -160,6 +163,58 @@ not depend on adding a serif family.
   overview copy and contributions when the result is the clearest proof of the
   work; do not repeat the same media later in the article. Keep its caption
   muted and italic, and underline only the linked destination text.
+- Long-form blog posts use the same heading family, weight, spacing, and scale as
+  project-detail titles. Above the title, render a neutral `SERIES /` label and
+  a subtly underlined cyan series link so the hierarchy and click target are
+  both explicit. The subtitle becomes an Inter regular editorial standfirst,
+  with cyan topics directly beneath it; underline linked topics with the same
+  restrained treatment as the series link so their clickability is explicit.
+  Render middle-dot separators outside the links and never underline them.
+  Place this copy beside
+  a narrow margin note with separate author, publication-date, and reading-time
+  rows. Lead with `Author / Hwan Heo` so ownership is visible before the reader
+  reaches the full author note at the end of the article.
+  Do not add a decorative accent rule or a visible `Article Details` heading;
+  do not duplicate the series link in the end matter. On compact screens, turn
+  the margin note into three inline metadata columns without a card border. The
+  opening may be modestly wider and asymmetric; the article that follows
+  returns to the standard reading measure. The
+  masthead, utility row, and article share one uninterrupted page surface with
+  no divider between title and body. Cover art remains for previews and social
+  metadata rather than appearing behind the article title, while the utility
+  row stays aligned to the body.
+- Source articles should begin with a level-two section. When an article opens
+  with summary prose, use `## Abstract`; when it explicitly offers a compact
+  takeaway, use `## TL; DR`. Keep that opening as ordinary paragraphs rather
+  than a blockquote or summary list so every article enters the reading flow
+  with the same hierarchy.
+- Blog posts use the shared dark sidebar for global navigation between Blog,
+  Portfolio, Labs, and profile destinations. Search, theme, and language stay
+  in a slim, right-aligned utility row because they are reading-context tools;
+  do not duplicate global navigation or section labels in that row. On compact
+  screens, replace the sidebar trigger with a borderless `Blog Home` link at the
+  left edge of the utility row. The post search icon expands an inline text
+  field before navigating to results; opening search must not discard the
+  current reading context, and the Home label may recede while the field is
+  open to preserve input width.
+- Blog home, archive, and search utility rows use borderless back links and
+  underline-only search fields. Do not use pill containers for back navigation,
+  search inputs, or result counts. Search results place series and localized
+  publication date together in one restrained context line above the title;
+  do not expose a separate `Languages` field. Search only the active locale and
+  link directly to that locale's article. Wherever a mobile sidebar remains
+  available, its scrim and panel must stack above any fixed utility bar.
+- Do not render breadcrumbs before a long-form blog article when the persistent
+  sidebar already provides the return paths.
+- Close each article with an editorial author note containing a portrait, name,
+  professional scope, and restrained `Email` and `LinkedIn` links in English in
+  every locale. Treat it as a signature rather than another navigation menu,
+  and separate the following related-post section with whitespace instead of a
+  hairline. This is the primary ownership signal; the copyright footer remains
+  subordinate.
+- Author portrait cutouts use a small closed foreground mask to recover isolated
+  missing pixels. Match the image underlay to its neutral source matte in both
+  themes so transparent edges never read as a clipped second background.
 - Use whitespace to group related content before adding borders or containers.
 - Major narrative sections may have larger gaps than reference sections.
 - Avoid equal full-page treatment for every section.
@@ -179,6 +234,9 @@ The default component is unframed.
 - Avoid pill shapes for taxonomy; use inline text separated by a middle dot.
 - Circular shapes are reserved for icon-only controls and portraits.
 - Remove a border when whitespace already explains the relationship.
+- In the collapsed desktop sidebar, activating Labs opens a small anchored
+  overlay below the rail icon without expanding the full sidebar. Treat it as
+  transient navigation: close it on outside click or Escape and restore focus.
 
 Shadows are acceptable only for transient or floating utility UI such as the
 mobile sidebar toggle, tooltip, and scroll-to-top control.
@@ -292,8 +350,14 @@ use underline motion only. Do not translate their text or icons on hover.
 - Use one-column project and blog previews below the existing mobile breakpoint.
 - Keep image aspect ratio stable.
 - Avoid viewport-scaled font sizes outside established `clamp()` ranges.
-- On compact project and article pages, reduce breadcrumbs to the useful section
-  ancestor when the full trail would compete with the sidebar control or title.
+- On compact project pages, reduce breadcrumbs to the useful section ancestor
+  when the full trail would compete with the sidebar control or title. Blog
+  articles omit breadcrumbs entirely.
+- On mobile, the floating sidebar toggle hides while scrolling down and returns
+  when scrolling up or reaching the top. Keep it visible while navigation is
+  open so the control does not sit over long-form headings and preview media.
+- Blog-home back-to-top remains desktop-only, while long-form post pages keep
+  the compact control available on mobile as an end-to-top reading affordance.
 - Long-form TOC and share controls are desktop-only reading rails. Anchor both
   to the shared reading-column tokens so they remain outside the article body.
 

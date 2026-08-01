@@ -3,11 +3,9 @@ date: January 06, 2025
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-<p class="lang kor">
-    <strong> TL; DR. </strong>
-    Photography 가 아닌 domain 에서 Neural Rendering 을 적용하기 위해선 어떤 사항들을 고려해야하는지 생각해보자!
-    + Viewer 가 없는 Neural Rendering technique 을 위한 빠른 viewer 개발 Tip
-</p>
+## TL; DR
+
+Photography 가 아닌 domain 에서 Neural Rendering 을 적용하려면 어떤 사항들을 고려해야 하는지 살펴본다. Official viewer가 없는 Neural Rendering technique을 위한 빠른 viewer 개발 팁도 함께 다룬다.
 
 ## <span id="introduction"></span>Introduction
 

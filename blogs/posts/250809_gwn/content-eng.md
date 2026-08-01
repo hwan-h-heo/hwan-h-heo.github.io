@@ -3,7 +3,7 @@ date: August 09, 2025
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 
-### TL; DR
+## TL; DR
  
 Let's explore the definition of Winding Number and how its 3D extension, Generalized Winding Number, can be used in SDF calculation! 
 
