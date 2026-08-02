@@ -241,11 +241,16 @@ not depend on adding a serif family.
   open to preserve input width.
 - Blog home, archive, and search utility rows use borderless back links and
   underline-only search fields. Do not use pill containers for back navigation,
-  search inputs, or result counts. Search results place series and localized
-  publication date together in one restrained context line above the title;
-  do not expose a separate `Languages` field. Search only the active locale and
-  link directly to that locale's article. Wherever a mobile sidebar remains
-  available, its scrim and panel must stack above any fixed utility bar.
+  search inputs, or result counts. Search, Tag, and Series pages continue the
+  dark-cover and numbered-chapter grammar as `00 / SEARCH·TOPIC·SERIES INDEX`,
+  `01 / RESULTS·ARTICLES`, and—when the date boundary exists—`02 / OLD ARCHIVE`.
+  Their cover is the same calm `#101011` ink without the obsolete photographic
+  banner. Their preview rows use the Blog home hierarchy: series, title,
+  subtitle, localized publication date, then tags. Search only the active locale
+  and link directly to that locale's article; do not expose a separate
+  `Languages` field. Apply the same recent-right / old-left media signature,
+  collapsing back to media-first rows on mobile. Wherever a mobile sidebar
+  remains available, its scrim and panel must stack above any fixed utility bar.
 - Do not render breadcrumbs before a long-form blog article when the persistent
   sidebar already provides the return paths.
 - Close each article with an editorial author note containing a portrait, name,

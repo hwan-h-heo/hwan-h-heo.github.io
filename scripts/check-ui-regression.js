@@ -80,8 +80,17 @@ function createCases(siteData) {
             id: 'blog-archive',
             path: '/blogs/series/3d-generation/',
             type: 'blog-archive',
+            archiveContext: 'Series Index',
             coreSelectors: ['.blog-archive-page', '.blog-home-archive', '.blog-home-tab-content'],
             widths: responsiveWidths.blog
+        },
+        {
+            id: 'blog-tag-archive',
+            path: '/blogs/tags/3d-generation/',
+            type: 'blog-archive',
+            archiveContext: 'Topic Index',
+            coreSelectors: ['.blog-archive-page', '.blog-home-archive', '.blog-home-tab-content'],
+            widths: [390, 1440]
         },
         {
             id: 'post',
@@ -1172,6 +1181,9 @@ async function assertBlogArchiveUtilities(page, testCase, width) {
         const back = document.querySelector('.blog-home-back');
         const search = document.querySelector('.blog-home-search');
         const count = document.querySelector('.blog-search-count');
+        const hero = document.querySelector('.blog-editorial-utility-hero');
+        const sectionHeading = document.querySelector('.blog-editorial-section-head h2');
+        const previews = Array.from(document.querySelectorAll('.post-preview[data-post-id]'));
         const backStyle = getComputedStyle(back);
         const searchStyle = getComputedStyle(search);
         const countStyle = count ? getComputedStyle(count) : null;
@@ -1183,12 +1195,35 @@ async function assertBlogArchiveUtilities(page, testCase, width) {
             countBackground: countStyle?.backgroundColor || '',
             countBorderWidth: countStyle?.borderTopWidth || '',
             countRadius: countStyle?.borderRadius || '',
-            directResultMeta: pageType === 'blog-search'
-                ? Boolean(document.querySelector('#search-results-container .post-preview > .post-meta'))
-                : false,
-            resultContextDate: pageType === 'blog-search'
-                ? Boolean(document.querySelector('#search-results-container .post-card-eyebrow time'))
-                : true,
+            editorialHero: Boolean(hero)
+                && getComputedStyle(hero).backgroundImage === 'none'
+                && getComputedStyle(hero).backgroundColor === 'rgb(16, 16, 17)',
+            editorialImprint: document.querySelector('.blog-editorial-imprint')?.textContent.replace(/\s+/g, ' ').trim() || '',
+            editorialSectionHeading: sectionHeading?.textContent.replace(/\s+/g, ' ').trim() || '',
+            previewHierarchyValid: previews.every((card) => {
+                const body = card.querySelector('.post-card-body');
+                const series = body?.querySelector('.post-series-context');
+                const title = body?.querySelector('.post-title');
+                const subtitle = body?.querySelector('.post-subtitle');
+                const date = body?.querySelector(':scope > .post-meta');
+                const tags = body?.querySelector('.post-tag-row');
+                return Boolean(series && title && date)
+                    && Boolean(series.compareDocumentPosition(title) & Node.DOCUMENT_POSITION_FOLLOWING)
+                    && (!subtitle || Boolean(title.compareDocumentPosition(subtitle) & Node.DOCUMENT_POSITION_FOLLOWING))
+                    && Boolean((subtitle || title).compareDocumentPosition(date) & Node.DOCUMENT_POSITION_FOLLOWING)
+                    && (!tags || Boolean(date.compareDocumentPosition(tags) & Node.DOCUMENT_POSITION_FOLLOWING));
+            }),
+            previewEraSignatureValid: previews.every((card) => {
+                const year = Number(card.querySelector('time[datetime]')?.getAttribute('datetime')?.slice(0, 4));
+                const isRecent = year >= new Date().getFullYear() - 1;
+                if (window.innerWidth <= 575) {
+                    const cover = card.querySelector('.post-card-cover')?.getBoundingClientRect();
+                    const body = card.querySelector('.post-card-body')?.getBoundingClientRect();
+                    return Boolean(cover && body && cover.bottom <= body.top + 1);
+                }
+                return card.classList.contains('post-preview-media-right') === isRecent;
+            }),
+            oldArchiveFolio: document.querySelector('.blog-home-era-break')?.textContent.replace(/\s+/g, ' ').trim() || '',
             visibleLanguageField: pageType === 'blog-search'
                 ? Array.from(document.querySelectorAll('#search-results-container .post-preview *'))
                     .some((element) => ['Languages:', '언어:'].some((label) => element.textContent.trim().startsWith(label)))
@@ -1214,6 +1249,21 @@ async function assertBlogArchiveUtilities(page, testCase, width) {
             && state.searchBackground === 'rgba(0, 0, 0, 0)',
         `${testCase.id} restored the legacy pill search field.`
     );
+    assert(state.editorialHero, `${testCase.id} did not adopt the dark editorial utility cover.`);
+    assert(
+        state.editorialImprint.startsWith(testCase.type === 'blog-search'
+            ? '00 / Search Index'
+            : `00 / ${testCase.archiveContext || 'Series Index'}`)
+            && state.editorialImprint.endsWith("Hwan's Blog"),
+        `${testCase.id} is missing its indexed Blog imprint.`
+    );
+    assert(
+        state.editorialSectionHeading === (testCase.type === 'blog-search' ? '01 Results' : '01 Articles'),
+        `${testCase.id} result chapter no longer follows the numbered editorial grammar.`
+    );
+    assert(state.previewHierarchyValid, `${testCase.id} previews no longer share the Blog home content hierarchy.`);
+    assert(state.previewEraSignatureValid, `${testCase.id} previews no longer share the Blog home era alignment.`);
+    assert(state.oldArchiveFolio === '02 Old Archive', `${testCase.id} is missing the old-archive boundary folio.`);
     if (testCase.type === 'blog-search') {
         assert(
             state.countBorderWidth === '0px'
@@ -1222,8 +1272,8 @@ async function assertBlogArchiveUtilities(page, testCase, width) {
             'Search results restored the legacy pill count.'
         );
         assert(
-            !state.directResultMeta && state.resultContextDate && !state.visibleLanguageField,
-            'Search results restored the separated date or visible language metadata.'
+            !state.visibleLanguageField,
+            'Search results restored visible language metadata.'
         );
 
         if (width === 1440) {

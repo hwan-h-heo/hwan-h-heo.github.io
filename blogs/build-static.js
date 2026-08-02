@@ -588,7 +588,8 @@ function generateArchivePages() {
             description,
             canonicalPath: entry.path,
             posts: entry.posts,
-            siteData
+            siteData,
+            archiveKind: 'series'
         }));
         console.log(`Generated series archive: ${entry.path}`);
     });
@@ -600,7 +601,8 @@ function generateArchivePages() {
             description,
             canonicalPath: entry.path,
             posts: entry.posts,
-            siteData
+            siteData,
+            archiveKind: 'tag'
         }));
         console.log(`Generated tag archive: ${entry.path}`);
     });

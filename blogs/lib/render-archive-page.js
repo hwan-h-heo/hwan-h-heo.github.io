@@ -6,7 +6,34 @@ const {
     serializeStructuredData
 } = require('./seo-utils');
 
-function renderArchivePage({ title, description, canonicalPath, posts, siteData }) {
+function renderArchiveEntries(posts, siteData) {
+    const recentArchiveYearCutoff = new Date().getFullYear() - 1;
+    let oldArchiveStarted = false;
+
+    return posts.map((post) => {
+        const isRecent = Number(post.date.slice(0, 4)) >= recentArchiveYearCutoff;
+        const oldArchiveHeading = !isRecent && !oldArchiveStarted
+            ? `
+                        <div class="blog-home-era-break">
+                            <h3>
+                                <span class="blog-home-era-index" aria-hidden="true">02</span>
+                                <span>Old Archive</span>
+                            </h3>
+                            <span class="blog-home-era-rule" aria-hidden="true"></span>
+                        </div>`
+            : '';
+
+        if (!isRecent) {
+            oldArchiveStarted = true;
+        }
+
+        return `${oldArchiveHeading}${renderPostPreview(post, 'eng', siteData, {
+            mediaSide: isRecent ? 'right' : 'left'
+        })}`;
+    }).join('');
+}
+
+function renderArchivePage({ title, description, canonicalPath, posts, siteData, archiveKind = 'tag' }) {
     const canonicalUrl = `${SITE_URL}${canonicalPath}`;
     const structuredData = {
         '@context': 'https://schema.org',
@@ -21,7 +48,8 @@ function renderArchivePage({ title, description, canonicalPath, posts, siteData 
         }
     };
 
-    const postHtml = posts.map((post) => renderPostPreview(post, 'eng', siteData)).join('');
+    const postHtml = renderArchiveEntries(posts, siteData);
+    const archiveContext = archiveKind === 'series' ? 'Series Index' : 'Topic Index';
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -81,24 +109,32 @@ function renderArchivePage({ title, description, canonicalPath, posts, siteData 
                 </div>
             </nav>
 
-            <header class="masthead blog-home-hero" style="background-image: url('/assets/image_fx_.webp'); background-position: center 34%; background-size: cover;">
+            <header class="masthead blog-home-hero blog-editorial-utility-hero">
                 <div class="blog-shell blog-hero-shell">
-                    <div class="blog-home-hero-grid">
-                        <div class="blog-home-hero-copy">
-                            <span class="blog-home-kicker">Archive</span>
-                            <h1>${escapeHtml(title)}</h1>
-                            <p>${escapeHtml(description)}</p>
+                    <div class="blog-editorial-utility-copy">
+                        <div class="blog-editorial-imprint">
+                            <div class="blog-editorial-brandline" lang="en">
+                                <span class="blog-editorial-index">00</span>
+                                <span class="blog-editorial-separator" aria-hidden="true">/</span>
+                                <span class="blog-home-kicker">${escapeHtml(archiveContext)}</span>
+                            </div>
+                            <span class="blog-editorial-edition" lang="en">Hwan's Blog</span>
                         </div>
+                        <h1>${escapeHtml(title)}</h1>
+                        <p>${escapeHtml(description)}</p>
                     </div>
                 </div>
             </header>
 
             <div class="blog-shell blog-home-container">
-                <section class="blog-home-archive" aria-labelledby="archive-posts-heading">
-                    <div class="blog-home-archive-head">
-                        <div>
-                            <h2 id="archive-posts-heading">Articles</h2>
-                        </div>
+                <section class="blog-home-archive blog-editorial-archive" aria-labelledby="archive-posts-heading">
+                    <div class="blog-home-archive-head blog-editorial-section-head">
+                        <h2 id="archive-posts-heading">
+                            <span class="blog-home-archive-index" aria-hidden="true">01</span>
+                            <span>Articles</span>
+                        </h2>
+                        <span class="blog-home-archive-rule" aria-hidden="true"></span>
+                        <span class="blog-archive-count">${posts.length} ${posts.length === 1 ? 'article' : 'articles'}</span>
                     </div>
                     <div class="blog-home-tab-content">
                         ${postHtml}
@@ -135,6 +171,17 @@ function renderArchivePage({ title, description, canonicalPath, posts, siteData 
                     updateArchiveCards(language);
                 }
 
+                function formatArchiveDate(value, language) {
+                    return new Date(value + 'T00:00:00').toLocaleDateString(
+                        language === 'kor' ? 'ko-KR' : 'en-US',
+                        {
+                            year: 'numeric',
+                            month: language === 'kor' ? 'numeric' : 'long',
+                            day: 'numeric'
+                        }
+                    );
+                }
+
                 async function updateArchiveCards(language) {
                     if (!window.siteDataClient) {
                         return;
@@ -156,10 +203,13 @@ function renderArchivePage({ title, description, canonicalPath, posts, siteData 
                             const coverImage = card.querySelector('img[data-blog-cover]');
                             const subtitle = card.querySelector('.post-subtitle');
                             const series = card.querySelector('[data-post-series]');
+                            const time = card.querySelector('.post-meta time');
+                            const textLanguage = language === 'kor' ? 'ko' : 'en';
 
                             if (titleLink) {
                                 titleLink.textContent = title;
                                 titleLink.href = url;
+                                titleLink.closest('.post-title')?.setAttribute('lang', textLanguage);
                             }
 
                             if (coverLink) {
@@ -173,12 +223,17 @@ function renderArchivePage({ title, description, canonicalPath, posts, siteData 
 
                             if (subtitle) {
                                 subtitle.textContent = subtitleText;
+                                subtitle.setAttribute('lang', textLanguage);
                             }
 
                             if (series) {
                                 series.textContent = siteData.series[post.series]?.[language]
                                     || siteData.series[post.series]?.eng
                                     || 'Series';
+                            }
+
+                            if (time) {
+                                time.textContent = formatArchiveDate(post.date, language);
                             }
 
                         });
