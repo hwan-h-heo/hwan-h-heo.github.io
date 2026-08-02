@@ -1,6 +1,7 @@
 const { SITE_URL } = require('./site-config');
 const {
     escapeHtml,
+    getFeaturedPost,
     renderFeaturedPost,
     renderPostPreview,
     renderSeriesGroups,
@@ -50,7 +51,7 @@ function renderBlogHeadMetadata() {
 
 function renderStaticBlogIndex(sourceHtml, siteData) {
     const lang = 'eng';
-    const featuredPost = siteData.posts.find((post) => post.category === 'post') || siteData.posts[0] || null;
+    const featuredPost = getFeaturedPost(siteData);
     const regularPosts = siteData.posts.filter((post) => post.category === 'post' && post.id !== featuredPost?.id);
     const notes = siteData.posts.filter((post) => post.category === 'note');
     const seriesCount = new Set(siteData.posts.map((post) => post.series).filter(Boolean)).size;

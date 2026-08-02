@@ -31,6 +31,7 @@
 
         return {
             posts,
+            blogHome: { ...(rawSiteData.blogHome || {}) },
             series: rawSiteData.series || {},
             portfolioProjects: rawSiteData.portfolioProjects || [],
             publications: rawSiteData.publications || [],

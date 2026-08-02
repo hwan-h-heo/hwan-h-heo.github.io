@@ -164,6 +164,14 @@ function renderTags(post, siteData = null) {
 }
 
 function getFeaturedPost(siteData) {
+    const featuredPostId = siteData.blogHome?.featuredPostId;
+    const configuredPost = featuredPostId
+        ? (siteData.postById?.[featuredPostId] || siteData.posts.find((post) => post.id === featuredPostId))
+        : null;
+    if (configuredPost) {
+        return configuredPost;
+    }
+
     return siteData.posts.find((post) => post.category === 'post') || siteData.posts[0] || null;
 }
 

@@ -306,6 +306,32 @@ function validateTalkShape(talk, index, errors) {
     validateStringField(talk, 'titleHtml', errors, label, false);
 }
 
+function validateBlogHomeShape(blogHome, posts, errors) {
+    const allowedKeys = new Set(['featuredPostId']);
+    Object.keys(blogHome).forEach((key) => {
+        if (!allowedKeys.has(key)) {
+            errors.push(`Unexpected key "${key}" in blogHome.`);
+        }
+    });
+
+    validateStringField(blogHome, 'featuredPostId', errors, 'blogHome');
+    if (!blogHome.featuredPostId) {
+        return;
+    }
+
+    const featuredPost = posts.find((post) => post.id === blogHome.featuredPostId);
+    if (!featuredPost) {
+        errors.push(`Blog home featured post "${blogHome.featuredPostId}" does not exist.`);
+        return;
+    }
+    if ((featuredPost.status || 'published') !== 'published') {
+        errors.push(`Blog home featured post "${blogHome.featuredPostId}" must be published.`);
+    }
+    if (featuredPost.category !== 'post') {
+        errors.push(`Blog home featured post "${blogHome.featuredPostId}" must use the post category.`);
+    }
+}
+
 function normalizeRelatedItem(item) {
     if (typeof item === 'string') {
         return {
@@ -358,6 +384,7 @@ function normalizeSiteData(rawSiteData, relatedData = {}) {
 
     return {
         posts,
+        blogHome: { ...rawSiteData.blogHome },
         series: rawSiteData.series,
         portfolioProjects: rawSiteData.portfolioProjects || [],
         publications: rawSiteData.publications || [],
@@ -384,11 +411,16 @@ function validateSiteData(rawSiteData) {
         errors.push('Site data must include a series map.');
     }
 
+    if (!rawSiteData.blogHome || typeof rawSiteData.blogHome !== 'object' || Array.isArray(rawSiteData.blogHome)) {
+        errors.push('Site data must include a blogHome object.');
+    }
+
     if (errors.length > 0) {
         throw new Error(errors.join('\n'));
     }
 
     rawSiteData.posts.forEach((post) => validatePostShape(post, rawSiteData.series, errors));
+    validateBlogHomeShape(rawSiteData.blogHome, rawSiteData.posts, errors);
 
     const portfolioProjectIds = new Set();
     (rawSiteData.portfolioProjects || []).forEach((project, index) => {

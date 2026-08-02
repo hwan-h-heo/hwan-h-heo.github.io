@@ -69,6 +69,7 @@
         bootstrap: {
             categories: ['post', 'note'],
             languages: ['eng', 'kor'],
+            blogHome: {},
             series: {},
             posts: [],
             featuredPortfolioPosts: []
@@ -165,6 +166,8 @@
             'sidebar-toggle-icon',
             'sidebar-toggle-label',
             'existing-post-select',
+            'blog-home-featured-post',
+            'save-blog-home-button',
             'post-id',
             'post-date',
             'post-category',
@@ -245,6 +248,7 @@
         el.sidebarToggleButton.addEventListener('click', toggleSidebar);
         el.newPostButton.addEventListener('click', handleNewPost);
         el.loadPostButton.addEventListener('click', openLoadPostModal);
+        el.saveBlogHomeButton.addEventListener('click', saveBlogHomeSettings);
         el.saveDraftButton.addEventListener('click', saveDraft);
         el.driveLoadButton.addEventListener('click', openDriveDraftModal);
         el.driveSaveButton.addEventListener('click', saveDriveDraft);
@@ -555,7 +559,9 @@
             el.publishButton,
             el.loadSelectedPostButton,
             el.loadDraftButton,
-            el.existingPostSelect
+            el.existingPostSelect,
+            el.blogHomeFeaturedPost,
+            el.saveBlogHomeButton
         ].forEach((button) => {
             button.disabled = disabled;
         });
@@ -585,6 +591,21 @@
                 };
             }
         );
+        const blogHomePosts = state.bootstrap.posts.filter((post) => (
+            post.category === 'post' && (post.status || 'published') === 'published'
+        ));
+        fillSelect(
+            el.blogHomeFeaturedPost,
+            blogHomePosts.map((post) => post.id),
+            (value) => {
+                const post = blogHomePosts.find((item) => item.id === value);
+                return {
+                    value,
+                    label: post ? `${post.title_eng} · ${post.date}` : value
+                };
+            }
+        );
+        el.blogHomeFeaturedPost.value = state.bootstrap.blogHome?.featuredPostId || '';
 
         if (!el.postSeries.value && state.metadata.series) {
             el.postSeries.value = state.metadata.series;
@@ -643,6 +664,7 @@
             state.bootstrap = {
                 categories: ['post', 'note'],
                 languages: ['eng', 'kor'],
+                blogHome: { ...(siteData.blogHome || {}) },
                 series: siteData.series || {},
                 posts: [...(siteData.posts || [])].sort((a, b) => new Date(b.date) - new Date(a.date)),
                 featuredPortfolioPosts: siteData.featuredPortfolioPosts || []
@@ -2862,6 +2884,50 @@
             renderModeBadge();
         } catch (error) {
             showFeedback('error', 'Publish failed', [error.message]);
+        }
+    }
+
+    async function saveBlogHomeSettings() {
+        if (!state.editMode) {
+            showFeedback('error', 'Blog home save unavailable', [
+                'Start the local editor server with `npm run edit` first.'
+            ]);
+            return;
+        }
+
+        const featuredPostId = el.blogHomeFeaturedPost.value;
+        if (!featuredPostId) {
+            showFeedback('error', 'Featured post required', [
+                'Select a published post for the Blog Home Featured position.'
+            ]);
+            return;
+        }
+
+        const originalLabel = el.saveBlogHomeButton.textContent;
+        el.saveBlogHomeButton.disabled = true;
+        el.saveBlogHomeButton.textContent = 'Saving…';
+
+        try {
+            const response = await fetch(`${API_BASE}/blog-home`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ featuredPostId })
+            });
+            const result = await response.json();
+            if (!response.ok || !result.success) {
+                showFeedback('error', 'Blog home save failed', result.details || [result.error || 'Unknown error']);
+                return;
+            }
+
+            state.bootstrap.blogHome = { ...result.blogHome };
+            showFeedback('success', 'Blog home updated', [
+                `${el.blogHomeFeaturedPost.selectedOptions[0]?.textContent || featuredPostId} is now Featured.`
+            ]);
+        } catch (error) {
+            showFeedback('error', 'Blog home save failed', [error.message]);
+        } finally {
+            el.saveBlogHomeButton.textContent = originalLabel;
+            el.saveBlogHomeButton.disabled = !state.editMode;
         }
     }
 

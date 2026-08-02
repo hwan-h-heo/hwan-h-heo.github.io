@@ -10,6 +10,7 @@ A markdown editor for creating blog posts, registering metadata, and publishing 
 - ☁️ **Google Drive Drafts**: Save and restore complete post workspaces as visible Markdown files in Drive
 - 📝 **Post Publishing**: Create or update `site-data.json` and `posts/{postId}/content-*.md` in one flow
 - 🗂️ **Metadata Editing**: Manage identity, descriptions, slug, tags, cover, status, dates, languages, and portfolio feature settings
+- 🏠 **Blog Home Curation**: Select and save the Featured article independently of publication date
 - ✅ **Validation**: Duplicate id checks, allowed category/series validation, and language/file alignment
 - 🎨 **Blog-Matched Styling**: Preview looks exactly like published posts
 - 📐 **Math Support**: Write LaTeX equations with KaTeX
@@ -33,6 +34,7 @@ In edit mode, you can:
 - Publish metadata to `data/site-data.json`
 - Create or update `posts/{postId}/content-eng.md` and optional `content-kor.md`
 - Configure `featuredPortfolioPosts` entry for the current post
+- Select the explicit Blog Home Featured post without editing post dates or array order
 
 ### Google Drive Drafts
 
@@ -56,10 +58,11 @@ Then navigate to the editor - draft management features are hidden.
 ## Workflow
 
 1. **Start editor**: `npm run edit`
-2. **Fill metadata**: Set identity, titles/descriptions, dates, slug, tags, local cover, status, languages, and optional featured teaser info
-3. **Write content**: Use the English/Korean tabs and click blocks in Layout view, or switch to Markdown for the split source editor
-4. **Save draft**: Save the active language tab if you want a local snapshot
-5. **Publish**: Click `Publish` to write metadata and markdown files together
+2. **Curate the home**: Use **Blog Home → Featured post** whenever the homepage lead article should change
+3. **Fill metadata**: Set identity, titles/descriptions, dates, slug, tags, local cover, status, languages, and optional featured teaser info
+4. **Write content**: Use the English/Korean tabs and click blocks in Layout view, or switch to Markdown for the split source editor
+5. **Save draft**: Save the active language tab if you want a local snapshot
+6. **Publish**: Click `Publish` to write metadata and markdown files together
 
 ## Keyboard Shortcuts
 

@@ -192,6 +192,7 @@ function buildBootstrapPayload() {
     return {
         categories: POST_CATEGORIES,
         languages: POST_LANGUAGES,
+        blogHome: { ...rawSiteData.blogHome },
         series: rawSiteData.series,
         featuredPortfolioPosts: rawSiteData.featuredPortfolioPosts || [],
         posts: sortPostsByDate(rawSiteData.posts).map((post) => ({
@@ -214,6 +215,45 @@ function buildBootstrapPayload() {
             featured: featuredMap.has(post.id)
         }))
     };
+}
+
+function saveBlogHomeSettings(payload) {
+    const rawSiteData = loadRawSiteData();
+    validateSiteData(rawSiteData);
+
+    const featuredPostId = String(payload?.featuredPostId || '').trim();
+    const featuredPost = rawSiteData.posts.find((post) => post.id === featuredPostId);
+    const errors = [];
+
+    if (!featuredPostId) {
+        errors.push('Select a featured post for the blog home.');
+    } else if (!featuredPost) {
+        errors.push(`Post "${featuredPostId}" does not exist.`);
+    } else {
+        if ((featuredPost.status || 'published') !== 'published') {
+            errors.push('The blog home featured post must be published.');
+        }
+        if (featuredPost.category !== 'post') {
+            errors.push('The blog home featured post must use the post category.');
+        }
+    }
+
+    if (errors.length > 0) {
+        const validationError = new Error(errors.join('\n'));
+        validationError.validationErrors = errors;
+        throw validationError;
+    }
+
+    const nextSiteData = {
+        ...rawSiteData,
+        blogHome: {
+            ...rawSiteData.blogHome,
+            featuredPostId
+        }
+    };
+    writeSiteData(nextSiteData);
+
+    return { ...nextSiteData.blogHome };
 }
 
 function readPostBundle(postId) {
@@ -743,6 +783,13 @@ const server = http.createServer(async (req, res) => {
         try {
             if (pathname === '/api/editor-bootstrap' && req.method === 'GET') {
                 sendJson(res, 200, buildBootstrapPayload());
+                return;
+            }
+
+            if (pathname === '/api/blog-home' && req.method === 'POST') {
+                const body = await parseJsonBody(req);
+                const blogHome = saveBlogHomeSettings(body);
+                sendJson(res, 200, { success: true, blogHome });
                 return;
             }
 

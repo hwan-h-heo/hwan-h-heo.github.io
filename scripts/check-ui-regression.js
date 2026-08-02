@@ -547,17 +547,24 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
         return;
     }
 
-    const initialTitleState = await page.evaluate(() => {
-        const heroTitle = document.querySelector('[data-i18n="heroTitle"]');
-        const heroIntro = document.querySelector('[data-i18n="heroIntro"]');
+    const initialTitleState = await page.evaluate(async () => {
+        const heroTitle = document.querySelector('.blog-home-hero-copy h1');
+        const heroIntro = document.querySelector('.blog-home-hero-copy > p');
         const heroIntroStyle = getComputedStyle(heroIntro);
         const heroIntroRange = document.createRange();
         heroIntroRange.selectNodeContents(heroIntro);
+        const siteData = await fetch('/blogs/data/site-data.json').then((response) => response.json());
+        const featuredPostId = siteData.blogHome?.featuredPostId || '';
+        const featuredPost = siteData.posts.find((post) => post.id === featuredPostId);
         return {
+            configuredFeaturedLanguage: featuredPost?.languages?.includes('kor') ? 'ko' : 'en',
+            configuredFeaturedPostId: featuredPostId,
+            featuredPostId: document.querySelector('.blog-feature-card')?.dataset.postId || '',
             heroIntroFontFamily: heroIntroStyle.fontFamily,
             heroIntroLetterSpacing: heroIntroStyle.letterSpacing,
             heroIntroText: heroIntro.textContent,
             heroIntroWidth: heroIntroRange.getBoundingClientRect().width,
+            heroIsStatic: !heroTitle?.hasAttribute('data-i18n') && !heroIntro?.hasAttribute('data-i18n'),
             heroTitle: heroTitle?.textContent || '',
             heroWidth: heroTitle?.getBoundingClientRect().width || 0,
             postTitles: Object.fromEntries(Array.from(document.querySelectorAll('.post-preview[data-post-id]')).map((card) => {
@@ -571,6 +578,12 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
             }))
         };
     });
+    assert(initialTitleState.heroIsStatic, 'Blog hero title or description returned to runtime-managed copy.');
+    assert(
+        initialTitleState.configuredFeaturedPostId
+            && initialTitleState.featuredPostId === initialTitleState.configuredFeaturedPostId,
+        'Blog home did not render the explicitly configured featured post.'
+    );
     await page.evaluate(() => {
         window.__blogStaticPreview = document.querySelector('.post-preview[data-post-id]');
     });
@@ -587,7 +600,7 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
                 ? []
                 : [card.dataset.postId];
         });
-        const heroIntro = document.querySelector('[data-i18n="heroIntro"]');
+        const heroIntro = document.querySelector('.blog-home-hero-copy > p');
         const heroIntroStyle = getComputedStyle(heroIntro);
         const heroIntroRange = document.createRange();
         heroIntroRange.selectNodeContents(heroIntro);
@@ -595,20 +608,23 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
             button: document.querySelector('#lang-toggle-main')?.textContent.trim(),
             preservedStaticPreview: window.__blogStaticPreview === document.querySelector('.post-preview[data-post-id]'),
             lang: document.documentElement.lang,
-            title: document.querySelector('[data-i18n="heroTitle"]')?.textContent,
+            title: document.querySelector('.blog-home-hero-copy h1')?.textContent,
             featureLang: document.querySelector('.blog-feature-copy h2')?.lang,
             heroIntroFontFamily: heroIntroStyle.fontFamily,
             heroIntroLetterSpacing: heroIntroStyle.letterSpacing,
             heroIntroText: heroIntro.textContent,
             heroIntroWidth: heroIntroRange.getBoundingClientRect().width,
-            heroWidth: document.querySelector('[data-i18n="heroTitle"]')?.getBoundingClientRect().width || 0,
+            heroWidth: document.querySelector('.blog-home-hero-copy h1')?.getBoundingClientRect().width || 0,
             stableTitleIssues
         };
     }, initialTitleState.postTitles);
     assert(koreanState.lang === 'ko' && koreanState.button === 'A', 'Blog language toggle did not switch to Korean.');
     assert(koreanState.preservedStaticPreview, 'Blog language toggle replaced the server-rendered preview markup.');
     assert(koreanState.title && initialTitleState.heroTitle, 'Blog language toggle left the hero copy empty.');
-    assert(koreanState.featureLang === 'ko', 'Blog language toggle did not identify the translated featured title as Korean.');
+    assert(
+        koreanState.featureLang === initialTitleState.configuredFeaturedLanguage,
+        'Blog language toggle used the wrong language for the configured featured title.'
+    );
     assert(koreanState.heroIntroText === initialTitleState.heroIntroText, 'Blog language toggle changed the fixed English hero intro.');
     assert(koreanState.heroIntroFontFamily === initialTitleState.heroIntroFontFamily, 'Blog language toggle changed the hero-intro font.');
     assert(koreanState.heroIntroLetterSpacing === initialTitleState.heroIntroLetterSpacing, 'Blog language toggle changed the hero-intro tracking.');
@@ -1233,6 +1249,23 @@ async function assertEditorIcons(page, width) {
     assert(changedIcon && changedIcon !== initialIcon, 'Editor sidebar icon did not change with its collapsed state.');
     await toggle.click();
     assert(await page.locator('#sidebar-toggle-icon use').getAttribute('href') === initialIcon, 'Editor sidebar icon did not restore its initial state.');
+
+    await page.waitForFunction(() => document.querySelector('#blog-home-featured-post')?.options.length > 0);
+    const blogHomeState = await page.evaluate(async () => {
+        const siteData = await fetch('/blogs/data/site-data.json').then((response) => response.json());
+        const select = document.querySelector('#blog-home-featured-post');
+        const saveButton = document.querySelector('#save-blog-home-button');
+        return {
+            configuredFeaturedPostId: siteData.blogHome?.featuredPostId || '',
+            saveDisabled: Boolean(saveButton?.disabled),
+            selectedFeaturedPostId: select?.value || ''
+        };
+    });
+    assert(
+        blogHomeState.selectedFeaturedPostId === blogHomeState.configuredFeaturedPostId,
+        'Blog editor did not load the configured Blog Home Featured post.'
+    );
+    assert(blogHomeState.saveDisabled, 'Static Blog Editor exposed an active site-data save control.');
 }
 
 async function runInteractions(page, testCase, width, options) {

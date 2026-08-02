@@ -58,8 +58,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     const labels = {
         eng: {
             heroKicker: "Hwan's Blog",
-            heroTitle: 'Research notes for 3D AI systems',
-            heroIntro: '3D generation, computer vision, graphics, CUDA inference, and the implementation details that usually stay between commits.',
             searchPlaceholder: 'Search...',
             archiveTitle: 'All Writing',
             tabPosts: 'Posts',
@@ -72,8 +70,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         },
         kor: {
             heroKicker: "Hwan's Blog",
-            heroTitle: 'Research notes for 3D AI systems',
-            heroIntro: '3D generation, computer vision, graphics, CUDA inference, and the implementation details that usually stay between commits.',
             searchPlaceholder: 'Search...',
             archiveTitle: 'All Writing',
             tabPosts: 'Posts',
@@ -153,6 +149,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     function getFeaturedPost() {
+        const featuredPostId = siteData.blogHome?.featuredPostId;
+        if (featuredPostId && postById.has(featuredPostId)) {
+            return postById.get(featuredPostId);
+        }
+
         return sortedPosts.find((post) => post.category === 'post') || sortedPosts[0];
     }
 
