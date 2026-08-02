@@ -140,9 +140,29 @@ Rules:
 - Keep body line height around `1.58` to `1.78`.
 - Keep compact metadata around `0.72rem` to `0.84rem`.
 - Use `text-wrap: pretty` for display titles where supported.
-- Long-form blog `h4` headings use a short solid accent rail, never a gradient.
+- Long-form blog `h4` headings use a short horizontal solid accent rule as an
+  index mark, never a gradient or a repeated left-side rail.
 - Long-form blog tables use a compact `4px` outer radius, hairline cell borders,
   and no shadow so their hierarchy comes from typography and rules.
+- Long-form code blocks use the same compact `4px` editorial radius, a neutral
+  hairline and faint wash, and a borderless copy control. Give every block a
+  quiet mono `CODE` folio, extended to `CODE / LANGUAGE` when the Markdown fence
+  identifies a language. Avoid floating copy buttons, card shadows, and
+  utility-panel styling.
+- Normalize captioned article media into numbered folios such as `FIG. 01 /`.
+  Keep the index in neutral mono type, the caption in muted body type, and media
+  at a compact `4px` radius; source links retain the article link treatment.
+  Fold legacy inline `figcaption` markup, emphasized caption lines, and isolated
+  single-item caption lists into this same figure grammar during the static
+  build. When one captioned legacy image has an explicit sub-100% width, keep
+  the caption centered on a related, readable measure rather than letting it
+  span the full article column. Keep ordinary explanatory paragraphs and
+  multi-item lists in the body.
+- Long-form blockquotes act as editorial annotations because source content uses
+  them for questions, theorems, summaries, and quotations. Use a faint neutral
+  wash, one neutral hairline, and a short editorial-accent cap; do not add a
+  quotation glyph, rounded card, shadow, or semantic label that may misclassify
+  the content.
 
 The editorial quality comes from scale, weight, alignment, and rhythm. It does
 not depend on adding a serif family.
@@ -165,15 +185,37 @@ not depend on adding a serif family.
   muted and italic, and underline only the linked destination text.
 - Long-form blog posts use the same heading family, weight, spacing, and scale as
   project-detail titles. Above the title, render a neutral `SERIES /` label and
-  a subtly underlined cyan series link so the hierarchy and click target are
-  both explicit. The subtitle becomes an Inter regular editorial standfirst,
-  with cyan topics directly beneath it; underline linked topics with the same
-  restrained treatment as the series link so their clickability is explicit.
-  Render middle-dot separators outside the links and never underline them.
+  an underline-free cyan series link ending in one quiet directional arrow so
+  the hierarchy and destination are both explicit without adding a persistent
+  rule beneath the text. The subtitle becomes an Inter regular editorial
+  standfirst, with a muted neutral `TOPICS /` label and topics directly beneath
+  it. Keep clickable topics in editorial cyan, non-clickable topics in a more
+  legible neutral, and middle-dot separators in the faintest neutral so link
+  state is clear without persistent underlines. Series and topic links reveal a
+  restrained underline on hover and keyboard focus only. Render middle-dot
+  separators outside the links and never underline them; do not repeat the
+  directional arrow on individual topics.
+  Opening body paragraphs use the regular body treatment without a lead
+  paragraph, drop cap, decorative initial, or separate container. Korean post
+  titles use a Manrope-to-Noto Sans KR mixed
+  script stack so Latin technical terms retain the heading character; use a
+  matching title weight, looser line height, and less aggressive negative
+  tracking than English. Protect ASCII hyphenated technical compounds such as
+  `IO-Aware` from breaking internally in article titles; allow the surrounding
+  title to rebalance naturally. Korean standfirsts keep words intact and use
+  additional line height to offset the density of Hangul blocks.
+  Treat structural mono labels as a locale-independent publication imprint:
+  `SERIES`, `TOPICS`, `AUTHOR`, `PUBLISHED`, `READING`, `FEATURED`, and archive
+  chapter labels remain English in every locale. Localize their accessible
+  labels and reader-facing actions where useful, but do not mix translated and
+  untranslated structural labels in the same composition.
   Place this copy beside
   a narrow margin note with separate author, publication-date, and reading-time
-  rows. Lead with `Author / Hwan Heo` so ownership is visible before the reader
-  reaches the full author note at the end of the article.
+  rows. Keep the standfirst and margin note visually balanced, then let the body
+  follow without opening cover media so posts with heterogeneous source imagery
+  retain one consistent editorial rhythm. Lead with
+  `Author / Hwan Heo` so ownership is visible before the reader reaches the full
+  author note at the end of the article.
   Do not add a decorative accent rule or a visible `Article Details` heading;
   do not duplicate the series link in the end matter. On compact screens, turn
   the margin note into three inline metadata columns without a card border. The
@@ -297,6 +339,11 @@ Use a shared index/table grammar. Do not introduce a separate card system.
 - Blog home archive rows mirror the Portfolio preview hierarchy and alignment,
   while retaining a more compact media rail for the denser archive context.
   Keep top-aligned copy, description, tags, and date in one grid.
+- Extend the numbered-navigation signature into preview eyebrows with quiet
+  folio notation. Use `P–01` for portfolio projects, `W–01` for Portfolio-home
+  writing, and category-aware `P–01` / `N–01` notation for Blog-home Posts and
+  Notes. Keep the folio neutral and the adjacent editorial label accented; it
+  is margin notation, never a badge or a separate metadata row.
 
 ## Interaction And Motion
 

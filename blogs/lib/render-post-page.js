@@ -20,6 +20,22 @@ function serializeForScript(value) {
     return JSON.stringify(value, null, 2).replace(/</g, '\\u003c');
 }
 
+function renderPostDisplayTitle(title) {
+    const source = String(title || '');
+    const technicalTermPattern = /\b[A-Za-z0-9]+(?:-[A-Za-z0-9]+)+\b/g;
+    let cursor = 0;
+    let html = '';
+
+    source.replace(technicalTermPattern, (term, offset) => {
+        html += escapeHtml(source.slice(cursor, offset));
+        html += `<span class="post-title-term">${escapeHtml(term)}</span>`;
+        cursor = offset + term.length;
+        return term;
+    });
+
+    return html + escapeHtml(source.slice(cursor));
+}
+
 function resolveOgImage(post, featuredPortfolioPosts) {
     const configuredImage = post.socialImage || post.previewImage || post.cover || '';
     if (configuredImage && !/\.svg(?:[?#]|$)/i.test(configuredImage)) {
@@ -209,6 +225,7 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
     const seriesTitle = post.series ? getSeriesTitle(siteData, post.series, lang) : 'Technical Writing';
     const seriesHref = post.series ? getSeriesRoute(post.series) : '/blogs/';
     const heroSummary = post[`subtitle_${lang}`] || post[`description_${lang}`] || metaDescription;
+    const displayTitleHtml = renderPostDisplayTitle(title);
     const tagHtml = (post.tags || []).length
         ? `<div class="post-tags">${renderTags(post, siteData)}</div>`
         : '';
@@ -219,9 +236,15 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
         : {
             description: 'Lead 3D AI Research Engineer building production systems across large-scale 3D generation, CUDA inference, and graphics pipelines.'
         };
-    const detailLabels = lang === 'kor'
-        ? { details: '글 정보', author: '작성자', published: '발행', reading: '읽는 시간', topics: '주제' }
-        : { details: 'Article details', author: 'Author', published: 'Published', reading: 'Reading', topics: 'Topics' };
+    const detailLabels = {
+        author: 'Author',
+        published: 'Published',
+        reading: 'Reading',
+        topics: 'Topics'
+    };
+    const detailAriaLabels = lang === 'kor'
+        ? { details: '글 정보', topics: '주제' }
+        : { details: 'Article details', topics: 'Topics' };
 
     const structuredData = {
         '@context': 'https://schema.org',
@@ -361,9 +384,12 @@ ${renderPostSidebar()}
                             <div class="post-hero-series">
                                 <span class="post-hero-series-label">Series</span>
                                 <span class="post-hero-series-separator" aria-hidden="true">/</span>
-                                <a href="${escapeHtml(seriesHref)}">${escapeHtml(seriesTitle)}</a>
+                                <a href="${escapeHtml(seriesHref)}">
+                                    <span class="post-hero-series-name">${escapeHtml(seriesTitle)}</span>
+                                    <span class="post-hero-series-arrow" aria-hidden="true">→</span>
+                                </a>
                             </div>
-                            <h1>${escapeHtml(title)}</h1>
+                            <h1>${displayTitleHtml}</h1>
                         </div>
                     </div>
                 </div>
@@ -377,9 +403,13 @@ ${renderPostSidebar()}
                         <div class="post-intro-layout">
                             <div class="post-intro-copy">
                                 <p class="post-intro-deck">${escapeHtml(heroSummary)}</p>
-                                ${tagHtml ? `<div class="post-intro-topics" aria-label="${detailLabels.topics}">${tagHtml}</div>` : ''}
+                                ${tagHtml ? `<div class="post-intro-topics" aria-label="${detailAriaLabels.topics}">
+                                    <span class="post-intro-topics-label">${detailLabels.topics}</span>
+                                    <span class="post-intro-topics-separator" aria-hidden="true">/</span>
+                                    ${tagHtml}
+                                </div>` : ''}
                             </div>
-                            <aside class="post-article-info" aria-label="${detailLabels.details}">
+                            <aside class="post-article-info" aria-label="${detailAriaLabels.details}">
                                 <ul>
                                     <li data-post-detail="author">
                                         <strong>${detailLabels.author}</strong>

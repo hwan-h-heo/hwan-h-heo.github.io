@@ -1093,44 +1093,72 @@ header.masthead.post-masthead .post-heading h1 {
 }
 
 .blog-post-page .post-hero-series a {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: baseline;
     color: var(--blog-color-accent-strong);
+    text-decoration: none;
+}
+
+.blog-post-page .post-hero-series-arrow {
+    color: var(--blog-color-subtle);
+    opacity: 0.72;
+    transition: color 180ms ease, opacity 180ms ease;
+}
+
+.blog-post-page .post-hero-series a:hover .post-hero-series-name,
+.blog-post-page .post-hero-series a:focus-visible .post-hero-series-name {
     text-decoration: underline;
-    text-decoration-color: color-mix(in srgb, var(--blog-color-accent), transparent 76%);
+    text-decoration-color: color-mix(in srgb, var(--blog-color-accent), transparent 42%);
     text-decoration-thickness: 1px;
     text-underline-offset: 0.22em;
 }
 
-.blog-post-page .post-hero-series a:hover,
-.blog-post-page .post-hero-series a:focus-visible {
-    text-decoration: underline;
-    text-decoration-color: color-mix(in srgb, var(--blog-color-accent), transparent 42%);
-    text-underline-offset: 0.22em;
-}
-
-.blog-post-page .post-intro-topics .post-tags {
-    margin: 0.72rem 0 0;
-}
-
-.blog-post-page .post-intro-topics .post-tag {
+.blog-post-page .post-hero-series a:hover .post-hero-series-arrow,
+.blog-post-page .post-hero-series a:focus-visible .post-hero-series-arrow {
     color: var(--blog-color-accent-strong);
+    opacity: 1;
+}
+
+.blog-post-page .post-intro-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.42rem;
+    align-items: baseline;
+    margin-top: 0.72rem;
     font-family: var(--blog-mono);
     font-size: 0.66rem;
     font-weight: 500;
     letter-spacing: 0;
+    line-height: 1.4;
     text-transform: uppercase;
+}
+
+.blog-post-page .post-intro-topics-label,
+.blog-post-page .post-intro-topics-separator {
+    color: var(--blog-color-subtle);
+}
+
+.blog-post-page .post-intro-topics .post-tags {
+    display: inline-flex;
+    flex: 1 1 auto;
+    margin: 0;
+}
+
+.blog-post-page .post-intro-topics .post-tag {
+    color: var(--blog-color-muted);
+    font: inherit;
 }
 
 .blog-post-page .post-intro-topics .post-tag-separator {
     display: inline-block;
-    color: color-mix(in srgb, var(--blog-color-accent), transparent 42%);
+    color: color-mix(in srgb, var(--blog-color-subtle), transparent 38%);
     text-decoration: none;
 }
 
 .blog-post-page .post-intro-topics a.post-tag {
-    text-decoration: underline;
-    text-decoration-color: color-mix(in srgb, var(--blog-color-accent), transparent 64%);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.22em;
+    color: var(--blog-color-accent-strong);
+    text-decoration: none;
 }
 
 .blog-post-page .post-intro-topics a.post-tag:hover,
@@ -1138,7 +1166,14 @@ header.masthead.post-masthead .post-heading h1 {
     color: var(--blog-color-accent-strong);
     text-decoration: underline;
     text-decoration-color: color-mix(in srgb, var(--blog-color-accent), transparent 42%);
+    text-decoration-thickness: 1px;
     text-underline-offset: 0.22em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .blog-post-page .post-hero-series-arrow {
+        transition: none;
+    }
 }
 
 .blog-post-page .post-intro-column {
@@ -2473,6 +2508,11 @@ html[lang="ko"] .blog-home-hero h1 {
     margin: 0;
     padding: 1rem 0;
     border-bottom: 1px solid var(--blog-home-line);
+    counter-increment: blog-writing-folio;
+}
+
+.blog-home-page .blog-home-tab-panel {
+    counter-reset: blog-writing-folio;
 }
 
 .blog-home-page .post-preview:last-child {
@@ -2587,6 +2627,20 @@ html[lang="ko"] .blog-home-hero h1 {
     font-weight: 500;
     letter-spacing: 0;
     text-transform: uppercase;
+}
+
+.blog-home-page #posts-tab .post-card-eyebrow::before,
+.blog-home-page #notes-tab .post-card-eyebrow::before {
+    margin-right: 0.5rem;
+    color: var(--blog-home-muted);
+}
+
+.blog-home-page #posts-tab .post-card-eyebrow::before {
+    content: "P–" counter(blog-writing-folio, decimal-leading-zero) " /";
+}
+
+.blog-home-page #notes-tab .post-card-eyebrow::before {
+    content: "N–" counter(blog-writing-folio, decimal-leading-zero) " /";
 }
 
 .blog-home-page .post-card-body .post-title {

@@ -91,6 +91,13 @@ function createCases(siteData) {
             widths: [320, ...responsiveWidths.blog]
         },
         {
+            id: 'technical-title-post',
+            path: getPostRoute(requirePost(siteData, '250702_building_large_3d_1'), 'eng'),
+            type: 'post',
+            coreSelectors: ['#mainNav', '.masthead', '.main-content', '.post-title-term'],
+            widths: [390, 1440]
+        },
+        {
             id: 'disclosure-post',
             path: getPostRoute(requirePost(siteData, '240917_3djs'), 'eng'),
             type: 'disclosure-post',
@@ -670,6 +677,33 @@ async function assertPostNavigation(page, width) {
             detailAuthor,
             hasArticleDetailsHeading: Boolean(articleInfo?.querySelector('h2')),
             hasLegacyHeroSummary: Boolean(document.querySelector('.post-hero-summary')),
+            figureCaptionsValid: Array.from(document.querySelectorAll('.main-content figure figcaption'))
+                .every((caption, index) => {
+                    const figure = caption.closest('figure');
+                    const figureIndex = caption.querySelector('.post-figure-index');
+                    const figureCopy = caption.querySelector('.post-figure-caption');
+                    const expectedIndex = `FIG. ${String(index + 1).padStart(2, '0')}`;
+                    return figure?.classList.contains('post-media')
+                        && figure.classList.contains('post-media--editorial')
+                        && figureIndex?.textContent.trim() === expectedIndex
+                        && Boolean(figureCopy?.textContent.trim());
+                }),
+            narrowFigureCaptionsConstrained: Array.from(document.querySelectorAll('.main-content figure.post-media--narrow'))
+                .every((figure) => {
+                    const caption = figure.querySelector('figcaption');
+                    const mediaWidth = getComputedStyle(figure).getPropertyValue('--post-figure-media-width').trim();
+                    return Boolean(caption && mediaWidth)
+                        && caption.getBoundingClientRect().width < figure.getBoundingClientRect().width - 0.5;
+                }),
+            codeBlocksValid: Array.from(document.querySelectorAll('.main-content pre'))
+                .filter((pre) => pre.querySelector(':scope > code'))
+                .every((pre) => {
+                    const label = pre.dataset.codeLabel || '';
+                    const renderedLabel = getComputedStyle(pre, '::before').content.replace(/^['"]|['"]$/g, '');
+                    return pre.classList.contains('post-code-block')
+                        && label.startsWith('CODE')
+                        && renderedLabel === label;
+                }),
             heroWidth: heroColumn?.getBoundingClientRect().width || 0,
             infoBelowDeck: Boolean(introRect && infoRect && infoRect.top >= introRect.bottom),
             infoRightOfDeck: Boolean(introRect && infoRect && infoRect.left >= introRect.right),
@@ -688,6 +722,7 @@ async function assertPostNavigation(page, width) {
             searchFormWidth: searchForm?.getBoundingClientRect().width || 0,
             searchLinkVisible: Boolean(searchLinkItem && getComputedStyle(searchLinkItem).display !== 'none'),
             seriesEndPresent: Boolean(document.querySelector('#series-container, .post-end-series')),
+            seriesHasArrow: Boolean(seriesLink?.querySelector('.post-hero-series-arrow')),
             seriesKickerText: seriesKicker?.textContent.trim() || '',
             seriesLinkHref: seriesLink?.getAttribute('href') || '',
             seriesLinkDecoration: seriesLink ? getComputedStyle(seriesLink).textDecorationLine : '',
@@ -697,11 +732,14 @@ async function assertPostNavigation(page, width) {
             topicAfterDeck,
             topicColor: heroTopic ? getComputedStyle(heroTopic).color : '',
             topicDecoration: heroTopic ? getComputedStyle(heroTopic).textDecorationLine : '',
+            topicHref: heroTopic?.getAttribute('href') || '',
             topicText: heroTopic?.textContent.trim() || '',
             titleColor: titleStyle.color,
             titleFontFamily: titleStyle.fontFamily,
             titleFontWeight: titleStyle.fontWeight,
             titleLetterSpacing: titleStyle.letterSpacing,
+            titleTermsUnbroken: Array.from(title.querySelectorAll('.post-title-term'))
+                .every((term) => getComputedStyle(term).whiteSpace === 'nowrap' && term.getClientRects().length === 1),
             titleTextWrap: titleStyle.textWrap
         };
     });
@@ -727,10 +765,19 @@ async function assertPostNavigation(page, width) {
     assert(!state.breadcrumbsPresent, 'Post breadcrumbs should not interrupt the article opening.');
     assert(!state.hasLegacyHeroSummary && state.introDeckText, 'Post subtitle is not in the editorial opening deck.');
     assert(!state.introHasAccentRule, 'Post standfirst restored the decorative accent rule.');
+    assert(state.figureCaptionsValid, 'Post figure captions no longer follow the sequential editorial folio grammar.');
+    assert(state.narrowFigureCaptionsConstrained, 'Narrow post media no longer keeps its figure caption on a related measure.');
+    assert(state.codeBlocksValid, 'Post code blocks no longer expose their editorial code folio.');
+    assert(state.titleTermsUnbroken, 'Hyphenated technical terms split across post-title lines.');
     assert(state.seriesKickerText.startsWith('Series') && state.seriesLinkHref.startsWith('/blogs/series/'), 'Post series hierarchy or link is missing above the title.');
-    assert(state.seriesLinkDecoration.includes('underline'), 'Post series link no longer signals that it is clickable.');
-    assert(state.topicText && state.topicColor !== state.titleColor, 'Post topics are not expressed as the semantic accent below the title.');
-    assert(state.topicDecoration.includes('underline'), 'Linked post topics no longer signal that they are clickable.');
+    assert(state.seriesHasArrow && state.seriesLinkDecoration === 'none', 'Post series link lost its quiet arrow cue or restored a persistent underline.');
+    assert(
+        state.topicText
+            && state.topicHref.startsWith('/blogs/tags/')
+            && state.topicColor !== state.titleColor
+            && state.topicDecoration === 'none',
+        'Linked post topics no longer use the underline-free semantic accent treatment.'
+    );
     assert(state.topicAfterDeck, 'Post topics are not positioned below the subtitle.');
     assert(!state.seriesEndPresent, 'Post page restored the duplicated end-of-article series block.');
     assert(

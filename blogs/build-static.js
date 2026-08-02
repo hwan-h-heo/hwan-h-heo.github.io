@@ -606,6 +606,227 @@ function generateArchivePages() {
     });
 }
 
+function normalizeEditorialFigures(htmlContent) {
+    const cleanCaptionHtml = (captionHtml) => String(captionHtml || '')
+        .replace(
+            /(<strong\b[^>]*>)\s*(?:Figure|Fig)\.?\s*(?:\d+)?\s*(?:[.:]\s*)?/i,
+            '$1'
+        )
+        .replace(/^\s*(?:Figure|Fig)\.?\s*\d+\s*[.:]\s*/i, '')
+        .replace(/^\s*(?:Figure|Fig)\s*credit\s*:\s*/i, 'Credit: ')
+        .replace(/^\s*(?:Figure|Fig)\s+from\s+/i, 'Source: ')
+        .replace(/^\s*(?:Figure|Fig)\.?\s*:\s*/i, '')
+        .replace(/^\s*Fig\.\s*/i, '')
+        .replace(/<(strong|em)\b[^>]*>\s*<\/\1>/gi, '')
+        .trim();
+    const getFigureMediaMeasure = (figureBody) => {
+        const mediaTags = Array.from(String(figureBody || '').matchAll(/<(?:img|video)\b[^>]*>/gi));
+        if (mediaTags.length !== 1) {
+            return '';
+        }
+
+        const mediaTag = mediaTags[0][0];
+        const widthAttribute = mediaTag.match(/\bwidth\s*=\s*(?:"([^"]+)"|'([^']+)'|([^\s>]+))/i);
+        const styleAttribute = mediaTag.match(/\bstyle\s*=\s*(?:"([^"]+)"|'([^']+)')/i);
+        const inlineWidth = String(styleAttribute?.[1] || styleAttribute?.[2] || '')
+            .match(/(?:^|;)\s*width\s*:\s*([^;]+)/i)?.[1];
+        const configuredWidth = String(
+            widthAttribute?.[1]
+            || widthAttribute?.[2]
+            || widthAttribute?.[3]
+            || inlineWidth
+            || ''
+        ).trim();
+        const percentage = configuredWidth.match(/^(\d+(?:\.\d+)?)%$/);
+
+        if (!percentage) {
+            return '';
+        }
+
+        const numericWidth = Number.parseFloat(percentage[1]);
+        return numericWidth >= 25 && numericWidth < 100 ? `${numericWidth}%` : '';
+    };
+    const addEditorialFigureClasses = (figureAttributes, figureBody) => {
+        const attributes = String(figureAttributes || '');
+        const mediaMeasure = getFigureMediaMeasure(figureBody);
+        const classMatch = attributes.match(/\bclass=(['"])(.*?)\1/i);
+        const classes = new Set(classMatch?.[2].split(/\s+/).filter(Boolean) || []);
+        classes.add('post-media');
+        classes.add('post-media--editorial');
+        if (mediaMeasure) {
+            classes.add('post-media--narrow');
+        }
+
+        let updatedAttributes = classMatch
+            ? attributes.replace(classMatch[0], `class=${classMatch[1]}${Array.from(classes).join(' ')}${classMatch[1]}`)
+            : `${attributes} class="${Array.from(classes).join(' ')}"`;
+
+        if (!mediaMeasure) {
+            return updatedAttributes;
+        }
+
+        const styleMatch = updatedAttributes.match(/\bstyle=(['"])(.*?)\1/i);
+        if (styleMatch) {
+            const existingStyles = styleMatch[2].trim().replace(/;?$/, ';');
+            return updatedAttributes.replace(
+                styleMatch[0],
+                `style=${styleMatch[1]}${existingStyles} --post-figure-media-width: ${mediaMeasure};${styleMatch[1]}`
+            );
+        }
+
+        updatedAttributes += ` style="--post-figure-media-width: ${mediaMeasure};"`;
+        return updatedAttributes;
+    };
+    const extractCaption = (captionBlock) => {
+        const block = String(captionBlock || '').trim();
+        const figcaptionMatch = block.match(/^<figcaption\b[^>]*>([\s\S]*?)<\/figcaption>$/i);
+        if (figcaptionMatch) {
+            return cleanCaptionHtml(figcaptionMatch[1]);
+        }
+
+        const paragraphMatch = block.match(/^<p\b[^>]*>([\s\S]*?)<\/p>$/i);
+        if (paragraphMatch) {
+            const paragraphHtml = paragraphMatch[1].trim();
+            const plainText = paragraphHtml.replace(/<[^>]+>/g, '').trim();
+            const isEntirelyEmphasized = /^<em\b[^>]*>[\s\S]*<\/em>$/i.test(paragraphHtml);
+            const hasCaptionPrefix = /^(?:Figure|Fig|Source|Credit|Ref(?:erence)?|출처)\b\s*[.:]?/i.test(plainText);
+
+            return isEntirelyEmphasized || hasCaptionPrefix
+                ? cleanCaptionHtml(paragraphHtml.replace(/^<em\b[^>]*>|<\/em>$/gi, ''))
+                : '';
+        }
+
+        const listMatch = block.match(/^<ul\b[^>]*>([\s\S]*?)<\/ul>$/i);
+        if (!listMatch) {
+            return '';
+        }
+
+        const listItems = Array.from(listMatch[1].matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/gi));
+        if (listItems.length !== 1 || /<(?:ul|ol)\b/i.test(listItems[0][1])) {
+            return '';
+        }
+
+        return cleanCaptionHtml(listItems[0][1]);
+    };
+    const unwrapMediaParagraph = (mediaHtml) => String(mediaHtml || '')
+        .trim()
+        .replace(/^<p\b[^>]*>\s*([\s\S]*?)\s*<\/p>$/i, '$1')
+        .trim();
+    const wrapFigure = (mediaHtml, captionHtml) => `<figure class="post-media post-media--editorial">
+${unwrapMediaParagraph(mediaHtml)}
+<figcaption><span class="post-figure-index"></span><span class="post-figure-caption">${captionHtml}</span></figcaption>
+</figure>`;
+    const preservedFigures = [];
+    const figurePlaceholderPrefix = '___POST_EDITORIAL_FIGURE_';
+    const mediaUnitPattern = '(?:<p\\b[^>]*>\\s*(?:<img\\b[^>]*>|<video\\b[^>]*>[\\s\\S]*?<\\/video>)\\s*<\\/p>|<img\\b[^>]*>|<video\\b[^>]*>[\\s\\S]*?<\\/video>)';
+    const captionBlockPattern = '(?:<figcaption\\b[^>]*>[\\s\\S]*?<\\/figcaption>|<p\\b[^>]*>[\\s\\S]*?<\\/p>|<ul\\b[^>]*>[\\s\\S]*?<\\/ul>)';
+
+    let normalized = String(htmlContent || '').replace(
+        /<figure\b[^>]*>[\s\S]*?<\/figure>/gi,
+        (figureHtml) => {
+            const placeholder = `${figurePlaceholderPrefix}${preservedFigures.length}___`;
+            preservedFigures.push(figureHtml);
+            return placeholder;
+        }
+    );
+
+    normalized = normalized.replace(
+        new RegExp(`((?:${mediaUnitPattern}\\s*)+)(${captionBlockPattern})`, 'gi'),
+        (match, mediaHtml, captionBlock) => {
+            const captionHtml = extractCaption(captionBlock);
+            return captionHtml ? wrapFigure(mediaHtml, captionHtml) : match;
+        }
+    );
+
+    normalized = normalized.replace(
+        new RegExp(`((?:<img\\b[^>]*>|<video\\b[^>]*>[\\s\\S]*?<\\/video>))\\s*<\\/p>\\s*(${captionBlockPattern})`, 'gi'),
+        (match, mediaHtml, captionBlock) => {
+            const captionHtml = extractCaption(captionBlock);
+            return captionHtml ? `</p>\n${wrapFigure(mediaHtml, captionHtml)}` : match;
+        }
+    );
+
+    preservedFigures.forEach((figureHtml, index) => {
+        normalized = normalized.replace(`${figurePlaceholderPrefix}${index}___`, figureHtml);
+    });
+
+    let figureIndex = 0;
+    return normalized.replace(
+        /<figure\b[^>]*>[\s\S]*?<\/figure>/gi,
+        (figureHtml) => {
+            return figureHtml.replace(
+                /^<figure\b([^>]*)>([\s\S]*?)<figcaption\b[^>]*>([\s\S]*?)<\/figcaption>([\s\S]*?)<\/figure>$/i,
+                (match, figureAttributes, figureBody, captionHtml, figureEnd) => {
+                    figureIndex += 1;
+                    const label = `FIG. ${String(figureIndex).padStart(2, '0')}`;
+                    const cleanedCaption = captionHtml.includes('post-figure-caption')
+                        ? captionHtml
+                        : cleanCaptionHtml(captionHtml);
+                    const caption = cleanedCaption.includes('post-figure-index')
+                        ? cleanedCaption.replace(/<span class="post-figure-index">[\s\S]*?<\/span>/i, `<span class="post-figure-index">${label}</span>`)
+                        : `<span class="post-figure-index">${label}</span><span class="post-figure-caption">${cleanedCaption}</span>`;
+                    const attributes = addEditorialFigureClasses(figureAttributes, figureBody);
+
+                    return `<figure${attributes}>${figureBody}<figcaption>${caption}</figcaption>${figureEnd}</figure>`;
+                }
+            );
+        }
+    );
+}
+
+function normalizeEditorialCodeBlocks(htmlContent) {
+    const languageLabels = {
+        bash: 'BASH',
+        c: 'C',
+        cpp: 'C++',
+        csharp: 'C#',
+        css: 'CSS',
+        cuda: 'CUDA',
+        glsl: 'GLSL',
+        html: 'HTML',
+        javascript: 'JAVASCRIPT',
+        js: 'JAVASCRIPT',
+        json: 'JSON',
+        jsx: 'JSX',
+        markup: 'HTML',
+        plaintext: 'TEXT',
+        python: 'PYTHON',
+        rust: 'RUST',
+        shell: 'SHELL',
+        sql: 'SQL',
+        text: 'TEXT',
+        ts: 'TYPESCRIPT',
+        tsx: 'TSX',
+        typescript: 'TYPESCRIPT',
+        yaml: 'YAML'
+    };
+    const addClassName = (attributes, className) => {
+        const source = String(attributes || '');
+        const classMatch = source.match(/\bclass=(['"])(.*?)\1/i);
+        if (!classMatch) {
+            return `${source} class="${className}"`;
+        }
+
+        const classes = new Set(classMatch[2].split(/\s+/).filter(Boolean));
+        classes.add(className);
+        return source.replace(classMatch[0], `class=${classMatch[1]}${Array.from(classes).join(' ')}${classMatch[1]}`);
+    };
+
+    return String(htmlContent || '').replace(
+        /<pre\b([^>]*)>\s*<code\b([^>]*)>/gi,
+        (match, preAttributes, codeAttributes) => {
+            const languageClass = `${preAttributes} ${codeAttributes}`.match(/\blanguage-([a-z0-9_+.-]+)/i)?.[1] || '';
+            const normalizedLanguage = languageClass.toLowerCase();
+            const languageLabel = languageLabels[normalizedLanguage]
+                || normalizedLanguage.replace(/[_.-]+/g, ' ').toUpperCase();
+            const codeLabel = languageLabel ? `CODE / ${languageLabel}` : 'CODE';
+            const attributes = addClassName(preAttributes, 'post-code-block');
+
+            return `<pre${attributes} data-code-label="${codeLabel}"><code${codeAttributes}>`;
+        }
+    );
+}
+
 function normalizePostContent(post, content, htmlContent, lang) {
     let updatedHtmlContent = normalizeContentHeadingHierarchy(htmlContent);
     const postTitle = post[`title_${lang}`] || post.title_eng || post.id;
@@ -669,6 +890,8 @@ function normalizePostContent(post, content, htmlContent, lang) {
     updatedHtmlContent = normalizeContentImageAccessibility(updatedHtmlContent, {
         title: postTitle
     });
+    updatedHtmlContent = normalizeEditorialFigures(updatedHtmlContent);
+    updatedHtmlContent = normalizeEditorialCodeBlocks(updatedHtmlContent);
     return updatedHtmlContent;
 }
 

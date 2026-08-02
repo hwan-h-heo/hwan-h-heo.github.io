@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             heroTitle: 'Research notes for 3D AI systems',
             heroIntro: '3D generation, computer vision, graphics, CUDA inference, and the implementation details that usually stay between commits.',
             searchPlaceholder: 'Search...',
-            archiveTitle: '전체 글',
+            archiveTitle: 'All Writing',
             tabPosts: 'Posts',
             tabNotes: 'Notes',
             tabSeries: 'Series',
