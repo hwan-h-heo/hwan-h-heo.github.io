@@ -184,9 +184,6 @@
             'title-kor',
             'subtitle-kor',
             'korean-meta-fields',
-            'description-eng',
-            'description-kor',
-            'korean-publishing-fields',
             'featured-enabled',
             'featured-fields',
             'featured-image',
@@ -299,8 +296,6 @@
             el.subtitleEng,
             el.titleKor,
             el.subtitleKor,
-            el.descriptionEng,
-            el.descriptionKor,
             el.featuredImage,
             el.featuredAlt,
             el.featuredOrder
@@ -398,8 +393,6 @@
             subtitle_eng: '',
             title_kor: '',
             subtitle_kor: '',
-            description_eng: '',
-            description_kor: '',
             tags: [],
             cover: '',
             status: 'draft',
@@ -697,8 +690,6 @@
         el.subtitleEng.value = state.metadata.subtitle_eng;
         el.titleKor.value = state.metadata.title_kor;
         el.subtitleKor.value = state.metadata.subtitle_kor;
-        el.descriptionEng.value = state.metadata.description_eng;
-        el.descriptionKor.value = state.metadata.description_kor;
         el.featuredEnabled.checked = Boolean(state.metadata.featured);
         el.featuredImage.value = state.metadata.teaserImage;
         el.featuredAlt.value = state.metadata.teaserAlt;
@@ -720,8 +711,6 @@
         state.metadata.subtitle_eng = el.subtitleEng.value.trim();
         state.metadata.title_kor = el.titleKor.value.trim();
         state.metadata.subtitle_kor = el.subtitleKor.value.trim();
-        state.metadata.description_eng = el.descriptionEng.value.trim();
-        state.metadata.description_kor = el.descriptionKor.value.trim();
         state.metadata.featured = el.featuredEnabled.checked;
         state.metadata.teaserImage = el.featuredImage.value.trim();
         state.metadata.teaserAlt = el.featuredAlt.value.trim();
@@ -873,7 +862,6 @@
     function renderKoreanFields() {
         const hasKorean = state.metadata.languages.includes('kor');
         el.koreanMetaFields.classList.toggle('is-hidden', !hasKorean);
-        el.koreanPublishingFields.classList.toggle('is-hidden', !hasKorean);
     }
 
     function renderFeatureFields() {
@@ -2293,8 +2281,6 @@
             subtitle_eng: metadata.subtitle_eng || '',
             title_kor: metadata.title_kor || '',
             subtitle_kor: metadata.subtitle_kor || '',
-            description_eng: metadata.description_eng || '',
-            description_kor: metadata.description_kor || '',
             tags: Array.isArray(metadata.tags) ? metadata.tags : [],
             cover: metadata.cover || '',
             status: metadata.status === 'published' ? 'published' : 'draft',
@@ -2745,8 +2731,6 @@
                 subtitle_eng: state.metadata.subtitle_eng,
                 title_kor: state.metadata.title_kor,
                 subtitle_kor: state.metadata.subtitle_kor,
-                description_eng: state.metadata.description_eng,
-                description_kor: state.metadata.description_kor,
                 tags: [...state.metadata.tags],
                 cover: state.metadata.cover,
                 status: state.metadata.status,
@@ -2801,8 +2785,11 @@
         }
 
         if (payload.post.status === 'published') {
-            if (!payload.post.description_eng) {
-                errors.push('Published posts need an English description.');
+            if (!payload.post.subtitle_eng) {
+                errors.push('Published posts need an English subtitle.');
+            }
+            if (payload.post.languages.includes('kor') && !payload.post.subtitle_kor) {
+                errors.push('Published Korean posts need a Korean subtitle.');
             }
             if (!payload.post.cover || payload.post.cover === '/assets/blog_bg.jpeg') {
                 errors.push('Published posts need a post-specific cover image.');
@@ -2964,8 +2951,6 @@
                 subtitle_eng: result.post.subtitle_eng || '',
                 title_kor: result.post.title_kor || '',
                 subtitle_kor: result.post.subtitle_kor || '',
-                description_eng: result.post.description_eng || '',
-                description_kor: result.post.description_kor || '',
                 tags: Array.isArray(result.post.tags) ? result.post.tags : [],
                 cover: result.post.cover || '',
                 status: result.post.status || 'published',

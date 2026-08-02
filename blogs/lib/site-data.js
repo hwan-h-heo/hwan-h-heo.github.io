@@ -19,8 +19,6 @@ const POST_ALLOWED_KEYS = new Set([
     'series',
     'languages',
     'slug',
-    'description_eng',
-    'description_kor',
     'seoTitle',
     'seoTitle_eng',
     'seoTitle_kor',
@@ -91,7 +89,7 @@ function validatePostShape(post, seriesMap, errors) {
         errors.push(`Post "${post.id}" references unknown series "${post.series}".`);
     }
 
-    ['description_eng', 'description_kor', 'seoTitle', 'seoTitle_eng', 'seoTitle_kor', 'cover', 'previewImage', 'socialImage', 'translationKey', 'status', 'updated', 'slug'].forEach((key) => {
+    ['subtitle_eng', 'subtitle_kor', 'seoTitle', 'seoTitle_eng', 'seoTitle_kor', 'cover', 'previewImage', 'socialImage', 'translationKey', 'status', 'updated', 'slug'].forEach((key) => {
         validateStringField(post, key, errors, `post "${post.id || 'unknown'}"`, false);
     });
 
@@ -152,13 +150,13 @@ function validatePostShape(post, seriesMap, errors) {
 
     const status = post.status || 'published';
     if (status === 'published') {
-        ['slug', 'description_eng', 'cover', 'updated'].forEach((key) => {
+        ['slug', 'subtitle_eng', 'cover', 'updated'].forEach((key) => {
             if (!post[key]) {
                 errors.push(`Published post "${post.id}" must define "${key}".`);
             }
         });
-        if (post.languages?.includes('kor') && !post.description_kor) {
-            errors.push(`Published post "${post.id}" must define "description_kor" for Korean content.`);
+        if (post.languages?.includes('kor') && !post.subtitle_kor) {
+            errors.push(`Published post "${post.id}" must define "subtitle_kor" for Korean content.`);
         }
         if (!Array.isArray(post.tags) || post.tags.length === 0) {
             errors.push(`Published post "${post.id}" must define at least one tag.`);
@@ -362,8 +360,6 @@ function normalizeSiteData(rawSiteData, relatedData = {}) {
             languages: [...post.languages],
             tags: Array.isArray(post.tags) ? [...post.tags] : [],
             status: post.status || 'published',
-            description_eng: post.description_eng || post.subtitle_eng || '',
-            description_kor: post.description_kor || post.subtitle_kor || post.description_eng || post.subtitle_eng || '',
             cover: post.cover || '/assets/blog_bg.jpeg',
             previewImage: post.previewImage || '',
             socialImage: post.socialImage || '',

@@ -6,7 +6,6 @@ const {
     getAbsoluteUrl,
     getPostAlternates,
     getPostCanonicalUrl,
-    getPostDescription,
     getPostLanguageRoute,
     getPostTitle,
     getSeriesTitle,
@@ -224,7 +223,7 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
     ].join(', ');
     const seriesTitle = post.series ? getSeriesTitle(siteData, post.series, lang) : 'Technical Writing';
     const seriesHref = post.series ? getSeriesRoute(post.series) : '/blogs/';
-    const heroSummary = post[`subtitle_${lang}`] || post[`description_${lang}`] || metaDescription;
+    const heroSummary = post[`subtitle_${lang}`] || post.subtitle_eng || metaDescription;
     const displayTitleHtml = renderPostDisplayTitle(title);
     const tagHtml = (post.tags || []).length
         ? `<div class="post-tags">${renderTags(post, siteData)}</div>`
@@ -275,8 +274,6 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
             title_kor: entry.title_kor,
             subtitle_eng: entry.subtitle_eng,
             subtitle_kor: entry.subtitle_kor,
-            description_eng: entry.description_eng,
-            description_kor: entry.description_kor,
             tags: entry.tags || [],
             cover: entry.cover,
             status: entry.status,

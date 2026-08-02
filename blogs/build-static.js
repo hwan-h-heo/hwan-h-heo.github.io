@@ -912,11 +912,11 @@ function generatePostPage(post, lang) {
         contentHtml: normalizedHtml,
         frontmatter
     });
-    const explicitDescription = post[`description_${lang}`] || post[`subtitle_${lang}`] || post.description_eng || post.subtitle_eng || '';
+    const explicitSubtitle = post[`subtitle_${lang}`] || post.subtitle_eng || '';
     const derivedDescription = deriveDescriptionFromHtml(normalizedHtml);
-    const descriptionSource = explicitDescription && explicitDescription.length < 50 && derivedDescription
-        ? `${explicitDescription}. ${derivedDescription}`
-        : explicitDescription || derivedDescription || post[`title_${lang}`] || post.title_eng;
+    const descriptionSource = explicitSubtitle && explicitSubtitle.length < 50 && derivedDescription
+        ? `${explicitSubtitle}. ${derivedDescription}`
+        : explicitSubtitle || derivedDescription || post[`title_${lang}`] || post.title_eng;
     const metaDescription = truncateText(descriptionSource, 160);
     const readingTime = calculateReadingTime(normalizedHtml);
     const html = renderPostPage({
@@ -1097,7 +1097,7 @@ function generateFeed() {
         .map((post) => {
             const route = getPostRoute(post, 'eng');
             const url = `${SITE_URL}${route}`;
-            const description = post.description_eng || post.subtitle_eng || post.title_eng;
+            const description = post.subtitle_eng || post.title_eng;
             const pubDate = new Date(`${post.date}T00:00:00Z`).toUTCString();
             return [
                 '    <item>',

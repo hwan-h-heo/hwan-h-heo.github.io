@@ -201,8 +201,6 @@ function buildBootstrapPayload() {
             title_kor: post.title_kor || '',
             subtitle_eng: post.subtitle_eng || '',
             subtitle_kor: post.subtitle_kor || '',
-            description_eng: post.description_eng || '',
-            description_kor: post.description_kor || '',
             tags: Array.isArray(post.tags) ? post.tags : [],
             cover: post.cover || '',
             status: post.status || 'published',
@@ -308,8 +306,6 @@ function sanitizePostInput(rawSiteData, payload) {
     const titleKor = String(post.title_kor || '').trim();
     const subtitleEng = String(post.subtitle_eng || '').trim();
     const subtitleKor = String(post.subtitle_kor || '').trim();
-    const descriptionEng = String(post.description_eng || '').trim();
-    const descriptionKor = String(post.description_kor || '').trim();
     const cover = String(post.cover || '').trim();
     const status = String(post.status || '').trim();
     const updated = String(post.updated || '').trim();
@@ -322,12 +318,6 @@ function sanitizePostInput(rawSiteData, payload) {
     }
     if (subtitleKor) {
         sanitizedPost.subtitle_kor = subtitleKor;
-    }
-    if (descriptionEng) {
-        sanitizedPost.description_eng = descriptionEng;
-    }
-    if (descriptionKor) {
-        sanitizedPost.description_kor = descriptionKor;
     }
     if (cover) {
         sanitizedPost.cover = cover;
@@ -382,8 +372,14 @@ function sanitizePostInput(rawSiteData, payload) {
         if (!(sanitizedPost.slug || originalPost?.slug)) {
             errors.push('Published posts require a stable slug.');
         }
-        if (!(sanitizedPost.description_eng || originalPost?.description_eng)) {
-            errors.push('Published posts require an English description.');
+        if (!(sanitizedPost.subtitle_eng || originalPost?.subtitle_eng)) {
+            errors.push('Published posts require an English subtitle.');
+        }
+        if (
+            sanitizedPost.languages.includes('kor')
+            && !(sanitizedPost.subtitle_kor || originalPost?.subtitle_kor)
+        ) {
+            errors.push('Published Korean posts require a Korean subtitle.');
         }
         if (!(sanitizedPost.cover || originalPost?.cover) || (sanitizedPost.cover || originalPost?.cover) === '/assets/blog_bg.jpeg') {
             errors.push('Published posts require a post-specific cover image.');

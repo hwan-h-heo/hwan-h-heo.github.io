@@ -67,7 +67,7 @@ function renderArchivePage({ title, description, canonicalPath, posts, siteData 
                     <span>Blog</span>
                 </a>
                 <div class="blog-home-toolbar-actions">
-                    <form id="blog-home-search-form" class="blog-home-search" role="search">
+                    <form id="blog-home-search-form" class="blog-home-search" role="search" data-collapsible-search>
                         <label class="visually-hidden" for="blog-home-search-input">Search posts</label>
                         <input type="text" id="blog-home-search-input" placeholder="Search...">
                         <button type="submit" aria-label="Search">
@@ -149,12 +149,13 @@ function renderArchivePage({ title, description, canonicalPath, posts, siteData 
                             }
 
                             const title = window.siteDataClient.getPostTitle(post, language);
-                            const description = window.siteDataClient.getPostDescription(post, language);
+                            const subtitleText = window.siteDataClient.getPostSubtitle(post, language);
                             const url = window.siteDataClient.getPostUrl(post, language);
                             const titleLink = card.querySelector('.post-title a');
                             const coverLink = card.querySelector('.post-card-cover');
                             const coverImage = card.querySelector('img[data-blog-cover]');
                             const subtitle = card.querySelector('.post-subtitle');
+                            const series = card.querySelector('[data-post-series]');
 
                             if (titleLink) {
                                 titleLink.textContent = title;
@@ -171,8 +172,15 @@ function renderArchivePage({ title, description, canonicalPath, posts, siteData 
                             }
 
                             if (subtitle) {
-                                subtitle.textContent = description;
+                                subtitle.textContent = subtitleText;
                             }
+
+                            if (series) {
+                                series.textContent = siteData.series[post.series]?.[language]
+                                    || siteData.series[post.series]?.eng
+                                    || 'Series';
+                            }
+
                         });
                     } catch (error) {
                         console.warn('Failed to update archive language:', error);

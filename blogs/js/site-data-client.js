@@ -19,8 +19,6 @@
                 languages: [...post.languages],
                 tags: Array.isArray(post.tags) ? [...post.tags] : [],
                 status: post.status || 'published',
-                description_eng: post.description_eng || post.subtitle_eng || '',
-                description_kor: post.description_kor || post.subtitle_kor || post.description_eng || post.subtitle_eng || '',
                 cover: post.cover || '/assets/blog_bg.jpeg',
                 updated: post.updated || post.date,
                 slug: post.slug || createSlug(post.title_eng || post.id)
@@ -63,8 +61,8 @@
         return post[`title_${lang}`] || post.title_eng;
     }
 
-    function getPostDescription(post, lang) {
-        return post[`description_${lang}`] || post[`subtitle_${lang}`] || post.description_eng || post.subtitle_eng || '';
+    function getPostSubtitle(post, lang) {
+        return post[`subtitle_${lang}`] || post.subtitle_eng || '';
     }
 
     function getPostUrl(post, lang) {
@@ -75,7 +73,7 @@
     window.siteDataClient = {
         loadSiteData,
         getPostTitle,
-        getPostDescription,
+        getPostSubtitle,
         getPostUrl
     };
 })();

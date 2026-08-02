@@ -73,18 +73,17 @@ Runtime scripts:
 `blogs/data/site-data.json` remains the compatibility metadata index. Posts now support a frontmatter-like metadata shape directly in JSON:
 
 - `slug`
-- `description_eng`
-- `description_kor`
+- `subtitle_eng`
+- `subtitle_kor`
 - `tags`
 - `cover`
 - `status`
 - `updated`
 
-Published posts must define a stable slug, English description, local post-specific cover, at least one tag, status, and updated date. Korean posts also require a Korean description. Drafts may keep incomplete metadata while they are being written.
+Published posts must define a stable slug, English subtitle, local post-specific cover, at least one tag, status, and updated date. Korean posts also require a Korean subtitle. Drafts may keep incomplete metadata while they are being written.
 
 The build normalizes metadata for readers:
 
-- Missing `description_*` falls back to subtitles.
 - Missing `cover` falls back to `/assets/blog_bg.jpeg` only for draft/backward-compatible normalized data; validation rejects that fallback for published posts.
 - Missing `status` is treated as `published`.
 - `status: "draft"` posts are excluded from generated/public post lists.

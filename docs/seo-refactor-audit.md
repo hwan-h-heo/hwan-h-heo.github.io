@@ -88,8 +88,6 @@ Post metadata currently supports:
 - `title_kor`
 - `subtitle_eng`
 - `subtitle_kor`
-- `description_eng`
-- `description_kor`
 - `date`
 - `updated`
 - `category`

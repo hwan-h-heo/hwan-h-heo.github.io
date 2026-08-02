@@ -100,8 +100,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 }
                 const metadataMatch = [
                     post[`title_${language}`],
-                    post[`subtitle_${language}`],
-                    post[`description_${language}`]
+                    post[`subtitle_${language}`]
                 ].some((value) => String(value || '').toLowerCase().includes(searchTerm));
                 const tagMatch = (post.tags || []).some((tag) => tag.toLowerCase().includes(searchTerm));
                 const contentMatch = postContentCache[post.id]?.[language]?.includes(searchTerm);
@@ -129,7 +128,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         resultsContainer.innerHTML = filteredPosts.map((post) => {
             const title = window.siteDataClient.getPostTitle(post, language);
-            const description = window.siteDataClient.getPostDescription(post, language);
+            const subtitle = window.siteDataClient.getPostSubtitle(post, language);
             const url = window.siteDataClient.getPostUrl(post, language);
             const seriesTitle = getSeriesTitle(post, language);
             const source = post.cover || '/assets/blog_bg.jpeg';
@@ -153,7 +152,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                                 <time datetime="${escapeHtml(post.date)}">${escapeHtml(formatDate(post.date, language))}</time>
                             </div>
                             <h3 class="post-title"><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h3>
-                            ${description ? `<p class="post-subtitle">${escapeHtml(description)}</p>` : ''}
+                            ${subtitle ? `<p class="post-subtitle">${escapeHtml(subtitle)}</p>` : ''}
                             ${post.tags?.length ? `<div class="post-tag-row">${renderTags(post)}</div>` : ''}
                         </div>
                     </div>

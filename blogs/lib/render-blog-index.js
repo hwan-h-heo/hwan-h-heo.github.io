@@ -49,15 +49,43 @@ function renderBlogHeadMetadata() {
     ].join('\n');
 }
 
+function renderArchiveEntries(posts, lang, siteData, recentArchiveYearCutoff) {
+    let oldArchiveStarted = false;
+
+    return posts.map((post) => {
+        const isRecent = Number(post.date.slice(0, 4)) >= recentArchiveYearCutoff;
+        const oldArchiveHeading = !isRecent && !oldArchiveStarted
+            ? `
+                        <div class="blog-home-era-break">
+                            <h3>
+                                <span class="blog-home-era-index" aria-hidden="true">03</span>
+                                <span data-i18n="oldArchiveTitle">Old Archive</span>
+                            </h3>
+                            <span class="blog-home-era-rule" aria-hidden="true"></span>
+                        </div>`
+            : '';
+
+        if (!isRecent) {
+            oldArchiveStarted = true;
+        }
+
+        return `${oldArchiveHeading}${renderPostPreview(post, lang, siteData, {
+            mediaSide: isRecent ? 'right' : 'left'
+        })}`;
+    }).join('');
+}
+
 function renderStaticBlogIndex(sourceHtml, siteData) {
     const lang = 'eng';
+    const recentArchiveYearCutoff = new Date().getFullYear() - 1;
     const featuredPost = getFeaturedPost(siteData);
-    const regularPosts = siteData.posts.filter((post) => post.category === 'post' && post.id !== featuredPost?.id);
+    const allPosts = siteData.posts.filter((post) => post.category === 'post');
+    const regularPosts = allPosts.filter((post) => post.id !== featuredPost?.id);
     const notes = siteData.posts.filter((post) => post.category === 'note');
     const seriesCount = new Set(siteData.posts.map((post) => post.series).filter(Boolean)).size;
-    const postsHtml = regularPosts.map((post) => renderPostPreview(post, lang, siteData)).join('')
+    const postsHtml = renderArchiveEntries(regularPosts, lang, siteData, recentArchiveYearCutoff)
         || '<p class="blog-home-empty">No posts yet.</p>';
-    const notesHtml = notes.map((post) => renderPostPreview(post, lang, siteData)).join('')
+    const notesHtml = renderArchiveEntries(notes, lang, siteData, recentArchiveYearCutoff)
         || '<p class="blog-home-empty">No notes yet.</p>';
     const seriesHtml = renderSeriesGroups(siteData, lang)
         || '<p class="blog-home-empty">No series yet.</p>';
@@ -84,7 +112,7 @@ function renderStaticBlogIndex(sourceHtml, siteData) {
     html = replaceOrFail(
         html,
         /<span class="blog-home-tab-count" id="posts-count"><\/span>/,
-        `<span class="blog-home-tab-count" id="posts-count">${regularPosts.length}</span>`,
+        `<span class="blog-home-tab-count" id="posts-count">${allPosts.length}</span>`,
         'posts count'
     );
     html = replaceOrFail(
@@ -98,6 +126,24 @@ function renderStaticBlogIndex(sourceHtml, siteData) {
         /<span class="blog-home-tab-count" id="series-count"><\/span>/,
         `<span class="blog-home-tab-count" id="series-count">${seriesCount}</span>`,
         'series count'
+    );
+    html = replaceOrFail(
+        html,
+        /<dd id="hero-posts-count"><\/dd>/,
+        `<dd id="hero-posts-count">${allPosts.length}</dd>`,
+        'hero posts count'
+    );
+    html = replaceOrFail(
+        html,
+        /<dd id="hero-notes-count"><\/dd>/,
+        `<dd id="hero-notes-count">${notes.length}</dd>`,
+        'hero notes count'
+    );
+    html = replaceOrFail(
+        html,
+        /<dd id="hero-series-count"><\/dd>/,
+        `<dd id="hero-series-count">${seriesCount}</dd>`,
+        'hero series count'
     );
     html = replaceOrFail(
         html,

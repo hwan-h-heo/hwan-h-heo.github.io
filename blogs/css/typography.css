@@ -746,6 +746,15 @@ html[lang="ko"] .blog-home-page .series-post-list a {
     letter-spacing: 0;
 }
 
+html[lang="ko"] .blog-home-page .blog-feature-copy h2 {
+    max-width: 100%;
+    text-wrap: balance;
+}
+
+html[lang="ko"] .blog-home-page .blog-feature-subtitle {
+    word-break: keep-all;
+}
+
 html[lang="ko"] .blog-home-page .blog-feature-copy h2[lang="en"],
 html[lang="ko"] .blog-home-page .post-card-body .post-title[lang="en"],
 html[lang="ko"] .blog-home-page .series-title[lang="en"] {

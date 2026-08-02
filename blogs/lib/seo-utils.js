@@ -73,8 +73,9 @@ function getPostTitle(post, lang = 'eng') {
     return post[`title_${lang}`] || post.title_eng || post.id;
 }
 
-function getPostDescription(post, lang = 'eng') {
-    return truncateText(post[`description_${lang}`] || post[`subtitle_${lang}`] || post.description_eng || post.subtitle_eng || '');
+function getPostSubtitle(post, lang = 'eng', options = {}) {
+    const subtitle = post[`subtitle_${lang}`] || post.subtitle_eng || '';
+    return options.truncate === false ? stripHtml(subtitle) : truncateText(subtitle);
 }
 
 function getPostLanguageRoute(post, lang = 'eng') {
@@ -192,29 +193,32 @@ function renderBlogCoverImage(post, title, options = {}) {
     return `<img src="${escapeHtml(preview)}" data-blog-cover data-preview-src="${escapeHtml(preview)}"${autoplaySource}${animatedSource} alt="${escapeHtml(alt)}" loading="${loading}" decoding="async"${fetchPriority}>`;
 }
 
-function renderPostPreview(post, lang, siteData) {
+function renderPostPreview(post, lang, siteData, options = {}) {
     const title = getPostTitle(post, lang);
-    const description = getPostDescription(post, lang);
+    const subtitle = getPostSubtitle(post, lang);
     const seriesTitle = getSeriesTitle(siteData, post.series, lang);
     const url = getPostLanguageRoute(post, lang);
     const tagsHtml = renderTags(post, siteData);
+    const layoutClass = options.mediaSide === 'right' ? ' post-preview-media-right' : '';
 
     return `
-        <article class="post-preview" data-post-id="${escapeHtml(post.id)}" data-post-category="${escapeHtml(post.category)}">
+        <article class="post-preview${layoutClass}" data-post-id="${escapeHtml(post.id)}" data-post-category="${escapeHtml(post.category)}">
             <div class="post-card-link">
                 <a href="${escapeHtml(url)}" class="post-card-cover" aria-label="Read ${escapeHtml(title)}">
                     ${renderBlogCoverImage(post, title)}
                 </a>
                 <div class="post-card-body">
-                    <div class="post-card-eyebrow">
-                        <span>${escapeHtml(seriesTitle)}</span>
+                    <div class="post-card-eyebrow post-series-context">
+                        <span class="post-series-context-label">SERIES</span>
+                        <span class="post-series-context-separator" aria-hidden="true">/</span>
+                        <span class="post-series-context-value" data-post-series>${escapeHtml(seriesTitle)}</span>
                     </div>
                     <h3 class="post-title" lang="${escapeHtml(getTextHtmlLang(title, lang))}"><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h3>
-                    ${description ? `<p class="post-subtitle" lang="${escapeHtml(getTextHtmlLang(description, lang))}">${escapeHtml(description)}</p>` : ''}
-                    ${tagsHtml ? `<div class="post-tag-row">${tagsHtml}</div>` : ''}
+                    ${subtitle ? `<p class="post-subtitle" lang="${escapeHtml(getTextHtmlLang(subtitle, lang))}">${escapeHtml(subtitle)}</p>` : ''}
                     <p class="post-meta">
                         <time datetime="${escapeHtml(post.date)}">${escapeHtml(formatDate(post.date, lang))}</time>
                     </p>
+                    ${tagsHtml ? `<div class="post-tag-row">${tagsHtml}</div>` : ''}
                 </div>
             </div>
             <nav class="visually-hidden" aria-label="Available languages">
@@ -231,7 +235,7 @@ function renderFeaturedPost(siteData, lang = 'eng') {
     }
 
     const title = getPostTitle(featuredPost, lang);
-    const description = getPostDescription(featuredPost, lang);
+    const subtitle = getPostSubtitle(featuredPost, lang, { truncate: false });
     const seriesTitle = getSeriesTitle(siteData, featuredPost.series, lang);
     const url = getPostLanguageRoute(featuredPost, lang);
     const tagsHtml = renderTags(featuredPost, siteData);
@@ -245,11 +249,13 @@ function renderFeaturedPost(siteData, lang = 'eng') {
                     ${renderBlogCoverImage(featuredPost, title, { eager: true })}
                 </a>
                 <div class="blog-feature-copy">
-                    <div class="blog-feature-meta">
-                        <span data-feature-series>${escapeHtml(seriesTitle)}</span>
+                    <div class="blog-feature-meta post-series-context">
+                        <span class="post-series-context-label">SERIES</span>
+                        <span class="post-series-context-separator" aria-hidden="true">/</span>
+                        <span class="post-series-context-value" data-feature-series>${escapeHtml(seriesTitle)}</span>
                     </div>
                     <h2 lang="${escapeHtml(getTextHtmlLang(title, lang))}"><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h2>
-                    ${description ? `<p lang="${escapeHtml(getTextHtmlLang(description, lang))}">${escapeHtml(description)}</p>` : ''}
+                    ${subtitle ? `<p class="blog-feature-subtitle" lang="${escapeHtml(getTextHtmlLang(subtitle, lang))}">${escapeHtml(subtitle)}</p>` : ''}
                     <time class="blog-feature-date" datetime="${escapeHtml(featuredPost.date)}">${escapeHtml(formatDate(featuredPost.date, lang))}</time>
                     ${tagsHtml ? `<div class="post-tag-row">${tagsHtml}</div>` : ''}
                     <a class="blog-feature-read" href="${escapeHtml(url)}" aria-label="Read ${escapeHtml(title)}">
@@ -665,7 +671,7 @@ module.exports = {
     getLanguageMeta,
     getPostAlternates,
     getPostCanonicalUrl,
-    getPostDescription,
+    getPostSubtitle,
     getPostLanguageRoute,
     getPostTitle,
     getSeriesTitle,

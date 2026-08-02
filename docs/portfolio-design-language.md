@@ -285,13 +285,63 @@ mobile sidebar toggle, tooltip, and scroll-to-top control.
 
 ## Content Hierarchy
 
+### Blog home cover
+
+The Blog home opens as a compact dark editorial cover, not a photographic
+landing-page banner or a light newspaper masthead. Use the Portfolio Hero and
+Three.js canvas base ink (`#101011`) so both homes share one branded dark stage;
+do not derive the surface from the former source photograph's average color. Its
+first role is to create a calm, dark contrast with the pale paper below; avoid a
+brown, green-biased, blue-gray,
+or saturated accent-colored cover. Keep the title and standfirst as static HTML,
+omit the full-bleed background image, and let Featured supply the first content
+image. The Hero copy uses the exact same content measure as Featured and Archive
+below; do not create a narrower inset for the cover. On wide screens only, make
+one visual stage from the Hero's left edge to the shared copy measure's right
+edge, then divide it into two equal, non-overlapping regions. Center the complete
+sparse-representation pipeline in the left region. Right-align the complete
+generated asset-stage image in the right region so the artwork ends with the
+copy measure and leaves the top-bar side as dark tension. Scale both against the
+Hero height with dark space around them; they are background atmosphere rather
+than a full-bleed collage. Cover them with a strong
+deep-ink overlay that is darkest around the central copy and lower edge so the
+text retains primary contrast. Reuse the Portfolio Hero name color
+(`rgba(240, 241, 243, 0.88)`) for the Blog title, then step the standfirst and
+publication folios down through the same neutral family instead of returning to
+pure white or blue-gray. Hide both images on compact layouts before they could
+compete with the copy. Connect the cover to the numbered page chapters with one
+quiet `00 / HWAN'S BLOG · YEAR—YEAR` publication imprint so ownership remains
+visible without adding a separate logo treatment. Keep the technical scope in
+the title and standfirst rather than repeating it in the imprint. Use a
+single-line title on wide screens, a single-line standfirst where the measure
+allows it, and a Posts / Notes / Series publication index on its own following
+row, right-aligned to the copy measure. Keep the wide-screen utility search
+compact enough that its left edge begins beyond the visible title text instead
+of drawing a rule across the title's horizontal field. Below `768px`, reduce
+Blog search fields to the search icon; activate the icon to expand the input
+toward the left, following the post utility search interaction. Hide the shared
+sidebar hamburger throughout compact Blog layouts because the Blog utility row
+already supplies the relevant navigation and controls. Let the title wrap
+naturally only when the compact viewport requires it. Do not add a vertical
+divider or boxed rail between the title and standfirst. On compact layouts,
+stack the standfirst and index beneath the title.
+Search, theme, and language utilities use the cover's dark-surface contrast. The
+treatment must stay compact: never exceed the former `330px` Hero footprint on
+wide screens and keep the complete mobile cover within roughly `400px` at the
+390px reference viewport. Balance the cover transition around the Hero edge:
+the distance from the standfirst's bottom to the Hero edge must equal the
+distance from that edge to `01 FEATURED`. Keep the wide reference at `64px` and
+the compact reference near `48px`; the right-aligned publication-index row lives
+inside the upper interval so the spacing carries hierarchy rather than reading
+as empty padding.
+
 ### Project and blog previews
 
 Both preview types use the same order:
 
 1. Editorial label: project type or blog series
 2. Title
-3. Two-line description
+3. Two-line subtitle
 4. Up to two representative technology tags
 5. Institution and year, or publication date, with one meaningful accolade in
    the same neutral metadata row when available
@@ -301,10 +351,55 @@ rows.
 
 Preview rows are editorial reading surfaces, not full-row links. Only the media
 and title are primary links; the title link may fill the horizontal line box it
-occupies. Descriptions, tags, dates, organizations, and accolades remain normal
+occupies. Subtitles, tags, dates, organizations, and accolades remain normal
 selectable text. Apply the same rule to Blog home featured, archive, and search
 rows.
 
+On the Blog home, treat Featured and Archive as the two top-level publication
+chapters: `01 FEATURED` and `02 ARCHIVE`. Set both in the same short uppercase
+mono grammar with a quiet trailing hairline. Posts, Notes, and Series remain
+unnumbered tabs within Archive; keep their counts and conventional active-tab
+underline so the controls do not compete with the chapter folios. On compact
+layouts, let the tab row move beneath the complete `02 ARCHIVE` label and rule.
+The Posts count represents every published Post, including the separately
+presented Featured entry; exclude Featured only from the repeated Archive rows.
+Non-featured preview media uses the system's compact `4px` radius, and its copy
+begins at the media's top edge rather than being vertically centered. Keep its
+tags and publication date as one compact metadata stack beneath the subtitle;
+they should not read as separately spaced paragraphs.
+
+Archive preview rows do not use per-item `P–NN` or `N–NN` folios. Start both
+Featured and archive-row copy with `SERIES / NAME`, using a muted structural
+label and separator before the editorial-accent series value. Follow with title,
+subtitle, publication date, and tags in that order. Dates share the compact
+mono treatment used by Featured, while archive rows use tighter vertical rhythm.
+Only Featured closes with the restrained `Read post` action. Archive rows end
+with their tags so copy never grows beyond the adjacent media merely to repeat
+an action already available through the cover and title.
+
+Use the Blog home Archive layout as a quiet era signature rather than a repeating
+row pattern. Place media on the right for writing published within the current
+and previous calendar years, and return it to the left for older writing. In
+2026, this means 2025–2026 on the right and 2024 or earlier on the left. This
+reverses the opening Archive spread from Featured, then marks the older archive
+with a single deliberate shift. Keep `02 ARCHIVE` as the tab-owning chapter so
+Posts, Notes, and Series remain coherent, then insert one `03 OLD ARCHIVE` folio
+before the first pre-cutoff Post or Note to explain the alignment change. Remove
+the final Recent row's bottom hairline at this boundary so it does not double the
+new folio rule. Keep all text left-aligned and reset to media-first stacked rows
+on the compact single-column layout.
+
+Featured titles and subtitles are never clipped with a line clamp. Let the
+browser fit both through a small, bounded type-size adjustment after fonts load;
+on the side-by-side layout, the complete series-to-action copy stack must not
+exceed the cover height. If text still needs more room at the minimum readable
+size, preserve the full text instead of hiding it. Give Korean feature titles
+the full copy width, retain natural word boundaries with `keep-all`, and balance
+both the title and subtitle across their natural line counts so a single
+short word never remains as an isolated final line. Keep the Featured technology
+tags one type step smaller than archive-row tags, and use flexible space above
+`Read post` so its baseline closes exactly at the cover's bottom edge instead of
+shrinking the upper hierarchy unnecessarily.
 ### Resume
 
 Resume uses an editorial index rather than cards:
@@ -324,26 +419,27 @@ Use a shared index/table grammar. Do not introduce a separate card system.
   metadata hierarchy.
 - Publication actions and Download CV share the light-surface, left-origin
   underline grammar. They are text actions, never bordered buttons.
-- Blog preview eyebrows show the series only. `Post` and `Note` remain data
-  categories for filtering, not visible metadata.
-- The Blog home featured row retains the series as a secondary kicker beneath
-  its indexed `Featured` label, but uses tighter type rhythm and a compact
+- Blog preview eyebrows show `SERIES / NAME`. `Post` and `Note` remain data
+  categories for filtering, not visible metadata or per-row folios.
+- The Blog home featured row retains that series context beneath its indexed
+  `Featured` label, but uses tighter type rhythm and a compact
   `1.9:1` media crop on desktop and tablet (`2:1` on mobile).
 - Portfolio and Blog home technology tags share the same neutral inline text
   treatment and middle-dot separator. Preview tags do not use pills.
-- Blog home preview footers show the publication date only; do not repeat the
-  series or language availability already communicated elsewhere.
-- Portfolio home preview descriptions clamp at two lines but follow their
+- Blog home preview metadata places publication date before tags; do not repeat
+  language availability. Keep `Read post` exclusive to Featured.
+- Portfolio home preview subtitles clamp at two lines but follow their
   natural height; they do not reserve an empty second line. Dense Blog archive
-  rows follow their description's natural height.
+  rows follow their subtitle's natural height.
 - Blog home archive rows mirror the Portfolio preview hierarchy and alignment,
   while retaining a more compact media rail for the denser archive context.
-  Keep top-aligned copy, description, tags, and date in one grid.
+  Keep top-aligned copy, subtitle, date, tags, and action in one grid.
 - Extend the numbered-navigation signature into preview eyebrows with quiet
   folio notation. Use `P–01` for portfolio projects, `W–01` for Portfolio-home
-  writing, and category-aware `P–01` / `N–01` notation for Blog-home Posts and
-  Notes. Keep the folio neutral and the adjacent editorial label accented; it
-  is margin notation, never a badge or a separate metadata row.
+  writing. Keep the folio neutral and the adjacent editorial label accented;
+  it is margin notation, never a badge or a separate metadata row. Blog-home
+  archive rows are the exception: their shared `02 ARCHIVE` chapter label
+  provides the index, so individual Posts and Notes do not repeat a folio.
 
 ## Interaction And Motion
 

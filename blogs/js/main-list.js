@@ -3,6 +3,62 @@ document.addEventListener('DOMContentLoaded', async function() {
     const featureContainer = document.querySelector('#blog-home-feature');
     const langToggleButton = document.getElementById('lang-toggle-main');
     const tabControls = Array.from(document.querySelectorAll('[role="tab"][data-tab-target]'));
+    let featureFitFrame = 0;
+
+    function fitFeaturedCopy() {
+        const card = featureContainer?.querySelector('.blog-feature-card');
+        const cover = card?.querySelector('.blog-feature-cover');
+        const copyElement = card?.querySelector('.blog-feature-copy');
+        const titleElement = copyElement?.querySelector('h2');
+        const subtitleElement = copyElement?.querySelector('.blog-feature-subtitle');
+
+        if (!cover || !copyElement || !titleElement || !subtitleElement) {
+            return;
+        }
+
+        copyElement.classList.remove('is-height-fitted');
+        copyElement.style.removeProperty('height');
+        titleElement.style.removeProperty('font-size');
+        subtitleElement.style.removeProperty('font-size');
+
+        const coverRect = cover.getBoundingClientRect();
+        const copyRect = copyElement.getBoundingClientRect();
+        if (Math.abs(coverRect.top - copyRect.top) > 2) {
+            return;
+        }
+
+        const titleBase = Number.parseFloat(getComputedStyle(titleElement).fontSize);
+        const subtitleBase = Number.parseFloat(getComputedStyle(subtitleElement).fontSize);
+        const titleFloor = titleBase * 0.9;
+        const subtitleFloor = subtitleBase * 0.9;
+        let titleSize = titleBase;
+        let subtitleSize = subtitleBase;
+
+        copyElement.style.height = `${coverRect.height}px`;
+        copyElement.classList.add('is-height-fitted');
+
+        while (copyElement.scrollHeight > copyElement.clientHeight + 0.5) {
+            let resized = false;
+            if (titleSize > titleFloor) {
+                titleSize = Math.max(titleFloor, titleSize - 0.25);
+                titleElement.style.fontSize = `${titleSize}px`;
+                resized = true;
+            }
+            if (subtitleSize > subtitleFloor) {
+                subtitleSize = Math.max(subtitleFloor, subtitleSize - 0.125);
+                subtitleElement.style.fontSize = `${subtitleSize}px`;
+                resized = true;
+            }
+            if (!resized) {
+                break;
+            }
+        }
+    }
+
+    function scheduleFeaturedCopyFit() {
+        cancelAnimationFrame(featureFitFrame);
+        featureFitFrame = requestAnimationFrame(fitFeaturedCopy);
+    }
 
     function activateTab(control, { focus = false } = {}) {
         if (!control) {
@@ -49,7 +105,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     });
 
-    const { loadSiteData, getPostTitle, getPostDescription, getPostUrl } = window.siteDataClient;
+    const { loadSiteData, getPostTitle, getPostSubtitle, getPostUrl } = window.siteDataClient;
     const coverMedia = window.blogCoverMedia;
     const siteData = await loadSiteData();
     const sortedPosts = [...siteData.posts].sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -57,9 +113,9 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     const labels = {
         eng: {
-            heroKicker: "Hwan's Blog",
             searchPlaceholder: 'Search...',
-            archiveTitle: 'All Writing',
+            archiveTitle: 'Archive',
+            oldArchiveTitle: 'Old Archive',
             tabPosts: 'Posts',
             tabNotes: 'Notes',
             tabSeries: 'Series',
@@ -69,9 +125,9 @@ document.addEventListener('DOMContentLoaded', async function() {
             latest: 'Latest'
         },
         kor: {
-            heroKicker: "Hwan's Blog",
             searchPlaceholder: 'Search...',
-            archiveTitle: 'All Writing',
+            archiveTitle: 'Archive',
+            oldArchiveTitle: 'Old Archive',
             tabPosts: 'Posts',
             tabNotes: 'Notes',
             tabSeries: 'Series',
@@ -129,16 +185,16 @@ document.addEventListener('DOMContentLoaded', async function() {
             element.setAttribute('placeholder', copy(lang, element.dataset.placeholderI18n));
         });
 
-        const featuredPost = getFeaturedPost();
-        const postCount = sortedPosts
-            .filter((post) => post.category === 'post' && post.id !== featuredPost?.id)
-            .length;
+        const postCount = sortedPosts.filter((post) => post.category === 'post').length;
         const noteCount = sortedPosts.filter((post) => post.category === 'note').length;
         const seriesCount = new Set(sortedPosts.map((post) => post.series).filter(Boolean)).size;
 
         setText('#posts-count', postCount);
         setText('#notes-count', noteCount);
         setText('#series-count', seriesCount);
+        setText('#hero-posts-count', postCount);
+        setText('#hero-notes-count', noteCount);
+        setText('#hero-series-count', seriesCount);
 
         if (langToggleButton) {
             const targetLabel = lang === 'eng' ? '한국어로 전환' : 'Switch to English';
@@ -159,14 +215,14 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     function updatePostPreview(card, post, lang) {
         const title = getPostTitle(post, lang);
-        const description = getPostDescription(post, lang);
+        const subtitleText = getPostSubtitle(post, lang);
         const url = getPostUrl(post, lang);
         const coverLink = card.querySelector('.post-card-cover');
         const titleElement = card.querySelector('.post-title');
         const titleLink = card.querySelector('.post-title a');
         const coverImage = card.querySelector('img[data-blog-cover]');
         const subtitle = card.querySelector('.post-subtitle');
-        const eyebrow = card.querySelector('.post-card-eyebrow span');
+        const series = card.querySelector('[data-post-series]');
         const time = card.querySelector('.post-meta time');
 
         if (coverLink) {
@@ -184,12 +240,12 @@ document.addEventListener('DOMContentLoaded', async function() {
             coverImage.alt = `${title} cover image`;
         }
         if (subtitle) {
-            subtitle.textContent = description;
-            subtitle.hidden = !description;
-            subtitle.lang = getTextLang(description, lang);
+            subtitle.textContent = subtitleText;
+            subtitle.hidden = !subtitleText;
+            subtitle.lang = getTextLang(subtitleText, lang);
         }
-        if (eyebrow) {
-            eyebrow.textContent = getSeriesTitle(post, lang);
+        if (series) {
+            series.textContent = getSeriesTitle(post, lang);
         }
         if (time) {
             time.dateTime = post.date;
@@ -205,14 +261,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
 
         const title = getPostTitle(post, lang);
-        const description = getPostDescription(post, lang);
+        const subtitle = getPostSubtitle(post, lang);
         const url = getPostUrl(post, lang);
         const coverLink = card.querySelector('.blog-feature-cover');
         const titleElement = card.querySelector('.blog-feature-copy h2');
         const titleLink = card.querySelector('.blog-feature-copy h2 a');
         const readLink = card.querySelector('.blog-feature-read');
         const coverImage = card.querySelector('img[data-blog-cover]');
-        const descriptionElement = card.querySelector('.blog-feature-copy > p');
+        const subtitleElement = card.querySelector('.blog-feature-subtitle');
         const time = card.querySelector('.blog-feature-date');
 
         card.querySelector('[data-feature-label]')?.replaceChildren(copy(lang, 'featuredLabel'));
@@ -239,15 +295,16 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (coverImage) {
             coverImage.alt = `${title} cover image`;
         }
-        if (descriptionElement) {
-            descriptionElement.textContent = description;
-            descriptionElement.hidden = !description;
-            descriptionElement.lang = getTextLang(description, lang);
+        if (subtitleElement) {
+            subtitleElement.textContent = subtitle;
+            subtitleElement.hidden = !subtitle;
+            subtitleElement.lang = getTextLang(subtitle, lang);
         }
         if (time) {
             time.dateTime = post.date;
             time.textContent = formatDate(post.date, lang);
         }
+        scheduleFeaturedCopyFit();
     }
 
     function updateSeriesGroups(lang) {
@@ -313,5 +370,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     updateRenderedContent(localStorage.getItem('language') || 'eng');
+    window.addEventListener('resize', scheduleFeaturedCopyFit, { passive: true });
+    document.fonts?.ready.then(scheduleFeaturedCopyFit);
     coverMedia?.initializeBlogCoverMedia(document);
 });

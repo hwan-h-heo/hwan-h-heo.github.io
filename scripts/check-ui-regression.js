@@ -544,29 +544,269 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
     await page.locator('#posts-tab-control').click();
 
     if (width !== 1440) {
+        const compactHeroState = await page.evaluate(() => {
+            const hero = document.querySelector('.blog-editorial-hero');
+            const title = hero?.querySelector('h1');
+            const deck = hero?.querySelector('.blog-home-hero-deck');
+            const visual = hero?.querySelector('.blog-editorial-visual');
+            const leftVisual = hero?.querySelector('.blog-editorial-visual-left');
+            const featureLabel = document.querySelector('.blog-feature-label');
+            const index = hero?.querySelector('.blog-publication-index');
+            return {
+                backgroundImage: hero ? getComputedStyle(hero).backgroundImage : '',
+                heroHeight: hero?.getBoundingClientRect().height || Number.POSITIVE_INFINITY,
+                visualDisplay: visual ? getComputedStyle(visual).display : '',
+                leftVisualDisplay: leftVisual ? getComputedStyle(leftVisual).display : '',
+                featureOpeningGap: featureLabel && hero
+                    ? featureLabel.getBoundingClientRect().top - hero.getBoundingClientRect().bottom
+                    : Number.NEGATIVE_INFINITY,
+                standfirstToHeroEdge: hero && deck
+                    ? (() => {
+                        const range = document.createRange();
+                        range.selectNodeContents(deck);
+                        return hero.getBoundingClientRect().bottom - range.getBoundingClientRect().bottom;
+                    })()
+                    : Number.NEGATIVE_INFINITY,
+                deckBelowTitle: title && deck
+                    ? deck.getBoundingClientRect().top >= title.getBoundingClientRect().bottom
+                    : false,
+                indexBelowDeck: index && deck
+                    ? index.getBoundingClientRect().top >= deck.getBoundingClientRect().bottom
+                    : false,
+                countsInOneRow: (() => {
+                    const items = Array.from(document.querySelectorAll('.blog-publication-index > div'));
+                    const tops = items.map((item) => item.getBoundingClientRect().top);
+                    return items.length === 3 && Math.max(...tops) - Math.min(...tops) < 1;
+                })()
+            };
+        });
+        assert(compactHeroState.backgroundImage === 'none', 'Compact Blog hero restored a photographic background.');
+        assert(compactHeroState.heroHeight <= 400, `Compact Blog hero grew beyond 400px: ${compactHeroState.heroHeight}px.`);
+        assert(compactHeroState.featureOpeningGap >= 30, `Compact Featured begins too close to the Hero: ${compactHeroState.featureOpeningGap}px.`);
+        assert(
+            Math.abs(compactHeroState.featureOpeningGap - compactHeroState.standfirstToHeroEdge) <= 1,
+            'Compact Blog hero transition spacing is no longer balanced around the Hero edge.'
+        );
+        assert(
+            compactHeroState.visualDisplay === 'none' && compactHeroState.leftVisualDisplay === 'none',
+            'Compact Blog hero retained the wide-screen technical edge crops.'
+        );
+        assert(compactHeroState.deckBelowTitle, 'Compact Blog hero did not stack the standfirst beneath the title.');
+        assert(compactHeroState.indexBelowDeck, 'Compact Blog hero publication index no longer follows the standfirst.');
+        assert(compactHeroState.countsInOneRow, 'Compact Blog hero publication index lost its three-column folio.');
+        const compactUtilityState = await page.evaluate(() => {
+            const search = document.querySelector('.blog-home-search');
+            const searchButton = search?.querySelector('button[type="submit"]');
+            const sidebarToggle = document.querySelector('.sidebar-mobile-toggle');
+            const searchRect = search?.getBoundingClientRect();
+            return {
+                searchExpanded: Boolean(search?.classList.contains('is-expanded')),
+                searchButtonExpanded: searchButton?.getAttribute('aria-expanded'),
+                searchRight: searchRect?.right || 0,
+                searchWidth: searchRect?.width || Number.POSITIVE_INFINITY,
+                sidebarToggleVisible: sidebarToggle ? getComputedStyle(sidebarToggle).display !== 'none' : false
+            };
+        });
+        assert(!compactUtilityState.sidebarToggleVisible, 'Compact Blog restored the conflicting sidebar hamburger.');
+        assert(
+            !compactUtilityState.searchExpanded
+                && compactUtilityState.searchButtonExpanded === 'false'
+                && compactUtilityState.searchWidth <= 36,
+            'Compact Blog search did not begin as an icon-only control.'
+        );
+        await page.locator('.blog-home-search button[type="submit"]').click();
+        await page.waitForFunction(() => {
+            const search = document.querySelector('.blog-home-search');
+            return search?.classList.contains('is-expanded') && search.getBoundingClientRect().width > 100;
+        });
+        const expandedUtilityState = await page.evaluate(() => {
+            const search = document.querySelector('.blog-home-search');
+            const searchRect = search?.getBoundingClientRect();
+            return {
+                buttonExpanded: search?.querySelector('button[type="submit"]')?.getAttribute('aria-expanded'),
+                inputFocused: document.activeElement === search?.querySelector('input'),
+                right: searchRect?.right || 0,
+                width: searchRect?.width || 0
+            };
+        });
+        assert(
+            expandedUtilityState.buttonExpanded === 'true'
+                && expandedUtilityState.inputFocused
+                && expandedUtilityState.width > 100
+                && Math.abs(expandedUtilityState.right - compactUtilityState.searchRight) <= 1,
+            'Compact Blog search did not expand toward the left and focus its input.'
+        );
+        await page.locator('.blog-home-search input').press('Escape');
+        await page.waitForFunction(() => !document.querySelector('.blog-home-search')?.classList.contains('is-expanded'));
+        const compactArchiveOrder = await page.locator('#posts-tab .post-preview').first().evaluate((card) => {
+            const cover = card.querySelector('.post-card-cover')?.getBoundingClientRect();
+            const copy = card.querySelector('.post-card-body')?.getBoundingClientRect();
+            return cover && copy ? cover.bottom <= copy.top + 1 : false;
+        });
+        assert(compactArchiveOrder, 'Compact Archive rows did not reset to media-first stacking.');
         return;
     }
 
     const initialTitleState = await page.evaluate(async () => {
         const heroTitle = document.querySelector('.blog-home-hero-copy h1');
-        const heroIntro = document.querySelector('.blog-home-hero-copy > p');
+        const heroIntro = document.querySelector('.blog-home-hero-deck');
+        const hero = document.querySelector('.blog-editorial-hero');
+        const heroCopy = document.querySelector('.blog-home-hero-copy');
         const heroIntroStyle = getComputedStyle(heroIntro);
         const heroIntroRange = document.createRange();
         heroIntroRange.selectNodeContents(heroIntro);
+        const heroTitleRange = document.createRange();
+        heroTitleRange.selectNodeContents(heroTitle);
+        const heroVisual = document.querySelector('.blog-editorial-visual');
+        const heroLeftVisual = document.querySelector('.blog-editorial-visual-left');
+        const heroIndex = document.querySelector('.blog-publication-index');
         const siteData = await fetch('/blogs/data/site-data.json').then((response) => response.json());
         const featuredPostId = siteData.blogHome?.featuredPostId || '';
         const featuredPost = siteData.posts.find((post) => post.id === featuredPostId);
+        const featureCover = document.querySelector('.blog-feature-cover');
+        const featureCard = document.querySelector('.blog-feature-card');
+        const featureCopy = document.querySelector('.blog-feature-copy');
+        const featureTitle = featureCopy?.querySelector('h2');
+        const featureSubtitle = featureCopy?.querySelector('.blog-feature-subtitle');
+        const featureDate = featureCopy?.querySelector('.blog-feature-date');
+        const featureRead = featureCopy?.querySelector('.blog-feature-read');
+        const featureLabel = document.querySelector('.blog-feature-label');
+        const firstPreview = document.querySelector('.post-preview[data-post-id]');
+        const previewSubtitle = firstPreview?.querySelector('.post-subtitle');
+        const previewDate = firstPreview?.querySelector('.post-meta');
+        const previewTags = firstPreview?.querySelector('.post-tag-row');
+        const postArchiveCards = Array.from(document.querySelectorAll('#posts-tab .post-preview'));
+        const noteArchiveCards = Array.from(document.querySelectorAll('#notes-tab .post-preview'));
         return {
             configuredFeaturedLanguage: featuredPost?.languages?.includes('kor') ? 'ko' : 'en',
             configuredFeaturedPostId: featuredPostId,
+            configuredPostCount: siteData.posts.filter((post) => post.category === 'post').length,
             featuredPostId: document.querySelector('.blog-feature-card')?.dataset.postId || '',
             heroIntroFontFamily: heroIntroStyle.fontFamily,
             heroIntroLetterSpacing: heroIntroStyle.letterSpacing,
             heroIntroText: heroIntro.textContent,
             heroIntroWidth: heroIntroRange.getBoundingClientRect().width,
+            heroIntroLineCount: heroIntroRange.getClientRects().length,
             heroIsStatic: !heroTitle?.hasAttribute('data-i18n') && !heroIntro?.hasAttribute('data-i18n'),
             heroTitle: heroTitle?.textContent || '',
+            heroTitleColor: heroTitle ? getComputedStyle(heroTitle).color : '',
             heroWidth: heroTitle?.getBoundingClientRect().width || 0,
+            heroSearchClearsTitle: heroTitle && document.querySelector('.blog-home-search')
+                ? document.querySelector('.blog-home-search').getBoundingClientRect().left
+                    >= heroTitleRange.getBoundingClientRect().right
+                : false,
+            heroBackgroundImage: hero ? getComputedStyle(hero).backgroundImage : '',
+            heroHeight: hero?.getBoundingClientRect().height || Number.POSITIVE_INFINITY,
+            heroFeaturedMeasureMatches: heroCopy && featureCard
+                ? Math.abs(heroCopy.getBoundingClientRect().left - featureCard.getBoundingClientRect().left) <= 0.5
+                    && Math.abs(heroCopy.getBoundingClientRect().right - featureCard.getBoundingClientRect().right) <= 0.5
+                : false,
+            heroImprint: document.querySelector('.blog-editorial-imprint')?.textContent.replace(/\s+/g, ' ').trim() || '',
+            heroTitleLineCount: (() => {
+                if (!heroTitle) return 0;
+                const range = document.createRange();
+                range.selectNodeContents(heroTitle);
+                return range.getClientRects().length;
+            })(),
+            heroVisualBackgroundImage: heroVisual ? getComputedStyle(heroVisual).backgroundImage : '',
+            heroVisualDisplay: heroVisual ? getComputedStyle(heroVisual).display : '',
+            heroLeftVisualBackgroundImage: heroLeftVisual ? getComputedStyle(heroLeftVisual).backgroundImage : '',
+            heroLeftVisualDisplay: heroLeftVisual ? getComputedStyle(heroLeftVisual).display : '',
+            heroOverlayBackground: hero ? getComputedStyle(hero, '::before').backgroundImage : '',
+            heroVisualsFillBackground: heroLeftVisual && heroVisual && hero && heroCopy
+                ? Math.abs(heroVisual.getBoundingClientRect().left - hero.getBoundingClientRect().left) <= 0.5
+                    && Math.abs(heroLeftVisual.getBoundingClientRect().right - heroCopy.getBoundingClientRect().right) <= 0.5
+                    && Math.abs(heroVisual.getBoundingClientRect().width - heroLeftVisual.getBoundingClientRect().width) <= 0.5
+                    && heroVisual.getBoundingClientRect().right <= heroLeftVisual.getBoundingClientRect().left + 0.5
+                : false,
+            heroDeckIsBelowTitle: heroTitle && heroIntro
+                ? heroIntro.getBoundingClientRect().top >= heroTitle.getBoundingClientRect().bottom
+                : false,
+            heroIndexFollowsDeck: heroIntro && heroIndex
+                ? heroIndex.getBoundingClientRect().top >= heroIntro.getBoundingClientRect().bottom
+                    && Math.abs(heroIndex.getBoundingClientRect().right - heroCopy.getBoundingClientRect().right) <= 0.5
+                : false,
+            heroCounts: [
+                document.querySelector('#hero-posts-count')?.textContent.trim(),
+                document.querySelector('#hero-notes-count')?.textContent.trim(),
+                document.querySelector('#hero-series-count')?.textContent.trim()
+            ],
+            tabCounts: [
+                document.querySelector('#posts-count')?.textContent.trim(),
+                document.querySelector('#notes-count')?.textContent.trim(),
+                document.querySelector('#series-count')?.textContent.trim()
+            ],
+            featureStartsAfterHero: featureCover && hero
+                ? featureCover.getBoundingClientRect().top >= hero.getBoundingClientRect().bottom
+                : false,
+            featureOpeningGap: featureLabel && hero
+                ? featureLabel.getBoundingClientRect().top - hero.getBoundingClientRect().bottom
+                : Number.NEGATIVE_INFINITY,
+            standfirstToHeroEdge: heroIntro && hero
+                ? hero.getBoundingClientRect().bottom - heroIntroRange.getBoundingClientRect().bottom
+                : Number.NEGATIVE_INFINITY,
+            featureCopyOverflow: featureCopy && featureCover
+                ? featureCopy.getBoundingClientRect().height - featureCover.getBoundingClientRect().height
+                : Number.POSITIVE_INFINITY,
+            featureReadBottomDelta: featureRead && featureCover
+                ? featureRead.getBoundingClientRect().bottom - featureCover.getBoundingClientRect().bottom
+                : Number.POSITIVE_INFINITY,
+            featureSubtitleClamp: featureSubtitle ? getComputedStyle(featureSubtitle).webkitLineClamp : '',
+            featureTitleClamp: featureTitle ? getComputedStyle(featureTitle).webkitLineClamp : '',
+            hasArchiveReadAction: Boolean(document.querySelector('.post-preview .post-card-read')),
+            previewDateFontFamily: previewDate ? getComputedStyle(previewDate).fontFamily : '',
+            featureDateFontFamily: featureDate ? getComputedStyle(featureDate).fontFamily : '',
+            previewMetadataOrder: Boolean(
+                previewSubtitle && previewDate && previewTags
+                && (previewSubtitle.compareDocumentPosition(previewDate) & Node.DOCUMENT_POSITION_FOLLOWING)
+                && (previewDate.compareDocumentPosition(previewTags) & Node.DOCUMENT_POSITION_FOLLOWING)
+            ),
+            archiveEraSignatureMatches: [...postArchiveCards, ...noteArchiveCards].every((card) => {
+                const year = Number(siteData.posts.find((post) => post.id === card.dataset.postId)?.date.slice(0, 4));
+                return card.classList.contains('post-preview-media-right') === (year >= new Date().getFullYear() - 1);
+            }),
+            archiveEraBreaks: [
+                document.querySelector('#posts-tab'),
+                document.querySelector('#notes-tab')
+            ].map((panel) => {
+                const cards = Array.from(panel.querySelectorAll('.post-preview[data-post-id]'));
+                const marker = panel.querySelector('.blog-home-era-break');
+                const firstOld = cards.find((card) => {
+                    const year = Number(siteData.posts.find((post) => post.id === card.dataset.postId)?.date.slice(0, 4));
+                    return year < new Date().getFullYear() - 1;
+                });
+                const lastRecent = cards.findLast((card) => {
+                    const year = Number(siteData.posts.find((post) => post.id === card.dataset.postId)?.date.slice(0, 4));
+                    return year >= new Date().getFullYear() - 1;
+                });
+                return {
+                    count: panel.querySelectorAll('.blog-home-era-break').length,
+                    text: marker?.textContent.replace(/\s+/g, ' ').trim() || '',
+                    precedingBorderWidth: marker?.previousElementSibling
+                        ? getComputedStyle(marker.previousElementSibling).borderBottomWidth
+                        : '',
+                    betweenEras: Boolean(
+                        marker && firstOld && lastRecent
+                        && (lastRecent.compareDocumentPosition(marker) & Node.DOCUMENT_POSITION_FOLLOWING)
+                        && (marker.compareDocumentPosition(firstOld) & Node.DOCUMENT_POSITION_FOLLOWING)
+                    )
+                };
+            }),
+            postArchiveEraGeometry: [
+                postArchiveCards.find((card) => {
+                    const year = Number(siteData.posts.find((post) => post.id === card.dataset.postId)?.date.slice(0, 4));
+                    return year >= new Date().getFullYear() - 1;
+                }),
+                postArchiveCards.find((card) => {
+                    const year = Number(siteData.posts.find((post) => post.id === card.dataset.postId)?.date.slice(0, 4));
+                    return year < new Date().getFullYear() - 1;
+                })
+            ].map((card) => {
+                const cover = card.querySelector('.post-card-cover')?.getBoundingClientRect();
+                const copy = card.querySelector('.post-card-body')?.getBoundingClientRect();
+                return cover && copy ? cover.left > copy.left : null;
+            }),
+            previewSeriesLabel: firstPreview?.querySelector('.post-series-context-label')?.textContent.trim() || '',
             postTitles: Object.fromEntries(Array.from(document.querySelectorAll('.post-preview[data-post-id]')).map((card) => {
                 const title = card.querySelector('.post-title');
                 const style = getComputedStyle(title);
@@ -578,11 +818,78 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
             }))
         };
     });
-    assert(initialTitleState.heroIsStatic, 'Blog hero title or description returned to runtime-managed copy.');
+    assert(initialTitleState.heroIsStatic, 'Blog hero title or intro returned to runtime-managed copy.');
+    assert(initialTitleState.heroBackgroundImage === 'none', 'Blog home restored a template-style photographic hero background.');
+    assert(initialTitleState.heroHeight <= 330.5, `Wide Blog hero grew beyond its former 330px footprint: ${initialTitleState.heroHeight}px.`);
+    assert(initialTitleState.heroFeaturedMeasureMatches, 'Blog Hero copy no longer shares the Featured content measure.');
+    assert(initialTitleState.heroImprint === "00 / Hwan's Blog 2021—2026", 'Blog editorial-cover brand imprint is missing or changed.');
+    assert(initialTitleState.heroTitleLineCount === 1, 'Wide Blog editorial-cover title is no longer a single line.');
+    assert(initialTitleState.heroSearchClearsTitle, 'Wide Blog utility search overlaps the Hero title field.');
+    assert(
+        initialTitleState.heroTitleColor === 'rgba(240, 241, 243, 0.88)',
+        'Blog Hero title no longer shares the Portfolio Hero name color.'
+    );
+    assert(initialTitleState.heroIntroLineCount === 1, 'Wide Blog editorial-cover standfirst is no longer a single line.');
+    assert(
+        initialTitleState.heroVisualDisplay === 'block'
+            && initialTitleState.heroVisualBackgroundImage.includes('sparse-pipeline.png')
+            && initialTitleState.heroLeftVisualDisplay === 'block'
+            && initialTitleState.heroLeftVisualBackgroundImage.includes('remote-d832175607cd.png'),
+        'Wide Blog editorial-cover technical edge crops are missing.'
+    );
+    assert(initialTitleState.heroVisualsFillBackground, 'Blog editorial-cover images no longer split the left-to-copy-edge background stage.');
+    assert(initialTitleState.heroOverlayBackground.includes('linear-gradient'), 'Blog editorial-cover images lost their dark contrast overlay.');
+    assert(initialTitleState.heroDeckIsBelowTitle, 'Wide Blog hero standfirst no longer sits beneath its title.');
+    assert(initialTitleState.heroIndexFollowsDeck, 'Wide Blog hero publication index no longer follows the standfirst on a new line.');
+    assert(
+        JSON.stringify(initialTitleState.heroCounts) === JSON.stringify(initialTitleState.tabCounts),
+        'Blog hero publication index does not match the Archive counts.'
+    );
+    assert(
+        Number(initialTitleState.heroCounts[0]) === initialTitleState.configuredPostCount,
+        'Blog Posts count excludes the configured Featured post.'
+    );
+    assert(initialTitleState.featureStartsAfterHero, 'Featured media moved into or behind the image-free editorial cover.');
+    assert(initialTitleState.featureOpeningGap >= 56, `Featured begins too close to the Hero: ${initialTitleState.featureOpeningGap}px.`);
+    assert(
+        Math.abs(initialTitleState.featureOpeningGap - initialTitleState.standfirstToHeroEdge) <= 0.5,
+        'Blog Hero transition spacing is no longer equal on both sides of the Hero edge.'
+    );
     assert(
         initialTitleState.configuredFeaturedPostId
             && initialTitleState.featuredPostId === initialTitleState.configuredFeaturedPostId,
         'Blog home did not render the explicitly configured featured post.'
+    );
+    assert(initialTitleState.featureCopyOverflow <= 0.5, `Featured copy exceeds its cover by ${initialTitleState.featureCopyOverflow}px.`);
+    assert(
+        Math.abs(initialTitleState.featureReadBottomDelta) <= 0.5,
+        `Featured Read post does not close on the cover edge: ${initialTitleState.featureReadBottomDelta}px.`
+    );
+    assert(
+        ['none', ''].includes(initialTitleState.featureTitleClamp)
+            && ['none', ''].includes(initialTitleState.featureSubtitleClamp),
+        'Featured title or subtitle restored clipping.'
+    );
+    assert(!initialTitleState.hasArchiveReadAction, 'Archive rows restored the redundant Read post action.');
+    assert(initialTitleState.previewSeriesLabel === 'SERIES', 'Archive rows lost the explicit series hierarchy.');
+    assert(initialTitleState.previewMetadataOrder, 'Archive row date and tag hierarchy is out of order.');
+    assert(initialTitleState.archiveEraSignatureMatches, 'Archive media sides no longer follow the recent-two-years boundary.');
+    assert(
+        initialTitleState.archiveEraBreaks.every((entry) => (
+            entry.count === 1
+                && entry.text === '03 Old Archive'
+                && entry.precedingBorderWidth === '0px'
+                && entry.betweenEras
+        )),
+        'Posts or Notes lost the single 03 Old Archive boundary at the media-side transition.'
+    );
+    assert(
+        JSON.stringify(initialTitleState.postArchiveEraGeometry) === JSON.stringify([true, false]),
+        'Archive era classes do not match the rendered media positions.'
+    );
+    assert(
+        initialTitleState.previewDateFontFamily === initialTitleState.featureDateFontFamily,
+        'Featured and archive dates no longer share a font role.'
     );
     await page.evaluate(() => {
         window.__blogStaticPreview = document.querySelector('.post-preview[data-post-id]');
@@ -600,16 +907,20 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
                 ? []
                 : [card.dataset.postId];
         });
-        const heroIntro = document.querySelector('.blog-home-hero-copy > p');
+        const heroIntro = document.querySelector('.blog-home-hero-deck');
         const heroIntroStyle = getComputedStyle(heroIntro);
         const heroIntroRange = document.createRange();
         heroIntroRange.selectNodeContents(heroIntro);
+        const featureSubtitle = document.querySelector('.blog-feature-subtitle');
+        const featureTitle = document.querySelector('.blog-feature-copy h2');
         return {
             button: document.querySelector('#lang-toggle-main')?.textContent.trim(),
             preservedStaticPreview: window.__blogStaticPreview === document.querySelector('.post-preview[data-post-id]'),
             lang: document.documentElement.lang,
             title: document.querySelector('.blog-home-hero-copy h1')?.textContent,
             featureLang: document.querySelector('.blog-feature-copy h2')?.lang,
+            featureSubtitleWrap: featureSubtitle ? getComputedStyle(featureSubtitle).textWrap : '',
+            featureTitleWrap: featureTitle ? getComputedStyle(featureTitle).textWrap : '',
             heroIntroFontFamily: heroIntroStyle.fontFamily,
             heroIntroLetterSpacing: heroIntroStyle.letterSpacing,
             heroIntroText: heroIntro.textContent,
@@ -625,6 +936,8 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
         koreanState.featureLang === initialTitleState.configuredFeaturedLanguage,
         'Blog language toggle used the wrong language for the configured featured title.'
     );
+    assert(koreanState.featureSubtitleWrap === 'balance', 'Korean Featured subtitle lost balanced wrapping.');
+    assert(koreanState.featureTitleWrap === 'balance', 'Korean Featured title lost balanced wrapping.');
     assert(koreanState.heroIntroText === initialTitleState.heroIntroText, 'Blog language toggle changed the fixed English hero intro.');
     assert(koreanState.heroIntroFontFamily === initialTitleState.heroIntroFontFamily, 'Blog language toggle changed the hero-intro font.');
     assert(koreanState.heroIntroLetterSpacing === initialTitleState.heroIntroLetterSpacing, 'Blog language toggle changed the hero-intro tracking.');
@@ -638,10 +951,19 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
     const darkState = await page.evaluate(() => ({
         icon: document.querySelector('[data-theme-toggle] .site-icon use')?.getAttribute('href'),
         pressed: document.querySelector('[data-theme-toggle]')?.getAttribute('aria-pressed'),
-        theme: document.documentElement.dataset.theme
+        theme: document.documentElement.dataset.theme,
+        featureTitleColor: getComputedStyle(document.querySelector('.blog-feature-copy h2 a')).color,
+        featureTitleParentColor: getComputedStyle(document.querySelector('.blog-feature-copy h2')).color,
+        archiveTitleColor: getComputedStyle(document.querySelector('.post-preview .post-title a')).color,
+        archiveTitleParentColor: getComputedStyle(document.querySelector('.post-preview .post-title')).color
     }));
     assert(darkState.theme === 'dark' && darkState.pressed === 'true', 'Blog theme toggle did not expose its dark ARIA state.');
     assert(darkState.icon?.endsWith('#icon-sun'), 'Blog theme toggle did not switch to the sun icon.');
+    assert(
+        darkState.featureTitleColor === darkState.featureTitleParentColor
+            && darkState.archiveTitleColor === darkState.archiveTitleParentColor,
+        'Dark Blog title links no longer inherit the light editorial title color.'
+    );
     await captureScreenshot(page, testCase, width, 'dark-theme', options);
     await themeToggle.click();
 

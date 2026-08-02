@@ -82,7 +82,7 @@
         <main class="main blog-home-main">
         <nav class="blog-home-topbar" id="blogHomeTopbar" aria-label="Blog utilities">
             <div class="blog-home-toolbar-actions">
-                <form id="blog-home-search-form" class="blog-home-search" role="search">
+                <form id="blog-home-search-form" class="blog-home-search" role="search" data-collapsible-search>
                     <label class="visually-hidden" for="blog-home-search-input">Search posts</label>
                     <input type="text" id="blog-home-search-input" data-placeholder-i18n="searchPlaceholder" placeholder="Search...">
                     <button type="submit" aria-label="Search">
@@ -96,13 +96,36 @@
             </div>
         </nav>
 
-        <header class="masthead blog-home-hero" style="background-image: url('../assets/image_fx_.webp'); background-position: center 34%; background-size: cover;">
+        <header class="masthead blog-home-hero blog-editorial-hero">
+            <div class="blog-editorial-visual" aria-hidden="true"></div>
+            <div class="blog-editorial-visual-left" aria-hidden="true"></div>
             <div class="blog-shell blog-hero-shell">
-                <div class="blog-home-hero-grid">
-                    <div class="blog-home-hero-copy">
-                        <span class="blog-home-kicker" data-i18n="heroKicker" lang="en">Hwan's Blog</span>
-                        <h1 lang="en">Research notes for 3D AI systems</h1>
-                        <p lang="en">3D generation, computer vision, graphics, CUDA inference, and the implementation details that usually stay between commits.</p>
+                <div class="blog-home-hero-copy">
+                    <div class="blog-editorial-imprint" aria-label="Hwan's Blog index, 2021 to 2026">
+                        <div class="blog-editorial-brandline" lang="en">
+                            <span class="blog-editorial-index">00</span>
+                            <span class="blog-editorial-separator" aria-hidden="true">/</span>
+                            <span class="blog-home-kicker">Hwan's Blog</span>
+                        </div>
+                        <span class="blog-editorial-edition" lang="en">2021—2026</span>
+                    </div>
+                    <h1 lang="en">Research notes for 3D AI systems</h1>
+                    <div class="blog-editorial-deck">
+                        <p class="blog-home-hero-deck" lang="en">3D generation, computer vision, graphics, CUDA inference, and implementation details between commits.</p>
+                        <dl class="blog-publication-index" aria-label="Publication index">
+                            <div>
+                                <dt>Posts</dt>
+                                <dd id="hero-posts-count"></dd>
+                            </div>
+                            <div>
+                                <dt>Notes</dt>
+                                <dd id="hero-notes-count"></dd>
+                            </div>
+                            <div>
+                                <dt>Series</dt>
+                                <dd id="hero-series-count"></dd>
+                            </div>
+                        </dl>
                     </div>
                 </div>
             </div>
@@ -113,9 +136,11 @@
 
             <section class="blog-home-archive" aria-labelledby="blog-home-archive-title">
                 <div class="blog-home-archive-head">
-                    <div>
-                        <h2 id="blog-home-archive-title" data-i18n="archiveTitle">All Writing</h2>
-                    </div>
+                    <h2 id="blog-home-archive-title">
+                        <span class="blog-home-archive-index" aria-hidden="true">02</span>
+                        <span data-i18n="archiveTitle">Archive</span>
+                    </h2>
+                    <span class="blog-home-archive-rule" aria-hidden="true"></span>
                     <ul class="blog-home-tabs" role="tablist" aria-label="Blog categories">
                         <li class="blog-home-tab-item" role="presentation">
                             <button class="blog-home-tab is-active" id="posts-tab-control" data-tab-target="#posts-tab" type="button" role="tab" aria-controls="posts-tab" aria-selected="true" tabindex="0">

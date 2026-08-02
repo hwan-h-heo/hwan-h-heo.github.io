@@ -45,7 +45,6 @@ function main() {
         id,
         title_eng: title,
         subtitle_eng: '',
-        description_eng: '',
         date,
         updated: date,
         category: 'post',

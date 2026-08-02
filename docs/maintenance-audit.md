@@ -135,8 +135,6 @@ Post metadata currently supports:
 - `title_kor`
 - `subtitle_eng`
 - `subtitle_kor`
-- `description_eng`
-- `description_kor`
 - `date`
 - `updated`
 - `category`
@@ -146,7 +144,7 @@ Post metadata currently supports:
 - `status`
 - `languages`
 
-Post metadata is now frontmatter-like JSON rather than Markdown frontmatter. It supports preview description, cover image, tags, draft/published status, updated date, and pinned slugs while preserving compatibility with `blogs/data/site-data.json`.
+Post metadata is now frontmatter-like JSON rather than Markdown frontmatter. Its subtitle is the single source for editorial preview and SEO summary copy; the schema also supports cover image, tags, draft/published status, updated date, and pinned slugs while preserving compatibility with `blogs/data/site-data.json`.
 
 `blogs/lib/site-data.js` validates strict post shapes and rejects unexpected post keys. This is good for safety, but it means adding richer metadata must start with schema changes before data migration.
 

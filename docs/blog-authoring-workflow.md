@@ -19,7 +19,7 @@ blogs/posts/<YYMMDD_post_title>/
 It also adds a draft metadata entry to `blogs/data/site-data.json` with:
 
 - pinned `slug`
-- `description_eng`
+- `subtitle_eng`
 - `tags`
 - `cover`
 - `status: "draft"`
@@ -55,11 +55,12 @@ Preferred values:
 
 Published posts may use a shared local image, but `/assets/blog_bg.jpeg` is reserved as a draft fallback and fails published-content validation.
 
-## Set Preview Text
+## Set Subtitle
 
-Use `description_eng` and, when Korean content exists, `description_kor`.
-
-Older subtitles still render as compatibility fallbacks, but published posts must define `description_eng` and Korean posts must also define `description_kor`.
+Use `subtitle_eng` and, when Korean content exists, `subtitle_kor`. This single
+editorial deck supplies article headers, home and search previews, RSS summaries,
+and search/social metadata. Published posts must define the subtitle for every
+available language.
 
 ## Tags
 
