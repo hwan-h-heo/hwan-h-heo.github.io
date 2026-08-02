@@ -1079,8 +1079,15 @@ function generateSitemap() {
     });
     lines.push('</urlset>');
 
-    fs.writeFileSync(path.join(distDir, 'sitemap.xml'), `${lines.join('\n')}\n`);
-    console.log('Generated sitemap.xml');
+    const sitemapXml = `${lines.join('\n')}\n`;
+    ['sitemap.xml', 'google-sitemap.xml'].forEach((fileName) => {
+        fs.writeFileSync(path.join(distDir, fileName), sitemapXml);
+    });
+    fs.writeFileSync(
+        path.join(distDir, 'google-sitemap.txt'),
+        `${urls.map((url) => url.loc).join('\n')}\n`
+    );
+    console.log('Generated sitemap.xml, google-sitemap.xml, and google-sitemap.txt');
 }
 
 function generateFeed() {
@@ -1127,7 +1134,7 @@ function generateRobotsTxt() {
     const robotsTxt = `User-agent: *
 Allow: /
 
-Sitemap: ${SITE_URL}/sitemap.xml
+Sitemap: ${SITE_URL}/google-sitemap.xml
 `;
 
     fs.writeFileSync(path.join(distDir, 'robots.txt'), robotsTxt);

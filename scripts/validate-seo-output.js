@@ -131,6 +131,13 @@ function collectSitemapUrls(errors) {
     }
 
     const sitemapXml = readText(sitemapPath);
+    const googleSitemapPath = path.join(distRoot, 'google-sitemap.xml');
+    if (!fs.existsSync(googleSitemapPath)) {
+        errors.push('Missing generated google-sitemap.xml.');
+    } else if (readText(googleSitemapPath) !== sitemapXml) {
+        errors.push('google-sitemap.xml does not match sitemap.xml.');
+    }
+
     const $ = cheerio.load(sitemapXml, { xmlMode: true });
     if ($('urlset').length !== 1) {
         errors.push('Malformed sitemap.xml: expected one <urlset> root.');
@@ -149,6 +156,20 @@ function collectSitemapUrls(errors) {
         })).get();
         urls.push({ loc, alternates });
     });
+
+    const googleTextSitemapPath = path.join(distRoot, 'google-sitemap.txt');
+    if (!fs.existsSync(googleTextSitemapPath)) {
+        errors.push('Missing generated google-sitemap.txt.');
+    } else {
+        const textUrls = readText(googleTextSitemapPath)
+            .split(/\r?\n/)
+            .map((line) => line.trim())
+            .filter(Boolean);
+        const xmlUrls = urls.map((entry) => entry.loc);
+        if (JSON.stringify(textUrls) !== JSON.stringify(xmlUrls)) {
+            errors.push('google-sitemap.txt does not contain the same URLs as sitemap.xml.');
+        }
+    }
 
     return urls;
 }
@@ -565,8 +586,8 @@ function checkRobots(errors) {
     if (/Disallow:\s*\/blogs/i.test(robots)) {
         errors.push('robots.txt blocks /blogs/.');
     }
-    if (!robots.includes(`Sitemap: ${SITE_URL}/sitemap.xml`)) {
-        errors.push('robots.txt does not reference the absolute sitemap URL.');
+    if (!robots.includes(`Sitemap: ${SITE_URL}/google-sitemap.xml`)) {
+        errors.push('robots.txt does not reference the absolute Google sitemap URL.');
     }
 }
 

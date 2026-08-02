@@ -10,8 +10,18 @@ These steps happen after deploying the generated `blogs/dist/` output.
 2. Submit:
 
 ```text
-https://hwan-h-heo.github.io/sitemap.xml
+https://hwan-h-heo.github.io/google-sitemap.xml
 ```
+
+The legacy `/sitemap.xml` remains available with identical content. Submit the new URL as a separate sitemap entry to bypass any failed-fetch state cached against the old sitemap URL.
+
+If Search Console still reports that it cannot read the new XML URL, submit the plain-text diagnostic sitemap separately:
+
+```text
+https://hwan-h-heo.github.io/google-sitemap.txt
+```
+
+If TXT succeeds while XML fails, investigate XML-specific parsing or response handling. If both fail, treat the problem as a Google Search Console to GitHub Pages fetch issue rather than a sitemap-content issue.
 
 3. Inspect the blog homepage:
 

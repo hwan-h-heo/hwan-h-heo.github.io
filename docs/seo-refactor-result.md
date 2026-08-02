@@ -27,7 +27,7 @@ The SEO validation script runs against `blogs/dist/` after the static build and 
 - Preserved no-JavaScript discoverability for the primary blog index DOM.
 - Statically rendered previous/next post links, series navigation, language alternate navigation, breadcrumbs, related-post links, and return-to-blog links.
 - Generated a sitemap with absolute HTTPS URLs, canonical post-language URLs, archive URLs, project URLs, and sitemap-level XHTML alternates for translation pairs.
-- Generated root `robots.txt` with `Allow: /` and `Sitemap: https://hwan-h-heo.github.io/sitemap.xml`.
+- Generated root `sitemap.xml`, the identical `google-sitemap.xml`, and a URL-only `google-sitemap.txt`, with `robots.txt` pointing to `https://hwan-h-heo.github.io/google-sitemap.xml`.
 - Centralized legacy query redirect mapping in `blogs/data/legacy-post-redirects.json`.
 - Replaced the repository-level fallback with deterministic inline mapping, clear unknown-ID handling, canonical declaration where practical, and `location.replace()`.
 - Added generated-output SEO validation through `npm run validate:seo`.
@@ -160,7 +160,7 @@ The workflow is validation-only and does not deploy.
 
 - Deploy the generated site normally.
 - Register or verify the site in Google Search Console.
-- Submit `https://hwan-h-heo.github.io/sitemap.xml`.
+- Submit `https://hwan-h-heo.github.io/google-sitemap.xml` as a new sitemap entry.
 - Inspect `/blogs/` and representative article URLs.
 - Request indexing for important newly migrated canonical URLs.
 - Check for `Discovered - currently not indexed`, `Crawled - currently not indexed`, `Duplicate`, `Google chose different canonical`, and `Redirect error` statuses.
