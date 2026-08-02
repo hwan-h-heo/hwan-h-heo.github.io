@@ -69,6 +69,7 @@
         bootstrap: {
             categories: ['post', 'note'],
             languages: ['eng', 'kor'],
+            blogHome: {},
             series: {},
             posts: [],
             featuredPortfolioPosts: []
@@ -165,6 +166,8 @@
             'sidebar-toggle-icon',
             'sidebar-toggle-label',
             'existing-post-select',
+            'blog-home-featured-post',
+            'save-blog-home-button',
             'post-id',
             'post-date',
             'post-category',
@@ -181,9 +184,6 @@
             'title-kor',
             'subtitle-kor',
             'korean-meta-fields',
-            'description-eng',
-            'description-kor',
-            'korean-publishing-fields',
             'featured-enabled',
             'featured-fields',
             'featured-image',
@@ -245,6 +245,7 @@
         el.sidebarToggleButton.addEventListener('click', toggleSidebar);
         el.newPostButton.addEventListener('click', handleNewPost);
         el.loadPostButton.addEventListener('click', openLoadPostModal);
+        el.saveBlogHomeButton.addEventListener('click', saveBlogHomeSettings);
         el.saveDraftButton.addEventListener('click', saveDraft);
         el.driveLoadButton.addEventListener('click', openDriveDraftModal);
         el.driveSaveButton.addEventListener('click', saveDriveDraft);
@@ -295,8 +296,6 @@
             el.subtitleEng,
             el.titleKor,
             el.subtitleKor,
-            el.descriptionEng,
-            el.descriptionKor,
             el.featuredImage,
             el.featuredAlt,
             el.featuredOrder
@@ -394,8 +393,6 @@
             subtitle_eng: '',
             title_kor: '',
             subtitle_kor: '',
-            description_eng: '',
-            description_kor: '',
             tags: [],
             cover: '',
             status: 'draft',
@@ -555,7 +552,9 @@
             el.publishButton,
             el.loadSelectedPostButton,
             el.loadDraftButton,
-            el.existingPostSelect
+            el.existingPostSelect,
+            el.blogHomeFeaturedPost,
+            el.saveBlogHomeButton
         ].forEach((button) => {
             button.disabled = disabled;
         });
@@ -585,6 +584,21 @@
                 };
             }
         );
+        const blogHomePosts = state.bootstrap.posts.filter((post) => (
+            post.category === 'post' && (post.status || 'published') === 'published'
+        ));
+        fillSelect(
+            el.blogHomeFeaturedPost,
+            blogHomePosts.map((post) => post.id),
+            (value) => {
+                const post = blogHomePosts.find((item) => item.id === value);
+                return {
+                    value,
+                    label: post ? `${post.title_eng} · ${post.date}` : value
+                };
+            }
+        );
+        el.blogHomeFeaturedPost.value = state.bootstrap.blogHome?.featuredPostId || '';
 
         if (!el.postSeries.value && state.metadata.series) {
             el.postSeries.value = state.metadata.series;
@@ -643,6 +657,7 @@
             state.bootstrap = {
                 categories: ['post', 'note'],
                 languages: ['eng', 'kor'],
+                blogHome: { ...(siteData.blogHome || {}) },
                 series: siteData.series || {},
                 posts: [...(siteData.posts || [])].sort((a, b) => new Date(b.date) - new Date(a.date)),
                 featuredPortfolioPosts: siteData.featuredPortfolioPosts || []
@@ -675,8 +690,6 @@
         el.subtitleEng.value = state.metadata.subtitle_eng;
         el.titleKor.value = state.metadata.title_kor;
         el.subtitleKor.value = state.metadata.subtitle_kor;
-        el.descriptionEng.value = state.metadata.description_eng;
-        el.descriptionKor.value = state.metadata.description_kor;
         el.featuredEnabled.checked = Boolean(state.metadata.featured);
         el.featuredImage.value = state.metadata.teaserImage;
         el.featuredAlt.value = state.metadata.teaserAlt;
@@ -698,8 +711,6 @@
         state.metadata.subtitle_eng = el.subtitleEng.value.trim();
         state.metadata.title_kor = el.titleKor.value.trim();
         state.metadata.subtitle_kor = el.subtitleKor.value.trim();
-        state.metadata.description_eng = el.descriptionEng.value.trim();
-        state.metadata.description_kor = el.descriptionKor.value.trim();
         state.metadata.featured = el.featuredEnabled.checked;
         state.metadata.teaserImage = el.featuredImage.value.trim();
         state.metadata.teaserAlt = el.featuredAlt.value.trim();
@@ -851,7 +862,6 @@
     function renderKoreanFields() {
         const hasKorean = state.metadata.languages.includes('kor');
         el.koreanMetaFields.classList.toggle('is-hidden', !hasKorean);
-        el.koreanPublishingFields.classList.toggle('is-hidden', !hasKorean);
     }
 
     function renderFeatureFields() {
@@ -2271,8 +2281,6 @@
             subtitle_eng: metadata.subtitle_eng || '',
             title_kor: metadata.title_kor || '',
             subtitle_kor: metadata.subtitle_kor || '',
-            description_eng: metadata.description_eng || '',
-            description_kor: metadata.description_kor || '',
             tags: Array.isArray(metadata.tags) ? metadata.tags : [],
             cover: metadata.cover || '',
             status: metadata.status === 'published' ? 'published' : 'draft',
@@ -2723,8 +2731,6 @@
                 subtitle_eng: state.metadata.subtitle_eng,
                 title_kor: state.metadata.title_kor,
                 subtitle_kor: state.metadata.subtitle_kor,
-                description_eng: state.metadata.description_eng,
-                description_kor: state.metadata.description_kor,
                 tags: [...state.metadata.tags],
                 cover: state.metadata.cover,
                 status: state.metadata.status,
@@ -2779,8 +2785,11 @@
         }
 
         if (payload.post.status === 'published') {
-            if (!payload.post.description_eng) {
-                errors.push('Published posts need an English description.');
+            if (!payload.post.subtitle_eng) {
+                errors.push('Published posts need an English subtitle.');
+            }
+            if (payload.post.languages.includes('kor') && !payload.post.subtitle_kor) {
+                errors.push('Published Korean posts need a Korean subtitle.');
             }
             if (!payload.post.cover || payload.post.cover === '/assets/blog_bg.jpeg') {
                 errors.push('Published posts need a post-specific cover image.');
@@ -2865,6 +2874,50 @@
         }
     }
 
+    async function saveBlogHomeSettings() {
+        if (!state.editMode) {
+            showFeedback('error', 'Blog home save unavailable', [
+                'Start the local editor server with `npm run edit` first.'
+            ]);
+            return;
+        }
+
+        const featuredPostId = el.blogHomeFeaturedPost.value;
+        if (!featuredPostId) {
+            showFeedback('error', 'Featured post required', [
+                'Select a published post for the Blog Home Featured position.'
+            ]);
+            return;
+        }
+
+        const originalLabel = el.saveBlogHomeButton.textContent;
+        el.saveBlogHomeButton.disabled = true;
+        el.saveBlogHomeButton.textContent = 'Saving…';
+
+        try {
+            const response = await fetch(`${API_BASE}/blog-home`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ featuredPostId })
+            });
+            const result = await response.json();
+            if (!response.ok || !result.success) {
+                showFeedback('error', 'Blog home save failed', result.details || [result.error || 'Unknown error']);
+                return;
+            }
+
+            state.bootstrap.blogHome = { ...result.blogHome };
+            showFeedback('success', 'Blog home updated', [
+                `${el.blogHomeFeaturedPost.selectedOptions[0]?.textContent || featuredPostId} is now Featured.`
+            ]);
+        } catch (error) {
+            showFeedback('error', 'Blog home save failed', [error.message]);
+        } finally {
+            el.saveBlogHomeButton.textContent = originalLabel;
+            el.saveBlogHomeButton.disabled = !state.editMode;
+        }
+    }
+
     function handleNewPost() {
         if (!window.confirm('Reset the current workspace and start a new post?')) {
             return;
@@ -2898,8 +2951,6 @@
                 subtitle_eng: result.post.subtitle_eng || '',
                 title_kor: result.post.title_kor || '',
                 subtitle_kor: result.post.subtitle_kor || '',
-                description_eng: result.post.description_eng || '',
-                description_kor: result.post.description_kor || '',
                 tags: Array.isArray(result.post.tags) ? result.post.tags : [],
                 cover: result.post.cover || '',
                 status: result.post.status || 'published',

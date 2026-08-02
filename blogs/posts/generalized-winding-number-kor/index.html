@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="Mesh 에서 GWN 을 이용하여 견고한 SDF 를 계산하는 방법. Winding Number 의 정의와, 이를 3D 로 확장한 Generalized Winding Number 가 왜 SDF 계산에서 쓰일 수 있는지 알아보자!" />
+    <meta name="description" content="불완전하거나 열린 mesh에서도 Generalized Winding Number로 inside/outside를 판별하고 견고한 SDF를 계산하는 방법을 살펴보기" />
     <meta name="keywords" content="note, graphics, Graphics, 3D graphics, computer vision, machine learning" />
     <meta name="author" content="Hwan Heo" />
     <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/posts/generalized-winding-number-kor/" />
@@ -13,7 +13,7 @@
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://hwan-h-heo.github.io/blogs/posts/generalized-winding-number-kor/" />
     <meta property="og:title" content="Generalized Winding Number (Korean)" />
-    <meta property="og:description" content="Mesh 에서 GWN 을 이용하여 견고한 SDF 를 계산하는 방법. Winding Number 의 정의와, 이를 3D 로 확장한 Generalized Winding Number 가 왜 SDF 계산에서 쓰일 수 있는지 알아보자!" />
+    <meta property="og:description" content="불완전하거나 열린 mesh에서도 Generalized Winding Number로 inside/outside를 판별하고 견고한 SDF를 계산하는 방법을 살펴보기" />
     <meta property="og:image" content="https://hwan-h-heo.github.io/blogs/posts/250809_gwn/assets/image.png" />
     <meta property="og:site_name" content="HwanHeo's Blog" />
     <meta property="article:published_time" content="2025-08-09T00:00:00.000Z" />
@@ -22,17 +22,17 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://hwan-h-heo.github.io/blogs/posts/generalized-winding-number-kor/" />
     <meta name="twitter:title" content="Generalized Winding Number (Korean)" />
-    <meta name="twitter:description" content="Mesh 에서 GWN 을 이용하여 견고한 SDF 를 계산하는 방법. Winding Number 의 정의와, 이를 3D 로 확장한 Generalized Winding Number 가 왜 SDF 계산에서 쓰일 수 있는지 알아보자!" />
+    <meta name="twitter:description" content="불완전하거나 열린 mesh에서도 Generalized Winding Number로 inside/outside를 판별하고 견고한 SDF를 계산하는 방법을 살펴보기" />
     <meta name="twitter:image" content="https://hwan-h-heo.github.io/blogs/posts/250809_gwn/assets/image.png" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Generalized Winding Number","description":"Mesh 에서 GWN 을 이용하여 견고한 SDF 를 계산하는 방법. Winding Number 의 정의와, 이를 3D 로 확장한 Generalized Winding Number 가 왜 SDF 계산에서 쓰일 수 있는지 알아보자!","url":"https://hwan-h-heo.github.io/blogs/posts/generalized-winding-number-kor/","mainEntityOfPage":"https://hwan-h-heo.github.io/blogs/posts/generalized-winding-number-kor/","image":["https://hwan-h-heo.github.io/blogs/posts/250809_gwn/assets/image.png"],"author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"publisher":{"@type":"Person","name":"Hwan Heo"},"datePublished":"2025-08-09","dateModified":"2025-08-09","inLanguage":"ko"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Generalized Winding Number","description":"불완전하거나 열린 mesh에서도 Generalized Winding Number로 inside/outside를 판별하고 견고한 SDF를 계산하는 방법을 살펴보기","url":"https://hwan-h-heo.github.io/blogs/posts/generalized-winding-number-kor/","mainEntityOfPage":"https://hwan-h-heo.github.io/blogs/posts/generalized-winding-number-kor/","image":["https://hwan-h-heo.github.io/blogs/posts/250809_gwn/assets/image.png"],"author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"publisher":{"@type":"Person","name":"Hwan Heo"},"datePublished":"2025-08-09","dateModified":"2025-08-09","inLanguage":"ko"}</script>
 
     <title>Generalized Winding Number (Korean) | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css?v=c4319681dd" rel="stylesheet" />
+    <link href="/blogs/css/blog.css?v=48f73e3499" rel="stylesheet" />
     <link href="/blogs/css/sidebar.css?v=975e92b635" rel="stylesheet" />
     <link href="/css/sidebar-nav.css?v=17f2552cf5" rel="stylesheet" />
-    <link href="/blogs/css/typography.css?v=5e2acfdea5" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=8ab8293a7c" rel="stylesheet" />
     <link href="/blogs/css/post.css?v=efef9e6e9b" rel="stylesheet" />
     <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
     <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
@@ -143,7 +143,10 @@
                             <div class="post-hero-series">
                                 <span class="post-hero-series-label">Series</span>
                                 <span class="post-hero-series-separator" aria-hidden="true">/</span>
-                                <a href="/blogs/series/graphics/">Computer Graphics</a>
+                                <a href="/blogs/series/graphics/">
+                                    <span class="post-hero-series-name">Computer Graphics</span>
+                                    <span class="post-hero-series-arrow" aria-hidden="true">→</span>
+                                </a>
                             </div>
                             <h1>Generalized Winding Number</h1>
                         </div>
@@ -158,21 +161,25 @@
                     <div class="post-reading-column post-hero-column post-intro-column">
                         <div class="post-intro-layout">
                             <div class="post-intro-copy">
-                                <p class="post-intro-deck">불완전하거나 열린 mesh에서도 Generalized Winding Number로 inside/outside를 판별하고 견고한 SDF를 계산하는 방법을 살펴본다.</p>
-                                <div class="post-intro-topics" aria-label="주제"><div class="post-tags"><a class="post-tag" href="/blogs/tags/graphics/">Graphics</a></div></div>
+                                <p class="post-intro-deck">불완전하거나 열린 mesh에서도 Generalized Winding Number로 inside/outside를 판별하고 견고한 SDF를 계산하는 방법을 살펴보기</p>
+                                <div class="post-intro-topics" aria-label="주제">
+                                    <span class="post-intro-topics-label">Topics</span>
+                                    <span class="post-intro-topics-separator" aria-hidden="true">/</span>
+                                    <div class="post-tags"><a class="post-tag" href="/blogs/tags/graphics/">Graphics</a></div>
+                                </div>
                             </div>
                             <aside class="post-article-info" aria-label="글 정보">
                                 <ul>
                                     <li data-post-detail="author">
-                                        <strong>작성자</strong>
+                                        <strong>Author</strong>
                                         <span>Hwan Heo</span>
                                     </li>
                                     <li data-post-detail="published">
-                                        <strong>발행</strong>
+                                        <strong>Published</strong>
                                         <time datetime="2025-08-09">August 9, 2025</time>
                                     </li>
                                     <li data-post-detail="reading">
-                                        <strong>읽는 시간</strong>
+                                        <strong>Reading</strong>
                                         <span class="post-detail-reading">9 min read</span>
                                     </li>
                                 </ul>
@@ -207,9 +214,9 @@
 <h2 id="toc-heading-1">Introduction</h2>
 <p>Graphics 에서 Signed Distance Field (SDF) 를 계산하는 것은 애니메이션, 충돌 처리, 물리학적 시뮬레이션 등을 위해 필수적이다. 
 SDF 는 그 이름과 같이, &#39;부호를 가진 거리 함수&#39; 인데, <em>어떤 점으로부터 물체까지의 가장 가까운 거리</em> 에, 물체의 외부라면 positive, 내부이면 negative 의 값을 내뱉는 함수이다. </p>
-<figure id="figure-2" >
+<figure id="figure-2"  class="post-media post-media--editorial post-media--narrow" style="--post-figure-media-width: 70%;">
   <img src='/blogs/posts/250809_gwn/assets/image-3.png' alt="Generalized Winding Number — Introduction" width='70%' loading="lazy" decoding="async">
-  <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Signed Distance Field</figcaption>
+  <figcaption><span class="post-figure-index">FIG. 01</span><span class="post-figure-caption">Signed Distance Field</span></figcaption>
 </figure>
 
 <p>이는 &#39;Eikonal Equation&#39; 이라는 non-trival PDE problem 을 풀어야 정확히 구할 수 있지만, 모든 공간에 대해서 해당 방정식의 해를 정확하게 구하는 것은 계산적으로 매우 어려운 일이기 때문에, 보통은 구하기 쉬운 &#39;거리&#39; 를 먼저 계산한 뒤 &#39;내부 vs. 외부&#39; 만을 판별하여 부호를 붙인다. </p>
@@ -217,9 +224,9 @@ SDF 는 그 이름과 같이, &#39;부호를 가진 거리 함수&#39; 인데, <
 <code>flood fill</code> 알고리즘을 이용하여 내외부를 결정짓는 방법도 있지만, 이는 mesh 에 있는 hole 이나 self intersction 등을 고치지는 못한다. </p>
 <p>이 글에서는 SDF 를 우아하게 정의하고, broken mesh 의 hole 이나 self intersction 등의 문제를 repair 하는 능력을 갖춘 <em><strong>Generalized Winding Number</strong></em> 를 알아볼 것이다.  </p>
 <h2 id="toc-heading-2">What is Winding Number?</h2>
-<figure id="figure-1" >
+<figure id="figure-1"  class="post-media post-media--editorial post-media--narrow" style="--post-figure-media-width: 70%;">
   <img src='/blogs/posts/250809_gwn/assets/image.png' alt="Generalized Winding Number — What is Winding Number?" width='70%' loading="lazy" decoding="async">
-  <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Winding Number</figcaption>
+  <figcaption><span class="post-figure-index">FIG. 02</span><span class="post-figure-caption">Winding Number</span></figcaption>
 </figure>
 
 <p>Winding Number 는 특정 점을 기준으로 <em><strong>닫힌 곡선이 얼마나 많이 감겨 있는지</strong></em> 를 나타내는 정수 값이다. 이 개념은 복소해석학, 대수적 위상수학 등 다양한 수학 분야 뿐 아니라 컴퓨터 그래픽스에서도 중요하게 다루어진다. </p>
@@ -336,9 +343,9 @@ $$</p>
 <h2 id="toc-heading-8">GWN Field for SDF</h2>
 <h3 id="toc-heading-9">SDF from GWN</h3>
 <p>GWN의 가장 큰 장점은 <strong>Robustness</strong> 이다. 전통적인 방법들은 메시가 &quot;깔끔할 것&quot;(e.g., no holes, no Self-intersections, normal-consistent, watertight manifold) 을 요구하지만, GWN 은 이러한 가정이 깨진 <strong>Broken Mesh</strong> 에서도 의미 있는 값을 계산할 수 있다.</p>
-<figure id="figure-2" >
+<figure id="figure-2"  class="post-media post-media--editorial post-media--narrow" style="--post-figure-media-width: 70%;">
   <img src='/blogs/posts/250809_gwn/assets/image-5.png' alt="Generalized Winding Number — SDF from GWN" width='70%' loading="lazy" decoding="async">
-  <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> GWN + UDF from Polygonal Mesh </figcaption>
+  <figcaption><span class="post-figure-index">FIG. 03</span><span class="post-figure-caption">GWN + UDF from Polygonal Mesh</span></figcaption>
 </figure>
 
 <p>앞서 살펴봤듯이 GWN $w(p)$ 는 mesh surface 에서 0.5 가 되므로, 
@@ -378,9 +385,9 @@ $$</p>
 </ul>
 </li>
 </ul>
-<figure id="figure-2" >
+<figure id="figure-2"  class="post-media post-media--editorial post-media--narrow" style="--post-figure-media-width: 70%;">
   <img src='/blogs/posts/250809_gwn/assets/image-4.png' alt="Generalized Winding Number — Why GWN?" width='70%' loading="lazy" decoding="async">
-  <figcaption style='text-align: center; font-size: 15px;'><strong>Figure: </strong> Mesh Repair with GWN</figcaption>
+  <figcaption><span class="post-figure-index">FIG. 04</span><span class="post-figure-caption">Mesh Repair with GWN</span></figcaption>
 </figure>
     
     
@@ -472,11 +479,9 @@ $$</p>
     {
       "id": "260727_sparse_3d",
       "title_eng": "What the Compiler Missed in Sparse 3D Inference",
-      "title_kor": "컴파일러가 놓친 Sparse 3D Forward 최적화",
+      "title_kor": "컴파일러가 놓치는 Sparse 3D Generation Inference 최적화",
       "subtitle_eng": "Why generic compiler paths underperform on dynamic sparse 3D generative models—and how null-context attention removal and model-aware CUDA kernels cut inference latency.",
-      "subtitle_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
-      "description_eng": "Why generic compiler paths underperform on dynamic sparse 3D generative models—and how null-context attention removal and model-aware CUDA kernels cut inference latency.",
-      "description_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
+      "subtitle_kor": "torch.compile과 TensorRT가 실패하는 Sparse 3D Generation model에서 Null-Context Attention 제거와 custom CUDA Fusion으로 forward latency 줄이는 방법",
       "tags": [
         "3D Generation",
         "Generative AI",
@@ -498,10 +503,8 @@ $$</p>
       "id": "260115_Varco3D",
       "title_eng": "VARCO 3D: A Year in Review — 2025 Retrospective",
       "title_kor": "3D 생성형 AI 서비스; Varco3D 개발기",
-      "subtitle_eng": "How a fast-follower team tracked the evolution of 3D AI to build an in-house generative 3D service—from VecSet VAEs to voxel-conditioned 3D DiTs.",
-      "subtitle_kor": "빠르게 발전하는 3D AI를 추적하며 인하우스 3D 생성형 AI 서비스를 구축해 간 과정",
-      "description_eng": "How a fast-follower team tracked the evolution of 3D AI to build an in-house generative 3D service—from VecSet VAEs to voxel-conditioned 3D DiTs.",
-      "description_kor": "빠르게 발전하는 3D AI를 추적하며 인하우스 3D 생성형 AI 서비스를 구축해 간 과정",
+      "subtitle_eng": "How a fast-follower team tracked the evolution of 3D AI to build an in-house generative 3D service—from VecSet VAEs to Voxel-conditioned 3D DiTs.",
+      "subtitle_kor": "3D VecSet VAEs 에서부터 Hunyuan3D 3.0의 Voxel-conditioned 3D DiTs까지 추적하며 자체 3D 생성형 AI 서비스를 구축해 간 과정",
       "tags": [
         "3D Generation",
         "Generative AI"
@@ -522,10 +525,8 @@ $$</p>
       "id": "250823_sdf",
       "title_eng": "SDF and Eikonal Equation",
       "title_kor": "SDF 와 Eikonal Equation 의 관계는?",
-      "subtitle_eng": "A rigorous derivation of why a signed distance field satisfies the Eikonal equation, from its geometric definition to gradient bounds.",
-      "subtitle_kor": "Signed distance field의 기하학적 정의에서 출발해, gradient의 크기가 왜 Eikonal equation을 만족하는지 엄밀하게 유도한다.",
-      "description_eng": "Why signed distance field induces eikonal equation",
-      "description_kor": "Eikonal equation 의 해가 왜 signed distance field 인지 알아보자",
+      "subtitle_eng": "A rigorous derivation of why a signed distance field satisfies the Eikonal equation, from its geometric definition to gradient bounds",
+      "subtitle_kor": "Signed distance field의 기하학적 정의에서 출발해, gradient의 크기가 왜 Eikonal equation을 만족하는지 엄밀하게 유도해보기",
       "tags": [
         "Graphics"
       ],
@@ -546,9 +547,7 @@ $$</p>
       "title_eng": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
       "title_kor": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
       "subtitle_eng": "Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow",
-      "subtitle_kor": "Rectified Flow의 생성 경로가 왜 직선으로 수렴하는지, 물리학과 기하학, optimal transport의 관점에서 살펴본다.",
-      "description_eng": "Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow",
-      "description_kor": "Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구",
+      "subtitle_kor": "Rectified Flow의 생성 경로가 왜 직선으로 수렴하는지, 물리학과 기하학, optimal transport의 관점에서 살펴보기",
       "tags": [
         "3D Generation",
         "Generative AI"
@@ -569,10 +568,8 @@ $$</p>
       "id": "250809_gwn",
       "title_eng": "Generalized Winding Number",
       "title_kor": "Generalized Winding Number",
-      "subtitle_eng": "How Generalized Winding Numbers turn imperfect meshes into robust inside–outside tests for signed distance field construction.",
-      "subtitle_kor": "불완전하거나 열린 mesh에서도 Generalized Winding Number로 inside/outside를 판별하고 견고한 SDF를 계산하는 방법을 살펴본다.",
-      "description_eng": "How to make a robust SDF using GWN from Mesh",
-      "description_kor": "Mesh 에서 GWN 을 이용하여 견고한 SDF 를 계산하는 방법",
+      "subtitle_eng": "How Generalized Winding Numbers turn imperfect meshes into robust inside–outside tests for signed distance field construction",
+      "subtitle_kor": "불완전하거나 열린 mesh에서도 Generalized Winding Number로 inside/outside를 판별하고 견고한 SDF를 계산하는 방법을 살펴보기",
       "tags": [
         "Graphics"
       ],
@@ -592,10 +589,8 @@ $$</p>
       "id": "250710_building_large_3d_2",
       "title_eng": "Building Large 3D Generative Model (2) VAE and DiT Deep Dive",
       "title_kor": "Large 3D Generative Model 구축하기 (2) VAE and DiT 분석",
-      "subtitle_eng": "Comparing vecset and sparse-voxel VAE–DiT architectures, from 3D representation and compression to shape-generation design.",
-      "subtitle_kor": "Vecset과 sparse voxel이 3D shape을 표현하는 방식부터 VAE와 DiT 구조, 생성 모델 설계의 차이까지 비교한다.",
-      "description_eng": "VAE and DiT Architecture for Vecset vs. Sparse-Voxel",
-      "description_kor": "VAE and DiT 구조 분석 for Vecset vs. Sparse-Voxel",
+      "subtitle_eng": "Comparing vecset and sparse-voxel VAE–DiT architectures, from 3D representation and compression to shape-generation design",
+      "subtitle_kor": "Vecset과 sparse voxel이 3D shape을 표현하는 방식부터 VAE와 DiT 구조, 생성 모델 설계의 차이까지 비교해보기",
       "tags": [
         "3D Generation",
         "Generative AI"
@@ -616,10 +611,8 @@ $$</p>
       "id": "250702_building_large_3d_1",
       "title_eng": "Building Large 3D Generative Model (1) Data pre-processing",
       "title_kor": "Large 3D Generative Model 구축하기 (1) 데이터 전처리",
-      "subtitle_eng": "Preparing training-ready 3D data through watertight mesh conversion, surface sampling, and salient-edge-aware preprocessing.",
-      "subtitle_kor": "대규모 3D 생성 모델의 학습 데이터를 위해 watertight mesh 변환, surface sampling, salient edge 추출 과정을 정리한다.",
-      "description_eng": "Watertight Mesh Conversion and Salient Edge Sampling",
-      "description_kor": "Watertight Mesh 변환과 Salient Edge Sampling",
+      "subtitle_eng": "Preparing training-ready 3D data through watertight mesh conversion, surface sampling, and salient-edge-aware preprocessing",
+      "subtitle_kor": "대규모 3D 생성 모델의 학습 데이터를 위해 watertight mesh 변환, surface sampling, salient edge 추출 과정을 정리해보기",
       "tags": [
         "3D Generation",
         "Generative AI"
@@ -640,10 +633,8 @@ $$</p>
       "id": "250310_model_viewer",
       "title_eng": "3D Model Viewer in Web",
       "title_kor": "커스텀 3D 웹뷰어 만들기",
-      "subtitle_eng": "Comparing Google model-viewer with a custom Three.js pipeline for embedding, controlling, and presenting 3D assets on the web.",
-      "subtitle_kor": "Google model-viewer와 직접 만든 Three.js viewer를 비교하며, 웹에서 3D asset을 안정적으로 보여주는 방법을 정리한다.",
-      "description_eng": "Custom Threejs 3D Model Viewer",
-      "description_kor": "커스텀 Three.js 3D 모델 뷰어",
+      "subtitle_eng": "Comparing Google model-viewer with a custom Three.js pipeline for embedding, controlling, and presenting 3D assets on the web",
+      "subtitle_kor": "Google model-viewer와 직접 만든 Three.js viewer를 비교하며, 웹에서 3D asset을 안정적으로 보여주는 방법을 정리해보기",
       "tags": [
         "Web 3D",
         "Three.js"
@@ -664,10 +655,8 @@ $$</p>
       "id": "250302_3d_latent_diffusion",
       "title_eng": "An Era of 3D Generation",
       "title_kor": "3D 생성 모델의 시대",
-      "subtitle_eng": "Tracing 3D latent diffusion from ShapeVAE to TRELLIS and Hunyuan3D, and comparing how modern systems represent and generate shape.",
-      "subtitle_kor": "ShapeVAE에서 TRELLIS와 Hunyuan3D까지, 3D latent diffusion이 shape을 표현하고 생성하는 방식을 비교한다.",
-      "description_eng": "From ShapeVAE to Trellis and Hunyuan3D",
-      "description_kor": "ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것",
+      "subtitle_eng": "Tracing 3D latent diffusion from ShapeVAE to TRELLIS and Hunyuan3D, and comparing how modern systems represent and generate shape",
+      "subtitle_kor": "ShapeVAE에서 TRELLIS와 Hunyuan3D까지, 3D latent diffusion이 shape을 표현하고 생성하는 방식 톺아보기",
       "tags": [
         "3D Generation",
         "Generative AI"
@@ -689,9 +678,7 @@ $$</p>
       "title_eng": "Neural Rendering Beyond Photography",
       "title_kor": "X-Ray 와 NeRF",
       "subtitle_eng": "Applying NeRF and Gaussian Splatting beyond photography to X-ray tomography, plus a lightweight viewer workflow built with Viser.",
-      "subtitle_kor": "NeRF와 Gaussian Splatting을 X-ray tomography에 적용하는 원리를 살펴보고, Viser 기반 viewer 제작 팁까지 정리한다.",
-      "description_eng": "NeRF for Tomography & Tip for NeRF Viewer",
-      "description_kor": "의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁",
+      "subtitle_kor": "NeRF와 Gaussian Splatting을 X-ray tomography에 적용하는 원리를 살펴보고, Viser 기반 viewer 제작 팁까지 살펴보기",
       "tags": [
         "Neural Rendering",
         "Gaussian Splatting"
@@ -712,10 +699,8 @@ $$</p>
       "id": "240917_3djs",
       "title_eng": "Add Gaussian Splatting to Your Website",
       "title_kor": "웹사이트에 3D GS 삽입하기",
-      "subtitle_eng": "A practical Three.js guide to embedding an interactive Gaussian Splatting scene in a website, with no web-graphics background required.",
-      "subtitle_kor": "Three.js를 이용해 웹사이트에 interactive Gaussian Splatting scene을 삽입하고 제어하는 과정을 단계별로 정리한다.",
-      "description_eng": "Tutorial for GS Scene w/ Three-js",
-      "description_kor": "Three-js 이용한 custom GS scene 웹뷰어 tutorial",
+      "subtitle_eng": "A practical Three.js guide to embedding an interactive Gaussian Splatting scene in a website, with no web-graphics background required",
+      "subtitle_kor": "Three.js를 이용해 웹사이트에 interactive Gaussian Splatting scene을 삽입하고 제어해보기",
       "tags": [
         "Web 3D",
         "Three.js"
@@ -737,9 +722,7 @@ $$</p>
       "title_eng": "Don't Rasterize, But Ray Trace 3D Gaussian",
       "title_kor": "3D Gaussian Ray Tracing 톺아보기",
       "subtitle_eng": "How NVIDIA’s 3D Gaussian Ray Tracing replaces splat rasterization with differentiable ray tracing—and what that changes.",
-      "subtitle_kor": "NVIDIA의 3D Gaussian Ray Tracing이 splat rasterization을 differentiable ray tracing으로 바꾸는 방식과 장점을 분석한다.",
-      "description_eng": "In-Depth Review of 3D Gaussian Ray Tracing by NVIDIA",
-      "description_kor": "3D Gaussian Ray Tracing 분석하기",
+      "subtitle_kor": "NVIDIA의 3D Gaussian Ray Tracing이 splat rasterization을 differentiable ray tracing으로 바꾸는 방식과 장점에 대한 심층 분석",
       "tags": [
         "Neural Rendering",
         "Gaussian Splatting"
@@ -761,9 +744,7 @@ $$</p>
       "title_eng": "A Comprehensive Analysis of Gaussian Splatting Rasterization",
       "title_kor": "Gaussian Splatting Rasterization 완벽 분석",
       "subtitle_eng": "A ground-up guide to Gaussian Splatting and differentiable rasterization, tracing the mathematics through its CUDA implementation—from projection and covariance to sorting and alpha blending.",
-      "subtitle_kor": "수식과 CUDA rasterizer 코드를 직접 대응시키는 Gaussian Splatting 완전 해설",
-      "description_eng": "A ground-up guide to Gaussian Splatting and differentiable rasterization, tracing the mathematics through its CUDA implementation—from projection and covariance to sorting and alpha blending.",
-      "description_kor": "수식과 CUDA rasterizer 코드를 직접 대응시키는 Gaussian Splatting 완전 해설",
+      "subtitle_kor": "수식과 CUDA rasterizer 코드를 직접 대응시키며 따라가보는 Gaussian Splatting 완전 해설",
       "tags": [
         "Neural Rendering",
         "Gaussian Splatting"
@@ -784,8 +765,6 @@ $$</p>
       "id": "240721_sfm",
       "title_eng": "Radiance Fields from Deep-based Structure-from-Motion",
       "subtitle_eng": "Comparing VGGSfM and MASt3R as learned Structure-from-Motion pipelines for camera estimation and radiance-field reconstruction.",
-      "description_eng": "Comparison of VGGSfM & MAsT3R",
-      "description_kor": "Comparison of VGGSfM & MAsT3R",
       "tags": [
         "Neural Rendering",
         "Gaussian Splatting"
@@ -805,10 +784,8 @@ $$</p>
       "id": "240602_2dgs",
       "title_eng": "Under the 3D: Geometrically Accurate 2D Gaussian Splatting",
       "title_kor": "2D Gaussian Splatting 톺아보기",
-      "subtitle_eng": "How 2D Gaussian Splatting replaces volumetric blobs with oriented disks to improve surface geometry and mesh reconstruction.",
-      "subtitle_kor": "2D Gaussian Splatting이 volumetric blob 대신 oriented disk를 사용해 surface geometry와 mesh reconstruction을 개선하는 원리를 살펴본다.",
-      "description_eng": "Understanding 2D GS's Algorithm",
-      "description_kor": "3D GS 의 mesh recon 어려움과 이를 해결한 2D GS",
+      "subtitle_eng": "How 2D Gaussian Splatting replaces volumetric blobs with oriented disks to improve surface geometry and mesh reconstruction",
+      "subtitle_kor": "2D Gaussian Splatting이 volumetric blob 대신 oriented disk를 사용해 surface geometry와 mesh reconstruction을 개선하는 원리를 살펴보기",
       "tags": [
         "Neural Rendering",
         "Gaussian Splatting"
@@ -831,8 +808,6 @@ $$</p>
       "title_kor": "Diffusion 으로 추정한 Depth 진짜 좋나요?",
       "subtitle_eng": "Evaluating diffusion-estimated depth by turning Marigold predictions into textured meshes and inspecting their geometric consistency.",
       "subtitle_kor": "Diffusion 으로 추정한 Depth Map 을 이용해 Textured Mesh 만들어보기 (feat. Marigold)",
-      "description_eng": "Making Mesh from Estimated Depth Map by Diffusion",
-      "description_kor": "Diffusion 으로 추정한 Depth Map 을 이용해 Textured Mesh 만들어보기 (feat. Marigold)",
       "tags": [
         "3D Generation",
         "Generative AI"
@@ -853,10 +828,8 @@ $$</p>
       "id": "240226_sora",
       "title_eng": "Can Sora Understand 3D?",
       "title_kor": "Sora 가 상상하는 3D World",
-      "subtitle_eng": "Testing whether video generation models encode enough 3D consistency to reconstruct radiance fields from their synthesized views.",
+      "subtitle_eng": "Testing whether video generation models encode enough 3D consistency to reconstruct radiance fields from their synthesized views",
       "subtitle_kor": "Video Generative AI 로부터 NeRF reconstruction 해보기",
-      "description_eng": "Radiance Fields Reconstruction from Video Generative AI",
-      "description_kor": "Video Generative AI 로부터 NeRF reconstruction 해보기",
       "tags": [
         "3D Generation",
         "Generative AI"
@@ -876,10 +849,8 @@ $$</p>
       "id": "231130_nerf_in_game",
       "title_eng": "Can NeRF be used in Game?",
       "title_kor": "NeRF 를 게임 제작에서 이용할 수 있을까?",
-      "subtitle_eng": "Examining the quality, rendering, and production constraints that limit NeRF in games—and the workarounds available today.",
-      "subtitle_kor": "NeRF 의 단점을 살펴보자",
-      "description_eng": "Explore Limitations of NeRF",
-      "description_kor": "NeRF 의 단점을 살펴보자",
+      "subtitle_eng": "Examining the quality, rendering, and production constraints that limit NeRF in games—and the workarounds available today",
+      "subtitle_kor": "NeRF의 단점을 통해 살펴보는 Neural Rendering 기술이 게임에 적용되기 위해 넘어야 할 과제들",
       "tags": [
         "Neural Rendering",
         "Gaussian Splatting"
@@ -899,10 +870,8 @@ $$</p>
       "id": "230202_ngp",
       "title_eng": "Instant-NGP Review & Re-Implementation",
       "title_kor": "Instant-NGP 리뷰 및 재구현",
-      "subtitle_eng": "Reviewing Instant-NGP’s multi-resolution hash encoding and rebuilding its NeRF pipeline step by step in PyTorch.",
-      "subtitle_kor": "Review of Instant-NGP and PyTorch Re-Implementation",
-      "description_eng": "Review of Instant-NGP and PyTorch Re-Implementation",
-      "description_kor": "Review of Instant-NGP and PyTorch Re-Implementation",
+      "subtitle_eng": "Reviewing Instant-NGP’s multi-resolution hash encoding and rebuilding its NeRF pipeline step by step in PyTorch",
+      "subtitle_kor": "PyTorch Re-Implementation을 통해 수식과 코드 단위로 상세 리뷰해보는 Instant-NGP",
       "tags": [
         "Neural Rendering",
         "Gaussian Splatting"
@@ -924,8 +893,6 @@ $$</p>
       "title_kor": "Position Encoding 이 NeRF 에서 필수적인 이유",
       "subtitle_eng": "Review of Fourier Features Let Networks Learn High-Frequency Functions",
       "subtitle_kor": "Fourier Features Let Networks Learn High-Frequency Functions 리뷰",
-      "description_eng": "Review of Fourier Features Let Networks Learn High-Frequency Functions",
-      "description_kor": "Fourier Features Let Networks Learn High-Frequency Functions 리뷰",
       "tags": [
         "Neural Rendering",
         "Gaussian Splatting"
@@ -946,9 +913,7 @@ $$</p>
       "title_eng": "Change of Basis",
       "title_kor": "Change of Basis",
       "subtitle_eng": "Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)",
-      "subtitle_kor": "대각화와 고윳값, SVD와 PCA를 통해 좌표계 변환이 복잡한 선형대수 문제를 어떻게 단순화하는지 살펴본다.",
-      "description_eng": "Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)",
-      "description_kor": "대각화와 고윳값, 특이값 분해, Principal Component Analysis (PCA)",
+      "subtitle_kor": "대각화와 고윳값, SVD와 PCA를 통해 좌표계 변환이 복잡한 선형대수 문제를 어떻게 단순화하는지 살펴보기",
       "tags": [
         "Linear Algebra"
       ],
@@ -968,10 +933,8 @@ $$</p>
       "id": "210909_lin_alg_1",
       "title_eng": "Linear System",
       "title_kor": "Linear System",
-      "subtitle_eng": "Building intuition for linear systems and transformations through matrices, basis vectors, and geometric mappings.",
-      "subtitle_kor": "행렬과 기저벡터의 관점에서 선형시스템과 선형변환이 공간을 어떻게 바꾸는지 직관적으로 살펴본다.",
-      "description_eng": "Linear System, Linear Transformation, and its Intuitions",
-      "description_kor": "선형시스템과 선형변환, 이에 대한 직관들",
+      "subtitle_eng": "Building intuition for linear systems and transformations through matrices, basis vectors, and geometric mappings",
+      "subtitle_kor": "행렬과 기저벡터의 관점에서 선형시스템과 선형변환이 공간을 어떻게 바꾸는지 직관적으로 살펴보기",
       "tags": [
         "Linear Algebra"
       ],
@@ -993,8 +956,6 @@ $$</p>
       "title_kor": "3D Stereo Vision and Epipolar Geometry",
       "subtitle_eng": "From camera projection to stereo correspondence, deriving the epipolar geometry used to recover 3D structure from two views.",
       "subtitle_kor": "Camera Projection, Stereo, and Epipolar Geometry",
-      "description_eng": "Camera Projection, Stereo, and Epipolar Geometry",
-      "description_kor": "Camera Projection, Stereo, and Epipolar Geometry",
       "tags": [
         "Computer Vision"
       ],
@@ -1015,8 +976,6 @@ $$</p>
       "title_kor": "Homography and Image Alignment",
       "subtitle_eng": "How image transformations, homographies, feature correspondences, and alignment connect in practical computer vision pipelines.",
       "subtitle_kor": "Image Transformation, Homography, and Correspondence Matching",
-      "description_eng": "Image Transformation, Homography, and Correspondence Matching",
-      "description_kor": "Image Transformation, Homography, and Correspondence Matching",
       "tags": [
         "Computer Vision"
       ],
@@ -1037,8 +996,6 @@ $$</p>
       "title_kor": "Feature Extraction and Detection",
       "subtitle_eng": "A practical tour of image gradients, Sobel and LoG filters, and the feature detection principles built on top of them.",
       "subtitle_kor": "Image Gradient, Sobel Filter, LoG, and Detection",
-      "description_eng": "Image Gradient, Sobel Filter, LoG, and Detection",
-      "description_kor": "Image Gradient, Sobel Filter, LoG, and Detection",
       "tags": [
         "Computer Vision"
       ],
@@ -1059,8 +1016,6 @@ $$</p>
       "title_kor": "Image Filter and Morphology",
       "subtitle_eng": "A practical introduction to spatial image filters and morphology, including erosion, dilation, opening, and closing.",
       "subtitle_kor": "다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여",
-      "description_eng": "Various Image Filters and Morphology (Erosion & Dilation)",
-      "description_kor": "다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여",
       "tags": [
         "Computer Vision"
       ],
@@ -1077,6 +1032,10 @@ $$</p>
     }
   ],
   "series": {
+    "cuda": {
+      "eng": "CUDA",
+      "kor": "CUDA"
+    },
     "nerf-and-gs": {
       "eng": "Radiance Fields & Gaussian Splatting",
       "kor": "Radiance Fields & Gaussian Splatting"

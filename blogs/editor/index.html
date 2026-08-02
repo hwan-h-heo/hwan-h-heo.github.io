@@ -7,8 +7,8 @@
     <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
     <link rel="stylesheet" href="/assets/css/site-icons.css?v=32957b8b04">
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="../css/blog.css?v=c4319681dd" rel="stylesheet" />
-    <link href="../css/typography.css?v=5e2acfdea5" rel="stylesheet" />
+    <link href="../css/blog.css?v=48f73e3499" rel="stylesheet" />
+    <link href="../css/typography.css?v=8ab8293a7c" rel="stylesheet" />
     <link href="../css/post.css?v=efef9e6e9b" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
@@ -46,6 +46,23 @@
                             <strong>Ready.</strong>
                             <p>Fill in metadata, write content, then publish.</p>
                         </div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panel-header">
+                            <h2>Blog Home</h2>
+                            <span class="pill">Curated</span>
+                        </div>
+                        <p class="panel-copy">
+                            Choose the article that appears in the Featured position independently of publication date.
+                        </p>
+                        <label class="field">
+                            <span>Featured post</span>
+                            <div class="inline-field">
+                                <select id="blog-home-featured-post"></select>
+                                <button id="save-blog-home-button" class="button button-secondary" type="button">Save featured</button>
+                            </div>
+                        </label>
                     </section>
 
                     <section class="panel">
@@ -99,7 +116,7 @@
                         </label>
                         <label class="field">
                             <span>English subtitle</span>
-                            <input id="subtitle-eng" type="text" placeholder="Optional subtitle" />
+                            <textarea id="subtitle-eng" rows="3" placeholder="Article subtitle used across previews, search, and social metadata"></textarea>
                         </label>
                         <div id="korean-meta-fields" class="language-block is-hidden">
                             <label class="field">
@@ -108,7 +125,7 @@
                             </label>
                             <label class="field">
                                 <span>Korean subtitle</span>
-                                <input id="subtitle-kor" type="text" placeholder="Optional subtitle" />
+                                <textarea id="subtitle-kor" rows="3" placeholder="미리보기·검색·공유 메타데이터에 사용할 부제"></textarea>
                             </label>
                         </div>
                     </section>
@@ -142,16 +159,6 @@
                             <span>Cover image</span>
                             <input id="post-cover" type="text" placeholder="/blogs/posts/250101_new_post/assets/cover.png" />
                         </label>
-                        <label class="field">
-                            <span>English description</span>
-                            <textarea id="description-eng" rows="3" placeholder="Short search and social preview description"></textarea>
-                        </label>
-                        <div id="korean-publishing-fields" class="language-block is-hidden">
-                            <label class="field">
-                                <span>Korean description</span>
-                                <textarea id="description-kor" rows="3" placeholder="검색 및 공유용 짧은 설명"></textarea>
-                            </label>
-                        </div>
                     </section>
 
                     <section class="panel">
@@ -423,6 +430,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
     <script src="../js/markdown-with-math.js?v=d91c966c00"></script>
-    <script src="./editor.js?v=f17ef79a2f"></script>
+    <script src="./editor.js?v=3bba1c4a19"></script>
 </body>
 </html>

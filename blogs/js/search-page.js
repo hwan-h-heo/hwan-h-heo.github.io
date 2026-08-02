@@ -13,10 +13,9 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     const copy = {
         eng: {
-            kicker: 'Search',
+            kicker: 'Search Index',
             title: 'Search the archive',
             intro: 'Find research notes by title, topic, tag, or anything mentioned in the article.',
-            eyebrow: 'Archive index',
             results: 'Results',
             searching: 'Searching the archive...',
             prompt: 'Enter a search term to browse the archive.',
@@ -25,10 +24,9 @@ document.addEventListener('DOMContentLoaded', async function() {
             resultsCount: 'results'
         },
         kor: {
-            kicker: '검색',
+            kicker: 'Search Index',
             title: '아카이브 검색',
             intro: '제목, 주제, 태그와 본문에 포함된 내용으로 글을 찾아보세요.',
-            eyebrow: '아카이브 인덱스',
             results: '검색 결과',
             searching: '아카이브를 검색하고 있습니다...',
             prompt: '검색어를 입력해 글을 찾아보세요.',
@@ -100,8 +98,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 }
                 const metadataMatch = [
                     post[`title_${language}`],
-                    post[`subtitle_${language}`],
-                    post[`description_${language}`]
+                    post[`subtitle_${language}`]
                 ].some((value) => String(value || '').toLowerCase().includes(searchTerm));
                 const tagMatch = (post.tags || []).some((tag) => tag.toLowerCase().includes(searchTerm));
                 const contentMatch = postContentCache[post.id]?.[language]?.includes(searchTerm);
@@ -127,9 +124,11 @@ document.addEventListener('DOMContentLoaded', async function() {
             return;
         }
 
+        const recentArchiveYearCutoff = new Date().getFullYear() - 1;
+        let oldArchiveStarted = false;
         resultsContainer.innerHTML = filteredPosts.map((post) => {
             const title = window.siteDataClient.getPostTitle(post, language);
-            const description = window.siteDataClient.getPostDescription(post, language);
+            const subtitle = window.siteDataClient.getPostSubtitle(post, language);
             const url = window.siteDataClient.getPostUrl(post, language);
             const seriesTitle = getSeriesTitle(post, language);
             const source = post.cover || '/assets/blog_bg.jpeg';
@@ -139,21 +138,39 @@ document.addEventListener('DOMContentLoaded', async function() {
             const animatedSource = !keepAnimated && coverMedia?.isAnimatedCover(source)
                 ? ` data-animated-src="${escapeHtml(source)}"`
                 : '';
+            const isRecent = Number(post.date.slice(0, 4)) >= recentArchiveYearCutoff;
+            const layoutClass = isRecent ? ' post-preview-media-right' : '';
+            const oldArchiveHeading = !isRecent && !oldArchiveStarted
+                ? `
+                    <div class="blog-home-era-break">
+                        <h3>
+                            <span class="blog-home-era-index" aria-hidden="true">02</span>
+                            <span>Old Archive</span>
+                        </h3>
+                        <span class="blog-home-era-rule" aria-hidden="true"></span>
+                    </div>`
+                : '';
+
+            if (!isRecent) {
+                oldArchiveStarted = true;
+            }
 
             return `
-                <article class="post-preview" data-post-id="${escapeHtml(post.id)}" data-post-category="${escapeHtml(post.category)}">
+                ${oldArchiveHeading}
+                <article class="post-preview${layoutClass}" data-post-id="${escapeHtml(post.id)}" data-post-category="${escapeHtml(post.category)}">
                     <div class="post-card-link">
                         <a href="${escapeHtml(url)}" class="post-card-cover" aria-label="Read ${escapeHtml(title)}">
                             <img src="${escapeHtml(preview)}" data-blog-cover data-preview-src="${escapeHtml(preview)}"${autoplaySource}${animatedSource} alt="${escapeHtml(title)} cover image" loading="lazy" decoding="async">
                         </a>
                         <div class="post-card-body">
-                            <div class="post-card-eyebrow">
-                                <span>${escapeHtml(seriesTitle)}</span>
-                                <span aria-hidden="true">/</span>
-                                <time datetime="${escapeHtml(post.date)}">${escapeHtml(formatDate(post.date, language))}</time>
+                            <div class="post-card-eyebrow post-series-context">
+                                <span class="post-series-context-label">SERIES</span>
+                                <span class="post-series-context-separator" aria-hidden="true">/</span>
+                                <span class="post-series-context-value">${escapeHtml(seriesTitle)}</span>
                             </div>
-                            <h3 class="post-title"><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h3>
-                            ${description ? `<p class="post-subtitle">${escapeHtml(description)}</p>` : ''}
+                            <h3 class="post-title" lang="${language === 'kor' ? 'ko' : 'en'}"><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h3>
+                            ${subtitle ? `<p class="post-subtitle" lang="${language === 'kor' ? 'ko' : 'en'}">${escapeHtml(subtitle)}</p>` : ''}
+                            <p class="post-meta"><time datetime="${escapeHtml(post.date)}">${escapeHtml(formatDate(post.date, language))}</time></p>
                             ${post.tags?.length ? `<div class="post-tag-row">${renderTags(post)}</div>` : ''}
                         </div>
                     </div>

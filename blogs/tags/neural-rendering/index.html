@@ -19,9 +19,9 @@
         <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"Neural Rendering Articles","description":"Technical articles tagged Neural Rendering, covering implementation details and research notes by Hwan Heo.","url":"https://hwan-h-heo.github.io/blogs/tags/neural-rendering/","isPartOf":{"@type":"Blog","name":"Hwan Heo's Blog","url":"https://hwan-h-heo.github.io/blogs/"}}</script>
         <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        <link href="/blogs/css/blog.css?v=c4319681dd" rel="stylesheet" />
+        <link href="/blogs/css/blog.css?v=48f73e3499" rel="stylesheet" />
         <link href="/blogs/css/sidebar.css?v=975e92b635" rel="stylesheet" />
-        <link href="/blogs/css/typography.css?v=5e2acfdea5" rel="stylesheet" />
+        <link href="/blogs/css/typography.css?v=8ab8293a7c" rel="stylesheet" />
         <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
         <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
         <script>
@@ -42,7 +42,7 @@
                     <span>Blog</span>
                 </a>
                 <div class="blog-home-toolbar-actions">
-                    <form id="blog-home-search-form" class="blog-home-search" role="search">
+                    <form id="blog-home-search-form" class="blog-home-search" role="search" data-collapsible-search>
                         <label class="visually-hidden" for="blog-home-search-input">Search posts</label>
                         <input type="text" id="blog-home-search-input" placeholder="Search...">
                         <button type="submit" aria-label="Search">
@@ -56,42 +56,52 @@
                 </div>
             </nav>
 
-            <header class="masthead blog-home-hero" style="background-image: url('/assets/image_fx_.webp'); background-position: center 34%; background-size: cover;">
+            <header class="masthead blog-home-hero blog-editorial-utility-hero">
                 <div class="blog-shell blog-hero-shell">
-                    <div class="blog-home-hero-grid">
-                        <div class="blog-home-hero-copy">
-                            <span class="blog-home-kicker">Archive</span>
-                            <h1>Neural Rendering Articles</h1>
-                            <p>Technical articles tagged Neural Rendering, covering implementation details and research notes by Hwan Heo.</p>
+                    <div class="blog-editorial-utility-copy">
+                        <div class="blog-editorial-imprint">
+                            <div class="blog-editorial-brandline" lang="en">
+                                <span class="blog-editorial-index">00</span>
+                                <span class="blog-editorial-separator" aria-hidden="true">/</span>
+                                <span class="blog-home-kicker">Topic Index</span>
+                            </div>
+                            <span class="blog-editorial-edition" lang="en">Hwan's Blog</span>
                         </div>
+                        <h1>Neural Rendering Articles</h1>
+                        <p>Technical articles tagged Neural Rendering, covering implementation details and research notes by Hwan Heo.</p>
                     </div>
                 </div>
             </header>
 
             <div class="blog-shell blog-home-container">
-                <section class="blog-home-archive" aria-labelledby="archive-posts-heading">
-                    <div class="blog-home-archive-head">
-                        <div>
-                            <h2 id="archive-posts-heading">Articles</h2>
-                        </div>
+                <section class="blog-home-archive blog-editorial-archive" aria-labelledby="archive-posts-heading">
+                    <div class="blog-home-archive-head blog-editorial-section-head">
+                        <h2 id="archive-posts-heading">
+                            <span class="blog-home-archive-index" aria-hidden="true">01</span>
+                            <span>Articles</span>
+                        </h2>
+                        <span class="blog-home-archive-rule" aria-hidden="true"></span>
+                        <span class="blog-archive-count">8 articles</span>
                     </div>
                     <div class="blog-home-tab-content">
                         
-        <article class="post-preview" data-post-id="250106_tomography" data-post-category="post">
+        <article class="post-preview post-preview-media-right" data-post-id="250106_tomography" data-post-category="post">
             <div class="post-card-link">
                 <a href="/blogs/posts/neural-rendering-beyond-photography/" class="post-card-cover" aria-label="Read Neural Rendering Beyond Photography">
                     <img src="/assets/generated/blog-covers/250106_tomography.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/250106_tomography.webp" alt="Neural Rendering Beyond Photography cover image" loading="lazy" decoding="async">
                 </a>
                 <div class="post-card-body">
-                    <div class="post-card-eyebrow">
-                        <span>Radiance Fields &amp; Gaussian Splatting</span>
+                    <div class="post-card-eyebrow post-series-context">
+                        <span class="post-series-context-label">SERIES</span>
+                        <span class="post-series-context-separator" aria-hidden="true">/</span>
+                        <span class="post-series-context-value" data-post-series>Radiance Fields &amp; Gaussian Splatting</span>
                     </div>
                     <h3 class="post-title" lang="en"><a href="/blogs/posts/neural-rendering-beyond-photography/">Neural Rendering Beyond Photography</a></h3>
-                    <p class="post-subtitle" lang="en">NeRF for Tomography &amp; Tip for NeRF Viewer</p>
-                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
+                    <p class="post-subtitle" lang="en">Applying NeRF and Gaussian Splatting beyond photography to X-ray tomography, plus a lightweight viewer workflow built with Viser.</p>
                     <p class="post-meta">
                         <time datetime="2025-01-06">January 6, 2025</time>
                     </p>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                 </div>
             </div>
             <nav class="visually-hidden" aria-label="Available languages">
@@ -99,21 +109,30 @@
             </nav>
         </article>
     
+                        <div class="blog-home-era-break">
+                            <h3>
+                                <span class="blog-home-era-index" aria-hidden="true">02</span>
+                                <span>Old Archive</span>
+                            </h3>
+                            <span class="blog-home-era-rule" aria-hidden="true"></span>
+                        </div>
         <article class="post-preview" data-post-id="240823_grt" data-post-category="post">
             <div class="post-card-link">
                 <a href="/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian/" class="post-card-cover" aria-label="Read Don&#39;t Rasterize, But Ray Trace 3D Gaussian">
                     <img src="/assets/generated/blog-covers/240823_grt.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/240823_grt.webp" data-animated-src="/blogs/posts/240823_grt/assets/teaser.gif" alt="Don&#39;t Rasterize, But Ray Trace 3D Gaussian cover image" loading="lazy" decoding="async">
                 </a>
                 <div class="post-card-body">
-                    <div class="post-card-eyebrow">
-                        <span>Radiance Fields &amp; Gaussian Splatting</span>
+                    <div class="post-card-eyebrow post-series-context">
+                        <span class="post-series-context-label">SERIES</span>
+                        <span class="post-series-context-separator" aria-hidden="true">/</span>
+                        <span class="post-series-context-value" data-post-series>Radiance Fields &amp; Gaussian Splatting</span>
                     </div>
                     <h3 class="post-title" lang="en"><a href="/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian/">Don&#39;t Rasterize, But Ray Trace 3D Gaussian</a></h3>
-                    <p class="post-subtitle" lang="en">In-Depth Review of 3D Gaussian Ray Tracing by NVIDIA</p>
-                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
+                    <p class="post-subtitle" lang="en">How NVIDIA’s 3D Gaussian Ray Tracing replaces splat rasterization with differentiable ray tracing—and what that changes.</p>
                     <p class="post-meta">
                         <time datetime="2024-08-23">August 23, 2024</time>
                     </p>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                 </div>
             </div>
             <nav class="visually-hidden" aria-label="Available languages">
@@ -127,15 +146,17 @@
                     <img src="/assets/generated/blog-covers/240805_gs.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/240805_gs.webp" data-animated-src="/blogs/posts/240805_gs/assets/garden.gif" alt="A Comprehensive Analysis of Gaussian Splatting Rasterization cover image" loading="lazy" decoding="async">
                 </a>
                 <div class="post-card-body">
-                    <div class="post-card-eyebrow">
-                        <span>Radiance Fields &amp; Gaussian Splatting</span>
+                    <div class="post-card-eyebrow post-series-context">
+                        <span class="post-series-context-label">SERIES</span>
+                        <span class="post-series-context-separator" aria-hidden="true">/</span>
+                        <span class="post-series-context-value" data-post-series>Radiance Fields &amp; Gaussian Splatting</span>
                     </div>
                     <h3 class="post-title" lang="en"><a href="/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization/">A Comprehensive Analysis of Gaussian Splatting Rasterization</a></h3>
                     <p class="post-subtitle" lang="en">A ground-up guide to Gaussian Splatting and differentiable rasterization, tracing the mathematics through its CUDA implementation—from projection and covariance</p>
-                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                     <p class="post-meta">
                         <time datetime="2024-08-05">August 5, 2024</time>
                     </p>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                 </div>
             </div>
             <nav class="visually-hidden" aria-label="Available languages">
@@ -149,15 +170,17 @@
                     <img src="/assets/generated/blog-covers/240721_sfm.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/240721_sfm.webp" alt="Radiance Fields from Deep-based Structure-from-Motion cover image" loading="lazy" decoding="async">
                 </a>
                 <div class="post-card-body">
-                    <div class="post-card-eyebrow">
-                        <span>Radiance Fields &amp; Gaussian Splatting</span>
+                    <div class="post-card-eyebrow post-series-context">
+                        <span class="post-series-context-label">SERIES</span>
+                        <span class="post-series-context-separator" aria-hidden="true">/</span>
+                        <span class="post-series-context-value" data-post-series>Radiance Fields &amp; Gaussian Splatting</span>
                     </div>
                     <h3 class="post-title" lang="en"><a href="/blogs/posts/radiance-fields-from-deep-based-structure-from-motion/">Radiance Fields from Deep-based Structure-from-Motion</a></h3>
-                    <p class="post-subtitle" lang="en">Comparison of VGGSfM &amp; MAsT3R</p>
-                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
+                    <p class="post-subtitle" lang="en">Comparing VGGSfM and MASt3R as learned Structure-from-Motion pipelines for camera estimation and radiance-field reconstruction.</p>
                     <p class="post-meta">
                         <time datetime="2024-07-21">July 21, 2024</time>
                     </p>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                 </div>
             </div>
             <nav class="visually-hidden" aria-label="Available languages">
@@ -171,15 +194,17 @@
                     <img src="/assets/generated/blog-covers/240602_2dgs.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/240602_2dgs.webp" data-animated-src="/blogs/posts/240602_2dgs/assets/teaser.gif" alt="Under the 3D: Geometrically Accurate 2D Gaussian Splatting cover image" loading="lazy" decoding="async">
                 </a>
                 <div class="post-card-body">
-                    <div class="post-card-eyebrow">
-                        <span>Radiance Fields &amp; Gaussian Splatting</span>
+                    <div class="post-card-eyebrow post-series-context">
+                        <span class="post-series-context-label">SERIES</span>
+                        <span class="post-series-context-separator" aria-hidden="true">/</span>
+                        <span class="post-series-context-value" data-post-series>Radiance Fields &amp; Gaussian Splatting</span>
                     </div>
                     <h3 class="post-title" lang="en"><a href="/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting/">Under the 3D: Geometrically Accurate 2D Gaussian Splatting</a></h3>
-                    <p class="post-subtitle" lang="en">Understanding 2D GS&#39;s Algorithm</p>
-                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
+                    <p class="post-subtitle" lang="en">How 2D Gaussian Splatting replaces volumetric blobs with oriented disks to improve surface geometry and mesh reconstruction</p>
                     <p class="post-meta">
                         <time datetime="2024-06-02">June 2, 2024</time>
                     </p>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                 </div>
             </div>
             <nav class="visually-hidden" aria-label="Available languages">
@@ -193,15 +218,17 @@
                     <img src="/assets/generated/blog-covers/231130_nerf_in_game.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/231130_nerf_in_game.webp" alt="Can NeRF be used in Game? cover image" loading="lazy" decoding="async">
                 </a>
                 <div class="post-card-body">
-                    <div class="post-card-eyebrow">
-                        <span>Radiance Fields &amp; Gaussian Splatting</span>
+                    <div class="post-card-eyebrow post-series-context">
+                        <span class="post-series-context-label">SERIES</span>
+                        <span class="post-series-context-separator" aria-hidden="true">/</span>
+                        <span class="post-series-context-value" data-post-series>Radiance Fields &amp; Gaussian Splatting</span>
                     </div>
                     <h3 class="post-title" lang="en"><a href="/blogs/posts/can-nerf-be-used-in-game/">Can NeRF be used in Game?</a></h3>
-                    <p class="post-subtitle" lang="en">Explore Limitations of NeRF</p>
-                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
+                    <p class="post-subtitle" lang="en">Examining the quality, rendering, and production constraints that limit NeRF in games—and the workarounds available today</p>
                     <p class="post-meta">
                         <time datetime="2023-11-30">November 30, 2023</time>
                     </p>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                 </div>
             </div>
             <nav class="visually-hidden" aria-label="Available languages">
@@ -215,15 +242,17 @@
                     <img src="/assets/generated/blog-covers/230202_ngp.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/230202_ngp.webp" data-animated-src="/blogs/posts/230202_ngp/assets/ngp_nerf.gif" alt="Instant-NGP Review &amp; Re-Implementation cover image" loading="lazy" decoding="async">
                 </a>
                 <div class="post-card-body">
-                    <div class="post-card-eyebrow">
-                        <span>Radiance Fields &amp; Gaussian Splatting</span>
+                    <div class="post-card-eyebrow post-series-context">
+                        <span class="post-series-context-label">SERIES</span>
+                        <span class="post-series-context-separator" aria-hidden="true">/</span>
+                        <span class="post-series-context-value" data-post-series>Radiance Fields &amp; Gaussian Splatting</span>
                     </div>
                     <h3 class="post-title" lang="en"><a href="/blogs/posts/instant-ngp-review-re-implementation/">Instant-NGP Review &amp; Re-Implementation</a></h3>
-                    <p class="post-subtitle" lang="en">Review of Instant-NGP and PyTorch Re-Implementation</p>
-                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
+                    <p class="post-subtitle" lang="en">Reviewing Instant-NGP’s multi-resolution hash encoding and rebuilding its NeRF pipeline step by step in PyTorch</p>
                     <p class="post-meta">
                         <time datetime="2023-02-02">February 2, 2023</time>
                     </p>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                 </div>
             </div>
             <nav class="visually-hidden" aria-label="Available languages">
@@ -237,15 +266,17 @@
                     <img src="/assets/generated/blog-covers/211128_fourier.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/211128_fourier.webp" alt="Why Positional Encoding Makes NeRF more Powerful cover image" loading="lazy" decoding="async">
                 </a>
                 <div class="post-card-body">
-                    <div class="post-card-eyebrow">
-                        <span>Radiance Fields &amp; Gaussian Splatting</span>
+                    <div class="post-card-eyebrow post-series-context">
+                        <span class="post-series-context-label">SERIES</span>
+                        <span class="post-series-context-separator" aria-hidden="true">/</span>
+                        <span class="post-series-context-value" data-post-series>Radiance Fields &amp; Gaussian Splatting</span>
                     </div>
                     <h3 class="post-title" lang="en"><a href="/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/">Why Positional Encoding Makes NeRF more Powerful</a></h3>
                     <p class="post-subtitle" lang="en">Review of Fourier Features Let Networks Learn High-Frequency Functions</p>
-                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                     <p class="post-meta">
                         <time datetime="2021-11-28">November 28, 2021</time>
                     </p>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
                 </div>
             </div>
             <nav class="visually-hidden" aria-label="Available languages">
@@ -257,7 +288,7 @@
                 </section>
             </div>
         </main>
-        <script src="/blogs/js/site-data-client.js?v=fd5ff44d2c"></script>
+        <script src="/blogs/js/site-data-client.js?v=61dca8d30d"></script>
         <script src="/blogs/js/blog-cover-media.js?v=f16969bf34"></script>
         <script src="/blogs/js/blog-shell.js?v=456de34605"></script>
         <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
@@ -286,6 +317,17 @@
                     updateArchiveCards(language);
                 }
 
+                function formatArchiveDate(value, language) {
+                    return new Date(value + 'T00:00:00').toLocaleDateString(
+                        language === 'kor' ? 'ko-KR' : 'en-US',
+                        {
+                            year: 'numeric',
+                            month: language === 'kor' ? 'numeric' : 'long',
+                            day: 'numeric'
+                        }
+                    );
+                }
+
                 async function updateArchiveCards(language) {
                     if (!window.siteDataClient) {
                         return;
@@ -300,16 +342,20 @@
                             }
 
                             const title = window.siteDataClient.getPostTitle(post, language);
-                            const description = window.siteDataClient.getPostDescription(post, language);
+                            const subtitleText = window.siteDataClient.getPostSubtitle(post, language);
                             const url = window.siteDataClient.getPostUrl(post, language);
                             const titleLink = card.querySelector('.post-title a');
                             const coverLink = card.querySelector('.post-card-cover');
                             const coverImage = card.querySelector('img[data-blog-cover]');
                             const subtitle = card.querySelector('.post-subtitle');
+                            const series = card.querySelector('[data-post-series]');
+                            const time = card.querySelector('.post-meta time');
+                            const textLanguage = language === 'kor' ? 'ko' : 'en';
 
                             if (titleLink) {
                                 titleLink.textContent = title;
                                 titleLink.href = url;
+                                titleLink.closest('.post-title')?.setAttribute('lang', textLanguage);
                             }
 
                             if (coverLink) {
@@ -322,8 +368,20 @@
                             }
 
                             if (subtitle) {
-                                subtitle.textContent = description;
+                                subtitle.textContent = subtitleText;
+                                subtitle.setAttribute('lang', textLanguage);
                             }
+
+                            if (series) {
+                                series.textContent = siteData.series[post.series]?.[language]
+                                    || siteData.series[post.series]?.eng
+                                    || 'Series';
+                            }
+
+                            if (time) {
+                                time.textContent = formatArchiveDate(post.date, language);
+                            }
+
                         });
                     } catch (error) {
                         console.warn('Failed to update archive language:', error);

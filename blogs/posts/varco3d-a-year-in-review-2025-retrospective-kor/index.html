@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="빠르게 발전하는 3D AI를 추적하며 인하우스 3D 생성형 AI 서비스를 구축해 간 과정. 개인적인 소회를 기록하는 행위에 그리 능숙한 편은 아니다. 그럼에도 2025년은 단순한 연차의 축적으로 치부하기엔 너무 많은 것이 바뀌었다. 커리어와 개인사 양면에서 삶의 궤도가 급격히 뒤틀리는" />
+    <meta name="description" content="3D VecSet VAEs 에서부터 Hunyuan3D 3.0의 Voxel-conditioned 3D DiTs까지 추적하며 자체 3D 생성형 AI 서비스를 구축해 간 과정" />
     <meta name="keywords" content="post, 3d-generation, 3D Generation, Generative AI, 3D graphics, computer vision, machine learning" />
     <meta name="author" content="Hwan Heo" />
     <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/" />
@@ -13,7 +13,7 @@
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/" />
     <meta property="og:title" content="3D 생성형 AI 서비스; Varco3D 개발기" />
-    <meta property="og:description" content="빠르게 발전하는 3D AI를 추적하며 인하우스 3D 생성형 AI 서비스를 구축해 간 과정. 개인적인 소회를 기록하는 행위에 그리 능숙한 편은 아니다. 그럼에도 2025년은 단순한 연차의 축적으로 치부하기엔 너무 많은 것이 바뀌었다. 커리어와 개인사 양면에서 삶의 궤도가 급격히 뒤틀리는" />
+    <meta property="og:description" content="3D VecSet VAEs 에서부터 Hunyuan3D 3.0의 Voxel-conditioned 3D DiTs까지 추적하며 자체 3D 생성형 AI 서비스를 구축해 간 과정" />
     <meta property="og:image" content="https://hwan-h-heo.github.io/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif" />
     <meta property="og:site_name" content="HwanHeo's Blog" />
     <meta property="article:published_time" content="2026-01-15T00:00:00.000Z" />
@@ -22,17 +22,17 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/" />
     <meta name="twitter:title" content="3D 생성형 AI 서비스; Varco3D 개발기" />
-    <meta name="twitter:description" content="빠르게 발전하는 3D AI를 추적하며 인하우스 3D 생성형 AI 서비스를 구축해 간 과정. 개인적인 소회를 기록하는 행위에 그리 능숙한 편은 아니다. 그럼에도 2025년은 단순한 연차의 축적으로 치부하기엔 너무 많은 것이 바뀌었다. 커리어와 개인사 양면에서 삶의 궤도가 급격히 뒤틀리는" />
+    <meta name="twitter:description" content="3D VecSet VAEs 에서부터 Hunyuan3D 3.0의 Voxel-conditioned 3D DiTs까지 추적하며 자체 3D 생성형 AI 서비스를 구축해 간 과정" />
     <meta name="twitter:image" content="https://hwan-h-heo.github.io/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"3D 생성형 AI 서비스; Varco3D 개발기","description":"빠르게 발전하는 3D AI를 추적하며 인하우스 3D 생성형 AI 서비스를 구축해 간 과정. 개인적인 소회를 기록하는 행위에 그리 능숙한 편은 아니다. 그럼에도 2025년은 단순한 연차의 축적으로 치부하기엔 너무 많은 것이 바뀌었다. 커리어와 개인사 양면에서 삶의 궤도가 급격히 뒤틀리는","url":"https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/","mainEntityOfPage":"https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/","image":["https://hwan-h-heo.github.io/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif"],"author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"publisher":{"@type":"Person","name":"Hwan Heo"},"datePublished":"2026-01-15","dateModified":"2026-01-15","inLanguage":"ko"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"3D 생성형 AI 서비스; Varco3D 개발기","description":"3D VecSet VAEs 에서부터 Hunyuan3D 3.0의 Voxel-conditioned 3D DiTs까지 추적하며 자체 3D 생성형 AI 서비스를 구축해 간 과정","url":"https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/","mainEntityOfPage":"https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/","image":["https://hwan-h-heo.github.io/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif"],"author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"publisher":{"@type":"Person","name":"Hwan Heo"},"datePublished":"2026-01-15","dateModified":"2026-01-15","inLanguage":"ko"}</script>
 
     <title>3D 생성형 AI 서비스; Varco3D 개발기 | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css?v=c4319681dd" rel="stylesheet" />
+    <link href="/blogs/css/blog.css?v=48f73e3499" rel="stylesheet" />
     <link href="/blogs/css/sidebar.css?v=975e92b635" rel="stylesheet" />
     <link href="/css/sidebar-nav.css?v=17f2552cf5" rel="stylesheet" />
-    <link href="/blogs/css/typography.css?v=5e2acfdea5" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=8ab8293a7c" rel="stylesheet" />
     <link href="/blogs/css/post.css?v=efef9e6e9b" rel="stylesheet" />
     <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
     <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
@@ -143,7 +143,10 @@
                             <div class="post-hero-series">
                                 <span class="post-hero-series-label">Series</span>
                                 <span class="post-hero-series-separator" aria-hidden="true">/</span>
-                                <a href="/blogs/series/3d-generation/">3D AI</a>
+                                <a href="/blogs/series/3d-generation/">
+                                    <span class="post-hero-series-name">3D AI</span>
+                                    <span class="post-hero-series-arrow" aria-hidden="true">→</span>
+                                </a>
                             </div>
                             <h1>3D 생성형 AI 서비스; Varco3D 개발기</h1>
                         </div>
@@ -158,21 +161,25 @@
                     <div class="post-reading-column post-hero-column post-intro-column">
                         <div class="post-intro-layout">
                             <div class="post-intro-copy">
-                                <p class="post-intro-deck">빠르게 발전하는 3D AI를 추적하며 인하우스 3D 생성형 AI 서비스를 구축해 간 과정</p>
-                                <div class="post-intro-topics" aria-label="주제"><div class="post-tags"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div></div>
+                                <p class="post-intro-deck">3D VecSet VAEs 에서부터 Hunyuan3D 3.0의 Voxel-conditioned 3D DiTs까지 추적하며 자체 3D 생성형 AI 서비스를 구축해 간 과정</p>
+                                <div class="post-intro-topics" aria-label="주제">
+                                    <span class="post-intro-topics-label">Topics</span>
+                                    <span class="post-intro-topics-separator" aria-hidden="true">/</span>
+                                    <div class="post-tags"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a></div>
+                                </div>
                             </div>
                             <aside class="post-article-info" aria-label="글 정보">
                                 <ul>
                                     <li data-post-detail="author">
-                                        <strong>작성자</strong>
+                                        <strong>Author</strong>
                                         <span>Hwan Heo</span>
                                     </li>
                                     <li data-post-detail="published">
-                                        <strong>발행</strong>
+                                        <strong>Published</strong>
                                         <time datetime="2026-01-15">January 15, 2026</time>
                                     </li>
                                     <li data-post-detail="reading">
-                                        <strong>읽는 시간</strong>
+                                        <strong>Reading</strong>
                                         <span class="post-detail-reading">15 min read</span>
                                     </li>
                                 </ul>
@@ -204,10 +211,11 @@
 
 <h2 id="toc-heading-0">Introduction</h2>
 <p>개인적인 소회를 기록하는 행위에 그리 능숙한 편은 아니다. 그럼에도 2025년은 단순한 연차의 축적으로 치부하기엔 너무 많은 것이 바뀌었다. 커리어와 개인사 양면에서 삶의 궤도가 급격히 뒤틀리는 감각을 경험한 해였고, 특히 &#39;NC AI&#39;의 독립 법인 분사와 그 과정에서 마주한 기술적·조직적 격변은 내 업무의 지향점을 근본적으로 재정의하는 결정적 계기가 되었다. 그 기록과 함께 한 해를 반추하며 글을 시작해보려 한다.
-<img src='/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif' width=60% alt="3D 생성형 AI 서비스; Varco3D 개발기 — Introduction" loading="lazy" decoding="async"></p>
-<ul>
-<li><em>Generated by Varco3D, NC AI&#39;s proprietary 3D Genrative Model</em></li>
-</ul>
+</p>
+<figure class="post-media post-media--editorial post-media--narrow" style="--post-figure-media-width: 60%;">
+<img src='/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif' width=60% alt="3D 생성형 AI 서비스; Varco3D 개발기 — Introduction" loading="lazy" decoding="async">
+<figcaption><span class="post-figure-index">FIG. 01</span><span class="post-figure-caption"><em>Generated by Varco3D, NC AI&#39;s proprietary 3D Genrative Model</em></span></figcaption>
+</figure>
 <hr>
 <h4>2025 연초까지의 기록</h4>
 <p>재직 중인 &#39;NC AI&#39;는 본래 엔씨소프트 산하의 Research 본부였다. 4,000명 규모의 게임사 내부에 200명에 달하는 거대 연구 조직이 공존한다는 기묘한 구조는, 내부자로서도 그 지속 가능성에 끊임없이 의구심을 갖게 하는 대목이었다. 특히 조직의 방향성이 모호했던 2024년 이전까지, 이곳에서의 시간은 성장이 아닌 정체에 가까웠다.</p>
@@ -253,23 +261,24 @@ $$</p>
 
 
 <p>이는 주어진 메시를 다각도에서 Depth &amp; Normal map으로 렌더링한 후, ControlNet을 이용해 Multi-view 이미지를 생성하고 이를 다시 메시에 역투영(Back-projection)하는 방식이었다. 
-<img src='/blogs/posts/260115_Varco3D/assets/remote-d832175607cd.png' width=50% alt="3D 생성형 AI 서비스; Varco3D 개발기 — 1.2. Texture Generative AI" loading="lazy" decoding="async"></p>
-<ul>
-<li><em>Visualization of multi-view images back-projection on mesh</em></li>
-</ul>
+</p>
+<figure class="post-media post-media--editorial post-media--narrow" style="--post-figure-media-width: 50%;">
+<img src='/blogs/posts/260115_Varco3D/assets/remote-d832175607cd.png' width=50% alt="3D 생성형 AI 서비스; Varco3D 개발기 — 1.2. Texture Generative AI" loading="lazy" decoding="async">
+<figcaption><span class="post-figure-index">FIG. 02</span><span class="post-figure-caption"><em>Visualization of multi-view images back-projection on mesh</em></span></figcaption>
+</figure>
 <p>혁신적인 접근법이었고, 실제 게임 개발 공정에도 적용되는 성과를 거두었으나, 2D 모델 특유의 frontal view bias로 인한 Janus problem, 서비스의 태생상 기성 Geometry가 무조건 필요하다는 등의 단점이 존재하였다.</p>
 <hr>
 <h3 id="toc-heading-4">1.3. Beyond SDS; Native 3D Generation</h3>
 <p>그 무렵, 3D 생성 연구의 또 다른 축에서는 3D Native VAE를 이용한 3D Diffusion 모델 연구가 확장되고 있었다. <strong>&#39;VecSet VAE&#39;</strong> 로 대표되는 이 방식은 Polygonal Mesh에서 샘플링한 포인트 클라우드를 latent space로 압축하고, 다시 그 공간에서 SDF field를 복원하는 VAE 구조다. (자세한 사항은 <a href="https://hwan-h-heo.github.io/blogs/posts/an-era-of-3d-generation/">3D 생성 모델의 시대</a>를 참고)</p>
-<p><img src="/blogs/posts/260115_Varco3D/assets/remote-8cd489d1938b.png" alt="3D 생성형 AI 서비스; Varco3D 개발기 — 1.3. Beyond SDS; Native 3D Generation" loading="lazy" decoding="async"></p>
-<ul>
-<li><em>ShapeVAE illustration</em></li>
-</ul>
+<figure class="post-media post-media--editorial">
+<img src="/blogs/posts/260115_Varco3D/assets/remote-8cd489d1938b.png" alt="3D 생성형 AI 서비스; Varco3D 개발기 — 1.3. Beyond SDS; Native 3D Generation" loading="lazy" decoding="async">
+<figcaption><span class="post-figure-index">FIG. 03</span><span class="post-figure-caption"><em>ShapeVAE illustration</em></span></figcaption>
+</figure>
 <p>이러한 ShapeVAE를 통해, 수십만개 이상의 faces를 가지는 mesh를 2K~8K 정도의 token length로 압축한 latent space로부터 Diffusion Model, 혹은 Flow Matching 모델을 학습하는 것이 <strong>&#39;3D Native Generative Model&#39;</strong> 의 기본 골자다.</p>
-<p><img src="/blogs/posts/260115_Varco3D/assets/remote-5e3e4b4b19ce.png" alt="3D 생성형 AI 서비스; Varco3D 개발기 — 1.3. Beyond SDS; Native 3D Generation, figure 2" loading="lazy" decoding="async"></p>
-<ul>
-<li>ShapeVAE 에서 학습된 3D DiT 중 하나인 <a href="https://nju-3dv.github.io/projects/Direct3D/">Direct3D</a> 의 sample results</li>
-</ul>
+<figure class="post-media post-media--editorial">
+<img src="/blogs/posts/260115_Varco3D/assets/remote-5e3e4b4b19ce.png" alt="3D 생성형 AI 서비스; Varco3D 개발기 — 1.3. Beyond SDS; Native 3D Generation, figure 2" loading="lazy" decoding="async">
+<figcaption><span class="post-figure-index">FIG. 04</span><span class="post-figure-caption">ShapeVAE 에서 학습된 3D DiT 중 하나인 <a href="https://nju-3dv.github.io/projects/Direct3D/">Direct3D</a> 의 sample results</span></figcaption>
+</figure>
 <p>나는 이 3D native geometry 생성 연구와 Texture Copilot의 아이디어를 결합하면, SDS의 고질적인 문제들을 우회하는 완결된 파이프라인을 구축할 수 있으리라 판단했다. 이러한 믿음을 바탕으로 2024년 말, ShapeVAE 와 DiT 모델을 직접 학습하고, Texturing 에서는 Janus 문제를 해결하기 위해 Multi-View 생성을 위한 어텐션 모듈을 설계하는 등의 시도를 담은 CaPa 프로젝트를 진행하게 된다.</p>
 <p><a href="https://ncsoft.github.io/CaPa/"><strong>CaPa Project Page</strong></a>
 <img src='/blogs/posts/260115_Varco3D/assets/remote-329e04631f27.png' width=70% alt="3D 생성형 AI 서비스; Varco3D 개발기 — 1.3. Beyond SDS; Native 3D Generation, figure 3" loading="lazy" decoding="async"></p>
@@ -321,10 +330,10 @@ $$</p>
 <blockquote>
 <p><em><strong>왜 이러한 차이가 나게되는 것일까?</strong></em></p>
 </blockquote>
-<p><img src="/blogs/posts/260115_Varco3D/assets/remote-3cf490792ce8.png" alt="3D 생성형 AI 서비스; Varco3D 개발기 — 2.2. SOTA Sparse Voxel Method, figure 3" loading="lazy" decoding="async"></p>
-<ul>
-<li><em>Sparc3D의 inference pipeline illustration 재구성</em></li>
-</ul>
+<figure class="post-media post-media--editorial">
+<img src="/blogs/posts/260115_Varco3D/assets/remote-3cf490792ce8.png" alt="3D 생성형 AI 서비스; Varco3D 개발기 — 2.2. SOTA Sparse Voxel Method, figure 3" loading="lazy" decoding="async">
+<figcaption><span class="post-figure-index">FIG. 05</span><span class="post-figure-caption"><em>Sparc3D의 inference pipeline illustration 재구성</em></span></figcaption>
+</figure>
 <p>이러한 성능 차이의 비밀은 구조적 특성에 있다.
 그림과 같이, Sparse Voxel VAE의 decoding은 <em>저해상도의 sparse voxel latent grid</em> 를 <em>고해상도의 sparse voxel SDF grid</em> 로 매핑한다. 즉, sparse voxel VAE는 일종의 <strong>&#39;3D super-resolution&#39;</strong> 인 셈이다. </p>
 <p>이 구조에서 생성 모델(DiT)은 전체적인 형상을 만드는 대신, 이미 정의된 Active voxel 내에서 세부 디테일을 복원하는 데 집중한다. 전체 형상과 디테일 생성을 Decoupling 했기에 학습 효율이 극대화될 수 있었던 것이다.</p>
@@ -374,10 +383,10 @@ $$</p>
 <hr>
 <h3 id="toc-heading-11">3.2. FlashVDM; vice-versa of Lattice?</h3>
 <p>이 논문의 아이디어는 VecSet decoding 가속화 연구인 <a href="https://github.com/Tencent-Hunyuan/FlashVDM"><strong>FlashVDM</strong></a>의 실험에서 파생된 것이라고 추측한다 (저자 또한 같다). FlashVDM은 SDF 추출에 <strong>dense grid point query</strong>가 필요했던 기존 VecSet decoding 단계에 <strong>octree-decoding (Hierarchical Decoding)</strong> 을 제안하여 수십배로 decoding 시간을 단축한 연구이다. </p>
-<p><img src="/blogs/posts/260727_sparse_3d/assets/sparse-pipeline.png" alt="3D 생성형 AI 서비스; Varco3D 개발기 — 3.2. FlashVDM; vice-versa of Lattice?" loading="lazy" decoding="async"></p>
-<ul>
-<li><em><strong>Visualization of FlashVDM.</strong></em> <em>Right</em> 의 mesh 를 VAE decoder 를 통해 복원할 때, FlashVDM 은 <em>Left</em> 의 좌-&gt;우 처럼 coarse resolution 에서 먼저 active voxel 식별 후 이 active voxel 범위에서만 resolution 을 늘려가면서 고해상도의 SDF 를 복원한다. <img src='/blogs/posts/260115_Varco3D/assets/remote-361723135c58.png' width=50% alt="3D 생성형 AI 서비스; Varco3D 개발기 — 3.2. FlashVDM; vice-versa of Lattice?, figure 2" loading="lazy" decoding="async"></li>
-</ul>
+<figure class="post-media post-media--editorial">
+<img src="/blogs/posts/260727_sparse_3d/assets/sparse-pipeline.png" alt="3D 생성형 AI 서비스; Varco3D 개발기 — 3.2. FlashVDM; vice-versa of Lattice?" loading="lazy" decoding="async">
+<figcaption><span class="post-figure-index">FIG. 06</span><span class="post-figure-caption"><em><strong>Visualization of FlashVDM.</strong></em> <em>Right</em> 의 mesh 를 VAE decoder 를 통해 복원할 때, FlashVDM 은 <em>Left</em> 의 좌-&gt;우 처럼 coarse resolution 에서 먼저 active voxel 식별 후 이 active voxel 범위에서만 resolution 을 늘려가면서 고해상도의 SDF 를 복원한다. <img src='/blogs/posts/260115_Varco3D/assets/remote-361723135c58.png' width=50% alt="3D 생성형 AI 서비스; Varco3D 개발기 — 3.2. FlashVDM; vice-versa of Lattice?, figure 2" loading="lazy" decoding="async"></span></figcaption>
+</figure>
 <p>Octree-decoding 외에 FlashVDM에서 보고한 VecSet VAE의 중요한 특징은, VecSet VAE Decoder가 point query를 받아 SDF value를 decoding할 때, <strong>공간상의 인접한 point query는 비슷한 latent token과의 attention에만 집중한다는 사실</strong>이다. 이 발견을 역으로 뒤집으면, VecSet의 latent token은 이미 spatial location에 밀접한 관련을 가지며 그 자체로 강한 locality를 내재하고 있다는 결론에 이른다. </p>
 <p>이는 위치 정보만 잘 주어지면 전체 구조를 다시 학습할 필요 없이 세부 디테일만 채워 넣을 수 있다는 가정으로 이어진다. 즉, DiT 모델을 학습/추론할 때 3D spatial location 과의 연결 고리만 전달해 줄 수 있다면 sparse voxel 방법론과 마찬가지로 global shape에 대한 정보를 아는 refinement 모델을 설계할 수 있다. DiT가 텅 빈 공간에서 맨땅에 헤딩하듯 형상을 만드는 것이 아니라, global shape에 대한 강력한 guidance를 받으며 local detail 생성에만 집중하게 만드는 것이다. </p>
 <p><img src="/blogs/posts/260115_Varco3D/assets/remote-34753712de5b.png" alt="3D 생성형 AI 서비스; Varco3D 개발기 — 3.2. FlashVDM; vice-versa of Lattice?, figure 3" loading="lazy" decoding="async"></p>
@@ -404,15 +413,15 @@ $$</p>
 <h4><em>vs.</em> Sparse-Voxel Method</h4>
 <p>모델 결과물은 Varco3D 1.0-preview (Sparse Voxel) 이상의 디테일을 보여주면서도, 생성된 Mesh의 Topology가 훨씬 robust하고 artifact 형상이 적다는 점이 고무적이었다. 이 모델은 inference 최적화 과정을 거쳐 곧 Varco3D 1.0 model 로 정식 업데이트 될 예정이다. </p>
 <p>같은 coarse-to-fine 방식인 Varco3D 1.0 preview 와의 비교를 몇 가지 첨부한다. </p>
-<p><img src="/blogs/posts/260115_Varco3D/assets/remote-eb6322f90365.png" alt="3D 생성형 AI 서비스; Varco3D 개발기 — vs. Sparse-Voxel Method" loading="lazy" decoding="async"></p>
-<ul>
-<li><strong>Varco3D 1.0-preview (sparse voxel)</strong> <em>vs.</em> <strong>Varco3D 1.0 (VecSet-Lattice)</strong></li>
-</ul>
+<figure class="post-media post-media--editorial">
+<img src="/blogs/posts/260115_Varco3D/assets/remote-eb6322f90365.png" alt="3D 생성형 AI 서비스; Varco3D 개발기 — vs. Sparse-Voxel Method" loading="lazy" decoding="async">
+<figcaption><span class="post-figure-index">FIG. 07</span><span class="post-figure-caption"><strong>Varco3D 1.0-preview (sparse voxel)</strong> <em>vs.</em> <strong>Varco3D 1.0 (VecSet-Lattice)</strong></span></figcaption>
+</figure>
 <p>Sparse voxel 기반의 Varco3D 1.0 preview 모델이 과도한 detail, artifact 등도 생성하는데 반면, Varco3D 1.0 모델은 깔끔하고 robust 한 output 을 생성하였다. </p>
-<p><img src="/blogs/posts/260115_Varco3D/assets/remote-c92c366ed46f.png" alt="3D 생성형 AI 서비스; Varco3D 개발기 — vs. Sparse-Voxel Method, figure 2" loading="lazy" decoding="async"></p>
-<ul>
-<li><strong>Varco3D 1.0-preview (sparse voxel)</strong> <em>vs.</em> <strong>Varco3D 1.0 (VecSet-Lattice)</strong></li>
-</ul>
+<figure class="post-media post-media--editorial">
+<img src="/blogs/posts/260115_Varco3D/assets/remote-c92c366ed46f.png" alt="3D 생성형 AI 서비스; Varco3D 개발기 — vs. Sparse-Voxel Method, figure 2" loading="lazy" decoding="async">
+<figcaption><span class="post-figure-index">FIG. 08</span><span class="post-figure-caption"><strong>Varco3D 1.0-preview (sparse voxel)</strong> <em>vs.</em> <strong>Varco3D 1.0 (VecSet-Lattice)</strong></span></figcaption>
+</figure>
 <hr>
 <h2 id="toc-heading-13">4. Next Step in 3D Generation</h2>
 <p>2026년을 맞이하며, Varco3D 1.0 개발 과정에서 느꼈던 &#39;Sparse Voxel&#39;과 &#39;VecSet&#39; 사이의 기술적 균형, 그리고 이를 넘어선 새로운 3D Representation의 가능성에 대해 정리하며 글을 맺으려 한다.</p>
@@ -422,11 +431,10 @@ $$</p>
 <p><strong><em>장점</em> — Detailed Generation</strong>: FPS로 sampling하는 Lattice와 달리 active voxel 모두를 사용하기 때문에 local detail 측면에서 Lattice보다 뛰어날 때가 많다.</p>
 <p><strong><em>단점</em> — 불안정성</strong>: 학습과 추론의 안정성 측면에서는 아쉬움이 크다. Token length가 데이터마다 항상 다르고, $128^3$ 해상도의 active voxel 수만 해도 평균 80K 개가 넘는다. 또한 active voxel 모두를 사용하기 때문에 active voxel의 품질에 굉장히 많은 영향을 받는다.</p>
 <p>이 정도 토큰 길이에서는 Full Attention 학습이 사실상 불가능하므로 Swin Transformer 류의 Sliding Window Attention을 쓰거나, 64/32 resolution으로 downsampling하여 Full Attention 후 다시 upsample해야 하는데, 이 과정에서 구조적 불안정성이 발생한다.</p>
+<figure class="post-media post-media--editorial post-media--narrow" style="--post-figure-media-width: 70%;">
 <img src='/blogs/posts/260115_Varco3D/assets/remote-dfc4c3230951.png' width=70% alt="3D 생성형 AI 서비스; Varco3D 개발기 — Sparse Voxel" loading="lazy" decoding="async">
-
-<ul>
-<li>Direct3D-S2 의 3D sliding window attention 메커니즘</li>
-</ul>
+<figcaption><span class="post-figure-index">FIG. 09</span><span class="post-figure-caption">Direct3D-S2 의 3D sliding window attention 메커니즘</span></figcaption>
+</figure>
 <hr>
 <h4>VecSet</h4>
 <p><strong><em>장점</em> — Full Attention</strong>: Lattice 구조를 채택하면 훨씬 적은 token length (약 6K)만으로도 학습이 가능하여, Full Attention을 안정적으로 적용할 수 있다.</p>
@@ -437,25 +445,25 @@ $$</p>
 <p>마지막으로, 2026년 3D 생성 분야에서 주목하고 있는 것은 <strong>3D Representation 그 자체의 변화이다.</strong></p>
 <p>지금까지 설명한 모든 방식은 SDF (Signed Distance Function)의 그늘 아래 있었다. SDF는 공간상의 어떤 점이 물체의 표면으로부터 얼마나 떨어져 있는지(Distance), 그리고 안인지 밖인지(Sign)를 나타내는 값이다. 이를 Marching Cubes 알고리즘을 통해 Mesh로 변환하는데, 여기에는 치명적인 제약이 있다. 바로 <strong>&quot;반드시 닫힌 물체(Watertight)여야 한다&quot;</strong> 는 점이다. 물이 새지 않는 꽉 닫힌 도형만 표현 가능하기에, 찢어진 옷깃이나 얇은 종이, 혹은 투명한 유리의 단면 같은 &#39;열린 표면(Open Surface)&#39;을 생성하는 데 한계가 명확했다.</p>
 <p>최근 공개된 <a href="https://microsoft.github.io/TRELLIS.2/">Trellis-2</a> 와 <a href="https://github.com/Luo-Yihao/FaithC">FaithC</a> 은 이 문제를 해결하기 위해, AI가 SDF 값을 예측하는 대신 <strong>QEM (Quadric Error Metric)</strong> 파라미터를 직접 예측하는 방식을 택했다. </p>
-<p><img src="/blogs/posts/260115_Varco3D/assets/remote-9fc346759c86.png" alt="3D 생성형 AI 서비스; Varco3D 개발기 — 4.2. Beyond SDF: Trellis 2 &amp; Faith-Contouring" loading="lazy" decoding="async"></p>
-<ul>
-<li><em>Illustration of FaithC</em></li>
-</ul>
+<figure class="post-media post-media--editorial">
+<img src="/blogs/posts/260115_Varco3D/assets/remote-9fc346759c86.png" alt="3D 생성형 AI 서비스; Varco3D 개발기 — 4.2. Beyond SDF: Trellis 2 &amp; Faith-Contouring" loading="lazy" decoding="async">
+<figcaption><span class="post-figure-index">FIG. 10</span><span class="post-figure-caption"><em>Illustration of FaithC</em></span></figcaption>
+</figure>
 <p>물론 이 방식에도 명확한 trade-off가 존재한다. 직접 생성해보며 느낀 가장 큰 문제는 바로 &#39;위상적 불연속성(Topological Discontinuity)&#39;, 쉽게 말해 결과물이 찢어지는 현상이었다. 이는 SDF라는 강력한 continuity constraint가 사라지다 보니, 모델이 생성한 각 voxel의 예측값들이 서로 매끄럽게 연결되지 못하기 때문에 발생하는 문제라고 생각한다.</p>
-<p><img src="/blogs/posts/260115_Varco3D/assets/remote-d9b61cf191e7.png" alt="3D 생성형 AI 서비스; Varco3D 개발기 — 4.2. Beyond SDF: Trellis 2 &amp; Faith-Contouring, figure 2" loading="lazy" decoding="async"></p>
-<ul>
-<li>Generated by Trellis 2</li>
-</ul>
+<figure class="post-media post-media--editorial">
+<img src="/blogs/posts/260115_Varco3D/assets/remote-d9b61cf191e7.png" alt="3D 생성형 AI 서비스; Varco3D 개발기 — 4.2. Beyond SDF: Trellis 2 &amp; Faith-Contouring, figure 2" loading="lazy" decoding="async">
+<figcaption><span class="post-figure-index">FIG. 11</span><span class="post-figure-caption">Generated by Trellis 2</span></figcaption>
+</figure>
 <p>SDF는 수학적으로 &#39;연속 함수&#39; 공간에서 정의되기에, 해상도와 무관하게 표면이 매끄럽게 닫혀 있음이 보장된다. 하지만 discrete voxel grid 위에서 값을 예측하는 Trellis2/FaithC 류의 방식은, 인접한 voxel 간의 연결성을 모델이 완벽하게 학습하지 못하면 표면에 구멍이 뚫리거나 메쉬가 찢어지는 아티팩트가 빈번하게 발생했다.</p>
 <p>이 문제를 해결할 아이디어로, 기존 Q matrix에 UDF(Unsigned Distance Function) 처럼 표면 연속성을 보장하는 정보를 추가 채널로 함께 예측하게 하는 방법을 생각해볼 수 있다. SDF처럼 &#39;닫힌 도형&#39;을 강제하지 않으면서도, UDF의 gradient를 통해 인접한 voxel 간의 topological continuity를 가이드한다면, 후처리 없이도 &quot;찢어지지 않는 open surface&quot;를 생성하는 robust한 native 3D generation이 가능하지 않을까 생각한다.</p>
 <hr>
 <h2 id="toc-heading-16">Epilogue</h2>
 <p>글을 맺으며, 연구자로서 마음 한구석에 자리 잡은 솔직한 소회를 꺼내 보려 한다.</p>
 <p>냉정하게, 현재의 Varco3D는 아직 글로벌 빅테크들이 내놓는 Closed SOTA 모델들과 비교했을 때 우위에 서 있다고 말하기 어렵다. 수천, 수만 장의 H100을 투입하는 그들의 자본력 앞에서, 64장의 A100으로 모델을 학습해야하는 현실은 때로 무력감을 안겨주기도 한다. &quot;자원이 부족하다&quot;는 말은 비겁한 변명처럼 느껴지기도 하지만, 동시에 매일 아침 쏟아지는 새로운 연구들을 보며 따라가기에 급급할 때면 초조함이 밀려온다.</p>
-<p><img src="/blogs/posts/260115_Varco3D/assets/remote-96eb2ba7b888.png" alt="3D 생성형 AI 서비스; Varco3D 개발기 — Epilogue" loading="lazy" decoding="async"></p>
-<ul>
-<li>Varco3D-1.0 <em>vs.</em> Hunyuan3D-3.1 <em>vs.</em>  Meshy-6</li>
-</ul>
+<figure class="post-media post-media--editorial">
+<img src="/blogs/posts/260115_Varco3D/assets/remote-96eb2ba7b888.png" alt="3D 생성형 AI 서비스; Varco3D 개발기 — Epilogue" loading="lazy" decoding="async">
+<figcaption><span class="post-figure-index">FIG. 12</span><span class="post-figure-caption">Varco3D-1.0 <em>vs.</em> Hunyuan3D-3.1 <em>vs.</em>  Meshy-6</span></figcaption>
+</figure>
 <p>하지만 이 초조함은 역설적으로 &#39;순수 연구&#39;에 대한 강렬한 갈망으로 이어진다. 단순히 남들이 닦아놓은 길을 더 효율적으로 따라가는데 매몰되지 않고, 3D Representation의 본질이 무엇인지, 수학적 연속성을 어떻게 딥러닝의 언어로 치환할 것인지와 같은 근원적인 질문에 답하고 싶다. 현재의 3D AI 서비스들이 넘지 못한 &#39;실용성의 간극&#39;은 결국 파라미터의 크기가 아니라, 표현 방식과 같은 3D에 대한 본질을 혁신할 때만 메워질 수 있다고 믿는다.</p>
 <p>Sovereign AI 라는 거창한 구호 아래 자체 모델을 고집하는 이유는 단순히 라이선스 문제 때문만이 아니다. 빅테크의 자취만을 따라가는 추격자에 그치지 않고, 우리만의 관점으로 기술의 판도를 바꾸는 &#39;날카로운 균열&#39;을 만들어내겠다는 의지다. 자원의 한계가 상상력의 한계가 되지 않도록, 2026년에도 정체의 감각에 머무르지 않고 격랑을 거스르는 사람으로 남고 싶다.</p>
 <iframe src="https://3d.varco.ai/test-embed/02072a988541af639c393f1d4c45f2ef.glb" width="100%" height="500px" title="설명" style="border: none;"></iframe>
@@ -515,11 +523,11 @@ $$</p>
                     <strong>From Flow Matching to Optimal Transport: A Physics-base...</strong>
                 </a>
     
-                <a class="post-nav-card is-next" href="/blogs/posts/optimizing-sparse-3d-generation-inference-kor/" aria-label="Next Post: 컴파일러가 놓친 Sparse 3D Forward 최적화">
+                <a class="post-nav-card is-next" href="/blogs/posts/optimizing-sparse-3d-generation-inference-kor/" aria-label="Next Post: 컴파일러가 놓치는 Sparse 3D Generation Inference 최적화">
                     <span class="post-nav-kicker">
                         Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
-                    <strong>컴파일러가 놓친 Sparse 3D Forward 최적화</strong>
+                    <strong>컴파일러가 놓치는 Sparse 3D Generation Inference 최적화</strong>
                 </a>
     </nav></div>
                     </div>
@@ -548,11 +556,9 @@ $$</p>
     {
       "id": "260727_sparse_3d",
       "title_eng": "What the Compiler Missed in Sparse 3D Inference",
-      "title_kor": "컴파일러가 놓친 Sparse 3D Forward 최적화",
+      "title_kor": "컴파일러가 놓치는 Sparse 3D Generation Inference 최적화",
       "subtitle_eng": "Why generic compiler paths underperform on dynamic sparse 3D generative models—and how null-context attention removal and model-aware CUDA kernels cut inference latency.",
-      "subtitle_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
-      "description_eng": "Why generic compiler paths underperform on dynamic sparse 3D generative models—and how null-context attention removal and model-aware CUDA kernels cut inference latency.",
-      "description_kor": "Null-Context Attention 제거와 CUDA Fusion으로 Sparse 3D Generation forward latency 줄이기",
+      "subtitle_kor": "torch.compile과 TensorRT가 실패하는 Sparse 3D Generation model에서 Null-Context Attention 제거와 custom CUDA Fusion으로 forward latency 줄이는 방법",
       "tags": [
         "3D Generation",
         "Generative AI",
@@ -574,10 +580,8 @@ $$</p>
       "id": "260115_Varco3D",
       "title_eng": "VARCO 3D: A Year in Review — 2025 Retrospective",
       "title_kor": "3D 생성형 AI 서비스; Varco3D 개발기",
-      "subtitle_eng": "How a fast-follower team tracked the evolution of 3D AI to build an in-house generative 3D service—from VecSet VAEs to voxel-conditioned 3D DiTs.",
-      "subtitle_kor": "빠르게 발전하는 3D AI를 추적하며 인하우스 3D 생성형 AI 서비스를 구축해 간 과정",
-      "description_eng": "How a fast-follower team tracked the evolution of 3D AI to build an in-house generative 3D service—from VecSet VAEs to voxel-conditioned 3D DiTs.",
-      "description_kor": "빠르게 발전하는 3D AI를 추적하며 인하우스 3D 생성형 AI 서비스를 구축해 간 과정",
+      "subtitle_eng": "How a fast-follower team tracked the evolution of 3D AI to build an in-house generative 3D service—from VecSet VAEs to Voxel-conditioned 3D DiTs.",
+      "subtitle_kor": "3D VecSet VAEs 에서부터 Hunyuan3D 3.0의 Voxel-conditioned 3D DiTs까지 추적하며 자체 3D 생성형 AI 서비스를 구축해 간 과정",
       "tags": [
         "3D Generation",
         "Generative AI"
@@ -598,10 +602,8 @@ $$</p>
       "id": "250823_sdf",
       "title_eng": "SDF and Eikonal Equation",
       "title_kor": "SDF 와 Eikonal Equation 의 관계는?",
-      "subtitle_eng": "A rigorous derivation of why a signed distance field satisfies the Eikonal equation, from its geometric definition to gradient bounds.",
-      "subtitle_kor": "Signed distance field의 기하학적 정의에서 출발해, gradient의 크기가 왜 Eikonal equation을 만족하는지 엄밀하게 유도한다.",
-      "description_eng": "Why signed distance field induces eikonal equation",
-      "description_kor": "Eikonal equation 의 해가 왜 signed distance field 인지 알아보자",
+      "subtitle_eng": "A rigorous derivation of why a signed distance field satisfies the Eikonal equation, from its geometric definition to gradient bounds",
+      "subtitle_kor": "Signed distance field의 기하학적 정의에서 출발해, gradient의 크기가 왜 Eikonal equation을 만족하는지 엄밀하게 유도해보기",
       "tags": [
         "Graphics"
       ],
@@ -622,9 +624,7 @@ $$</p>
       "title_eng": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
       "title_kor": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
       "subtitle_eng": "Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow",
-      "subtitle_kor": "Rectified Flow의 생성 경로가 왜 직선으로 수렴하는지, 물리학과 기하학, optimal transport의 관점에서 살펴본다.",
-      "description_eng": "Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow",
-      "description_kor": "Rectified Flow 가 대체 왜 직선인지에 대한 심층 탐구",
+      "subtitle_kor": "Rectified Flow의 생성 경로가 왜 직선으로 수렴하는지, 물리학과 기하학, optimal transport의 관점에서 살펴보기",
       "tags": [
         "3D Generation",
         "Generative AI"
@@ -645,10 +645,8 @@ $$</p>
       "id": "250809_gwn",
       "title_eng": "Generalized Winding Number",
       "title_kor": "Generalized Winding Number",
-      "subtitle_eng": "How Generalized Winding Numbers turn imperfect meshes into robust inside–outside tests for signed distance field construction.",
-      "subtitle_kor": "불완전하거나 열린 mesh에서도 Generalized Winding Number로 inside/outside를 판별하고 견고한 SDF를 계산하는 방법을 살펴본다.",
-      "description_eng": "How to make a robust SDF using GWN from Mesh",
-      "description_kor": "Mesh 에서 GWN 을 이용하여 견고한 SDF 를 계산하는 방법",
+      "subtitle_eng": "How Generalized Winding Numbers turn imperfect meshes into robust inside–outside tests for signed distance field construction",
+      "subtitle_kor": "불완전하거나 열린 mesh에서도 Generalized Winding Number로 inside/outside를 판별하고 견고한 SDF를 계산하는 방법을 살펴보기",
       "tags": [
         "Graphics"
       ],
@@ -668,10 +666,8 @@ $$</p>
       "id": "250710_building_large_3d_2",
       "title_eng": "Building Large 3D Generative Model (2) VAE and DiT Deep Dive",
       "title_kor": "Large 3D Generative Model 구축하기 (2) VAE and DiT 분석",
-      "subtitle_eng": "Comparing vecset and sparse-voxel VAE–DiT architectures, from 3D representation and compression to shape-generation design.",
-      "subtitle_kor": "Vecset과 sparse voxel이 3D shape을 표현하는 방식부터 VAE와 DiT 구조, 생성 모델 설계의 차이까지 비교한다.",
-      "description_eng": "VAE and DiT Architecture for Vecset vs. Sparse-Voxel",
-      "description_kor": "VAE and DiT 구조 분석 for Vecset vs. Sparse-Voxel",
+      "subtitle_eng": "Comparing vecset and sparse-voxel VAE–DiT architectures, from 3D representation and compression to shape-generation design",
+      "subtitle_kor": "Vecset과 sparse voxel이 3D shape을 표현하는 방식부터 VAE와 DiT 구조, 생성 모델 설계의 차이까지 비교해보기",
       "tags": [
         "3D Generation",
         "Generative AI"
@@ -692,10 +688,8 @@ $$</p>
       "id": "250702_building_large_3d_1",
       "title_eng": "Building Large 3D Generative Model (1) Data pre-processing",
       "title_kor": "Large 3D Generative Model 구축하기 (1) 데이터 전처리",
-      "subtitle_eng": "Preparing training-ready 3D data through watertight mesh conversion, surface sampling, and salient-edge-aware preprocessing.",
-      "subtitle_kor": "대규모 3D 생성 모델의 학습 데이터를 위해 watertight mesh 변환, surface sampling, salient edge 추출 과정을 정리한다.",
-      "description_eng": "Watertight Mesh Conversion and Salient Edge Sampling",
-      "description_kor": "Watertight Mesh 변환과 Salient Edge Sampling",
+      "subtitle_eng": "Preparing training-ready 3D data through watertight mesh conversion, surface sampling, and salient-edge-aware preprocessing",
+      "subtitle_kor": "대규모 3D 생성 모델의 학습 데이터를 위해 watertight mesh 변환, surface sampling, salient edge 추출 과정을 정리해보기",
       "tags": [
         "3D Generation",
         "Generative AI"
@@ -716,10 +710,8 @@ $$</p>
       "id": "250310_model_viewer",
       "title_eng": "3D Model Viewer in Web",
       "title_kor": "커스텀 3D 웹뷰어 만들기",
-      "subtitle_eng": "Comparing Google model-viewer with a custom Three.js pipeline for embedding, controlling, and presenting 3D assets on the web.",
-      "subtitle_kor": "Google model-viewer와 직접 만든 Three.js viewer를 비교하며, 웹에서 3D asset을 안정적으로 보여주는 방법을 정리한다.",
-      "description_eng": "Custom Threejs 3D Model Viewer",
-      "description_kor": "커스텀 Three.js 3D 모델 뷰어",
+      "subtitle_eng": "Comparing Google model-viewer with a custom Three.js pipeline for embedding, controlling, and presenting 3D assets on the web",
+      "subtitle_kor": "Google model-viewer와 직접 만든 Three.js viewer를 비교하며, 웹에서 3D asset을 안정적으로 보여주는 방법을 정리해보기",
       "tags": [
         "Web 3D",
         "Three.js"
@@ -740,10 +732,8 @@ $$</p>
       "id": "250302_3d_latent_diffusion",
       "title_eng": "An Era of 3D Generation",
       "title_kor": "3D 생성 모델의 시대",
-      "subtitle_eng": "Tracing 3D latent diffusion from ShapeVAE to TRELLIS and Hunyuan3D, and comparing how modern systems represent and generate shape.",
-      "subtitle_kor": "ShapeVAE에서 TRELLIS와 Hunyuan3D까지, 3D latent diffusion이 shape을 표현하고 생성하는 방식을 비교한다.",
-      "description_eng": "From ShapeVAE to Trellis and Hunyuan3D",
-      "description_kor": "ShapeVAE 부터 Trellis 와 Hunyuan3D 까지, 최근 3D 생성 트렌드의 모든 것",
+      "subtitle_eng": "Tracing 3D latent diffusion from ShapeVAE to TRELLIS and Hunyuan3D, and comparing how modern systems represent and generate shape",
+      "subtitle_kor": "ShapeVAE에서 TRELLIS와 Hunyuan3D까지, 3D latent diffusion이 shape을 표현하고 생성하는 방식 톺아보기",
       "tags": [
         "3D Generation",
         "Generative AI"
@@ -765,9 +755,7 @@ $$</p>
       "title_eng": "Neural Rendering Beyond Photography",
       "title_kor": "X-Ray 와 NeRF",
       "subtitle_eng": "Applying NeRF and Gaussian Splatting beyond photography to X-ray tomography, plus a lightweight viewer workflow built with Viser.",
-      "subtitle_kor": "NeRF와 Gaussian Splatting을 X-ray tomography에 적용하는 원리를 살펴보고, Viser 기반 viewer 제작 팁까지 정리한다.",
-      "description_eng": "NeRF for Tomography & Tip for NeRF Viewer",
-      "description_kor": "의료데이터를 위한 NeRF modeling 과 NeRF Viewer 팁",
+      "subtitle_kor": "NeRF와 Gaussian Splatting을 X-ray tomography에 적용하는 원리를 살펴보고, Viser 기반 viewer 제작 팁까지 살펴보기",
       "tags": [
         "Neural Rendering",
         "Gaussian Splatting"
@@ -788,10 +776,8 @@ $$</p>
       "id": "240917_3djs",
       "title_eng": "Add Gaussian Splatting to Your Website",
       "title_kor": "웹사이트에 3D GS 삽입하기",
-      "subtitle_eng": "A practical Three.js guide to embedding an interactive Gaussian Splatting scene in a website, with no web-graphics background required.",
-      "subtitle_kor": "Three.js를 이용해 웹사이트에 interactive Gaussian Splatting scene을 삽입하고 제어하는 과정을 단계별로 정리한다.",
-      "description_eng": "Tutorial for GS Scene w/ Three-js",
-      "description_kor": "Three-js 이용한 custom GS scene 웹뷰어 tutorial",
+      "subtitle_eng": "A practical Three.js guide to embedding an interactive Gaussian Splatting scene in a website, with no web-graphics background required",
+      "subtitle_kor": "Three.js를 이용해 웹사이트에 interactive Gaussian Splatting scene을 삽입하고 제어해보기",
       "tags": [
         "Web 3D",
         "Three.js"
@@ -813,9 +799,7 @@ $$</p>
       "title_eng": "Don't Rasterize, But Ray Trace 3D Gaussian",
       "title_kor": "3D Gaussian Ray Tracing 톺아보기",
       "subtitle_eng": "How NVIDIA’s 3D Gaussian Ray Tracing replaces splat rasterization with differentiable ray tracing—and what that changes.",
-      "subtitle_kor": "NVIDIA의 3D Gaussian Ray Tracing이 splat rasterization을 differentiable ray tracing으로 바꾸는 방식과 장점을 분석한다.",
-      "description_eng": "In-Depth Review of 3D Gaussian Ray Tracing by NVIDIA",
-      "description_kor": "3D Gaussian Ray Tracing 분석하기",
+      "subtitle_kor": "NVIDIA의 3D Gaussian Ray Tracing이 splat rasterization을 differentiable ray tracing으로 바꾸는 방식과 장점에 대한 심층 분석",
       "tags": [
         "Neural Rendering",
         "Gaussian Splatting"
@@ -837,9 +821,7 @@ $$</p>
       "title_eng": "A Comprehensive Analysis of Gaussian Splatting Rasterization",
       "title_kor": "Gaussian Splatting Rasterization 완벽 분석",
       "subtitle_eng": "A ground-up guide to Gaussian Splatting and differentiable rasterization, tracing the mathematics through its CUDA implementation—from projection and covariance to sorting and alpha blending.",
-      "subtitle_kor": "수식과 CUDA rasterizer 코드를 직접 대응시키는 Gaussian Splatting 완전 해설",
-      "description_eng": "A ground-up guide to Gaussian Splatting and differentiable rasterization, tracing the mathematics through its CUDA implementation—from projection and covariance to sorting and alpha blending.",
-      "description_kor": "수식과 CUDA rasterizer 코드를 직접 대응시키는 Gaussian Splatting 완전 해설",
+      "subtitle_kor": "수식과 CUDA rasterizer 코드를 직접 대응시키며 따라가보는 Gaussian Splatting 완전 해설",
       "tags": [
         "Neural Rendering",
         "Gaussian Splatting"
@@ -860,8 +842,6 @@ $$</p>
       "id": "240721_sfm",
       "title_eng": "Radiance Fields from Deep-based Structure-from-Motion",
       "subtitle_eng": "Comparing VGGSfM and MASt3R as learned Structure-from-Motion pipelines for camera estimation and radiance-field reconstruction.",
-      "description_eng": "Comparison of VGGSfM & MAsT3R",
-      "description_kor": "Comparison of VGGSfM & MAsT3R",
       "tags": [
         "Neural Rendering",
         "Gaussian Splatting"
@@ -881,10 +861,8 @@ $$</p>
       "id": "240602_2dgs",
       "title_eng": "Under the 3D: Geometrically Accurate 2D Gaussian Splatting",
       "title_kor": "2D Gaussian Splatting 톺아보기",
-      "subtitle_eng": "How 2D Gaussian Splatting replaces volumetric blobs with oriented disks to improve surface geometry and mesh reconstruction.",
-      "subtitle_kor": "2D Gaussian Splatting이 volumetric blob 대신 oriented disk를 사용해 surface geometry와 mesh reconstruction을 개선하는 원리를 살펴본다.",
-      "description_eng": "Understanding 2D GS's Algorithm",
-      "description_kor": "3D GS 의 mesh recon 어려움과 이를 해결한 2D GS",
+      "subtitle_eng": "How 2D Gaussian Splatting replaces volumetric blobs with oriented disks to improve surface geometry and mesh reconstruction",
+      "subtitle_kor": "2D Gaussian Splatting이 volumetric blob 대신 oriented disk를 사용해 surface geometry와 mesh reconstruction을 개선하는 원리를 살펴보기",
       "tags": [
         "Neural Rendering",
         "Gaussian Splatting"
@@ -907,8 +885,6 @@ $$</p>
       "title_kor": "Diffusion 으로 추정한 Depth 진짜 좋나요?",
       "subtitle_eng": "Evaluating diffusion-estimated depth by turning Marigold predictions into textured meshes and inspecting their geometric consistency.",
       "subtitle_kor": "Diffusion 으로 추정한 Depth Map 을 이용해 Textured Mesh 만들어보기 (feat. Marigold)",
-      "description_eng": "Making Mesh from Estimated Depth Map by Diffusion",
-      "description_kor": "Diffusion 으로 추정한 Depth Map 을 이용해 Textured Mesh 만들어보기 (feat. Marigold)",
       "tags": [
         "3D Generation",
         "Generative AI"
@@ -929,10 +905,8 @@ $$</p>
       "id": "240226_sora",
       "title_eng": "Can Sora Understand 3D?",
       "title_kor": "Sora 가 상상하는 3D World",
-      "subtitle_eng": "Testing whether video generation models encode enough 3D consistency to reconstruct radiance fields from their synthesized views.",
+      "subtitle_eng": "Testing whether video generation models encode enough 3D consistency to reconstruct radiance fields from their synthesized views",
       "subtitle_kor": "Video Generative AI 로부터 NeRF reconstruction 해보기",
-      "description_eng": "Radiance Fields Reconstruction from Video Generative AI",
-      "description_kor": "Video Generative AI 로부터 NeRF reconstruction 해보기",
       "tags": [
         "3D Generation",
         "Generative AI"
@@ -952,10 +926,8 @@ $$</p>
       "id": "231130_nerf_in_game",
       "title_eng": "Can NeRF be used in Game?",
       "title_kor": "NeRF 를 게임 제작에서 이용할 수 있을까?",
-      "subtitle_eng": "Examining the quality, rendering, and production constraints that limit NeRF in games—and the workarounds available today.",
-      "subtitle_kor": "NeRF 의 단점을 살펴보자",
-      "description_eng": "Explore Limitations of NeRF",
-      "description_kor": "NeRF 의 단점을 살펴보자",
+      "subtitle_eng": "Examining the quality, rendering, and production constraints that limit NeRF in games—and the workarounds available today",
+      "subtitle_kor": "NeRF의 단점을 통해 살펴보는 Neural Rendering 기술이 게임에 적용되기 위해 넘어야 할 과제들",
       "tags": [
         "Neural Rendering",
         "Gaussian Splatting"
@@ -975,10 +947,8 @@ $$</p>
       "id": "230202_ngp",
       "title_eng": "Instant-NGP Review & Re-Implementation",
       "title_kor": "Instant-NGP 리뷰 및 재구현",
-      "subtitle_eng": "Reviewing Instant-NGP’s multi-resolution hash encoding and rebuilding its NeRF pipeline step by step in PyTorch.",
-      "subtitle_kor": "Review of Instant-NGP and PyTorch Re-Implementation",
-      "description_eng": "Review of Instant-NGP and PyTorch Re-Implementation",
-      "description_kor": "Review of Instant-NGP and PyTorch Re-Implementation",
+      "subtitle_eng": "Reviewing Instant-NGP’s multi-resolution hash encoding and rebuilding its NeRF pipeline step by step in PyTorch",
+      "subtitle_kor": "PyTorch Re-Implementation을 통해 수식과 코드 단위로 상세 리뷰해보는 Instant-NGP",
       "tags": [
         "Neural Rendering",
         "Gaussian Splatting"
@@ -1000,8 +970,6 @@ $$</p>
       "title_kor": "Position Encoding 이 NeRF 에서 필수적인 이유",
       "subtitle_eng": "Review of Fourier Features Let Networks Learn High-Frequency Functions",
       "subtitle_kor": "Fourier Features Let Networks Learn High-Frequency Functions 리뷰",
-      "description_eng": "Review of Fourier Features Let Networks Learn High-Frequency Functions",
-      "description_kor": "Fourier Features Let Networks Learn High-Frequency Functions 리뷰",
       "tags": [
         "Neural Rendering",
         "Gaussian Splatting"
@@ -1022,9 +990,7 @@ $$</p>
       "title_eng": "Change of Basis",
       "title_kor": "Change of Basis",
       "subtitle_eng": "Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)",
-      "subtitle_kor": "대각화와 고윳값, SVD와 PCA를 통해 좌표계 변환이 복잡한 선형대수 문제를 어떻게 단순화하는지 살펴본다.",
-      "description_eng": "Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)",
-      "description_kor": "대각화와 고윳값, 특이값 분해, Principal Component Analysis (PCA)",
+      "subtitle_kor": "대각화와 고윳값, SVD와 PCA를 통해 좌표계 변환이 복잡한 선형대수 문제를 어떻게 단순화하는지 살펴보기",
       "tags": [
         "Linear Algebra"
       ],
@@ -1044,10 +1010,8 @@ $$</p>
       "id": "210909_lin_alg_1",
       "title_eng": "Linear System",
       "title_kor": "Linear System",
-      "subtitle_eng": "Building intuition for linear systems and transformations through matrices, basis vectors, and geometric mappings.",
-      "subtitle_kor": "행렬과 기저벡터의 관점에서 선형시스템과 선형변환이 공간을 어떻게 바꾸는지 직관적으로 살펴본다.",
-      "description_eng": "Linear System, Linear Transformation, and its Intuitions",
-      "description_kor": "선형시스템과 선형변환, 이에 대한 직관들",
+      "subtitle_eng": "Building intuition for linear systems and transformations through matrices, basis vectors, and geometric mappings",
+      "subtitle_kor": "행렬과 기저벡터의 관점에서 선형시스템과 선형변환이 공간을 어떻게 바꾸는지 직관적으로 살펴보기",
       "tags": [
         "Linear Algebra"
       ],
@@ -1069,8 +1033,6 @@ $$</p>
       "title_kor": "3D Stereo Vision and Epipolar Geometry",
       "subtitle_eng": "From camera projection to stereo correspondence, deriving the epipolar geometry used to recover 3D structure from two views.",
       "subtitle_kor": "Camera Projection, Stereo, and Epipolar Geometry",
-      "description_eng": "Camera Projection, Stereo, and Epipolar Geometry",
-      "description_kor": "Camera Projection, Stereo, and Epipolar Geometry",
       "tags": [
         "Computer Vision"
       ],
@@ -1091,8 +1053,6 @@ $$</p>
       "title_kor": "Homography and Image Alignment",
       "subtitle_eng": "How image transformations, homographies, feature correspondences, and alignment connect in practical computer vision pipelines.",
       "subtitle_kor": "Image Transformation, Homography, and Correspondence Matching",
-      "description_eng": "Image Transformation, Homography, and Correspondence Matching",
-      "description_kor": "Image Transformation, Homography, and Correspondence Matching",
       "tags": [
         "Computer Vision"
       ],
@@ -1113,8 +1073,6 @@ $$</p>
       "title_kor": "Feature Extraction and Detection",
       "subtitle_eng": "A practical tour of image gradients, Sobel and LoG filters, and the feature detection principles built on top of them.",
       "subtitle_kor": "Image Gradient, Sobel Filter, LoG, and Detection",
-      "description_eng": "Image Gradient, Sobel Filter, LoG, and Detection",
-      "description_kor": "Image Gradient, Sobel Filter, LoG, and Detection",
       "tags": [
         "Computer Vision"
       ],
@@ -1135,8 +1093,6 @@ $$</p>
       "title_kor": "Image Filter and Morphology",
       "subtitle_eng": "A practical introduction to spatial image filters and morphology, including erosion, dilation, opening, and closing.",
       "subtitle_kor": "다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여",
-      "description_eng": "Various Image Filters and Morphology (Erosion & Dilation)",
-      "description_kor": "다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여",
       "tags": [
         "Computer Vision"
       ],
@@ -1153,6 +1109,10 @@ $$</p>
     }
   ],
   "series": {
+    "cuda": {
+      "eng": "CUDA",
+      "kor": "CUDA"
+    },
     "nerf-and-gs": {
       "eng": "Radiance Fields & Gaussian Splatting",
       "kor": "Radiance Fields & Gaussian Splatting"

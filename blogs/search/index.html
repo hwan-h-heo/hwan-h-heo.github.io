@@ -8,8 +8,8 @@
         <title>Search | Hwan Heo</title>
         <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        <link href="../css/blog.css?v=c4319681dd" rel="stylesheet" />
-        <link href="../css/typography.css?v=5e2acfdea5" rel="stylesheet" />
+        <link href="../css/blog.css?v=48f73e3499" rel="stylesheet" />
+        <link href="../css/typography.css?v=8ab8293a7c" rel="stylesheet" />
         <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
         <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
         <script>
@@ -37,7 +37,7 @@
                     <span>Blog</span>
                 </a>
                 <div class="blog-home-toolbar-actions">
-                    <form id="search-form" class="blog-home-search" role="search">
+                    <form id="search-form" class="blog-home-search" role="search" data-collapsible-search>
                         <label class="visually-hidden" for="search-input">Search posts</label>
                         <input type="text" id="search-input" placeholder="Search...">
                         <button type="submit" id="search-button" aria-label="Search">
@@ -51,25 +51,31 @@
                 </div>
             </nav>
 
-            <header class="masthead blog-home-hero" style="background-image: url('../../assets/image_fx_.webp'); background-position: center 34%; background-size: cover;">
+            <header class="masthead blog-home-hero blog-editorial-utility-hero">
                 <div class="blog-shell blog-hero-shell">
-                    <div class="blog-home-hero-grid">
-                        <div class="blog-home-hero-copy">
-                            <span class="blog-home-kicker" data-search-copy="kicker">Search</span>
-                            <h1 data-search-copy="title">Search the archive</h1>
-                            <p data-search-copy="intro">Find research notes by title, topic, tag, or anything mentioned in the article.</p>
+                    <div class="blog-editorial-utility-copy">
+                        <div class="blog-editorial-imprint">
+                            <div class="blog-editorial-brandline" lang="en">
+                                <span class="blog-editorial-index">00</span>
+                                <span class="blog-editorial-separator" aria-hidden="true">/</span>
+                                <span class="blog-home-kicker" data-search-copy="kicker">Search Index</span>
+                            </div>
+                            <span class="blog-editorial-edition" lang="en">Hwan's Blog</span>
                         </div>
+                        <h1 data-search-copy="title">Search the archive</h1>
+                        <p data-search-copy="intro">Find research notes by title, topic, tag, or anything mentioned in the article.</p>
                     </div>
                 </div>
             </header>
 
             <div class="blog-shell blog-home-container">
-                <section class="blog-home-archive blog-search-results" aria-labelledby="search-results-heading">
-                    <div class="blog-home-archive-head">
-                        <div>
-                            <span class="blog-search-eyebrow" data-search-copy="eyebrow">Archive index</span>
-                            <h2 id="search-results-heading" data-search-copy="results">Results</h2>
-                        </div>
+                <section class="blog-home-archive blog-editorial-archive blog-search-results" aria-labelledby="search-results-heading">
+                    <div class="blog-home-archive-head blog-editorial-section-head">
+                        <h2 id="search-results-heading">
+                            <span class="blog-home-archive-index" aria-hidden="true">01</span>
+                            <span data-search-copy="results">Results</span>
+                        </h2>
+                        <span class="blog-home-archive-rule" aria-hidden="true"></span>
                         <span id="search-result-count" class="blog-search-count" aria-live="polite"></span>
                     </div>
                     <div id="search-results-container" class="blog-home-tab-content" aria-live="polite">
@@ -89,11 +95,11 @@
             </div>
         </footer>
 
-        <script src="../js/site-data-client.js?v=fd5ff44d2c"></script>
+        <script src="../js/site-data-client.js?v=61dca8d30d"></script>
         <script src="../js/blog-cover-media.js?v=f16969bf34"></script>
         <script src="../js/blog-shell.js?v=456de34605"></script>
         <script src="../js/theme-toggle.js?v=32f6914d64"></script>
-        <script src="../js/search-page.js?v=c5f3967b70"></script>
+        <script src="../js/search-page.js?v=ed78730f2e"></script>
         <script>
             initBlogShell({ formSelector: '#search-form', inputSelector: '#search-input' });
         </script>

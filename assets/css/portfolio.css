@@ -1068,12 +1068,14 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   gap: 0;
   margin: 0;
   padding: 0;
+  counter-reset: portfolio-writing-folio;
 }
 
 .portfolio-blog-section .portfolio-blog-preview-item {
   margin: 0;
   padding: 1rem 0;
   border-bottom: 1px solid var(--color-line-soft);
+  counter-increment: portfolio-writing-folio;
 }
 
 .portfolio-blog-section .portfolio-blog-preview-item:first-child {
@@ -1165,6 +1167,12 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   font-weight: 500;
   letter-spacing: 0;
   text-transform: uppercase;
+}
+
+.portfolio-blog-section .portfolio-blog-preview-eyebrow::before {
+  margin-right: 0.5rem;
+  color: var(--color-text-faint);
+  content: "W–" counter(portfolio-writing-folio, decimal-leading-zero) " /";
 }
 
 .portfolio-blog-section .portfolio-blog-preview-title {
@@ -1800,12 +1808,14 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   gap: 0;
   margin: 0;
   padding: 0;
+  counter-reset: portfolio-project-folio;
 }
 
 .portfolio-project-item {
   margin: 0;
   padding: 1rem 0;
   border-bottom: 1px solid var(--color-line-soft);
+  counter-increment: portfolio-project-folio;
 }
 
 .portfolio-project-item:first-child {
@@ -1897,6 +1907,12 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   font-weight: 500;
   letter-spacing: 0;
   text-transform: uppercase;
+}
+
+.portfolio-project-eyebrow::before {
+  margin-right: 0.5rem;
+  color: var(--color-text-faint);
+  content: "P–" counter(portfolio-project-folio, decimal-leading-zero) " /";
 }
 
 .portfolio-project-title {

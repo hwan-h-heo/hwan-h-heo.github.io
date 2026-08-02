@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     try {
-        const { loadSiteData, getPostTitle, getPostDescription, getPostUrl } = window.siteDataClient;
+        const { loadSiteData, getPostTitle, getPostSubtitle, getPostUrl } = window.siteDataClient;
         const coverMedia = window.blogCoverMedia;
         const externalLinkIcon = window.SiteIcons.render('box-arrow-up-right', {
             className: 'portfolio-blog-preview-external-icon'
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             .filter((item) => item.post)
             .map((item) => {
                 const title = getPostTitle(item.post, 'eng');
-                const subtitle = item.post.subtitle_eng || getPostDescription(item.post, 'eng');
+                const subtitle = getPostSubtitle(item.post, 'eng');
                 const seriesTitle = getSeriesTitle(item.post);
                 const date = formatDate(item.post.date);
                 const tagsHtml = renderTags(item.previewTags || item.post.tags);
