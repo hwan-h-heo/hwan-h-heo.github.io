@@ -2031,10 +2031,10 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 .portfolio-project-body {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   max-width: 880px;
   min-width: 0;
-  padding-top: 0;
+  padding-top: clamp(0.32rem, 0.5vw, 0.48rem);
 }
 
 .portfolio-project-eyebrow {

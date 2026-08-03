@@ -401,9 +401,11 @@ the Portfolio-home Blog preview's persistent external-destination signal.
 On the Portfolio home, use a complementary desktop orientation to mark the
 transition from selected work into writing: Project previews place media on the
 left and copy on the right, while Blog previews place copy on the left and media
-on the right. Vertically center both copy stacks against their media so the
-shared card grammar remains evident. On compact single-column layouts, return
-both preview types to media-first order and top-align the copy.
+on the right. Top-align Project copy with one small optical inset for a
+consistent artifact-index scan without pinning the eyebrow to the media edge,
+while vertically centering the larger Portfolio-home Blog headline stack
+against its smaller media rail. On compact single-column layouts, return both
+preview types to media-first order and top-align the copy without that inset.
 Introduce the Portfolio Blog previews with one left-aligned `SELECTED NOTES`
 mono label and a quiet trailing hairline, echoing the Blog chapter grammar
 without assigning the Portfolio section a competing chapter number.
