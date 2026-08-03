@@ -689,6 +689,13 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
         const siteData = await fetch('/blogs/data/site-data.json').then((response) => response.json());
         const featuredPostId = siteData.blogHome?.featuredPostId || '';
         const featuredPost = siteData.posts.find((post) => post.id === featuredPostId);
+        const archiveStartPostId = siteData.blogHome?.archiveStartPostId || '';
+        const archiveStartPost = siteData.posts.find((post) => post.id === archiveStartPostId);
+        const archiveStartDate = archiveStartPost?.date || '';
+        const cardIsFromArchive = (card) => {
+            const post = siteData.posts.find((entry) => entry.id === card.dataset.postId);
+            return Boolean(post && archiveStartDate && post.date <= archiveStartDate);
+        };
         const featureCover = document.querySelector('.blog-feature-cover');
         const featureCard = document.querySelector('.blog-feature-card');
         const featureCopy = document.querySelector('.blog-feature-copy');
@@ -706,6 +713,7 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
         return {
             configuredFeaturedLanguage: featuredPost?.languages?.includes('kor') ? 'ko' : 'en',
             configuredFeaturedPostId: featuredPostId,
+            configuredArchiveStartPostId: archiveStartPostId,
             configuredPostCount: siteData.posts.filter((post) => post.category === 'post').length,
             featuredPostId: document.querySelector('.blog-feature-card')?.dataset.postId || '',
             heroIntroFontFamily: heroIntroStyle.fontFamily,
@@ -789,8 +797,7 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
                 && (previewDate.compareDocumentPosition(previewTags) & Node.DOCUMENT_POSITION_FOLLOWING)
             ),
             archiveEraSignatureMatches: [...postArchiveCards, ...noteArchiveCards].every((card) => {
-                const year = Number(siteData.posts.find((post) => post.id === card.dataset.postId)?.date.slice(0, 4));
-                return card.classList.contains('post-preview-media-right') === (year >= new Date().getFullYear() - 1);
+                return card.classList.contains('post-preview-media-right') === !cardIsFromArchive(card);
             }),
             archiveEraBreaks: [
                 document.querySelector('#posts-tab'),
@@ -798,36 +805,25 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
             ].map((panel) => {
                 const cards = Array.from(panel.querySelectorAll('.post-preview[data-post-id]'));
                 const marker = panel.querySelector('.blog-home-era-break');
-                const firstOld = cards.find((card) => {
-                    const year = Number(siteData.posts.find((post) => post.id === card.dataset.postId)?.date.slice(0, 4));
-                    return year < new Date().getFullYear() - 1;
-                });
-                const lastRecent = cards.findLast((card) => {
-                    const year = Number(siteData.posts.find((post) => post.id === card.dataset.postId)?.date.slice(0, 4));
-                    return year >= new Date().getFullYear() - 1;
-                });
+                const firstFromArchive = cards.find(cardIsFromArchive);
+                const lastCurrent = cards.findLast((card) => !cardIsFromArchive(card));
                 return {
                     count: panel.querySelectorAll('.blog-home-era-break').length,
+                    firstArchivePostId: firstFromArchive?.dataset.postId || '',
                     text: marker?.textContent.replace(/\s+/g, ' ').trim() || '',
                     precedingBorderWidth: marker?.previousElementSibling
                         ? getComputedStyle(marker.previousElementSibling).borderBottomWidth
                         : '',
                     betweenEras: Boolean(
-                        marker && firstOld && lastRecent
-                        && (lastRecent.compareDocumentPosition(marker) & Node.DOCUMENT_POSITION_FOLLOWING)
-                        && (marker.compareDocumentPosition(firstOld) & Node.DOCUMENT_POSITION_FOLLOWING)
+                        marker && firstFromArchive && lastCurrent
+                        && (lastCurrent.compareDocumentPosition(marker) & Node.DOCUMENT_POSITION_FOLLOWING)
+                        && (marker.compareDocumentPosition(firstFromArchive) & Node.DOCUMENT_POSITION_FOLLOWING)
                     )
                 };
             }),
             postArchiveEraGeometry: [
-                postArchiveCards.find((card) => {
-                    const year = Number(siteData.posts.find((post) => post.id === card.dataset.postId)?.date.slice(0, 4));
-                    return year >= new Date().getFullYear() - 1;
-                }),
-                postArchiveCards.find((card) => {
-                    const year = Number(siteData.posts.find((post) => post.id === card.dataset.postId)?.date.slice(0, 4));
-                    return year < new Date().getFullYear() - 1;
-                })
+                postArchiveCards.find((card) => !cardIsFromArchive(card)),
+                postArchiveCards.find(cardIsFromArchive)
             ].map((card) => {
                 const cover = card.querySelector('.post-card-cover')?.getBoundingClientRect();
                 const copy = card.querySelector('.post-card-body')?.getBoundingClientRect();
@@ -901,15 +897,21 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
     assert(!initialTitleState.hasArchiveReadAction, 'Archive rows restored the redundant Read post action.');
     assert(initialTitleState.previewSeriesLabel === 'SERIES', 'Archive rows lost the explicit series hierarchy.');
     assert(initialTitleState.previewMetadataOrder, 'Archive row date and tag hierarchy is out of order.');
-    assert(initialTitleState.archiveEraSignatureMatches, 'Archive media sides no longer follow the recent-two-years boundary.');
+    assert(initialTitleState.archiveEraSignatureMatches, 'Archive media sides no longer follow the configured post boundary.');
     assert(
         initialTitleState.archiveEraBreaks.every((entry) => (
             entry.count === 1
-                && entry.text === '03 Old Archive'
+                && entry.text === '03 From the Archive'
                 && entry.precedingBorderWidth === '0px'
                 && entry.betweenEras
         )),
-        'Posts or Notes lost the single 03 Old Archive boundary at the media-side transition.'
+        'Posts or Notes lost the single 03 From the Archive boundary at the media-side transition.'
+    );
+    assert(
+        initialTitleState.configuredArchiveStartPostId
+            && initialTitleState.archiveEraBreaks[0]?.firstArchivePostId
+                === initialTitleState.configuredArchiveStartPostId,
+        'The Posts archive does not begin with the configured archive-start post.'
     );
     assert(
         JSON.stringify(initialTitleState.postArchiveEraGeometry) === JSON.stringify([true, false]),
@@ -1196,7 +1198,7 @@ async function assertPostNavigation(page, width) {
 }
 
 async function assertBlogArchiveUtilities(page, testCase, width) {
-    const state = await page.evaluate((pageType) => {
+    const state = await page.evaluate(async (pageType) => {
         const back = document.querySelector('.blog-home-back');
         const search = document.querySelector('.blog-home-search');
         const count = document.querySelector('.blog-search-count');
@@ -1206,6 +1208,11 @@ async function assertBlogArchiveUtilities(page, testCase, width) {
         const backStyle = getComputedStyle(back);
         const searchStyle = getComputedStyle(search);
         const countStyle = count ? getComputedStyle(count) : null;
+        const siteData = await fetch('/blogs/data/site-data.json').then((response) => response.json());
+        const archiveStartPost = siteData.posts.find((post) => (
+            post.id === siteData.blogHome?.archiveStartPostId
+        ));
+        const archiveStartDate = archiveStartPost?.date || '';
         return {
             backBackground: backStyle.backgroundColor,
             backBorderWidth: backStyle.borderTopWidth,
@@ -1233,16 +1240,16 @@ async function assertBlogArchiveUtilities(page, testCase, width) {
                     && (!tags || Boolean(date.compareDocumentPosition(tags) & Node.DOCUMENT_POSITION_FOLLOWING));
             }),
             previewEraSignatureValid: previews.every((card) => {
-                const year = Number(card.querySelector('time[datetime]')?.getAttribute('datetime')?.slice(0, 4));
-                const isRecent = year >= new Date().getFullYear() - 1;
+                const postDate = card.querySelector('time[datetime]')?.getAttribute('datetime') || '';
+                const fromArchive = Boolean(archiveStartDate && postDate <= archiveStartDate);
                 if (window.innerWidth <= 575) {
                     const cover = card.querySelector('.post-card-cover')?.getBoundingClientRect();
                     const body = card.querySelector('.post-card-body')?.getBoundingClientRect();
                     return Boolean(cover && body && cover.bottom <= body.top + 1);
                 }
-                return card.classList.contains('post-preview-media-right') === isRecent;
+                return card.classList.contains('post-preview-media-right') === !fromArchive;
             }),
-            oldArchiveFolio: document.querySelector('.blog-home-era-break')?.textContent.replace(/\s+/g, ' ').trim() || '',
+            fromArchiveFolio: document.querySelector('.blog-home-era-break')?.textContent.replace(/\s+/g, ' ').trim() || '',
             visibleLanguageField: pageType === 'blog-search'
                 ? Array.from(document.querySelectorAll('#search-results-container .post-preview *'))
                     .some((element) => ['Languages:', '언어:'].some((label) => element.textContent.trim().startsWith(label)))
@@ -1282,7 +1289,7 @@ async function assertBlogArchiveUtilities(page, testCase, width) {
     );
     assert(state.previewHierarchyValid, `${testCase.id} previews no longer share the Blog home content hierarchy.`);
     assert(state.previewEraSignatureValid, `${testCase.id} previews no longer share the Blog home era alignment.`);
-    assert(state.oldArchiveFolio === '02 Old Archive', `${testCase.id} is missing the old-archive boundary folio.`);
+    assert(state.fromArchiveFolio === '02 From the Archive', `${testCase.id} is missing the archive boundary folio.`);
     if (testCase.type === 'blog-search') {
         assert(
             state.countBorderWidth === '0px'
@@ -1525,7 +1532,10 @@ async function assertLightbox(page, testCase, width, options) {
 }
 
 async function assertSharedSidebar(page, testCase, width, options) {
-    if (!['project', 'post'].includes(testCase.type) || ![390, 1200].includes(width)) {
+    const railOnlyTypes = ['blog-home', 'post', 'viewer', 'editor'];
+    const checksCompactSidebar = width === 390 && ['project', 'post'].includes(testCase.type);
+    const checksDesktopSidebar = width === 1200 && (testCase.type === 'project' || railOnlyTypes.includes(testCase.type));
+    if (!checksCompactSidebar && !checksDesktopSidebar) {
         return;
     }
 
@@ -1571,9 +1581,20 @@ async function assertSharedSidebar(page, testCase, width, options) {
         return;
     }
 
-    const collapseToggle = page.locator('.sidebar-collapse-toggle');
-    assert(await collapseToggle.getAttribute('aria-expanded') === 'false', 'Desktop sidebar did not honor its default collapsed preference.');
-    if (testCase.type === 'post') {
+    if (railOnlyTypes.includes(testCase.type)) {
+        const railState = await page.evaluate(() => {
+            const header = document.querySelector('#header');
+            return {
+                collapsed: document.documentElement.classList.contains('sidebar-collapsed'),
+                headerWidth: header?.getBoundingClientRect().width || 0,
+                collapseToggleCount: document.querySelectorAll('.sidebar-collapse-toggle').length
+            };
+        });
+        assert(
+            railState.collapsed && railState.headerWidth <= 80 && railState.collapseToggleCount === 0,
+            `${testCase.id} sidebar is no longer a fixed desktop rail: ${JSON.stringify(railState)}`
+        );
+
         const labsSummary = page.locator('.sidebar-labs-menu > summary');
         await labsSummary.click();
         const collapsedLabsState = await page.evaluate(() => {
@@ -1604,7 +1625,44 @@ async function assertSharedSidebar(page, testCase, width, options) {
             await page.locator('.sidebar-labs-menu').evaluate((element) => !element.open && document.activeElement === element.querySelector('summary')),
             'Escape did not close the collapsed Labs overlay and restore focus.'
         );
+
+        if (testCase.type !== 'post') {
+            return;
+        }
+
+        const contentsToggle = page.locator('.sidebar-contents-toggle');
+        await contentsToggle.click();
+        const contentsState = await page.evaluate(() => {
+            const header = document.querySelector('#header');
+            const toc = document.querySelector('.toc');
+            const tocRect = toc?.getBoundingClientRect();
+            return {
+                expanded: document.querySelector('.sidebar-contents-toggle')?.getAttribute('aria-expanded'),
+                visible: toc?.classList.contains('is-visible'),
+                ariaHidden: toc?.getAttribute('aria-hidden'),
+                tocLeft: tocRect?.left || 0,
+                sidebarRight: header?.getBoundingClientRect().right || 0
+            };
+        });
+        assert(
+            contentsState.expanded === 'true'
+                && contentsState.visible
+                && contentsState.ariaHidden === 'false'
+                && contentsState.tocLeft >= contentsState.sidebarRight - 1,
+            `Post Contents did not open as a rail flyout: ${JSON.stringify(contentsState)}`
+        );
+
+        await page.keyboard.press('Escape');
+        assert(
+            await contentsToggle.evaluate((element) => element.getAttribute('aria-expanded') === 'false' && document.activeElement === element),
+            'Escape did not close the Contents flyout and restore focus.'
+        );
+        await page.evaluate(() => window.scrollTo(0, 0));
+        return;
     }
+
+    const collapseToggle = page.locator('.sidebar-collapse-toggle');
+    assert(await collapseToggle.getAttribute('aria-expanded') === 'false', 'Desktop sidebar did not honor its default collapsed preference.');
     await collapseToggle.click();
     await page.waitForFunction(() => {
         const header = document.querySelector('#header');

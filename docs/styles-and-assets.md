@@ -76,8 +76,10 @@ Post media belongs in `blogs/posts/<post-id>/assets/`. Project media belongs in
 
 `css/sidebar-nav.css` and `js/sidebar-controller.js` own the shared responsive
 sidebar behavior for portfolio, project, blog index, search, and Labs pages.
-Desktop sidebars switch between a 300px panel and a persisted 72px icon rail;
-mobile sidebars use an overlay drawer. The portfolio home reserves the saved
+Portfolio and project desktop sidebars switch between a 300px panel and a
+persisted 72px icon rail. Public Blog, Post, and Labs surfaces use the 72px rail
+as their only desktop state; mobile sidebars use an overlay drawer. The
+portfolio home reserves the saved
 sidebar width for sections below the full-width hero, so revealing the sidebar
 does not reflow the page. Sidebar content briefly crossfades while the rail
 changes width to keep labels from reflowing visibly. Keep page-specific sidebar

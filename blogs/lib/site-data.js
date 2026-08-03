@@ -305,7 +305,7 @@ function validateTalkShape(talk, index, errors) {
 }
 
 function validateBlogHomeShape(blogHome, posts, errors) {
-    const allowedKeys = new Set(['featuredPostId']);
+    const allowedKeys = new Set(['featuredPostId', 'archiveStartPostId']);
     Object.keys(blogHome).forEach((key) => {
         if (!allowedKeys.has(key)) {
             errors.push(`Unexpected key "${key}" in blogHome.`);
@@ -313,21 +313,45 @@ function validateBlogHomeShape(blogHome, posts, errors) {
     });
 
     validateStringField(blogHome, 'featuredPostId', errors, 'blogHome');
-    if (!blogHome.featuredPostId) {
-        return;
+    validateStringField(blogHome, 'archiveStartPostId', errors, 'blogHome');
+
+    if (blogHome.featuredPostId) {
+        const featuredPost = posts.find((post) => post.id === blogHome.featuredPostId);
+        if (!featuredPost) {
+            errors.push(`Blog home featured post "${blogHome.featuredPostId}" does not exist.`);
+        } else {
+            if ((featuredPost.status || 'published') !== 'published') {
+                errors.push(`Blog home featured post "${blogHome.featuredPostId}" must be published.`);
+            }
+            if (featuredPost.category !== 'post') {
+                errors.push(`Blog home featured post "${blogHome.featuredPostId}" must use the post category.`);
+            }
+        }
     }
 
-    const featuredPost = posts.find((post) => post.id === blogHome.featuredPostId);
-    if (!featuredPost) {
-        errors.push(`Blog home featured post "${blogHome.featuredPostId}" does not exist.`);
-        return;
+    if (blogHome.archiveStartPostId) {
+        const archiveStartPost = posts.find((post) => post.id === blogHome.archiveStartPostId);
+        if (!archiveStartPost) {
+            errors.push(`Blog home archive start post "${blogHome.archiveStartPostId}" does not exist.`);
+        } else {
+            if ((archiveStartPost.status || 'published') !== 'published') {
+                errors.push(`Blog home archive start post "${blogHome.archiveStartPostId}" must be published.`);
+            }
+            if (archiveStartPost.category !== 'post') {
+                errors.push(`Blog home archive start post "${blogHome.archiveStartPostId}" must use the post category.`);
+            }
+        }
     }
-    if ((featuredPost.status || 'published') !== 'published') {
-        errors.push(`Blog home featured post "${blogHome.featuredPostId}" must be published.`);
-    }
-    if (featuredPost.category !== 'post') {
-        errors.push(`Blog home featured post "${blogHome.featuredPostId}" must use the post category.`);
-    }
+}
+
+function isFromArchive(post, siteData) {
+    const archiveStartPostId = siteData.blogHome?.archiveStartPostId;
+    const archiveStartPost = archiveStartPostId
+        ? (siteData.postById?.[archiveStartPostId]
+            || siteData.posts.find((entry) => entry.id === archiveStartPostId))
+        : null;
+
+    return Boolean(archiveStartPost && post.date <= archiveStartPost.date);
 }
 
 function normalizeRelatedItem(item) {
@@ -598,6 +622,7 @@ module.exports = {
     POST_LANGUAGES,
     PORTFOLIO_CATEGORIES,
     createSlug,
+    isFromArchive,
     loadRawPostRelatedData,
     loadRawSiteData,
     loadSiteData,

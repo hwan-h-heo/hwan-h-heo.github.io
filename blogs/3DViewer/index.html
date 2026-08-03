@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="sidebar-collapsed blog-sidebar-rail">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -44,13 +44,13 @@
             }
         </style>
         <script src="/assets/js/site-icons.js"></script>
-        <script src="../../js/sidebar-controller.js"></script>
+        <script src="../../js/sidebar-controller.js" data-sidebar-mode="rail"></script>
         <link href="../css/sidebar.css" rel="stylesheet">
         <link href="../../css/sidebar-nav.css" rel="stylesheet">
         <link href="../css/typography.css" rel="stylesheet">
     </head>
     <body>
-        <header id="header" class="header blog-sidebar dark-background">
+        <header id="header" class="header blog-sidebar dark-background" data-sidebar-mode="rail">
             <div class="profile-img">
               <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo">
             </div>
@@ -87,8 +87,18 @@
                   <svg class="site-icon sidebar-labs-chevron" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
                 </summary>
                 <div class="sidebar-labs-panel">
-                  <a href="./" class="active"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg><span>3D Viewer</span></a>
-                  <a href="../editor/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg><span>Markdown Editor</span></a>
+                  <div class="sidebar-rail-panel-heading" aria-hidden="true">
+                    <span>Labs / 02</span>
+                    <small>Tools &amp; experiments</small>
+                  </div>
+                  <a href="./" class="active">
+                    <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg>
+                    <span class="sidebar-labs-copy"><strong>3D Viewer</strong><small>Inspect 3D assets</small></span>
+                  </a>
+                  <a href="../editor/">
+                    <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg>
+                    <span class="sidebar-labs-copy"><strong>Markdown Editor</strong><small>Draft long-form posts</small></span>
+                  </a>
                 </div>
               </details>
             </div>

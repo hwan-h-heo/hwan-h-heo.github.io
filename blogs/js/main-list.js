@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         eng: {
             searchPlaceholder: 'Search...',
             archiveTitle: 'Articles',
-            oldArchiveTitle: 'Old Archive',
+            fromArchiveTitle: 'From the Archive',
             tabPosts: 'Posts',
             tabNotes: 'Notes',
             tabSeries: 'Series',
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         kor: {
             searchPlaceholder: 'Search...',
             archiveTitle: 'Articles',
-            oldArchiveTitle: 'Old Archive',
+            fromArchiveTitle: 'From the Archive',
             tabPosts: 'Posts',
             tabNotes: 'Notes',
             tabSeries: 'Series',

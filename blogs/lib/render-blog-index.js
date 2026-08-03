@@ -1,4 +1,5 @@
 const { SITE_URL } = require('./site-config');
+const { isFromArchive } = require('./site-data');
 const {
     escapeHtml,
     getFeaturedPost,
@@ -49,43 +50,42 @@ function renderBlogHeadMetadata() {
     ].join('\n');
 }
 
-function renderArchiveEntries(posts, lang, siteData, recentArchiveYearCutoff) {
-    let oldArchiveStarted = false;
+function renderArchiveEntries(posts, lang, siteData) {
+    let archiveStarted = false;
 
     return posts.map((post) => {
-        const isRecent = Number(post.date.slice(0, 4)) >= recentArchiveYearCutoff;
-        const oldArchiveHeading = !isRecent && !oldArchiveStarted
+        const fromArchive = isFromArchive(post, siteData);
+        const fromArchiveHeading = fromArchive && !archiveStarted
             ? `
                         <div class="blog-home-era-break">
                             <h3>
                                 <span class="blog-home-era-index" aria-hidden="true">03</span>
-                                <span data-i18n="oldArchiveTitle">Old Archive</span>
+                                <span data-i18n="fromArchiveTitle">From the Archive</span>
                             </h3>
                             <span class="blog-home-era-rule" aria-hidden="true"></span>
                         </div>`
             : '';
 
-        if (!isRecent) {
-            oldArchiveStarted = true;
+        if (fromArchive) {
+            archiveStarted = true;
         }
 
-        return `${oldArchiveHeading}${renderPostPreview(post, lang, siteData, {
-            mediaSide: isRecent ? 'right' : 'left'
+        return `${fromArchiveHeading}${renderPostPreview(post, lang, siteData, {
+            mediaSide: fromArchive ? 'left' : 'right'
         })}`;
     }).join('');
 }
 
 function renderStaticBlogIndex(sourceHtml, siteData) {
     const lang = 'eng';
-    const recentArchiveYearCutoff = new Date().getFullYear() - 1;
     const featuredPost = getFeaturedPost(siteData);
     const allPosts = siteData.posts.filter((post) => post.category === 'post');
     const regularPosts = allPosts.filter((post) => post.id !== featuredPost?.id);
     const notes = siteData.posts.filter((post) => post.category === 'note');
     const seriesCount = new Set(siteData.posts.map((post) => post.series).filter(Boolean)).size;
-    const postsHtml = renderArchiveEntries(regularPosts, lang, siteData, recentArchiveYearCutoff)
+    const postsHtml = renderArchiveEntries(regularPosts, lang, siteData)
         || '<p class="blog-home-empty">No posts yet.</p>';
-    const notesHtml = renderArchiveEntries(notes, lang, siteData, recentArchiveYearCutoff)
+    const notesHtml = renderArchiveEntries(notes, lang, siteData)
         || '<p class="blog-home-empty">No notes yet.</p>';
     const seriesHtml = renderSeriesGroups(siteData, lang)
         || '<p class="blog-home-empty">No series yet.</p>';

@@ -120,8 +120,10 @@ function renderConditionalBodyScripts(runtimeFeatures) {
     return scripts.join('\n');
 }
 
-function renderPostSidebar() {
-    return `    <header id="header" class="header blog-sidebar dark-background">
+function renderPostSidebar(lang) {
+    const contentsLabel = lang === 'kor' ? '목차 열기' : 'Open contents';
+
+    return `    <header id="header" class="header blog-sidebar dark-background" data-sidebar-mode="rail">
         <div class="profile-img">
             <img src="/assets/icon.webp" alt="Portrait illustration of Hwan Heo">
         </div>
@@ -163,10 +165,27 @@ function renderPostSidebar() {
                     ${renderSiteIcon('chevron-down', { className: 'sidebar-labs-chevron' })}
                 </summary>
                 <div class="sidebar-labs-panel">
-                    <a href="/blogs/3DViewer/">${renderSiteIcon('box', { className: 'navicon' })}<span>3D Viewer</span></a>
-                    <a href="/blogs/editor/">${renderSiteIcon('pencil-square', { className: 'navicon' })}<span>Markdown Editor</span></a>
+                    <div class="sidebar-rail-panel-heading" aria-hidden="true">
+                        <span>Labs / 02</span>
+                        <small>Tools &amp; experiments</small>
+                    </div>
+                    <a href="/blogs/3DViewer/">
+                        ${renderSiteIcon('box', { className: 'navicon' })}
+                        <span class="sidebar-labs-copy"><strong>3D Viewer</strong><small>Inspect 3D assets</small></span>
+                    </a>
+                    <a href="/blogs/editor/">
+                        ${renderSiteIcon('pencil-square', { className: 'navicon' })}
+                        <span class="sidebar-labs-copy"><strong>Markdown Editor</strong><small>Draft long-form posts</small></span>
+                    </a>
                 </div>
             </details>
+        </div>
+
+        <div class="sidebar-contents">
+            <button class="sidebar-contents-toggle" type="button" aria-label="${contentsLabel}" aria-controls="post-toc" aria-expanded="false">
+                ${renderSiteIcon('list-ul', { className: 'navicon' })}
+                <span>Contents</span>
+            </button>
         </div>
     </header>`;
 }
@@ -288,7 +307,7 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
     };
 
     return `<!DOCTYPE html>
-<html lang="${lang === 'eng' ? 'en' : 'ko'}">
+<html lang="${lang === 'eng' ? 'en' : 'ko'}" class="sidebar-collapsed blog-sidebar-rail">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -323,7 +342,7 @@ ${alternateLinksHtml}
     <link href="/blogs/css/post.css" rel="stylesheet" />
     <link href="/assets/css/site-icons.css" rel="stylesheet" />
     <script src="/assets/js/site-icons.js"></script>
-    <script src="/js/sidebar-controller.js"></script>
+    <script src="/js/sidebar-controller.js" data-sidebar-mode="rail"></script>
 ${renderConditionalHeadAssets(activeRuntimeFeatures)}
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
@@ -344,7 +363,7 @@ ${renderConditionalHeadAssets(activeRuntimeFeatures)}
         </script>
 </head>
 <body class="blog-post-page">
-${renderPostSidebar()}
+${renderPostSidebar(lang)}
 
     <main class="main blog-post-main">
         <nav class="post-site-nav" id="mainNav" aria-label="Post utilities">

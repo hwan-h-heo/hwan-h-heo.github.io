@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="sidebar-collapsed blog-sidebar-rail">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -23,7 +23,7 @@
     <link href="./editor.css" rel="stylesheet" />
 </head>
 <body>
-    <header id="header" class="header blog-sidebar dark-background public-site-sidebar">
+    <header id="header" class="header blog-sidebar dark-background public-site-sidebar" data-sidebar-mode="rail">
         <div class="profile-img">
             <img src="/assets/icon.webp" alt="Portrait illustration of Hwan Heo">
         </div>
@@ -58,15 +58,25 @@
         </nav>
 
         <div class="sidebar-labs">
-            <details class="sidebar-labs-menu is-active" open>
+            <details class="sidebar-labs-menu is-active">
                 <summary>
                     <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-tools"></use></svg>
                     <span>Labs</span>
                     <svg class="site-icon sidebar-labs-chevron" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
                 </summary>
                 <div class="sidebar-labs-panel">
-                    <a href="/blogs/3DViewer/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg><span>3D Viewer</span></a>
-                    <a href="/blogs/editor/" class="active" aria-current="page"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg><span>Markdown Editor</span></a>
+                    <div class="sidebar-rail-panel-heading" aria-hidden="true">
+                        <span>Labs / 02</span>
+                        <small>Tools &amp; experiments</small>
+                    </div>
+                    <a href="/blogs/3DViewer/">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg>
+                        <span class="sidebar-labs-copy"><strong>3D Viewer</strong><small>Inspect 3D assets</small></span>
+                    </a>
+                    <a href="/blogs/editor/" class="active" aria-current="page">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg>
+                        <span class="sidebar-labs-copy"><strong>Markdown Editor</strong><small>Draft long-form posts</small></span>
+                    </a>
                 </div>
             </details>
         </div>

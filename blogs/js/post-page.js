@@ -196,13 +196,59 @@
             return;
         }
 
+        const contentsToggle = document.querySelector('.sidebar-contents-toggle');
+        const labsMenu = document.querySelector('.sidebar-labs-menu');
+        const railFlyoutMedia = window.matchMedia('(min-width: 1200px) and (max-width: 1599px)');
+        const persistentTocMedia = window.matchMedia('(min-width: 1600px)');
         let tocItems = [];
+        let railFlyoutOpen = false;
+
+        if (!toc.id) {
+            toc.id = 'post-toc';
+        }
+        contentsToggle?.setAttribute('aria-controls', toc.id);
+
+        function updateRailFlyoutPosition() {
+            if (!contentsToggle || !railFlyoutMedia.matches) {
+                return;
+            }
+
+            const triggerRect = contentsToggle.getBoundingClientRect();
+            const viewportPadding = 10;
+            const top = Math.max(viewportPadding, Math.round(triggerRect.top));
+            toc.style.setProperty('--post-rail-flyout-top', `${top}px`);
+        }
 
         function updateTocVisibility() {
             const headerHeight = document.querySelector('.masthead')?.offsetHeight || 300;
-            const isVisible = window.innerWidth > 1280 && window.scrollY > headerHeight;
+            if (!railFlyoutMedia.matches && railFlyoutOpen) {
+                railFlyoutOpen = false;
+                contentsToggle?.setAttribute('aria-expanded', 'false');
+            }
+
+            const isPersistent = persistentTocMedia.matches && window.scrollY > headerHeight;
+            const isVisible = railFlyoutMedia.matches ? railFlyoutOpen : isPersistent;
+            toc.classList.toggle('is-rail-flyout', railFlyoutMedia.matches);
             toc.classList.toggle('is-visible', isVisible);
             toc.setAttribute('aria-hidden', isVisible ? 'false' : 'true');
+
+            if (railFlyoutMedia.matches) {
+                updateRailFlyoutPosition();
+            }
+        }
+
+        function setRailFlyoutOpen(open, restoreFocus = false) {
+            railFlyoutOpen = railFlyoutMedia.matches && open;
+            contentsToggle?.setAttribute('aria-expanded', String(railFlyoutOpen));
+
+            if (railFlyoutOpen && labsMenu?.open) {
+                labsMenu.open = false;
+            }
+
+            updateTocVisibility();
+            if (restoreFocus && contentsToggle) {
+                contentsToggle.focus();
+            }
         }
 
         function getDirectAnchor(item) {
@@ -278,11 +324,42 @@
             }
         }
 
-        document.addEventListener('scroll', updateTocVisibility);
+        document.addEventListener('scroll', updateTocVisibility, { passive: true });
         window.addEventListener('scroll', syncToc, false);
         window.addEventListener('resize', () => {
             updateTocVisibility();
             updateSublistHeights();
+        });
+        railFlyoutMedia.addEventListener('change', updateTocVisibility);
+        persistentTocMedia.addEventListener('change', updateTocVisibility);
+        contentsToggle?.addEventListener('click', () => {
+            setRailFlyoutOpen(!railFlyoutOpen);
+        });
+        labsMenu?.addEventListener('toggle', () => {
+            if (labsMenu.open && railFlyoutOpen) {
+                setRailFlyoutOpen(false);
+            }
+        });
+        document.addEventListener('pointerdown', (event) => {
+            if (
+                railFlyoutOpen
+                && !toc.contains(event.target)
+                && !contentsToggle?.contains(event.target)
+            ) {
+                setRailFlyoutOpen(false);
+            }
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && railFlyoutOpen) {
+                setRailFlyoutOpen(false, true);
+            }
+        });
+        toc.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', () => {
+                if (railFlyoutOpen) {
+                    setRailFlyoutOpen(false);
+                }
+            });
         });
         updateTocVisibility();
         normalizeLegacyTocLists();

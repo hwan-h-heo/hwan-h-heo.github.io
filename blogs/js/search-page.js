@@ -124,8 +124,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             return;
         }
 
-        const recentArchiveYearCutoff = new Date().getFullYear() - 1;
-        let oldArchiveStarted = false;
+        let archiveStarted = false;
         resultsContainer.innerHTML = filteredPosts.map((post) => {
             const title = window.siteDataClient.getPostTitle(post, language);
             const subtitle = window.siteDataClient.getPostSubtitle(post, language);
@@ -138,25 +137,25 @@ document.addEventListener('DOMContentLoaded', async function() {
             const animatedSource = !keepAnimated && coverMedia?.isAnimatedCover(source)
                 ? ` data-animated-src="${escapeHtml(source)}"`
                 : '';
-            const isRecent = Number(post.date.slice(0, 4)) >= recentArchiveYearCutoff;
-            const layoutClass = isRecent ? ' post-preview-media-right' : '';
-            const oldArchiveHeading = !isRecent && !oldArchiveStarted
+            const fromArchive = window.siteDataClient.isFromArchive(post, siteData);
+            const layoutClass = fromArchive ? '' : ' post-preview-media-right';
+            const fromArchiveHeading = fromArchive && !archiveStarted
                 ? `
                     <div class="blog-home-era-break">
                         <h3>
                             <span class="blog-home-era-index" aria-hidden="true">02</span>
-                            <span>Old Archive</span>
+                            <span>From the Archive</span>
                         </h3>
                         <span class="blog-home-era-rule" aria-hidden="true"></span>
                     </div>`
                 : '';
 
-            if (!isRecent) {
-                oldArchiveStarted = true;
+            if (fromArchive) {
+                archiveStarted = true;
             }
 
             return `
-                ${oldArchiveHeading}
+                ${fromArchiveHeading}
                 <article class="post-preview${layoutClass}" data-post-id="${escapeHtml(post.id)}" data-post-category="${escapeHtml(post.category)}">
                     <div class="post-card-link">
                         <a href="${escapeHtml(url)}" class="post-card-cover" aria-label="Read ${escapeHtml(title)}">

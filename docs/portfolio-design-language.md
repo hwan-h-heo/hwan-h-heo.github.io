@@ -240,15 +240,21 @@ not depend on adding a serif family.
   takeaway, use `## TL; DR`. Keep that opening as ordinary paragraphs rather
   than a blockquote or summary list so every article enters the reading flow
   with the same hierarchy.
-- Blog posts use the shared dark sidebar for global navigation between Blog,
-  Portfolio, Labs, and profile destinations. Search, theme, and language stay
-  in a slim, right-aligned utility row because they are reading-context tools;
-  do not duplicate global navigation or section labels in that row. On compact
-  screens, replace the sidebar trigger with a borderless `Blog Home` link at the
-  left edge of the utility row. The post search icon expands an inline text
-  field before navigating to results; opening search must not discard the
-  current reading context, and the Home label may recede while the field is
-  open to preserve input width.
+- Public Blog, Post, and Labs surfaces keep the shared dark desktop sidebar as
+  a fixed `72px` activity rail; they do not expose its `300px` expanded state.
+  The portrait and Blog, Portfolio, and Labs destinations remain the permanent
+  rail grammar. Search, theme, and language stay in a slim, right-aligned
+  utility row because they are familiar reading-context tools and must not be
+  duplicated in the rail. On posts between `1200px` and `1599px`, add one
+  contextual Contents trigger that opens the existing TOC as a transient rail
+  flyout; at `1600px` and above, retain the persistent right-side TOC and hide
+  that trigger. Do not add a separate reading-progress edge: the browser
+  scrollbar and, on wide screens, the active TOC already communicate reading
+  position. On compact screens, replace the sidebar trigger
+  with a borderless `Blog Home` link at the left edge of the utility row. The
+  post search icon expands an inline text field before navigating to results;
+  opening search must not discard the current reading context, and the Home
+  label may recede while the field is open to preserve input width.
 - The public Markdown Editor uses that same dark sidebar as its only persistent
   left rail. Keep browser and Drive draft utilities in a transient right-side
   `Draft tools` drawer, and omit repository publishing, existing-post loading,
@@ -259,12 +265,13 @@ not depend on adding a serif family.
   underline-only search fields. Do not use pill containers for back navigation,
   search inputs, or result counts. Search, Tag, and Series pages continue the
   dark-cover and numbered-chapter grammar as `00 / SEARCH·TOPIC·SERIES INDEX`,
-  `01 / RESULTS·ARTICLES`, and—when the date boundary exists—`02 / OLD ARCHIVE`.
+  `01 / RESULTS·ARTICLES`, and—when the configured archive boundary exists—
+  `02 / FROM THE ARCHIVE`.
   Their cover is the same calm `#101011` ink without the obsolete photographic
   banner. Their preview rows use the Blog home hierarchy: series, title,
   subtitle, localized publication date, then tags. Search only the active locale
   and link directly to that locale's article; do not expose a separate
-  `Languages` field. Apply the same recent-right / old-left media signature,
+  `Languages` field. Apply the same current-right / archive-left media signature,
   collapsing back to media-first rows on mobile. Wherever a mobile sidebar
   remains available, its scrim and panel must stack above any fixed utility bar.
 - Do not render breadcrumbs before a long-form blog article when the persistent
@@ -297,9 +304,12 @@ The default component is unframed.
 - Avoid pill shapes for taxonomy; use inline text separated by a middle dot.
 - Circular shapes are reserved for icon-only controls and portraits.
 - Remove a border when whitespace already explains the relationship.
-- In the collapsed desktop sidebar, activating Labs opens a small anchored
-  overlay below the rail icon without expanding the full sidebar. Treat it as
-  transient navigation: close it on outside click or Escape and restore focus.
+- In the desktop rail, Labs and post Contents use the same anchored-flyout
+  grammar: align the flyout's top edge with its trigger, open it to the right of
+  the rail, and keep only one flyout open. Treat both as transient navigation:
+  close on outside click or Escape and restore focus. Labs uses a quiet
+  `LABS / COUNT` heading plus short tool descriptions; it is a tool switcher,
+  not a card grid or a second sidebar.
 
 Shadows are acceptable only for transient or floating utility UI such as the
 mobile sidebar toggle, tooltip, and scroll-to-top control.
@@ -399,16 +409,18 @@ with their tags so copy never grows beyond the adjacent media merely to repeat
 an action already available through the cover and title.
 
 Use the Blog home Archive layout as a quiet era signature rather than a repeating
-row pattern. Place media on the right for writing published within the current
-and previous calendar years, and return it to the left for older writing. In
-2026, this means 2025–2026 on the right and 2024 or earlier on the left. This
-reverses the opening Archive spread from Featured, then marks the older archive
-with a single deliberate shift. Keep `02 ARTICLES` as the tab-owning chapter so
-Posts, Notes, and Series remain coherent, then insert one `03 OLD ARCHIVE` folio
-before the first pre-cutoff Post or Note to explain the alignment change. Remove
-the final Recent row's bottom hairline at this boundary so it does not double the
-new folio rule. Keep all text left-aligned and reset to media-first stacked rows
-on the compact single-column layout.
+row pattern. Place media on the right for current writing, then return it to the
+left from the post configured by `blogHome.archiveStartPostId` onward. The
+current boundary begins with `Neural Rendering Beyond Photography`, marking the
+shift from broader 3D generation and 3D AI writing into the earlier neural-
+rendering body of work. This reverses the opening Archive spread from Featured,
+then marks the archive with a single deliberate shift. Keep `02 ARTICLES` as
+the tab-owning chapter so Posts, Notes, and Series remain coherent, then insert
+one `03 FROM THE ARCHIVE` folio immediately before the configured boundary Post
+or the first qualifying Note. Remove the final current row's bottom hairline at
+this boundary so it does not double the new folio rule. Keep all text
+left-aligned and reset to media-first stacked rows on the compact single-column
+layout.
 
 Featured titles and subtitles are never clipped with a line clamp. Let the
 browser fit both through a small, bounded type-size adjustment after fonts load;

@@ -1,4 +1,5 @@
 const { SITE_URL } = require('./site-config');
+const { isFromArchive } = require('./site-data');
 const { render: renderSiteIcon } = require('../../assets/js/site-icons');
 const {
     escapeHtml,
@@ -7,28 +8,27 @@ const {
 } = require('./seo-utils');
 
 function renderArchiveEntries(posts, siteData) {
-    const recentArchiveYearCutoff = new Date().getFullYear() - 1;
-    let oldArchiveStarted = false;
+    let archiveStarted = false;
 
     return posts.map((post) => {
-        const isRecent = Number(post.date.slice(0, 4)) >= recentArchiveYearCutoff;
-        const oldArchiveHeading = !isRecent && !oldArchiveStarted
+        const fromArchive = isFromArchive(post, siteData);
+        const fromArchiveHeading = fromArchive && !archiveStarted
             ? `
                         <div class="blog-home-era-break">
                             <h3>
                                 <span class="blog-home-era-index" aria-hidden="true">02</span>
-                                <span>Old Archive</span>
+                                <span>From the Archive</span>
                             </h3>
                             <span class="blog-home-era-rule" aria-hidden="true"></span>
                         </div>`
             : '';
 
-        if (!isRecent) {
-            oldArchiveStarted = true;
+        if (fromArchive) {
+            archiveStarted = true;
         }
 
-        return `${oldArchiveHeading}${renderPostPreview(post, 'eng', siteData, {
-            mediaSide: isRecent ? 'right' : 'left'
+        return `${fromArchiveHeading}${renderPostPreview(post, 'eng', siteData, {
+            mediaSide: fromArchive ? 'left' : 'right'
         })}`;
     }).join('');
 }

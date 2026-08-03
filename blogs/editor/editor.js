@@ -414,6 +414,7 @@
 
         const sidebarController = document.createElement('script');
         sidebarController.src = '/js/sidebar-controller.js';
+        sidebarController.dataset.sidebarMode = 'rail';
         sidebarController.dataset.publicEditorSidebar = 'true';
         document.head.appendChild(sidebarController);
     }

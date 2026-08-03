@@ -1,6 +1,7 @@
 {
   "blogHome": {
-    "featuredPostId": "260727_sparse_3d"
+    "featuredPostId": "260727_sparse_3d",
+    "archiveStartPostId": "250106_tomography"
   },
   "posts": [
     {

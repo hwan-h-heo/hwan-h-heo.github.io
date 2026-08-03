@@ -70,10 +70,21 @@
         return `/blogs/posts/${resolvedLang === 'eng' ? post.slug : `${post.slug}-kor`}/`;
     }
 
+    function isFromArchive(post, siteData) {
+        const archiveStartPostId = siteData.blogHome?.archiveStartPostId;
+        const archiveStartPost = archiveStartPostId
+            ? (siteData.postById?.[archiveStartPostId]
+                || siteData.posts.find((entry) => entry.id === archiveStartPostId))
+            : null;
+
+        return Boolean(archiveStartPost && post.date <= archiveStartPost.date);
+    }
+
     window.siteDataClient = {
         loadSiteData,
         getPostTitle,
         getPostSubtitle,
-        getPostUrl
+        getPostUrl,
+        isFromArchive
     };
 })();

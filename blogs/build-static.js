@@ -870,7 +870,11 @@ function normalizePostContent(post, content, htmlContent, lang) {
 
     if (!content.includes('<nav class="toc">')) {
         const { tocHtml, contentHtml } = generateTOC(updatedHtmlContent, lang);
-        updatedHtmlContent = tocHtml ? `<nav class="toc" aria-label="Table of contents">${tocHtml}</nav>${contentHtml}` : contentHtml;
+        updatedHtmlContent = tocHtml ? `<nav id="post-toc" class="toc" aria-label="Table of contents">${tocHtml}</nav>${contentHtml}` : contentHtml;
+    }
+
+    if (!updatedHtmlContent.includes('id="post-toc"')) {
+        updatedHtmlContent = updatedHtmlContent.replace('<nav class="toc"', '<nav id="post-toc" class="toc"');
     }
 
     updatedHtmlContent = updatedHtmlContent.replace(

@@ -258,7 +258,8 @@
 
 #header.header .navmenu a,
 #header.header .navmenu a:focus,
-#header.header .sidebar-labs-menu summary {
+#header.header .sidebar-labs-menu summary,
+#header.header .sidebar-contents-toggle {
     min-height: 43px;
     padding: 9px 12px;
     border: 1px solid transparent;
@@ -300,7 +301,9 @@
 #header.header .navmenu a:hover,
 #header.header .navmenu a:focus-visible,
 #header.header .sidebar-labs-menu summary:hover,
-#header.header .sidebar-labs-menu summary:focus-visible {
+#header.header .sidebar-labs-menu summary:focus-visible,
+#header.header .sidebar-contents-toggle:hover,
+#header.header .sidebar-contents-toggle:focus-visible {
     border-color: rgba(215, 229, 240, 0.08);
     color: var(--site-sidebar-ink);
     background: rgba(255, 255, 255, 0.045);
@@ -310,7 +313,8 @@
 #header.header .navmenu a.active,
 #header.header .navmenu a.active:focus,
 #header.header .sidebar-labs-menu[open] summary,
-#header.header .sidebar-labs-menu.is-active summary {
+#header.header .sidebar-labs-menu.is-active summary,
+#header.header .sidebar-contents-toggle[aria-expanded="true"] {
     border-color: transparent;
     color: var(--site-sidebar-ink);
     background: transparent;
@@ -319,7 +323,8 @@
 
 #header.header .navmenu a .navicon,
 #header.header .navmenu a:focus .navicon,
-#header.header .sidebar-labs-menu summary .navicon {
+#header.header .sidebar-labs-menu summary .navicon,
+#header.header .sidebar-contents-toggle .navicon {
     flex: 0 0 22px;
     width: 22px;
     margin-right: 10px;
@@ -335,7 +340,10 @@
 #header.header .navmenu a.active:focus .navicon,
 #header.header .sidebar-labs-menu summary:hover .navicon,
 #header.header .sidebar-labs-menu[open] summary .navicon,
-#header.header .sidebar-labs-menu.is-active summary .navicon {
+#header.header .sidebar-labs-menu.is-active summary .navicon,
+#header.header .sidebar-contents-toggle:hover .navicon,
+#header.header .sidebar-contents-toggle:focus-visible .navicon,
+#header.header .sidebar-contents-toggle[aria-expanded="true"] .navicon {
     color: var(--site-sidebar-accent);
 }
 
@@ -352,6 +360,28 @@
     border-left: 1px solid var(--site-sidebar-line);
     border-radius: 9px;
     background: rgba(255, 255, 255, 0.025);
+}
+
+#header.header .sidebar-rail-panel-heading {
+    display: grid;
+    gap: 0.22rem;
+    padding: 0.45rem 0.5rem 0.55rem;
+    border-bottom: 1px solid var(--site-sidebar-line);
+}
+
+#header.header .sidebar-rail-panel-heading span {
+    color: var(--site-sidebar-ink);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.65rem;
+    font-weight: 500;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+#header.header .sidebar-rail-panel-heading small {
+    color: var(--site-sidebar-muted);
+    font-size: 0.72rem;
+    line-height: 1.35;
 }
 
 #header.header .sidebar-labs-panel a,
@@ -372,6 +402,42 @@
 #header.header .sidebar-labs-panel a.active {
     color: var(--site-sidebar-ink);
     background: transparent;
+}
+
+#header.header .sidebar-labs-copy {
+    display: grid;
+    gap: 0.12rem;
+    min-width: 0;
+}
+
+#header.header .sidebar-labs-copy strong {
+    color: inherit;
+    font-size: 0.78rem;
+    font-weight: 550;
+    line-height: 1.25;
+}
+
+#header.header .sidebar-labs-copy small {
+    color: color-mix(in srgb, var(--site-sidebar-muted), transparent 8%);
+    font-size: 0.68rem;
+    line-height: 1.35;
+}
+
+#header.header .sidebar-contents {
+    display: none;
+    margin-top: 5px;
+}
+
+#header.header .sidebar-contents-toggle {
+    appearance: none;
+    align-items: center;
+    width: 100%;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    font-family: var(--site-sidebar-nav-font);
+    text-align: left;
 }
 
 .sidebar-collapsed-tooltip::before {
@@ -414,7 +480,8 @@
 #header.header > .logo,
 #header.header > .social-links,
 #header.header > .navmenu,
-#header.header > .sidebar-labs {
+#header.header > .sidebar-labs,
+#header.header > .sidebar-contents {
     opacity: 1;
     transition: opacity var(--site-sidebar-content-fade-duration) ease;
 }
@@ -423,14 +490,16 @@
 #header.header.sidebar-layout-changing > .logo,
 #header.header.sidebar-layout-changing > .social-links,
 #header.header.sidebar-layout-changing > .navmenu,
-#header.header.sidebar-layout-changing > .sidebar-labs {
+#header.header.sidebar-layout-changing > .sidebar-labs,
+#header.header.sidebar-layout-changing > .sidebar-contents {
     opacity: 0;
     pointer-events: none;
 }
 
 #header.header .navmenu a,
 #header.header .navmenu a:focus,
-#header.header .sidebar-labs-menu summary {
+#header.header .sidebar-labs-menu summary,
+#header.header .sidebar-contents-toggle {
     font-family: var(--site-sidebar-nav-font);
     font-size: 15px;
     font-weight: 400;
@@ -491,7 +560,8 @@
     }
 
     html.sidebar-collapsed #header.header .navmenu a,
-    html.sidebar-collapsed #header.header .navmenu a:focus {
+    html.sidebar-collapsed #header.header .navmenu a:focus,
+    html.sidebar-collapsed #header.header .sidebar-contents-toggle {
         justify-content: center;
         box-sizing: border-box;
         width: 40px;
@@ -513,7 +583,8 @@
 
     html.sidebar-collapsed #header.header .navmenu a .navicon,
     html.sidebar-collapsed #header.header .navmenu a:focus .navicon,
-    html.sidebar-collapsed #header.header .sidebar-labs-menu summary .navicon {
+    html.sidebar-collapsed #header.header .sidebar-labs-menu summary .navicon,
+    html.sidebar-collapsed #header.header .sidebar-contents-toggle .navicon {
         flex-basis: auto;
         width: 1em;
         margin: 0;
@@ -524,7 +595,8 @@
     html.sidebar-collapsed .header .project-selector-toggle,
     html.sidebar-collapsed .header .project-selector-options,
     html.sidebar-collapsed .header .sidebar-labs-menu summary > span,
-    html.sidebar-collapsed .header .sidebar-labs-chevron {
+    html.sidebar-collapsed .header .sidebar-labs-chevron,
+    html.sidebar-collapsed .header .sidebar-contents-toggle > span {
         display: none;
     }
 
@@ -542,13 +614,13 @@
 
     html.sidebar-collapsed #header.header .sidebar-labs-menu[open] .sidebar-labs-panel {
         position: absolute;
-        top: calc(100% + 7px);
+        top: 0;
         right: auto;
         bottom: auto;
         left: calc(100% + 10px);
         z-index: 1080;
         display: grid;
-        width: 13rem;
+        width: 16rem;
         margin: 0;
         padding: 0.42rem;
         border: 1px solid var(--site-sidebar-line);
@@ -561,7 +633,7 @@
     html.sidebar-collapsed #header.header .sidebar-labs-menu[open] .sidebar-labs-panel a:focus {
         justify-content: flex-start;
         width: auto;
-        min-height: 36px;
+        min-height: 48px;
         margin: 0;
         padding: 0.48rem 0.56rem;
         overflow: visible;
@@ -571,7 +643,8 @@
     }
 
     html.sidebar-collapsed #header.header .project-nav-selector summary,
-    html.sidebar-collapsed #header.header .sidebar-labs-menu summary {
+    html.sidebar-collapsed #header.header .sidebar-labs-menu summary,
+    html.sidebar-collapsed #header.header .sidebar-contents-toggle {
         justify-content: center;
         box-sizing: border-box;
         width: 40px;
@@ -580,6 +653,10 @@
         margin-right: auto;
         margin-left: auto;
         padding: 0;
+    }
+
+    .blog-post-page #header.header .sidebar-contents {
+        display: block;
     }
 
     html.sidebar-collapsed .header .sidebar-collapse-toggle {
@@ -614,6 +691,12 @@
     }
 }
 
+@media (min-width: 1600px) {
+    .blog-post-page #header.header .sidebar-contents {
+        display: none;
+    }
+}
+
 @media (max-width: 1199px) {
     .sidebar-collapsed-tooltip {
         display: none;
@@ -629,6 +712,10 @@
     }
 
     .sidebar-collapse-toggle {
+        display: none;
+    }
+
+    #header.header .sidebar-contents {
         display: none;
     }
 
