@@ -143,6 +143,9 @@ Rules:
   description blocks on the structural left edge and apply one shared, subtle
   leftward correction to large Manrope headings instead of adding per-section
   paragraph margins.
+- Keep Portfolio section headings non-interactive. Put section-level navigation
+  in a separate compact text action so headings retain one consistent chapter
+  role.
 - Keep letter spacing at `0` in new portfolio styles.
 - Use uppercase mono labels sparingly and keep them short.
 - Limit small text to three levels: structural label, metadata, and action.
@@ -405,7 +408,9 @@ Do not repeat technology tags or the publication date beneath Portfolio-home
 Blog standfirsts. Keep the right-side Blog media rail narrower than the Project
 media rail so the headline, rather than the thumbnail, carries the row.
 Keep the headline free of a trailing destination icon; the explicit action owns
-the Portfolio-home Blog preview's persistent external-destination signal.
+the Portfolio-home Blog preview's persistent external-destination signal. Open
+Portfolio-to-Blog navigation in a new tab because the Blog is treated as an
+independent publication brand rather than another Portfolio section.
 
 On the Portfolio home, use a complementary desktop orientation to mark the
 transition from selected work into writing: Project previews place media on the
@@ -415,9 +420,24 @@ consistent artifact-index scan without pinning the eyebrow to the media edge,
 while vertically centering the larger Portfolio-home Blog headline stack
 against its smaller media rail. On compact single-column layouts, return both
 preview types to media-first order and top-align the copy without that inset.
-Introduce the Portfolio Blog previews with one left-aligned `SELECTED NOTES`
-mono label and a quiet trailing hairline, echoing the Blog chapter grammar
-without assigning the Portfolio section a competing chapter number.
+Introduce both Portfolio preview groups with the Blog chapter-head grammar:
+a short uppercase mono label, one flexible hairline, and the controls or action
+that own the list. Projects keep the `Selected` and `All` filters with counts in
+the section intro's right rail, balancing its compact title and description;
+`PROJECT INDEX` and its hairline then provide a quiet pause immediately before
+the rows. The Technical Blog intro mirrors that composition by keeping
+`View all posts` in its right rail, using the boxed external-link icon and a new
+tab for the independent Blog brand; `SELECTED NOTES` and its hairline then form
+the quiet pause before the writing rows. On compact layouts, move both the
+Project filters and Blog action beneath their complete intros. Do not assign
+either Portfolio section a competing chapter number.
+
+Give explicit Portfolio controls and collection actions such as `Selected`,
+`All`, and `View all posts` the strong small-action weight. Set repeated
+per-preview `Read post` actions one weight step lighter so they retain their
+editorial cadence without competing with controls that change or leave the
+section. The collection-level `View all posts` action may be one modest type
+step larger than the compact filter tabs without approaching card-title scale.
 
 Do not add a badge layer. Do not repeat the same classification in multiple
 rows.
@@ -425,9 +445,11 @@ rows.
 Preview rows are editorial reading surfaces, not full-row links. Only the media
 and title are primary links; the title link may fill the horizontal line box it
 occupies. Portfolio-home Blog previews add one compact `Read post` link to make
-their publication role explicit. Subtitles, tags, dates, organizations, and
-accolades remain normal selectable text. Apply the same non-row-link rule to
-Blog home featured, archive, and search rows.
+their publication role explicit; its repetition also supplies a restrained
+editorial cadence, while the section-level `View all posts` action owns
+collection navigation. Subtitles, tags, dates, organizations, and accolades
+remain normal selectable text. Apply the same non-row-link rule to Blog home
+featured, archive, and search rows.
 
 On the Blog home, treat Featured and Articles as the two top-level publication
 chapters: `01 FEATURED` and `02 ARTICLES`. Set both in the same short uppercase

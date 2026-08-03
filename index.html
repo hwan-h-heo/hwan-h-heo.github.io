@@ -40,7 +40,7 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect" />
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="assets/css/site-icons.css" rel="stylesheet">
@@ -116,16 +116,30 @@
       <!-- Section Title -->
       <div class="portfolio-shell section-title portfolio-section-heading">
         <div class="portfolio-heading-copy">
-          <h2>Selected Projects</h2>
+          <h2>Projects</h2>
           <p class="portfolio-credibility">Production 3D AI systems · 4 papers · 6 invited talks</p>
         </div>
         <ul class="portfolio-filters portfolio-view-toggle" aria-label="Filter portfolio projects">
-          <li data-portfolio-view="selected" class="filter-active" role="button" tabindex="0" aria-pressed="true">Selected</li>
-          <li data-portfolio-view="all" role="button" tabindex="0" aria-pressed="false">All</li>
+          <li>
+            <button type="button" data-portfolio-view="selected" class="filter-active" aria-pressed="true">
+              <span>Selected</span>
+              <span class="portfolio-filter-count" data-portfolio-count="selected"></span>
+            </button>
+          </li>
+          <li>
+            <button type="button" data-portfolio-view="all" aria-pressed="false">
+              <span>All</span>
+              <span class="portfolio-filter-count" data-portfolio-count="all"></span>
+            </button>
+          </li>
         </ul>
       </div><!-- End Section Title -->
 
       <div class="portfolio-shell portfolio-content">
+        <div class="portfolio-index-head portfolio-project-index-head">
+          <h3 class="portfolio-index-label">Project Index</h3>
+          <span class="portfolio-index-rule" aria-hidden="true"></span>
+        </div>
         <div class="portfolio-project-list" id="portfolio-projects"><!-- portfolio-projects-static --></div>
 
         <div class="portfolio-evidence">
@@ -166,12 +180,21 @@
     <!-- Blog Section -->
     <section id="blog" class="portfolio-blog-section section light-background" data-section-ready="false">
       <!-- Section Title -->
-      <div class="portfolio-shell section-title">
-        <h2><a href="blogs/" target="_blank">Technical Blog <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg> </a></h2>
-        <p>Essays and technical notes on building 3D generative systems:<br/>from representations and model training to CUDA kernels, geometry processing, and production engineering.</p>
+      <div class="portfolio-shell section-title portfolio-blog-section-heading">
+        <div class="portfolio-blog-heading-copy">
+          <h2>Technical Blog</h2>
+          <p>Essays and technical notes on building 3D generative systems:<br/>from representations and model training to CUDA kernels, geometry processing, and production engineering.</p>
+        </div>
+        <a class="portfolio-blog-all-link" href="blogs/" target="_blank" rel="noopener noreferrer">
+          <span>View all posts</span>
+          <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
+        </a>
       </div><!-- End Section Title -->
       <div class="portfolio-shell portfolio-blog-content">
-        <h5 class="portfolio-blog-subheading">Selected Notes</h5>
+        <div class="portfolio-index-head portfolio-blog-index-head">
+          <h3 class="portfolio-index-label">Selected Notes</h3>
+          <span class="portfolio-index-rule" aria-hidden="true"></span>
+        </div>
         <div class="portfolio-blog-list-shell">
           <div class="portfolio-blog-list" id="portfolio-blog-posts"></div>
           <p class="portfolio-blog-list-spacer" aria-hidden="true"><br/></p>
