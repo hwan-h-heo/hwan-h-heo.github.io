@@ -54,7 +54,9 @@ function renderArchiveEntries(posts, lang, siteData) {
     let archiveStarted = false;
 
     return posts.map((post) => {
-        const fromArchive = isFromArchive(post, siteData);
+        // Notes are implementation/reference material rather than a dated news
+        // stream, so keep the complete Notes collection above the era break.
+        const fromArchive = post.category === 'post' && isFromArchive(post, siteData);
         const fromArchiveHeading = fromArchive && !archiveStarted
             ? `
                         <div class="blog-home-era-break">

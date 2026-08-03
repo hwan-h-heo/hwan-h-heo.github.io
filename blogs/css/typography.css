@@ -652,6 +652,25 @@ header.masthead .post-heading .meta {
     box-shadow: 0 12px 28px rgba(39, 49, 59, 0.08);
 }
 
+.main-content iframe.post-voxel-demo {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto 0.55rem;
+    border: 0;
+    border-radius: 12px;
+    aspect-ratio: 16 / 9;
+    background: #101011;
+    box-shadow: 0 12px 28px rgba(39, 49, 59, 0.08);
+}
+
+@media (max-width: 640px) {
+    .main-content iframe.post-voxel-demo {
+        aspect-ratio: 4 / 3;
+    }
+}
+
 .main-content table {
     width: 100%;
     margin: 2rem 0;

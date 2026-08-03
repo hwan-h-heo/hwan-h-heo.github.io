@@ -31,6 +31,32 @@ TARGET_EXTENT = 0.96
 GRID_MINIMUM = -0.5
 SAT_EPSILON = 1e-10
 TRIANGLE_BLOCK_SIZE = 65_536
+WORLD_SCALE = 4.05
+CAMERA_AZIMUTH_DEGREES = 43.0
+CAMERA_ELEVATION_DEGREES = 26.5
+CAMERA_ORBIT_LIMIT_DEGREES = 10.0
+CAMERA_ORBIT_SAMPLES_DEGREES = (-10.0, 0.0, 10.0)
+CAMERA_PROFILES = {
+    "desktop": {
+        "distance": 9.8,
+        "distanceEnvelope": 1.2,
+        "fov": 41.5,
+        "verticalCenter": -0.45,
+        "layouts": (
+            {"screenOffset": 0.0, "aspect": 16 / 9},
+        ),
+    },
+    "mobile": {
+        "distance": 9.8,
+        "distanceEnvelope": 1.2,
+        "fov": 41.5,
+        "verticalCenter": -0.45,
+        "layouts": (
+            {"screenOffset": 0.0, "aspect": 16 / 9},
+            {"screenOffset": 0.0, "aspect": 4 / 3},
+        ),
+    },
+}
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -55,6 +81,13 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument("--mobile-demo-parents", type=int, nargs=4, default=(512, 300, 160, 80))
     parser.add_argument("--desktop-ghost-budget", type=int, default=2_000)
     parser.add_argument("--mobile-ghost-budget", type=int, default=600)
+    parser.add_argument(
+        "--camera-visible-only",
+        action="store_true",
+        help="Retain only finest voxels visible across the runtime camera-orbit envelope.",
+    )
+    parser.add_argument("--visibility-raster-height", type=int, default=512)
+    parser.add_argument("--visibility-depth-layers", type=float, default=6.0)
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--quiet", action="store_true")
     arguments = parser.parse_args()
@@ -64,6 +97,10 @@ def parse_arguments() -> argparse.Namespace:
     for name in ("desktop_max_leaves", "mobile_max_leaves"):
         if getattr(arguments, name) < 0:
             parser.error(f"--{name.replace('_', '-')} cannot be negative")
+    if arguments.visibility_raster_height < 64:
+        parser.error("--visibility-raster-height must be at least 64")
+    if arguments.visibility_depth_layers < 0:
+        parser.error("--visibility-depth-layers cannot be negative")
     return arguments
 
 
@@ -250,6 +287,176 @@ def voxelize_surface(triangles: np.ndarray, resolution: int, quiet: bool) -> np.
     return np.column_stack((x, y, z)).astype(np.uint16)
 
 
+def camera_visibility_profile(name: str) -> dict[str, object]:
+    settings = CAMERA_PROFILES[name]
+    azimuth = math.radians(CAMERA_AZIMUTH_DEGREES)
+    elevation = math.radians(CAMERA_ELEVATION_DEGREES)
+    vertical_center = float(settings["verticalCenter"])
+    target = np.array((0.0, vertical_center, 0.0), dtype=np.float64)
+    distance = float(settings["distance"])
+    distance_envelope = float(settings["distanceEnvelope"])
+    horizontal_distance = distance * math.cos(elevation)
+    base_camera = np.array((
+        horizontal_distance * math.sin(azimuth),
+        distance * math.sin(elevation),
+        horizontal_distance * math.cos(azimuth),
+    ), dtype=np.float64)
+    base_offset = base_camera - target
+    orbit_radius = float(np.linalg.norm(base_offset))
+    orbit_azimuth = math.atan2(float(base_offset[0]), float(base_offset[2]))
+    orbit_elevation = math.asin(float(base_offset[1]) / orbit_radius)
+    views: list[dict[str, object]] = []
+    for layout in settings["layouts"]:
+        screen_offset = float(layout["screenOffset"])
+        group = np.array((
+            math.cos(azimuth) * screen_offset,
+            vertical_center,
+            -math.sin(azimuth) * screen_offset,
+        ), dtype=np.float64)
+        cameras = []
+        for azimuth_offset in CAMERA_ORBIT_SAMPLES_DEGREES:
+            for elevation_offset in CAMERA_ORBIT_SAMPLES_DEGREES:
+                sample_azimuth = orbit_azimuth + math.radians(azimuth_offset)
+                sample_elevation = orbit_elevation + math.radians(elevation_offset)
+                for radius_offset in (-distance_envelope, 0.0, distance_envelope):
+                    sample_radius = orbit_radius + radius_offset
+                    sample_horizontal = sample_radius * math.cos(sample_elevation)
+                    cameras.append(target + np.array((
+                        sample_horizontal * math.sin(sample_azimuth),
+                        sample_radius * math.sin(sample_elevation),
+                        sample_horizontal * math.cos(sample_azimuth),
+                    ), dtype=np.float64))
+        views.append({
+            "aspect": float(layout["aspect"]),
+            "screenOffset": screen_offset,
+            "groupPosition": group,
+            "cameraPositions": cameras,
+        })
+    return {
+        "settings": settings,
+        "views": views,
+        "lookTarget": target,
+    }
+
+
+def visible_voxels_for_camera(
+    indices: np.ndarray,
+    resolution: int,
+    variant: str,
+    raster_height: int,
+    depth_layers: float,
+) -> tuple[np.ndarray, dict[str, object]]:
+    """Conservatively keep voxel AABBs visible in a small runtime camera envelope."""
+    profile = camera_visibility_profile(variant)
+    settings = profile["settings"]
+    half_cell = WORLD_SCALE / resolution * 0.5
+    local_centers = (
+        (indices.astype(np.float64) + 0.5) / resolution - 0.5
+    ) * WORLD_SCALE
+    corner_signs = np.array(
+        [
+            (dx, dy, dz)
+            for dx in (-1.0, 1.0)
+            for dy in (-1.0, 1.0)
+            for dz in (-1.0, 1.0)
+        ],
+        dtype=np.float64,
+    )
+    local_corners = local_centers[:, None, :] + corner_signs[None, :, :] * half_cell
+    retained = np.zeros(len(indices), dtype=bool)
+    tangent = math.tan(math.radians(float(settings["fov"])) * 0.5)
+    depth_slack = depth_layers * WORLD_SCALE / resolution
+    raster_sizes: list[list[int]] = []
+    camera_sample_count = 0
+
+    for view in profile["views"]:
+        aspect = float(view["aspect"])
+        raster_width = max(64, int(round(raster_height * aspect)))
+        raster_sizes.append([raster_width, raster_height])
+        corners = local_corners + view["groupPosition"][None, None, :]
+        for camera in view["cameraPositions"]:
+            camera_sample_count += 1
+            forward = profile["lookTarget"] - camera
+            forward /= np.linalg.norm(forward)
+            right = np.cross(forward, np.array((0.0, 1.0, 0.0), dtype=np.float64))
+            right /= np.linalg.norm(right)
+            up = np.cross(right, forward)
+            relative = corners - camera[None, None, :]
+            depth = np.einsum("nvc,c->nv", relative, forward)
+            projected_x = np.einsum("nvc,c->nv", relative, right) / (
+                np.maximum(depth, 1e-8) * tangent * aspect
+            )
+            projected_y = np.einsum("nvc,c->nv", relative, up) / (
+                np.maximum(depth, 1e-8) * tangent
+            )
+            lower_x = np.floor((projected_x.min(axis=1) * 0.5 + 0.5) * raster_width).astype(np.int64)
+            upper_x = np.ceil((projected_x.max(axis=1) * 0.5 + 0.5) * raster_width).astype(np.int64) - 1
+            lower_y = np.floor((projected_y.min(axis=1) * 0.5 + 0.5) * raster_height).astype(np.int64)
+            upper_y = np.ceil((projected_y.max(axis=1) * 0.5 + 0.5) * raster_height).astype(np.int64) - 1
+            near_depth = depth.min(axis=1)
+            valid = (
+                (near_depth > 0)
+                & (upper_x >= 0)
+                & (lower_x < raster_width)
+                & (upper_y >= 0)
+                & (lower_y < raster_height)
+            )
+            lower_x = np.clip(lower_x, 0, raster_width - 1)
+            upper_x = np.clip(upper_x, 0, raster_width - 1)
+            lower_y = np.clip(lower_y, 0, raster_height - 1)
+            upper_y = np.clip(upper_y, 0, raster_height - 1)
+            z_buffer = np.full((raster_height, raster_width), np.inf, dtype=np.float64)
+            visible_candidates = np.flatnonzero(valid)
+
+            for index in visible_candidates:
+                region = z_buffer[
+                    lower_y[index]:upper_y[index] + 1,
+                    lower_x[index]:upper_x[index] + 1,
+                ]
+                np.minimum(region, near_depth[index], out=region)
+
+            for index in visible_candidates:
+                region = z_buffer[
+                    lower_y[index]:upper_y[index] + 1,
+                    lower_x[index]:upper_x[index] + 1,
+                ]
+                if np.any(near_depth[index] <= region + depth_slack):
+                    retained[index] = True
+
+    visible = np.asarray(indices[retained], dtype=np.uint16)
+    if len(visible) == 0:
+        raise ValueError(f"Camera visibility culling removed every {variant} finest voxel.")
+    metadata = {
+        "applied": True,
+        "method": "Conservative perspective z-buffer over projected finest-level voxel AABBs across a bounded camera-orbit envelope",
+        "rasterSizes": raster_sizes,
+        "depthSlackVoxels": float(depth_layers),
+        "cameraSampleCount": camera_sample_count,
+        "camera": {
+            "azimuthDegrees": CAMERA_AZIMUTH_DEGREES,
+            "elevationDegrees": CAMERA_ELEVATION_DEGREES,
+            "distance": float(settings["distance"]),
+            "distanceEnvelope": float(settings["distanceEnvelope"]),
+            "fovDegrees": float(settings["fov"]),
+            "screenOffset": float(settings["layouts"][0]["screenOffset"]),
+            "verticalCenter": float(settings["verticalCenter"]),
+            "layouts": [
+                {
+                    "aspect": float(layout["aspect"]),
+                    "screenOffset": float(layout["screenOffset"]),
+                }
+                for layout in settings["layouts"]
+            ],
+            "orbitLimitDegrees": CAMERA_ORBIT_LIMIT_DEGREES,
+            "orbitSamplesDegrees": list(CAMERA_ORBIT_SAMPLES_DEGREES),
+        },
+        "inputFinestCount": int(len(indices)),
+        "retainedFinestCount": int(len(visible)),
+        "retentionRatio": len(visible) / max(len(indices), 1),
+    }
+    return visible, metadata
+
+
 def build_variant(
     name: str,
     full_levels: dict[int, np.ndarray],
@@ -259,16 +466,36 @@ def build_variant(
     seed: int,
     common_manifest: dict[str, object],
     output_dir: Path,
+    camera_visible_only: bool,
+    visibility_raster_height: int,
+    visibility_depth_layers: float,
 ) -> dict[str, object]:
     finest_resolution = PRODUCTION_RESOLUTIONS[-1]
     full_leaves = full_levels[finest_resolution]
-    sampling_applied = 0 < budget < len(full_leaves)
+    if camera_visible_only:
+        render_leaves, visibility = visible_voxels_for_camera(
+            full_leaves,
+            finest_resolution,
+            name,
+            visibility_raster_height,
+            visibility_depth_layers,
+        )
+    else:
+        render_leaves = full_leaves
+        visibility = {
+            "applied": False,
+            "method": "none; complete surface retained",
+            "inputFinestCount": int(len(full_leaves)),
+            "retainedFinestCount": int(len(full_leaves)),
+            "retentionRatio": 1.0,
+        }
+    sampling_applied = 0 < budget < len(render_leaves)
     leaves = sample_morton_stratified(
-        full_leaves,
+        render_leaves,
         budget,
         seed,
         finest_resolution,
-    ) if sampling_applied else full_leaves
+    ) if sampling_applied else render_leaves
     levels = derive_hierarchy(leaves)
     masks = {
         resolution: build_child_masks(levels[resolution], levels[resolution * 2], resolution)
@@ -350,12 +577,17 @@ def build_variant(
                 if sampling_applied
                 else {
                     "available": True,
-                    "retained": "all active finest-level voxels",
+                    "retained": (
+                        "all camera-visible finest-level voxels"
+                        if camera_visible_only
+                        else "all active finest-level voxels"
+                    ),
                 }
             ),
-            "method": "Morton-order stratified selection" if sampling_applied else "none; full active indices retained at every displayed level",
+            "method": "Morton-order stratified selection" if sampling_applied else "none; every selected finest index retained",
             "seed": int(seed),
         },
+        "visibilityCulling": visibility,
         "binary": {
             "byteLength": len(payload),
             "headerByteLength": 16,
@@ -426,7 +658,11 @@ def main() -> int:
         "fullCounts": {str(resolution): int(len(full_levels[resolution])) for resolution in PRODUCTION_RESOLUTIONS},
         "hierarchy": {
             "childBit": "dx * 4 + dy * 2 + dz",
-            "derivation": "The reference is collapsed to 256, then to the displayed 128 finest level; every coarser level is unique(finer // 2).",
+            "derivation": (
+                "The reference is collapsed to 256 and then 128; camera-visible 128 leaves are selected per variant, and every rendered coarser level is unique(finer // 2)."
+                if arguments.camera_visible_only
+                else "The reference is collapsed to 256, then to the displayed 128 finest level; every coarser level is unique(finer // 2)."
+            ),
         },
         "voxelization": {
             "method": "Conservative triangle-AABB overlap using box, triangle-plane, and nine edge-cross-axis SAT tests",
@@ -443,6 +679,9 @@ def main() -> int:
         arguments.seed,
         common_manifest,
         output_dir,
+        arguments.camera_visible_only,
+        arguments.visibility_raster_height,
+        arguments.visibility_depth_layers,
     )
     mobile = build_variant(
         "mobile",
@@ -453,6 +692,9 @@ def main() -> int:
         arguments.seed,
         common_manifest,
         output_dir,
+        arguments.camera_visible_only,
+        arguments.visibility_raster_height,
+        arguments.visibility_depth_layers,
     )
 
     print("Generated deterministic hierarchy assets:")

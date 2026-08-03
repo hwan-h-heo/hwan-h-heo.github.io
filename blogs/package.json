@@ -5,7 +5,7 @@
   "scripts": {
     "build": "node build-static.js",
     "build:incremental": "node build-static.js --incremental",
-    "dev": "npm run build && npx http-server dist -p 8080 -o",
+    "dev": "npm run build && npx http-server dist -p 8080 -o -c-1",
     "deploy": "npm run build && npm run deploy:dist",
     "deploy:dist": "gh-pages -d dist --dotfiles",
     "edit": "node editor-server.js"

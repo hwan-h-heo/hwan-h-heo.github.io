@@ -247,6 +247,15 @@ not depend on adding a serif family.
   takeaway, use `## TL; DR`. Keep that opening as ordinary paragraphs rather
   than a blockquote or summary list so every article enters the reading flow
   with the same hierarchy.
+- An implementation Note may place one self-contained live figure before the
+  opening section when that artifact is the subject of the Note. Keep the demo
+  on the dark Three.js surface, isolate it from the portfolio hero, and provide
+  pause, reduced-motion, offscreen-pause, and static-fallback behavior. Use a
+  responsive `16:9` frame that becomes `4:3` on compact screens; do not let its
+  scripts or binary assets load on the portfolio home page. When pointer orbit
+  helps establish that the artifact is a 3D scene, clamp it to a subtle authored
+  envelope (currently ±10 degrees around the submitted view) and generate any
+  visibility-culling assets against that complete envelope.
 - Public Blog, Post, and Labs surfaces keep the shared dark desktop sidebar as
   a fixed `72px` activity rail; they do not expose its `300px` expanded state.
   The portrait and Blog, Portfolio, and Labs destinations remain the permanent
@@ -512,66 +521,13 @@ Use a shared index/table grammar. Do not introduce a separate card system.
 
 Motion should confirm an interaction, not advertise itself.
 
-The production portfolio hero remains the established wave visual. The
-coarse-to-fine voxel treatment is an experimental one-shot intro available only
-through `?hero=voxel`; it must not add hierarchy-asset requests to the default
-page load. After the voxel intro fully dissolves, dispose its renderer and fade
-the established wave back in at its quiet ambient phase rather than restarting
-the voxel sequence.
-
-The experimental voxel visual uses a restrained, right-biased coarse-to-fine
-surface refinement in a low-saturation graphite-to-silver family; avoid the
-familiar bright blue AI/SaaS illustration palette. Begin with a fully occupied
-coarse cube volume. Prune non-surface cells with a slow, legible
-corner-to-corner, BFS-like wave. Before that front reaches the far corner, let
-already-confirmed coarse surface cells hand directly into the same recursive
-refinement so the opening is part of one continuous hierarchy rather than a
-separate prelude. At every later refinement, let a similar front travel
-recursively through the octree instead of replacing one complete level with the
-next. Each reached parent first becomes all eight candidate child
-slots; only after those slots separate do rejected children collapse. Retained
-children then repeat that local sequence in BFS order within their own octant.
-Relieve the otherwise empty black field with one very sparse layer of dim,
-screen-wide cool-graphite particles. Keep them nearly static and too restrained
-to read as a literal star field, glow effect, or CTA burst. Fade them with the
-voxel dissolve so the established Wave remains the only persistent background.
-Keep every hierarchy level resident during the cascade so coarse and fine voxels
-coexist along the front, and never introduce a whole-level visibility switch.
-Advance the complete cascade with a linear clock. Use one consistent local
-duration and constant split/collapse velocity for every parent; give the global
-cascade enough time that overlapping generations remain individually legible.
-Reserve easing
-for the initial dense reveal and final dissolve, not for the recursive wave
-itself. Let camera-facing children begin their subdivision well before the
-parent transition finishes. For the current depth-first treatment, begin the nearest child handoff at roughly 22%
-of the parent transition and the farthest around 31%, so about three adjacent
-hierarchy levels coexist. Once the upper-left front reaches a coarse sub-volume,
-let that region descend toward the finest resolution before the broad front has
-passed across the object. Start classification and recursive refinement on the
-same linear clock, using the same corner rank and parent-coherent hash, so a
-confirmed coarse voxel never pauses before its first split. Delay rear
-octants through the same local BFS ordering so visible generations overlap while
-the less visible back side catches up without creating a global pause.
-Match the first refinement front's spatial duration to its overlap with the
-dense prune: the last coarse parent must begin subdivision as the classification
-front reaches that same cell, not after a separate trailing gap.
-Retain every active index within each displayed resolution rather than thinning
-individual levels; lower the complete displayed resolution range when
-performance needs to be bounded. Keep the object itself axis-aligned,
-visually smaller than the wave field, and near the wave hero's wide-screen
-right-center locus. Use the submitted wide-screen reference of 38.5-degree
-azimuth, 24-degree elevation, 42.5-degree field of view, and distance 13 for the
-three-quarter view. Translate the model
-along the camera's view-plane right axis so rightward placement does not alter
-its screen-space height or depth.
-Do not restart or reverse the hierarchy. Complete the moving refinement within
-roughly five seconds of the visitor's initial scan, leave the final voxel silhouette for
-only a quarter-second hold, then dissolve it smoothly over roughly 1.15 seconds before the ambient wave
-fades in. Do not introduce
-a source-mesh reveal after the hierarchy. Keep the final silhouette subordinate
-to the left-side typography, retain only minimal
-camera-based pointer parallax, and show a static fine surface when reduced motion
-is requested.
+The production portfolio hero is the established Wave and must remain the only
+home-page hero implementation. `js/hero.js` loads it directly; URL parameters,
+article demos, and experimental assets must not replace it or alter its shader,
+timeline, palette, or fallback behavior. Technical visualizations such as the
+coarse-to-fine voxel decoder belong to a dedicated Note or demo route. Load
+their scripts and binary assets only inside that opt-in context, with no requests
+or handoff state added to the portfolio home page.
 
 Canonical timing:
 

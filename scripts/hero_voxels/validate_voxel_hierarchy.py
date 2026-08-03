@@ -135,12 +135,28 @@ def load_and_validate(manifest_path: Path, print_report: bool = True) -> tuple[d
 
     finest_budget_value = manifest["budget"]["finestLeaves"]
     ghost_budget = int(manifest["budget"]["ghostInstancesPerTransition"])
+    visibility = manifest.get("visibilityCulling", {"applied": False})
+    visibility_applied = bool(visibility.get("applied"))
     if finest_budget_value is not None:
         require(
             len(levels[finest_resolution]) <= int(finest_budget_value),
             "Finest retained leaf count exceeds its budget.",
         )
-    if not bool(manifest["sampling"]["applied"]):
+    if visibility_applied:
+        require(
+            int(visibility.get("inputFinestCount", -1))
+            == int(manifest["fullCounts"][str(finest_resolution)]),
+            "Visibility input count does not match the full finest level.",
+        )
+        require(
+            int(visibility.get("retainedFinestCount", -1)) == len(levels[finest_resolution]),
+            "Visibility retained count does not match the rendered finest level.",
+        )
+        require(
+            0 < len(levels[finest_resolution]) <= int(manifest["fullCounts"][str(finest_resolution)]),
+            "Visibility culling retained an invalid finest-level count.",
+        )
+    if not bool(manifest["sampling"]["applied"]) and not visibility_applied:
         require(
             all(
                 int(manifest["renderCounts"][str(resolution)])
@@ -148,6 +164,12 @@ def load_and_validate(manifest_path: Path, print_report: bool = True) -> tuple[d
                 for resolution in PRODUCTION_RESOLUTIONS
             ),
             "A full-level hierarchy must retain every active coordinate.",
+        )
+    for resolution in PRODUCTION_RESOLUTIONS:
+        require(
+            int(manifest["renderCounts"][str(resolution)])
+            <= int(manifest["fullCounts"][str(resolution)]),
+            f"Level {resolution} retains more coordinates than the complete hierarchy.",
         )
     for resolution in PRODUCTION_RESOLUTIONS[:-1]:
         require(int(manifest["levels"][str(resolution)]["transition"]["rejectedGhostCount"]) <= ghost_budget, f"Level {resolution} ghost count exceeds its budget.")

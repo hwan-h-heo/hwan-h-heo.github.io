@@ -5,6 +5,29 @@
   },
   "posts": [
     {
+      "id": "260803_hierarchical_decoding_threejs",
+      "title_eng": "Visualizing Hierarchical Surface Decoding in Three.js",
+      "title_kor": "Hierarchical Surface Decoding을 Three.js로 시각화하기",
+      "subtitle_eng": "Turning a Manim storyboard into a deterministic, GPU-instanced coarse-to-fine surface decoding animation for the web",
+      "subtitle_kor": "Manim으로 구상한 hierarchical decoding을 deterministic hierarchy와 GPU instancing 기반의 웹 애니메이션으로 옮긴 과정",
+      "date": "2026-08-03",
+      "category": "note",
+      "series": "web-3d",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "visualizing-hierarchical-surface-decoding-in-three-js",
+      "tags": [
+        "Web 3D",
+        "Three.js",
+        "3D Generation"
+      ],
+      "cover": "/blogs/posts/260803_hierarchical_decoding_threejs/assets/flashvdm-volume-decoding-poster.webp",
+      "status": "draft",
+      "updated": "2026-08-03"
+    },
+    {
       "id": "260727_sparse_3d",
       "title_eng": "What the Compiler Missed in Sparse 3D Inference",
       "title_kor": "컴파일러가 놓치는 Sparse 3D Generation Inference 최적화",
@@ -164,7 +187,7 @@
       "subtitle_eng": "Comparing Google model-viewer with a custom Three.js pipeline for embedding, controlling, and presenting 3D assets on the web",
       "subtitle_kor": "Google model-viewer와 직접 만든 Three.js viewer를 비교하며, 웹에서 3D asset을 안정적으로 보여주는 방법을 정리해보기",
       "date": "2025-03-10",
-      "category": "post",
+      "category": "note",
       "series": "web-3d",
       "languages": [
         "eng",
@@ -230,7 +253,7 @@
       "subtitle_eng": "A practical Three.js guide to embedding an interactive Gaussian Splatting scene in a website, with no web-graphics background required",
       "subtitle_kor": "Three.js를 이용해 웹사이트에 interactive Gaussian Splatting scene을 삽입하고 제어해보기",
       "date": "2024-09-17",
-      "category": "post",
+      "category": "note",
       "series": "web-3d",
       "languages": [
         "eng",

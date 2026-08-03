@@ -8,6 +8,7 @@ const { generateBlogCoverPreviews } = require('./lib/blog-cover-assets');
 const { normalizeContentImageAccessibility } = require('./lib/content-image-accessibility');
 const { loadSiteData } = require('./lib/site-data');
 const { SITE_URL } = require('./lib/site-config');
+const { stampDeploymentVersion } = require('./lib/deployment-version');
 const { versionStaticAssetReferences } = require('./lib/static-asset-versioning');
 const { renderPostPage } = require('./lib/render-post-page');
 const { renderStaticBlogIndex } = require('./lib/render-blog-index');
@@ -68,6 +69,11 @@ function resetDistDir() {
     ensureDirSync(distDir);
 }
 
+function isPrivateHeroGlb(filePath) {
+    const normalizedPath = filePath.replace(/\\/g, '/').replace(/^\.\/+/, '');
+    return /^assets\/hero\/[^/]+\.glb$/i.test(normalizedPath);
+}
+
 function copyStaticAssets() {
     const blogDirs = ['css', 'js', '3DViewer', 'search', 'data'];
     blogDirs.forEach((dir) => {
@@ -112,7 +118,7 @@ function copyStaticAssets() {
             copyRecursiveSync(srcPath, destPath, {
                 shouldCopy: (sourcePath) => {
                     const relativePath = path.relative(repoRoot, sourcePath).replace(/\\/g, '/');
-                    return relativePath !== 'assets/hero/hero_test_asset.glb';
+                    return !isPrivateHeroGlb(relativePath);
                 }
             });
         }
@@ -149,7 +155,8 @@ function getIncrementalStaticDestination(filePath) {
 function copyIncrementalStaticFiles(filePaths) {
     filePaths.forEach((filePath) => {
         const normalizedSourcePath = filePath.replace(/\\/g, '/').replace(/^\.\/+/, '');
-        if (normalizedSourcePath === 'assets/hero/hero_test_asset.glb') {
+        if (isPrivateHeroGlb(normalizedSourcePath)) {
+            fs.rmSync(getIncrementalStaticDestination(filePath), { force: true });
             console.log(`Skipped private preprocessing source: ${normalizedSourcePath}`);
             return;
         }
@@ -1180,6 +1187,7 @@ async function buildSite() {
     generateFeed();
     generateRobotsTxt();
     generateSupportFiles();
+    stampDeploymentVersion({ distDir });
     versionStaticAssetReferences({ distDir });
 
     console.log('\nBuild completed successfully.');
@@ -1222,6 +1230,7 @@ async function buildIncremental(options = {}) {
     generateFeed();
     generateRobotsTxt();
     generateSupportFiles();
+    stampDeploymentVersion({ distDir });
     versionStaticAssetReferences({ distDir });
 
     console.log('\nIncremental build completed successfully.');

@@ -1,18 +1,5 @@
-const requestedHero = new URLSearchParams(window.location.search).get('hero');
-const useExperimentalVoxelHero = requestedHero === 'voxel';
-
 async function loadHero() {
-    if (!useExperimentalVoxelHero) {
-        await import('./hero-wave.js');
-        return;
-    }
-
-    try {
-        await import('./hero-voxel.js');
-    } catch (error) {
-        console.warn('The experimental voxel hero could not load; using the wave hero.', error);
-        await import('./hero-wave.js');
-    }
+    await import('./hero-wave.js');
 }
 
 loadHero().catch((error) => {

@@ -8,6 +8,11 @@ const ignoredReferenceRoots = [
     'blogs/dist/'
 ];
 const ignoredAssetNames = new Set(['LICENSE.txt']);
+const ignoredAssetPatterns = [
+    // Offline-only voxelization inputs are intentionally gitignored and never
+    // requested by the static site; only their generated hierarchy is public.
+    /^assets\/hero\/[^/]+\.glb$/i
+];
 const retiredStylesheets = [
     'assets/css/main.css',
     'assets/css/project-legacy.css',
@@ -86,8 +91,12 @@ const sourceText = sourceFiles
     .map((filePath) => fs.readFileSync(path.join(repoRoot, filePath), 'utf8'))
     .join('\n');
 const errors = [];
+const auditedAssets = collectAuditedAssets().filter((filePath) => {
+    const relativePath = normalizePath(path.relative(repoRoot, filePath));
+    return !ignoredAssetPatterns.some((pattern) => pattern.test(relativePath));
+});
 
-collectAuditedAssets().forEach((filePath) => {
+auditedAssets.forEach((filePath) => {
     const fileName = path.basename(filePath);
     if (!sourceText.includes(fileName)) {
         errors.push(`Unreferenced asset: ${normalizePath(path.relative(repoRoot, filePath))}`);
@@ -114,6 +123,6 @@ if (errors.length > 0) {
 }
 
 console.log(
-    `Static asset audit passed: ${collectAuditedAssets().length} media files, `
+    `Static asset audit passed: ${auditedAssets.length} media files, `
     + `${sourceFiles.length} source files checked.`
 );
