@@ -427,7 +427,7 @@ the section intro's right rail, balancing its compact title and description;
 `PROJECT INDEX` and its hairline then provide a quiet pause immediately before
 the rows. The Technical Blog intro mirrors that composition by keeping
 `View all posts` in its right rail, using the boxed external-link icon and a new
-tab for the independent Blog brand; `SELECTED NOTES` and its hairline then form
+tab for the independent Blog brand; `SELECTED WRITING` and its hairline then form
 the quiet pause before the writing rows. On compact layouts, move both the
 Project filters and Blog action beneath their complete intros. Do not assign
 either Portfolio section a competing chapter number.
