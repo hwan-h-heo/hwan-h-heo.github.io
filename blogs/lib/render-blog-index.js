@@ -129,24 +129,6 @@ function renderStaticBlogIndex(sourceHtml, siteData) {
     );
     html = replaceOrFail(
         html,
-        /<dd id="hero-posts-count"><\/dd>/,
-        `<dd id="hero-posts-count">${allPosts.length}</dd>`,
-        'hero posts count'
-    );
-    html = replaceOrFail(
-        html,
-        /<dd id="hero-notes-count"><\/dd>/,
-        `<dd id="hero-notes-count">${notes.length}</dd>`,
-        'hero notes count'
-    );
-    html = replaceOrFail(
-        html,
-        /<dd id="hero-series-count"><\/dd>/,
-        `<dd id="hero-series-count">${seriesCount}</dd>`,
-        'hero series count'
-    );
-    html = replaceOrFail(
-        html,
         /(<div class="blog-home-tab-panel is-active" id="posts-tab" role="tabpanel" aria-labelledby="posts-tab-control" tabindex="0">)\s*(<\/div>)/,
         `$1\n${postsHtml}\n                    $2`,
         'posts tab'

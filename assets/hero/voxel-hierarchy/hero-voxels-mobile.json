@@ -1,0 +1,245 @@
+{
+  "axisConvention": "glTF 2.0 right-handed source coordinates; normalized xyz coordinates are stored without axis permutation",
+  "axisOrder": "xyz",
+  "binary": {
+    "byteLength": 978652,
+    "headerByteLength": 16,
+    "littleEndian": true,
+    "sha256": "a57788678710d14aee681bc4474ea7540853be74d6a848f7ad8f265d9d1adaa5",
+    "url": "hero-voxels-mobile.bin"
+  },
+  "budget": {
+    "finestLeaves": null,
+    "ghostInstancesPerTransition": 600
+  },
+  "fullCounts": {
+    "128": 128513,
+    "16": 926,
+    "32": 4548,
+    "64": 23737,
+    "8": 193
+  },
+  "hierarchy": {
+    "childBit": "dx * 4 + dy * 2 + dz",
+    "derivation": "The reference is collapsed to 256, then to the displayed 128 finest level; every coarser level is unique(finer // 2)."
+  },
+  "levels": {
+    "128": {
+      "childMasks": null,
+      "count": 128513,
+      "demoParents": null,
+      "indices": {
+        "byteLength": 771078,
+        "components": 3,
+        "offset": 207572,
+        "type": "uint16"
+      },
+      "transition": null
+    },
+    "16": {
+      "childMasks": {
+        "byteLength": 926,
+        "offset": 7292,
+        "type": "uint8"
+      },
+      "count": 926,
+      "demoParents": {
+        "byteLength": 504,
+        "count": 126,
+        "offset": 8220,
+        "type": "uint32"
+      },
+      "indices": {
+        "byteLength": 5556,
+        "components": 3,
+        "offset": 1736,
+        "type": "uint16"
+      },
+      "transition": {
+        "activeChildren": 4548,
+        "candidateChildren": 7408,
+        "demonstrationParentCount": 126,
+        "rejectedGhostCount": 572,
+        "retentionRatio": 0.6139308855291576
+      }
+    },
+    "32": {
+      "childMasks": {
+        "byteLength": 4548,
+        "offset": 36012,
+        "type": "uint8"
+      },
+      "count": 4548,
+      "demoParents": {
+        "byteLength": 528,
+        "count": 132,
+        "offset": 40560,
+        "type": "uint32"
+      },
+      "indices": {
+        "byteLength": 27288,
+        "components": 3,
+        "offset": 8724,
+        "type": "uint16"
+      },
+      "transition": {
+        "activeChildren": 23737,
+        "candidateChildren": 36384,
+        "demonstrationParentCount": 132,
+        "rejectedGhostCount": 598,
+        "retentionRatio": 0.6524021547933158
+      }
+    },
+    "64": {
+      "childMasks": {
+        "byteLength": 23737,
+        "offset": 183512,
+        "type": "uint8"
+      },
+      "count": 23737,
+      "demoParents": {
+        "byteLength": 320,
+        "count": 80,
+        "offset": 207252,
+        "type": "uint32"
+      },
+      "indices": {
+        "byteLength": 142422,
+        "components": 3,
+        "offset": 41088,
+        "type": "uint16"
+      },
+      "transition": {
+        "activeChildren": 128513,
+        "candidateChildren": 189896,
+        "demonstrationParentCount": 80,
+        "rejectedGhostCount": 359,
+        "retentionRatio": 0.6767546446475966
+      }
+    },
+    "8": {
+      "childMasks": {
+        "byteLength": 193,
+        "offset": 1176,
+        "type": "uint8"
+      },
+      "count": 193,
+      "demoParents": {
+        "byteLength": 364,
+        "count": 91,
+        "offset": 1372,
+        "type": "uint32"
+      },
+      "indices": {
+        "byteLength": 1158,
+        "components": 3,
+        "offset": 16,
+        "type": "uint16"
+      },
+      "transition": {
+        "activeChildren": 926,
+        "candidateChildren": 1544,
+        "demonstrationParentCount": 91,
+        "rejectedGhostCount": 422,
+        "retentionRatio": 0.5997409326424871
+      }
+    }
+  },
+  "mesh": {
+    "degenerateTriangleCount": 0,
+    "geometryCount": 1,
+    "invalidTriangleCount": 0,
+    "nodeInstanceCount": 1,
+    "primitiveModes": {
+      "4": 1
+    },
+    "triangleCount": 50000
+  },
+  "normalization": {
+    "domain": [
+      [
+        -0.5,
+        0.5
+      ],
+      [
+        -0.5,
+        0.5
+      ],
+      [
+        -0.5,
+        0.5
+      ]
+    ],
+    "normalizedBounds": {
+      "max": [
+        0.3419129678587569,
+        0.48,
+        0.3065892968863078
+      ],
+      "min": [
+        -0.3419129678587569,
+        -0.48,
+        -0.3065892968863078
+      ]
+    },
+    "originalBounds": {
+      "max": [
+        0.3592716455459595,
+        0.5043622255325317,
+        0.32196101546287537
+      ],
+      "min": [
+        -0.3594001233577728,
+        -0.5045566558837891,
+        -0.32246342301368713
+      ]
+    },
+    "targetExtent": 0.96,
+    "translation": [
+      6.423890590667725e-05,
+      9.721517562866211e-05,
+      0.0002512037754058838
+    ],
+    "uniformScale": 0.9515135633623503
+  },
+  "productionResolutions": [
+    8,
+    16,
+    32,
+    64,
+    128
+  ],
+  "referenceResolution": 512,
+  "renderCounts": {
+    "128": 128513,
+    "16": 926,
+    "32": 4548,
+    "64": 23737,
+    "8": 193
+  },
+  "runtime": {
+    "cascadeCandidateInstanceCount": 235232,
+    "estimatedGpuAttributeBytes": 1650208,
+    "maximumTransitionInstanceCount": 189896
+  },
+  "sampling": {
+    "applied": false,
+    "componentCoverage": {
+      "available": true,
+      "retained": "all active finest-level voxels"
+    },
+    "method": "none; full active indices retained at every displayed level",
+    "seed": 7
+  },
+  "schema": "hero-voxel-hierarchy",
+  "source": {
+    "file": "03_remesh.glb",
+    "sha256": "28a8f268e2b9f20bd6fe04f4100f85577837a544f140c2cb9e9b1f4569691f1a"
+  },
+  "variant": "mobile",
+  "version": 2,
+  "voxelization": {
+    "method": "Conservative triangle-AABB overlap using box, triangle-plane, and nine edge-cross-axis SAT tests",
+    "surfaceOnly": true
+  }
+}

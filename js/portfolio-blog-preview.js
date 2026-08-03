@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     try {
         const { loadSiteData, getPostTitle, getPostSubtitle, getPostUrl } = window.siteDataClient;
         const coverMedia = window.blogCoverMedia;
-        const externalLinkIcon = window.SiteIcons.render('box-arrow-up-right', {
-            className: 'portfolio-blog-preview-external-icon'
+        const readPostIcon = window.SiteIcons.render('box-arrow-up-right', {
+            className: 'portfolio-blog-preview-read-icon'
         });
         const siteData = await loadSiteData();
 
@@ -33,10 +33,10 @@ document.addEventListener('DOMContentLoaded', async function() {
             if (Number.isNaN(date.getTime())) {
                 return '';
             }
-            return date.toLocaleDateString('en-US', {
+            return date.toLocaleDateString('en-GB', {
                 year: 'numeric',
-                month: 'long',
-                day: 'numeric'
+                month: 'short',
+                day: '2-digit'
             });
         };
 
@@ -45,11 +45,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             return series?.eng || post.series || 'Blog';
         };
 
-        const renderTags = (tags) => (tags || [])
-            .slice(0, 2)
-            .map((tag) => `<span class="portfolio-blog-preview-tag">${escapeHtml(tag)}</span>`)
-            .join('');
-
         const postsHtml = siteData.featuredPortfolioPosts
             .filter((item) => item.post)
             .map((item) => {
@@ -57,7 +52,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                 const subtitle = getPostSubtitle(item.post, 'eng');
                 const seriesTitle = getSeriesTitle(item.post);
                 const date = formatDate(item.post.date);
-                const tagsHtml = renderTags(item.previewTags || item.post.tags);
                 const image = item.teaserImage || item.post.cover || '/assets/blog_bg.jpeg';
                 const animatedImage = coverMedia?.isAnimatedCover(image)
                     ? image
@@ -82,14 +76,17 @@ document.addEventListener('DOMContentLoaded', async function() {
                 </a>
                 <div class="portfolio-blog-preview-body">
                   <span class="portfolio-blog-preview-eyebrow">
-                    <span>${escapeHtml(seriesTitle)}</span>
+                    <span class="portfolio-blog-preview-series">${escapeHtml(seriesTitle)}</span>
+                    ${date ? `<span class="portfolio-blog-preview-date-separator" aria-hidden="true">·</span><time class="portfolio-blog-preview-date" datetime="${escapeHtml(item.post.date)}">${escapeHtml(date)}</time>` : ''}
                   </span>
                   <a href="${escapeHtml(getPostUrl(item.post, 'eng'))}" target="_blank" rel="noopener noreferrer" class="portfolio-blog-preview-title-link">
-                    <span class="portfolio-blog-preview-title">${escapeHtml(title)} ${externalLinkIcon}</span>
+                    <span class="portfolio-blog-preview-title">${escapeHtml(title)}</span>
                   </a>
                   <span class="portfolio-blog-preview-summary">${escapeHtml(subtitle)}</span>
-                  ${tagsHtml ? `<span class="portfolio-blog-preview-tags">${tagsHtml}</span>` : ''}
-                  ${date ? `<span class="portfolio-blog-preview-meta">${escapeHtml(date)}</span>` : ''}
+                  <a href="${escapeHtml(getPostUrl(item.post, 'eng'))}" target="_blank" rel="noopener noreferrer" class="portfolio-blog-preview-read-link">
+                    <span>Read post</span>
+                    ${readPostIcon}
+                  </a>
                 </div>
               </div>
             </article>

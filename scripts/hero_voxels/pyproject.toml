@@ -1,0 +1,12 @@
+[project]
+name = "hero-voxel-hierarchy"
+version = "1.0.0"
+description = "Deterministic offline surface-voxel hierarchy builder for the portfolio hero"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "numpy==2.3.2",
+    "trimesh==4.7.1",
+]
+
+[tool.uv]
+package = false

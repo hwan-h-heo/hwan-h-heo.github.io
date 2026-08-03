@@ -5,3 +5,18 @@ projects/*/index.html
 node_modules/
 blogs/node_modules/
 /artifacts/ui-regression/
+/.codex-server/
+
+# Hero voxel preprocessing: keep only source/configuration and committed outputs.
+/scripts/hero_voxels/.venv/
+/scripts/hero_voxels/.uv-cache/
+/scripts/hero_voxels/.python-version
+/scripts/hero_voxels/.reference-*/
+/scripts/hero_voxels/**/__pycache__/
+/scripts/hero_voxels/**/*.pyc
+/scripts/hero_voxels/**/*.pyo
+
+# The source model is an offline-only, oversized input. Generated hierarchy
+# manifests and binaries under assets/hero/voxel-hierarchy remain trackable.
+/assets/hero/*.glb
+/hero_test_asset.glb

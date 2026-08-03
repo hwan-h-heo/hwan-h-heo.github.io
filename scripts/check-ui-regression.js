@@ -577,7 +577,7 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
             const visual = hero?.querySelector('.blog-editorial-visual');
             const leftVisual = hero?.querySelector('.blog-editorial-visual-left');
             const featureLabel = document.querySelector('.blog-feature-label');
-            const index = hero?.querySelector('.blog-publication-index');
+            const byline = hero?.querySelector('.blog-publication-byline');
             return {
                 backgroundImage: hero ? getComputedStyle(hero).backgroundImage : '',
                 heroHeight: hero?.getBoundingClientRect().height || Number.POSITIVE_INFINITY,
@@ -596,14 +596,12 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
                 deckBelowTitle: title && deck
                     ? deck.getBoundingClientRect().top >= title.getBoundingClientRect().bottom
                     : false,
-                indexBelowDeck: index && deck
-                    ? index.getBoundingClientRect().top >= deck.getBoundingClientRect().bottom
+                bylineBelowDeck: byline && deck
+                    ? byline.getBoundingClientRect().top >= deck.getBoundingClientRect().bottom
                     : false,
-                countsInOneRow: (() => {
-                    const items = Array.from(document.querySelectorAll('.blog-publication-index > div'));
-                    const tops = items.map((item) => item.getBoundingClientRect().top);
-                    return items.length === 3 && Math.max(...tops) - Math.min(...tops) < 1;
-                })()
+                bylineLeftAligned: byline && hero
+                    ? Math.abs(byline.getBoundingClientRect().left - hero.querySelector('.blog-home-hero-copy').getBoundingClientRect().left) <= 0.5
+                    : false
             };
         });
         assert(compactHeroState.backgroundImage === 'none', 'Compact Blog hero restored a photographic background.');
@@ -618,8 +616,8 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
             'Compact Blog hero retained the wide-screen technical edge crops.'
         );
         assert(compactHeroState.deckBelowTitle, 'Compact Blog hero did not stack the standfirst beneath the title.');
-        assert(compactHeroState.indexBelowDeck, 'Compact Blog hero publication index no longer follows the standfirst.');
-        assert(compactHeroState.countsInOneRow, 'Compact Blog hero publication index lost its three-column folio.');
+        assert(compactHeroState.bylineBelowDeck, 'Compact Blog hero byline no longer follows the standfirst.');
+        assert(compactHeroState.bylineLeftAligned, 'Compact Blog hero byline is not left-aligned to the copy measure.');
         const compactUtilityState = await page.evaluate(() => {
             const search = document.querySelector('.blog-home-search');
             const searchButton = search?.querySelector('button[type="submit"]');
@@ -685,7 +683,7 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
         heroTitleRange.selectNodeContents(heroTitle);
         const heroVisual = document.querySelector('.blog-editorial-visual');
         const heroLeftVisual = document.querySelector('.blog-editorial-visual-left');
-        const heroIndex = document.querySelector('.blog-publication-index');
+        const heroByline = document.querySelector('.blog-publication-byline');
         const siteData = await fetch('/blogs/data/site-data.json').then((response) => response.json());
         const featuredPostId = siteData.blogHome?.featuredPostId || '';
         const featuredPost = siteData.posts.find((post) => post.id === featuredPostId);
@@ -736,6 +734,7 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
                     && Math.abs(heroCopy.getBoundingClientRect().right - featureCard.getBoundingClientRect().right) <= 0.5
                 : false,
             heroImprint: document.querySelector('.blog-editorial-imprint')?.textContent.replace(/\s+/g, ' ').trim() || '',
+            heroByline: heroByline?.textContent.replace(/\s+/g, ' ').trim() || '',
             articlesChapter: document.querySelector('#blog-home-archive-title')?.textContent.replace(/\s+/g, ' ').trim() || '',
             heroTitleLineCount: (() => {
                 if (!heroTitle) return 0;
@@ -757,15 +756,10 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
             heroDeckIsBelowTitle: heroTitle && heroIntro
                 ? heroIntro.getBoundingClientRect().top >= heroTitle.getBoundingClientRect().bottom
                 : false,
-            heroIndexFollowsDeck: heroIntro && heroIndex
-                ? heroIndex.getBoundingClientRect().top >= heroIntro.getBoundingClientRect().bottom
-                    && Math.abs(heroIndex.getBoundingClientRect().right - heroCopy.getBoundingClientRect().right) <= 0.5
+            heroBylineFollowsDeck: heroIntro && heroByline
+                ? heroByline.getBoundingClientRect().top >= heroIntro.getBoundingClientRect().bottom
+                    && Math.abs(heroByline.getBoundingClientRect().right - heroCopy.getBoundingClientRect().right) <= 0.5
                 : false,
-            heroCounts: [
-                document.querySelector('#hero-posts-count')?.textContent.trim(),
-                document.querySelector('#hero-notes-count')?.textContent.trim(),
-                document.querySelector('#hero-series-count')?.textContent.trim()
-            ],
             tabCounts: [
                 document.querySelector('#posts-count')?.textContent.trim(),
                 document.querySelector('#notes-count')?.textContent.trim(),
@@ -845,7 +839,8 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
     assert(initialTitleState.heroBackgroundImage === 'none', 'Blog home restored a template-style photographic hero background.');
     assert(initialTitleState.heroHeight <= 330.5, `Wide Blog hero grew beyond its former 330px footprint: ${initialTitleState.heroHeight}px.`);
     assert(initialTitleState.heroFeaturedMeasureMatches, 'Blog Hero copy no longer shares the Featured content measure.');
-    assert(initialTitleState.heroImprint === "00 / Hwan's Blog 2021—2026", 'Blog editorial-cover brand imprint is missing or changed.');
+    assert(initialTitleState.heroImprint === '00 / Technical Writing 2021—2026', 'Blog editorial-cover subject imprint is missing or changed.');
+    assert(initialTitleState.heroByline === 'Written by / Hwan Heo', 'Blog editorial-cover author byline is missing or changed.');
     assert(initialTitleState.articlesChapter === '02 Articles', 'Blog Home writing chapter is no longer labeled 02 Articles.');
     assert(initialTitleState.heroTitleLineCount === 1, 'Wide Blog editorial-cover title is no longer a single line.');
     assert(initialTitleState.heroSearchClearsTitle, 'Wide Blog utility search overlaps the Hero title field.');
@@ -864,14 +859,10 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
     assert(initialTitleState.heroVisualsFillBackground, 'Blog editorial-cover images no longer split the left-to-copy-edge background stage.');
     assert(initialTitleState.heroOverlayBackground.includes('linear-gradient'), 'Blog editorial-cover images lost their dark contrast overlay.');
     assert(initialTitleState.heroDeckIsBelowTitle, 'Wide Blog hero standfirst no longer sits beneath its title.');
-    assert(initialTitleState.heroIndexFollowsDeck, 'Wide Blog hero publication index no longer follows the standfirst on a new line.');
+    assert(initialTitleState.heroBylineFollowsDeck, 'Wide Blog hero byline no longer follows the standfirst on a right-aligned line.');
     assert(
-        JSON.stringify(initialTitleState.heroCounts) === JSON.stringify(initialTitleState.tabCounts),
-        'Blog hero publication index does not match the Archive counts.'
-    );
-    assert(
-        Number(initialTitleState.heroCounts[0]) === initialTitleState.configuredPostCount,
-        'Blog Posts count excludes the configured Featured post.'
+        Number(initialTitleState.tabCounts[0]) === initialTitleState.configuredPostCount,
+        'Blog Articles tab count excludes the configured Featured post.'
     );
     assert(initialTitleState.featureStartsAfterHero, 'Featured media moved into or behind the image-free editorial cover.');
     assert(initialTitleState.featureOpeningGap >= 56, `Featured begins too close to the Hero: ${initialTitleState.featureOpeningGap}px.`);

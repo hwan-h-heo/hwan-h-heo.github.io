@@ -54,7 +54,8 @@ The portfolio home already has a coherent modern and editorial base:
 - Cards are unframed rows rather than floating panels.
 - Hairlines and whitespace create structure.
 - Radius and shadow are limited to media and utility controls.
-- Project and blog previews share the same hierarchy.
+- Project and blog previews share the same visual system while preserving
+  content-specific hierarchy.
 - Motion changes state without changing layout.
 
 The main drift risks are:
@@ -138,6 +139,10 @@ The typography system has three jobs:
 Rules:
 
 - Use display weight and scale for hierarchy, not decorative type effects.
+- Optically align Portfolio section headings with the copy beneath them: keep
+  description blocks on the structural left edge and apply one shared, subtle
+  leftward correction to large Manrope headings instead of adding per-section
+  paragraph margins.
 - Keep letter spacing at `0` in new portfolio styles.
 - Use uppercase mono labels sparingly and keep them short.
 - Limit small text to three levels: structural label, metadata, and action.
@@ -184,7 +189,9 @@ not depend on adding a serif family.
   viewports.
 - Resume is subordinate to About and must align with the About portrait and
   copy grid.
-- Project and blog preview rows must share column widths, gaps, and text order.
+- Project and Portfolio-home Blog preview rows share their row spacing, media
+  treatment, and interaction grammar; their column proportions and metadata
+  order may differ to express artifact versus publication.
 - Project and Blog remain on one pale output surface. Separate the two chapters
   with balanced whitespace rather than a background-color change or an
   additional divider.
@@ -341,12 +348,13 @@ text retains primary contrast. Reuse the Portfolio Hero name color
 publication folios down through the same neutral family instead of returning to
 pure white or blue-gray. Hide both images on compact layouts before they could
 compete with the copy. Connect the cover to the numbered page chapters with one
-quiet `00 / HWAN'S BLOG · YEAR—YEAR` publication imprint so ownership remains
-visible without adding a separate logo treatment. Keep the technical scope in
-the title and standfirst rather than repeating it in the imprint. Use a
-single-line title on wide screens, a single-line standfirst where the measure
-allows it, and a Posts / Notes / Series publication index on its own following
-row, right-aligned to the copy measure. Keep the wide-screen utility search
+quiet `00 / TECHNICAL WRITING · YEAR—YEAR` publication imprint so the section's
+subject is immediately legible without adding a separate logo treatment. Use a
+`WRITTEN BY / HWAN HEO` byline on its own following row, right-aligned to the
+copy measure on wide screens and left-aligned on phone layouts. Keep Posts /
+Notes / Series counts in the `02 ARTICLES` tabs instead of duplicating them in
+the Hero. Use a single-line title on wide screens and a single-line standfirst
+where the measure allows it. Keep the wide-screen utility search
 compact enough that its left edge begins beyond the visible title text instead
 of drawing a rule across the title's horizontal field. Below `768px`, reduce
 Blog search fields to the search icon; activate the icon to expand the input
@@ -368,23 +376,47 @@ as empty padding.
 
 ### Project and blog previews
 
-Both preview types use the same order:
+Portfolio Project previews use this order:
 
-1. Editorial label: project type or blog series
+1. Project folio and editorial type
 2. Title
 3. Two-line subtitle
 4. Up to two representative technology tags
-5. Institution and year, or publication date, with one meaningful accolade in
-   the same neutral metadata row when available
+5. Institution and year, with one meaningful accolade in the same neutral
+   metadata row when available
+
+Portfolio-home Blog previews use a publication-first order:
+
+1. Writing folio, series, and publication date in one compact mono line
+2. A headline one type step larger than the Project preview title
+3. A two-line editorial standfirst
+4. A compact `Read post` text action with the boxed external-link icon
+
+Do not repeat technology tags or the publication date beneath Portfolio-home
+Blog standfirsts. Keep the right-side Blog media rail narrower than the Project
+media rail so the headline, rather than the thumbnail, carries the row.
+Keep the headline free of a trailing destination icon; the explicit action owns
+the Portfolio-home Blog preview's persistent external-destination signal.
+
+On the Portfolio home, use a complementary desktop orientation to mark the
+transition from selected work into writing: Project previews place media on the
+left and copy on the right, while Blog previews place copy on the left and media
+on the right. Vertically center both copy stacks against their media so the
+shared card grammar remains evident. On compact single-column layouts, return
+both preview types to media-first order and top-align the copy.
+Introduce the Portfolio Blog previews with one left-aligned `SELECTED NOTES`
+mono label and a quiet trailing hairline, echoing the Blog chapter grammar
+without assigning the Portfolio section a competing chapter number.
 
 Do not add a badge layer. Do not repeat the same classification in multiple
 rows.
 
 Preview rows are editorial reading surfaces, not full-row links. Only the media
 and title are primary links; the title link may fill the horizontal line box it
-occupies. Subtitles, tags, dates, organizations, and accolades remain normal
-selectable text. Apply the same rule to Blog home featured, archive, and search
-rows.
+occupies. Portfolio-home Blog previews add one compact `Read post` link to make
+their publication role explicit. Subtitles, tags, dates, organizations, and
+accolades remain normal selectable text. Apply the same non-row-link rule to
+Blog home featured, archive, and search rows.
 
 On the Blog home, treat Featured and Articles as the two top-level publication
 chapters: `01 FEATURED` and `02 ARTICLES`. Set both in the same short uppercase
@@ -452,7 +484,7 @@ Use a shared index/table grammar. Do not introduce a separate card system.
   metadata hierarchy.
 - Publication actions and Download CV share the light-surface, left-origin
   underline grammar. They are text actions, never bordered buttons.
-- Blog preview eyebrows show `SERIES / NAME`. `Post` and `Note` remain data
+- Blog-home preview eyebrows show `SERIES / NAME`. `Post` and `Note` remain data
   categories for filtering, not visible metadata or per-row folios.
 - The Blog home featured row retains that series context beneath its indexed
   `Featured` label, but uses tighter type rhythm and a compact
@@ -478,6 +510,67 @@ Use a shared index/table grammar. Do not introduce a separate card system.
 
 Motion should confirm an interaction, not advertise itself.
 
+The production portfolio hero remains the established wave visual. The
+coarse-to-fine voxel treatment is an experimental one-shot intro available only
+through `?hero=voxel`; it must not add hierarchy-asset requests to the default
+page load. After the voxel intro fully dissolves, dispose its renderer and fade
+the established wave back in at its quiet ambient phase rather than restarting
+the voxel sequence.
+
+The experimental voxel visual uses a restrained, right-biased coarse-to-fine
+surface refinement in a low-saturation graphite-to-silver family; avoid the
+familiar bright blue AI/SaaS illustration palette. Begin with a fully occupied
+coarse cube volume. Prune non-surface cells with a slow, legible
+corner-to-corner, BFS-like wave. Before that front reaches the far corner, let
+already-confirmed coarse surface cells hand directly into the same recursive
+refinement so the opening is part of one continuous hierarchy rather than a
+separate prelude. At every later refinement, let a similar front travel
+recursively through the octree instead of replacing one complete level with the
+next. Each reached parent first becomes all eight candidate child
+slots; only after those slots separate do rejected children collapse. Retained
+children then repeat that local sequence in BFS order within their own octant.
+Relieve the otherwise empty black field with one very sparse layer of dim,
+screen-wide cool-graphite particles. Keep them nearly static and too restrained
+to read as a literal star field, glow effect, or CTA burst. Fade them with the
+voxel dissolve so the established Wave remains the only persistent background.
+Keep every hierarchy level resident during the cascade so coarse and fine voxels
+coexist along the front, and never introduce a whole-level visibility switch.
+Advance the complete cascade with a linear clock. Use one consistent local
+duration and constant split/collapse velocity for every parent; give the global
+cascade enough time that overlapping generations remain individually legible.
+Reserve easing
+for the initial dense reveal and final dissolve, not for the recursive wave
+itself. Let camera-facing children begin their subdivision well before the
+parent transition finishes. For the current depth-first treatment, begin the nearest child handoff at roughly 22%
+of the parent transition and the farthest around 31%, so about three adjacent
+hierarchy levels coexist. Once the upper-left front reaches a coarse sub-volume,
+let that region descend toward the finest resolution before the broad front has
+passed across the object. Start classification and recursive refinement on the
+same linear clock, using the same corner rank and parent-coherent hash, so a
+confirmed coarse voxel never pauses before its first split. Delay rear
+octants through the same local BFS ordering so visible generations overlap while
+the less visible back side catches up without creating a global pause.
+Match the first refinement front's spatial duration to its overlap with the
+dense prune: the last coarse parent must begin subdivision as the classification
+front reaches that same cell, not after a separate trailing gap.
+Retain every active index within each displayed resolution rather than thinning
+individual levels; lower the complete displayed resolution range when
+performance needs to be bounded. Keep the object itself axis-aligned,
+visually smaller than the wave field, and near the wave hero's wide-screen
+right-center locus. Use the submitted wide-screen reference of 38.5-degree
+azimuth, 24-degree elevation, 42.5-degree field of view, and distance 13 for the
+three-quarter view. Translate the model
+along the camera's view-plane right axis so rightward placement does not alter
+its screen-space height or depth.
+Do not restart or reverse the hierarchy. Complete the moving refinement within
+roughly five seconds of the visitor's initial scan, leave the final voxel silhouette for
+only a quarter-second hold, then dissolve it smoothly over roughly 1.15 seconds before the ambient wave
+fades in. Do not introduce
+a source-mesh reveal after the hierarchy. Keep the final silhouette subordinate
+to the left-side typography, retain only minimal
+camera-based pointer parallax, and show a static fine surface when reduced motion
+is requested.
+
 Canonical timing:
 
 | Token or value | Use |
@@ -497,14 +590,17 @@ Rules:
 - Keep the blocking portfolio preloader within about one second and exit it on
   `--motion-base`; ambient hero motion may continue independently.
 
-Project and blog preview rows have no row-level hover state. Their two link
-regions respond independently:
+Project and blog preview rows have no row-level hover state. Their media and
+title link regions respond independently:
 
 1. Hovering or focusing the media link scales its image to `1.02` with a slight
    filter adjustment.
 2. Hovering or focusing the title link moves it to `--accent-editorial` and
-   reveals its destination icon. Use the boxed external-link icon for
-   `target="_blank"` and a simple directional arrow for same-tab links.
+   reveals its destination icon where that title owns the destination cue. Use
+   the boxed external-link icon for `target="_blank"` and a simple directional
+   arrow for same-tab links. Portfolio-home Blog headlines are the exception:
+   they use color only because their separate `Read post` action owns a
+   persistent boxed external-link icon and the light-surface underline motion.
 
 Use the same destination mapping for trailing Contact icons. `mailto:` may keep
 the directional arrow; external profiles use the boxed external-link icon.
@@ -545,7 +641,8 @@ Before merging a visual change, confirm:
 
 - The change uses an existing token or adds a clearly semantic token.
 - Bright cyan indicates action or active state, not general emphasis.
-- Project and blog previews still share the same hierarchy.
+- Project and blog previews still share one visual system while retaining their
+  artifact- and publication-specific hierarchy.
 - No new badge, pill, card surface, shadow, or divider was added unnecessarily.
 - Small text still fits one of the three established roles.
 - Hover and keyboard focus convey the same action.

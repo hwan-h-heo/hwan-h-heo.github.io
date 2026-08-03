@@ -109,7 +109,12 @@ function copyStaticAssets() {
         const srcPath = path.join(__dirname, '..', dir);
         const destPath = path.join(distDir, dir);
         if (fs.existsSync(srcPath)) {
-            copyRecursiveSync(srcPath, destPath);
+            copyRecursiveSync(srcPath, destPath, {
+                shouldCopy: (sourcePath) => {
+                    const relativePath = path.relative(repoRoot, sourcePath).replace(/\\/g, '/');
+                    return relativePath !== 'assets/hero/hero_test_asset.glb';
+                }
+            });
         }
     });
 
@@ -143,6 +148,11 @@ function getIncrementalStaticDestination(filePath) {
 
 function copyIncrementalStaticFiles(filePaths) {
     filePaths.forEach((filePath) => {
+        const normalizedSourcePath = filePath.replace(/\\/g, '/').replace(/^\.\/+/, '');
+        if (normalizedSourcePath === 'assets/hero/hero_test_asset.glb') {
+            console.log(`Skipped private preprocessing source: ${normalizedSourcePath}`);
+            return;
+        }
         const srcPath = path.join(repoRoot, filePath);
         const destPath = getIncrementalStaticDestination(filePath);
 
