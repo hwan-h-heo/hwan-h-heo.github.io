@@ -163,14 +163,19 @@
     function initPortfolioViewToggle(section) {
         if (!section) return;
 
+        const projectItems = Array.from(section.querySelectorAll('.portfolio-project-item'));
+        const counts = {
+            selected: projectItems.filter((item) => item.dataset.selected === 'true').length,
+            all: projectItems.length
+        };
+
+        section.querySelectorAll('[data-portfolio-count]').forEach((count) => {
+            count.textContent = counts[count.dataset.portfolioCount] ?? '';
+        });
+
         section.querySelectorAll('[data-portfolio-view]').forEach((control) => {
             const activate = () => setPortfolioView(section, control.dataset.portfolioView);
             control.addEventListener('click', activate);
-            control.addEventListener('keydown', (event) => {
-                if (event.key !== 'Enter' && event.key !== ' ') return;
-                event.preventDefault();
-                activate();
-            });
         });
 
         setPortfolioView(section, section.dataset.portfolioView || 'selected');

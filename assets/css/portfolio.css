@@ -490,30 +490,6 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   display: none;
 }
 
-.section-title h2 a {
-  display: inline-flex;
-  gap: 0.48rem;
-  align-items: center;
-  color: inherit;
-}
-
-.section-title h2 a:hover {
-  color: color-mix(in srgb, var(--heading-color), var(--accent-color) 30%);
-}
-
-.section-title h2 .site-icon {
-  color: color-mix(in srgb, var(--heading-color), transparent 52%);
-  font-size: 0.54em;
-  transition:
-    color var(--motion-fast) var(--ease-standard),
-    transform var(--motion-base) var(--ease-emphasized);
-}
-
-.section-title h2 a:hover .site-icon {
-  color: var(--accent-color);
-  transform: translate(2px, -2px);
-}
-
 .section-title p {
   max-width: 920px;
   margin-bottom: 0;
@@ -1051,12 +1027,17 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   margin-top: 0;
 }
 
-.portfolio-blog-section .portfolio-blog-subheading {
-  display: flex;
-  gap: 0.7rem;
+.portfolio-index-head {
+  display: grid;
+  grid-template-columns: auto minmax(1.5rem, 1fr) auto;
+  gap: 0.9rem;
   align-items: center;
   width: 100%;
   margin: 0 0 1.25rem;
+}
+
+.portfolio-index-label {
+  margin: 0;
   color: var(--color-text-soft);
   font-family: var(--mono-font);
   font-size: 0.68rem;
@@ -1066,12 +1047,61 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   text-transform: uppercase;
 }
 
-.portfolio-blog-section .portfolio-blog-subheading::after {
-  flex: 1 1 auto;
+.portfolio-index-rule {
+  display: block;
+  width: 100%;
   min-width: 1.5rem;
   height: 1px;
   background: var(--color-line);
+}
+
+.portfolio-blog-all-link {
+  position: relative;
+  display: inline-flex;
+  gap: 0.45rem;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.34rem 0 0.46rem;
+  color: var(--color-text-soft);
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  transition: color var(--motion-base) var(--ease-standard);
+}
+
+.portfolio-blog-all-link::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: var(--action-underline-light);
   content: "";
+  transform: scaleX(0.42);
+  transform-origin: left center;
+  transition: transform 480ms var(--ease-emphasized);
+}
+
+.portfolio-blog-all-link:hover,
+.portfolio-blog-all-link:focus-visible {
+  color: var(--color-ink);
+}
+
+.portfolio-blog-all-link:hover::after,
+.portfolio-blog-all-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.portfolio-blog-all-link:focus-visible {
+  outline: 2px solid var(--accent-line-strong);
+  outline-offset: 3px;
+}
+
+.portfolio-blog-all-link .site-icon {
+  color: currentColor;
+  font-size: 0.72rem;
+  opacity: 0.66;
 }
 
 .portfolio-blog-section .portfolio-blog-list-shell {
@@ -1247,7 +1277,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   color: var(--color-text-strong);
   font-family: var(--default-font);
   font-size: 0.8rem;
-  font-weight: 650;
+  font-weight: 600;
   line-height: 1.2;
   text-decoration: none;
   transition: color var(--motion-base) var(--ease-standard);
@@ -1842,14 +1872,16 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   }
 }
 
-.portfolio-section-heading {
+.portfolio-section-heading,
+.portfolio-blog-section-heading {
   display: flex;
   gap: 2rem;
   align-items: flex-start;
   justify-content: space-between;
 }
 
-.portfolio-heading-copy {
+.portfolio-heading-copy,
+.portfolio-blog-heading-copy {
   flex: 1 1 auto;
   min-width: 0;
 }
@@ -1868,6 +1900,14 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   line-height: 1.45;
 }
 
+.portfolio > .section-title {
+  padding-bottom: 36px;
+}
+
+.portfolio-project-index-head {
+  margin-bottom: 1rem;
+}
+
 @media (max-width: 575.98px) {
   .portfolio-credibility {
     margin-left: 0.18rem;
@@ -1875,34 +1915,49 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 }
 
 .portfolio .portfolio-section-heading .portfolio-filters {
-  display: flex;
+  display: inline-flex;
   flex-wrap: wrap;
-  gap: 1.25rem;
+  gap: 1rem;
   justify-content: flex-end;
   margin: 0.35rem 0 0 auto;
   padding: 0;
   list-style: none;
 }
 
+.portfolio-blog-section-heading .portfolio-blog-all-link {
+  flex: 0 0 auto;
+  margin-top: 0.35rem;
+}
+
 .portfolio .portfolio-section-heading .portfolio-filters li {
-  position: relative;
   margin: 0;
-  padding: 0.38rem 0 0.5rem;
+}
+
+.portfolio .portfolio-section-heading .portfolio-filters button {
+  position: relative;
+  display: inline-flex;
+  gap: 0.34rem;
+  align-items: center;
+  min-height: 2rem;
+  margin: 0;
+  padding: 0.34rem 0 0.46rem;
   border: 0;
-  border-bottom: 1px solid var(--color-line);
+  border-bottom: 1px solid transparent;
   border-radius: 0;
   color: var(--color-text-soft);
   background: transparent;
-  font-family: var(--heading-font);
-  font-size: 0.7rem;
+  font-family: var(--default-font);
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0;
+  line-height: 1;
+  cursor: pointer;
   transition:
     color var(--motion-fast) var(--ease-standard),
     opacity var(--motion-fast) var(--ease-standard);
 }
 
-.portfolio .portfolio-section-heading .portfolio-filters li::after {
+.portfolio .portfolio-section-heading .portfolio-filters button::after {
   content: "";
   position: absolute;
   right: 0;
@@ -1915,27 +1970,34 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   transition: transform 480ms var(--ease-emphasized);
 }
 
-.portfolio .portfolio-section-heading .portfolio-filters li:hover {
+.portfolio .portfolio-section-heading .portfolio-filters button:hover {
   color: var(--color-ink);
 }
 
-.portfolio .portfolio-section-heading .portfolio-filters li:hover::after,
-.portfolio .portfolio-section-heading .portfolio-filters li:focus-visible::after {
+.portfolio .portfolio-section-heading .portfolio-filters button:hover::after,
+.portfolio .portfolio-section-heading .portfolio-filters button:focus-visible::after {
   transform: scaleX(1);
 }
 
-.portfolio .portfolio-section-heading .portfolio-filters li:focus-visible {
+.portfolio .portfolio-section-heading .portfolio-filters button:focus-visible {
   outline: 2px solid var(--accent-line-strong);
   outline-offset: 2px;
 }
 
-.portfolio .portfolio-section-heading .portfolio-filters li.filter-active {
+.portfolio .portfolio-section-heading .portfolio-filters button.filter-active {
   color: var(--color-ink);
   background: transparent;
 }
 
-.portfolio .portfolio-section-heading .portfolio-filters li.filter-active::after {
+.portfolio .portfolio-section-heading .portfolio-filters button.filter-active::after {
   transform: scaleX(1);
+}
+
+.portfolio-filter-count {
+  color: currentColor;
+  opacity: 0.66;
+  font-family: var(--mono-font);
+  font-weight: 500;
 }
 
 .portfolio-content {
@@ -2468,7 +2530,12 @@ section, .section { color: var(--default-color); background-color: var(--backgro
     font-size: 0.68rem;
   }
 
-  .portfolio-section-heading {
+  .portfolio-index-head {
+    grid-template-columns: auto minmax(1.5rem, 1fr);
+  }
+
+  .portfolio-section-heading,
+  .portfolio-blog-section-heading {
     flex-wrap: wrap;
     gap: 0.75rem;
   }
@@ -2478,9 +2545,12 @@ section, .section { color: var(--default-color); background-color: var(--backgro
     margin-top: 0;
   }
 
-  .portfolio .portfolio-section-heading .portfolio-filters li {
-    padding: 0.38rem 0 0.46rem;
-    font-size: 0.64rem;
+  .portfolio-blog-heading-copy {
+    flex-basis: 100%;
+  }
+
+  .portfolio-blog-section-heading .portfolio-blog-all-link {
+    margin-top: 0;
   }
 
   .portfolio-project-layout {
@@ -2603,10 +2673,14 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .portfolio-blog-all-link,
+  .portfolio-blog-all-link::after,
   .portfolio-blog-section .portfolio-blog-preview-title,
   .portfolio-blog-section .portfolio-blog-preview-read-link,
   .portfolio-blog-section .portfolio-blog-preview-read-link::after,
   .portfolio-blog-section .portfolio-blog-preview-read-icon,
+  .portfolio .portfolio-section-heading .portfolio-filters button,
+  .portfolio .portfolio-section-heading .portfolio-filters button::after,
   .portfolio-project-title,
   .portfolio-project-title::after {
     transition: none;

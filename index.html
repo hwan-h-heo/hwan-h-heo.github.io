@@ -40,17 +40,17 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect" />
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="assets/css/site-icons.css?v=44d073d4a3" rel="stylesheet">
 
   <script src="assets/js/site-icons.js?v=30f71d459a"></script>
-  <script src="js/sidebar-controller.js?v=0af8c364dc"></script>
+  <script src="js/sidebar-controller.js?v=8a95afafe7"></script>
 
   <!-- Main CSS File -->
-  <link href="assets/css/portfolio.css?v=b2838191b8" rel="stylesheet">
-  <link href="css/sidebar-nav.css?v=144adf4121" rel="stylesheet">
+  <link href="assets/css/portfolio.css?v=2d17ee0a04" rel="stylesheet">
+  <link href="css/sidebar-nav.css?v=f9cab81086" rel="stylesheet">
 
   <script>
     window.setTimeout(function releaseDelayedHero() {
@@ -77,7 +77,7 @@
       gtag('config', 'G-RF7ETSKPK9');
   </script>
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://hwan-h-heo.github.io/#person","name":"Hwan Heo","alternateName":"허환","url":"https://hwan-h-heo.github.io","jobTitle":"Lead 3D AI Research Engineer","worksFor":{"@type":"Organization","name":"NC AI"},"alumniOf":{"@type":"CollegeOrUniversity","name":"Korea University"},"sameAs":["https://scholar.google.com/citations?user=RulvYTkAAAAJ","https://github.com/hwanhuh","https://www.linkedin.com/in/hwan-heo-0905korea/"],"knowsAbout":["3D generative AI","Neural rendering","CUDA inference optimization","Computer graphics"]},{"@type":"ScholarlyArticle","name":"CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation","author":[{"@type":"Person","name":"Hwan Heo"},{"@type":"Person","name":"Jangyeong Kim"},{"@type":"Person","name":"Seongyeong Lee"},{"@type":"Person","name":"Jeong-A Wi"},{"@type":"Person","name":"Junyoung Choi"},{"@type":"Person","name":"Sangjun Ahn"}],"url":"https://arxiv.org/abs/2501.09433","isPartOf":{"@type":"CreativeWork","name":"Technical Report, Featured on Hugging Face Daily Papers, TLDR AI"}},{"@type":"ScholarlyArticle","name":"DreamSurfels: Generative Gaussian Surfels for Geometrically Accurate 3D Content Creation","author":[{"@type":"Person","name":"Hwan Heo"},{"@type":"Person","name":"Sangjun Ahn"}],"url":"https://hwan-h-heo.github.io/#portfolio","isPartOf":{"@type":"CreativeWork","name":"The 15th International Conference on ICT Convergence (ICTC), Oct 2024 Oral presentation, domestic conference"}},{"@type":"ScholarlyArticle","name":"Robust Camera Pose Refinement for Multi-Resolution Hash Encoding","author":[{"@type":"Person","name":"Hwan Heo"},{"@type":"Person","name":"Taekyung Kim"},{"@type":"Person","name":"J. Lee"},{"@type":"Person","name":"Jiyoung Lee"},{"@type":"Person","name":"Soohyun Kim"},{"@type":"Person","name":"Hyunwoo J. Kim"},{"@type":"Person","name":"Jin-Hwa Kim"}],"url":"https://dl.acm.org/doi/10.5555/3618408.3618936","isPartOf":{"@type":"CreativeWork","name":"The 40th International Conference on Machine Learning (ICML), Jul 2023"}},{"@type":"ScholarlyArticle","name":"Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild","author":[{"@type":"Person","name":"Jaewon Lee"},{"@type":"Person","name":"Injae Kim"},{"@type":"Person","name":"Hwan Heo"},{"@type":"Person","name":"Hyunwoo J. Kim"}],"url":"https://arxiv.org/abs/2303.03966","isPartOf":{"@type":"CreativeWork","name":"preprint, arXiv 2023"}}]}</script>
-    <meta name="site-deploy-version" content="5870789ccb88d656">
+    <meta name="site-deploy-version" content="1d580887df202c27">
     <script defer src="/assets/js/deploy-refresh.js?v=adb609281d"></script>
 </head>
 
@@ -155,16 +155,30 @@
       <!-- Section Title -->
       <div class="portfolio-shell section-title portfolio-section-heading">
         <div class="portfolio-heading-copy">
-          <h2>Selected Projects</h2>
+          <h2>Projects</h2>
           <p class="portfolio-credibility">Production 3D AI systems · 4 papers · 6 invited talks</p>
         </div>
         <ul class="portfolio-filters portfolio-view-toggle" aria-label="Filter portfolio projects">
-          <li data-portfolio-view="selected" class="filter-active" role="button" tabindex="0" aria-pressed="true">Selected</li>
-          <li data-portfolio-view="all" role="button" tabindex="0" aria-pressed="false">All</li>
+          <li>
+            <button type="button" data-portfolio-view="selected" class="filter-active" aria-pressed="true">
+              <span>Selected</span>
+              <span class="portfolio-filter-count" data-portfolio-count="selected"></span>
+            </button>
+          </li>
+          <li>
+            <button type="button" data-portfolio-view="all" aria-pressed="false">
+              <span>All</span>
+              <span class="portfolio-filter-count" data-portfolio-count="all"></span>
+            </button>
+          </li>
         </ul>
       </div><!-- End Section Title -->
 
       <div class="portfolio-shell portfolio-content">
+        <div class="portfolio-index-head portfolio-project-index-head">
+          <h3 class="portfolio-index-label">Project Index</h3>
+          <span class="portfolio-index-rule" aria-hidden="true"></span>
+        </div>
         <div class="portfolio-project-list" id="portfolio-projects">
             <article class="portfolio-project-item" data-selected="true" data-selected-order="0" data-all-order="0">
                 <div class="portfolio-project-layout">
@@ -490,12 +504,21 @@
     <!-- Blog Section -->
     <section id="blog" class="portfolio-blog-section section light-background" data-section-ready="false">
       <!-- Section Title -->
-      <div class="portfolio-shell section-title">
-        <h2><a href="blogs/" target="_blank">Technical Blog <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg> </a></h2>
-        <p>Essays and technical notes on building 3D generative systems:<br/>from representations and model training to CUDA kernels, geometry processing, and production engineering.</p>
+      <div class="portfolio-shell section-title portfolio-blog-section-heading">
+        <div class="portfolio-blog-heading-copy">
+          <h2>Technical Blog</h2>
+          <p>Essays and technical notes on building 3D generative systems:<br/>from representations and model training to CUDA kernels, geometry processing, and production engineering.</p>
+        </div>
+        <a class="portfolio-blog-all-link" href="blogs/" target="_blank" rel="noopener noreferrer">
+          <span>View all posts</span>
+          <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
+        </a>
       </div><!-- End Section Title -->
       <div class="portfolio-shell portfolio-blog-content">
-        <h5 class="portfolio-blog-subheading">Selected Notes</h5>
+        <div class="portfolio-index-head portfolio-blog-index-head">
+          <h3 class="portfolio-index-label">Selected Writing</h3>
+          <span class="portfolio-index-rule" aria-hidden="true"></span>
+        </div>
         <div class="portfolio-blog-list-shell">
           <div class="portfolio-blog-list" id="portfolio-blog-posts"></div>
           <p class="portfolio-blog-list-spacer" aria-hidden="true"><br/></p>
@@ -533,9 +556,9 @@
   <script src="blogs/js/site-data-client.js?v=aaf80fa06c"></script>
   <script src="blogs/js/blog-cover-media.js?v=816ac42637"></script>
   <script src="js/portfolio-blocks.js?v=cc1277b2b6"></script>
-  <script src="js/portfolio-content.js?v=7a75b2c408"></script>
-  <script src="js/portfolio-blog-preview.js?v=afa460df0e"></script>
-  <script type="module" src="js/hero.js?v=a19db541f1"></script>
+  <script src="js/portfolio-content.js?v=efa8e6da9c"></script>
+  <script src="js/portfolio-blog-preview.js?v=763eb3ce9a"></script>
+  <script type="module" src="js/hero.js?v=914ba93c39"></script>
 
   <!-- Main JS File -->
   <script src="assets/js/main.js?v=295e34cdef"></script>
