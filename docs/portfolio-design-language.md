@@ -239,6 +239,12 @@ not depend on adding a serif family.
   field before navigating to results; opening search must not discard the
   current reading context, and the Home label may recede while the field is
   open to preserve input width.
+- The public Markdown Editor uses that same dark sidebar as its only persistent
+  left rail. Keep browser and Drive draft utilities in a transient right-side
+  `Draft tools` drawer, and omit repository publishing, existing-post loading,
+  Blog Home curation, and portfolio-feature controls. The local authoring
+  console on port `3030` keeps its dedicated left control rail and the
+  `Blog Editor` name because it owns those repository operations.
 - Blog home, archive, and search utility rows use borderless back links and
   underline-only search fields. Do not use pill containers for back navigation,
   search inputs, or result counts. Search, Tag, and Series pages continue the

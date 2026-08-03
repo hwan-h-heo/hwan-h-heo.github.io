@@ -164,7 +164,7 @@ function renderPostSidebar() {
                 </summary>
                 <div class="sidebar-labs-panel">
                     <a href="/blogs/3DViewer/">${renderSiteIcon('box', { className: 'navicon' })}<span>3D Viewer</span></a>
-                    <a href="/blogs/editor/">${renderSiteIcon('pencil-square', { className: 'navicon' })}<span>Editor</span></a>
+                    <a href="/blogs/editor/">${renderSiteIcon('pencil-square', { className: 'navicon' })}<span>Markdown Editor</span></a>
                 </div>
             </details>
         </div>

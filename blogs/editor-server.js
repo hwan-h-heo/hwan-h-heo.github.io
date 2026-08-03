@@ -752,6 +752,10 @@ function resolveStaticPath(pathname) {
         return resolveInside(SITE_ROOT_DIR, relativePath);
     }
 
+    if (relativePath === 'css/sidebar-nav.css') {
+        return resolveInside(SITE_ROOT_DIR, relativePath);
+    }
+
     let resolvedPath = resolveInside(ROOT_DIR, relativePath);
 
     if (fs.existsSync(resolvedPath) && fs.statSync(resolvedPath).isDirectory()) {

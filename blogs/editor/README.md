@@ -1,6 +1,6 @@
-# Blog Editor
+# Markdown Editor and Blog Authoring Console
 
-A markdown editor for creating blog posts, registering metadata, and publishing both together.
+The public Markdown Editor creates portable browser and Google Drive drafts. The local Blog Editor adds repository publishing and curation controls for the site author.
 
 ## Features
 
@@ -19,7 +19,7 @@ A markdown editor for creating blog posts, registering metadata, and publishing 
 
 ## Usage
 
-### Edit Mode (Full Features)
+### Internal Blog Editor (Full Features)
 
 ```bash
 npm run edit
@@ -36,6 +36,12 @@ In edit mode, you can:
 - Configure `featuredPortfolioPosts` entry for the current post
 - Select the explicit Blog Home Featured post without editing post dates or array order
 
+### Public Markdown Editor
+
+The deployed `/blogs/editor/` route uses the shared dark site sidebar and keeps document utilities in the **Draft tools** drawer. Repository-only controls such as Publish, existing-post loading, Blog Home curation, and portfolio feature settings are not exposed there.
+
+Public drafts can be downloaded, uploaded, recovered from browser autosave, or stored in Google Drive.
+
 ### Google Drive Drafts
 
 Drive drafts work in both local edit mode and the static GitHub Pages editor.
@@ -47,13 +53,13 @@ Drive drafts work in both local edit mode and the static GitHub Pages editor.
 
 The editor requests the narrow `drive.file` scope and creates a visible `Hwan Blog Drafts` folder. Each draft contains `draft.json`, `content-eng.md`, and optional `content-kor.md`. Drive access tokens remain in memory; the Client ID and created root folder ID are stored locally. Draft assets are not uploaded in this first version.
 
-### Dev Mode (Preview Only)
+### Static Preview
 
 ```bash
 npm run dev
 ```
 
-Then navigate to the editor - draft management features are hidden.
+Then navigate to `/blogs/editor/` to inspect the public Markdown Editor surface.
 
 ## Workflow
 
