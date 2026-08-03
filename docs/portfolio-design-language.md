@@ -153,7 +153,12 @@ Rules:
   hairline and faint wash, and a borderless copy control. Give every block a
   quiet mono `CODE` folio, extended to `CODE / LANGUAGE` when the Markdown fence
   identifies a language. Avoid floating copy buttons, card shadows, and
-  utility-panel styling.
+  utility-panel styling. Collapsible code uses unframed top and bottom
+  hairlines, a `CODE /` folio, and a quiet text-only state marker instead of a
+  rounded card shell.
+- Interactive article embeds, including custom 3D viewers, stay within the
+  reading column. Sidebar offsets belong only to standalone Labs surfaces and
+  must never shift an embed inside article content.
 - Normalize captioned article media into numbered folios such as `FIG. 01 /`.
   Keep the index in neutral mono type, the caption in muted body type, and media
   at a compact `4px` radius; source links retain the article link treatment.

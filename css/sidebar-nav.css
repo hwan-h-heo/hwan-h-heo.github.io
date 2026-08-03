@@ -588,7 +588,7 @@
         margin-left: auto;
     }
 
-    html.sidebar-collapsed simple-model-viewer {
+    html.sidebar-collapsed body > simple-model-viewer {
         width: calc(100% - var(--site-sidebar-rail-width));
         margin-left: var(--site-sidebar-rail-width);
     }

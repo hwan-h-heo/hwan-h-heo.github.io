@@ -114,6 +114,13 @@ function createCases(siteData) {
             widths: [390, 991, 992, 1440]
         },
         {
+            id: 'embedded-viewer-post',
+            path: getPostRoute(requirePost(siteData, '250310_model_viewer'), 'eng'),
+            type: 'post',
+            coreSelectors: ['#mainNav', '.masthead', '.main-content', '.main-content simple-model-viewer'],
+            widths: [390, 1200, 1440]
+        },
+        {
             id: 'lightbox-post',
             path: getPostRoute(requirePost(siteData, '240823_grt'), 'eng'),
             type: 'lightbox-post',
@@ -322,6 +329,16 @@ async function inspectLayout(page, testCase, width) {
             const rect = element.getBoundingClientRect();
             if (rect.left < -2 || rect.right > viewportWidth + 2) {
                 issues.push(`${selector} exceeds the viewport (${Math.round(rect.left)}..${Math.round(rect.right)})`);
+            }
+        });
+
+        document.querySelectorAll('.main-content simple-model-viewer').forEach((viewer, index) => {
+            const content = viewer.closest('.main-content');
+            const contentRect = content?.getBoundingClientRect();
+            const viewerRect = viewer.getBoundingClientRect();
+            if (contentRect
+                && (viewerRect.left < contentRect.left - 1 || viewerRect.right > contentRect.right + 1)) {
+                issues.push(`embedded viewer ${index} escapes the article column`);
             }
         });
 

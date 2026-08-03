@@ -5,12 +5,15 @@
  * blog.css. Rules here may depend on markup emitted from post Markdown.
  */
 
-simple-model-viewer { 
-    display: block; 
+.main-content simple-model-viewer {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    height: min(600px, 70vh);
+    margin: 1.8rem 0;
+    box-sizing: border-box;
     background-color: #eeeeee;
-    width: 100vw; 
-    height: 100vh; 
-    margin-bottom: 3px;
 }
 .post-image-lightbox-trigger {
     display: block;
