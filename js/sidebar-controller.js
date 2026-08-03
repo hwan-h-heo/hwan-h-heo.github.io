@@ -6,6 +6,7 @@
     const SIDEBAR_TRANSITION_DURATION = 480;
     const MOBILE_SCROLL_THRESHOLD = 8;
     const MOBILE_SCROLL_TOP_ZONE = 64;
+    const scriptSidebarMode = document.currentScript?.dataset.sidebarMode || '';
 
     function createIconButton(className, iconName, label, controls) {
         const button = document.createElement('button');
@@ -41,7 +42,7 @@
 
     document.documentElement.classList.toggle(
         'sidebar-collapsed',
-        readCollapsedPreference()
+        scriptSidebarMode === 'rail' || readCollapsedPreference()
     );
 
     function initializeSidebar() {
@@ -54,6 +55,7 @@
         const desktopMedia = window.matchMedia(DESKTOP_MEDIA);
         const reducedMotionMedia = window.matchMedia('(prefers-reduced-motion: reduce)');
         const documentRoot = document.documentElement;
+        const railOnly = header.dataset.sidebarMode === 'rail' || scriptSidebarMode === 'rail';
         let collapseChangeTimer;
         let collapseRevealTimer;
         let mobileScrollFrame;
@@ -69,14 +71,18 @@
         mobileToggle.setAttribute('aria-expanded', 'false');
         header.before(mobileToggle);
 
-        const collapseToggle = createIconButton(
-            'sidebar-collapse-toggle',
-            'layout-sidebar-inset',
-            'Collapse sidebar',
-            header.id
-        );
-        collapseToggle.setAttribute('aria-expanded', 'true');
-        header.appendChild(collapseToggle);
+        const collapseToggle = railOnly
+            ? null
+            : createIconButton(
+                'sidebar-collapse-toggle',
+                'layout-sidebar-inset',
+                'Collapse sidebar',
+                header.id
+            );
+        if (collapseToggle) {
+            collapseToggle.setAttribute('aria-expanded', 'true');
+            header.appendChild(collapseToggle);
+        }
 
         const collapsedTooltip = document.createElement('div');
         collapsedTooltip.className = 'sidebar-collapsed-tooltip';
@@ -173,6 +179,9 @@
         }
 
         function updateCollapseButton(collapsed) {
+            if (!collapseToggle) {
+                return;
+            }
             const label = collapsed ? 'Expand sidebar' : 'Collapse sidebar';
             collapseToggle.setAttribute('aria-label', label);
             collapseToggle.setAttribute('title', label);
@@ -201,24 +210,28 @@
             window.clearTimeout(collapseChangeTimer);
             window.clearTimeout(collapseRevealTimer);
             header.classList.remove('sidebar-layout-changing');
-            collapseToggle.disabled = false;
+            if (collapseToggle) {
+                collapseToggle.disabled = false;
+            }
         }
 
         function setCollapsed(collapsed, persist = true, onComplete) {
-            if (persist) {
-                storeCollapsedPreference(collapsed);
+            const nextCollapsed = railOnly ? true : collapsed;
+            if (persist && !railOnly) {
+                storeCollapsedPreference(nextCollapsed);
             }
 
             const shouldAnimate = (
                 persist
+                && !railOnly
                 && desktopMedia.matches
                 && !reducedMotionMedia.matches
-                && collapsed !== isCollapsed()
+                && nextCollapsed !== isCollapsed()
             );
 
             if (!shouldAnimate) {
                 cancelCollapsedTransition();
-                applyCollapsed(collapsed);
+                applyCollapsed(nextCollapsed);
                 onComplete?.();
                 return;
             }
@@ -226,13 +239,15 @@
             cancelCollapsedTransition();
             header.classList.add('sidebar-layout-changing');
             collapseToggle.disabled = true;
-            updateCollapseButton(collapsed);
+            updateCollapseButton(nextCollapsed);
 
             collapseChangeTimer = window.setTimeout(() => {
-                applyCollapsed(collapsed);
+                applyCollapsed(nextCollapsed);
                 collapseRevealTimer = window.setTimeout(() => {
                     header.classList.remove('sidebar-layout-changing');
-                    collapseToggle.disabled = false;
+                    if (collapseToggle) {
+                        collapseToggle.disabled = false;
+                    }
                     onComplete?.();
                 }, SIDEBAR_TRANSITION_DURATION);
             }, CONTENT_FADE_DURATION);
@@ -254,7 +269,7 @@
         function syncViewportState() {
             if (desktopMedia.matches) {
                 setMobileOpen(false);
-                setCollapsed(readCollapsedPreference(), false);
+                setCollapsed(railOnly ? true : readCollapsedPreference(), false);
                 mobileToggle.classList.remove('is-scroll-hidden');
             } else {
                 setMobileOpen(false);
@@ -295,7 +310,7 @@
             mobileScrollFrame = window.requestAnimationFrame(updateMobileToggleForScroll);
         }, { passive: true });
 
-        collapseToggle.addEventListener('click', () => {
+        collapseToggle?.addEventListener('click', () => {
             setCollapsed(!isCollapsed());
         });
 
@@ -303,9 +318,11 @@
             setMobileOpen(!header.classList.contains('header-show'));
         });
 
-        header.querySelectorAll('#navmenu a, .sidebar-labs-panel a').forEach((link) => {
-            bindCollapsedTooltip(link);
+        header.querySelectorAll('#navmenu a, .sidebar-labs-panel a, .sidebar-contents-toggle').forEach((target) => {
+            bindCollapsedTooltip(target);
+        });
 
+        header.querySelectorAll('#navmenu a, .sidebar-labs-panel a').forEach((link) => {
             link.addEventListener('click', () => {
                 hideCollapsedTooltip(link);
                 if (!desktopMedia.matches) {

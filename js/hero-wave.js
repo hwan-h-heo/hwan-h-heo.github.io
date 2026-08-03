@@ -41,7 +41,10 @@ function queueInitialization() {
         initializeHeroWave();
     };
 
-    if (window.matchMedia('(max-width: 767px)').matches) {
+    if (
+        root.dataset.heroWaveBypassed === 'true'
+        || window.matchMedia('(max-width: 767px)').matches
+    ) {
         window.requestAnimationFrame(initialize);
     } else if ('requestIdleCallback' in window) {
         window.requestIdleCallback(initialize, { timeout: 800 });

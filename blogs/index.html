@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="sidebar-collapsed blog-sidebar-rail">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -10,8 +10,8 @@
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <!-- Blog styles -->
-        <link href="css/blog.css?v=48f73e3499" rel="stylesheet" />
-        <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+        <link href="css/blog.css?v=bd44f462e3" rel="stylesheet" />
+        <link href="/assets/css/site-icons.css?v=44d073d4a3" rel="stylesheet" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -28,11 +28,11 @@
                 } catch (error) {}
             })();
         </script>
-    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
-    <script src="../js/sidebar-controller.js?v=b1204606e7"></script>
-    <link href="css/sidebar.css?v=975e92b635" rel="stylesheet">
-    <link href="../css/sidebar-nav.css?v=17f2552cf5" rel="stylesheet">
-    <link href="css/typography.css?v=8ab8293a7c" rel="stylesheet">
+    <script src="/assets/js/site-icons.js?v=30f71d459a"></script>
+    <script src="../js/sidebar-controller.js?v=0af8c364dc" data-sidebar-mode="rail"></script>
+    <link href="css/sidebar.css?v=fe42893069" rel="stylesheet">
+    <link href="../css/sidebar-nav.css?v=144adf4121" rel="stylesheet">
+    <link href="css/typography.css?v=cf88064daa" rel="stylesheet">
             <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/" />
         <link rel="alternate" type="application/rss+xml" title="Hwan Heo's Blog" href="/blogs/feed.xml" />
         <meta property="og:type" content="website" />
@@ -45,9 +45,11 @@
         <meta name="twitter:description" content="Technical articles on sparse 3D generation, neural rendering, mesh processing, CUDA kernels, and production inference optimization." />
         <meta name="twitter:image" content="https://hwan-h-heo.github.io/assets/image_fx_.jpg" />
         <script type="application/ld+json">{"@context":"https://schema.org","@type":"Blog","name":"Hwan Heo's Blog","url":"https://hwan-h-heo.github.io/blogs/","description":"Technical articles on sparse 3D generation, neural rendering, mesh processing, CUDA kernels, and production inference optimization.","author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"inLanguage":"en"}</script>
-    </head>
+        <meta name="site-deploy-version" content="5870789ccb88d656">
+    <script defer src="/assets/js/deploy-refresh.js?v=adb609281d"></script>
+</head>
     <body class="blog-home-page">
-        <header id="header" class="header blog-sidebar dark-background">
+        <header id="header" class="header blog-sidebar dark-background" data-sidebar-mode="rail">
             <div class="profile-img">
               <img src="../assets/icon.webp" alt="Portrait illustration of Hwan Heo">
             </div>
@@ -84,8 +86,18 @@
                         <svg class="site-icon sidebar-labs-chevron" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
                     </summary>
                     <div class="sidebar-labs-panel">
-                        <a href="./3DViewer/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg><span>3D Viewer</span></a>
-                        <a href="./editor/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg><span>Editor</span></a>
+                        <div class="sidebar-rail-panel-heading" aria-hidden="true">
+                            <span>Labs / 02</span>
+                            <small>Tools &amp; experiments</small>
+                        </div>
+                        <a href="./3DViewer/">
+                            <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg>
+                            <span class="sidebar-labs-copy"><strong>3D Viewer</strong><small>Inspect 3D assets</small></span>
+                        </a>
+                        <a href="./editor/">
+                            <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg>
+                            <span class="sidebar-labs-copy"><strong>Markdown Editor</strong><small>Draft long-form posts</small></span>
+                        </a>
                     </div>
                 </details>
             </div>
@@ -113,31 +125,22 @@
             <div class="blog-editorial-visual-left" aria-hidden="true"></div>
             <div class="blog-shell blog-hero-shell">
                 <div class="blog-home-hero-copy">
-                    <div class="blog-editorial-imprint" aria-label="Hwan's Blog index, 2021 to 2026">
+                    <div class="blog-editorial-imprint" aria-label="Technical writing index, 2021 to 2026">
                         <div class="blog-editorial-brandline" lang="en">
                             <span class="blog-editorial-index">00</span>
                             <span class="blog-editorial-separator" aria-hidden="true">/</span>
-                            <span class="blog-home-kicker">Hwan's Blog</span>
+                            <span class="blog-home-kicker">Technical Writing</span>
                         </div>
                         <span class="blog-editorial-edition" lang="en">2021—2026</span>
                     </div>
                     <h1 lang="en">Research notes for 3D AI systems</h1>
                     <div class="blog-editorial-deck">
                         <p class="blog-home-hero-deck" lang="en">3D generation, computer vision, graphics, CUDA inference, and implementation details between commits.</p>
-                        <dl class="blog-publication-index" aria-label="Publication index">
-                            <div>
-                                <dt>Posts</dt>
-                                <dd id="hero-posts-count">18</dd>
-                            </div>
-                            <div>
-                                <dt>Notes</dt>
-                                <dd id="hero-notes-count">8</dd>
-                            </div>
-                            <div>
-                                <dt>Series</dt>
-                                <dd id="hero-series-count">6</dd>
-                            </div>
-                        </dl>
+                        <div class="blog-publication-byline" aria-label="Written by Hwan Heo" lang="en">
+                            <span class="blog-publication-byline-label">Written by</span>
+                            <span class="blog-editorial-separator" aria-hidden="true">/</span>
+                            <span class="blog-publication-byline-name">Hwan Heo</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -184,13 +187,13 @@
                         <li class="blog-home-tab-item" role="presentation">
                             <button class="blog-home-tab is-active" id="posts-tab-control" data-tab-target="#posts-tab" type="button" role="tab" aria-controls="posts-tab" aria-selected="true" tabindex="0">
                                 <span data-i18n="tabPosts">Posts</span>
-                                <span class="blog-home-tab-count" id="posts-count">18</span>
+                                <span class="blog-home-tab-count" id="posts-count">16</span>
                             </button>
                         </li>
                         <li class="blog-home-tab-item" role="presentation">
                             <button class="blog-home-tab" id="notes-tab-control" data-tab-target="#notes-tab" type="button" role="tab" aria-controls="notes-tab" aria-selected="false" tabindex="-1">
                                 <span data-i18n="tabNotes">Notes</span>
-                                <span class="blog-home-tab-count" id="notes-count">8</span>
+                                <span class="blog-home-tab-count" id="notes-count">10</span>
                             </button>
                         </li>
                         <li class="blog-home-tab-item" role="presentation">
@@ -301,30 +304,6 @@
             </nav>
         </article>
     
-        <article class="post-preview post-preview-media-right" data-post-id="250310_model_viewer" data-post-category="post">
-            <div class="post-card-link">
-                <a href="/blogs/posts/3d-model-viewer-in-web/" class="post-card-cover" aria-label="Read 3D Model Viewer in Web">
-                    <img src="/assets/generated/blog-covers/250310_model_viewer.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/250310_model_viewer.webp" alt="3D Model Viewer in Web cover image" loading="lazy" decoding="async">
-                </a>
-                <div class="post-card-body">
-                    <div class="post-card-eyebrow post-series-context">
-                        <span class="post-series-context-label">SERIES</span>
-                        <span class="post-series-context-separator" aria-hidden="true">/</span>
-                        <span class="post-series-context-value" data-post-series>3D in Web</span>
-                    </div>
-                    <h3 class="post-title" lang="en"><a href="/blogs/posts/3d-model-viewer-in-web/">3D Model Viewer in Web</a></h3>
-                    <p class="post-subtitle" lang="en">Comparing Google model-viewer with a custom Three.js pipeline for embedding, controlling, and presenting 3D assets on the web</p>
-                    <p class="post-meta">
-                        <time datetime="2025-03-10">March 10, 2025</time>
-                    </p>
-                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/web-3d/">Web 3D</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/three-js/">Three.js</a></div>
-                </div>
-            </div>
-            <nav class="visually-hidden" aria-label="Available languages">
-                <a href="/blogs/posts/3d-model-viewer-in-web/" hreflang="en">English</a>, <a href="/blogs/posts/3d-model-viewer-in-web-kor/" hreflang="ko">Korean</a>
-            </nav>
-        </article>
-    
         <article class="post-preview post-preview-media-right" data-post-id="250302_3d_latent_diffusion" data-post-category="post">
             <div class="post-card-link">
                 <a href="/blogs/posts/an-era-of-3d-generation/" class="post-card-cover" aria-label="Read An Era of 3D Generation">
@@ -349,7 +328,14 @@
             </nav>
         </article>
     
-        <article class="post-preview post-preview-media-right" data-post-id="250106_tomography" data-post-category="post">
+                        <div class="blog-home-era-break">
+                            <h3>
+                                <span class="blog-home-era-index" aria-hidden="true">03</span>
+                                <span data-i18n="fromArchiveTitle">From the Archive</span>
+                            </h3>
+                            <span class="blog-home-era-rule" aria-hidden="true"></span>
+                        </div>
+        <article class="post-preview" data-post-id="250106_tomography" data-post-category="post">
             <div class="post-card-link">
                 <a href="/blogs/posts/neural-rendering-beyond-photography/" class="post-card-cover" aria-label="Read Neural Rendering Beyond Photography">
                     <img src="/assets/generated/blog-covers/250106_tomography.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/250106_tomography.webp" alt="Neural Rendering Beyond Photography cover image" loading="lazy" decoding="async">
@@ -370,37 +356,6 @@
             </div>
             <nav class="visually-hidden" aria-label="Available languages">
                 <a href="/blogs/posts/neural-rendering-beyond-photography/" hreflang="en">English</a>, <a href="/blogs/posts/neural-rendering-beyond-photography-kor/" hreflang="ko">Korean</a>
-            </nav>
-        </article>
-    
-                        <div class="blog-home-era-break">
-                            <h3>
-                                <span class="blog-home-era-index" aria-hidden="true">03</span>
-                                <span data-i18n="oldArchiveTitle">Old Archive</span>
-                            </h3>
-                            <span class="blog-home-era-rule" aria-hidden="true"></span>
-                        </div>
-        <article class="post-preview" data-post-id="240917_3djs" data-post-category="post">
-            <div class="post-card-link">
-                <a href="/blogs/posts/add-gaussian-splatting-to-your-website/" class="post-card-cover" aria-label="Read Add Gaussian Splatting to Your Website">
-                    <img src="/assets/generated/blog-covers/240917_3djs.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/240917_3djs.webp" alt="Add Gaussian Splatting to Your Website cover image" loading="lazy" decoding="async">
-                </a>
-                <div class="post-card-body">
-                    <div class="post-card-eyebrow post-series-context">
-                        <span class="post-series-context-label">SERIES</span>
-                        <span class="post-series-context-separator" aria-hidden="true">/</span>
-                        <span class="post-series-context-value" data-post-series>3D in Web</span>
-                    </div>
-                    <h3 class="post-title" lang="en"><a href="/blogs/posts/add-gaussian-splatting-to-your-website/">Add Gaussian Splatting to Your Website</a></h3>
-                    <p class="post-subtitle" lang="en">A practical Three.js guide to embedding an interactive Gaussian Splatting scene in a website, with no web-graphics background required</p>
-                    <p class="post-meta">
-                        <time datetime="2024-09-17">September 17, 2024</time>
-                    </p>
-                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/web-3d/">Web 3D</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/three-js/">Three.js</a></div>
-                </div>
-            </div>
-            <nav class="visually-hidden" aria-label="Available languages">
-                <a href="/blogs/posts/add-gaussian-splatting-to-your-website/" hreflang="en">English</a>, <a href="/blogs/posts/add-gaussian-splatting-to-your-website-kor/" hreflang="ko">Korean</a>
             </nav>
         </article>
     
@@ -672,14 +627,55 @@
             </nav>
         </article>
     
-                        <div class="blog-home-era-break">
-                            <h3>
-                                <span class="blog-home-era-index" aria-hidden="true">03</span>
-                                <span data-i18n="oldArchiveTitle">Old Archive</span>
-                            </h3>
-                            <span class="blog-home-era-rule" aria-hidden="true"></span>
-                        </div>
-        <article class="post-preview" data-post-id="210910_lin_alg_2" data-post-category="note">
+        <article class="post-preview post-preview-media-right" data-post-id="250310_model_viewer" data-post-category="note">
+            <div class="post-card-link">
+                <a href="/blogs/posts/3d-model-viewer-in-web/" class="post-card-cover" aria-label="Read 3D Model Viewer in Web">
+                    <img src="/assets/generated/blog-covers/250310_model_viewer.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/250310_model_viewer.webp" alt="3D Model Viewer in Web cover image" loading="lazy" decoding="async">
+                </a>
+                <div class="post-card-body">
+                    <div class="post-card-eyebrow post-series-context">
+                        <span class="post-series-context-label">SERIES</span>
+                        <span class="post-series-context-separator" aria-hidden="true">/</span>
+                        <span class="post-series-context-value" data-post-series>3D in Web</span>
+                    </div>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/3d-model-viewer-in-web/">3D Model Viewer in Web</a></h3>
+                    <p class="post-subtitle" lang="en">Comparing Google model-viewer with a custom Three.js pipeline for embedding, controlling, and presenting 3D assets on the web</p>
+                    <p class="post-meta">
+                        <time datetime="2025-03-10">March 10, 2025</time>
+                    </p>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/web-3d/">Web 3D</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/three-js/">Three.js</a></div>
+                </div>
+            </div>
+            <nav class="visually-hidden" aria-label="Available languages">
+                <a href="/blogs/posts/3d-model-viewer-in-web/" hreflang="en">English</a>, <a href="/blogs/posts/3d-model-viewer-in-web-kor/" hreflang="ko">Korean</a>
+            </nav>
+        </article>
+    
+        <article class="post-preview post-preview-media-right" data-post-id="240917_3djs" data-post-category="note">
+            <div class="post-card-link">
+                <a href="/blogs/posts/add-gaussian-splatting-to-your-website/" class="post-card-cover" aria-label="Read Add Gaussian Splatting to Your Website">
+                    <img src="/assets/generated/blog-covers/240917_3djs.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/240917_3djs.webp" alt="Add Gaussian Splatting to Your Website cover image" loading="lazy" decoding="async">
+                </a>
+                <div class="post-card-body">
+                    <div class="post-card-eyebrow post-series-context">
+                        <span class="post-series-context-label">SERIES</span>
+                        <span class="post-series-context-separator" aria-hidden="true">/</span>
+                        <span class="post-series-context-value" data-post-series>3D in Web</span>
+                    </div>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/add-gaussian-splatting-to-your-website/">Add Gaussian Splatting to Your Website</a></h3>
+                    <p class="post-subtitle" lang="en">A practical Three.js guide to embedding an interactive Gaussian Splatting scene in a website, with no web-graphics background required</p>
+                    <p class="post-meta">
+                        <time datetime="2024-09-17">September 17, 2024</time>
+                    </p>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/web-3d/">Web 3D</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/three-js/">Three.js</a></div>
+                </div>
+            </div>
+            <nav class="visually-hidden" aria-label="Available languages">
+                <a href="/blogs/posts/add-gaussian-splatting-to-your-website/" hreflang="en">English</a>, <a href="/blogs/posts/add-gaussian-splatting-to-your-website-kor/" hreflang="ko">Korean</a>
+            </nav>
+        </article>
+    
+        <article class="post-preview post-preview-media-right" data-post-id="210910_lin_alg_2" data-post-category="note">
             <div class="post-card-link">
                 <a href="/blogs/posts/change-of-basis/" class="post-card-cover" aria-label="Read Change of Basis">
                     <img src="/assets/generated/blog-covers/210910_lin_alg_2.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/210910_lin_alg_2.webp" alt="Change of Basis cover image" loading="lazy" decoding="async">
@@ -703,7 +699,7 @@
             </nav>
         </article>
     
-        <article class="post-preview" data-post-id="210909_lin_alg_1" data-post-category="note">
+        <article class="post-preview post-preview-media-right" data-post-id="210909_lin_alg_1" data-post-category="note">
             <div class="post-card-link">
                 <a href="/blogs/posts/linear-system/" class="post-card-cover" aria-label="Read Linear System">
                     <img src="/assets/generated/blog-covers/210909_lin_alg_1.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/210909_lin_alg_1.webp" alt="Linear System cover image" loading="lazy" decoding="async">
@@ -727,7 +723,7 @@
             </nav>
         </article>
     
-        <article class="post-preview" data-post-id="210602_cv4" data-post-category="note">
+        <article class="post-preview post-preview-media-right" data-post-id="210602_cv4" data-post-category="note">
             <div class="post-card-link">
                 <a href="/blogs/posts/3d-stereo-vision-and-epipolar-geometry/" class="post-card-cover" aria-label="Read 3D Stereo Vision and Epipolar Geometry">
                     <img src="/assets/generated/blog-covers/210602_cv4.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/210602_cv4.webp" alt="3D Stereo Vision and Epipolar Geometry cover image" loading="lazy" decoding="async">
@@ -751,7 +747,7 @@
             </nav>
         </article>
     
-        <article class="post-preview" data-post-id="210502_cv3" data-post-category="note">
+        <article class="post-preview post-preview-media-right" data-post-id="210502_cv3" data-post-category="note">
             <div class="post-card-link">
                 <a href="/blogs/posts/homography-and-image-alignment/" class="post-card-cover" aria-label="Read Homography and Image Alignment">
                     <img src="/assets/generated/blog-covers/210502_cv3.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/210502_cv3.webp" alt="Homography and Image Alignment cover image" loading="lazy" decoding="async">
@@ -775,7 +771,7 @@
             </nav>
         </article>
     
-        <article class="post-preview" data-post-id="210402_cv2" data-post-category="note">
+        <article class="post-preview post-preview-media-right" data-post-id="210402_cv2" data-post-category="note">
             <div class="post-card-link">
                 <a href="/blogs/posts/feature-extraction-and-detection/" class="post-card-cover" aria-label="Read Feature Extraction and Detection">
                     <img src="/assets/generated/blog-covers/210402_cv2.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/210402_cv2.webp" alt="Feature Extraction and Detection cover image" loading="lazy" decoding="async">
@@ -799,7 +795,7 @@
             </nav>
         </article>
     
-        <article class="post-preview" data-post-id="210302_cv1" data-post-category="note">
+        <article class="post-preview post-preview-media-right" data-post-id="210302_cv1" data-post-category="note">
             <div class="post-card-link">
                 <a href="/blogs/posts/image-filter-and-morphology/" class="post-card-cover" aria-label="Read Image Filter and Morphology">
                     <img src="/assets/generated/blog-covers/210302_cv1.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/210302_cv1.webp" alt="Image Filter and Morphology cover image" loading="lazy" decoding="async">
@@ -1093,11 +1089,11 @@
                 </div>
             </div>
         </footer>
-        <script src="./js/site-data-client.js?v=61dca8d30d"></script>
-        <script src="./js/blog-cover-media.js?v=f16969bf34"></script>
-        <script src="./js/blog-shell.js?v=456de34605"></script>
-        <script src="./js/theme-toggle.js?v=32f6914d64"></script>
-        <script src="./js/main-list.js?v=22b02b9943"></script>
+        <script src="./js/site-data-client.js?v=aaf80fa06c"></script>
+        <script src="./js/blog-cover-media.js?v=816ac42637"></script>
+        <script src="./js/blog-shell.js?v=4b58cc185f"></script>
+        <script src="./js/theme-toggle.js?v=78c68b730b"></script>
+        <script src="./js/main-list.js?v=1438354d89"></script>
         <script>
             initBlogShell({ formSelector: '#blog-home-search-form', inputSelector: '#blog-home-search-input' });
         </script>

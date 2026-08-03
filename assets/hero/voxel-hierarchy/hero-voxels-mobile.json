@@ -1,0 +1,289 @@
+{
+  "axisConvention": "glTF 2.0 right-handed source coordinates; normalized xyz coordinates are stored without axis permutation",
+  "axisOrder": "xyz",
+  "binary": {
+    "byteLength": 322188,
+    "headerByteLength": 16,
+    "littleEndian": true,
+    "sha256": "f0544b79e49d7a59a4a25a13ae54c404976373c9e094e6b11a34451e8d7f3bc1",
+    "url": "hero-voxels-mobile.bin"
+  },
+  "budget": {
+    "finestLeaves": null,
+    "ghostInstancesPerTransition": 600
+  },
+  "fullCounts": {
+    "128": 76162,
+    "16": 1199,
+    "32": 4764,
+    "64": 19000,
+    "8": 260
+  },
+  "hierarchy": {
+    "childBit": "dx * 4 + dy * 2 + dz",
+    "derivation": "The reference is collapsed to 256 and then 128; camera-visible 128 leaves are selected per variant, and every rendered coarser level is unique(finer // 2)."
+  },
+  "levels": {
+    "128": {
+      "childMasks": null,
+      "count": 37637,
+      "demoParents": null,
+      "indices": {
+        "byteLength": 225822,
+        "components": 3,
+        "offset": 96364,
+        "type": "uint16"
+      },
+      "transition": null
+    },
+    "16": {
+      "childMasks": {
+        "byteLength": 748,
+        "offset": 6436,
+        "type": "uint8"
+      },
+      "count": 748,
+      "demoParents": {
+        "byteLength": 488,
+        "count": 122,
+        "offset": 7184,
+        "type": "uint32"
+      },
+      "indices": {
+        "byteLength": 4488,
+        "components": 3,
+        "offset": 1948,
+        "type": "uint16"
+      },
+      "transition": {
+        "activeChildren": 2661,
+        "candidateChildren": 5984,
+        "demonstrationParentCount": 122,
+        "rejectedGhostCount": 582,
+        "retentionRatio": 0.44468582887700536
+      }
+    },
+    "32": {
+      "childMasks": {
+        "byteLength": 2661,
+        "offset": 23640,
+        "type": "uint8"
+      },
+      "count": 2661,
+      "demoParents": {
+        "byteLength": 500,
+        "count": 125,
+        "offset": 26304,
+        "type": "uint32"
+      },
+      "indices": {
+        "byteLength": 15966,
+        "components": 3,
+        "offset": 7672,
+        "type": "uint16"
+      },
+      "transition": {
+        "activeChildren": 9891,
+        "candidateChildren": 21288,
+        "demonstrationParentCount": 125,
+        "rejectedGhostCount": 587,
+        "retentionRatio": 0.46462795941375423
+      }
+    },
+    "64": {
+      "childMasks": {
+        "byteLength": 9891,
+        "offset": 86152,
+        "type": "uint8"
+      },
+      "count": 9891,
+      "demoParents": {
+        "byteLength": 320,
+        "count": 80,
+        "offset": 96044,
+        "type": "uint32"
+      },
+      "indices": {
+        "byteLength": 59346,
+        "components": 3,
+        "offset": 26804,
+        "type": "uint16"
+      },
+      "transition": {
+        "activeChildren": 37637,
+        "candidateChildren": 79128,
+        "demonstrationParentCount": 80,
+        "rejectedGhostCount": 384,
+        "retentionRatio": 0.4756470528763522
+      }
+    },
+    "8": {
+      "childMasks": {
+        "byteLength": 208,
+        "offset": 1264,
+        "type": "uint8"
+      },
+      "count": 208,
+      "demoParents": {
+        "byteLength": 476,
+        "count": 119,
+        "offset": 1472,
+        "type": "uint32"
+      },
+      "indices": {
+        "byteLength": 1248,
+        "components": 3,
+        "offset": 16,
+        "type": "uint16"
+      },
+      "transition": {
+        "activeChildren": 748,
+        "candidateChildren": 1664,
+        "demonstrationParentCount": 119,
+        "rejectedGhostCount": 568,
+        "retentionRatio": 0.4495192307692308
+      }
+    }
+  },
+  "mesh": {
+    "degenerateTriangleCount": 0,
+    "geometryCount": 1,
+    "invalidTriangleCount": 0,
+    "nodeInstanceCount": 1,
+    "primitiveModes": {
+      "4": 1
+    },
+    "triangleCount": 100000
+  },
+  "normalization": {
+    "domain": [
+      [
+        -0.5,
+        0.5
+      ],
+      [
+        -0.5,
+        0.5
+      ],
+      [
+        -0.5,
+        0.5
+      ]
+    ],
+    "normalizedBounds": {
+      "max": [
+        0.47060277183531546,
+        0.3223860526696473,
+        0.48
+      ],
+      "min": [
+        -0.47060277183531546,
+        -0.3223860526696473,
+        -0.48
+      ]
+    },
+    "originalBounds": {
+      "max": [
+        0.49435660243034363,
+        0.3360905349254608,
+        0.5003008842468262
+      ],
+      "min": [
+        -0.4868779480457306,
+        -0.3361034095287323,
+        -0.5005274415016174
+      ]
+    },
+    "targetExtent": 0.96,
+    "translation": [
+      -0.0037393271923065186,
+      6.4373016357421875e-06,
+      0.00011327862739562988
+    ],
+    "uniformScale": 0.9592054654149489
+  },
+  "productionResolutions": [
+    8,
+    16,
+    32,
+    64,
+    128
+  ],
+  "referenceResolution": 512,
+  "renderCounts": {
+    "128": 37637,
+    "16": 748,
+    "32": 2661,
+    "64": 9891,
+    "8": 208
+  },
+  "runtime": {
+    "cascadeCandidateInstanceCount": 108064,
+    "estimatedGpuAttributeBytes": 760032,
+    "maximumTransitionInstanceCount": 79128
+  },
+  "sampling": {
+    "applied": false,
+    "componentCoverage": {
+      "available": true,
+      "retained": "all camera-visible finest-level voxels"
+    },
+    "method": "none; every selected finest index retained",
+    "seed": 7
+  },
+  "schema": "hero-voxel-hierarchy",
+  "source": {
+    "file": "hero_test_2.glb",
+    "sha256": "a8ec8d73cd7b98815b3ce4cd5c67f098d13318f1e8f329a9a6d0ff1eb9616c02"
+  },
+  "variant": "mobile",
+  "version": 2,
+  "visibilityCulling": {
+    "applied": true,
+    "camera": {
+      "azimuthDegrees": 43.0,
+      "distance": 9.8,
+      "distanceEnvelope": 1.2,
+      "elevationDegrees": 26.5,
+      "fovDegrees": 41.5,
+      "layouts": [
+        {
+          "aspect": 1.7777777777777777,
+          "screenOffset": 0.0
+        },
+        {
+          "aspect": 1.3333333333333333,
+          "screenOffset": 0.0
+        }
+      ],
+      "orbitLimitDegrees": 10.0,
+      "orbitSamplesDegrees": [
+        -10.0,
+        0.0,
+        10.0
+      ],
+      "screenOffset": 0.0,
+      "verticalCenter": -0.45
+    },
+    "cameraSampleCount": 54,
+    "depthSlackVoxels": 6.0,
+    "inputFinestCount": 76162,
+    "method": "Conservative perspective z-buffer over projected finest-level voxel AABBs across a bounded camera-orbit envelope",
+    "rasterSizes": [
+      [
+        910,
+        512
+      ],
+      [
+        683,
+        512
+      ]
+    ],
+    "retainedFinestCount": 37637,
+    "retentionRatio": 0.4941703211575326
+  },
+  "voxelization": {
+    "method": "Conservative triangle-AABB overlap using box, triangle-plane, and nine edge-cross-axis SAT tests",
+    "surfaceOnly": true
+  }
+}

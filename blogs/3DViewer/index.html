@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="sidebar-collapsed blog-sidebar-rail">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -18,10 +18,10 @@
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <!-- Blog styles -->
-        <link href="../css/blog.css?v=48f73e3499" rel="stylesheet" />
+        <link href="../css/blog.css?v=bd44f462e3" rel="stylesheet" />
         <!-- Prism.js CSS -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
-        <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+        <link href="/assets/css/site-icons.css?v=44d073d4a3" rel="stylesheet" />
         <style>
             body {
                 width: 100vw;
@@ -43,14 +43,16 @@
                 }
             }
         </style>
-        <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
-        <script src="../../js/sidebar-controller.js?v=b1204606e7"></script>
-        <link href="../css/sidebar.css?v=975e92b635" rel="stylesheet">
-        <link href="../../css/sidebar-nav.css?v=17f2552cf5" rel="stylesheet">
-        <link href="../css/typography.css?v=8ab8293a7c" rel="stylesheet">
-    </head>
+        <script src="/assets/js/site-icons.js?v=30f71d459a"></script>
+        <script src="../../js/sidebar-controller.js?v=0af8c364dc" data-sidebar-mode="rail"></script>
+        <link href="../css/sidebar.css?v=fe42893069" rel="stylesheet">
+        <link href="../../css/sidebar-nav.css?v=144adf4121" rel="stylesheet">
+        <link href="../css/typography.css?v=cf88064daa" rel="stylesheet">
+        <meta name="site-deploy-version" content="5870789ccb88d656">
+    <script defer src="/assets/js/deploy-refresh.js?v=adb609281d"></script>
+</head>
     <body>
-        <header id="header" class="header blog-sidebar dark-background">
+        <header id="header" class="header blog-sidebar dark-background" data-sidebar-mode="rail">
             <div class="profile-img">
               <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo">
             </div>
@@ -87,8 +89,18 @@
                   <svg class="site-icon sidebar-labs-chevron" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
                 </summary>
                 <div class="sidebar-labs-panel">
-                  <a href="./" class="active"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg><span>3D Viewer</span></a>
-                  <a href="../editor/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg><span>Editor</span></a>
+                  <div class="sidebar-rail-panel-heading" aria-hidden="true">
+                    <span>Labs / 02</span>
+                    <small>Tools &amp; experiments</small>
+                  </div>
+                  <a href="./" class="active">
+                    <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg>
+                    <span class="sidebar-labs-copy"><strong>3D Viewer</strong><small>Inspect 3D assets</small></span>
+                  </a>
+                  <a href="../editor/">
+                    <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg>
+                    <span class="sidebar-labs-copy"><strong>Markdown Editor</strong><small>Draft long-form posts</small></span>
+                  </a>
                 </div>
               </details>
             </div>

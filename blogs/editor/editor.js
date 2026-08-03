@@ -83,7 +83,8 @@
         ui: {
             sidebarCollapsed: false,
             editorPaneRatio: 0.52,
-            editorView: 'layout'
+            editorView: 'layout',
+            publicToolsOpen: false
         },
         autosave: {
             timerId: null,
@@ -119,6 +120,7 @@
 
     async function init() {
         cacheElements();
+        configureEditorMode();
         loadUiPreferences();
         loadDrivePreferences();
         bindEvents();
@@ -162,9 +164,17 @@
             'feedback',
             'workspace',
             'control-sidebar',
+            'control-sidebar-eyebrow',
+            'control-sidebar-title',
             'sidebar-toggle-button',
             'sidebar-toggle-icon',
             'sidebar-toggle-label',
+            'public-tools-button',
+            'public-tools-scrim',
+            'editor-brand',
+            'workflow-copy',
+            'publishing-panel-title',
+            'draft-tools-copy',
             'existing-post-select',
             'blog-home-featured-post',
             'save-blog-home-button',
@@ -195,8 +205,9 @@
             'markdown-view-button',
             'layout-editor',
             'layout-post-header',
-            'layout-cover-button',
+            'layout-series',
             'layout-title',
+            'layout-subtitle',
             'layout-date',
             'layout-reading-time',
             'layout-tags',
@@ -243,6 +254,8 @@
 
     function bindEvents() {
         el.sidebarToggleButton.addEventListener('click', toggleSidebar);
+        el.publicToolsButton.addEventListener('click', () => setPublicToolsOpen(true));
+        el.publicToolsScrim.addEventListener('click', () => setPublicToolsOpen(false));
         el.newPostButton.addEventListener('click', handleNewPost);
         el.loadPostButton.addEventListener('click', openLoadPostModal);
         el.saveBlogHomeButton.addEventListener('click', saveBlogHomeSettings);
@@ -269,9 +282,13 @@
         el.layoutTitle.addEventListener('input', handleLayoutTitleInput);
         el.layoutTitle.addEventListener('blur', handleLayoutTitleBlur);
         el.layoutTitle.addEventListener('keydown', handleLayoutTitleKeydown);
+        el.layoutSubtitle.addEventListener('input', handleLayoutSubtitleInput);
+        el.layoutSubtitle.addEventListener('blur', handleLayoutSubtitleBlur);
+        el.layoutSubtitle.addEventListener('keydown', handleLayoutSubtitleKeydown);
         el.layoutDate.addEventListener('change', handleLayoutDateInput);
         el.layoutTags.addEventListener('input', handleLayoutTagsInput);
-        el.layoutCoverButton.addEventListener('click', changeLayoutCover);
+        el.layoutTags.addEventListener('blur', handleLayoutTagsBlur);
+        el.layoutTags.addEventListener('keydown', handleLayoutTagsKeydown);
         el.appendBlockButton.addEventListener('click', appendVisualBlock);
         el.previewContent.addEventListener('click', handleVisualEditorClick);
         el.previewContent.addEventListener('paste', handleImagePaste);
@@ -375,6 +392,33 @@
         return value.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
     }
 
+    function configureEditorMode() {
+        const isPublic = !state.editMode;
+        document.documentElement.dataset.editorMode = isPublic ? 'public' : 'internal';
+        document.body.classList.toggle('is-public-editor', isPublic);
+        document.body.classList.toggle('is-internal-editor', !isPublic);
+        document.title = isPublic ? 'Markdown Editor | Hwan Heo' : 'Blog Editor';
+        el.editorBrand.textContent = isPublic ? 'Markdown Editor' : 'Blog Editor';
+
+        if (!isPublic) {
+            document.getElementById('header')?.remove();
+            return;
+        }
+
+        el.controlSidebar.setAttribute('aria-label', 'Draft tools');
+        el.controlSidebarEyebrow.textContent = 'Draft';
+        el.controlSidebarTitle.textContent = 'Document settings';
+        el.workflowCopy.textContent = 'This public workspace keeps drafts in your browser or Google Drive. Publishing remains available in the local authoring console.';
+        el.publishingPanelTitle.textContent = 'Document';
+        el.draftToolsCopy.textContent = 'Downloads and uploads operate on the active language. Use Google Drive to keep the complete document workspace together.';
+
+        const sidebarController = document.createElement('script');
+        sidebarController.src = '/js/sidebar-controller.js';
+        sidebarController.dataset.sidebarMode = 'rail';
+        sidebarController.dataset.publicEditorSidebar = 'true';
+        document.head.appendChild(sidebarController);
+    }
+
     function resetWorkspace(initialLoad) {
         const defaultSeries = Object.keys(state.bootstrap.series || {})[0] || '';
         state.mode = 'create';
@@ -432,9 +476,31 @@
     }
 
     function toggleSidebar() {
+        if (!state.editMode) {
+            setPublicToolsOpen(!state.ui.publicToolsOpen);
+            return;
+        }
+
         state.ui.sidebarCollapsed = !state.ui.sidebarCollapsed;
         applySidebarState();
         persistUiPreference(SIDEBAR_COLLAPSED_KEY, state.ui.sidebarCollapsed ? '1' : '0');
+    }
+
+    function setPublicToolsOpen(open) {
+        if (state.editMode) {
+            return;
+        }
+
+        if (!open) {
+            el.publicToolsButton.focus();
+        }
+
+        state.ui.publicToolsOpen = Boolean(open);
+        applySidebarState();
+
+        if (open) {
+            window.requestAnimationFrame(() => el.sidebarToggleButton.focus());
+        }
     }
 
     function setEditorView(view) {
@@ -467,7 +533,27 @@
     }
 
     function applySidebarState() {
+        if (!state.editMode) {
+            const open = state.ui.publicToolsOpen;
+            el.workspace.classList.remove('is-sidebar-collapsed');
+            el.controlSidebar.classList.remove('is-collapsed');
+            el.controlSidebar.classList.toggle('is-public-open', open);
+            el.controlSidebar.setAttribute('aria-hidden', String(!open));
+            el.controlSidebar.inert = !open;
+            el.publicToolsButton.setAttribute('aria-expanded', String(open));
+            el.sidebarToggleButton.setAttribute('aria-expanded', String(open));
+            el.sidebarToggleButton.setAttribute('aria-label', 'Close draft tools');
+            el.sidebarToggleButton.title = 'Close draft tools';
+            el.sidebarToggleLabel.textContent = 'Close';
+            icons.set(el.sidebarToggleIcon, 'x-lg');
+            el.publicToolsScrim.hidden = !open;
+            document.body.classList.toggle('is-public-tools-open', open);
+            return;
+        }
+
         const collapsed = state.ui.sidebarCollapsed;
+        el.controlSidebar.inert = false;
+        el.controlSidebar.removeAttribute('aria-hidden');
         el.workspace.classList.toggle('is-sidebar-collapsed', collapsed);
         el.controlSidebar.classList.toggle('is-collapsed', collapsed);
         el.sidebarToggleButton.setAttribute('aria-expanded', String(!collapsed));
@@ -694,6 +780,7 @@
         el.featuredImage.value = state.metadata.teaserImage;
         el.featuredAlt.value = state.metadata.teaserAlt;
         el.featuredOrder.value = state.metadata.featuredOrder;
+        renderLayoutMetadata();
     }
 
     function syncFormToState(options = {}) {
@@ -772,6 +859,10 @@
         return state.activeLanguage === 'kor' ? 'title_kor' : 'title_eng';
     }
 
+    function activeSubtitleKey() {
+        return state.activeLanguage === 'kor' ? 'subtitle_kor' : 'subtitle_eng';
+    }
+
     function renderLayoutMetadata() {
         if (!el.layoutTitle) {
             return;
@@ -781,35 +872,32 @@
         if (document.activeElement !== el.layoutTitle) {
             el.layoutTitle.textContent = title;
         }
+        const subtitle = state.metadata[activeSubtitleKey()] || '';
+        if (document.activeElement !== el.layoutSubtitle) {
+            el.layoutSubtitle.textContent = subtitle;
+        }
         if (document.activeElement !== el.layoutDate) {
             el.layoutDate.value = state.metadata.date || '';
         }
         if (document.activeElement !== el.layoutTags) {
-            el.layoutTags.value = (state.metadata.tags || []).join(', ');
+            el.layoutTags.textContent = (state.metadata.tags || []).join(' · ');
         }
+
+        const series = state.bootstrap.series[state.metadata.series] || {};
+        el.layoutSeries.textContent = series[state.activeLanguage]
+            || series.eng
+            || state.metadata.series
+            || 'Series';
+
+        const textLanguage = state.activeLanguage === 'kor' ? 'ko' : 'en';
+        el.layoutPostHeader.lang = textLanguage;
+        el.layoutSubtitle.lang = textLanguage;
 
         const wordCount = (state.contents[state.activeLanguage] || '').trim().split(/\s+/).filter(Boolean).length;
-        el.layoutReadingTime.textContent = `${Math.max(1, Math.ceil(wordCount / 220))} min read`;
-
-        const cover = resolveLayoutCoverUrl(state.metadata.cover);
-        el.layoutPostHeader.style.backgroundImage = cover
-            ? `linear-gradient(rgba(15, 23, 42, 0.42), rgba(15, 23, 42, 0.7)), url("${cover.replace(/"/g, '%22')}")`
-            : 'linear-gradient(135deg, #26364a, #0f766e)';
-        el.layoutCoverButton.classList.toggle('is-empty', !cover);
-    }
-
-    function resolveLayoutCoverUrl(value) {
-        const cover = String(value || '').trim();
-        if (!cover) {
-            return '';
-        }
-        if (/^(?:https?:|data:|blob:)/.test(cover)) {
-            return cover;
-        }
-        if (state.editMode && cover.startsWith('/blogs/')) {
-            return cover.slice('/blogs'.length);
-        }
-        return cover;
+        const readingMinutes = Math.max(1, Math.ceil(wordCount / 220));
+        el.layoutReadingTime.textContent = state.activeLanguage === 'kor'
+            ? `${readingMinutes}분`
+            : `${readingMinutes} min read`;
     }
 
     function handleLayoutTitleInput() {
@@ -836,27 +924,52 @@
         }
     }
 
+    function handleLayoutSubtitleInput() {
+        const value = el.layoutSubtitle.textContent.replace(/\n+/g, ' ');
+        const key = activeSubtitleKey();
+        state.metadata[key] = value;
+        const sidebarField = state.activeLanguage === 'kor' ? el.subtitleKor : el.subtitleEng;
+        sidebarField.value = value;
+        queueAutosave();
+    }
+
+    function handleLayoutSubtitleBlur() {
+        const value = el.layoutSubtitle.textContent.replace(/\n+/g, ' ').trim();
+        state.metadata[activeSubtitleKey()] = value;
+        el.layoutSubtitle.textContent = value;
+        const sidebarField = state.activeLanguage === 'kor' ? el.subtitleKor : el.subtitleEng;
+        sidebarField.value = value;
+    }
+
+    function handleLayoutSubtitleKeydown(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            el.layoutSubtitle.blur();
+        }
+    }
+
     function handleLayoutDateInput() {
         el.postDate.value = el.layoutDate.value;
         syncFormToState();
     }
 
     function handleLayoutTagsInput() {
-        el.postTags.value = el.layoutTags.value;
-        state.metadata.tags = [...new Set(el.layoutTags.value.split(',').map((tag) => tag.trim()).filter(Boolean))];
+        const value = el.layoutTags.textContent.replace(/\n+/g, ' ');
+        state.metadata.tags = [...new Set(value.split(/[,·]/).map((tag) => tag.trim()).filter(Boolean))];
+        el.postTags.value = state.metadata.tags.join(', ');
         queueAutosave();
     }
 
-    function changeLayoutCover() {
-        const nextCover = window.prompt(
-            'Cover image URL or site path',
-            state.metadata.cover || '/blogs/posts/YYMMDD_post/assets/cover.webp'
-        );
-        if (nextCover === null) {
-            return;
+    function handleLayoutTagsBlur() {
+        handleLayoutTagsInput();
+        el.layoutTags.textContent = state.metadata.tags.join(' · ');
+    }
+
+    function handleLayoutTagsKeydown(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            el.layoutTags.blur();
         }
-        el.postCover.value = nextCover.trim();
-        syncFormToState();
     }
 
     function renderKoreanFields() {
@@ -2433,18 +2546,22 @@
 
         el.layoutTocList.querySelectorAll('[data-outline-index]').forEach((button) => {
             button.addEventListener('click', () => {
-                navigateToOutlineHeading(Number.parseInt(button.dataset.outlineIndex, 10));
+                navigateToOutlineHeading(Number.parseInt(button.dataset.outlineIndex, 10), {
+                    focusEditor: false
+                });
             });
         });
     }
 
-    function navigateToOutlineHeading(headingIndex) {
+    function navigateToOutlineHeading(headingIndex, options = {}) {
         const targetHeading = state.preview.outline[headingIndex];
         if (!targetHeading) {
             return;
         }
 
-        focusEditorHeading(targetHeading);
+        if (options.focusEditor !== false) {
+            focusEditorHeading(targetHeading);
+        }
 
         const activePreview = state.ui.editorView === 'layout'
             ? el.previewContent
@@ -3147,6 +3264,12 @@
     }
 
     function handleKeyboardShortcuts(event) {
+        if (event.key === 'Escape' && !state.editMode && state.ui.publicToolsOpen) {
+            event.preventDefault();
+            setPublicToolsOpen(false);
+            return;
+        }
+
         if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
             event.preventDefault();
             if (state.editMode) {

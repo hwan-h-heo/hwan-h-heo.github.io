@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="sidebar-collapsed blog-sidebar-rail">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -29,14 +29,14 @@
     <title>SDF and Eikonal Equation | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css?v=48f73e3499" rel="stylesheet" />
-    <link href="/blogs/css/sidebar.css?v=975e92b635" rel="stylesheet" />
-    <link href="/css/sidebar-nav.css?v=17f2552cf5" rel="stylesheet" />
-    <link href="/blogs/css/typography.css?v=8ab8293a7c" rel="stylesheet" />
-    <link href="/blogs/css/post.css?v=efef9e6e9b" rel="stylesheet" />
-    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
-    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
-    <script src="/js/sidebar-controller.js?v=b1204606e7"></script>
+    <link href="/blogs/css/blog.css?v=bd44f462e3" rel="stylesheet" />
+    <link href="/blogs/css/sidebar.css?v=fe42893069" rel="stylesheet" />
+    <link href="/css/sidebar-nav.css?v=144adf4121" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=cf88064daa" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=0e8b7f9b61" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=44d073d4a3" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=30f71d459a"></script>
+    <script src="/js/sidebar-controller.js?v=0af8c364dc" data-sidebar-mode="rail"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -57,9 +57,11 @@
                 } catch (error) {}
             })();
         </script>
+    <meta name="site-deploy-version" content="5870789ccb88d656">
+    <script defer src="/assets/js/deploy-refresh.js?v=adb609281d"></script>
 </head>
 <body class="blog-post-page">
-    <header id="header" class="header blog-sidebar dark-background">
+    <header id="header" class="header blog-sidebar dark-background" data-sidebar-mode="rail">
         <div class="profile-img">
             <img src="/assets/icon.webp" alt="Portrait illustration of Hwan Heo">
         </div>
@@ -101,10 +103,27 @@
                     <svg class="site-icon sidebar-labs-chevron" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
                 </summary>
                 <div class="sidebar-labs-panel">
-                    <a href="/blogs/3DViewer/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg><span>3D Viewer</span></a>
-                    <a href="/blogs/editor/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg><span>Editor</span></a>
+                    <div class="sidebar-rail-panel-heading" aria-hidden="true">
+                        <span>Labs / 02</span>
+                        <small>Tools &amp; experiments</small>
+                    </div>
+                    <a href="/blogs/3DViewer/">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg>
+                        <span class="sidebar-labs-copy"><strong>3D Viewer</strong><small>Inspect 3D assets</small></span>
+                    </a>
+                    <a href="/blogs/editor/">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg>
+                        <span class="sidebar-labs-copy"><strong>Markdown Editor</strong><small>Draft long-form posts</small></span>
+                    </a>
                 </div>
             </details>
+        </div>
+
+        <div class="sidebar-contents">
+            <button class="sidebar-contents-toggle" type="button" aria-label="Open contents" aria-controls="post-toc" aria-expanded="false">
+                <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-list-ul"></use></svg>
+                <span>Contents</span>
+            </button>
         </div>
     </header>
 
@@ -187,7 +206,7 @@
                         </div>
                     </div>
                     <div class="post-reading-column main-content">
-                        <nav class="toc" aria-label="Table of contents"><div class="toc-title">On This Page</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="TL; DR" aria-label="TL; DR"><span class="toc-link-text">TL; DR</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="Introduction" aria-label="Introduction"><span class="toc-link-text">Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="From SDF to the Eikonal Equation" aria-label="From SDF to the Eikonal Equation"><span class="toc-link-text">From SDF to the Eikonal Equation</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-3" title="Proof 1" aria-label="Proof 1"><span class="toc-link-text">Proof 1</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="1.1. Supremum of the SDF Gradient" aria-label="1.1. Supremum of the SDF Gradient"><span class="toc-link-text">1.1. Supremum of the SDF Gradient</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="1.2. Infimum of the SDF Gradient" aria-label="1.2. Infimum of the SDF Gradient"><span class="toc-link-text">1.2. Infimum of the SDF Gradient</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="1.3. Conclusion" aria-label="1.3. Conclusion"><span class="toc-link-text">1.3. Conclusion</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-7" title="Proof 2" aria-label="Proof 2"><span class="toc-link-text">Proof 2</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.1. Gradient Calculation" aria-label="2.1. Gradient Calculation"><span class="toc-link-text">2.1. Gradient Calculation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-9" title="2.2. Gradient&#39;s Norm" aria-label="2.2. Gradient&#39;s Norm"><span class="toc-link-text">2.2. Gradient&#39;s Norm</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-10" title="Discussion" aria-label="Discussion"><span class="toc-link-text">Discussion</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
+                        <nav id="post-toc" class="toc" aria-label="Table of contents"><div class="toc-title">On This Page</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="TL; DR" aria-label="TL; DR"><span class="toc-link-text">TL; DR</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="Introduction" aria-label="Introduction"><span class="toc-link-text">Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="From SDF to the Eikonal Equation" aria-label="From SDF to the Eikonal Equation"><span class="toc-link-text">From SDF to the Eikonal Equation</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-3" title="Proof 1" aria-label="Proof 1"><span class="toc-link-text">Proof 1</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="1.1. Supremum of the SDF Gradient" aria-label="1.1. Supremum of the SDF Gradient"><span class="toc-link-text">1.1. Supremum of the SDF Gradient</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="1.2. Infimum of the SDF Gradient" aria-label="1.2. Infimum of the SDF Gradient"><span class="toc-link-text">1.2. Infimum of the SDF Gradient</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="1.3. Conclusion" aria-label="1.3. Conclusion"><span class="toc-link-text">1.3. Conclusion</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-7" title="Proof 2" aria-label="Proof 2"><span class="toc-link-text">Proof 2</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.1. Gradient Calculation" aria-label="2.1. Gradient Calculation"><span class="toc-link-text">2.1. Gradient Calculation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-9" title="2.2. Gradient&#39;s Norm" aria-label="2.2. Gradient&#39;s Norm"><span class="toc-link-text">2.2. Gradient&#39;s Norm</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-10" title="Discussion" aria-label="Discussion"><span class="toc-link-text">Discussion</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
@@ -387,23 +406,23 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
                             </article>
         
                             <article class="related-post-card">
+                                <a href="/blogs/posts/3d-model-viewer-in-web/" aria-label="Read 3D Model Viewer in Web">
+                                    <strong>3D Model Viewer in Web</strong>
+                                    <time datetime="2025-03-10">Mar 2025</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/add-gaussian-splatting-to-your-website/" aria-label="Read Add Gaussian Splatting to Your Website">
+                                    <strong>Add Gaussian Splatting to Your Website</strong>
+                                    <time datetime="2024-09-17">Sep 2024</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
                                 <a href="/blogs/posts/change-of-basis/" aria-label="Read Change of Basis">
                                     <strong>Change of Basis</strong>
                                     <time datetime="2021-09-10">Sep 2021</time>
-                                </a>
-                            </article>
-        
-                            <article class="related-post-card">
-                                <a href="/blogs/posts/linear-system/" aria-label="Read Linear System">
-                                    <strong>Linear System</strong>
-                                    <time datetime="2021-09-09">Sep 2021</time>
-                                </a>
-                            </article>
-        
-                            <article class="related-post-card">
-                                <a href="/blogs/posts/3d-stereo-vision-and-epipolar-geometry/" aria-label="Read 3D Stereo Vision and Epipolar Geometry">
-                                    <strong>3D Stereo Vision and Epipolar Geometry</strong>
-                                    <time datetime="2021-06-02">Jun 2021</time>
                                 </a>
                             </article>
         
@@ -615,7 +634,7 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "status": "published",
       "updated": "2025-03-10",
       "date": "2025-03-10",
-      "category": "post",
+      "category": "note",
       "series": "web-3d",
       "languages": [
         "eng",
@@ -681,7 +700,7 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
       "status": "published",
       "updated": "2024-09-17",
       "date": "2024-09-17",
-      "category": "post",
+      "category": "note",
       "series": "web-3d",
       "languages": [
         "eng",
@@ -1052,9 +1071,9 @@ This is partly to circumvent the technical limitations of the tcnn library, but 
 };
     </script>
 
-    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
-    <script src="/blogs/js/blog-shell.js?v=456de34605"></script>
-    <script src="/blogs/js/post-page.js?v=1a21761e37"></script>
+    <script src="/blogs/js/theme-toggle.js?v=78c68b730b"></script>
+    <script src="/blogs/js/blog-shell.js?v=4b58cc185f"></script>
+    <script src="/blogs/js/post-page.js?v=d1850cd64b"></script>
         <script>
             initBlogShell({
                 formSelector: '#post-nav-search-form',

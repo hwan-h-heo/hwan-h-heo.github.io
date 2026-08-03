@@ -1,27 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="sidebar-collapsed blog-sidebar-rail">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Blog Editor</title>
+    <title>Markdown Editor | Hwan Heo</title>
+    <script>
+        document.documentElement.dataset.editorMode = window.location.port === '3030' ? 'internal' : 'public';
+        if (document.documentElement.dataset.editorMode === 'internal') {
+            document.title = 'Blog Editor';
+        }
+    </script>
     <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico" />
-    <link rel="stylesheet" href="/assets/css/site-icons.css?v=32957b8b04">
+    <link rel="stylesheet" href="/assets/css/site-icons.css?v=44d073d4a3">
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="../css/blog.css?v=48f73e3499" rel="stylesheet" />
-    <link href="../css/typography.css?v=8ab8293a7c" rel="stylesheet" />
-    <link href="../css/post.css?v=efef9e6e9b" rel="stylesheet" />
+    <link href="../css/blog.css?v=bd44f462e3" rel="stylesheet" />
+    <link href="../css/sidebar.css?v=fe42893069" rel="stylesheet" />
+    <link href="/css/sidebar-nav.css?v=144adf4121" rel="stylesheet" />
+    <link href="../css/typography.css?v=cf88064daa" rel="stylesheet" />
+    <link href="../css/post.css?v=0e8b7f9b61" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
-    <link href="./editor.css?v=e054778d88" rel="stylesheet" />
+    <link href="./editor.css?v=159499ff6e" rel="stylesheet" />
 </head>
 <body>
+    <header id="header" class="header blog-sidebar dark-background public-site-sidebar" data-sidebar-mode="rail">
+        <div class="profile-img">
+            <img src="/assets/icon.webp" alt="Portrait illustration of Hwan Heo">
+        </div>
+
+        <a href="/blogs/" class="logo">
+            <span class="sitename">Hwan's Blog</span>
+        </a>
+
+        <div class="social-links">
+            <a href="https://github.com/hwanhuh" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
+            <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
+            <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
+            <a href="mailto:hwan.heo.ai@gmail.com" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
+        </div>
+
+        <nav id="navmenu" class="navmenu" aria-label="Blog navigation">
+            <ul>
+                <li>
+                    <a href="/blogs/">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house"></use></svg>
+                        <span>Blog Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/" class="sidebar-external-link">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-briefcase"></use></svg>
+                        <span>Portfolio</span>
+                        <svg class="site-icon sidebar-external-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-labs">
+            <details class="sidebar-labs-menu is-active">
+                <summary>
+                    <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-tools"></use></svg>
+                    <span>Labs</span>
+                    <svg class="site-icon sidebar-labs-chevron" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
+                </summary>
+                <div class="sidebar-labs-panel">
+                    <div class="sidebar-rail-panel-heading" aria-hidden="true">
+                        <span>Labs / 02</span>
+                        <small>Tools &amp; experiments</small>
+                    </div>
+                    <a href="/blogs/3DViewer/">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg>
+                        <span class="sidebar-labs-copy"><strong>3D Viewer</strong><small>Inspect 3D assets</small></span>
+                    </a>
+                    <a href="/blogs/editor/" class="active" aria-current="page">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg>
+                        <span class="sidebar-labs-copy"><strong>Markdown Editor</strong><small>Draft long-form posts</small></span>
+                    </a>
+                </div>
+            </details>
+        </div>
+    </header>
+
     <div class="editor-shell">
         <main id="workspace" class="workspace">
             <aside id="control-sidebar" class="sidebar">
                 <div class="sidebar-topbar">
                     <div class="sidebar-summary">
-                        <p class="eyebrow">Controls</p>
-                        <strong>Post setup</strong>
+                        <p id="control-sidebar-eyebrow" class="eyebrow">Controls</p>
+                        <strong id="control-sidebar-title">Post setup</strong>
                     </div>
                     <button id="sidebar-toggle-button" class="button button-secondary sidebar-toggle-button" type="button" aria-expanded="true">
                         <svg id="sidebar-toggle-icon" class="site-icon" data-icon="layout-sidebar" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-layout-sidebar"></use></svg>
@@ -38,7 +105,7 @@
                                 <span id="workspace-mode" class="pill">New post</span>
                             </div>
                         </div>
-                        <p class="panel-copy">
+                        <p id="workflow-copy" class="panel-copy">
                             Draft saves the active language markdown only. Publish writes metadata to <code>blogs/data/site-data.json</code>
                             and creates or updates <code>blogs/posts/&lt;id&gt;/content-*.md</code>.
                         </p>
@@ -48,7 +115,7 @@
                         </div>
                     </section>
 
-                    <section class="panel">
+                    <section class="panel" data-internal-only>
                         <div class="panel-header">
                             <h2>Blog Home</h2>
                             <span class="pill">Curated</span>
@@ -56,7 +123,7 @@
                         <p class="panel-copy">
                             Choose the article that appears in the Featured position independently of publication date.
                         </p>
-                        <label class="field">
+                        <label class="field" data-internal-only>
                             <span>Featured post</span>
                             <div class="inline-field">
                                 <select id="blog-home-featured-post"></select>
@@ -69,7 +136,7 @@
                         <div class="panel-header">
                             <h2>Workspace</h2>
                         </div>
-                        <label class="field">
+                        <label class="field" data-internal-only>
                             <span>Existing post</span>
                             <div class="inline-field">
                                 <select id="existing-post-select"></select>
@@ -132,7 +199,7 @@
 
                     <section class="panel">
                         <div class="panel-header">
-                            <h2>Publishing</h2>
+                            <h2 id="publishing-panel-title">Publishing</h2>
                         </div>
                         <label class="field">
                             <span>URL slug</span>
@@ -161,7 +228,7 @@
                         </label>
                     </section>
 
-                    <section class="panel">
+                    <section class="panel" data-internal-only>
                         <div class="panel-header">
                             <h2>Portfolio Feature</h2>
                         </div>
@@ -190,11 +257,11 @@
                         <div class="panel-header">
                             <h2>Draft Tools</h2>
                         </div>
-                        <p class="panel-copy">
+                        <p id="draft-tools-copy" class="panel-copy">
                             Drafts are per-language markdown snapshots. Downloads and uploads also operate on the active language tab only.
                         </p>
                         <div class="action-grid">
-                            <button id="load-draft-button" class="button button-secondary">Load draft</button>
+                            <button id="load-draft-button" class="button button-secondary" data-internal-only>Load draft</button>
                             <button id="download-button" class="button button-secondary">Download</button>
                             <button id="upload-button" class="button button-secondary">Upload</button>
                         </div>
@@ -260,11 +327,13 @@
                 </div>
             </aside>
 
+            <button id="public-tools-scrim" class="public-tools-scrim" type="button" aria-label="Close draft tools" hidden></button>
+
             <section class="editor-stage">
                 <div class="toolbar">
                     <div class="toolbar-primary">
                         <div class="toolbar-navigation">
-                            <span class="editor-brand">Blog Editor</span>
+                            <span id="editor-brand" class="editor-brand">Blog Editor</span>
                             <div id="language-tabs" class="language-tabs"></div>
                             <div class="editor-view-tabs" aria-label="Editor view">
                                 <button id="layout-view-button" class="editor-view-tab is-active" type="button" aria-pressed="true">
@@ -279,8 +348,8 @@
                         </div>
                         <div class="toolbar-document-actions" aria-label="Post actions">
                             <button id="new-post-button" class="button button-secondary" title="Create a new post">New</button>
-                            <button id="load-post-button" class="button button-secondary" title="Load an existing post">Load</button>
-                            <button id="save-draft-button" class="button button-secondary" title="Save a local draft">Save</button>
+                            <button id="load-post-button" class="button button-secondary" title="Load an existing post" data-internal-only>Load</button>
+                            <button id="save-draft-button" class="button button-secondary" title="Save a local draft" data-internal-only>Save</button>
                             <button id="drive-load-button" class="button button-secondary" title="Load drafts from Google Drive">
                                 <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-cloud-arrow-down"></use></svg>
                                 Drive
@@ -289,7 +358,11 @@
                                 <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-cloud-arrow-up"></use></svg>
                                 Drive save
                             </button>
-                            <button id="publish-button" class="button button-primary">Publish</button>
+                            <button id="publish-button" class="button button-primary" data-internal-only>Publish</button>
+                            <button id="public-tools-button" class="button button-secondary" type="button" aria-controls="control-sidebar" aria-expanded="false" data-public-only>
+                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-gear"></use></svg>
+                                Draft tools
+                            </button>
                         </div>
                     </div>
                     <div class="toolbar-actions">
@@ -335,22 +408,31 @@
 
                 <section id="layout-editor" class="layout-editor" aria-label="Layout editor">
                     <div class="layout-editor-hint">
-                        <span><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-cursor"></use></svg> Click a title or content block to edit it in place.</span>
+                        <span><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-cursor"></use></svg> Click the title, standfirst, topics, or a content block to edit it in place.</span>
                         <span>⌘/Ctrl + Enter finishes a block · Esc cancels</span>
                     </div>
 
-                    <div class="blog-layout-canvas">
+                    <div class="blog-layout-canvas blog-post-page">
                         <div class="layout-blog-nav">
-                            <strong>Blog</strong>
-                            <span>Layout editing</span>
+                            <span class="layout-blog-home" aria-hidden="true">
+                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg>
+                                Blog Home
+                            </span>
+                            <span class="layout-blog-actions" aria-hidden="true">
+                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
+                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg>
+                                <span>A</span>
+                            </span>
                         </div>
                         <header id="layout-post-header" class="layout-post-header">
-                            <button id="layout-cover-button" class="layout-cover-button" type="button">
-                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-image"></use></svg>
-                                Change cover
-                            </button>
                             <div class="layout-post-heading">
-                                <div
+                                <div class="layout-series-context">
+                                    <span>Series</span>
+                                    <span aria-hidden="true">/</span>
+                                    <strong id="layout-series">Series</strong>
+                                    <span class="layout-series-arrow" aria-hidden="true">↗</span>
+                                </div>
+                                <h1
                                     id="layout-title"
                                     class="layout-title"
                                     contenteditable="true"
@@ -358,33 +440,67 @@
                                     aria-label="Post title"
                                     data-placeholder="Click to add a title"
                                     spellcheck="true"
-                                ></div>
-                                <div class="layout-post-meta">
-                                    <span>Posted on</span>
-                                    <input id="layout-date" class="layout-date-input" type="date" aria-label="Post date" />
-                                    <span aria-hidden="true">•</span>
-                                    <span><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-clock"></use></svg> <span id="layout-reading-time">1 min read</span></span>
-                                </div>
-                                <label class="layout-tags-field">
-                                    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-tags"></use></svg>
-                                    <input id="layout-tags" type="text" placeholder="Add tags, separated by commas" aria-label="Post tags" />
-                                </label>
+                                ></h1>
                             </div>
                         </header>
 
-                        <div class="layout-post-body">
-                            <main class="layout-post-main">
-                                <article id="preview-content" class="preview-content main-content layout-preview-content"></article>
-                                <button id="append-block-button" class="append-block-button" type="button">
-                                    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-plus-lg"></use></svg>
-                                    Add content block
-                                </button>
-                            </main>
-                            <nav id="layout-toc" class="layout-editor-toc" aria-label="Table of contents" hidden>
-                                <div class="layout-editor-toc-title">Contents</div>
-                                <ol id="layout-toc-list" class="layout-editor-toc-list"></ol>
-                            </nav>
-                        </div>
+                        <article class="layout-post-article">
+                            <div class="layout-post-intro">
+                                <div class="layout-post-intro-copy">
+                                    <p
+                                        id="layout-subtitle"
+                                        class="layout-subtitle"
+                                        contenteditable="true"
+                                        role="textbox"
+                                        aria-label="Post subtitle"
+                                        data-placeholder="Click to add a standfirst"
+                                        spellcheck="true"
+                                    ></p>
+                                    <div class="layout-topics-field">
+                                        <span>Topics</span>
+                                        <span aria-hidden="true">/</span>
+                                        <span
+                                            id="layout-tags"
+                                            contenteditable="true"
+                                            role="textbox"
+                                            aria-label="Post topics"
+                                            data-placeholder="Add topics"
+                                            spellcheck="true"
+                                        ></span>
+                                    </div>
+                                </div>
+                                <aside class="layout-post-info" aria-label="Article details">
+                                    <ul>
+                                        <li>
+                                            <strong>Author</strong>
+                                            <span>Hwan Heo</span>
+                                        </li>
+                                        <li>
+                                            <strong>Published</strong>
+                                            <input id="layout-date" class="layout-date-input" type="date" aria-label="Post date" />
+                                        </li>
+                                        <li>
+                                            <strong>Reading</strong>
+                                            <span id="layout-reading-time">1 min read</span>
+                                        </li>
+                                    </ul>
+                                </aside>
+                            </div>
+
+                            <div class="layout-post-body">
+                                <main class="layout-post-main">
+                                    <article id="preview-content" class="preview-content main-content layout-preview-content"></article>
+                                    <button id="append-block-button" class="append-block-button" type="button">
+                                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-plus-lg"></use></svg>
+                                        Add content block
+                                    </button>
+                                </main>
+                                <nav id="layout-toc" class="layout-editor-toc" aria-label="Table of contents" hidden>
+                                    <div class="layout-editor-toc-title">On This Page</div>
+                                    <ol id="layout-toc-list" class="layout-editor-toc-list"></ol>
+                                </nav>
+                            </div>
+                        </article>
 
                         <footer class="layout-blog-footer">Copyright © Hwan Heo</footer>
                     </div>
@@ -428,8 +544,8 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
-    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
-    <script src="../js/markdown-with-math.js?v=d91c966c00"></script>
-    <script src="./editor.js?v=3bba1c4a19"></script>
+    <script src="/assets/js/site-icons.js?v=30f71d459a"></script>
+    <script src="../js/markdown-with-math.js?v=e4db4323a5"></script>
+    <script src="./editor.js?v=207e690e4d"></script>
 </body>
 </html>

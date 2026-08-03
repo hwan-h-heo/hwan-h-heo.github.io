@@ -2,6 +2,10 @@
   const preloader = document.getElementById('preloader');
   if (!preloader) return;
 
+  const MIN_VISIBLE_MS = 120;
+  const READY_TIMEOUT_MS = 800;
+  const EXIT_DURATION_MS = 240;
+  const HARD_TIMEOUT_MS = 1000;
   const delay = (milliseconds) => new Promise(resolve => window.setTimeout(resolve, milliseconds));
   const coreReady = new Promise(resolve => {
     if (document.documentElement.dataset.portfolioCoreReady) {
@@ -21,21 +25,21 @@
     window.setTimeout(() => {
       preloader.dataset.revealComplete = 'true';
       document.dispatchEvent(new CustomEvent('portfolio:preloader-hidden'));
-    }, 430);
+    }, EXIT_DURATION_MS);
   };
 
   Promise.all([
-    delay(260),
+    delay(MIN_VISIBLE_MS),
     Promise.race([
       Promise.all([coreReady, fontsReady]),
-      delay(1800)
+      delay(READY_TIMEOUT_MS)
     ])
   ]).then(reveal);
 
   window.addEventListener('pageshow', event => {
     if (event.persisted) reveal();
   }, { once: true });
-  window.setTimeout(reveal, 2200);
+  window.setTimeout(reveal, HARD_TIMEOUT_MS);
 })();
 
 (function() {

@@ -5,12 +5,15 @@
  * blog.css. Rules here may depend on markup emitted from post Markdown.
  */
 
-simple-model-viewer { 
-    display: block; 
+.main-content simple-model-viewer {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    height: min(600px, 70vh);
+    margin: 1.8rem 0;
+    box-sizing: border-box;
     background-color: #eeeeee;
-    width: 100vw; 
-    height: 100vh; 
-    margin-bottom: 3px;
 }
 .post-image-lightbox-trigger {
     display: block;
@@ -235,7 +238,7 @@ margin-bottom: 20px;
 
 .breadcrumbs {
     margin: 0.85rem 0 0.8rem;
-    color: #72808c;
+    color: var(--blog-color-muted);
     font-family: var(--blog-sans);
     font-size: 0.76rem;
 }
@@ -941,7 +944,7 @@ html[lang="ko"] .toc {
     font-family: var(--blog-korean);
 }
 
-@media (max-width: 1280px) {
+@media (max-width: 1199px) {
     .toc {
         display: none !important;
     }
@@ -971,9 +974,66 @@ html[lang="ko"] .toc {
     }
 }
 
-@media (min-width: 1281px) and (max-width: 1599px) {
-    html:not(.sidebar-collapsed) .blog-post-page .toc {
-        display: none !important;
+@media (min-width: 1200px) and (max-width: 1599px) {
+    .blog-post-page .toc {
+        top: var(--post-rail-flyout-top, 12rem);
+        right: auto;
+        left: calc(var(--site-sidebar-rail-width, 72px) + 10px);
+        z-index: 1080;
+        width: min(17rem, calc(100vw - var(--site-sidebar-rail-width, 72px) - 32px));
+        max-height: min(72vh, calc(100vh - var(--post-rail-flyout-top, 12rem) - 12px));
+        padding: 0.76rem 0.72rem 0.78rem 1.18rem;
+        border: 1px solid var(--site-sidebar-line, rgba(203, 220, 235, 0.11));
+        border-radius: 8px;
+        color: var(--site-sidebar-muted, rgba(190, 203, 216, 0.68));
+        background: rgba(8, 12, 18, 0.98);
+        box-shadow: 0 14px 34px rgba(0, 0, 0, 0.32);
+        transform: translateX(-4px);
+        transition:
+            opacity 180ms cubic-bezier(0.2, 0, 0, 1),
+            transform 180ms cubic-bezier(0.2, 0, 0, 1),
+            visibility 180ms cubic-bezier(0.2, 0, 0, 1);
+        scrollbar-color: rgba(190, 203, 216, 0.26) transparent;
+    }
+
+    .blog-post-page .toc.is-visible {
+        transform: translateX(0);
+    }
+
+    .blog-post-page .toc::before {
+        background: var(--site-sidebar-line, rgba(203, 220, 235, 0.11));
+    }
+
+    .blog-post-page .toc-title,
+    .blog-post-page .toc a,
+    .blog-post-page .toc .toc-link {
+        color: var(--site-sidebar-muted, rgba(190, 203, 216, 0.68));
+    }
+
+    .blog-post-page .toc .toc-item-level-2 > .toc-link,
+    .blog-post-page .toc > ul > li > a,
+    .blog-post-page .toc .toc-item.is-parent > .toc-link,
+    .blog-post-page .toc li.is-parent > a {
+        color: color-mix(in srgb, var(--site-sidebar-ink, #f4f8fc), transparent 18%);
+    }
+
+    .blog-post-page .toc .toc-item-level-3 > .toc-link,
+    .blog-post-page .toc ul ul a {
+        color: color-mix(in srgb, var(--site-sidebar-muted, #becbd8), transparent 8%);
+    }
+
+    .blog-post-page .toc a:hover,
+    .blog-post-page .toc .toc-link:hover,
+    .blog-post-page .toc .toc-item.is-current > .toc-link,
+    .blog-post-page .toc li.active > a,
+    .blog-post-page .toc li.is-current > a {
+        color: var(--site-sidebar-ink, #f4f8fc);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .blog-post-page .toc {
+        transition: none;
     }
 }
 

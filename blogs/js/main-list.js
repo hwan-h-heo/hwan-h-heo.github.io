@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         eng: {
             searchPlaceholder: 'Search...',
             archiveTitle: 'Articles',
-            oldArchiveTitle: 'Old Archive',
+            fromArchiveTitle: 'From the Archive',
             tabPosts: 'Posts',
             tabNotes: 'Notes',
             tabSeries: 'Series',
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         kor: {
             searchPlaceholder: 'Search...',
             archiveTitle: 'Articles',
-            oldArchiveTitle: 'Old Archive',
+            fromArchiveTitle: 'From the Archive',
             tabPosts: 'Posts',
             tabNotes: 'Notes',
             tabSeries: 'Series',
@@ -192,9 +192,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         setText('#posts-count', postCount);
         setText('#notes-count', noteCount);
         setText('#series-count', seriesCount);
-        setText('#hero-posts-count', postCount);
-        setText('#hero-notes-count', noteCount);
-        setText('#hero-series-count', seriesCount);
 
         if (langToggleButton) {
             const targetLabel = lang === 'eng' ? '한국어로 전환' : 'Switch to English';
