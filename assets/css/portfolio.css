@@ -90,7 +90,9 @@
     radial-gradient(circle at center, rgba(37, 37, 40, 0.94), rgba(20, 20, 22, 0.98) 48%, #0e0e0f 78%);
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.42s ease, visibility 0.42s ease;
+  transition:
+    opacity var(--motion-base) var(--ease-standard),
+    visibility var(--motion-base) var(--ease-standard);
 }
 
 #preloader.is-hidden {
@@ -325,7 +327,7 @@ button:not(:disabled) {
 @media (min-width: 1400px) {
   .portfolio-shell { max-width: 1320px; }
 }
-a { color: var(--accent-color); text-decoration: none; transition: 0.3s; }
+a { color: var(--accent-color); text-decoration: none; transition: color var(--motion-base) var(--ease-standard); }
 a:hover { color: color-mix(in srgb, var(--accent-color), transparent 25%); text-decoration: none; }
 .header {
   position: fixed;
@@ -365,7 +367,7 @@ a:hover { color: color-mix(in srgb, var(--accent-color), transparent 25%); text-
 .header .logo .sitename { font-size: 24px; margin: 0px; font-weight: 700; color: var(--heading-color); }
 .header .social-links { margin: 0px 0px 20px; text-align: center; }
 .header .social-links a { font-size: 16px; display: inline-flex; align-items: center; justify-content: center; background: color-mix(in srgb, var(--default-color), transparent 90%); color: var(--default-color); margin: 0px 2px; border-radius: 50%; text-align: center; width: 40px; height: 40px; transition: 0.3s; }
-.header .social-links a:hover {color: var(--contrast-color); background: var(--accent-color); transform: translateY(-1px) 0.3s ease;}
+.header .social-links a:hover {color: var(--contrast-color); background: var(--accent-color); transform: translateY(-1px);}
 .navmenu {padding: 0;z-index: 9997;}
 .navmenu ul {list-style: none; padding: 0 0 20px 0;margin: 0;}
 .navmenu a,
@@ -1201,7 +1203,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 
 .portfolio-blog-section .portfolio-blog-preview-meta {
   margin-top: 0.56rem;
-  color: #7b8491;
+  color: var(--color-text-soft);
   font-size: 0.74rem;
   line-height: 1.35;
 }
@@ -1992,7 +1994,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   gap: 0.2rem 0.55rem;
   align-items: center;
   margin-top: 0.56rem;
-  color: #7b8491;
+  color: var(--color-text-soft);
   font-size: 0.74rem;
   line-height: 1.35;
 }

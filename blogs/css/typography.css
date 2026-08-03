@@ -14,9 +14,6 @@ html {
 }
 
 body {
-    font-family: var(--blog-sans);
-    font-size: 1rem;
-    line-height: 1.7;
     letter-spacing: -0.006em;
     text-rendering: optimizeLegibility;
 }
@@ -152,7 +149,6 @@ header.masthead .post-heading .meta {
     letter-spacing: -0.008em;
 }
 
-.post-preview > .post-meta,
 .post-meta-sm,
 .post-tag {
     font-family: var(--blog-sans);

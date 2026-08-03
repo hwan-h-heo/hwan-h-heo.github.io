@@ -235,7 +235,7 @@ margin-bottom: 20px;
 
 .breadcrumbs {
     margin: 0.85rem 0 0.8rem;
-    color: #72808c;
+    color: var(--blog-color-muted);
     font-family: var(--blog-sans);
     font-size: 0.76rem;
 }

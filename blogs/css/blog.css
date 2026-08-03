@@ -12,10 +12,6 @@
 
 :root {
     --blog-reset-mono: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    --blog-body-font-family: Lora, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --blog-body-font-size: 1.1rem;
-    --blog-body-font-weight: 400;
-    --blog-body-line-height: 1.5;
     --blog-body-color: #212529;
     --blog-body-bg: #fff;
     --blog-link-color: #212529;
@@ -25,7 +21,7 @@
     --blog-color-heading: #1c2a36;
     --blog-color-ink: #24313d;
     --blog-color-text: #43515d;
-    --blog-color-muted: #72808c;
+    --blog-color-muted: #687382;
     --blog-color-subtle: #8b98a3;
     --blog-color-line: #dce5ee;
     --blog-color-line-soft: rgba(220, 229, 238, 0.84);
@@ -68,7 +64,7 @@ border: 0 !important;
 @media (prefers-reduced-motion: no-preference) {
 :root { scroll-behavior: smooth; }
 }
-body { margin: 0px; font-family: var(--blog-body-font-family); font-size: var(--blog-body-font-size); font-weight: var(--blog-body-font-weight); line-height: var(--blog-body-line-height); color: var(--blog-body-color); text-align: left; background-color: var(--blog-body-bg); text-size-adjust: 100%; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
+body { margin: 0px; font-family: var(--blog-sans, "Inter", "Noto Sans KR", system-ui, -apple-system, "Segoe UI", sans-serif); font-size: 1rem; font-weight: 400; line-height: 1.7; color: var(--blog-body-color); text-align: left; background-color: var(--blog-body-bg); text-size-adjust: 100%; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
 .math-container {
 width: 100%;
 overflow-x: auto;
@@ -106,7 +102,7 @@ opacity: 1;
 h6, h5, h4, h3, h2, h1 {
 margin-top: 0.5rem;
 margin-bottom: 0.5rem;
-font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+font-family: var(--blog-heading, "Manrope", "Noto Sans KR", system-ui, -apple-system, "Segoe UI", sans-serif);
 font-weight: 800;
 line-height: 1.2;
 }
@@ -583,7 +579,7 @@ right: 0;
 z-index: 1030;
 border-bottom: 1px solid #dee2e6;
 background-color: #fff;
-font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+font-family: var(--blog-sans, "Inter", "Noto Sans KR", system-ui, -apple-system, "Segoe UI", sans-serif);
 transition: background-color 0.2s ease, transform 0.22s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 #mainNav .post-nav-brand {
@@ -1014,13 +1010,13 @@ header.masthead .post-heading .subheading {
 font-size: 1.5rem;
 font-weight: 600;
 margin: 0.75rem 0 2rem;
-font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+font-family: var(--blog-sans, "Inter", "Noto Sans KR", system-ui, -apple-system, "Segoe UI", sans-serif);
 }
 header.masthead .post-heading .meta {
 font-size: 1rem;
 font-weight: 300;
 font-style: italic;
-font-family: "Lora", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+font-family: var(--blog-sans, "Inter", "Noto Sans KR", system-ui, -apple-system, "Segoe UI", sans-serif);
 }
 header.masthead .post-heading .meta a {
 color: #fff;
@@ -1555,37 +1551,6 @@ header.masthead.post-masthead .post-heading h1 {
     .blog-post-page .post-article-info li {
         font-size: 0.72rem;
     }
-}
-.post-preview > a {
-color: #212529;
-}
-.post-preview > a:focus, .post-preview > a:hover {
-text-decoration: none;
-color: #0085A1;
-}
-.post-preview > a > .post-title {
-font-size: 1rem;
-margin-top: 1.5rem;
-margin-bottom: 0.5rem;
-}
-.post-preview > a > .post-subtitle {
-font-weight: 300;
-font-size: 1rem;
-margin-bottom: 0.625rem;
-}
-.post-preview > .post-meta {
-font-size: 1rem;
-font-style: italic;
-margin-top: 0;
-color: #6c757d;
-}
-.post-preview > .post-meta > a {
-text-decoration: none;
-}
-@media (min-width: 992px) {
-.post-preview > a > .post-title {
-    font-size: 1.5rem;
-}
 }
 html { overflow-y: scroll; }
 .blog-search-page .main {
@@ -3239,7 +3204,7 @@ html[lang="ko"] .blog-home-hero h1 {
 .blog-home-page .post-meta-sm {
     flex: 0 0 auto;
     margin-left: 0;
-    color: #7b8491;
+    color: var(--blog-home-muted);
     font-family: var(--blog-mono);
     font-size: 0.68rem;
 }

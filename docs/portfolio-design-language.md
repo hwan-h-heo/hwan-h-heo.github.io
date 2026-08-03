@@ -91,6 +91,11 @@ Use neutral color for almost all content:
 Do not create hierarchy by introducing another hue. Move up or down this
 neutral scale first.
 
+Readable metadata such as dates, categories, affiliations, and compact actions
+must use at least the surface's `--color-text-soft` or `--blog-color-muted`
+contrast. Reserve faint or subtle values for redundant folios, separators, and
+inactive icons.
+
 ### Cyan roles
 
 The three canonical cyan tokens are semantic:
@@ -472,6 +477,8 @@ Rules:
 - Keep movement within 1 to 4px.
 - Respect `prefers-reduced-motion`.
 - Keyboard focus must expose the same meaning as hover.
+- Keep the blocking portfolio preloader within about one second and exit it on
+  `--motion-base`; ambient hero motion may continue independently.
 
 Project and blog preview rows have no row-level hover state. Their two link
 regions respond independently:
