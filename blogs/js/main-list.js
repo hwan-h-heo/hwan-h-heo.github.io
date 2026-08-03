@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const labels = {
         eng: {
             searchPlaceholder: 'Search...',
-            archiveTitle: 'Archive',
+            archiveTitle: 'Articles',
             oldArchiveTitle: 'Old Archive',
             tabPosts: 'Posts',
             tabNotes: 'Notes',
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         },
         kor: {
             searchPlaceholder: 'Search...',
-            archiveTitle: 'Archive',
+            archiveTitle: 'Articles',
             oldArchiveTitle: 'Old Archive',
             tabPosts: 'Posts',
             tabNotes: 'Notes',

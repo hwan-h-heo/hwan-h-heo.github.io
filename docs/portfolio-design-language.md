@@ -360,12 +360,12 @@ occupies. Subtitles, tags, dates, organizations, and accolades remain normal
 selectable text. Apply the same rule to Blog home featured, archive, and search
 rows.
 
-On the Blog home, treat Featured and Archive as the two top-level publication
-chapters: `01 FEATURED` and `02 ARCHIVE`. Set both in the same short uppercase
+On the Blog home, treat Featured and Articles as the two top-level publication
+chapters: `01 FEATURED` and `02 ARTICLES`. Set both in the same short uppercase
 mono grammar with a quiet trailing hairline. Posts, Notes, and Series remain
-unnumbered tabs within Archive; keep their counts and conventional active-tab
+unnumbered tabs within Articles; keep their counts and conventional active-tab
 underline so the controls do not compete with the chapter folios. On compact
-layouts, let the tab row move beneath the complete `02 ARCHIVE` label and rule.
+layouts, let the tab row move beneath the complete `02 ARTICLES` label and rule.
 The Posts count represents every published Post, including the separately
 presented Featured entry; exclude Featured only from the repeated Archive rows.
 Non-featured preview media uses the system's compact `4px` radius, and its copy
@@ -387,7 +387,7 @@ row pattern. Place media on the right for writing published within the current
 and previous calendar years, and return it to the left for older writing. In
 2026, this means 2025–2026 on the right and 2024 or earlier on the left. This
 reverses the opening Archive spread from Featured, then marks the older archive
-with a single deliberate shift. Keep `02 ARCHIVE` as the tab-owning chapter so
+with a single deliberate shift. Keep `02 ARTICLES` as the tab-owning chapter so
 Posts, Notes, and Series remain coherent, then insert one `03 OLD ARCHIVE` folio
 before the first pre-cutoff Post or Note to explain the alignment change. Remove
 the final Recent row's bottom hairline at this boundary so it does not double the
@@ -443,7 +443,7 @@ Use a shared index/table grammar. Do not introduce a separate card system.
   folio notation. Use `P–01` for portfolio projects, `W–01` for Portfolio-home
   writing. Keep the folio neutral and the adjacent editorial label accented;
   it is margin notation, never a badge or a separate metadata row. Blog-home
-  archive rows are the exception: their shared `02 ARCHIVE` chapter label
+  archive rows are the exception: their shared `02 ARTICLES` chapter label
   provides the index, so individual Posts and Notes do not repeat a folio.
 
 ## Interaction And Motion

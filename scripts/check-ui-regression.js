@@ -711,6 +711,7 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
                     && Math.abs(heroCopy.getBoundingClientRect().right - featureCard.getBoundingClientRect().right) <= 0.5
                 : false,
             heroImprint: document.querySelector('.blog-editorial-imprint')?.textContent.replace(/\s+/g, ' ').trim() || '',
+            articlesChapter: document.querySelector('#blog-home-archive-title')?.textContent.replace(/\s+/g, ' ').trim() || '',
             heroTitleLineCount: (() => {
                 if (!heroTitle) return 0;
                 const range = document.createRange();
@@ -832,6 +833,7 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
     assert(initialTitleState.heroHeight <= 330.5, `Wide Blog hero grew beyond its former 330px footprint: ${initialTitleState.heroHeight}px.`);
     assert(initialTitleState.heroFeaturedMeasureMatches, 'Blog Hero copy no longer shares the Featured content measure.');
     assert(initialTitleState.heroImprint === "00 / Hwan's Blog 2021—2026", 'Blog editorial-cover brand imprint is missing or changed.');
+    assert(initialTitleState.articlesChapter === '02 Articles', 'Blog Home writing chapter is no longer labeled 02 Articles.');
     assert(initialTitleState.heroTitleLineCount === 1, 'Wide Blog editorial-cover title is no longer a single line.');
     assert(initialTitleState.heroSearchClearsTitle, 'Wide Blog utility search overlaps the Hero title field.');
     assert(
