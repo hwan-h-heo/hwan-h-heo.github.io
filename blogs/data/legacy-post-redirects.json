@@ -1,4 +1,7 @@
 {
+  "260802_cuda_01_gemm": "/blogs/posts/gemm-on-nvidia-gpus/",
+  "260802_cuda_02_kernel_fusion": "/blogs/posts/cuda-kernel-fusion-boundaries-ownership-and-cost/",
+  "260802_cuda_03_flashattention": "/blogs/posts/flashattention-from-online-softmax-to-fa4/",
   "260727_sparse_3d": "/blogs/posts/optimizing-sparse-3d-generation-inference/",
   "260115_Varco3D": "/blogs/posts/varco3d-a-year-in-review-2025-retrospective/",
   "250823_sdf": "/blogs/posts/sdf-and-eikonal-equation/",
