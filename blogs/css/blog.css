@@ -1986,9 +1986,24 @@ html[lang="ko"] .blog-home-hero h1 {
     transform: none;
 }
 
-.blog-editorial-visual,
-.blog-editorial-visual-left {
+.blog-editorial-visual {
     display: none;
+}
+
+.blog-editorial-visual--sparse {
+    background: url("../posts/260727_sparse_3d/assets/sparse-pipeline.png") center / auto 86% no-repeat;
+    filter: saturate(0.68) contrast(1.03);
+}
+
+.blog-editorial-visual--hierarchy {
+    background: url("../posts/260803_hierarchical_decoding_threejs/assets/hero-frame-3-30.webp") center / auto 90% no-repeat;
+    filter: saturate(0.72) contrast(1.05) brightness(1.8);
+    opacity: 0.42;
+}
+
+.blog-editorial-visual--varco {
+    background: url("../posts/260115_Varco3D/assets/remote-d832175607cd.png") right center / auto 86% no-repeat;
+    filter: saturate(0.68) contrast(1.03);
 }
 
 .blog-editorial-imprint {
@@ -3145,23 +3160,22 @@ html[lang="ko"] .blog-home-hero h1 {
         inset: 0 auto 0 0;
         z-index: 0;
         display: block;
-        width: calc((100% - var(--blog-editorial-copy-gutter)) / 2);
-        background: url("../posts/260727_sparse_3d/assets/sparse-pipeline.png") center / auto 86% no-repeat;
-        filter: saturate(0.68) contrast(1.03);
         pointer-events: none;
     }
 
-    .blog-editorial-visual-left {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: calc((100% - var(--blog-editorial-copy-gutter)) / 2);
-        z-index: 0;
-        display: block;
+    .blog-editorial-visual--sparse {
+        left: 50%;
+        width: 36%;
+        transform: translateX(-50%);
+    }
+
+    .blog-editorial-visual--hierarchy {
         width: calc((100% - var(--blog-editorial-copy-gutter)) / 2);
-        background: url("../posts/260115_Varco3D/assets/remote-d832175607cd.png") right center / auto 86% no-repeat;
-        filter: saturate(0.68) contrast(1.03);
-        pointer-events: none;
+    }
+
+    .blog-editorial-visual--varco {
+        left: calc((100% - var(--blog-editorial-copy-gutter)) / 2);
+        width: calc((100% - var(--blog-editorial-copy-gutter)) / 2);
     }
 
     .blog-home-page header.masthead.blog-editorial-hero::before {
@@ -3173,7 +3187,45 @@ html[lang="ko"] .blog-home-hero h1 {
     }
 }
 
+@media (min-width: 1200px) {
+    .blog-editorial-visual--hierarchy {
+        background-position: 15% center;
+        filter: saturate(0.72) contrast(1.05) brightness(2.6);
+        opacity: 0.62;
+    }
+}
+
+@media (max-width: 1199.98px) {
+    .blog-editorial-visual--hierarchy {
+        left: 0;
+        width: 33.333%;
+        transform: none;
+        background-position: left center;
+        background-size: contain;
+    }
+
+    .blog-editorial-visual--sparse {
+        left: 33.333%;
+        width: 33.334%;
+        transform: none;
+        background-position: center;
+        background-size: contain;
+    }
+
+    .blog-editorial-visual--varco {
+        right: auto;
+        left: 66.667%;
+        width: 33.333%;
+        background-position: right center;
+        background-size: contain;
+    }
+}
+
 @media (min-width: 1400px) {
+    .blog-editorial-visual--sparse {
+        left: 45%;
+    }
+
     .blog-editorial-hero .blog-home-hero-deck {
         max-width: none;
         font-size: 0.82rem;
@@ -3183,6 +3235,27 @@ html[lang="ko"] .blog-home-hero h1 {
 }
 
 @media (max-width: 991.98px) {
+    .blog-editorial-visual {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        z-index: 0;
+        display: block;
+        pointer-events: none;
+    }
+
+    .blog-editorial-visual--hierarchy {
+        filter: saturate(0.72) contrast(1.05) brightness(2);
+    }
+
+    .blog-home-page header.masthead.blog-editorial-hero::before {
+        z-index: 1;
+        background:
+            linear-gradient(180deg, rgba(16, 16, 17, 0.72), rgba(16, 16, 17, 0.88)),
+            linear-gradient(90deg, rgba(16, 16, 17, 0.18), rgba(16, 16, 17, 0.42) 50%, rgba(16, 16, 17, 0.18));
+        opacity: 1;
+    }
+
     .blog-feature-card {
         grid-template-areas:
             "label"
@@ -3257,6 +3330,16 @@ html[lang="ko"] .blog-home-hero h1 {
 }
 
 @media (max-width: 575.98px) {
+    .blog-editorial-visual--hierarchy {
+        filter: saturate(0.72) contrast(1.05) brightness(2.2);
+    }
+
+    .blog-home-page header.masthead.blog-editorial-hero::before {
+        background:
+            linear-gradient(180deg, rgba(16, 16, 17, 0.78), rgba(16, 16, 17, 0.92)),
+            linear-gradient(90deg, rgba(16, 16, 17, 0.24), rgba(16, 16, 17, 0.48) 50%, rgba(16, 16, 17, 0.24));
+    }
+
     .blog-home-topbar {
         gap: 0.55rem;
         min-height: 3.35rem;
