@@ -132,7 +132,8 @@ The typography system has three jobs:
 
 | Family | Role |
 | --- | --- |
-| Manrope / `--heading-font` | names, section titles, project titles, commands |
+| Manrope / `--heading-font` | names, project titles, commands |
+| Space Grotesk | Portfolio-home chapter `h2` headings and matching Hero section-navigation labels |
 | Inter / `--default-font` | descriptions, metadata, navigation, contact copy |
 | IBM Plex Mono / `--mono-font` | indexes, categories, series names, small structural labels |
 
@@ -148,6 +149,10 @@ Rules:
   role.
 - Keep letter spacing at `0` in new portfolio styles.
 - Use uppercase mono labels sparingly and keep them short.
+- Treat the Portfolio About standfirst as descriptive copy, not structure: use
+  a high-contrast Cormorant Garamond italic rather than mono, with only a small
+  optical size correction for its low x-height. This is a contained accent, not
+  a fourth general-purpose text role.
 - Limit small text to three levels: structural label, metadata, and action.
 - Do not create a new font treatment for badges or tags.
 - Keep body line height around `1.58` to `1.78`.
@@ -182,8 +187,31 @@ Rules:
   quotation glyph, rounded card, shadow, or semantic label that may misclassify
   the content.
 
-The editorial quality comes from scale, weight, alignment, and rhythm. It does
-not depend on adding a serif family.
+The core editorial quality comes from scale, weight, alignment, and rhythm. It
+does not depend on serif type beyond the contained About standfirst accent.
+
+On the Portfolio Hero, keep the display name at its established restrained
+scale and place the quiet mono `00 / PORTFOLIO` folio and hairline above it as an
+out-of-flow margin notation; it must not push the identity block downward. Then
+stack the role, affiliation, and practice statement on a bounded reading rail.
+On wide layouts, keep the folio and display name as the composition's
+left-aligned anchor, right-align only the role-and-affiliation identity block,
+and return the practice statement and CTA contents to the left reading edge.
+Reset the identity block to left alignment on compact screens. Use the Portfolio
+chapter-heading family for the Project, Blog, and About CTA labels so the cover
+leads directly into the publication index; keep their numbers in mono and
+keep the three CTAs in compact content-led spans rather than stretching them
+across the deck width. On compact screens, let the same links share the available
+touch width evenly. Maintain one
+consistent, generous vertical rhythm from folio to name and name to deck, then
+allow one modestly larger pause before the CTA index so navigation does not read
+as another row of identity copy. Give each CTA a top-edge hairline and reveal
+its stronger action rule from the left on interaction, making the row read as a
+three-column publication index rather than a set of bottom-underlined buttons.
+Keep those resting CTA rules optically lighter than the Hero folio hairline so
+the navigation remains subordinate. Keep the Wave as the Hero's only
+atmospheric element so the typography supplies the identity without another
+decorative typeface or louder animation.
 
 ## Layout And Spacing
 
@@ -192,12 +220,23 @@ not depend on adding a serif family.
   viewports.
 - Resume is subordinate to About and must align with the About portrait and
   copy grid.
+- On wide Portfolio layouts, keep the About copy on a bounded reading rail and
+  let the portrait rail absorb the remaining width. Center the portrait within
+  that rail so the section balances across the shell instead of leaving unused
+  space outside a fixed two-column grid. Treat the person's name as the portrait
+  caption headline, clearly above role, affiliation, and point-cloud notation.
+  Optically lift the wide-layout portrait figure to compensate for transparent
+  image headroom; reset that lift when the figure returns to normal single-
+  column flow.
 - Project and Portfolio-home Blog preview rows share their row spacing, media
   treatment, and interaction grammar; their column proportions and metadata
   order may differ to express artifact versus publication.
 - Project and Blog remain on one pale output surface. Separate the two chapters
   with balanced whitespace rather than a background-color change or an
   additional divider.
+- On the Portfolio home, the desktop gutter exposed while the auto-hidden
+  sidebar returns at the Hero-to-Projects boundary must use `--color-section`,
+  matching the Projects surface without a white transition strip.
 - Fixed-format elements need stable dimensions or aspect ratios.
 - A case-study overview may place one outcome-focused media figure between its
   overview copy and contributions when the result is the clearest proof of the
@@ -404,6 +443,10 @@ Portfolio-home Blog previews use a publication-first order:
 3. A two-line editorial standfirst
 4. A compact `Read post` text action with the boxed external-link icon
 
+Keep both Portfolio Project and Blog preview titles at Manrope `650`. Their
+scale, spacing, and content hierarchy distinguish them from body copy; avoid a
+heavier display weight that competes with the Space Grotesk chapter headings.
+
 Do not repeat technology tags or the publication date beneath Portfolio-home
 Blog standfirsts. Keep the right-side Blog media rail narrower than the Project
 media rail so the headline, rather than the thumbnail, carries the row.
@@ -565,6 +608,36 @@ Rules:
 - Animate `transform`, `opacity`, color, and underline scale.
 - Do not animate dimensions, padding, or grid tracks on hover.
 - Keep movement within 1 to 4px.
+- Treat the Wave canvas as the spatial-motion exception: on desktop, pointer
+  input may drive a damped camera parallax and surface tilt so the field reads
+  as a 3D scene. Keep the combined edge response within roughly 10 degrees,
+  preserve the authored ambient drift, and use a smaller envelope for touch.
+- Treat the About portrait point cloud as a progressive enhancement. Keep its
+  colored points orthographically aligned to one flat depth plane at rest; on
+  fine-pointer hover, restore the authored depth gradually and allow only a
+  bounded pointer-relative rotation. Allow one first-view settle when the About
+  chapter reaches the same `200px` viewport boundary used by the `#about`
+  scrollspy: hold the flat photographic portrait briefly, then ease the point
+  layer and depth in with the angle, pass through one shallow left-to-right fan,
+  and return to the flat portrait over roughly `4.5s`. Keep the pre-trigger
+  portrait flat and never replay the intro. On fine-pointer devices
+  only, repeat the same left-to-right-to-front path over `4.5s` after at
+  least six seconds at rest. Fade the PNG almost entirely out during that fan so
+  it reads as spatial rotation rather than blur, while keeping its depth and
+  angle slightly quieter than the intro. Hover interrupts and takes priority.
+  Identify the enhancement with one quiet mono `POINT CLOUD` annotation and
+  reveal `/ HOVER FOR DEPTH` only when the interaction is actually available.
+  At rest, let the portrait PNG carry `100%` of the image and hide the point
+  layer completely, preventing a residual grid on compact displays. As the
+  depth response opens, bring the points in on a quicker ease-out curve while
+  keeping the PNG fully present through the first fifth of the response; only
+  then ease the underlay away. This avoids a thin, blurry midpoint without
+  leaving the PNG as a second, misaligned silhouette at full depth.
+  Size point sprites from their projected screen-space sampling interval rather
+  than DPR alone; overlap neighboring samples enough to prevent grid moire as
+  the portrait card changes size.
+  Fall back to the portrait PNG for reduced motion, data-saving mode, or an
+  unavailable or lost WebGL context.
 - Respect `prefers-reduced-motion`.
 - Keyboard focus must expose the same meaning as hover.
 - Keep the blocking portfolio preloader within about one second and exit it on
@@ -588,9 +661,10 @@ the directional arrow; external profiles use the boxed external-link icon.
 Do not add a card lift, background fill, shadow, border-color flash, or summary
 animation to this state.
 
-Hero CTA, Selected/All, and Download CV share the left-origin underline
-language. Line thickness may differ by surface: 2px on the dark hero, 1px on
-light editorial controls. Animated lines use the neutral
+Hero CTA, Selected/All, and Download CV share the left-origin action-rule
+language. The Hero chapter index places that rule on its top edge; light-surface
+controls keep it below the text. Line thickness may differ by surface: 2px on
+the dark hero, 1px on light editorial controls. Animated lines use the neutral
 `--action-underline-*` tokens rather than a full-strength accent.
 
 Light-surface text actions such as Download CV and publication or talk links

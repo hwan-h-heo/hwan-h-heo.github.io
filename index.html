@@ -40,7 +40,7 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect" />
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;650;700;800&family=Noto+Sans+KR:wght@400;500;600;700&family=Space+Grotesk:wght@600&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="assets/css/site-icons.css" rel="stylesheet">
@@ -115,6 +115,10 @@
 
       <!-- Section Title -->
       <div class="portfolio-shell section-title portfolio-section-heading">
+        <div class="portfolio-chapter-marker" aria-hidden="true">
+          <span class="portfolio-chapter-label"><span>01 /</span> Work</span>
+          <span class="portfolio-chapter-rule"></span>
+        </div>
         <div class="portfolio-heading-copy">
           <h2>Projects</h2>
           <p class="portfolio-credibility">Production 3D AI systems · 4 papers · 6 invited talks</p>
@@ -138,7 +142,6 @@
       <div class="portfolio-shell portfolio-content">
         <div class="portfolio-index-head portfolio-project-index-head">
           <h3 class="portfolio-index-label">Project Index</h3>
-          <span class="portfolio-index-rule" aria-hidden="true"></span>
         </div>
         <div class="portfolio-project-list" id="portfolio-projects"><!-- portfolio-projects-static --></div>
 
@@ -181,6 +184,10 @@
     <section id="blog" class="portfolio-blog-section section light-background" data-section-ready="false">
       <!-- Section Title -->
       <div class="portfolio-shell section-title portfolio-blog-section-heading">
+        <div class="portfolio-chapter-marker" aria-hidden="true">
+          <span class="portfolio-chapter-label"><span>02 /</span> Writing</span>
+          <span class="portfolio-chapter-rule"></span>
+        </div>
         <div class="portfolio-blog-heading-copy">
           <h2>Technical Blog</h2>
           <p>Essays and technical notes on building 3D generative systems:<br/>from representations and model training to CUDA kernels, geometry processing, and production engineering.</p>
@@ -193,7 +200,6 @@
       <div class="portfolio-shell portfolio-blog-content">
         <div class="portfolio-index-head portfolio-blog-index-head">
           <h3 class="portfolio-index-label">Selected Writing</h3>
-          <span class="portfolio-index-rule" aria-hidden="true"></span>
         </div>
         <div class="portfolio-blog-list-shell">
           <div class="portfolio-blog-list" id="portfolio-blog-posts"></div>
@@ -234,6 +240,7 @@
   <script src="js/portfolio-blocks.js"></script>
   <script src="js/portfolio-content.js"></script>
   <script src="js/portfolio-blog-preview.js"></script>
+  <script type="module" src="js/about-portrait.js"></script>
   <script type="module" src="js/hero.js"></script>
 
   <!-- Main JS File -->
