@@ -636,8 +636,12 @@ Rules:
   Size point sprites from their projected screen-space sampling interval rather
   than DPR alone; overlap neighboring samples enough to prevent grid moire as
   the portrait card changes size.
-  Fall back to the portrait PNG for reduced motion, data-saving mode, or an
-  unavailable or lost WebGL context.
+  Fall back to the portrait PNG for iOS and iPadOS, reduced motion, data-saving
+  mode, or an unavailable or lost WebGL context. Detect iPadOS when it presents
+  a desktop-style `MacIntel` platform with touch points. In these static modes,
+  do not import Three.js, create a WebGL canvas, or expose the point-cloud
+  affordance; keep the PNG at full opacity. Desktop Safari and other desktop
+  browsers retain the enhancement.
 - Respect `prefers-reduced-motion`.
 - Keyboard focus must expose the same meaning as hover.
 - Keep the blocking portfolio preloader within about one second and exit it on

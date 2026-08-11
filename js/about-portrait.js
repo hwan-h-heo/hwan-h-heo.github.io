@@ -14,6 +14,36 @@ function supportsWebGL() {
     return 'WebGLRenderingContext' in window || 'WebGL2RenderingContext' in window;
 }
 
+function isIOSOrIPadOS() {
+    const userAgent = navigator.userAgent || '';
+    const platform = navigator.platform || '';
+    return /iPad|iPhone|iPod/.test(userAgent)
+        || (platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
+function showStaticPortrait(stage) {
+    const figure = stage?.closest('.about-profile-note');
+    if (!stage) return;
+    stage.style.setProperty('--about-portrait-canvas-opacity', '0');
+    stage.style.setProperty('--about-portrait-image-opacity', '1');
+    stage.dataset.aboutPortraitMode = 'static';
+    stage.dataset.aboutPortraitState = 'fallback';
+    figure?.setAttribute('data-about-portrait-static', 'true');
+    figure?.removeAttribute('data-about-portrait-ready');
+}
+
+function clearStaticPortrait(stage) {
+    const figure = stage?.closest('.about-profile-note');
+    if (!stage) return;
+    stage.style.removeProperty('--about-portrait-canvas-opacity');
+    stage.style.removeProperty('--about-portrait-image-opacity');
+    delete stage.dataset.aboutPortraitMode;
+    if (stage.dataset.aboutPortraitState === 'fallback') {
+        delete stage.dataset.aboutPortraitState;
+    }
+    figure?.removeAttribute('data-about-portrait-static');
+}
+
 function loadTexture(THREE, url) {
     return new Promise((resolve, reject) => {
         new THREE.TextureLoader().load(url, resolve, undefined, reject);
@@ -460,9 +490,7 @@ async function createPortraitController(stage) {
         contextLost = true;
         if (frame) window.cancelAnimationFrame(frame);
         frame = 0;
-        setLayerOpacity(0, 1);
-        figure?.removeAttribute('data-about-portrait-ready');
-        stage.dataset.aboutPortraitState = 'fallback';
+        showStaticPortrait(stage);
     }
 
     const visibilityObserver = new IntersectionObserver((entries) => {
@@ -538,17 +566,25 @@ async function createPortraitController(stage) {
 }
 
 function initializePortrait() {
+    if (!aboutSection) return;
+
+    const stage = aboutSection.querySelector('[data-about-portrait]');
+    if (!stage) return;
     if (
-        !aboutSection
+        isIOSOrIPadOS()
         || reducedMotion.matches
         || navigator.connection?.saveData
         || !supportsWebGL()
     ) {
+        preloadObserver?.disconnect();
+        preloadObserver = null;
+        controller?.destroy();
+        controller = null;
+        showStaticPortrait(stage);
         return;
     }
-
-    const stage = aboutSection.querySelector('[data-about-portrait]');
-    if (!stage || stage.dataset.aboutPortraitBound === 'true') return;
+    if (stage.dataset.aboutPortraitBound === 'true') return;
+    clearStaticPortrait(stage);
     stage.dataset.aboutPortraitBound = 'true';
 
     preloadObserver?.disconnect();
@@ -566,8 +602,7 @@ function initializePortrait() {
             })
             .catch((error) => {
                 delete stage.dataset.aboutPortraitBound;
-                stage.style.removeProperty('--about-portrait-canvas-opacity');
-                stage.style.removeProperty('--about-portrait-image-opacity');
+                showStaticPortrait(stage);
                 console.warn('The About portrait projection could not be initialized.', error);
             });
     }, { rootMargin: '600px 0px' });
@@ -583,7 +618,10 @@ function handleReducedMotionChange(event) {
     controller?.destroy();
     controller = null;
     const stage = aboutSection?.querySelector('[data-about-portrait]');
-    if (stage) delete stage.dataset.aboutPortraitBound;
+    if (stage) {
+        delete stage.dataset.aboutPortraitBound;
+        showStaticPortrait(stage);
+    }
 }
 
 if (document.readyState === 'loading') {
