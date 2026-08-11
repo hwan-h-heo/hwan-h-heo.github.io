@@ -33,7 +33,7 @@
       "title_kor": "NVIDIA GPU의 GEMM: Naive Kernel에서 Tiled Pipeline까지",
       "subtitle_eng": "Why naive GEMM becomes memory-bound, how tiled reuse changes arithmetic intensity, and where Tensor Cores, schedulers, and libraries fit",
       "subtitle_kor": "Naive GEMM의 memory bottleneck부터 tiled reuse, Tensor Core pipeline, shape별 scheduling과 library 추상화까지",
-      "date": "2026-08-03",
+      "date": "2026-08-12",
       "category": "note",
       "series": "cuda",
       "languages": [
@@ -46,7 +46,7 @@
       ],
       "cover": "/blogs/posts/260802_cuda_01_gemm/assets/cover.webp",
       "status": "published",
-      "updated": "2026-08-11"
+      "updated": "2026-08-12"
     },
     {
       "id": "260802_cuda_02_kernel_fusion",
