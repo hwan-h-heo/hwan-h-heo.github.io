@@ -624,6 +624,18 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   color: var(--color-text-soft);
 }
 
+.about .about-profile-note[data-about-portrait-static="true"] .about-portrait-affordance {
+  display: none;
+}
+
+.about .about-profile-note[data-about-portrait-static="true"] .about-profile-image {
+  opacity: 1;
+}
+
+.about .about-profile-note[data-about-portrait-static="true"] .about-portrait-canvas {
+  display: none;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .about .about-profile-note[data-about-portrait-ready="true"] .about-portrait-affordance-hint {
     display: inline;
