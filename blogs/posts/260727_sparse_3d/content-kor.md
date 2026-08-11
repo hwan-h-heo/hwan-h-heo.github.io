@@ -54,9 +54,9 @@ vs.
 
 ---
 
-## 1. Sparse 3D Generation은 왜 최적화하기 어려운가
+## 1. Sparse 3D Generation 최적화의 난점
 
-### 1.1. Sparse representation은 workload를 동적으로 만든다
+### 1.1. Sparse Representation과 Dynamic Workload
 
 3D grid의 해상도를 두 배로 높이면 voxel 수는 여덟 배가 된다.
 
@@ -106,18 +106,18 @@ Sparse 3D에는 아직 비슷한 표준 runtime이 없다. 그렇다고 막연�
 
 Profiler상 전체 비용의 약 `87.6%`는 이미 FlashAttention과 cuBLAS/cuBLASLt GEMM이었다. 이 수치는 최적화 여지가 `12.4%`뿐이라는 뜻은 아니다. 이미 빠른 kernel도 불필요하게 호출될 수 있고, kernel 사이의 memory 이동과 dispatch는 여전히 줄일 수 있다.
 
-다만 방향은 분명해졌다.
+검토 후 네 가지 원칙을 세웠다.
 
 1. FlashAttention과 GEMM 자체를 처음부터 다시 만들지 않는다.
 2. Model semantics를 분석해 필요 없는 workload를 제거한다.
 3. Compiler가 잡지 못한 국소 tensor path는 직접 fusion한다.
 4. 각 candidate는 실제 denoise latency가 줄어들 때만 채택한다.
 
-범용 도구를 검토한 결과는 막다른 길이 아니라, 문제의 크기를 줄여준 출발점이었다.
+이 원칙으로 최적화 문제의 범위를 좁힐 수 있었다.
 
 ---
 
-## 2. Null-context attention은 계산할 필요가 없다
+## 2. Null-context Attention 제거
 
 ### 2.1. Zero tensor 죽이기
 
@@ -148,7 +148,7 @@ zero-valued tensor
 
 > 값이 전부 0인 condition을 attention에 넣으면, 실제로 무엇이 계산되는가?
 
-### 2.2. Null attention에서 query는 중요하지 않다
+### 2.2. Null Attention의 상수 Output
 
 Tensor의 row를 token으로 두는 row-vector convention을 사용하자. Condition-side value projection을 다음처럼 쓸 수 있다.
 
@@ -209,8 +209,6 @@ $$
 - Condition-side transform 이후 모든 valid value row가 동일함
 - Attention row의 valid-position weight 합이 1임
 - Image token이 shape token과 softmax normalization을 공유하는 joint-attention이 아님
-
-결론은 단순하다.
 
 > ***Null-context attention을 더 빠르게 만들 필요가 없었다. Full unconditional attention workload 자체가 필요하지 않았다.***
 
@@ -279,7 +277,7 @@ unconditional:
 - Real-payload benchmark와 raw-bit equivalence test
 - Public repository에 대한 최소 patch와 검증
 
-Agent의 가장 큰 효과는 kernel을 대신 작성한 데만 있지 않았다. 한 가설이 틀리면 버리고, 다른 shape와 fallback을 빠르게 시험하면서 반증 비용을 낮춘 데 있었다.
+Agent는 kernel 작성과 함께 반증 비용도 낮췄다. 한 가설이 틀리면 버리고, 다른 shape와 fallback을 빠르게 시험할 수 있었다.
 
 ### 2.4. Shortcut Evaluation
 
@@ -318,13 +316,13 @@ VARCO3D에서 결과가 나온 뒤에는 이 아이디어가 우리 implementati
 
 ---
 
-## 3. Compiler가 놓친 틈을 직접 fusion하기
+## 3. Compiler 밖의 Local Fusion
 
 Null-context처럼 수학적으로 지울 수 있는 branch는 흔하지 않다. 대부분의 active path는 실제 latent와 timestep에 의존한다. 의미론적 제거 다음에는 profiler가 필요했다.
 
 앞선 compiler probe에서 누적 CUDA kernel time의 약 `87.6%`가 FlashAttention과 cuBLAS/cuBLASLt GEMM이라는 사실은 이미 확인했다. 가장 큰 두 구간은 `flash_attn`과 `flex_gemm`을 사용하고 있었고, 새로운 attention kernel이나 GEMM을 처음부터 만드는 것은 이번 작업의 범위를 벗어났다.
 
-하지만 “대부분의 시간이 이미 최적화된 kernel에 쓰인다”는 사실과 “더 줄일 수 있는 실행 경로가 없다”는 말은 같지 않다.
+이미 최적화된 kernel 사이에도 줄일 수 있는 실행 경로가 남아 있었다.
 
 - Kernel 앞뒤의 normalization, indexing과 dtype conversion
 - Intermediate tensor를 global memory에 썼다가 다시 읽는 경로
@@ -332,7 +330,7 @@ Null-context처럼 수학적으로 지울 수 있는 branch는 흔하지 않다.
 
 Full `torch.compile`이 안정적으로 동작했다면 Inductor가 노렸을 영역도 주로 이런 pointwise chain과 intermediate materialization이었을 것이다. Sparse metadata와 custom backend 때문에 전체 graph를 compile하기 어렵다면, 역할과 입출력이 분명한 국소 경로를 직접 fusion하면 된다.
 
-### 3.1. Fusion은 정확히 무엇을 없애는가
+### 3.1. Fusion Boundary와 Memory Round Trip
 
 GPU에서 PyTorch operation을 실행하면 각 operation은 하나 이상의 CUDA kernel launch로 이어진다.
 
@@ -358,7 +356,7 @@ Kernel fusion은 이 chain을 하나의 CUDA kernel 내부에서 처리한다.
 out = (x * scale + shift) * gate
 ```
 
-`x`를 한 번 읽은 뒤 register 내부에서 scale, shift와 gate를 적용하고 최종 결과만 global memory에 쓴다. 이를 통해 다음 비용을 줄일 수 있다.
+`x`를 한 번 읽은 뒤 register 내부에서 scale, shift와 gate를 적용하고 최종 결과만 global memory에 쓴다. 다음 비용이 줄어든다.
 
 - CUDA kernel launch
 - Intermediate tensor allocation
@@ -368,7 +366,7 @@ out = (x * scale + shift) * gate
 
 이번 모델에서는 단순한 contiguous elementwise operation보다 sparse batch indexing이 섞인 패턴이 더 중요한 대상이었다.
 
-### 3.2. AI Agent와 한 candidate씩 검증한 Custom CUDA fusion
+### 3.2. Custom CUDA Candidate 검증
 
 Agent를 사용하면 CUDA candidate를 빠르게 구현할 수 있다. 동시에 여러 optimization을 한꺼번에 넣으면 어떤 변경이 실제 latency를 줄였는지 알 수 없다. 따라서 한 cycle에서는 하나의 candidate만 다뤘다.
 
@@ -428,7 +426,7 @@ Kernel은 packed QKV tensor에서 직접 다음을 수행한다.
 - `stack`과 `cat` 각각 4회
 - `view_as_complex`와 `view_as_real` 각각 8회
 
-여기서 빨라진 것은 RMSNorm 하나가 아니다. Attention preprocessing 전체의 tensor lifecycle이 짧아졌다.
+이 fusion은 Attention preprocessing 전체의 tensor lifecycle을 줄였다.
 
 ### 4.2. Sparse LayerNorm + AdaLN affine
 
@@ -469,13 +467,13 @@ out = normalized * scale_token + shift_token
 
 `layer_norm` candidate는 residual path의 독립 normalization을 전용 kernel로 치환했고, `sparse_batch_mul_add`는 batch-indexed modulation과 residual affine chain을 하나의 kernel로 단순화했다. `qk_rms_norm_cross_inplace`는 cross-attention preprocessing을 줄였지만 큰 payload에서 이득이 재현되지 않아 기본 성능 근거에서는 제외했다.
 
-이 과정에서 profiler의 operation 수가 줄었다는 사실과 product latency가 줄었다는 사실은 분리해서 봐야 한다. 그 차이가 가장 선명하게 드러난 candidate가 GELU였다.
+Profiler의 operation 수와 product latency는 별개의 지표였다. GELU candidate에서 그 차이가 가장 선명했다.
 
 ---
 
-## 5. 더 빠른 GELU kernel이 틀린 fusion 이었던 이유
+## 5. GELU Fusion 실패 사례
 
-### 5.1. Kernel을 바꿨다고 Fusion이 된 것은 아니다
+### 5.1. Standalone GELU 교체의 한계
 
 위 profiler 표에서 언급한 `gelu` 에 대해서 잠시 돌아가보자.
 
@@ -506,7 +504,7 @@ MLP GEMM output store
 PyTorch GELU는 해당 A100과 tensor shape에서 이미 효율적으로 구현돼 있었다. Kernel 하나를 다른 kernel로 바꿨지만 줄이려던 global-memory 왕복은 그대로였다.
 즉, 단순히 GELU 수식을 빠른 CUDA 커널로 바꾸는 것은 메모리 I/O 횟수를 줄이지 못했다.
 
-여기서 candidate를 폐기하고 넘어갈 수도 있었다. 대신 질문을 한 번 더 바꿨다.
+GELU 앞쪽의 boundary까지 조사 범위를 넓혔다.
 
 > GELU가 느린 것이 아니라면, 어떤 boundary를 없애야 실제로 빨라지는가?
 
@@ -615,7 +613,7 @@ def bf16_bits_equal(a: torch.Tensor, b: torch.Tensor) -> bool:
 
 Null-context path에서는 대상 cross-attention block의 output projection 이후 tensor와 paired denoiser output을 검증 경계로 사용했다.
 
-### 7.1. Tensor shape도 contract다
+### 7.1. Tensor Shape Contract
 
 기존 batched CFG output projection을 다음처럼 두자.
 
@@ -661,7 +659,7 @@ $$
 
 이 설명은 관찰한 mismatch에 대한 가능한 mechanism이다. 실제 채택 판단은 특정 kernel family나 algorithm ID가 같다는 추정에 의존하지 않고, 오직 raw-bit qualification 결과에 의존한다.
 
-### 7.2. Direct M=1 cache가 탈락한 이유
+### 7.2. Direct M=1 Cache 탈락
 
 가장 직접적인 구현은 startup에서 한 row만 projection하는 것이다.
 
@@ -675,7 +673,7 @@ cache:  [1, D]
 
 따라서 direct `M=1` 결과를 허용 오차로 승인하지 않고, production reference와 같은 raw bit를 만드는 calibration shape를 탐색했다.
 
-### 7.3. Canonical cache: qualification 이후의 bitwise-exact
+### 7.3. Canonical Cache Qualification
 
 Startup에서 모든 row가 $b_V$인 canonical input을 만든다.
 
@@ -734,7 +732,7 @@ Startup self-test는 model의 모든 대상 layer에 대해 다음 순서로 수
 
 Self-test는 모든 가능한 shape와 미래 environment에 대한 수학적 증명이 아니다. 현재 worker의 configured validation scope에서 기대한 numerical behavior가 재현되는지 확인하고 fast path를 gate하는 장치다.
 
-### 7.4. cuBLASLt GELU epilogue가 bitwise-exact를 약속할 수 없는 이유
+### 7.4. cuBLASLt GELU Epilogue의 Bitwise Equivalence 한계
 
 기존 eager path는 GEMM output을 BF16으로 저장한 뒤 GELU를 적용한다.
 
@@ -797,7 +795,7 @@ Custom extension은 serving worker에서 JIT compile하지 않고 production env
 
 처음 받은 Agent의 답은 틀리지 않았다. 대표 block은 `13`개 graph와 `12`개 graph break로 쪼개졌고, representative profiler의 CUDA kernel time 대부분은 이미 FlashAttention과 GEMM에 있었다. Full `torch.compile`과 TensorRT port를 우선순위에서 내린 판단은 합리적이었다.
 
-이번 작업이 이어진 이유는 그 답을 부정했기 때문이 아니라 질문의 단위를 바꿨기 때문이다.
+여기서 질문의 단위를 바꿨다.
 
 > 범용 compiler가 전체 model을 최적화할 수 있는가?
 
@@ -807,13 +805,11 @@ Custom extension은 serving worker에서 JIT compile하지 않고 production env
 
 로 질문을 바꿨다.
 
-결과적으로 VARCO3D 2.0의 15-step denoise latency를 asset별 동일 가중 평균 기준, 출력 품질 하락 없이 `25.66%` 줄일 수 있었다.
+이 접근으로 VARCO3D 2.0의 15-step denoise latency를 asset별 동일 가중 평균 기준, 출력 품질 하락 없이 `25.66%` 줄였다.
 
-CUDA 커널 전문 엔지니어의 관점에서 보면 `M=256` canonical cache를 찾은 과정이나 GELU candidate를 다시 설계한 과정은 다소 우회적으로 보일 수 있다. 나 역시 이번 작업을 통해 fusion의 핵심이 단순히 kernel 수를 줄이는 데 있는 것이 아니라, 실제 global-memory round trip과 intermediate materialization을 제거하는 데 있다는 점을 시행착오로 배웠다.
+`M=256` canonical cache와 GELU candidate 재설계는 시행착오를 거쳐 나왔다. 그 과정에서 fusion은 kernel 수보다 제거한 global-memory round trip과 intermediate materialization을 기준으로 평가해야 한다는 점을 배웠다.
 
-하지만 이 작업의 의미는 처음부터 CUDA 전문가처럼 문제를 풀었다는 데 있지 않다. 모델의 conditioning semantics와 forward equation을 이해하는 리서처가 불필요한 계산을 수식으로 특정하고, Agent를 repository 탐색, 구현, benchmark와 regression test의 실행자로 활용했다는 데 있다.
-
-이 작업은 AI Agent가 CUDA 전문성을 대체하는 방식이라기보다, 도메인 지식을 가진 리서처가 자신이 직접 다룰 수 있는 engineering boundary를 넓히는 방식에 가까웠다.
+모델의 conditioning semantics와 forward equation을 이해하고 있었기에 불필요한 계산을 수식으로 특정할 수 있었다. Agent는 repository 탐색, 구현, benchmark와 regression test를 반복하는 실행자 역할을 맡았다. 덕분에 CUDA가 익숙하지 않은 리서처도 직접 다룰 수 있는 engineering boundary를 넓힐 수 있었다.
 
 ---
 

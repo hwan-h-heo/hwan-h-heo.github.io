@@ -6,7 +6,7 @@ The formula appears to be a simple sequence of two matrix multiplications with s
 
 FlashAttention does not change the SDPA formula. It reorganizes the same computation by tiling attention and carrying row-wise statistics through online softmax, so the score and probability matrices never need to be materialized in HBM.
 
-This article examines how that approach reduces memory traffic and latency in the attention forward and backward passes. It then traces how intermediate-state ownership and hardware pipelines changed from FA1 through FA4, and explains how to identify the kernel that actually runs behind PyTorch and cuDNN SDPA backends.
+Start with how this reorganization reduces memory traffic in the attention forward and backward passes. The changes from FA1 through FA4 can then be compared through intermediate-state ownership and the hardware pipeline. The final section identifies the kernel that actually runs behind PyTorch and cuDNN SDPA backends.
 
 ---
 
@@ -146,7 +146,7 @@ The equations do not determine which loop, CTA, or warp owns this state. The imp
 
 ---
 
-## 3. From FA1 to FA4
+## 3. FA1–FA4
 
 Algorithm 1 in FA1 places K/V block column $j$ in the outer loop.
 
@@ -182,10 +182,12 @@ FA1 stores a normalized partial output after each block, whereas FA2 retains the
 
 The partitioning scheme that assigns K/V to different warps and merges partial outputs in shared memory also changes. FA2 partitions Q rows and output slices across warps; when the layouts align, MMA fragments and row state remain in registers, leaving Q/K/V tiles and layout transformations in shared memory. Larger tiles increase both reuse and resource consumption.
 
+Later versions begin with the same two questions: what bottleneck remains in the previous implementation, and which execution unit should own each state?
 
-| Version | Main bottleneck | Ownership or pipeline response | Numerical scope |
+
+| Version | Bottleneck targeted by this version | Ownership or pipeline response | Numerical scope |
 | --- | --- | --- | --- |
-| FA1 | Storing $S/P$ in HBM | K/V outer loop; repeated visits to Q/O row state | Exactly equivalent to dense attention in real arithmetic |
+| FA1 | Baseline materialization of $S/P$ in HBM | K/V outer loop; repeated visits to Q/O row state | Exactly equivalent to dense attention in real arithmetic |
 | FA2 | Occupancy, non-matmul work, inter-warp exchange | Q outer loop; CTA-owned row block; per-warp Q/output partitioning | Same mathematical function, different floating-point order |
 | FA3 | Underused Hopper asynchronous units | TMA producers, WGMMA consumers, GEMM–softmax overlap | FP16/BF16 path and a separate FP8 path |
 | FA4 | Blackwell Tensor Cores scaling faster than softmax and shared memory | Fully asynchronous MMA to TMEM, larger tiles, two exponential paths, conditional rescaling, 2-CTA MMA in backward | March 2026 v1 preprint; polynomial `exp2` is an explicit approximation |
@@ -276,7 +278,7 @@ $$
 
 Softmax normalization finishes before dropout, and $P^{\mathrm{drop}}$ is multiplied by $V$. Backward must regenerate the same $Z_{ij}$ used in forward.
 
-A counter-based RNG maps each **logical attention position** $(\text{batch},\text{head},i,j)$ to the same counter and random value. If this mapping and the saved RNG state match, forward and backward may traverse tiles in different orders; nevertheless, gradient accumulation can remain nondeterministic even when the dropout mask is reconstructed correctly.
+An implementation that uses a counter-based RNG maps each **logical attention position** $(\text{batch},\text{head},i,j)$ to the same counter and random value. The exact counter mapping is a backend-specific implementation contract. If this mapping and the saved RNG state match, forward and backward may traverse tiles in different orders. Gradient accumulation can still remain nondeterministic even when the dropout mask is reconstructed correctly.
 
 ---
 
@@ -300,11 +302,33 @@ The name FlashAttention alone does not identify the kernel that runs. Training, 
 
 Because backend support changes quickly, the related statements in this article were checked against the August 2026 documentation for PyTorch 2.13 and cuDNN 9.13.1, and the Dao-AILab repository.
 
-Dtype, head dimension, mask, stride, GQA, paging, determinism, and GPU architecture may change the backend or trigger a fallback. Inspect the selected backend and kernel trace directly. In PyTorch, `torch.nn.attention.sdpa_kernel()` can constrain the candidate backends.
+Dtype, head dimension, mask, stride, GQA, paging, determinism, and GPU architecture may change the backend or trigger a fallback. In PyTorch, constrain the candidates with `torch.nn.attention.sdpa_kernel()`, then inspect the GPU events in a profiler trace to identify the kernel that actually ran.
+
+```python
+import torch
+import torch.nn.functional as F
+from torch.nn.attention import SDPBackend, sdpa_kernel
+from torch.profiler import ProfilerActivity, profile
+
+with sdpa_kernel(SDPBackend.FLASH_ATTENTION):
+    for _ in range(5):
+        F.scaled_dot_product_attention(q, k, v)
+    torch.cuda.synchronize()
+
+    with profile(
+        activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA]
+    ) as prof:
+        out = F.scaled_dot_product_attention(q, k, v)
+        torch.cuda.synchronize()
+
+prof.export_chrome_trace("sdpa-trace.json")
+```
+
+When the selected backend does not support a shape or dtype, constraining the candidates exposes the reason through an error or warning instead of silently accepting a fallback. In the Chrome trace, inspect the kernel events on the GPU track rather than stopping at the CPU-side SDPA operator name. Match the warm-up count and profiling region to the real benchmark.
 
 ---
 
-## Closing
+## FlashAttention Path Selection
 
 The common foundation of FlashAttention is the $(m,\ell,o)$ state carried from tile to tile. FA1 uses this state to eliminate HBM materialization of $S/P$, while FA2 lets a query CTA own the row state through completion. FA3 and FA4 reorganize producers, consumers, on-chip storage, and the computation pipeline for Hopper and Blackwell.
 

@@ -24,16 +24,16 @@
         "3D Generation"
       ],
       "cover": "/blogs/posts/260803_hierarchical_decoding_threejs/assets/flashvdm-volume-decoding-poster.webp",
-      "status": "draft",
-      "updated": "2026-08-03"
+      "status": "published",
+      "updated": "2026-08-12"
     },
     {
       "id": "260802_cuda_01_gemm",
-      "title_eng": "GEMM on NVIDIA GPUs: From cuBLAS to Custom Kernels",
-      "title_kor": "NVIDIA GPU의 GEMM: cuBLAS부터 Custom Kernel까지",
-      "subtitle_eng": "From library boundaries and hierarchical tiling to Tensor Core pipelines, shape-aware scheduling, and custom-kernel validation",
-      "subtitle_kor": "Library 선택과 계층적 tiling부터 Tensor Core pipeline, shape별 scheduling과 custom kernel 검증까지",
-      "date": "2026-08-05",
+      "title_eng": "GEMM on NVIDIA GPUs: From Naive Kernels to Tiled Pipelines",
+      "title_kor": "NVIDIA GPU의 GEMM: Naive Kernel에서 Tiled Pipeline까지",
+      "subtitle_eng": "Why naive GEMM becomes memory-bound, how tiled reuse changes arithmetic intensity, and where Tensor Cores, schedulers, and libraries fit",
+      "subtitle_kor": "Naive GEMM의 memory bottleneck부터 tiled reuse, Tensor Core pipeline, shape별 scheduling과 library 추상화까지",
+      "date": "2026-08-03",
       "category": "note",
       "series": "cuda",
       "languages": [
@@ -46,7 +46,7 @@
       ],
       "cover": "/blogs/posts/260802_cuda_01_gemm/assets/cover.webp",
       "status": "published",
-      "updated": "2026-08-05"
+      "updated": "2026-08-11"
     },
     {
       "id": "260802_cuda_02_kernel_fusion",
@@ -66,7 +66,7 @@
         "CUDA"
       ],
       "cover": "/blogs/posts/260802_cuda_02_kernel_fusion/assets/cover.webp",
-      "status": "published",
+      "status": "draft",
       "updated": "2026-08-05"
     },
     {
@@ -75,7 +75,7 @@
       "title_kor": "FlashAttention: Online Softmax에서 FA4까지",
       "subtitle_eng": "How tiled online softmax reduces attention memory traffic, from FA1–FA4 pipelines to backward recomputation and backend selection",
       "subtitle_kor": "Tiled online softmax의 원리부터 FA1–FA4 pipeline, backward recomputation, determinism과 backend 선택까지",
-      "date": "2026-08-03",
+      "date": "2026-08-05",
       "category": "note",
       "series": "cuda",
       "languages": [
@@ -87,7 +87,7 @@
         "CUDA"
       ],
       "cover": "/blogs/posts/260802_cuda_03_flashattention/assets/cover-v2.webp",
-      "status": "published",
+      "status": "draft",
       "updated": "2026-08-05"
     },
     {

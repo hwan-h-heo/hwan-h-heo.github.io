@@ -49,7 +49,7 @@ function listTagArchiveEntries(siteData, minimumPosts = 2) {
         .sort((a, b) => a.title.localeCompare(b.title));
 }
 
-function listSeriesArchiveEntries(siteData, minimumPosts = 2) {
+function listSeriesArchiveEntries(siteData, minimumPosts = 1) {
     const bySeries = new Map();
     siteData.posts.forEach((post) => {
         if (!post.series) {

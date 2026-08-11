@@ -6,7 +6,7 @@ Scaled Dot-Product Attention, 줄여서 SDPA는 query와 key의 유사도를 구
 
 FlashAttention은 SDPA 수식을 바꾸지 않는다. Attention을 tile로 나누고 online softmax로 행별 통계를 이어 가면서 score와 probability 행렬을 HBM에 만들지 않도록 같은 연산을 재구성한다.
 
-이번 글에서는 이 방식이 attention forward와 backward의 memory traffic 및 latency를 어떻게 줄이는지 살펴본다. 이어 FA1에서 FA4까지 중간 상태의 소유 범위와 hardware pipeline이 어떻게 달라졌는지, PyTorch와 cuDNN의 SDPA backend에서 실제 kernel을 어떻게 확인해야 하는지도 다룬다.
+이 재구성이 attention forward와 backward의 memory traffic을 줄이는 원리부터 살펴보자. FA1에서 FA4까지 무엇이 달라졌는지는 중간 상태의 소유 범위와 hardware pipeline을 기준으로 비교한다. 마지막에는 PyTorch와 cuDNN의 SDPA backend에서 실제로 실행된 kernel을 확인한다.
 
 ---
 
@@ -146,7 +146,7 @@ $$
 
 ---
 
-## 3. FA1에서 FA4까지
+## 3. FA1–FA4
 
 FA1의 Algorithm 1은 K/V block column $j$를 바깥쪽 loop에 둔다.
 
@@ -182,10 +182,12 @@ FA1은 block마다 정규화된 partial output을 저장하지만 FA2는 아직 
 
 K/V를 warp별로 나누고 partial output을 shared memory에서 합치는 방식도 바뀌었다. Q row와 output slice를 warp별로 나누며 layout이 맞으면 MMA fragment와 row 상태를 register에 두고 shared memory에는 Q/K/V tile과 layout 변환만 남긴다. Tile이 커지면 재사용과 자원 사용량이 함께 늘어난다.
 
+이후 버전도 이전 구현에 남은 병목과 state ownership을 차례로 바꿨다.
 
-| 버전  | 주된 병목                                                  | 소유권 또는 파이프라인의 대응                                                           | 수치적 범위                                    |
+
+| 버전  | 이 버전이 겨냥한 병목                                           | 소유권 또는 파이프라인의 대응                                                           | 수치적 범위                                    |
 | --- | ------------------------------------------------------ | -------------------------------------------------------------------------- | ----------------------------------------- |
-| FA1 | $S/P$를 HBM에 저장                                         | K/V 바깥쪽 loop, Q/O 행 상태를 반복 방문                                              | 실수 연산에서 dense attention과 정확히 동등           |
+| FA1 | Baseline의 $S/P$ HBM 저장                                  | K/V 바깥쪽 loop, Q/O 행 상태를 반복 방문                                              | 실수 연산에서 dense attention과 정확히 동등           |
 | FA2 | Occupancy, 행렬곱 외 연산, warp 사이 교환                        | Q 바깥쪽 loop, CTA가 행 block 소유, warp별 Q/output 분할                             | 같은 수학적 함수, 다른 부동소수점 순서                    |
 | FA3 | 충분히 쓰이지 못한 Hopper 비동기 unit                             | TMA producer, WGMMA consumer, GEMM–softmax 중첩                              | FP16/BF16 경로와 별도의 FP8 경로                  |
 | FA4 | Softmax와 shared memory보다 빠르게 확장된 Blackwell Tensor Core | TMEM으로 완전히 비동기인 MMA, 큰 tile, 두 종류의 지수 함수, 조건부 rescale, backward의 2-CTA MMA | 2026년 3월 v1 preprint, 다항식 `exp2`는 명시적인 근사 |
@@ -276,7 +278,7 @@ $$
 
 에서 softmax 정규화는 dropout 전에 끝나며 $V$에는 $P^{\mathrm{drop}}$을 곱한다. Backward는 forward에서 사용한 $Z_{ij}$를 다시 만들어야 한다.
 
-Counter-based RNG는 **논리적인 attention 위치** $(\text{batch},\text{head},i,j)$를 같은 counter와 난숫값에 연결한다. 이 mapping과 저장한 RNG 상태가 같으면 forward와 backward의 tile 순회 순서는 달라도 되지만 dropout mask를 정확히 복원해도 gradient accumulation은 비결정적일 수 있다.
+Counter-based RNG를 쓰는 구현은 **논리적인 attention 위치** $(\text{batch},\text{head},i,j)$를 같은 counter와 난숫값에 연결한다. 구체적인 counter mapping은 backend가 정하는 구현 계약이다. 이 mapping과 저장한 RNG 상태가 같다면 forward와 backward의 tile 순회 순서는 달라도 된다. Dropout mask를 정확히 복원해도 gradient accumulation은 여전히 비결정적일 수 있다.
 
 ---
 
@@ -300,11 +302,33 @@ FlashAttention이라는 이름만으로 실제 kernel을 알 수는 없다. Trai
 
 Backend 지원 범위는 빠르게 바뀌므로 본문은 2026년 8월의 PyTorch 2.13 문서, cuDNN 9.13.1, Dao-AILab repository를 기준으로 확인했다.
 
-Dtype, head dimension, mask, stride, GQA, paging, determinism, GPU architecture에 따라 backend가 바뀌거나 fallback이 발생할 수 있으므로 선택된 backend와 kernel trace를 직접 확인해야 한다. PyTorch에서는 `torch.nn.attention.sdpa_kernel()`로 후보 backend를 제한할 수 있다.
+Dtype, head dimension, mask, stride, GQA, paging, determinism, GPU architecture에 따라 backend가 바뀌거나 fallback이 발생할 수 있다. PyTorch에서는 `torch.nn.attention.sdpa_kernel()`로 후보를 제한하고 profiler의 GPU event에서 실제 kernel을 확인한다.
+
+```python
+import torch
+import torch.nn.functional as F
+from torch.nn.attention import SDPBackend, sdpa_kernel
+from torch.profiler import ProfilerActivity, profile
+
+with sdpa_kernel(SDPBackend.FLASH_ATTENTION):
+    for _ in range(5):
+        F.scaled_dot_product_attention(q, k, v)
+    torch.cuda.synchronize()
+
+    with profile(
+        activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA]
+    ) as prof:
+        out = F.scaled_dot_product_attention(q, k, v)
+        torch.cuda.synchronize()
+
+prof.export_chrome_trace("sdpa-trace.json")
+```
+
+후보를 강제로 제한했는데 해당 shape이나 dtype을 지원하지 않으면 fallback 대신 오류나 경고가 나온다. Chrome trace에서는 CPU의 SDPA operator 이름에 그치지 말고 GPU track의 kernel event를 본다. Warm-up 횟수와 측정 구간은 실제 benchmark 조건에 맞춰야 한다.
 
 ---
 
-## Closing
+## FlashAttention 경로 선택
 
 FlashAttention의 공통 기반은 tile마다 이어지는 $(m,\ell,o)$ 상태다. FA1은 이 상태로 $S/P$의 HBM 저장을 없앴고 FA2는 query CTA가 row 상태를 끝까지 소유하도록 바꿨다. FA3와 FA4는 Hopper와 Blackwell에 맞춰 producer, consumer, on-chip storage, 연산 pipeline을 다시 구성했다.
 
