@@ -5,12 +5,12 @@ author: Hwan Heo
 
 <figure class="post-media">
   <iframe class="post-voxel-demo" src="./assets/hierarchical-surface-decoding.html?v=20260803-camera3" title="Live Three.js hierarchical surface decoding demo" loading="eager"></iframe>
-  <figcaption>Precomputed hierarchy와 기존 voxel renderer를 불러와 반복 재생하는 live Three.js 결과. Pause와 reduced-motion을 지원한다.</figcaption>
+  <figcaption>Illustration of the Hierarchical Volume Decoing by live Three.js.</figcaption>
 </figure>
 
 ## Abstract
 
-고해상도 3D field를 복원할 때 모든 좌표를 같은 비용으로 query할 필요는 없다. 먼저 낮은 해상도에서 surface가 존재할 영역을 찾고, 그 주변만 재귀적으로 세분화하면 된다. [FlashVDM](https://github.com/Tencent-Hunyuan/FlashVDM)의 hierarchical decoding을 읽으며 이 과정 자체를 시각화해보고 싶었다.
+고해상도 3D implicit field를 복원할 때 모든 좌표를 같은 비용으로 query할 필요는 없다. 먼저 낮은 해상도에서 surface가 존재할 영역을 찾고, 그 주변만 재귀적으로 세분화하면 된다. [FlashVDM](https://github.com/Tencent-Hunyuan/FlashVDM)의 hierarchical decoding을 읽으며 이 과정 자체를 시각화해보고 싶었다.
 
 처음에는 Manim으로 개념을 정리했고, 이후 실제 GLB surface에서 deterministic voxel hierarchy를 생성해 Three.js animation으로 옮겼다. 이 글은 논문의 알고리즘을 재현하는 튜토리얼이 아니라, **coarse-to-fine decoding을 어떤 움직임으로 설명할 것인가**에 대한 짧은 구현 기록이다.
 

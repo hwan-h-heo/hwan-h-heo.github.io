@@ -29,16 +29,16 @@
     <title>컴파일러가 놓치는 Sparse 3D Generation Inference 최적화 | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css?v=bd44f462e3" rel="stylesheet" />
-    <link href="/blogs/css/sidebar.css?v=fe42893069" rel="stylesheet" />
-    <link href="/css/sidebar-nav.css?v=f9cab81086" rel="stylesheet" />
-    <link href="/blogs/css/typography.css?v=cf88064daa" rel="stylesheet" />
-    <link href="/blogs/css/post.css?v=0e8b7f9b61" rel="stylesheet" />
-    <link href="/assets/css/site-icons.css?v=44d073d4a3" rel="stylesheet" />
-    <script src="/assets/js/site-icons.js?v=30f71d459a"></script>
-    <script src="/js/sidebar-controller.js?v=8a95afafe7" data-sidebar-mode="rail"></script>
+    <link href="/blogs/css/blog.css?v=a1fa956e9d" rel="stylesheet" />
+    <link href="/blogs/css/sidebar.css?v=975e92b635" rel="stylesheet" />
+    <link href="/css/sidebar-nav.css?v=6503f0effb" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5feaa1dfce" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=dc5dd44b65" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
+    <script src="/js/sidebar-controller.js?v=3db1bd5d00" data-sidebar-mode="rail"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
-    <link href="/blogs/css/code-copy.css?v=c3797630bc" rel="stylesheet" />
+    <link href="/blogs/css/code-copy.css?v=462bb4eb1f" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -59,7 +59,7 @@
                 } catch (error) {}
             })();
         </script>
-    <meta name="site-deploy-version" content="1d580887df202c27">
+    <meta name="site-deploy-version" content="70177764564cc6d9">
     <script defer src="/assets/js/deploy-refresh.js?v=adb609281d"></script>
 </head>
 <body class="blog-post-page">
@@ -186,7 +186,7 @@
                                 <div class="post-intro-topics" aria-label="주제">
                                     <span class="post-intro-topics-label">Topics</span>
                                     <span class="post-intro-topics-separator" aria-hidden="true">/</span>
-                                    <div class="post-tags"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a><span class="post-tag-separator" aria-hidden="true">·</span><span class="post-tag">CUDA</span></div>
+                                    <div class="post-tags"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/cuda/">CUDA</a></div>
                                 </div>
                             </div>
                             <aside class="post-article-info" aria-label="글 정보">
@@ -201,14 +201,14 @@
                                     </li>
                                     <li data-post-detail="reading">
                                         <strong>Reading</strong>
-                                        <span class="post-detail-reading">23 min read</span>
+                                        <span class="post-detail-reading">22 min read</span>
                                     </li>
                                 </ul>
                             </aside>
                         </div>
                     </div>
                     <div class="post-reading-column main-content">
-                        <nav id="post-toc" class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Abstract" aria-label="Abstract"><span class="toc-link-text">Abstract</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="들어가며" aria-label="들어가며"><span class="toc-link-text">들어가며</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="1. Sparse 3D Generation은 왜 최적화하기 어려운가" aria-label="1. Sparse 3D Generation은 왜 최적화하기 어려운가"><span class="toc-link-text">1. Sparse 3D Generation은 왜 최적화하기 어려운가</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="1.1. Sparse representation은 workload를 동적으로 만든다" aria-label="1.1. Sparse representation은 workload를 동적으로 만든다"><span class="toc-link-text">1.1. Sparse representation은 workload를 동적으로 만든다</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="1.2. 범용 최적화 공식이 놓치는 지점" aria-label="1.2. 범용 최적화 공식이 놓치는 지점"><span class="toc-link-text">1.2. 범용 최적화 공식이 놓치는 지점</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-5" title="2. Null-context attention은 계산할 필요가 없다" aria-label="2. Null-context attention은 계산할 필요가 없다"><span class="toc-link-text">2. Null-context attention은 계산할 필요가 없다</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="2.1. Zero tensor 죽이기" aria-label="2.1. Zero tensor 죽이기"><span class="toc-link-text">2.1. Zero tensor 죽이기</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="2.2. Null attention에서 query는 중요하지 않다" aria-label="2.2. Null attention에서 query는 중요하지 않다"><span class="toc-link-text">2.2. Null attention에서 query는 중요하지 않다</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.3. Reference-compatible path에서 canonical cache까지" aria-label="2.3. Reference-compatible path에서 canonical cache까지"><span class="toc-link-text">2.3. Reference-compatible path에서 canonical cache까지</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-9" title="2.4. Shortcut Evaluation" aria-label="2.4. Shortcut Evaluation"><span class="toc-link-text">2.4. Shortcut Evaluation</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-10" title="3. Compiler가 놓친 틈을 직접 fusion하기" aria-label="3. Compiler가 놓친 틈을 직접 fusion하기"><span class="toc-link-text">3. Compiler가 놓친 틈을 직접 fusion하기</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-11" title="3.1. Fusion은 정확히 무엇을 없애는가" aria-label="3.1. Fusion은 정확히 무엇을 없애는가"><span class="toc-link-text">3.1. Fusion은 정확히 무엇을 없애는가</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-12" title="3.2. AI Agent와 한 candidate씩 검증한 Custom CUDA fusion" aria-label="3.2. AI Agent와 한 candidate씩 검증한 Custom CUDA fusion"><span class="toc-link-text">3.2. AI Agent와 한 candidate씩 검증한 Custom CUDA fusion</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-13" title="4. Production까지 살아남은 Fused Kernels" aria-label="4. Production까지 살아남은 Fused Kernels"><span class="toc-link-text">4. Production까지 살아남은 Fused Kernels</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-14" title="4.1. Q/K RMSNorm, RoPE, QKV" aria-label="4.1. Q/K RMSNorm, RoPE, QKV"><span class="toc-link-text">4.1. Q/K RMSNorm, RoPE, QKV</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-15" title="4.2. Sparse LayerNorm + AdaLN affine" aria-label="4.2. Sparse LayerNorm + AdaLN affine"><span class="toc-link-text">4.2. Sparse LayerNorm + AdaLN affine</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-16" title="4.3. Leave-one-out ablation" aria-label="4.3. Leave-one-out ablation"><span class="toc-link-text">4.3. Leave-one-out ablation</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-17" title="5. 더 빠른 GELU kernel이 틀린 fusion 이었던 이유" aria-label="5. 더 빠른 GELU kernel이 틀린 fusion 이었던 이유"><span class="toc-link-text">5. 더 빠른 GELU kernel이 틀린 fusion 이었던 이유</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-18" title="5.1. Kernel을 바꿨다고 Fusion이 된 것은 아니다" aria-label="5.1. Kernel을 바꿨다고 Fusion이 된 것은 아니다"><span class="toc-link-text">5.1. Kernel을 바꿨다고 Fusion이 된 것은 아니다</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-19" title="5.2. Fusion boundary를 cuBLASLt epilogue 안으로" aria-label="5.2. Fusion boundary를 cuBLASLt epilogue 안으로"><span class="toc-link-text">5.2. Fusion boundary를 cuBLASLt epilogue 안으로</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-20" title="6. Dynamic-token production benchmark" aria-label="6. Dynamic-token production benchmark"><span class="toc-link-text">6. Dynamic-token production benchmark</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-21" title="6.1. Real payload에서 잰 denoise latency" aria-label="6.1. Real payload에서 잰 denoise latency"><span class="toc-link-text">6.1. Real payload에서 잰 denoise latency</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-22" title="6.2. Profiler가 드러낸 두 종류의 최적화" aria-label="6.2. Profiler가 드러낸 두 종류의 최적화"><span class="toc-link-text">6.2. Profiler가 드러낸 두 종류의 최적화</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-23" title="7. Fast path를 위한 Numerical Contract" aria-label="7. Fast path를 위한 Numerical Contract"><span class="toc-link-text">7. Fast path를 위한 Numerical Contract</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-24" title="7.1. Tensor shape도 contract다" aria-label="7.1. Tensor shape도 contract다"><span class="toc-link-text">7.1. Tensor shape도 contract다</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-25" title="7.2. Direct M=1 cache가 탈락한 이유" aria-label="7.2. Direct M=1 cache가 탈락한 이유"><span class="toc-link-text">7.2. Direct M=1 cache가 탈락한 이유</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-26" title="7.3. Canonical cache: qualification 이후의 bitwise-exact" aria-label="7.3. Canonical cache: qualification 이후의 bitwise-exact"><span class="toc-link-text">7.3. Canonical cache: qualification 이후의 bitwise-exact</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-27" title="7.4. cuBLASLt GELU epilogue가 bitwise-exact를 약속할 수 없는 이유" aria-label="7.4. cuBLASLt GELU epilogue가 bitwise-exact를 약속할 수 없는 이유"><span class="toc-link-text">7.4. cuBLASLt GELU epilogue가 bitwise-exact를 약속할 수 없는 이유</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-28" title="7.5. 하나의 optimization, 하나의 contract" aria-label="7.5. 하나의 optimization, 하나의 contract"><span class="toc-link-text">7.5. 하나의 optimization, 하나의 contract</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-29" title="Conclusion" aria-label="Conclusion"><span class="toc-link-text">Conclusion</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
+                        <nav id="post-toc" class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Abstract" aria-label="Abstract"><span class="toc-link-text">Abstract</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="들어가며" aria-label="들어가며"><span class="toc-link-text">들어가며</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="1. Sparse 3D Generation 최적화의 난점" aria-label="1. Sparse 3D Generation 최적화의 난점"><span class="toc-link-text">1. Sparse 3D Generation 최적화의 난점</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="1.1. Sparse Representation과 Dynamic Workload" aria-label="1.1. Sparse Representation과 Dynamic Workload"><span class="toc-link-text">1.1. Sparse Representation과 Dynamic Workload</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="1.2. 범용 최적화 공식이 놓치는 지점" aria-label="1.2. 범용 최적화 공식이 놓치는 지점"><span class="toc-link-text">1.2. 범용 최적화 공식이 놓치는 지점</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-5" title="2. Null-context Attention 제거" aria-label="2. Null-context Attention 제거"><span class="toc-link-text">2. Null-context Attention 제거</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="2.1. Zero tensor 죽이기" aria-label="2.1. Zero tensor 죽이기"><span class="toc-link-text">2.1. Zero tensor 죽이기</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="2.2. Null Attention의 상수 Output" aria-label="2.2. Null Attention의 상수 Output"><span class="toc-link-text">2.2. Null Attention의 상수 Output</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.3. Reference-compatible path에서 canonical cache까지" aria-label="2.3. Reference-compatible path에서 canonical cache까지"><span class="toc-link-text">2.3. Reference-compatible path에서 canonical cache까지</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-9" title="2.4. Shortcut Evaluation" aria-label="2.4. Shortcut Evaluation"><span class="toc-link-text">2.4. Shortcut Evaluation</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-10" title="3. Compiler 밖의 Local Fusion" aria-label="3. Compiler 밖의 Local Fusion"><span class="toc-link-text">3. Compiler 밖의 Local Fusion</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-11" title="3.1. Fusion Boundary와 Memory Round Trip" aria-label="3.1. Fusion Boundary와 Memory Round Trip"><span class="toc-link-text">3.1. Fusion Boundary와 Memory Round Trip</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-12" title="3.2. Custom CUDA Candidate 검증" aria-label="3.2. Custom CUDA Candidate 검증"><span class="toc-link-text">3.2. Custom CUDA Candidate 검증</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-13" title="4. Production까지 살아남은 Fused Kernels" aria-label="4. Production까지 살아남은 Fused Kernels"><span class="toc-link-text">4. Production까지 살아남은 Fused Kernels</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-14" title="4.1. Q/K RMSNorm, RoPE, QKV" aria-label="4.1. Q/K RMSNorm, RoPE, QKV"><span class="toc-link-text">4.1. Q/K RMSNorm, RoPE, QKV</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-15" title="4.2. Sparse LayerNorm + AdaLN affine" aria-label="4.2. Sparse LayerNorm + AdaLN affine"><span class="toc-link-text">4.2. Sparse LayerNorm + AdaLN affine</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-16" title="4.3. Leave-one-out ablation" aria-label="4.3. Leave-one-out ablation"><span class="toc-link-text">4.3. Leave-one-out ablation</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-17" title="5. GELU Fusion 실패 사례" aria-label="5. GELU Fusion 실패 사례"><span class="toc-link-text">5. GELU Fusion 실패 사례</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-18" title="5.1. Standalone GELU 교체의 한계" aria-label="5.1. Standalone GELU 교체의 한계"><span class="toc-link-text">5.1. Standalone GELU 교체의 한계</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-19" title="5.2. Fusion boundary를 cuBLASLt epilogue 안으로" aria-label="5.2. Fusion boundary를 cuBLASLt epilogue 안으로"><span class="toc-link-text">5.2. Fusion boundary를 cuBLASLt epilogue 안으로</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-20" title="6. Dynamic-token production benchmark" aria-label="6. Dynamic-token production benchmark"><span class="toc-link-text">6. Dynamic-token production benchmark</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-21" title="6.1. Real payload에서 잰 denoise latency" aria-label="6.1. Real payload에서 잰 denoise latency"><span class="toc-link-text">6.1. Real payload에서 잰 denoise latency</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-22" title="6.2. Profiler가 드러낸 두 종류의 최적화" aria-label="6.2. Profiler가 드러낸 두 종류의 최적화"><span class="toc-link-text">6.2. Profiler가 드러낸 두 종류의 최적화</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-23" title="7. Fast path를 위한 Numerical Contract" aria-label="7. Fast path를 위한 Numerical Contract"><span class="toc-link-text">7. Fast path를 위한 Numerical Contract</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-24" title="7.1. Tensor Shape Contract" aria-label="7.1. Tensor Shape Contract"><span class="toc-link-text">7.1. Tensor Shape Contract</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-25" title="7.2. Direct M=1 Cache 탈락" aria-label="7.2. Direct M=1 Cache 탈락"><span class="toc-link-text">7.2. Direct M=1 Cache 탈락</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-26" title="7.3. Canonical Cache Qualification" aria-label="7.3. Canonical Cache Qualification"><span class="toc-link-text">7.3. Canonical Cache Qualification</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-27" title="7.4. cuBLASLt GELU Epilogue의 Bitwise Equivalence 한계" aria-label="7.4. cuBLASLt GELU Epilogue의 Bitwise Equivalence 한계"><span class="toc-link-text">7.4. cuBLASLt GELU Epilogue의 Bitwise Equivalence 한계</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-28" title="7.5. 하나의 optimization, 하나의 contract" aria-label="7.5. 하나의 optimization, 하나의 contract"><span class="toc-link-text">7.5. 하나의 optimization, 하나의 contract</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-29" title="Conclusion" aria-label="Conclusion"><span class="toc-link-text">Conclusion</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
@@ -273,8 +273,8 @@
 <li>Compiler가 묶지 못한 국소 tensor path의 memory round trip을 직접 fusion한다.</li>
 </ol>
 <hr>
-<h2 id="toc-heading-2">1. Sparse 3D Generation은 왜 최적화하기 어려운가</h2>
-<h3 id="toc-heading-3">1.1. Sparse representation은 workload를 동적으로 만든다</h3>
+<h2 id="toc-heading-2">1. Sparse 3D Generation 최적화의 난점</h2>
+<h3 id="toc-heading-3">1.1. Sparse Representation과 Dynamic Workload</h3>
 <p>3D grid의 해상도를 두 배로 높이면 voxel 수는 여덟 배가 된다.</p>
 <p>$$
 (2N)^3 = 8N^3
@@ -287,7 +287,7 @@ $$</p>
 <li>Active token만 Transformer로 denoise한다.</li>
 <li>Sparse representation을 mesh로 복원한다.</li>
 </ol>
-<p><img src="/blogs/posts/260727_sparse_3d/assets/sparse-pipeline.png" alt="컴파일러가 놓치는 Sparse 3D Generation Inference 최적화 — 1.1. Sparse representation은 workload를 동적으로 만든다" loading="lazy" decoding="async"></p>
+<p><img src="/blogs/posts/260727_sparse_3d/assets/sparse-pipeline.png" alt="컴파일러가 놓치는 Sparse 3D Generation Inference 최적화 — 1.1. Sparse Representation과 Dynamic Workload" loading="lazy" decoding="async"></p>
 <p>Sparse representation은 비어 있는 공간의 계산을 피한다. 대신 active token 수가 입력마다 달라진다.</p>
 <table>
 <thead>
@@ -298,9 +298,9 @@ $$</p>
 </tr>
 </thead>
 <tbody><tr>
-<td><img src="/blogs/posts/260727_sparse_3d/assets/sparse-tokens-3k.png" alt="컴파일러가 놓치는 Sparse 3D Generation Inference 최적화 — 1.1. Sparse representation은 workload를 동적으로 만든다, figure 2" loading="lazy" decoding="async"></td>
-<td><img src="/blogs/posts/260727_sparse_3d/assets/sparse-tokens-24k.png" alt="컴파일러가 놓치는 Sparse 3D Generation Inference 최적화 — 1.1. Sparse representation은 workload를 동적으로 만든다, figure 3" loading="lazy" decoding="async"></td>
-<td><img src="/blogs/posts/260727_sparse_3d/assets/sparse-tokens-13k.png" alt="컴파일러가 놓치는 Sparse 3D Generation Inference 최적화 — 1.1. Sparse representation은 workload를 동적으로 만든다, figure 4" loading="lazy" decoding="async"></td>
+<td><img src="/blogs/posts/260727_sparse_3d/assets/sparse-tokens-3k.png" alt="컴파일러가 놓치는 Sparse 3D Generation Inference 최적화 — 1.1. Sparse Representation과 Dynamic Workload, figure 2" loading="lazy" decoding="async"></td>
+<td><img src="/blogs/posts/260727_sparse_3d/assets/sparse-tokens-24k.png" alt="컴파일러가 놓치는 Sparse 3D Generation Inference 최적화 — 1.1. Sparse Representation과 Dynamic Workload, figure 3" loading="lazy" decoding="async"></td>
+<td><img src="/blogs/posts/260727_sparse_3d/assets/sparse-tokens-13k.png" alt="컴파일러가 놓치는 Sparse 3D Generation Inference 최적화 — 1.1. Sparse Representation과 Dynamic Workload, figure 4" loading="lazy" decoding="async"></td>
 </tr>
 </tbody></table>
 <p>Token 수가 바뀌면 다음 값도 함께 변한다.</p>
@@ -341,16 +341,16 @@ $$</p>
 </tr>
 </tbody></table>
 <p>Profiler상 전체 비용의 약 <code>87.6%</code>는 이미 FlashAttention과 cuBLAS/cuBLASLt GEMM이었다. 이 수치는 최적화 여지가 <code>12.4%</code>뿐이라는 뜻은 아니다. 이미 빠른 kernel도 불필요하게 호출될 수 있고, kernel 사이의 memory 이동과 dispatch는 여전히 줄일 수 있다.</p>
-<p>다만 방향은 분명해졌다.</p>
+<p>검토 후 네 가지 원칙을 세웠다.</p>
 <ol>
 <li>FlashAttention과 GEMM 자체를 처음부터 다시 만들지 않는다.</li>
 <li>Model semantics를 분석해 필요 없는 workload를 제거한다.</li>
 <li>Compiler가 잡지 못한 국소 tensor path는 직접 fusion한다.</li>
 <li>각 candidate는 실제 denoise latency가 줄어들 때만 채택한다.</li>
 </ol>
-<p>범용 도구를 검토한 결과는 막다른 길이 아니라, 문제의 크기를 줄여준 출발점이었다.</p>
+<p>이 원칙으로 최적화 문제의 범위를 좁힐 수 있었다.</p>
 <hr>
-<h2 id="toc-heading-5">2. Null-context attention은 계산할 필요가 없다</h2>
+<h2 id="toc-heading-5">2. Null-context Attention 제거</h2>
 <h3 id="toc-heading-6">2.1. Zero tensor 죽이기</h3>
 <p>현대적인 image-to-3D 생성 모델은 DINO 계열의 VFM에서 input image feature를 추출하고, 이를 cross-attention으로 3D denoiser에 주입하는 경우가 많다. 학습 중 image condition을 dropout하면 inference에서 2D 생성 모델과 유사한 CFG를 적용할 수 있다.</p>
 <p>다만 차이점은 2D Gen 처럼 Text-Encoder에 빈 text 를 넣어 negative condition 을 만드는 것이 아니라, 다음과 같이 명시적인 <code>zero valued tensor</code> 를 unconditional branch 에서 사용한다는 것이다.</p>
@@ -372,7 +372,7 @@ $$</p>
 <blockquote>
 <p>값이 전부 0인 condition을 attention에 넣으면, 실제로 무엇이 계산되는가?</p>
 </blockquote>
-<h3 id="toc-heading-7">2.2. Null attention에서 query는 중요하지 않다</h3>
+<h3 id="toc-heading-7">2.2. Null Attention의 상수 Output</h3>
 <p>Tensor의 row를 token으로 두는 row-vector convention을 사용하자. Condition-side value projection을 다음처럼 쓸 수 있다.</p>
 <p>$$
 V = ZW_V + \mathbf{1}_L b_V^\top,
@@ -417,7 +417,6 @@ $$</p>
 <li>Attention row의 valid-position weight 합이 1임</li>
 <li>Image token이 shape token과 softmax normalization을 공유하는 joint-attention이 아님</li>
 </ul>
-<p>결론은 단순하다.</p>
 <blockquote>
 <p><em><strong>Null-context attention을 더 빠르게 만들 필요가 없었다. Full unconditional attention workload 자체가 필요하지 않았다.</strong></em></p>
 </blockquote>
@@ -471,7 +470,7 @@ unconditional:
 <li>Real-payload benchmark와 raw-bit equivalence test</li>
 <li>Public repository에 대한 최소 patch와 검증</li>
 </ul>
-<p>Agent의 가장 큰 효과는 kernel을 대신 작성한 데만 있지 않았다. 한 가설이 틀리면 버리고, 다른 shape와 fallback을 빠르게 시험하면서 반증 비용을 낮춘 데 있었다.</p>
+<p>Agent는 kernel 작성과 함께 반증 비용도 낮췄다. 한 가설이 틀리면 버리고, 다른 shape와 fallback을 빠르게 시험할 수 있었다.</p>
 <h3 id="toc-heading-9">2.4. Shortcut Evaluation</h3>
 <h4>VARCO 3D 2.0</h4>
 <p>Fusion과 null-context를 같은 10개 payload에서 독립적으로 on/off했다.</p>
@@ -538,17 +537,17 @@ unconditional:
 <p>따라서 적용 여부는 “negative condition이 0인가”가 아니라, <strong>condition-side transform 이후의 value row가 실제로 동일한가</strong>를 기준으로 판단해야 한다.</p>
 <p>이 결과로 null-context 최적화가 VARCO3D의 우연한 구현 특성은 아니라는 점을 확인했다. 동시에 적용 조건이 수학적으로 분명하기 때문에, 맞지 않는 stage에는 넣지 않을 수 있었다.</p>
 <hr>
-<h2 id="toc-heading-10">3. Compiler가 놓친 틈을 직접 fusion하기</h2>
+<h2 id="toc-heading-10">3. Compiler 밖의 Local Fusion</h2>
 <p>Null-context처럼 수학적으로 지울 수 있는 branch는 흔하지 않다. 대부분의 active path는 실제 latent와 timestep에 의존한다. 의미론적 제거 다음에는 profiler가 필요했다.</p>
 <p>앞선 compiler probe에서 누적 CUDA kernel time의 약 <code>87.6%</code>가 FlashAttention과 cuBLAS/cuBLASLt GEMM이라는 사실은 이미 확인했다. 가장 큰 두 구간은 <code>flash_attn</code>과 <code>flex_gemm</code>을 사용하고 있었고, 새로운 attention kernel이나 GEMM을 처음부터 만드는 것은 이번 작업의 범위를 벗어났다.</p>
-<p>하지만 “대부분의 시간이 이미 최적화된 kernel에 쓰인다”는 사실과 “더 줄일 수 있는 실행 경로가 없다”는 말은 같지 않다.</p>
+<p>이미 최적화된 kernel 사이에도 줄일 수 있는 실행 경로가 남아 있었다.</p>
 <ul>
 <li>Kernel 앞뒤의 normalization, indexing과 dtype conversion</li>
 <li>Intermediate tensor를 global memory에 썼다가 다시 읽는 경로</li>
 <li>Python dispatcher와 작은 CUDA launch가 반복되는 local chain</li>
 </ul>
 <p>Full <code>torch.compile</code>이 안정적으로 동작했다면 Inductor가 노렸을 영역도 주로 이런 pointwise chain과 intermediate materialization이었을 것이다. Sparse metadata와 custom backend 때문에 전체 graph를 compile하기 어렵다면, 역할과 입출력이 분명한 국소 경로를 직접 fusion하면 된다.</p>
-<h3 id="toc-heading-11">3.1. Fusion은 정확히 무엇을 없애는가</h3>
+<h3 id="toc-heading-11">3.1. Fusion Boundary와 Memory Round Trip</h3>
 <p>GPU에서 PyTorch operation을 실행하면 각 operation은 하나 이상의 CUDA kernel launch로 이어진다.</p>
 <pre class="post-code-block" data-code-label="CODE / PYTHON"><code class="language-python">y = x * scale
 z = y + shift
@@ -566,7 +565,7 @@ out = z * gate
 <p>Kernel fusion은 이 chain을 하나의 CUDA kernel 내부에서 처리한다.</p>
 <pre class="post-code-block" data-code-label="CODE / PYTHON"><code class="language-python">out = (x * scale + shift) * gate
 </code></pre>
-<p><code>x</code>를 한 번 읽은 뒤 register 내부에서 scale, shift와 gate를 적용하고 최종 결과만 global memory에 쓴다. 이를 통해 다음 비용을 줄일 수 있다.</p>
+<p><code>x</code>를 한 번 읽은 뒤 register 내부에서 scale, shift와 gate를 적용하고 최종 결과만 global memory에 쓴다. 다음 비용이 줄어든다.</p>
 <ul>
 <li>CUDA kernel launch</li>
 <li>Intermediate tensor allocation</li>
@@ -575,7 +574,7 @@ out = z * gate
 <li>Python과 ATen dispatch overhead</li>
 </ul>
 <p>이번 모델에서는 단순한 contiguous elementwise operation보다 sparse batch indexing이 섞인 패턴이 더 중요한 대상이었다.</p>
-<h3 id="toc-heading-12">3.2. AI Agent와 한 candidate씩 검증한 Custom CUDA fusion</h3>
+<h3 id="toc-heading-12">3.2. Custom CUDA Candidate 검증</h3>
 <p>Agent를 사용하면 CUDA candidate를 빠르게 구현할 수 있다. 동시에 여러 optimization을 한꺼번에 넣으면 어떤 변경이 실제 latency를 줄였는지 알 수 없다. 따라서 한 cycle에서는 하나의 candidate만 다뤘다.</p>
 <pre class="post-code-block" data-code-label="CODE / TEXT"><code class="language-text">Real workload profile
 → candidate 하나 선택
@@ -622,7 +621,7 @@ out = z * gate
 <li><code>stack</code>과 <code>cat</code> 각각 4회</li>
 <li><code>view_as_complex</code>와 <code>view_as_real</code> 각각 8회</li>
 </ul>
-<p>여기서 빨라진 것은 RMSNorm 하나가 아니다. Attention preprocessing 전체의 tensor lifecycle이 짧아졌다.</p>
+<p>이 fusion은 Attention preprocessing 전체의 tensor lifecycle을 줄였다.</p>
 <h3 id="toc-heading-15">4.2. Sparse LayerNorm + AdaLN affine</h3>
 <p>기존 path는 다음과 같았다.</p>
 <pre class="post-code-block" data-code-label="CODE / PYTHON"><code class="language-python">normalized = layer_norm(x)
@@ -689,10 +688,10 @@ out = normalized * scale_token + shift_token
 </tr>
 </tbody></table>
 <p><code>layer_norm</code> candidate는 residual path의 독립 normalization을 전용 kernel로 치환했고, <code>sparse_batch_mul_add</code>는 batch-indexed modulation과 residual affine chain을 하나의 kernel로 단순화했다. <code>qk_rms_norm_cross_inplace</code>는 cross-attention preprocessing을 줄였지만 큰 payload에서 이득이 재현되지 않아 기본 성능 근거에서는 제외했다.</p>
-<p>이 과정에서 profiler의 operation 수가 줄었다는 사실과 product latency가 줄었다는 사실은 분리해서 봐야 한다. 그 차이가 가장 선명하게 드러난 candidate가 GELU였다.</p>
+<p>Profiler의 operation 수와 product latency는 별개의 지표였다. GELU candidate에서 그 차이가 가장 선명했다.</p>
 <hr>
-<h2 id="toc-heading-17">5. 더 빠른 GELU kernel이 틀린 fusion 이었던 이유</h2>
-<h3 id="toc-heading-18">5.1. Kernel을 바꿨다고 Fusion이 된 것은 아니다</h3>
+<h2 id="toc-heading-17">5. GELU Fusion 실패 사례</h2>
+<h3 id="toc-heading-18">5.1. Standalone GELU 교체의 한계</h3>
 <p>위 profiler 표에서 언급한 <code>gelu</code> 에 대해서 잠시 돌아가보자.</p>
 <p>해당 최적화를 진행한 근거는 물론 Profiler였다.
 Kernel call분석에는 standalone <code>aten::gelu</code>가 step당 48회 반복해서 나타났다.</p>
@@ -715,7 +714,7 @@ Kernel call분석에는 standalone <code>aten::gelu</code>가 step당 48회 반�
 </code></pre>
 <p>PyTorch GELU는 해당 A100과 tensor shape에서 이미 효율적으로 구현돼 있었다. Kernel 하나를 다른 kernel로 바꿨지만 줄이려던 global-memory 왕복은 그대로였다.
 즉, 단순히 GELU 수식을 빠른 CUDA 커널로 바꾸는 것은 메모리 I/O 횟수를 줄이지 못했다.</p>
-<p>여기서 candidate를 폐기하고 넘어갈 수도 있었다. 대신 질문을 한 번 더 바꿨다.</p>
+<p>GELU 앞쪽의 boundary까지 조사 범위를 넓혔다.</p>
 <blockquote>
 <p>GELU가 느린 것이 아니라면, 어떤 boundary를 없애야 실제로 빨라지는가?</p>
 </blockquote>
@@ -847,7 +846,7 @@ def bf16_bits_equal(a: torch.Tensor, b: torch.Tensor) -&gt; bool:
     return torch.equal(a_bits, b_bits)
 </code></pre>
 <p>Null-context path에서는 대상 cross-attention block의 output projection 이후 tensor와 paired denoiser output을 검증 경계로 사용했다.</p>
-<h3 id="toc-heading-24">7.1. Tensor shape도 contract다</h3>
+<h3 id="toc-heading-24">7.1. Tensor Shape Contract</h3>
 <p>기존 batched CFG output projection을 다음처럼 두자.</p>
 <p>$$
 Y = XW_O + \mathbf{1}_{2N}b_O^\top,
@@ -881,7 +880,7 @@ $$</p>
 $$</p>
 <p><code>M=1</code>은 GEMV 또는 skinny-GEMM 계열의 다른 구현으로 dispatch될 수 있다. 일반적으로 cuBLAS/cuBLASLt는 $M$, $N$, $K$, dtype, layout과 alignment에 따라 algorithm과 tile configuration을 선택할 수 있으며, BF16에서는 accumulation과 rounding order의 차이가 최종 bit에 드러날 수 있다.</p>
 <p>이 설명은 관찰한 mismatch에 대한 가능한 mechanism이다. 실제 채택 판단은 특정 kernel family나 algorithm ID가 같다는 추정에 의존하지 않고, 오직 raw-bit qualification 결과에 의존한다.</p>
-<h3 id="toc-heading-25">7.2. Direct M=1 cache가 탈락한 이유</h3>
+<h3 id="toc-heading-25">7.2. Direct M=1 Cache 탈락</h3>
 <p>가장 직접적인 구현은 startup에서 한 row만 projection하는 것이다.</p>
 <pre class="post-code-block" data-code-label="CODE / TEXT"><code class="language-text">input:  [1, D] = b_V
 linear: [1, D] W_O + b_O
@@ -889,7 +888,7 @@ cache:  [1, D]
 </code></pre>
 <p>하지만 이 path는 reference <code>[2N,D]</code> GEMM의 unconditional row와 bitwise하게 일치하지 않았다. 차이가 작더라도 denoiser step마다 residual path로 누적될 수 있고, 이 최적화의 목표는 “품질상 유사함”이 아니라 기존 exact null path를 더 짧게 실행하는 것이었다.</p>
 <p>따라서 direct <code>M=1</code> 결과를 허용 오차로 승인하지 않고, production reference와 같은 raw bit를 만드는 calibration shape를 탐색했다.</p>
-<h3 id="toc-heading-26">7.3. Canonical cache: qualification 이후의 bitwise-exact</h3>
+<h3 id="toc-heading-26">7.3. Canonical Cache Qualification</h3>
 <p>Startup에서 모든 row가 $b_V$인 canonical input을 만든다.</p>
 <p>$$
 X_{\mathrm{canonical}} =
@@ -936,7 +935,7 @@ $$</p>
 <li>대상 layer configuration 변경</li>
 </ul>
 <p>Self-test는 모든 가능한 shape와 미래 environment에 대한 수학적 증명이 아니다. 현재 worker의 configured validation scope에서 기대한 numerical behavior가 재현되는지 확인하고 fast path를 gate하는 장치다.</p>
-<h3 id="toc-heading-27">7.4. cuBLASLt GELU epilogue가 bitwise-exact를 약속할 수 없는 이유</h3>
+<h3 id="toc-heading-27">7.4. cuBLASLt GELU Epilogue의 Bitwise Equivalence 한계</h3>
 <p>기존 eager path는 GEMM output을 BF16으로 저장한 뒤 GELU를 적용한다.</p>
 <p>$$
 y =
@@ -1007,7 +1006,7 @@ $$</p>
 <hr>
 <h2 id="toc-heading-29">Conclusion</h2>
 <p>처음 받은 Agent의 답은 틀리지 않았다. 대표 block은 <code>13</code>개 graph와 <code>12</code>개 graph break로 쪼개졌고, representative profiler의 CUDA kernel time 대부분은 이미 FlashAttention과 GEMM에 있었다. Full <code>torch.compile</code>과 TensorRT port를 우선순위에서 내린 판단은 합리적이었다.</p>
-<p>이번 작업이 이어진 이유는 그 답을 부정했기 때문이 아니라 질문의 단위를 바꿨기 때문이다.</p>
+<p>여기서 질문의 단위를 바꿨다.</p>
 <blockquote>
 <p>범용 compiler가 전체 model을 최적화할 수 있는가?</p>
 </blockquote>
@@ -1016,10 +1015,9 @@ $$</p>
 <p>현재 forward path에서 실행할 필요가 없는 계산과 불필요하게 끊긴 memory path는 무엇인가?</p>
 </blockquote>
 <p>로 질문을 바꿨다.</p>
-<p>결과적으로 VARCO3D 2.0의 15-step denoise latency를 asset별 동일 가중 평균 기준, 출력 품질 하락 없이 <code>25.66%</code> 줄일 수 있었다.</p>
-<p>CUDA 커널 전문 엔지니어의 관점에서 보면 <code>M=256</code> canonical cache를 찾은 과정이나 GELU candidate를 다시 설계한 과정은 다소 우회적으로 보일 수 있다. 나 역시 이번 작업을 통해 fusion의 핵심이 단순히 kernel 수를 줄이는 데 있는 것이 아니라, 실제 global-memory round trip과 intermediate materialization을 제거하는 데 있다는 점을 시행착오로 배웠다.</p>
-<p>하지만 이 작업의 의미는 처음부터 CUDA 전문가처럼 문제를 풀었다는 데 있지 않다. 모델의 conditioning semantics와 forward equation을 이해하는 리서처가 불필요한 계산을 수식으로 특정하고, Agent를 repository 탐색, 구현, benchmark와 regression test의 실행자로 활용했다는 데 있다.</p>
-<p>이 작업은 AI Agent가 CUDA 전문성을 대체하는 방식이라기보다, 도메인 지식을 가진 리서처가 자신이 직접 다룰 수 있는 engineering boundary를 넓히는 방식에 가까웠다.</p>
+<p>이 접근으로 VARCO3D 2.0의 15-step denoise latency를 asset별 동일 가중 평균 기준, 출력 품질 하락 없이 <code>25.66%</code> 줄였다.</p>
+<p><code>M=256</code> canonical cache와 GELU candidate 재설계는 시행착오를 거쳐 나왔다. 그 과정에서 fusion은 kernel 수보다 제거한 global-memory round trip과 intermediate materialization을 기준으로 평가해야 한다는 점을 배웠다.</p>
+<p>모델의 conditioning semantics와 forward equation을 이해하고 있었기에 불필요한 계산을 수식으로 특정할 수 있었다. Agent는 repository 탐색, 구현, benchmark와 regression test를 반복하는 실행자 역할을 맡았다. 덕분에 CUDA가 익숙하지 않은 리서처도 직접 다룰 수 있는 engineering boundary를 넓힐 수 있었다.</p>
 <hr>
 <p><img src="/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png" alt="컴파일러가 놓치는 Sparse 3D Generation Inference 최적화 — Conclusion" loading="lazy" decoding="async"></p>
 <p>이 설계는 일회성 실험으로 끝나지 않았다. 최적화된 kernel은 VARCO3D 2.0 serving path에 들어갔고, 이 과정에서 정리한 profiling, candidate selection, numerical qualification과 fallback 원칙은 사내 <code>worker-forward-optimize</code> skill로 정리했다.</p>
@@ -1090,11 +1088,11 @@ $$</p>
                     <strong>3D 생성형 AI 서비스; Varco3D 개발기</strong>
                 </a>
     
-                <a class="post-nav-card is-explore" href="/blogs/posts/sdf-and-eikonal-equation-kor/" aria-label="Explore Series: Computer Graphics">
+                <a class="post-nav-card is-explore" href="/blogs/posts/gemm-on-nvidia-gpus-kor/" aria-label="Explore Series: CUDA">
                     <span class="post-nav-kicker">
                         Explore Series <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
-                    <strong>Computer Graphics</strong>
+                    <strong>CUDA</strong>
                 </a>
     </nav></div>
                     </div>
@@ -1120,6 +1118,27 @@ $$</p>
     <script>
         window.siteData = {
   "posts": [
+    {
+      "id": "260802_cuda_01_gemm",
+      "title_eng": "GEMM on NVIDIA GPUs: From Naive Kernels to Tiled Pipelines",
+      "title_kor": "NVIDIA GPU의 GEMM: Naive Kernel에서 Tiled Pipeline까지",
+      "subtitle_eng": "Why naive GEMM becomes memory-bound, how tiled reuse changes arithmetic intensity, and where Tensor Cores, schedulers, and libraries fit",
+      "subtitle_kor": "Naive GEMM의 memory bottleneck부터 tiled reuse, Tensor Core pipeline, shape별 scheduling과 library 추상화까지",
+      "tags": [
+        "CUDA"
+      ],
+      "cover": "/blogs/posts/260802_cuda_01_gemm/assets/cover.webp",
+      "status": "published",
+      "updated": "2026-08-12",
+      "date": "2026-08-12",
+      "category": "note",
+      "series": "cuda",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "gemm-on-nvidia-gpus"
+    },
     {
       "id": "260727_sparse_3d",
       "title_eng": "What the Compiler Missed in Sparse 3D Inference",
@@ -1725,10 +1744,10 @@ $$</p>
     </script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
-    <script src="/blogs/js/code-copy.js?v=772952b2cd"></script>
-    <script src="/blogs/js/theme-toggle.js?v=78c68b730b"></script>
-    <script src="/blogs/js/blog-shell.js?v=4b58cc185f"></script>
-    <script src="/blogs/js/post-page.js?v=d1850cd64b"></script>
+    <script src="/blogs/js/code-copy.js?v=e6b60656e4"></script>
+    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+    <script src="/blogs/js/blog-shell.js?v=456de34605"></script>
+    <script src="/blogs/js/post-page.js?v=181bf06e84"></script>
         <script>
             initBlogShell({
                 formSelector: '#post-nav-search-form',

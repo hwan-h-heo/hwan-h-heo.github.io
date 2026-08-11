@@ -56,9 +56,9 @@ This article starts from that question and records two directions that were vali
 
 ---
 
-## 1. Why Sparse 3D Resists the Usual Optimization Playbook
+## 1. Sparse 3D Optimization Challenges
 
-### 1.1. Sparsity Turns the Workload into a Moving Target
+### 1.1. Sparse Representations and Dynamic Workloads
 
 If you double the resolution of a 3D grid, the number of voxels increases eightfold.
 
@@ -108,18 +108,18 @@ Sparse 3D does not yet have a comparable standard runtime. But this was not a va
 
 In the profiler, about `87.6%` of total cost was already FlashAttention and cuBLAS/cuBLASLt GEMM. This number does not mean there was only `12.4%` room left to optimize. Even kernels that are already fast can still be called unnecessarily, and memory movement and dispatch between kernels can still be reduced.
 
-The direction, however, became clear.
+The review led to four rules for the next phase.
 
 1. Do not rebuild FlashAttention or GEMM itself from scratch.
 2. Analyze the model semantics and remove unnecessary workload.
 3. Directly fuse local tensor paths that the compiler misses.
 4. Adopt each candidate only when it reduces actual denoise latency.
 
-The result of reviewing general-purpose tools was not a dead end, but a starting point that made the problem smaller.
+These rules narrowed the optimization problem to a tractable scope.
 
 ---
 
-## 2. Null-Context Attention Is Work We Never Had to Do
+## 2. Null-Context Attention Elimination
 
 ### 2.1. Killing the Zero Tensor
 
@@ -150,7 +150,7 @@ At first, I thought of this as an optimization that would merely remove the zero
 
 > When a condition whose values are all 0 is fed into attention, what is actually being computed?
 
-### 2.2. In Null Attention, the Query Does Not Matter
+### 2.2. Constant Output in Null Attention
 
 Let us use a row-vector convention, where each row of a tensor is a token. The condition-side value projection can be written as follows.
 
@@ -209,8 +209,6 @@ This optimization requires the following conditions.
 - All valid value rows are identical after the condition-side transform
 - The attention row weights over valid positions sum to 1
 - The block is not joint attention where image tokens and shape tokens share the same softmax normalization
-
-The conclusion is simple.
 
 > ***We did not need to make null-context attention faster. We did not need the full unconditional attention workload at all.***
 
@@ -279,7 +277,7 @@ During this implementation process, the Agent handled the following iterative wo
 - Running real-payload benchmarks and raw-bit equivalence tests
 - Applying and validating minimal patches to public repositories
 
-The Agent's largest contribution was not only in writing kernels on my behalf. It was in lowering the cost of falsification: when one hypothesis failed, it could be discarded, and other shapes and fallbacks could be tested quickly.
+Besides writing kernels, the Agent made hypotheses cheaper to falsify. When one failed, I could discard it and quickly test other shapes and fallbacks.
 
 ### 2.4. Putting the Shortcut on the Stopwatch
 
@@ -318,13 +316,13 @@ These results confirmed that null-context optimization is not just an accidental
 
 ---
 
-## 3. Fusing the Gaps the Compiler Missed
+## 3. Local Fusion Beyond the Compiler
 
 Branches that can be removed mathematically, as with null-context, are rare. Most active paths depend on the actual latent and timestep. After semantic elimination, the next tool I needed was the profiler.
 
 The earlier compiler probe had already shown that roughly `87.6%` of cumulative CUDA kernel time was spent in FlashAttention and cuBLAS/cuBLASLt GEMM. The two largest regions were using `flash_attn` and `flex_gemm`, and building a new attention kernel or GEMM from scratch was outside the scope of this work.
 
-But "most of the time is already spent in optimized kernels" is not the same as "there are no execution paths left to reduce."
+Optimized kernels still had reducible execution paths around them.
 
 - Normalization, indexing, and dtype conversion before and after kernels
 - Paths that write intermediate tensors to global memory and then read them back
@@ -332,7 +330,7 @@ But "most of the time is already spent in optimized kernels" is not the same as 
 
 If full `torch.compile` had worked reliably, these pointwise chains and intermediate materializations are mostly where Inductor would have aimed. If sparse metadata and a custom backend make it difficult to compile the entire graph, then the answer is to directly fuse local paths whose role and inputs/outputs are clear.
 
-### 3.1. What Fusion Actually Removes
+### 3.1. Fusion Boundaries and Memory Round Trips
 
 When a PyTorch operation runs on the GPU, each operation leads to one or more CUDA kernel launches.
 
@@ -358,7 +356,7 @@ Kernel fusion handles this chain inside a single CUDA kernel.
 out = (x * scale + shift) * gate
 ```
 
-After reading `x` once, it applies scale, shift, and gate in registers, and writes only the final result to global memory. This reduces the following costs.
+After reading `x` once, it applies scale, shift, and gate in registers, and writes only the final result to global memory. The fused path removes:
 
 - CUDA kernel launch
 - Intermediate tensor allocation
@@ -368,7 +366,7 @@ After reading `x` once, it applies scale, shift, and gate in registers, and writ
 
 In this model, patterns involving sparse batch indexing were more important targets than simple contiguous elementwise operations.
 
-### 3.2. Letting an AI Agent Write CUDA, One Candidate at a Time
+### 3.2. Custom CUDA Candidate Validation
 
 Using an AI Agent makes it possible to implement CUDA candidates quickly. At the same time, if multiple optimizations are introduced at once, it becomes impossible to tell which change actually reduced latency. So each cycle handled exactly one candidate.
 
@@ -428,7 +426,7 @@ In a representative profile of one denoising step, this path replaced the follow
 - 4 calls each to `stack` and `cat`
 - 8 calls each to `view_as_complex` and `view_as_real`
 
-What became faster here was not just a single RMSNorm. The entire tensor lifecycle of attention preprocessing became shorter.
+This fusion shortened the tensor lifecycle of the entire attention preprocessing path.
 
 ### 4.2. Sparse LayerNorm Meets AdaLN in One Pass
 
@@ -469,13 +467,13 @@ The table below shows the leave-one-out results from disabling only one candidat
 
 The `layer_norm` candidate replaced independent normalization on the residual path with a dedicated kernel, and `sparse_batch_mul_add` simplified batch-indexed modulation and the residual affine chain into a single kernel. `qk_rms_norm_cross_inplace` reduced cross-attention preprocessing, but because the gain did not reproduce on larger payloads, I did not count it as evidence for the baseline speedup.
 
-In this process, the fact that the profiler's operation count went down had to be considered separately from the fact that product latency went down. GELU was the candidate where that distinction appeared most clearly.
+Profiler operation count and product latency were separate signals. The GELU candidate made that distinction clearest.
 
 ---
 
-## 5. When a Faster GELU Kernel Was the Wrong Boundary
+## 5. A Failed GELU Fusion
 
-### 5.1. Replacing a Kernel Is Not Yet Fusion
+### 5.1. Limits of a Standalone GELU Replacement
 
 Let us briefly return to the `gelu` mentioned in the profiler table above.
 
@@ -506,7 +504,7 @@ MLP GEMM output store
 PyTorch GELU was already implemented efficiently for this A100 and tensor shape. I had replaced one kernel with another, but the global-memory round trip I wanted to remove was still there.
 In other words, simply replacing the GELU formula with a fast CUDA kernel did not reduce the number of memory I/O operations.
 
-I could have discarded the candidate here and moved on. Instead, I changed the question once more.
+I expanded the investigation to the boundary before GELU.
 
 > If GELU itself is not slow, which boundary needs to disappear for the path to actually get faster?
 
@@ -615,7 +613,7 @@ def bf16_bits_equal(a: torch.Tensor, b: torch.Tensor) -> bool:
 
 On the null-context path, I used the tensor after the output projection of the target cross-attention block and the paired denoiser output as the verification boundaries.
 
-### 7.1. Tensor Shape Is Part of the Contract
+### 7.1. Tensor-Shape Contract
 
 Let the existing batched CFG output projection be:
 
@@ -661,7 +659,7 @@ $$
 
 This explanation is a possible mechanism for the mismatch I observed. The actual adoption decision did not depend on assuming that a particular kernel family or algorithm ID was the same. It depended only on the raw-bit qualification result.
 
-### 7.2. Why the Direct M=1 Cache Did Not Make the Cut
+### 7.2. Rejection of the Direct M=1 Cache
 
 The most direct implementation is to project just one row at startup.
 
@@ -675,7 +673,7 @@ However, this path was not bitwise-exact with the unconditional row of the refer
 
 Therefore, I did not accept the direct `M=1` result under a tolerance. Instead, I searched for a calibration shape that produced the same raw bits as the production reference.
 
-### 7.3. Canonical Cache, Bitwise-Exact After Qualification
+### 7.3. Canonical Cache Qualification
 
 At startup, construct a canonical input whose every row is $b_V$.
 
@@ -734,7 +732,7 @@ This qualification responds to the following changes.
 
 The self-test is not a mathematical proof over every possible shape and future environment. It is a gate for the fast path, checking whether the expected numerical behavior is reproduced within the configured validation scope of the current worker.
 
-### 7.4. Why the cuBLASLt GELU Epilogue Cannot Promise Bitwise Exactness
+### 7.4. Bitwise Equivalence Limits of the cuBLASLt GELU Epilogue
 
 The existing eager path stores the GEMM output as BF16 and then applies GELU.
 
@@ -797,7 +795,7 @@ The custom extension was not JIT-compiled in the serving worker. It was distribu
 
 The Agent's first answer was not wrong. The representative block had been split into `13` graphs and `12` graph breaks, and most of the CUDA kernel time in the representative profiler was already in FlashAttention and GEMM. Deprioritizing full `torch.compile` and a TensorRT port was a reasonable call.
 
-This work continued not because I rejected that answer, but because I changed the granularity of the question.
+At that point, I changed the granularity of the question.
 
 > Can a general-purpose compiler optimize the entire model?
 
@@ -805,13 +803,11 @@ to
 
 > What computation in the current forward path does not actually need to run, and where is the memory path being interrupted unnecessarily?
 
-As a result, VARCO3D 2.0's 15-step denoise latency was reduced by `25.66%` on an equal-weighted per-asset average, without an observed quality drop.
+This approach reduced VARCO3D 2.0's 15-step denoise latency by `25.66%` on an equal-weighted per-asset average, without an observed quality drop.
 
-From the perspective of a CUDA kernel specialist, the process of finding the `M=256` canonical cache or redesigning the GELU candidate may look somewhat indirect. I also learned through this work, by trial and error, that the essence of fusion is not simply reducing the number of kernels, but eliminating real global-memory round trips and intermediate materialization.
+The `M=256` canonical cache and the redesigned GELU candidate both emerged through trial and error. The process taught me to evaluate fusion in terms of removed global-memory round trips and intermediate materialization. Kernel count alone was not a useful criterion.
 
-But the significance of this work is not that I solved the problem like a CUDA expert from the start. It is that a researcher who understands the model's conditioning semantics and forward equation can identify unnecessary computation mathematically, then use an Agent as the executor for repository exploration, implementation, benchmarking, and regression tests. In that setup, the engineering boundary one person can work across becomes wider.
-
-This is less a case of an AI Agent replacing CUDA expertise than of a domain-aware researcher pulling an unfamiliar implementation area into a shorter iteration loop.
+Understanding the model's conditioning semantics and forward equation let me identify unnecessary computation mathematically. The Agent handled the iterative repository exploration, implementation, benchmarking, and regression testing. This widened the engineering boundary I could work across without starting as a CUDA specialist.
 
 ---
 

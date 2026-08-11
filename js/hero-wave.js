@@ -710,14 +710,14 @@ function createHeroWave(THREE) {
     let pointerTargetY = 0;
     let disposed = false;
     let ctaTimelineStarted = false;
-    let cameraParallaxX = 0.85;
-    let cameraParallaxY = 0.42;
-    let cameraParallaxZ = 0.38;
+    let cameraParallaxX = 1.4;
+    let cameraParallaxY = 0.68;
+    let cameraParallaxZ = 0.62;
     let cameraDriftX = 0.34;
     let cameraDriftY = 0.12;
     let cameraDriftZ = 0.14;
-    let groupParallaxX = 0.018;
-    let groupParallaxY = 0.04;
+    let groupParallaxX = 0.038;
+    let groupParallaxY = 0.075;
     const cameraBasePosition = new THREE.Vector3();
     const cameraLookTarget = new THREE.Vector3();
 
@@ -767,14 +767,14 @@ function createHeroWave(THREE) {
         camera.fov = narrow ? 47 : 42;
         cameraBasePosition.set(0, narrow ? 4.8 : 4.25, narrow ? 10.8 : 10.2);
         cameraLookTarget.set(0, narrow ? -1.55 : -1.35, -1.8);
-        cameraParallaxX = narrow ? 0.36 : 0.85;
-        cameraParallaxY = narrow ? 0.2 : 0.42;
-        cameraParallaxZ = narrow ? 0.16 : 0.38;
+        cameraParallaxX = narrow ? 0.48 : 1.4;
+        cameraParallaxY = narrow ? 0.28 : 0.68;
+        cameraParallaxZ = narrow ? 0.22 : 0.62;
         cameraDriftX = narrow ? 0.24 : 0.34;
         cameraDriftY = narrow ? 0.08 : 0.12;
         cameraDriftZ = narrow ? 0.09 : 0.14;
-        groupParallaxX = narrow ? 0.009 : 0.018;
-        groupParallaxY = narrow ? 0.02 : 0.04;
+        groupParallaxX = narrow ? 0.014 : 0.038;
+        groupParallaxY = narrow ? 0.03 : 0.075;
         camera.position.copy(cameraBasePosition);
         camera.lookAt(cameraLookTarget);
         camera.updateProjectionMatrix();
@@ -827,9 +827,9 @@ function createHeroWave(THREE) {
             markHeroCtaVisible();
         }
 
-        const pointerEase = 1 - Math.exp(-Math.max(delta, 0) * 4.8);
-        const cameraEase = 1 - Math.exp(-Math.max(delta, 0) * 3.6);
-        const groupEase = 1 - Math.exp(-Math.max(delta, 0) * 2.8);
+        const pointerEase = 1 - Math.exp(-Math.max(delta, 0) * 7.2);
+        const cameraEase = 1 - Math.exp(-Math.max(delta, 0) * 5.2);
+        const groupEase = 1 - Math.exp(-Math.max(delta, 0) * 4.2);
         pointerX += (pointerTargetX - pointerX) * pointerEase;
         pointerY += (pointerTargetY - pointerY) * pointerEase;
 
@@ -887,6 +887,11 @@ function createHeroWave(THREE) {
         animationFrame = 0;
     }
 
+    function shapePointerInput(value) {
+        const clamped = Math.max(-1, Math.min(1, value));
+        return Math.sign(clamped) * Math.pow(Math.abs(clamped), 0.82);
+    }
+
     function handlePointerMove(event) {
         if (!heroIsVisible) {
             return;
@@ -896,8 +901,8 @@ function createHeroWave(THREE) {
         const normalizedX = ((event.clientX - rect.left) / Math.max(rect.width, 1) - 0.5) * 2;
         const normalizedY = ((event.clientY - rect.top) / Math.max(rect.height, 1) - 0.5) * 2;
         const influence = event.pointerType === 'touch' ? 0.55 : 1;
-        pointerTargetX = Math.max(-1, Math.min(1, normalizedX)) * influence;
-        pointerTargetY = Math.max(-1, Math.min(1, normalizedY)) * influence;
+        pointerTargetX = shapePointerInput(normalizedX) * influence;
+        pointerTargetY = shapePointerInput(normalizedY) * influence;
     }
 
     function resetPointerTarget(event) {

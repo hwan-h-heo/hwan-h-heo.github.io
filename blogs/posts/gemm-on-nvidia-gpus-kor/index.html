@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="ko" class="sidebar-collapsed blog-sidebar-rail">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Naive GEMM의 memory bottleneck부터 tiled reuse, Tensor Core pipeline, shape별 scheduling과 library 추상화까지" />
+    <meta name="keywords" content="note, cuda, CUDA, 3D graphics, computer vision, machine learning" />
+    <meta name="author" content="Hwan Heo" />
+    <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/posts/gemm-on-nvidia-gpus-kor/" />
+    <link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/gemm-on-nvidia-gpus/" />
+    <link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/gemm-on-nvidia-gpus-kor/" />
+    <link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/gemm-on-nvidia-gpus/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://hwan-h-heo.github.io/blogs/posts/gemm-on-nvidia-gpus-kor/" />
+    <meta property="og:title" content="NVIDIA GPU의 GEMM: Naive Kernel에서 Tiled Pipeline까지" />
+    <meta property="og:description" content="Naive GEMM의 memory bottleneck부터 tiled reuse, Tensor Core pipeline, shape별 scheduling과 library 추상화까지" />
+    <meta property="og:image" content="https://hwan-h-heo.github.io/blogs/posts/260802_cuda_01_gemm/assets/cover.webp" />
+    <meta property="og:site_name" content="HwanHeo's Blog" />
+    <meta property="article:published_time" content="2026-08-12T00:00:00.000Z" />
+    <meta property="article:modified_time" content="2026-08-12T00:00:00.000Z" />
+    <meta property="article:author" content="Hwan Heo" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://hwan-h-heo.github.io/blogs/posts/gemm-on-nvidia-gpus-kor/" />
+    <meta name="twitter:title" content="NVIDIA GPU의 GEMM: Naive Kernel에서 Tiled Pipeline까지" />
+    <meta name="twitter:description" content="Naive GEMM의 memory bottleneck부터 tiled reuse, Tensor Core pipeline, shape별 scheduling과 library 추상화까지" />
+    <meta name="twitter:image" content="https://hwan-h-heo.github.io/blogs/posts/260802_cuda_01_gemm/assets/cover.webp" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"NVIDIA GPU의 GEMM: Naive Kernel에서 Tiled Pipeline까지","description":"Naive GEMM의 memory bottleneck부터 tiled reuse, Tensor Core pipeline, shape별 scheduling과 library 추상화까지","url":"https://hwan-h-heo.github.io/blogs/posts/gemm-on-nvidia-gpus-kor/","mainEntityOfPage":"https://hwan-h-heo.github.io/blogs/posts/gemm-on-nvidia-gpus-kor/","image":["https://hwan-h-heo.github.io/blogs/posts/260802_cuda_01_gemm/assets/cover.webp"],"author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"publisher":{"@type":"Person","name":"Hwan Heo"},"datePublished":"2026-08-12","dateModified":"2026-08-12","inLanguage":"ko"}</script>
+
+    <title>NVIDIA GPU의 GEMM: Naive Kernel에서 Tiled Pipeline까지 | Hwan Heo</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="/blogs/css/blog.css?v=a1fa956e9d" rel="stylesheet" />
+    <link href="/blogs/css/sidebar.css?v=975e92b635" rel="stylesheet" />
+    <link href="/css/sidebar-nav.css?v=6503f0effb" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5feaa1dfce" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=dc5dd44b65" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
+    <script src="/js/sidebar-controller.js?v=3db1bd5d00" data-sidebar-mode="rail"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+    <link href="/blogs/css/code-copy.css?v=462bb4eb1f" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RF7ETSKPK9');
+    </script>
+        <script>
+            (function() {
+                try {
+                    const storedTheme = localStorage.getItem('blog-theme');
+                    const theme = storedTheme === 'dark' || storedTheme === 'light' ? storedTheme : 'light';
+                    document.documentElement.dataset.theme = theme;
+                } catch (error) {}
+            })();
+        </script>
+    <meta name="site-deploy-version" content="70177764564cc6d9">
+    <script defer src="/assets/js/deploy-refresh.js?v=adb609281d"></script>
+</head>
+<body class="blog-post-page">
+    <header id="header" class="header blog-sidebar dark-background" data-sidebar-mode="rail">
+        <div class="profile-img">
+            <img src="/assets/icon.webp" alt="Portrait illustration of Hwan Heo">
+        </div>
+
+        <a href="/blogs/" class="logo">
+            <span class="sitename">Hwan's Blog</span>
+        </a>
+
+        <div class="social-links">
+            <a href="https://github.com/hwanhuh" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
+            <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
+            <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
+            <a href="mailto:hwan.heo.ai@gmail.com" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
+        </div>
+
+        <nav id="navmenu" class="navmenu" aria-label="Blog navigation">
+            <ul>
+                <li>
+                    <a href="/blogs/" class="active" aria-current="location">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house"></use></svg>
+                        <span>Blog Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/" class="sidebar-external-link">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-briefcase"></use></svg>
+                        <span>Portfolio</span>
+                        <svg class="site-icon sidebar-external-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-labs">
+            <details class="sidebar-labs-menu">
+                <summary>
+                    <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-tools"></use></svg>
+                    <span>Labs</span>
+                    <svg class="site-icon sidebar-labs-chevron" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
+                </summary>
+                <div class="sidebar-labs-panel">
+                    <div class="sidebar-rail-panel-heading" aria-hidden="true">
+                        <span>Labs / 02</span>
+                        <small>Tools &amp; experiments</small>
+                    </div>
+                    <a href="/blogs/3DViewer/">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg>
+                        <span class="sidebar-labs-copy"><strong>3D Viewer</strong><small>Inspect 3D assets</small></span>
+                    </a>
+                    <a href="/blogs/editor/">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg>
+                        <span class="sidebar-labs-copy"><strong>Markdown Editor</strong><small>Draft long-form posts</small></span>
+                    </a>
+                </div>
+            </details>
+        </div>
+
+        <div class="sidebar-contents">
+            <button class="sidebar-contents-toggle" type="button" aria-label="목차 열기" aria-controls="post-toc" aria-expanded="false">
+                <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-list-ul"></use></svg>
+                <span>Contents</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="main blog-post-main">
+        <nav class="post-site-nav" id="mainNav" aria-label="Post utilities">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-utility-column">
+                        <a class="post-nav-home" href="/blogs/" aria-label="Back to Blog Home">
+                            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg>
+                            <span>Blog Home</span>
+                        </a>
+                        <ul class="post-nav-actions">
+                            <li class="post-nav-action post-nav-search-item">
+                                <form id="post-nav-search-form" class="post-nav-search" role="search" data-collapsible-search>
+                                    <label class="visually-hidden" for="post-nav-search-input">블로그 글 검색</label>
+                                    <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
+                                    <button type="submit" aria-label="검색" aria-controls="post-nav-search-input" aria-expanded="false">
+                                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
+                                    </button>
+                                </form>
+                            </li>
+                            <li class="post-nav-action"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><svg class="site-icon theme-toggle-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg></button></li>
+                            <li class="post-nav-action"><a href="/blogs/posts/gemm-on-nvidia-gpus/" class="post-nav-language-link" data-language-target="eng" aria-label="Switch to English" title="Switch to English">A</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <header class="masthead post-masthead">
+            <div class="blog-shell post-hero-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-hero-column">
+                        <div class="post-heading">
+                            <div class="post-hero-series">
+                                <span class="post-hero-series-label">Series</span>
+                                <span class="post-hero-series-separator" aria-hidden="true">/</span>
+                                <a href="/blogs/series/cuda/">
+                                    <span class="post-hero-series-name">CUDA</span>
+                                    <span class="post-hero-series-arrow" aria-hidden="true">→</span>
+                                </a>
+                            </div>
+                            <h1>NVIDIA GPU의 GEMM: Naive Kernel에서 Tiled Pipeline까지</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <article class="post-article">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-hero-column post-intro-column">
+                        <div class="post-intro-layout">
+                            <div class="post-intro-copy">
+                                <p class="post-intro-deck">Naive GEMM의 memory bottleneck부터 tiled reuse, Tensor Core pipeline, shape별 scheduling과 library 추상화까지</p>
+                                <div class="post-intro-topics" aria-label="주제">
+                                    <span class="post-intro-topics-label">Topics</span>
+                                    <span class="post-intro-topics-separator" aria-hidden="true">/</span>
+                                    <div class="post-tags"><a class="post-tag" href="/blogs/tags/cuda/">CUDA</a></div>
+                                </div>
+                            </div>
+                            <aside class="post-article-info" aria-label="글 정보">
+                                <ul>
+                                    <li data-post-detail="author">
+                                        <strong>Author</strong>
+                                        <span>Hwan Heo</span>
+                                    </li>
+                                    <li data-post-detail="published">
+                                        <strong>Published</strong>
+                                        <time datetime="2026-08-12">August 12, 2026</time>
+                                    </li>
+                                    <li data-post-detail="reading">
+                                        <strong>Reading</strong>
+                                        <span class="post-detail-reading">14 min read</span>
+                                    </li>
+                                </ul>
+                            </aside>
+                        </div>
+                    </div>
+                    <div class="post-reading-column main-content">
+                        <nav id="post-toc" class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Abstract" aria-label="Abstract"><span class="toc-link-text">Abstract</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="1. GEMM의 정의" aria-label="1. GEMM의 정의"><span class="toc-link-text">1. GEMM의 정의</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="2. Naive GEMM의 병목" aria-label="2. Naive GEMM의 병목"><span class="toc-link-text">2. Naive GEMM의 병목</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="입력 재사용의 부재" aria-label="입력 재사용의 부재"><span class="toc-link-text">입력 재사용의 부재</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="GEMM의 Arithmetic Intensity" aria-label="GEMM의 Arithmetic Intensity"><span class="toc-link-text">GEMM의 Arithmetic Intensity</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-5" title="3. Tiled GEMM과 데이터 재사용" aria-label="3. Tiled GEMM과 데이터 재사용"><span class="toc-link-text">3. Tiled GEMM과 데이터 재사용</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="Global-memory Traffic 감소" aria-label="Global-memory Traffic 감소"><span class="toc-link-text">Global-memory Traffic 감소</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="On-chip 병목" aria-label="On-chip 병목"><span class="toc-link-text">On-chip 병목</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-8" title="4. Hierarchical Tiling과 Tensor Core Pipeline" aria-label="4. Hierarchical Tiling과 Tensor Core Pipeline"><span class="toc-link-text">4. Hierarchical Tiling과 Tensor Core Pipeline</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-9" title="Register blocking" aria-label="Register blocking"><span class="toc-link-text">Register blocking</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="Tensor Core Pipeline" aria-label="Tensor Core Pipeline"><span class="toc-link-text">Tensor Core Pipeline</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-11" title="Load–Compute Overlap" aria-label="Load–Compute Overlap"><span class="toc-link-text">Load–Compute Overlap</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-12" title="Epilogue" aria-label="Epilogue"><span class="toc-link-text">Epilogue</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-13" title="5. Tiling 이후의 병목" aria-label="5. Tiling 이후의 병목"><span class="toc-link-text">5. Tiling 이후의 병목</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-14" title="6. 추상화 계층" aria-label="6. 추상화 계층"><span class="toc-link-text">6. 추상화 계층</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-15" title="Shape Manifest" aria-label="Shape Manifest"><span class="toc-link-text">Shape Manifest</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-16" title="GEMM 최적화 기준" aria-label="GEMM 최적화 기준"><span class="toc-link-text">GEMM 최적화 기준</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-17" title="References" aria-label="References"><span class="toc-link-text">References</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
+    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
+</button>
+
+<div id="myshare_modal" class="share_modal" role="status" aria-live="polite" aria-hidden="true">
+    <div class="share_modal-content">
+        <button class="share_modal_close" type="button" aria-label="Dismiss">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-x-lg"></use></svg>
+        </button>
+        <span class="share_modal-icon" aria-hidden="true">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-check2"></use></svg>
+        </span>
+        <span class="share_modal-message">
+            <strong>링크 복사됨</strong>
+            <small>글 주소를 바로 공유할 수 있습니다.</small>
+        </span>
+        <div class="copy_indicator-container">
+            <div class="copy_indicator" id="share_modalIndicator"></div>
+        </div>
+    </div>
+</div>
+
+<h2 id="toc-heading-0">Abstract</h2>
+<p>GEMM(General Matrix Multiplication)은 두 행렬을 곱한 뒤 필요하면 기존 행렬을 더하는 연산이다. 딥러닝에서 자주 만나는 Linear layer, attention projection, MLP의 주된 계산이 모두 여기에 해당한다. 딥러닝 workload의 성능을 들여다보려면 GEMM이 어디서 빨라지고 어디서 느려지는지부터 짚어야 한다.</p>
+<p>GEMM을 최적화할 때 먼저 볼 것은 multiply-add가 아니라 data movement다. Naive kernel은 output 하나를 thread 하나에 맡긴다. 이때 여러 thread가 같은 A와 B 원소를 global memory에서 반복해서 가져온다. Tiled kernel은 이런 중복 이동을 shared memory와 register의 재사용으로 바꾼다. Arithmetic intensity가 높아지면서 병목도 HBM bandwidth에서 on-chip bandwidth, instruction throughput, scheduling 쪽으로 옮겨 간다.</p>
+<p>이 글에서는 먼저 GEMM의 수학적 정의와 naive 구현의 traffic을 살펴본다. 그 위에 shared-memory tiling, register blocking, Tensor Core pipeline을 차례로 쌓아 본다. 이후 shape-aware scheduling과 fusion 같은 고급 기법까지 범위를 넓힌다. cuBLAS, cuBLASLt, CUTLASS, CuTe의 위치는 마지막에 다룬다.</p>
+<p>본문의 API와 아키텍처 설명은 2026년 8월, CUDA 13.3과 CUTLASS 4.6.1 공식 문서를 기준으로 확인했다. 지원 dtype, epilogue, scheduler와 instruction path는 toolkit과 GPU 세대에 따라 달라지므로 실제 적용 전에는 배포 환경의 문서와 API query를 다시 확인해야 한다.</p>
+<hr>
+<h2 id="toc-heading-1">1. GEMM의 정의</h2>
+<p>일반적인 GEMM은 다음 식을 계산한다.</p>
+<p>$$
+D=\alpha\,\operatorname{op}(A)\operatorname{op}(B)+\beta C
+$$</p>
+<p><code>op</code>는 matrix를 그대로 쓰거나 transpose하는 연산을 가리킨다. Transpose가 없는 경우 shape은</p>
+<p>$$
+A\in\mathbb{R}^{M\times K},\qquad
+B\in\mathbb{R}^{K\times N},\qquad
+C,D\in\mathbb{R}^{M\times N}
+$$</p>
+<p>이다. Output 원소 하나는</p>
+<p>$$
+D_{ij}=\alpha\sum_{k=0}^{K-1}A_{ik}B_{kj}+\beta C_{ij}
+$$</p>
+<p>로 계산한다. $M\times N$개의 dot product가 있고 각 dot product의 길이는 $K$다. Multiply와 add를 각각 1 FLOP로 세면 주된 matrix product의 연산량은 약</p>
+<p>$$
+2MNK\quad\text{FLOPs}
+$$</p>
+<p>이다. Alpha와 beta를 적용하는 연산은 이 근사에서 제외한다.</p>
+<p>여기서 눈여겨볼 성질은 reuse다. $A_{ik}$ 하나는 같은 row의 $N$개 output에 쓰인다. $B_{kj}$ 하나는 같은 column의 $M$개 output에 쓰인다. 입력을 한 번만 읽고 이 reuse를 모두 활용한다면 행렬이 커질수록 byte당 계산량도 늘어난다.</p>
+<p>물론 수식에 reuse가 보인다고 해서 kernel이 알아서 활용해 주지는 않는다. GPU에서 GEMM을 빠르게 만들려면 이 값을 memory hierarchy의 어느 단계에 둘지, 또 어떤 thread들이 나눠 쓸지를 정해야 한다.</p>
+<hr>
+<h2 id="toc-heading-2">2. Naive GEMM의 병목</h2>
+<p>가장 직접적인 병렬화는 output 원소 하나를 CUDA thread 하나에 맡기는 것이다. 아래 예제는 $D=AB$, 즉 $\alpha=1$, $\beta=0$, transpose 없음으로 제한하며 A, B, D가 row-major contiguous buffer라고 가정한다.</p>
+<pre class="post-code-block" data-code-label="CODE / C++"><code class="language-cpp">__global__ void naive_gemm(
+    const float* A,
+    const float* B,
+    float* D,
+    int M,
+    int N,
+    int K)
+{
+    int row = blockIdx.y * blockDim.y + threadIdx.y;
+    int col = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (row &gt;= M || col &gt;= N) {
+        return;
+    }
+
+    float acc = 0.0f;
+    for (int k = 0; k &lt; K; ++k) {
+        acc += A[row * K + k] * B[k * N + col];
+    }
+    D[row * N + col] = acc;
+}
+</code></pre>
+<p>이 kernel은 정답을 내고 output parallelism도 충분히 드러낸다. 겉보기에는 별문제가 없어 보인다. 하지만 각 thread가 자신의 dot product를 따로 계산한다.</p>
+<figure class="post-media post-media--editorial">
+  <video controls autoplay loop muted playsinline preload="metadata" aria-label="Naive GEMM thread-to-output mapping animation">
+    <source src="/blogs/posts/260802_cuda_01_gemm/assets/naive-gemm-mapping.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <figcaption><span class="post-figure-index">FIG. 01</span><span class="post-figure-caption">Output 원소 하나를 thread 하나에 배정하는 naive GEMM mapping. 각 thread는 A row와 B column을 따라 독립적으로 dot product를 계산한다.</span></figcaption>
+</figure>
+
+<h3 id="toc-heading-3">입력 재사용의 부재</h3>
+<p>Output 하나를 계산할 때 A에서 $K$개, B에서 $K$개를 읽는다. $MN$개의 output을 각각 따로 계산한다고 보면 logical input read는 모두</p>
+<p>$$
+2MNK\quad\text{elements}
+$$</p>
+<p>다. Input element 크기를 $b$ bytes, output element 크기를 $b_D$ bytes라 두면 traffic은 단순하게</p>
+<p>$$
+\text{bytes}_{\text{naive}}
+\approx 2bMNK+b_DMN
+$$</p>
+<p>이고 arithmetic intensity는</p>
+<p>$$
+I_{\text{naive}}
+\approx
+\frac{2MNK}{2bMNK+b_DMN}
+\xrightarrow[K\to\infty]{}
+\frac{1}{b}
+$$</p>
+<p>로 계산된다. 이 모델에서는 FP32 input이 약 <code>0.25 FLOP/byte</code>, FP16/BF16 input이 약 <code>0.5 FLOP/byte</code>에 그친다.</p>
+<p>이 수치가 그대로 실제 DRAM traffic이 되는 것은 아니다. 같은 warp의 thread는 A 원소를 broadcast 받는다. B의 연속된 원소는 coalesced access가 된다. L1/L2 cache도 중복 요청 일부를 받아낸다. 위 계산에서 봐야 할 부분은 따로 있다. Output마다 독립적인 load instruction을 발행하면 kernel이 직접 관리하는 reuse가 생기지 않는다.</p>
+<p>실제 HBM traffic은 cache hit와 transaction 형태에 따라 이 계산보다 작다. 다만 working set이 cache보다 크거나 여러 CTA가 cache capacity를 놓고 경쟁하면 같은 A/B tile이 L2와 HBM에서 반복해서 올라온다. “naive GEMM은 언제나 DRAM bandwidth peak에 닿는다”라고 단정할 수는 없다. 그래도 병목이 생기는 지점은 분명하다.</p>
+<blockquote>
+<p>Naive GEMM은 수학적으로 가능한 A/B reuse를 kernel이 소유하지 않는다. 큰 problem에서는 global-memory load가 반복되고 arithmetic unit에 operand를 공급하는 경계가 병목이 되기 쉽다.</p>
+</blockquote>
+<p>위 mapping은 row-major다. 한 warp가 같은 output row에서 연속된 column을 처리하면 B access는 coalesced된다. 같은 <code>k</code>의 A는 warp lane들이 한 주소를 함께 읽는다. Hardware broadcast 덕분에 transaction 수는 줄어든다. 다만 cache sector에서 실제로 쓰는 word는 적기도 하다. 다음 <code>k</code>에 필요한 cache line이 그때까지 남으리라는 보장도 없다. 여기에 다른 output row와 CTA가 같은 B tile을 다시 읽는 문제까지 더해진다. NVIDIA의 <a href="https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/#shared-memory-in-matrix-multiplication-c-ab">CUDA C++ Best Practices Guide</a>에서도 shared memory를 써서 이 중복 transfer를 없애는 matrix multiplication 예제를 소개한다.</p>
+<figure class="post-media post-media--editorial">
+  <video controls autoplay loop muted playsinline preload="metadata" aria-label="Naive GEMM memory bottleneck animation">
+    <source src="/blogs/posts/260802_cuda_01_gemm/assets/naive-memory-bound.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <figcaption><span class="post-figure-index">FIG. 02</span><span class="post-figure-caption">같은 A와 B 원소를 여러 thread와 CTA가 다시 요청하는 naive path. Kernel이 reuse를 직접 관리하지 않아 operand 공급이 병목으로 남는다.</span></figcaption>
+</figure>
+
+<h3 id="toc-heading-4">GEMM의 Arithmetic Intensity</h3>
+<p>A와 B를 각각 한 번만 읽고 D를 한 번 쓴다고 가정하면 $\beta=0$일 때 전체 연산의 이상적인 traffic은 대략</p>
+<p>$$
+b(MK+KN)+b_DMN
+$$</p>
+<p>이다. $\beta\ne0$이면 C를 읽는 $b_CMN$ bytes가 더 든다. $M$, $N$, $K$가 함께 커질 때 FLOP은 cubic하게 늘고 input과 output element 수는 quadratic하게 늘어난다. GEMM은 원래 높은 arithmetic intensity를 만들 수 있는 연산이다. Naive mapping에서는 이 장점을 살리지 못한다.</p>
+<p>Roofline 관점에서는</p>
+<p>$$
+P_{\text{attainable}}
+\leq
+\min\left(P_{\text{compute peak}},\ I\cdot B_{\text{memory}}\right)
+$$</p>
+<p>이다. Naive implementation처럼 $I$가 낮으면 memory roof가 먼저 성능을 제한한다. 이제 줄여야 할 것은 FLOP이 아니다. 같은 FLOP을 처리하는 데 필요한 global-memory byte를 줄여 $I$를 높여야 한다.</p>
+<hr>
+<h2 id="toc-heading-5">3. Tiled GEMM과 데이터 재사용</h2>
+<p>Tiling에서는 가까운 output들을 한 CTA가 함께 계산한다. 필요한 A와 B 조각은 shared memory에 한 번만 올린다.</p>
+<pre class="post-code-block" data-code-label="CODE / TEXT"><code class="language-text">HBM / global memory
+  A tile, B tile을 cooperative load
+          ↓
+Shared memory
+  block의 여러 thread가 같은 tile을 재사용
+          ↓
+Registers
+  각 thread가 output partial sum을 누적
+          ↓
+HBM / global memory
+  완성된 output을 한 번 store
+</code></pre>
+<figure class="post-media post-media--editorial">
+  <video controls autoplay loop muted playsinline preload="metadata" aria-label="Tiled GEMM shared-memory reuse animation">
+    <source src="/blogs/posts/260802_cuda_01_gemm/assets/tiled-gemm-reuse.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <figcaption><span class="post-figure-index">FIG. 03</span><span class="post-figure-caption">A와 B tile을 shared memory에 한 번 올리고 CTA의 여러 thread가 재사용하는 tiled GEMM. Global-memory request는 줄고 같은 byte로 처리하는 FLOP은 늘어난다.</span></figcaption>
+</figure>
+
+<p>단순화한 square-tile kernel은 다음과 같다.</p>
+<pre class="post-code-block" data-code-label="CODE / C++"><code class="language-cpp">template &lt;int TILE&gt;
+__global__ void tiled_gemm(
+    const float* A,
+    const float* B,
+    float* D,
+    int M,
+    int N,
+    int K)
+{
+    __shared__ float As[TILE][TILE];
+    __shared__ float Bs[TILE][TILE];
+
+    int tx = threadIdx.x;
+    int ty = threadIdx.y;
+    int row = blockIdx.y * TILE + ty;
+    int col = blockIdx.x * TILE + tx;
+    float acc = 0.0f;
+
+    for (int k0 = 0; k0 &lt; K; k0 += TILE) {
+        As[ty][tx] = (row &lt; M &amp;&amp; k0 + tx &lt; K)
+            ? A[row * K + k0 + tx] : 0.0f;
+        Bs[ty][tx] = (k0 + ty &lt; K &amp;&amp; col &lt; N)
+            ? B[(k0 + ty) * N + col] : 0.0f;
+
+        __syncthreads();
+        for (int k = 0; k &lt; TILE; ++k) {
+            acc += As[ty][k] * Bs[k][tx];
+        }
+        __syncthreads();
+    }
+
+    if (row &lt; M &amp;&amp; col &lt; N) {
+        D[row * N + col] = acc;
+    }
+}
+</code></pre>
+<p>첫 barrier를 지나야 tile 계산이 시작된다. 두 번째 barrier는 현재 계산이 끝나기 전에 다음 K tile이 shared-memory buffer를 덮지 못하게 막는다. Production kernel에서는 thread 하나가 여러 element를 맡아 더 큰 tile을 cooperative하게 load한다. 여기에 asynchronous pipeline과 register tile을 더한다.</p>
+<h3 id="toc-heading-6">Global-memory Traffic 감소</h3>
+<p>CTA 하나가 $B_M\times B_N$ output tile을 계산하고 K dimension을 $B_K$씩 순회한다고 하자. 한 K tile에서 필요한 input과 연산량은</p>
+<p>$$
+\begin{aligned}
+\text{A tile} &amp;: B_MB_K,\\
+\text{B tile} &amp;: B_KB_N,\\
+\text{compute} &amp;: 2B_MB_NB_K\ \text{FLOPs}.
+\end{aligned}
+$$</p>
+<p>A 원소 하나는 CTA 안에서 $B_N$개의 output에, B 원소 하나는 $B_M$개의 output에 재사용된다. Input을 HBM에서 한 번씩만 읽는다고 가정하면 input 기준 arithmetic intensity는</p>
+<p>$$
+I_{\text{tile,input}}
+\approx
+\frac{2B_MB_NB_K}
+{b(B_MB_K+B_KB_N)}
+=
+\frac{2B_MB_N}{b(B_M+B_N)}.
+$$</p>
+<p>정사각형 tile $B_M=B_N=T$에서는</p>
+<p>$$
+I_{\text{tile,input}}\approx\frac{T}{b}
+$$</p>
+<p>가 된다.</p>
+<table>
+<thead>
+<tr>
+<th>CTA output tile</th>
+<th align="right">FP16/BF16 input ($b=2$)</th>
+<th align="right">FP32 input ($b=4$)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$64\times64$</td>
+<td align="right">약 32 FLOP/byte</td>
+<td align="right">약 16 FLOP/byte</td>
+</tr>
+<tr>
+<td>$128\times128$</td>
+<td align="right">약 64 FLOP/byte</td>
+<td align="right">약 32 FLOP/byte</td>
+</tr>
+</tbody></table>
+<p>같은 dtype에서 tile edge를 두 배로 키우면 이 단순 모델의 input reuse도 두 배로 늘어난다. Naive mapping에서는 cache에 맡겼던 재사용을 이제 CTA가 직접 관리한다. Cooperative load를 연속 주소에 맞추면 global access도 coalesced된다.</p>
+<h3 id="toc-heading-7">On-chip 병목</h3>
+<p>큰 tile이 언제나 빠른 것은 아니다. Tile을 키우면 다음 비용이 함께 증가한다.</p>
+<ul>
+<li>shared-memory capacity와 bandwidth</li>
+<li>thread별 accumulator register와 register pressure</li>
+<li>block barrier와 pipeline state</li>
+<li>problem boundary의 빈 lane과 tail waste</li>
+<li>CTA당 자원 사용 증가로 인한 residency 감소</li>
+</ul>
+<p>위 식은 input traffic만 계산했다. D store, $\beta C$의 read, alignment와 padding, CTA 사이의 중복 load는 빠져 있다. K가 짧을 때는 output과 epilogue traffic의 비중이 커진다. M이나 N이 작다면 tile 수가 부족해 GPU 전체를 채우지 못하기도 한다.</p>
+<p>Tiling은 “memory-bound를 완전히 해결하는 기법”이 아니다. HBM에서 shared memory로 같은 값을 반복해서 가져오던 병목을 줄였을 뿐이다. 그다음에는 shared-memory access, register reuse, compute instruction과 synchronization 가운데 무엇이 비싼지가 드러난다.</p>
+<hr>
+<h2 id="toc-heading-8">4. Hierarchical Tiling과 Tensor Core Pipeline</h2>
+<p>고성능 GEMM을 구현하려면 CTA tile 하나만으로는 부족하다. Output과 K reduction을 CUDA execution hierarchy와 memory hierarchy에 맞춰 한 번 더 나눈다.</p>
+<figure class="post-media post-media--editorial">
+<img src="/blogs/posts/260802_cuda_01_gemm/assets/cutlass-gemm-hierarchy.webp" alt="Global memory에서 thread-block, warp, thread tile과 epilogue로 이어지는 CUTLASS GEMM hierarchy" loading="lazy" decoding="async">
+<figcaption><span class="post-figure-index">FIG. 04</span><span class="post-figure-caption">Block-, warp-, thread-level tile reuse와 epilogue data movement를 보여 주는 CUTLASS schematic이다. Hopper WGMMA나 Blackwell의 operand path를 그대로 나타낸 그림은 아니다. Source: <a href="https://docs.nvidia.com/cutlass/latest/media/docs/cpp/efficient_gemm.html">NVIDIA CUTLASS — Efficient GEMM in CUDA</a></span></figcaption>
+</figure>
+<pre class="post-code-block" data-code-label="CODE / TEXT"><code class="language-text">Device GEMM
+  ↓
+CTA tile: global memory → shared memory, grid scheduling
+  ↓
+Warp / warp-group tile: shared-memory tile 분할
+  ↓
+MMA instruction tile: Tensor Core 또는 CUDA Core 연산
+  ↓
+Register / architecture-specific state: operand와 accumulator 재사용
+</code></pre>
+<h3 id="toc-heading-9">Register blocking</h3>
+<p>Shared-memory tiling으로 HBM traffic을 줄이고 나면 shared-memory bandwidth가 다음 한계로 나타나기도 한다. Thread나 warp가 output scalar 하나 대신 작은 output tile을 맡는다고 해 보자. Shared memory에서 가져온 A fragment 하나를 여러 column accumulator에 쓴다. B fragment 하나도 여러 row accumulator가 나눠 쓴다.</p>
+<p>Register blocking을 적용하면 shared-memory load당 FMA 수가 늘어난다. Partial sum도 mainloop 동안 register 가까이에 둔다. 대신 accumulator가 많아지는 만큼 register pressure가 커진다. Resident warp 수는 줄어들기도 한다. Register 수를 억지로 제한하다 local-memory spill이 생기면 앞에서 줄인 traffic이 다시 늘어난다.</p>
+<h3 id="toc-heading-10">Tensor Core Pipeline</h3>
+<p>Tensor Core instruction은 작은 matrix tile에</p>
+<p>$$
+D_{\text{frag}}\leftarrow A_{\text{frag}}B_{\text{frag}}+D_{\text{frag}}
+$$</p>
+<p>를 수행한다. 하지만 이 instruction만으로 GEMM kernel이 완성되지는 않는다. Global-memory load, shared-memory layout, synchronization, tail handling, epilogue와 output store가 모두 필요하다. Tensor Core의 peak throughput이 높을수록 operand를 제때 공급할 tiling과 pipeline도 중요해진다.</p>
+<p>Operand path는 architecture마다 다르다.</p>
+<ul>
+<li>Volta부터 Ampere까지 널리 사용된 warp-level MMA에서는 shared-memory operand를 thread별 register fragment로 옮기고 accumulator도 register에 둔다.</li>
+<li><strong>Hopper WGMMA</strong>는 B를 shared-memory descriptor로 참조한다. 구성에 따라 A는 shared memory 또는 register에서 공급하고 accumulator는 register에 둔다. <a href="https://docs.nvidia.com/cuda/parallel-thread-execution/#asynchronous-warpgroup-level-matrix-multiply-accumulate-instructions-wgmma">PTX ISA — WGMMA</a></li>
+<li>**Blackwell SM100 <code>tcgen05.mma</code>**는 accumulator를 Tensor Memory(TMEM)에 저장한다. A는 shared memory 또는 TMEM, B는 shared memory에서 공급할 수 있다. <a href="https://docs.nvidia.com/cutlass/latest/media/docs/pythonDSL/mma_docs/tcgen05_programming.html">NVIDIA CUTLASS — tcgen05 MMA Programming Guide</a></li>
+</ul>
+<p>그래서 모든 세대를 “thread register fragment” 하나로 묶어 설명하기는 어렵다.</p>
+<h3 id="toc-heading-11">Load–Compute Overlap</h3>
+<figure class="post-media post-media--editorial">
+<img src="/blogs/posts/260802_cuda_01_gemm/assets/cutlass-software-pipeline.webp" alt="CUTLASS double-buffered software pipeline" loading="lazy" decoding="async">
+<figcaption><span class="post-figure-index">FIG. 05</span><span class="post-figure-caption">Global-to-shared load, shared-to-register load, math의 overlap을 보여 주는 legacy CUTLASS double-buffering schematic이다. Hopper WGMMA/TMA나 Blackwell pipeline을 정확히 묘사한 그림은 아니다. Source: <a href="https://docs.nvidia.com/cutlass/latest/media/docs/cpp/efficient_gemm.html#pipelining">NVIDIA CUTLASS — Efficient GEMM in CUDA, Software Pipelining</a></span></figcaption>
+</figure>
+<p>Tiling이 transfer byte를 줄이는 방법이라면, software pipelining은 아직 남은 transfer latency를 compute 뒤에 숨기는 방법이다.</p>
+<pre class="post-code-block" data-code-label="CODE / TEXT"><code class="language-text">load tile 0
+wait tile 0
+
+compute tile 0  ||  load tile 1
+compute tile 1  ||  load tile 2
+compute tile 2  ||  load tile 3
+</code></pre>
+<p>Double buffering과 multi-stage pipeline은 다음 tile을 미리 가져온다. 그만큼 shared-memory 사용량과 pipeline state는 늘어난다. Pipeline이 지나치게 깊으면 occupancy가 낮아진다. Short-K에서는 setup cost만 늘어난다. Ampere의 asynchronous copy, Hopper 이후의 TMA, 세대별 MMA와 barrier는 구현 방식은 달라도 load와 compute를 겹치는 데 쓰인다.</p>
+<h3 id="toc-heading-12">Epilogue</h3>
+<p>Mainloop가 끝나면 accumulator를 output layout에 맞춰 global memory에 저장한다. 지원하는 조합이라면 epilogue에서 alpha, beta, bias, activation, clamp와 dtype conversion을 같은 단계에 처리한다.</p>
+<p>지원되는 epilogue를 쓰면 GEMM result를 저장한 뒤 별도 kernel이 다시 읽어야 하는 intermediate round trip이 사라진다. Irregular indexing이나 무거운 transform까지 억지로 넣어 mainloop throughput이 떨어진다면 이야기가 다르다. 이때는 tuned GEMM 뒤에 작은 kernel을 따로 실행하는 쪽이 더 빠르기도 하다.</p>
+<hr>
+<h2 id="toc-heading-13">5. Tiling 이후의 병목</h2>
+<p>모든 GEMM shape에 잘 맞는 tile과 pipeline은 없다. Large square GEMM에는 output tile이 충분하고 steady-state mainloop도 길다. Small-M, short-K, tail-heavy problem은 전혀 다른 비용에 막힌다.</p>
+<table>
+<thead>
+<tr>
+<th>관찰된 problem</th>
+<th>실제 병목</th>
+<th>검토할 기법</th>
+<th>추가 비용</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>큰 M/N/K와 규칙적인 shape</td>
+<td>compute throughput, operand feed</td>
+<td>큰 CTA·warp tile, 깊은 pipeline, Tensor Core</td>
+<td>register/shared-memory pressure</td>
+</tr>
+<tr>
+<td>M/N이 작고 K가 김</td>
+<td>output tile과 execution wave 부족</td>
+<td>Split-K, Stream-K 계열</td>
+<td>partial reduction, workspace/atomic, 달라진 덧셈 순서</td>
+</tr>
+<tr>
+<td>Tile 경계에 remainder가 큼</td>
+<td>inactive lane과 tail waste</td>
+<td>더 작은 tile, predication, residue 전용 kernel</td>
+<td>kernel 후보와 dispatch 증가</td>
+</tr>
+<tr>
+<td>같은 shape의 small GEMM 다수</td>
+<td>launch와 scheduling 비중</td>
+<td>strided batched GEMM</td>
+<td>batch 내부 shape·layout 제약</td>
+</tr>
+<tr>
+<td>서로 다른 small GEMM 다수</td>
+<td>problem별 tail과 load imbalance</td>
+<td><a href="https://docs.nvidia.com/cutlass/latest/media/docs/cpp/grouped_scheduler.html">grouped persistent GEMM</a></td>
+<td>metadata 탐색과 ordering</td>
+</tr>
+<tr>
+<td>$M\approx1$인 batch-1 linear</td>
+<td>부족한 parallelism과 weight traffic</td>
+<td>GEMV/small-M kernel, batching, weight prepacking</td>
+<td>전용 layout, batching latency</td>
+</tr>
+<tr>
+<td>Quantized input 또는 post-op</td>
+<td>decode·intermediate traffic</td>
+<td>mainloop prologue, fused epilogue</td>
+<td>register pressure, 지원 조합 제한</td>
+</tr>
+</tbody></table>
+<p>Split-K는 한 output tile의 K range를 여러 worker가 나눈다.</p>
+<p>$$
+P^{(s)}_{ij}=\sum_{k\in K_s}A_{ik}B_{kj},\qquad
+P_{ij}=\sum_sP^{(s)}_{ij}
+$$</p>
+<p>K 방향의 병렬성은 늘어난다. 대신 partial sum을 저장하고 다시 합쳐야 한다. 기존 M/N tile만으로 GPU를 충분히 채우는 상황이라면 reduction 비용 때문에 오히려 느려진다. Stream-K 계열 역시 work를 더 고르게 나누는 대가로 scheduler와 fix-up 비용을 치른다.</p>
+<p>Small-M GEMM에서는 M 방향 tile 수가 줄어든다. 같은 weight B를 여러 output row에 재사용할 기회도 적어진다. 이때는 큰 GEMM용 tile의 nominal TFLOPS만 봐서는 안 된다. 먼저 볼 값은 absolute latency, weight byte, active CTA 수다. 여러 request를 batching하면 B reuse와 parallelism이 늘지만 그만큼 대기 latency가 생긴다.</p>
+<p>Tile tail에서는 경계에 남는 크기를 살펴야 한다. $M=130$인데 CTA tile의 M 크기가 64라면 세 번째 tile에서 실제로 쓰는 row는 2개뿐이다. 이런 경우에는 큰 tile의 peak throughput보다 boundary waste가 성능을 더 크게 좌우한다.</p>
+<p>Precision을 기록할 때는 input, compute/accumulator, output dtype을 나눠야 한다. BF16 input, FP32 accumulator, BF16 output이 한 조합이다. FP8과 block-scaled format이라면 scale dtype과 granularity도 적어야 한다. Split-K, scheduler와 epilogue가 reduction order나 rounding boundary를 바꾸면 같은 GEMM 식에서도 bitwise result가 달라질 수 있다.</p>
+<hr>
+<h2 id="toc-heading-14">6. 추상화 계층</h2>
+<p>지금까지는 kernel이 최적화되는 과정을 아래에서 위로 따라왔다. 실제 제품을 구현할 때는 반대로 접근한다. 요구사항을 표현할 수 있는 가장 높은 계층에서 시작하면 된다.</p>
+<pre class="post-code-block" data-code-label="CODE / TEXT"><code class="language-text">Mathematical operation
+  GEMM semantics and shapes
+        ↓
+Library / API
+  cuBLAS → cuBLASLt
+        ↓
+Kernel construction
+  CUTLASS device operators → CuTe components
+        ↓
+Custom implementation
+  CUDA C++ / architecture-specific instructions
+        ↓
+Hardware
+  scheduler, SM, Tensor Core, register, shared memory, HBM
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>필요한 것</th>
+<th>첫 후보</th>
+<th>한 단계 아래로 내려갈 조건</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>표준 dense GEMM</td>
+<td>cuBLAS</td>
+<td>layout, epilogue, workspace, algorithm 후보를 더 제어해야 함</td>
+</tr>
+<tr>
+<td>유연한 layout·compute type·epilogue</td>
+<td>cuBLASLt</td>
+<td>API가 필요한 조합이나 dataflow를 표현하지 못함</td>
+</tr>
+<tr>
+<td>Custom mainloop·quantized decode·scheduler</td>
+<td>CUTLASS device operator / CuTe component</td>
+<td>제공된 구성 요소로도 요구사항을 표현하거나 유지하기 어려움</td>
+</tr>
+<tr>
+<td>완전히 특수한 dataflow</td>
+<td>Custom CUDA kernel</td>
+<td>측정된 이득이 구현·검증·이식 비용보다 큼</td>
+</tr>
+</tbody></table>
+<p>cuBLASLt는 cuBLAS의 상위 버전이 아니다. Layout, algorithm, heuristic과 epilogue를 더 유연하게 기술하는 별도 API다. CUTLASS나 CuTe로 작성했다고 해서 library보다 빠른 것도 아니다.</p>
+<p>원리를 이해할 때는 naive kernel에서 시작해 위로 올라간다. 제품 구현은 cuBLAS에서 시작해 필요한 만큼만 아래로 내려가면 된다.</p>
+<h3 id="toc-heading-15">Shape Manifest</h3>
+<p>추상화 계층을 고르기 전에 production path의 shape를 수집한다.</p>
+<pre class="post-code-block" data-code-label="CODE / TEXT"><code class="language-text">name, M, N, K, batch/group, transA, transB,
+A/B/C/D layout and dtype, compute type,
+alpha, beta, epilogue, alignment,
+workspace limit, frequency or probability
+</code></pre>
+<p>평균 shape 하나만 보면 tail, small-M, short-K와 heterogeneous group을 놓치기 쉽다. 표준 연산에서는 cuBLAS를 baseline으로 잡고 같은 조건의 cuBLASLt heuristic 후보와 비교한다. API로 요구사항을 표현할 수 없거나 중요한 shape에서 같은 병목이 반복될 때 CUTLASS 또는 custom kernel을 후보에 넣는다.</p>
+<p>측정할 때는 다음을 함께 남긴다.</p>
+<ul>
+<li>Small GEMM은 TFLOPS보다 median·tail absolute latency를 우선한다.</li>
+<li>Large GEMM은 latency와 achieved FLOP/s를 함께 보고 Nsight Compute에서 SM/Tensor Core utilization, DRAM·L2 traffic을 확인한다.</li>
+<li>Custom tile은 register 수, spill, shared-memory 사용량, occupancy와 tail utilization을 기록한다.</li>
+<li>Fused epilogue나 quantized decode는 pure GEMM이 아니라 호출 전후의 end-to-end interval을 잰다.</li>
+<li>Allocation과 copy는 측정 구간 밖으로 옮긴다. Production이 cache-hot이 아니라면 여러 buffer를 rotation한다. <a href="https://docs.nvidia.com/cutlass/latest/media/docs/cpp/gemm_performance_measurement_methodology_guidelines.html">NVIDIA CUTLASS — GEMM Performance Measurement Methodology</a></li>
+</ul>
+<p>Input, compute, output dtype에 맞는 reference와 tolerance도 정해 둔다. Byte-exact reproducibility가 필요하다면 toolkit, GPU architecture, algorithm과 workspace configuration을 함께 고정해야 한다. 그 정도의 재현성이 필요하지 않다면 application에 의미 있는 error bound를 사용한다. <a href="https://docs.nvidia.com/cuda/cublas/#results-reproducibility">NVIDIA cuBLAS — Results Reproducibility</a></p>
+<hr>
+<h2 id="toc-heading-16">GEMM 최적화 기준</h2>
+<p>Naive GEMM이 느린 이유를 thread 수에서 찾으면 안 된다. 각 output을 계산할 때 같은 operand를 계속 옮기는 것이 문제다. Shared-memory tiling은 A와 B를 CTA 안에서 재사용해 global-memory byte를 줄인다. Register blocking은 같은 방식을 warp와 thread 수준에 적용한다. 이렇게 dataflow를 정리한 다음에야 Tensor Core와 software pipeline으로 compute throughput을 높이고 latency를 숨긴다.</p>
+<p>여기까지 오면 shape가 답을 바꾼다. Small-M, short-K, tail, batching, quantization과 epilogue마다 병목이 다르고 잘 맞는 scheduler도 달라진다. cuBLAS, cuBLASLt, CUTLASS, CuTe, custom CUDA는 이런 선택을 서로 다른 높이에서 다루는 도구다. 무조건 가장 낮은 계층으로 내려갈 필요는 없다. 실제 병목을 해결하는 데 필요한 만큼만 드러내는 계층을 고르면 된다.</p>
+<hr>
+<h2 id="toc-heading-17">References</h2>
+<ol>
+<li>NVIDIA, <em>cuBLAS 13.3 Documentation</em>: <a href="https://docs.nvidia.com/cuda/cublas/">https://docs.nvidia.com/cuda/cublas/</a></li>
+<li>NVIDIA, <em>cuBLASLt API</em>: <a href="https://docs.nvidia.com/cuda/cublas/#using-the-cublaslt-api">https://docs.nvidia.com/cuda/cublas/#using-the-cublaslt-api</a></li>
+<li>NVIDIA, <em>CUDA C++ Best Practices Guide — Shared Memory in Matrix Multiplication</em>: <a href="https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/#shared-memory-in-matrix-multiplication-c-ab">https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/#shared-memory-in-matrix-multiplication-c-ab</a></li>
+<li>NVIDIA, <em>CUTLASS 4.6.1 Documentation</em>: <a href="https://docs.nvidia.com/cutlass/latest/overview.html">https://docs.nvidia.com/cutlass/latest/overview.html</a></li>
+<li>NVIDIA, <em>Efficient GEMM in CUDA</em>: <a href="https://docs.nvidia.com/cutlass/latest/media/docs/cpp/efficient_gemm.html">https://docs.nvidia.com/cutlass/latest/media/docs/cpp/efficient_gemm.html</a></li>
+<li>NVIDIA, <em>CUTLASS GEMM API</em>: <a href="https://docs.nvidia.com/cutlass/latest/media/docs/cpp/gemm_api.html">https://docs.nvidia.com/cutlass/latest/media/docs/cpp/gemm_api.html</a></li>
+<li>NVIDIA, <em>GEMM Performance Measurement Methodology Guidelines</em>: <a href="https://docs.nvidia.com/cutlass/latest/media/docs/cpp/gemm_performance_measurement_methodology_guidelines.html">https://docs.nvidia.com/cutlass/latest/media/docs/cpp/gemm_performance_measurement_methodology_guidelines.html</a></li>
+<li>NVIDIA, <em>PTX ISA — WGMMA</em>: <a href="https://docs.nvidia.com/cuda/parallel-thread-execution/#asynchronous-warpgroup-level-matrix-multiply-accumulate-instructions-wgmma">https://docs.nvidia.com/cuda/parallel-thread-execution/#asynchronous-warpgroup-level-matrix-multiply-accumulate-instructions-wgmma</a></li>
+<li>NVIDIA, <em>tcgen05 MMA Programming Guide</em>: <a href="https://docs.nvidia.com/cutlass/latest/media/docs/pythonDSL/mma_docs/tcgen05_programming.html">https://docs.nvidia.com/cutlass/latest/media/docs/pythonDSL/mma_docs/tcgen05_programming.html</a></li>
+<li>NVIDIA, <em>Grouped Kernel Schedulers</em>: <a href="https://docs.nvidia.com/cutlass/latest/media/docs/cpp/grouped_scheduler.html">https://docs.nvidia.com/cutlass/latest/media/docs/cpp/grouped_scheduler.html</a></li>
+</ol>
+
+                    </div>
+                    <div class="post-reading-column post-end-matter">
+                        <section class="post-author-note" aria-labelledby="post-author-name">
+                            <img class="post-author-portrait" src="/assets/profile4-author.png" alt="Hwan Heo" loading="lazy">
+                            <div class="post-author-copy">
+                                <span class="post-author-kicker">Written by</span>
+                                <h2 id="post-author-name">Hwan Heo</h2>
+                                <p>대규모 3D 생성 모델부터 CUDA 추론 최적화와 그래픽스 파이프라인까지, 실제 제품으로 이어지는 3D AI 시스템을 만듭니다.</p>
+                                <div class="post-author-links" aria-label="Author links">
+                                    <a href="mailto:hwan.heo.ai@gmail.com">Email</a>
+                                    <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                                </div>
+                            </div>
+                        </section>
+                        
+                    <section class="related-posts" aria-labelledby="related-posts-heading">
+                        <h2 id="related-posts-heading">Related Posts</h2>
+                        <div class="related-post-grid">
+                            
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/optimizing-sparse-3d-generation-inference-kor/" aria-label="Read 컴파일러가 놓치는 Sparse 3D Generation Inference 최적화">
+                                    <strong>컴파일러가 놓치는 Sparse 3D Generation Inference 최적화</strong>
+                                    <time datetime="2026-07-27">2026년 7월</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/sdf-and-eikonal-equation-kor/" aria-label="Read SDF 와 Eikonal Equation 의 관계는?">
+                                    <strong>SDF 와 Eikonal Equation 의 관계는?</strong>
+                                    <time datetime="2025-08-23">2025년 8월</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/generalized-winding-number-kor/" aria-label="Read Generalized Winding Number">
+                                    <strong>Generalized Winding Number</strong>
+                                    <time datetime="2025-08-09">2025년 8월</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/3d-model-viewer-in-web-kor/" aria-label="Read 커스텀 3D 웹뷰어 만들기">
+                                    <strong>커스텀 3D 웹뷰어 만들기</strong>
+                                    <time datetime="2025-03-10">2025년 3월</time>
+                                </a>
+                            </article>
+        
+                        </div>
+                    </section>
+    
+                        <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
+                <a class="post-nav-card is-older" href="/blogs/posts/optimizing-sparse-3d-generation-inference-kor/" aria-label="Previous Post: 컴파일러가 놓치는 Sparse 3D Generation Inference 최적화">
+                    <span class="post-nav-kicker">
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
+                    </span>
+                    <strong>컴파일러가 놓치는 Sparse 3D Generation Inference 최적화</strong>
+                </a>
+    <span class="post-nav-spacer" aria-hidden="true"></span></nav></div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <button id="scroll-top" class="scroll-top button_top post-scroll-top" type="button" aria-label="Back to top">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up"></use></svg>
+        </button>
+
+        <footer class="blog-post-footer">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column">
+                        <div class="blog-footer-note">Copyright © Hwan Heo</div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        window.siteData = {
+  "posts": [
+    {
+      "id": "260802_cuda_01_gemm",
+      "title_eng": "GEMM on NVIDIA GPUs: From Naive Kernels to Tiled Pipelines",
+      "title_kor": "NVIDIA GPU의 GEMM: Naive Kernel에서 Tiled Pipeline까지",
+      "subtitle_eng": "Why naive GEMM becomes memory-bound, how tiled reuse changes arithmetic intensity, and where Tensor Cores, schedulers, and libraries fit",
+      "subtitle_kor": "Naive GEMM의 memory bottleneck부터 tiled reuse, Tensor Core pipeline, shape별 scheduling과 library 추상화까지",
+      "tags": [
+        "CUDA"
+      ],
+      "cover": "/blogs/posts/260802_cuda_01_gemm/assets/cover.webp",
+      "status": "published",
+      "updated": "2026-08-12",
+      "date": "2026-08-12",
+      "category": "note",
+      "series": "cuda",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "gemm-on-nvidia-gpus"
+    },
+    {
+      "id": "260727_sparse_3d",
+      "title_eng": "What the Compiler Missed in Sparse 3D Inference",
+      "title_kor": "컴파일러가 놓치는 Sparse 3D Generation Inference 최적화",
+      "subtitle_eng": "Why generic compiler paths underperform on dynamic sparse 3D generative models—and how null-context attention removal and model-aware CUDA kernels cut inference latency.",
+      "subtitle_kor": "torch.compile과 TensorRT가 실패하는 Sparse 3D Generation model에서 Null-Context Attention 제거와 custom CUDA Fusion으로 forward latency 줄이는 방법",
+      "tags": [
+        "3D Generation",
+        "Generative AI",
+        "CUDA"
+      ],
+      "cover": "/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png",
+      "status": "published",
+      "updated": "2026-07-27",
+      "date": "2026-07-27",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "optimizing-sparse-3d-generation-inference"
+    },
+    {
+      "id": "260115_Varco3D",
+      "title_eng": "VARCO 3D: A Year in Review — 2025 Retrospective",
+      "title_kor": "3D 생성형 AI 서비스; Varco3D 개발기",
+      "subtitle_eng": "How a fast-follower team tracked the evolution of 3D AI to build an in-house generative 3D service—from VecSet VAEs to Voxel-conditioned 3D DiTs.",
+      "subtitle_kor": "3D VecSet VAEs 에서부터 Hunyuan3D 3.0의 Voxel-conditioned 3D DiTs까지 추적하며 자체 3D 생성형 AI 서비스를 구축해 간 과정",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif",
+      "status": "published",
+      "updated": "2026-01-15",
+      "date": "2026-01-15",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "varco3d-a-year-in-review-2025-retrospective"
+    },
+    {
+      "id": "250823_sdf",
+      "title_eng": "SDF and Eikonal Equation",
+      "title_kor": "SDF 와 Eikonal Equation 의 관계는?",
+      "subtitle_eng": "A rigorous derivation of why a signed distance field satisfies the Eikonal equation, from its geometric definition to gradient bounds",
+      "subtitle_kor": "Signed distance field의 기하학적 정의에서 출발해, gradient의 크기가 왜 Eikonal equation을 만족하는지 엄밀하게 유도해보기",
+      "tags": [
+        "Graphics"
+      ],
+      "cover": "/blogs/posts/250823_sdf/assets/remote-12d4629724c7.png",
+      "status": "published",
+      "updated": "2025-08-23",
+      "date": "2025-08-23",
+      "category": "note",
+      "series": "graphics",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "sdf-and-eikonal-equation"
+    },
+    {
+      "id": "250810_flow",
+      "title_eng": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
+      "title_kor": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
+      "subtitle_eng": "Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow",
+      "subtitle_kor": "Rectified Flow의 생성 경로가 왜 직선으로 수렴하는지, 물리학과 기하학, optimal transport의 관점에서 살펴보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250810_flow/assets/remote-40629d4b233a.png",
+      "status": "published",
+      "updated": "2025-08-10",
+      "date": "2025-08-10",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models"
+    },
+    {
+      "id": "250809_gwn",
+      "title_eng": "Generalized Winding Number",
+      "title_kor": "Generalized Winding Number",
+      "subtitle_eng": "How Generalized Winding Numbers turn imperfect meshes into robust inside–outside tests for signed distance field construction",
+      "subtitle_kor": "불완전하거나 열린 mesh에서도 Generalized Winding Number로 inside/outside를 판별하고 견고한 SDF를 계산하는 방법을 살펴보기",
+      "tags": [
+        "Graphics"
+      ],
+      "cover": "/blogs/posts/250809_gwn/assets/image.png",
+      "status": "published",
+      "updated": "2025-08-09",
+      "date": "2025-08-09",
+      "category": "note",
+      "series": "graphics",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "generalized-winding-number"
+    },
+    {
+      "id": "250710_building_large_3d_2",
+      "title_eng": "Building Large 3D Generative Model (2) VAE and DiT Deep Dive",
+      "title_kor": "Large 3D Generative Model 구축하기 (2) VAE and DiT 분석",
+      "subtitle_eng": "Comparing vecset and sparse-voxel VAE–DiT architectures, from 3D representation and compression to shape-generation design",
+      "subtitle_kor": "Vecset과 sparse voxel이 3D shape을 표현하는 방식부터 VAE와 DiT 구조, 생성 모델 설계의 차이까지 비교해보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250710_building_large_3d_2/assets/image-13.png",
+      "status": "published",
+      "updated": "2025-07-10",
+      "date": "2025-07-10",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "building-large-3d-generative-model-2-vae-and-dit-deep-dive"
+    },
+    {
+      "id": "250702_building_large_3d_1",
+      "title_eng": "Building Large 3D Generative Model (1) Data pre-processing",
+      "title_kor": "Large 3D Generative Model 구축하기 (1) 데이터 전처리",
+      "subtitle_eng": "Preparing training-ready 3D data through watertight mesh conversion, surface sampling, and salient-edge-aware preprocessing",
+      "subtitle_kor": "대규모 3D 생성 모델의 학습 데이터를 위해 watertight mesh 변환, surface sampling, salient edge 추출 과정을 정리해보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250702_building_large_3d_1/assets/image-10.png",
+      "status": "published",
+      "updated": "2025-07-02",
+      "date": "2025-07-02",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "building-large-3d-generative-model-1-data-pre-processing"
+    },
+    {
+      "id": "250310_model_viewer",
+      "title_eng": "3D Model Viewer in Web",
+      "title_kor": "커스텀 3D 웹뷰어 만들기",
+      "subtitle_eng": "Comparing Google model-viewer with a custom Three.js pipeline for embedding, controlling, and presenting 3D assets on the web",
+      "subtitle_kor": "Google model-viewer와 직접 만든 Three.js viewer를 비교하며, 웹에서 3D asset을 안정적으로 보여주는 방법을 정리해보기",
+      "tags": [
+        "Web 3D",
+        "Three.js"
+      ],
+      "cover": "/blogs/posts/250310_model_viewer/assets/image.png",
+      "status": "published",
+      "updated": "2025-03-10",
+      "date": "2025-03-10",
+      "category": "note",
+      "series": "web-3d",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "3d-model-viewer-in-web"
+    },
+    {
+      "id": "250302_3d_latent_diffusion",
+      "title_eng": "An Era of 3D Generation",
+      "title_kor": "3D 생성 모델의 시대",
+      "subtitle_eng": "Tracing 3D latent diffusion from ShapeVAE to TRELLIS and Hunyuan3D, and comparing how modern systems represent and generate shape",
+      "subtitle_kor": "ShapeVAE에서 TRELLIS와 Hunyuan3D까지, 3D latent diffusion이 shape을 표현하고 생성하는 방식 톺아보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser-poster.jpg",
+      "status": "published",
+      "updated": "2025-03-02",
+      "date": "2025-03-02",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "an-era-of-3d-generation"
+    },
+    {
+      "id": "250106_tomography",
+      "title_eng": "Neural Rendering Beyond Photography",
+      "title_kor": "X-Ray 와 NeRF",
+      "subtitle_eng": "Applying NeRF and Gaussian Splatting beyond photography to X-ray tomography, plus a lightweight viewer workflow built with Viser.",
+      "subtitle_kor": "NeRF와 Gaussian Splatting을 X-ray tomography에 적용하는 원리를 살펴보고, Viser 기반 viewer 제작 팁까지 살펴보기",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/250106_tomography/assets/image1.png",
+      "status": "published",
+      "updated": "2025-01-06",
+      "date": "2025-01-06",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "neural-rendering-beyond-photography"
+    },
+    {
+      "id": "240917_3djs",
+      "title_eng": "Add Gaussian Splatting to Your Website",
+      "title_kor": "웹사이트에 3D GS 삽입하기",
+      "subtitle_eng": "A practical Three.js guide to embedding an interactive Gaussian Splatting scene in a website, with no web-graphics background required",
+      "subtitle_kor": "Three.js를 이용해 웹사이트에 interactive Gaussian Splatting scene을 삽입하고 제어해보기",
+      "tags": [
+        "Web 3D",
+        "Three.js"
+      ],
+      "cover": "/assets/guitar.jpeg",
+      "status": "published",
+      "updated": "2024-09-17",
+      "date": "2024-09-17",
+      "category": "note",
+      "series": "web-3d",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "add-gaussian-splatting-to-your-website"
+    },
+    {
+      "id": "240823_grt",
+      "title_eng": "Don't Rasterize, But Ray Trace 3D Gaussian",
+      "title_kor": "3D Gaussian Ray Tracing 톺아보기",
+      "subtitle_eng": "How NVIDIA’s 3D Gaussian Ray Tracing replaces splat rasterization with differentiable ray tracing—and what that changes.",
+      "subtitle_kor": "NVIDIA의 3D Gaussian Ray Tracing이 splat rasterization을 differentiable ray tracing으로 바꾸는 방식과 장점에 대한 심층 분석",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240823_grt/assets/teaser.gif",
+      "status": "published",
+      "updated": "2024-08-23",
+      "date": "2024-08-23",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "dont-rasterize-but-ray-trace-3d-gaussian"
+    },
+    {
+      "id": "240805_gs",
+      "title_eng": "A Comprehensive Analysis of Gaussian Splatting Rasterization",
+      "title_kor": "Gaussian Splatting Rasterization 완벽 분석",
+      "subtitle_eng": "A ground-up guide to Gaussian Splatting and differentiable rasterization, tracing the mathematics through its CUDA implementation—from projection and covariance to sorting and alpha blending.",
+      "subtitle_kor": "수식과 CUDA rasterizer 코드를 직접 대응시키며 따라가보는 Gaussian Splatting 완전 해설",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240805_gs/assets/garden.gif",
+      "status": "published",
+      "updated": "2024-08-05",
+      "date": "2024-08-05",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "a-comprehensive-analysis-of-gaussian-splatting-rasterization"
+    },
+    {
+      "id": "240721_sfm",
+      "title_eng": "Radiance Fields from Deep-based Structure-from-Motion",
+      "subtitle_eng": "Comparing VGGSfM and MASt3R as learned Structure-from-Motion pipelines for camera estimation and radiance-field reconstruction.",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240721_sfm/assets/sfm.jpg",
+      "status": "published",
+      "updated": "2024-07-21",
+      "date": "2024-07-21",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng"
+      ],
+      "slug": "radiance-fields-from-deep-based-structure-from-motion"
+    },
+    {
+      "id": "240602_2dgs",
+      "title_eng": "Under the 3D: Geometrically Accurate 2D Gaussian Splatting",
+      "title_kor": "2D Gaussian Splatting 톺아보기",
+      "subtitle_eng": "How 2D Gaussian Splatting replaces volumetric blobs with oriented disks to improve surface geometry and mesh reconstruction",
+      "subtitle_kor": "2D Gaussian Splatting이 volumetric blob 대신 oriented disk를 사용해 surface geometry와 mesh reconstruction을 개선하는 원리를 살펴보기",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240602_2dgs/assets/teaser.gif",
+      "status": "published",
+      "updated": "2024-06-02",
+      "date": "2024-06-02",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "under-the-3d-geometrically-accurate-2d-gaussian-splatting"
+    },
+    {
+      "id": "240426_diffusion_depth",
+      "title_eng": "Is Diffusion's Estimated Depth Really Good?",
+      "title_kor": "Diffusion 으로 추정한 Depth 진짜 좋나요?",
+      "subtitle_eng": "Evaluating diffusion-estimated depth by turning Marigold predictions into textured meshes and inspecting their geometric consistency.",
+      "subtitle_kor": "Diffusion 으로 추정한 Depth Map 을 이용해 Textured Mesh 만들어보기 (feat. Marigold)",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/240426_diffusion_depth/assets/teaser.jpeg",
+      "status": "published",
+      "updated": "2024-04-26",
+      "date": "2024-04-26",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "is-diffusions-estimated-depth-really-good"
+    },
+    {
+      "id": "240226_sora",
+      "title_eng": "Can Sora Understand 3D?",
+      "title_kor": "Sora 가 상상하는 3D World",
+      "subtitle_eng": "Testing whether video generation models encode enough 3D consistency to reconstruct radiance fields from their synthesized views",
+      "subtitle_kor": "Video Generative AI 로부터 NeRF reconstruction 해보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/240226_sora/assets/big-sur-gs-poster.jpg",
+      "status": "published",
+      "updated": "2024-02-26",
+      "date": "2024-02-26",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng"
+      ],
+      "slug": "can-sora-understand-3d"
+    },
+    {
+      "id": "231130_nerf_in_game",
+      "title_eng": "Can NeRF be used in Game?",
+      "title_kor": "NeRF 를 게임 제작에서 이용할 수 있을까?",
+      "subtitle_eng": "Examining the quality, rendering, and production constraints that limit NeRF in games—and the workarounds available today",
+      "subtitle_kor": "NeRF의 단점을 통해 살펴보는 Neural Rendering 기술이 게임에 적용되기 위해 넘어야 할 과제들",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/231130_nerf_in_game/assets/VID_4_NeRF_obeject_in_blender-poster.jpg",
+      "status": "published",
+      "updated": "2023-11-30",
+      "date": "2023-11-30",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng"
+      ],
+      "slug": "can-nerf-be-used-in-game"
+    },
+    {
+      "id": "230202_ngp",
+      "title_eng": "Instant-NGP Review & Re-Implementation",
+      "title_kor": "Instant-NGP 리뷰 및 재구현",
+      "subtitle_eng": "Reviewing Instant-NGP’s multi-resolution hash encoding and rebuilding its NeRF pipeline step by step in PyTorch",
+      "subtitle_kor": "PyTorch Re-Implementation을 통해 수식과 코드 단위로 상세 리뷰해보는 Instant-NGP",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/230202_ngp/assets/ngp_nerf.gif",
+      "status": "published",
+      "updated": "2023-02-02",
+      "date": "2023-02-02",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng"
+      ],
+      "slug": "instant-ngp-review-re-implementation"
+    },
+    {
+      "id": "211128_fourier",
+      "title_eng": "Why Positional Encoding Makes NeRF more Powerful",
+      "title_kor": "Position Encoding 이 NeRF 에서 필수적인 이유",
+      "subtitle_eng": "Review of Fourier Features Let Networks Learn High-Frequency Functions",
+      "subtitle_kor": "Fourier Features Let Networks Learn High-Frequency Functions 리뷰",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/211128_fourier/assets/main.png",
+      "status": "published",
+      "updated": "2021-11-28",
+      "date": "2021-11-28",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng"
+      ],
+      "slug": "why-positional-encoding-makes-nerf-more-powerful"
+    },
+    {
+      "id": "210910_lin_alg_2",
+      "title_eng": "Change of Basis",
+      "title_kor": "Change of Basis",
+      "subtitle_eng": "Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)",
+      "subtitle_kor": "대각화와 고윳값, SVD와 PCA를 통해 좌표계 변환이 복잡한 선형대수 문제를 어떻게 단순화하는지 살펴보기",
+      "tags": [
+        "Linear Algebra"
+      ],
+      "cover": "/blogs/posts/210910_lin_alg_2/assets/image-1.png",
+      "status": "published",
+      "updated": "2021-09-10",
+      "date": "2021-09-10",
+      "category": "note",
+      "series": "linear-algebra",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "change-of-basis"
+    },
+    {
+      "id": "210909_lin_alg_1",
+      "title_eng": "Linear System",
+      "title_kor": "Linear System",
+      "subtitle_eng": "Building intuition for linear systems and transformations through matrices, basis vectors, and geometric mappings",
+      "subtitle_kor": "행렬과 기저벡터의 관점에서 선형시스템과 선형변환이 공간을 어떻게 바꾸는지 직관적으로 살펴보기",
+      "tags": [
+        "Linear Algebra"
+      ],
+      "cover": "/blogs/posts/210909_lin_alg_1/assets/image.png",
+      "status": "published",
+      "updated": "2021-09-09",
+      "date": "2021-09-09",
+      "category": "note",
+      "series": "linear-algebra",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "linear-system"
+    },
+    {
+      "id": "210602_cv4",
+      "title_eng": "3D Stereo Vision and Epipolar Geometry",
+      "title_kor": "3D Stereo Vision and Epipolar Geometry",
+      "subtitle_eng": "From camera projection to stereo correspondence, deriving the epipolar geometry used to recover 3D structure from two views.",
+      "subtitle_kor": "Camera Projection, Stereo, and Epipolar Geometry",
+      "tags": [
+        "Computer Vision"
+      ],
+      "cover": "/blogs/posts/210602_cv4/assets/svg6.svg",
+      "status": "published",
+      "updated": "2021-06-02",
+      "date": "2021-06-02",
+      "category": "note",
+      "series": "computer-vision",
+      "languages": [
+        "eng"
+      ],
+      "slug": "3d-stereo-vision-and-epipolar-geometry"
+    },
+    {
+      "id": "210502_cv3",
+      "title_eng": "Homography and Image Alignment",
+      "title_kor": "Homography and Image Alignment",
+      "subtitle_eng": "How image transformations, homographies, feature correspondences, and alignment connect in practical computer vision pipelines.",
+      "subtitle_kor": "Image Transformation, Homography, and Correspondence Matching",
+      "tags": [
+        "Computer Vision"
+      ],
+      "cover": "/blogs/posts/210502_cv3/assets/svg4.svg",
+      "status": "published",
+      "updated": "2021-05-02",
+      "date": "2021-05-02",
+      "category": "note",
+      "series": "computer-vision",
+      "languages": [
+        "eng"
+      ],
+      "slug": "homography-and-image-alignment"
+    },
+    {
+      "id": "210402_cv2",
+      "title_eng": "Feature Extraction and Detection",
+      "title_kor": "Feature Extraction and Detection",
+      "subtitle_eng": "A practical tour of image gradients, Sobel and LoG filters, and the feature detection principles built on top of them.",
+      "subtitle_kor": "Image Gradient, Sobel Filter, LoG, and Detection",
+      "tags": [
+        "Computer Vision"
+      ],
+      "cover": "/blogs/posts/210402_cv2/assets/svg1.svg",
+      "status": "published",
+      "updated": "2021-04-02",
+      "date": "2021-04-02",
+      "category": "note",
+      "series": "computer-vision",
+      "languages": [
+        "eng"
+      ],
+      "slug": "feature-extraction-and-detection"
+    },
+    {
+      "id": "210302_cv1",
+      "title_eng": "Image Filter and Morphology",
+      "title_kor": "Image Filter and Morphology",
+      "subtitle_eng": "A practical introduction to spatial image filters and morphology, including erosion, dilation, opening, and closing.",
+      "subtitle_kor": "다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여",
+      "tags": [
+        "Computer Vision"
+      ],
+      "cover": "/blogs/posts/210302_cv1/assets/image-1.jpg",
+      "status": "published",
+      "updated": "2021-03-02",
+      "date": "2021-03-02",
+      "category": "note",
+      "series": "computer-vision",
+      "languages": [
+        "eng"
+      ],
+      "slug": "image-filter-and-morphology"
+    }
+  ],
+  "series": {
+    "cuda": {
+      "eng": "CUDA",
+      "kor": "CUDA"
+    },
+    "nerf-and-gs": {
+      "eng": "Radiance Fields & Gaussian Splatting",
+      "kor": "Radiance Fields & Gaussian Splatting"
+    },
+    "3d-generation": {
+      "eng": "3D AI",
+      "kor": "3D AI"
+    },
+    "web-3d": {
+      "eng": "3D in Web",
+      "kor": "웹에서 3D 구현하기"
+    },
+    "linear-algebra": {
+      "eng": "Linear Algebra for Deep Learning",
+      "kor": "딥러닝을 위한 선형대수"
+    },
+    "computer-vision": {
+      "eng": "Classical Computer Vision",
+      "kor": "고전 Computer Vision"
+    },
+    "graphics": {
+      "eng": "Computer Graphics",
+      "kor": "Computer Graphics"
+    }
+  }
+};
+        window.blogPostPageConfig = {
+  "postId": "260802_cuda_01_gemm",
+  "lang": "kor",
+  "alternateLang": "eng",
+  "alternateHref": "/blogs/posts/gemm-on-nvidia-gpus/",
+  "runtimeFeatures": {
+    "katex": true,
+    "prism": true,
+    "modelViewer": false,
+    "modelViewerTextureToggle": false,
+    "three": false,
+    "tween": false,
+    "simpleModelViewer": false,
+    "gaussianSplats": false
+  }
+};
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="/blogs/js/code-copy.js?v=e6b60656e4"></script>
+    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+    <script src="/blogs/js/blog-shell.js?v=456de34605"></script>
+    <script src="/blogs/js/post-page.js?v=181bf06e84"></script>
+        <script>
+            initBlogShell({
+                formSelector: '#post-nav-search-form',
+                inputSelector: '#post-nav-search-input'
+            });
+        </script>
+</body>
+</html>

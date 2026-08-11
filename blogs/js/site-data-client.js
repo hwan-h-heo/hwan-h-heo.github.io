@@ -13,7 +13,7 @@
 
     function normalizeSiteData(rawSiteData) {
         const posts = rawSiteData.posts
-            .filter((post) => post.status !== 'draft')
+            .filter((post) => (post.status || 'published') === 'published')
             .map((post) => ({
                 ...post,
                 languages: [...post.languages],
@@ -44,7 +44,7 @@
 
     async function loadSiteData() {
         if (!siteDataPromise) {
-            siteDataPromise = fetch(DATA_PATH)
+            siteDataPromise = fetch(DATA_PATH, { cache: 'no-store' })
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error(`Failed to load ${DATA_PATH}`);

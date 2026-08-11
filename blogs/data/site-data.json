@@ -25,7 +25,70 @@
       ],
       "cover": "/blogs/posts/260803_hierarchical_decoding_threejs/assets/flashvdm-volume-decoding-poster.webp",
       "status": "draft",
-      "updated": "2026-08-03"
+      "updated": "2026-08-12"
+    },
+    {
+      "id": "260802_cuda_01_gemm",
+      "title_eng": "GEMM on NVIDIA GPUs: From Naive Kernels to Tiled Pipelines",
+      "title_kor": "NVIDIA GPU의 GEMM: Naive Kernel에서 Tiled Pipeline까지",
+      "subtitle_eng": "Why naive GEMM becomes memory-bound, how tiled reuse changes arithmetic intensity, and where Tensor Cores, schedulers, and libraries fit",
+      "subtitle_kor": "Naive GEMM의 memory bottleneck부터 tiled reuse, Tensor Core pipeline, shape별 scheduling과 library 추상화까지",
+      "date": "2026-08-12",
+      "category": "note",
+      "series": "cuda",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "gemm-on-nvidia-gpus",
+      "tags": [
+        "CUDA"
+      ],
+      "cover": "/blogs/posts/260802_cuda_01_gemm/assets/cover.webp",
+      "status": "published",
+      "updated": "2026-08-12"
+    },
+    {
+      "id": "260802_cuda_02_kernel_fusion",
+      "title_eng": "CUDA Kernel Fusion: Boundaries, Ownership, and Cost",
+      "title_kor": "CUDA Kernel Fusion: 경계, 소유권, 비용",
+      "subtitle_eng": "How fusion removes materialized intermediates—and when synchronization, resource pressure, and numerical behavior erase the gain",
+      "subtitle_kor": "중간 tensor의 materialization을 없애는 원리와 synchronization, resource pressure, numerical contract까지",
+      "date": "2026-08-04",
+      "category": "note",
+      "series": "cuda",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "cuda-kernel-fusion-boundaries-ownership-and-cost",
+      "tags": [
+        "CUDA"
+      ],
+      "cover": "/blogs/posts/260802_cuda_02_kernel_fusion/assets/cover.webp",
+      "status": "draft",
+      "updated": "2026-08-05"
+    },
+    {
+      "id": "260802_cuda_03_flashattention",
+      "title_eng": "FlashAttention: From Online Softmax to FA4",
+      "title_kor": "FlashAttention: Online Softmax에서 FA4까지",
+      "subtitle_eng": "How tiled online softmax reduces attention memory traffic, from FA1–FA4 pipelines to backward recomputation and backend selection",
+      "subtitle_kor": "Tiled online softmax의 원리부터 FA1–FA4 pipeline, backward recomputation, determinism과 backend 선택까지",
+      "date": "2026-08-05",
+      "category": "note",
+      "series": "cuda",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "flashattention-from-online-softmax-to-fa4",
+      "tags": [
+        "CUDA"
+      ],
+      "cover": "/blogs/posts/260802_cuda_03_flashattention/assets/cover-v2.webp",
+      "status": "draft",
+      "updated": "2026-08-05"
     },
     {
       "id": "260727_sparse_3d",

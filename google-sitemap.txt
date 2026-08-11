@@ -1,5 +1,7 @@
 https://hwan-h-heo.github.io/
 https://hwan-h-heo.github.io/blogs/
+https://hwan-h-heo.github.io/blogs/posts/gemm-on-nvidia-gpus/
+https://hwan-h-heo.github.io/blogs/posts/gemm-on-nvidia-gpus-kor/
 https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference/
 https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference-kor/
 https://hwan-h-heo.github.io/blogs/posts/varco3d-a-year-in-review-2025-retrospective/
@@ -47,10 +49,12 @@ https://hwan-h-heo.github.io/blogs/series/3d-generation/
 https://hwan-h-heo.github.io/blogs/series/web-3d/
 https://hwan-h-heo.github.io/blogs/series/computer-vision/
 https://hwan-h-heo.github.io/blogs/series/graphics/
+https://hwan-h-heo.github.io/blogs/series/cuda/
 https://hwan-h-heo.github.io/blogs/series/linear-algebra/
 https://hwan-h-heo.github.io/blogs/series/nerf-and-gs/
 https://hwan-h-heo.github.io/blogs/tags/3d-generation/
 https://hwan-h-heo.github.io/blogs/tags/computer-vision/
+https://hwan-h-heo.github.io/blogs/tags/cuda/
 https://hwan-h-heo.github.io/blogs/tags/gaussian-splatting/
 https://hwan-h-heo.github.io/blogs/tags/generative-ai/
 https://hwan-h-heo.github.io/blogs/tags/graphics/

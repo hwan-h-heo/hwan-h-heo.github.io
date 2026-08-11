@@ -6,6 +6,14 @@
     <description>Technical articles on sparse 3D generation, neural rendering, mesh processing, CUDA kernels, and production inference optimization.</description>
     <language>en</language>
     <item>
+      <title>GEMM on NVIDIA GPUs: From Naive Kernels to Tiled Pipelines</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/gemm-on-nvidia-gpus/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/gemm-on-nvidia-gpus/</guid>
+      <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>Why naive GEMM becomes memory-bound, how tiled reuse changes arithmetic intensity, and where Tensor Cores, schedulers, and libraries fit</description>
+    </item>
+    <item>
       <title>What the Compiler Missed in Sparse 3D Inference</title>
       <link>https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference/</link>
       <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference/</guid>

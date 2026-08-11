@@ -69,12 +69,20 @@
         const subtitle = block.subtitle || (block.typedItems || []).join(' · ');
         return `
             <div class="hero-content">
+                <div class="hero-imprint" aria-hidden="true">
+                    <span>00 / Portfolio</span>
+                    <span class="hero-imprint-rule"></span>
+                </div>
                 <h1>${escapeHtml(block.title)}</h1>
-                <hr/>
-                <p class="subtitle">
-                    <span class="hero-subtitle-text">${escapeHtml(subtitle)}</span>
-                </p>
-                <p class="lead">${renderHeroLead(block)}</p>
+                <div class="hero-deck">
+                    <div class="hero-role-block">
+                        <p class="subtitle">
+                            <span class="hero-subtitle-text">${escapeHtml(subtitle)}</span>
+                        </p>
+                        <p class="hero-affiliation">${escapeHtml(block.affiliation)}</p>
+                    </div>
+                    <p class="lead">${renderHeroLead(block)}</p>
+                </div>
                 <div class="hero-actions">
                     ${renderHeroActions(block.actions)}
                 </div>
@@ -93,13 +101,11 @@
             const externalAttrs = isExternal
                 ? ' target="_blank" rel="noopener noreferrer"'
                 : '';
-            const icon = link.icon || 'arrow-up-right';
             const destinationIcon = isExternal ? 'box-arrow-up-right' : 'arrow-up-right';
 
             return `
                 <a class="about-contact-link" href="${escapeHtml(link.url)}"${externalAttrs}>
-                    ${icons.render(icon)}
-                    <span>
+                    <span class="about-contact-copy">
                         <strong>${escapeHtml(link.label)}</strong>
                         <small>${escapeHtml(link.value)}</small>
                     </span>
@@ -117,25 +123,40 @@
     }
 
     function renderAbout(block) {
+        const depthAttribute = block.depthImage
+            ? ` data-about-depth="${escapeHtml(block.depthImage)}"`
+            : '';
+
         return `
-            <div class="portfolio-shell section-title">
-                <h2>${escapeHtml(block.title)}</h2>
+            <div class="portfolio-shell section-title about-section-heading">
+                <div class="portfolio-chapter-marker" aria-hidden="true">
+                    <span class="portfolio-chapter-label"><span>03 /</span> Profile</span>
+                    <span class="portfolio-chapter-rule"></span>
+                </div>
+                <div class="about-heading-copy">
+                    <h2>${escapeHtml(block.title)}</h2>
+                </div>
             </div>
 
             <div class="portfolio-shell">
-                <div class="about-layout">
-                    <div class="about-media">
-                        <img src="${escapeHtml(block.image)}" class="about-profile-image" alt="${escapeHtml(block.imageAlt)}">
-                    </div>
-                    <div class="content about-copy">
-                        <div class="about-identity">
-                            <h2 class="about-name">${escapeHtml(block.name || block.role)}</h2>
+                <div class="about-editorial-layout">
+                    <p class="about-standfirst">${block.introHtml || ''}</p>
+                    <figure class="about-profile-note">
+                        <div class="about-media" data-about-portrait${depthAttribute}>
+                            <img src="${escapeHtml(block.image)}" class="about-profile-image" alt="${escapeHtml(block.imageAlt)}" loading="lazy" decoding="async">
+                        </div>
+                        <figcaption class="about-identity">
+                            <p class="about-portrait-affordance" aria-hidden="true">
+                                <span>Point cloud</span><span class="about-portrait-affordance-hint">/ Hover for depth</span>
+                            </p>
+                            <h3 class="about-name">${escapeHtml(block.name || block.role)}</h3>
                             <p class="about-meta">
                                 <span class="about-role">${escapeHtml(block.role)}</span>
                                 <span class="about-affiliation">${escapeHtml(block.affiliation)}</span>
                             </p>
-                        </div>
-                        <p class="about-intro">${block.introHtml || ''}</p>
+                        </figcaption>
+                    </figure>
+                    <div class="content about-copy">
                         <p class="about-bio">${block.bodyHtml || ''}</p>
                         ${renderAboutContacts(block.contactLinks)}
                     </div>

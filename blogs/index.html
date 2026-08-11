@@ -10,8 +10,8 @@
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <!-- Blog styles -->
-        <link href="css/blog.css?v=bd44f462e3" rel="stylesheet" />
-        <link href="/assets/css/site-icons.css?v=44d073d4a3" rel="stylesheet" />
+        <link href="css/blog.css?v=a1fa956e9d" rel="stylesheet" />
+        <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -28,11 +28,11 @@
                 } catch (error) {}
             })();
         </script>
-    <script src="/assets/js/site-icons.js?v=30f71d459a"></script>
-    <script src="../js/sidebar-controller.js?v=8a95afafe7" data-sidebar-mode="rail"></script>
-    <link href="css/sidebar.css?v=fe42893069" rel="stylesheet">
-    <link href="../css/sidebar-nav.css?v=f9cab81086" rel="stylesheet">
-    <link href="css/typography.css?v=cf88064daa" rel="stylesheet">
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
+    <script src="../js/sidebar-controller.js?v=3db1bd5d00" data-sidebar-mode="rail"></script>
+    <link href="css/sidebar.css?v=975e92b635" rel="stylesheet">
+    <link href="../css/sidebar-nav.css?v=6503f0effb" rel="stylesheet">
+    <link href="css/typography.css?v=5feaa1dfce" rel="stylesheet">
             <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/" />
         <link rel="alternate" type="application/rss+xml" title="Hwan Heo's Blog" href="/blogs/feed.xml" />
         <meta property="og:type" content="website" />
@@ -45,7 +45,7 @@
         <meta name="twitter:description" content="Technical articles on sparse 3D generation, neural rendering, mesh processing, CUDA kernels, and production inference optimization." />
         <meta name="twitter:image" content="https://hwan-h-heo.github.io/assets/image_fx_.jpg" />
         <script type="application/ld+json">{"@context":"https://schema.org","@type":"Blog","name":"Hwan Heo's Blog","url":"https://hwan-h-heo.github.io/blogs/","description":"Technical articles on sparse 3D generation, neural rendering, mesh processing, CUDA kernels, and production inference optimization.","author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"inLanguage":"en"}</script>
-        <meta name="site-deploy-version" content="1d580887df202c27">
+        <meta name="site-deploy-version" content="70177764564cc6d9">
     <script defer src="/assets/js/deploy-refresh.js?v=adb609281d"></script>
 </head>
     <body class="blog-home-page">
@@ -121,8 +121,9 @@
         </nav>
 
         <header class="masthead blog-home-hero blog-editorial-hero">
-            <div class="blog-editorial-visual" aria-hidden="true"></div>
-            <div class="blog-editorial-visual-left" aria-hidden="true"></div>
+            <div class="blog-editorial-visual blog-editorial-visual--hierarchy" aria-hidden="true"></div>
+            <div class="blog-editorial-visual blog-editorial-visual--sparse" aria-hidden="true"></div>
+            <div class="blog-editorial-visual blog-editorial-visual--varco" aria-hidden="true"></div>
             <div class="blog-shell blog-hero-shell">
                 <div class="blog-home-hero-copy">
                     <div class="blog-editorial-imprint" aria-label="Technical writing index, 2021 to 2026">
@@ -164,7 +165,7 @@
                     <h2 lang="en"><a href="/blogs/posts/optimizing-sparse-3d-generation-inference/">What the Compiler Missed in Sparse 3D Inference</a></h2>
                     <p class="blog-feature-subtitle" lang="en">Why generic compiler paths underperform on dynamic sparse 3D generative models—and how null-context attention removal and model-aware CUDA kernels cut inference latency.</p>
                     <time class="blog-feature-date" datetime="2026-07-27">July 27, 2026</time>
-                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a><span class="post-tag-separator" aria-hidden="true">·</span><span class="post-tag">CUDA</span></div>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/3d-generation/">3D Generation</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/generative-ai/">Generative AI</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/cuda/">CUDA</a></div>
                     <a class="blog-feature-read" href="/blogs/posts/optimizing-sparse-3d-generation-inference/" aria-label="Read What the Compiler Missed in Sparse 3D Inference">
                         <span data-feature-read-label>Read post</span>
                         <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
@@ -193,13 +194,13 @@
                         <li class="blog-home-tab-item" role="presentation">
                             <button class="blog-home-tab" id="notes-tab-control" data-tab-target="#notes-tab" type="button" role="tab" aria-controls="notes-tab" aria-selected="false" tabindex="-1">
                                 <span data-i18n="tabNotes">Notes</span>
-                                <span class="blog-home-tab-count" id="notes-count">10</span>
+                                <span class="blog-home-tab-count" id="notes-count">11</span>
                             </button>
                         </li>
                         <li class="blog-home-tab-item" role="presentation">
                             <button class="blog-home-tab" id="series-tab-control" data-tab-target="#series-tab" type="button" role="tab" aria-controls="series-tab" aria-selected="false" tabindex="-1">
                                 <span data-i18n="tabSeries">Series</span>
-                                <span class="blog-home-tab-count" id="series-count">6</span>
+                                <span class="blog-home-tab-count" id="series-count">7</span>
                             </button>
                         </li>
                     </ul>
@@ -579,6 +580,30 @@
 
                     <div class="blog-home-tab-panel" id="notes-tab" role="tabpanel" aria-labelledby="notes-tab-control" tabindex="0" hidden>
 
+        <article class="post-preview post-preview-media-right" data-post-id="260802_cuda_01_gemm" data-post-category="note">
+            <div class="post-card-link">
+                <a href="/blogs/posts/gemm-on-nvidia-gpus/" class="post-card-cover" aria-label="Read GEMM on NVIDIA GPUs: From Naive Kernels to Tiled Pipelines">
+                    <img src="/assets/generated/blog-covers/260802_cuda_01_gemm.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/260802_cuda_01_gemm.webp" alt="GEMM on NVIDIA GPUs: From Naive Kernels to Tiled Pipelines cover image" loading="lazy" decoding="async">
+                </a>
+                <div class="post-card-body">
+                    <div class="post-card-eyebrow post-series-context">
+                        <span class="post-series-context-label">SERIES</span>
+                        <span class="post-series-context-separator" aria-hidden="true">/</span>
+                        <span class="post-series-context-value" data-post-series>CUDA</span>
+                    </div>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/gemm-on-nvidia-gpus/">GEMM on NVIDIA GPUs: From Naive Kernels to Tiled Pipelines</a></h3>
+                    <p class="post-subtitle" lang="en">Why naive GEMM becomes memory-bound, how tiled reuse changes arithmetic intensity, and where Tensor Cores, schedulers, and libraries fit</p>
+                    <p class="post-meta">
+                        <time datetime="2026-08-12">August 12, 2026</time>
+                    </p>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/cuda/">CUDA</a></div>
+                </div>
+            </div>
+            <nav class="visually-hidden" aria-label="Available languages">
+                <a href="/blogs/posts/gemm-on-nvidia-gpus/" hreflang="en">English</a>, <a href="/blogs/posts/gemm-on-nvidia-gpus-kor/" hreflang="ko">Korean</a>
+            </nav>
+        </article>
+    
         <article class="post-preview post-preview-media-right" data-post-id="250823_sdf" data-post-category="note">
             <div class="post-card-link">
                 <a href="/blogs/posts/sdf-and-eikonal-equation/" class="post-card-cover" aria-label="Read SDF and Eikonal Equation">
@@ -823,6 +848,30 @@
 
                     <div class="blog-home-tab-panel" id="series-tab" role="tabpanel" aria-labelledby="series-tab-control" tabindex="0" hidden>
 
+                    <article class="series-group" data-series-id="cuda">
+                        <div class="series-card-header">
+                            <span class="series-card-kicker">Series</span>
+                            <h3 class="series-title" lang="en">
+                                <a href="/blogs/series/cuda/">
+                                    <span data-series-title>CUDA</span>
+                                    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up-right"></use></svg>
+                                </a>
+                            </h3>
+                            <div class="series-card-meta">
+                                <span data-series-count>1 items</span>
+                                <span><span data-series-latest-label>Latest</span> <time datetime="2026-08-12">Aug 2026</time></span>
+                            </div>
+                        </div>
+                        <ol class="series-post-list">
+                            
+                        <li data-series-post-id="260802_cuda_01_gemm">
+                            <a href="/blogs/posts/gemm-on-nvidia-gpus/" lang="en">GEMM on NVIDIA GPUs: From Naive Kernels to Tiled Pipelines</a>
+                            <span class="post-meta-sm"><time datetime="2026-08-12">Aug 2026</time></span>
+                        </li>
+                
+                        </ol>
+                    </article>
+            
                     <article class="series-group" data-series-id="3d-generation">
                         <div class="series-card-header">
                             <span class="series-card-kicker">Series</span>
@@ -1089,11 +1138,11 @@
                 </div>
             </div>
         </footer>
-        <script src="./js/site-data-client.js?v=aaf80fa06c"></script>
-        <script src="./js/blog-cover-media.js?v=816ac42637"></script>
-        <script src="./js/blog-shell.js?v=4b58cc185f"></script>
-        <script src="./js/theme-toggle.js?v=78c68b730b"></script>
-        <script src="./js/main-list.js?v=1438354d89"></script>
+        <script src="./js/site-data-client.js?v=5320e49fbf"></script>
+        <script src="./js/blog-cover-media.js?v=f16969bf34"></script>
+        <script src="./js/blog-shell.js?v=456de34605"></script>
+        <script src="./js/theme-toggle.js?v=32f6914d64"></script>
+        <script src="./js/main-list.js?v=0301f5d8db"></script>
         <script>
             initBlogShell({ formSelector: '#blog-home-search-form', inputSelector: '#blog-home-search-input' });
         </script>
