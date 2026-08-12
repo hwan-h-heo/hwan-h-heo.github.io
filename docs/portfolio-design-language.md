@@ -218,16 +218,24 @@ decorative typeface or louder animation.
 - The hero may use viewport height; content sections should not.
 - Standard sections use generous vertical padding but cap their width at large
   viewports.
-- Resume is subordinate to About and must align with the About portrait and
-  copy grid.
+- The career and CV index is subordinate to About. Its rules use the complete
+  About shell width, while the expanded Experience and Education content uses
+  the same full-width two-column measure before collapsing to one column.
 - On wide Portfolio layouts, keep the About copy on a bounded reading rail and
   let the portrait rail absorb the remaining width. Center the portrait within
   that rail so the section balances across the shell instead of leaving unused
   space outside a fixed two-column grid. Treat the person's name as the portrait
   caption headline, clearly above role, affiliation, and point-cloud notation.
+  Right-align that caption to the portrait edge on wide layouts so it reads as
+  a deliberate margin note, compensating for the source PNG's transparent right
+  inset so the text follows the visible portrait rather than the image box;
+  return it to left alignment in compact flow.
   Optically lift the wide-layout portrait figure to compensate for transparent
   image headroom; reset that lift when the figure returns to normal single-
   column flow.
+- Give the About standfirst and portrait modest visual emphasis without turning
+  either into a second hero: the standfirst remains a compact editorial lead,
+  and the wide portrait stays near 300px rather than dominating its rail.
 - Project and Portfolio-home Blog preview rows share their row spacing, media
   treatment, and interaction grammar; their column proportions and metadata
   order may differ to express artifact versus publication.
@@ -541,15 +549,27 @@ short word never remains as an isolated final line. Keep the Featured technology
 tags one type step smaller than archive-row tags, and use flexible space above
 `Read post` so its baseline closes exactly at the cover's bottom edge instead of
 shrinking the upper hierarchy unnecessarily.
-### Resume
+### Career and CV index
 
-Resume uses an editorial index rather than cards:
+Career and CV use the same editorial index grammar as Papers and Talks rather
+than introducing a titled Resume subsection or cards:
 
+- Do not render a visible Resume heading. Follow the About profile directly
+  with two full-width index rows: Document / Curriculum Vitae first, then
+  Career / Experience & Education. Do not split Experience and Education into
+  separate disclosures.
+- Keep the Document row informational rather than clickable as a whole. Only
+  its compact Download text action and icon link to the CV file; do not repeat
+  the file format as separate metadata.
+- Use one opening hairline above Document and one inter-row hairline above
+  Career. Leave the final Career disclosure open without a closing rule.
+- Give the expanded index a generous top inset so its category labels do not
+  attach visually to the disclosure rule.
 - equal Experience and Education columns
 - period aligned separately from entry content
 - neutral descriptions and metadata
 - muted inline links with a visible underline
-- one compact Download CV action
+- one compact Curriculum Vitae download action
 
 ### Papers and talks
 
@@ -558,8 +578,12 @@ Use a shared index/table grammar. Do not introduce a separate card system.
 - Papers use an index, copy, and action rail; talks use a date and copy rail.
 - Repeated rows share the same hairline, vertical rhythm, title scale, and
   metadata hierarchy.
-- Publication actions and Download CV share the light-surface, left-origin
-  underline grammar. They are text actions, never bordered buttons.
+- Papers and Talks keep their count plus chevron as the complete disclosure
+  signal; do not add a redundant View details / Close label. The single Career
+  disclosure retains that explicit state label because it follows a non-
+  collapsible Document row in a different chapter context.
+- Publication actions and the compact CV Download link use the light-surface,
+  left-origin underline grammar. Neither is rendered as a bordered button.
 - Blog-home preview eyebrows show `SERIES / NAME`. `Post` and `Note` remain data
   categories for filtering, not visible metadata or per-row folios.
 - The Blog home featured row retains that series context beneath its indexed
@@ -626,7 +650,9 @@ Rules:
   it reads as spatial rotation rather than blur, while keeping its depth and
   angle slightly quieter than the intro. Hover interrupts and takes priority.
   Identify the enhancement with one quiet mono `POINT CLOUD` annotation and
-  reveal `/ HOVER FOR DEPTH` only when the interaction is actually available.
+  show `/ HOVER FOR DEPTH` from first paint on fine-pointer layouts so
+  enhancement readiness never changes the caption layout. Keep the hint hidden
+  where hover is unavailable.
   At rest, let the portrait PNG carry `100%` of the image and hide the point
   layer completely, preventing a residual grid on compact displays. As the
   depth response opens, bring the points in on a quicker ease-out curve while
@@ -659,20 +685,24 @@ title link regions respond independently:
    they use color only because their separate `Read post` action owns a
    persistent boxed external-link icon and the light-surface underline motion.
 
-Use the same destination mapping for trailing Contact icons. `mailto:` may keep
-the directional arrow; external profiles use the boxed external-link icon.
+On the Portfolio About contact index, use one small service icon before the
+copy—Envelope for Email and LinkedIn for LinkedIn—and retain one quiet trailing
+destination icon to anchor the far edge of each wide contact row. Use the
+directional arrow for Email and the boxed external-link icon for LinkedIn. Keep
+both neutral at rest and move them to the interactive accent on hover or
+keyboard focus.
 
 Do not add a card lift, background fill, shadow, border-color flash, or summary
 animation to this state.
 
-Hero CTA, Selected/All, and Download CV share the left-origin action-rule
-language. The Hero chapter index places that rule on its top edge; light-surface
-controls keep it below the text. Line thickness may differ by surface: 2px on
-the dark hero, 1px on light editorial controls. Animated lines use the neutral
+Hero CTA and Selected/All share the left-origin action-rule language. The Hero
+chapter index places that rule on its top edge; light-surface controls keep it
+below the text. Line thickness may differ by surface: 2px on the dark hero, 1px
+on light editorial controls. Animated lines use the neutral
 `--action-underline-*` tokens rather than a full-strength accent.
 
-Light-surface text actions such as Download CV and publication or talk links
-use underline motion only. Do not translate their text or icons on hover.
+Light-surface text actions such as the CV download and publication or talk
+links use underline motion only. Do not translate their text or icons on hover.
 
 ## Responsive Rules
 

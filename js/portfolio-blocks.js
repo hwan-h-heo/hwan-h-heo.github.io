@@ -105,6 +105,7 @@
 
             return `
                 <a class="about-contact-link" href="${escapeHtml(link.url)}"${externalAttrs}>
+                    ${icons.render(link.icon || 'link', { className: 'about-contact-icon' })}
                     <span class="about-contact-copy">
                         <strong>${escapeHtml(link.label)}</strong>
                         <small>${escapeHtml(link.value)}</small>
@@ -202,21 +203,44 @@
 
     function renderResume(block) {
         return `
-            <div class="portfolio-shell section-title resume-section-heading">
-                <h2>${escapeHtml(block.title)}</h2>
-                <a class="resume-cv-link" href="${escapeHtml(block.cvUrl)}" download aria-label="Download curriculum vitae">
-                    <span>Download CV</span>
-                    ${icons.render('download')}
-                </a>
-            </div>
-            <div class="portfolio-shell resume-content">
-                <div class="resume-layout">
-                    ${(block.columns || []).map((column) => `
-                        <div class="resume-column">
-                            ${(column.sections || []).map(renderResumeSection).join('')}
-                        </div>
-                    `).join('')}
+            <div class="portfolio-shell resume-disclosure-shell">
+                <div class="resume-document-row">
+                    <span>
+                        <span class="portfolio-disclosure-kicker">Document</span>
+                        <strong>Curriculum Vitae</strong>
+                    </span>
+                    <span class="portfolio-disclosure-meta resume-document-meta">
+                        <a class="resume-document-download" href="${escapeHtml(block.cvUrl)}" download aria-label="Download curriculum vitae PDF">
+                            <span>Download</span>
+                            ${icons.render('download')}
+                        </a>
+                    </span>
                 </div>
+                <details class="portfolio-disclosure resume-disclosure">
+                    <summary>
+                        <span>
+                            <span class="portfolio-disclosure-kicker">Career</span>
+                            <strong>Experience &amp; Education</strong>
+                        </span>
+                        <span class="portfolio-disclosure-meta resume-disclosure-meta">
+                            <span class="resume-disclosure-count">${escapeHtml(block.summary)}</span>
+                            <span class="portfolio-disclosure-state">
+                                <span class="portfolio-disclosure-state-closed">View details</span>
+                                <span class="portfolio-disclosure-state-open">Close</span>
+                            </span>
+                            ${icons.render('chevron-down')}
+                        </span>
+                    </summary>
+                    <div class="resume-disclosure-panel">
+                        <div class="resume-layout">
+                            ${(block.columns || []).map((column) => `
+                                <div class="resume-column">
+                                    ${(column.sections || []).map(renderResumeSection).join('')}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </details>
             </div>
         `;
     }

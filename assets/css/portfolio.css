@@ -526,6 +526,13 @@ section, .section { color: var(--default-color); background-color: var(--backgro
     margin-left: 0;
   }
 }
+.about {
+  --about-copy-width: 760px;
+  --about-grid-gap: clamp(3.5rem, 6vw, 6.5rem);
+  --about-portrait-min-width: 240px;
+  --about-portrait-width: 300px;
+}
+
 .about .about-section-heading h2 {
   margin-bottom: 0;
 }
@@ -536,10 +543,10 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   margin: 0;
   color: var(--color-text-strong);
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: clamp(1.04rem, 1.22vw, 1.16rem);
+  font-size: clamp(1.08rem, 1.32vw, 1.26rem);
   font-style: italic;
   font-weight: 500;
-  line-height: 1.62;
+  line-height: 1.58;
   text-wrap: pretty;
 }
 
@@ -548,8 +555,8 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   grid-template-areas:
     "standfirst portrait"
     "copy portrait";
-  grid-template-columns: minmax(0, 760px) minmax(240px, 1fr);
-  column-gap: clamp(3.5rem, 6vw, 6.5rem);
+  grid-template-columns: minmax(0, var(--about-copy-width)) minmax(var(--about-portrait-min-width), 1fr);
+  column-gap: var(--about-grid-gap);
   row-gap: 1.35rem;
   align-items: start;
   justify-content: stretch;
@@ -563,7 +570,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 .about .about-profile-note {
   grid-area: portrait;
   justify-self: center;
-  width: min(100%, 280px);
+  width: min(100%, var(--about-portrait-width));
   margin: clamp(-2.25rem, -2.5vw, -1.5rem) 0 0;
 }
 
@@ -637,7 +644,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .about .about-profile-note[data-about-portrait-ready="true"] .about-portrait-affordance-hint {
+  .about .about-portrait-affordance-hint {
     display: inline;
   }
 
@@ -682,6 +689,21 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   line-height: 1.48;
 }
 
+@media (min-width: 992px) {
+  .about .about-identity {
+    padding-right: 16.7%;
+    text-align: right;
+  }
+
+  .about .about-portrait-affordance {
+    justify-content: flex-end;
+  }
+
+  .about .about-meta {
+    align-items: flex-end;
+  }
+}
+
 .about .about-bio {
   max-width: 760px;
   margin: 0;
@@ -715,8 +737,8 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 
 .about .about-contact-link {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.75rem;
+  grid-template-columns: 1.15rem minmax(0, 1fr) auto;
+  gap: 0.85rem;
   align-items: center;
   min-width: 0;
   padding: 0.82rem 0;
@@ -743,6 +765,19 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   min-width: 0;
 }
 
+.about .about-contact-icon {
+  align-self: center;
+  color: var(--color-text-faint);
+  font-size: 0.94rem;
+  transition: color var(--motion-base) var(--ease-standard);
+}
+
+.about .about-contact-arrow {
+  color: var(--color-text-faint);
+  font-size: 0.72rem;
+  transition: color var(--motion-base) var(--ease-standard);
+}
+
 .about .about-contact-link strong {
   font-family: var(--heading-font);
   font-size: 0.8rem;
@@ -759,13 +794,8 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   white-space: nowrap;
 }
 
-.about .about-contact-arrow {
-  flex: 0 0 auto;
-  color: var(--color-text-faint);
-  font-size: 0.72rem;
-  transition: color var(--motion-base) var(--ease-standard);
-}
-
+.about .about-contact-link:hover .about-contact-icon,
+.about .about-contact-link:focus-visible .about-contact-icon,
 .about .about-contact-link:hover .about-contact-arrow,
 .about .about-contact-link:focus-visible .about-contact-arrow {
   color: var(--accent-interactive);
@@ -838,87 +868,67 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   margin-top: clamp(3rem, 4.5vw, 4.5rem);
 }
 
-.resume-section-heading {
-  display: grid;
-  grid-template-columns: auto auto;
-  align-items: baseline;
-  justify-content: start;
-  gap: 2rem;
-  padding-bottom: 2.55rem;
+.resume-disclosure-shell {
+  border-top: 0;
 }
 
-.resume-section-heading h2 {
-  margin-bottom: 0;
+.resume .portfolio-disclosure.resume-disclosure {
+  border-top: 1px solid var(--color-line);
+  border-bottom: 0;
 }
 
-.resume-subsection .resume-section-heading h2 {
-  font-size: clamp(1.18rem, 1.45vw, 1.4rem);
-  font-weight: 730;
-  line-height: 1.1;
+.resume-disclosure-meta {
+  gap: clamp(0.8rem, 1.6vw, 1.4rem);
 }
 
-@media (min-width: 1200px) {
-  .resume-subsection {
-    --resume-about-width: 1320px;
-    --resume-about-half-width: 660px;
-    --resume-copy-overhang: 38px;
-    --resume-portrait-inset: 21px;
-  }
-
-  .index-page .main > #about > .resume-subsection > .portfolio-shell {
-    width: calc(
-      min(100%, var(--resume-about-width))
-      + var(--resume-copy-overhang)
-      - var(--resume-portrait-inset)
-    );
-    max-width: none;
-    margin-right: 0;
-    margin-left: max(
-      var(--resume-portrait-inset),
-      calc(50% - var(--resume-about-half-width) + var(--resume-portrait-inset))
-    );
-  }
+.resume .portfolio-disclosure.resume-disclosure[open] summary {
+  border-bottom: 0;
 }
 
-@media (min-width: 2000px) {
-  .resume-subsection {
-    --resume-about-width: 1500px;
-    --resume-about-half-width: 750px;
-    --resume-copy-overhang: 44px;
-    --resume-portrait-inset: 51px;
-  }
+.resume .resume-disclosure .resume-disclosure-panel {
+  padding: clamp(3.5rem, 5vw, 4.75rem) 0 clamp(1rem, 2vw, 1.75rem);
 }
 
-@media (min-width: 2600px) {
-  .resume-subsection {
-    --resume-about-width: 1600px;
-    --resume-about-half-width: 800px;
-    --resume-portrait-inset: 68px;
-  }
+.resume-document-row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 4.8rem;
+  padding: 1rem 0;
+  color: inherit;
+  border-top: 1px solid var(--color-line);
 }
 
-.resume-cv-link {
+.resume-document-row strong {
+  display: block;
+  color: var(--color-heading);
+  font-family: var(--heading-font);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.35;
+}
+
+.resume-document-download {
   position: relative;
   display: inline-flex;
-  align-items: center;
   gap: 0.62rem;
+  align-items: center;
   overflow: hidden;
   min-height: 2.25rem;
   padding: 0.45rem 0 0.5rem;
   color: var(--color-text-strong);
-  background: transparent;
-  border: 0;
-  border-bottom: 1px solid var(--color-line);
-  border-radius: 0;
   font-family: var(--heading-font);
   font-size: 0.76rem;
   font-weight: 700;
   line-height: 1;
   text-decoration: none;
+  border-bottom: 1px solid var(--color-line);
   transition: color var(--motion-base) var(--ease-standard);
 }
 
-.resume-cv-link::after {
+.resume-document-download::after {
   position: absolute;
   right: 0;
   bottom: 0;
@@ -931,24 +941,22 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   transition: transform 480ms var(--ease-emphasized);
 }
 
-.resume-cv-link:hover {
-  color: var(--color-ink);
-  background: transparent;
+.resume-document-download .site-icon {
+  color: var(--accent-interactive);
 }
 
-.resume-cv-link:hover::after,
-.resume-cv-link:focus-visible::after {
+.resume-document-download:hover {
+  color: var(--color-ink);
+}
+
+.resume-document-download:hover::after,
+.resume-document-download:focus-visible::after {
   transform: scaleX(1);
 }
 
-.resume-cv-link:focus-visible {
+.resume-document-download:focus-visible {
   outline: 2px solid var(--accent-line-strong);
   outline-offset: 4px;
-}
-
-.resume-cv-link .site-icon {
-  color: var(--accent-color);
-  font-size: 0.82rem;
 }
 
 .resume-layout {
@@ -1109,15 +1117,12 @@ section, .section { color: var(--default-color); background-color: var(--backgro
     margin-top: 3rem;
   }
 
-  .resume-section-heading {
-    grid-template-columns: 1fr;
-    align-items: start;
-    gap: 1.35rem;
-    padding-bottom: 2.35rem;
+  .resume-disclosure-count {
+    display: none;
   }
 
-  .resume-cv-link {
-    justify-self: start;
+  .resume .resume-disclosure .resume-disclosure-panel {
+    padding-top: 3rem;
   }
 
   .resume .resume-item {
@@ -2412,6 +2417,11 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   display: none;
 }
 
+.portfolio-disclosure summary:focus-visible {
+  outline: 2px solid var(--accent-line-strong);
+  outline-offset: -2px;
+}
+
 .portfolio-disclosure summary strong {
   display: block;
   color: #0f172a;
@@ -2438,6 +2448,30 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   color: #64748b;
   font-size: 0.73rem;
   white-space: nowrap;
+}
+
+.portfolio-disclosure-state {
+  color: var(--color-text-strong);
+  font-family: var(--heading-font);
+  font-weight: 700;
+  transition: color var(--motion-base) var(--ease-standard);
+}
+
+.portfolio-disclosure summary:hover .portfolio-disclosure-state,
+.portfolio-disclosure summary:focus-visible .portfolio-disclosure-state {
+  color: var(--accent-editorial);
+}
+
+.portfolio-disclosure-state-open {
+  display: none;
+}
+
+.portfolio-disclosure[open] .portfolio-disclosure-state-closed {
+  display: none;
+}
+
+.portfolio-disclosure[open] .portfolio-disclosure-state-open {
+  display: inline;
 }
 
 .portfolio-disclosure-meta .site-icon {
