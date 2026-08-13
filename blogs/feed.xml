@@ -173,53 +173,5 @@
       <language>en</language>
       <description>Review of Fourier Features Let Networks Learn High-Frequency Functions</description>
     </item>
-    <item>
-      <title>Change of Basis</title>
-      <link>https://hwan-h-heo.github.io/blogs/posts/change-of-basis/</link>
-      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/change-of-basis/</guid>
-      <pubDate>Fri, 10 Sep 2021 00:00:00 GMT</pubDate>
-      <language>en</language>
-      <description>Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)</description>
-    </item>
-    <item>
-      <title>Linear System</title>
-      <link>https://hwan-h-heo.github.io/blogs/posts/linear-system/</link>
-      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/linear-system/</guid>
-      <pubDate>Thu, 09 Sep 2021 00:00:00 GMT</pubDate>
-      <language>en</language>
-      <description>Building intuition for linear systems and transformations through matrices, basis vectors, and geometric mappings</description>
-    </item>
-    <item>
-      <title>3D Stereo Vision and Epipolar Geometry</title>
-      <link>https://hwan-h-heo.github.io/blogs/posts/3d-stereo-vision-and-epipolar-geometry/</link>
-      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/3d-stereo-vision-and-epipolar-geometry/</guid>
-      <pubDate>Wed, 02 Jun 2021 00:00:00 GMT</pubDate>
-      <language>en</language>
-      <description>From camera projection to stereo correspondence, deriving the epipolar geometry used to recover 3D structure from two views.</description>
-    </item>
-    <item>
-      <title>Homography and Image Alignment</title>
-      <link>https://hwan-h-heo.github.io/blogs/posts/homography-and-image-alignment/</link>
-      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/homography-and-image-alignment/</guid>
-      <pubDate>Sun, 02 May 2021 00:00:00 GMT</pubDate>
-      <language>en</language>
-      <description>How image transformations, homographies, feature correspondences, and alignment connect in practical computer vision pipelines.</description>
-    </item>
-    <item>
-      <title>Feature Extraction and Detection</title>
-      <link>https://hwan-h-heo.github.io/blogs/posts/feature-extraction-and-detection/</link>
-      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/feature-extraction-and-detection/</guid>
-      <pubDate>Fri, 02 Apr 2021 00:00:00 GMT</pubDate>
-      <language>en</language>
-      <description>A practical tour of image gradients, Sobel and LoG filters, and the feature detection principles built on top of them.</description>
-    </item>
-    <item>
-      <title>Image Filter and Morphology</title>
-      <link>https://hwan-h-heo.github.io/blogs/posts/image-filter-and-morphology/</link>
-      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/image-filter-and-morphology/</guid>
-      <pubDate>Tue, 02 Mar 2021 00:00:00 GMT</pubDate>
-      <language>en</language>
-      <description>A practical introduction to spatial image filters and morphology, including erosion, dilation, opening, and closing.</description>
-    </item>
   </channel>
 </rss>

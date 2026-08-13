@@ -82,12 +82,13 @@ function createHeroWave(THREE) {
         || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4)
         || (navigator.deviceMemory && navigator.deviceMemory <= 4);
     const pixelRatioCap = isCompact ? 1.6 : 1.5;
-    const waveSegments = isCompact ? [36, 18] : [56, 26];
-    const wireSegments = isCompact ? [18, 9] : [28, 13];
-    const driftingParticleCount = isCompact ? 150 : 340;
+    const waveSegments = isCompact ? [36, 18] : [64, 30];
+    const silkStrandCount = isCompact ? 10 : 17;
+    const silkStrandSegments = isCompact ? 42 : 72;
+    const driftingParticleCount = isCompact ? 120 : 240;
     const introCycleDuration = isCompact ? 4.8 : 5.6;
     const ambientCycleDuration = 10.5;
-    const ambientPlaybackRate = 0.88;
+    const ambientPlaybackRate = 0.68;
     const ambientStartPhase = 0.44;
     const ctaRevealPhase = isCompact ? 0.42 : 0.44;
     const ctaRevealDelay = introCycleDuration * ctaRevealPhase;
@@ -115,11 +116,72 @@ function createHeroWave(THREE) {
     scene.add(group);
 
     const waveHeightShader = `
+        vec2 waveWarp(vec2 point, float time) {
+            return vec2(
+                sin(point.y * 0.41 - time * 0.13) * 0.3
+                    + sin((point.x + point.y) * 0.17 + time * 0.09) * 0.1,
+                sin(point.x * 0.28 + time * 0.11) * 0.18
+            );
+        }
+
+        vec2 waveDomain(vec2 point, float time) {
+            vec2 warped = point + waveWarp(point, time);
+            float angle = 0.31;
+            mat2 rotation = mat2(
+                cos(angle), -sin(angle),
+                sin(angle), cos(angle)
+            );
+            return rotation * warped;
+        }
+
+        vec2 waveFocus(float time) {
+            return vec2(
+                2.25 + sin(time * 0.075) * 0.42,
+                -0.45 + cos(time * 0.06) * 0.34
+            );
+        }
+
         float waveHeight(vec2 point, float time) {
-            float primary = sin(point.x * 0.62 + time * 0.62) * 0.52;
-            float crossing = sin(point.y * 0.96 - time * 0.46) * 0.28;
-            float detail = sin((point.x + point.y) * 0.42 + time * 0.31) * 0.17;
-            return primary + crossing + detail;
+            vec2 domain = waveDomain(point, time);
+            float foldedPhase = domain.x * 0.68
+                + sin(domain.y * 0.39 - time * 0.19) * 1.24
+                + time * 0.3;
+            float fold = sin(foldedPhase) * 0.48;
+            float counterFold = sin(
+                domain.y * 0.81 - domain.x * 0.17 - time * 0.24
+            ) * 0.16;
+
+            vec2 focusOffset = (point - waveFocus(time)) * vec2(0.72, 1.08);
+            float focusDistance = length(focusOffset);
+            float focusEnvelope = 1.0 - smoothstep(1.1, 7.6, focusDistance);
+            float diffraction = sin(
+                focusDistance * 1.52 - time * 0.34
+            ) * 0.25 * focusEnvelope;
+
+            return fold + counterFold + diffraction;
+        }
+
+        float waveLustre(vec2 point, float time) {
+            vec2 domain = waveDomain(point, time);
+            float foldedPhase = domain.x * 0.68
+                + sin(domain.y * 0.39 - time * 0.19) * 1.24
+                + time * 0.3;
+            float foldCrest = pow(
+                max(0.0, 0.5 + 0.5 * sin(foldedPhase)),
+                9.0
+            );
+
+            vec2 focusOffset = (point - waveFocus(time)) * vec2(0.72, 1.08);
+            float focusDistance = length(focusOffset);
+            float focusEnvelope = 1.0 - smoothstep(1.4, 7.2, focusDistance);
+            float diffractionCrest = pow(
+                max(0.0, 0.5 + 0.5 * sin(
+                    focusDistance * 1.52 - time * 0.34
+                )),
+                12.0
+            ) * focusEnvelope;
+
+            return clamp(max(foldCrest * 0.72, diffractionCrest), 0.0, 1.0);
         }
 
         float firstCycleMask(float time) {
@@ -276,6 +338,7 @@ function createHeroWave(THREE) {
 
             void main() {
                 vec3 target = position;
+                target.xz += waveWarp(target.xz, uTime);
                 target.y = waveHeight(target.xz, uTime);
 
                 float firstCycle = firstCycleMask(uTime);
@@ -300,6 +363,7 @@ function createHeroWave(THREE) {
                 ambientFlowing.z += cos(
                     uTime * 0.23 + aSeed * 15.0
                 ) * 0.07;
+                ambientFlowing.xz += waveWarp(ambientFlowing.xz, uTime) * 0.7;
                 ambientFlowing.y += waveHeight(ambientFlowing.xz, uTime);
                 ambientFlowing.y += sin(
                     uTime * 1.05 + aSeed * 17.0
@@ -377,6 +441,7 @@ function createHeroWave(THREE) {
                 transformed = mix(transformed, burstPosition, firstCycle);
 
                 float frontier = formationFrontier(position, uTime);
+                float lustre = waveLustre(transformed.xz, uTime);
                 float twinkle = 0.64 + 0.36 * sin(uTime * 1.15 + aSeed * 18.0);
                 float visibility = surfaceFade(transformed);
                 float volumeVisibility = surfaceBoundsFade(transformed);
@@ -389,6 +454,7 @@ function createHeroWave(THREE) {
                 float formedAlpha = 0.56 + 0.2 * twinkle;
                 vAlpha = visibility * mix(flowingAlpha, formedAlpha, meshEase);
                 vAlpha += visibility * frontier * 0.28;
+                vAlpha += visibility * lustre * (0.12 + meshEase * 0.18);
                 float previewSelection = 1.0 - step(0.09, pathNoise);
                 float previewAlpha = smoothstep(
                     previewStart,
@@ -421,6 +487,7 @@ function createHeroWave(THREE) {
                         + transformed.y * 0.25
                         + aSeed * 0.28
                         + frontier * 0.24
+                        + lustre * 0.32
                         + firstCycle * burstArc * 0.14,
                     0.0,
                     1.0
@@ -433,6 +500,7 @@ function createHeroWave(THREE) {
                         + aSeed * 1.7
                         + meshEase * 0.35
                         + frontier * 0.8
+                        + lustre * 0.48
                         + firstCycle * burstArc * 0.45
                 )
                     * uPixelRatio
@@ -460,16 +528,30 @@ function createHeroWave(THREE) {
     surfaceParticles.renderOrder = 2;
     group.add(surfaceParticles);
 
-    const wireSurfaceGeometry = new THREE.PlaneGeometry(
-        22,
-        12,
-        wireSegments[0],
-        wireSegments[1]
+    const silkLinePositions = [];
+    for (let strandIndex = 0; strandIndex < silkStrandCount; strandIndex += 1) {
+        const strandProgress = strandIndex / Math.max(silkStrandCount - 1, 1);
+        const z = -5.5 + strandProgress * 11;
+        for (let segmentIndex = 0; segmentIndex < silkStrandSegments; segmentIndex += 1) {
+            const xStart = -11 + (segmentIndex / silkStrandSegments) * 22;
+            const xEnd = -11 + ((segmentIndex + 1) / silkStrandSegments) * 22;
+            const strandBias = Math.sin(strandProgress * Math.PI) * 0.12;
+            silkLinePositions.push(
+                xStart,
+                0,
+                z + Math.sin(xStart * 0.19 + strandIndex * 0.47) * strandBias,
+                xEnd,
+                0,
+                z + Math.sin(xEnd * 0.19 + strandIndex * 0.47) * strandBias
+            );
+        }
+    }
+    const silkLineGeometry = new THREE.BufferGeometry();
+    silkLineGeometry.setAttribute(
+        'position',
+        new THREE.Float32BufferAttribute(silkLinePositions, 3)
     );
-    wireSurfaceGeometry.rotateX(-Math.PI / 2);
-    const wireGeometry = new THREE.WireframeGeometry(wireSurfaceGeometry);
-    wireSurfaceGeometry.dispose();
-    const wireMaterial = new THREE.ShaderMaterial({
+    const silkLineMaterial = new THREE.ShaderMaterial({
         uniforms: sharedUniforms,
         transparent: true,
         depthTest: false,
@@ -484,22 +566,32 @@ function createHeroWave(THREE) {
 
             void main() {
                 vec3 transformed = position;
+                transformed.xz += waveWarp(transformed.xz, uTime);
                 transformed.y = waveHeight(transformed.xz, uTime);
 
                 float mesh = formationAmount(position, uTime);
                 float frontier = formationFrontier(position, uTime);
-                float idleGrid = 0.045 + 0.018 * sin(
-                    uTime * 0.48
+                float lustre = waveLustre(transformed.xz, uTime);
+                float idleGrid = 0.026 + 0.011 * sin(
+                    uTime * 0.38
                         + position.x * 0.22
                         + position.z * 0.18
                 );
                 vAlpha = surfaceFade(transformed)
                     * (
                         idleGrid
+                            + lustre * 0.16
                             + pow(mesh, 1.15)
-                                * (0.52 + frontier * 0.34)
+                                * (0.42 + frontier * 0.28 + lustre * 0.18)
                     );
-                vTint = clamp(0.35 + transformed.y * 0.25 + frontier * 0.34, 0.0, 1.0);
+                vTint = clamp(
+                    0.3
+                        + transformed.y * 0.22
+                        + frontier * 0.3
+                        + lustre * 0.44,
+                    0.0,
+                    1.0
+                );
 
                 gl_Position = projectionMatrix
                     * modelViewMatrix
@@ -521,9 +613,9 @@ function createHeroWave(THREE) {
         `
     });
 
-    const surfaceWireframe = new THREE.LineSegments(wireGeometry, wireMaterial);
-    surfaceWireframe.renderOrder = 1;
-    group.add(surfaceWireframe);
+    const silkLines = new THREE.LineSegments(silkLineGeometry, silkLineMaterial);
+    silkLines.renderOrder = 1;
+    group.add(silkLines);
 
     const driftingGeometry = new THREE.BufferGeometry();
     const driftingPositions = new Float32Array(driftingParticleCount * 3);
@@ -569,6 +661,7 @@ function createHeroWave(THREE) {
                 transformed.z += sin(
                     transformed.x * 0.38 + uTime * 0.32 + aSeed * 9.0
                 ) * 0.32;
+                transformed.xz += waveWarp(transformed.xz, uTime) * 0.55;
                 transformed.y += waveHeight(transformed.xz, uTime) * 0.68;
                 transformed.y += sin(uTime * 0.72 + aSeed * 14.0) * 0.24;
 
@@ -627,9 +720,10 @@ function createHeroWave(THREE) {
                     vec3(transformed.x, 0.0, transformed.z),
                     uTime
                 );
+                float lustre = waveLustre(transformed.xz, uTime);
                 float pulse = 0.52 + 0.48 * sin(uTime * 0.92 + aSeed * 21.0);
                 vAlpha = edge
-                    * (0.12 + pulse * 0.34)
+                    * (0.08 + pulse * 0.26 + lustre * 0.12)
                     * (0.35 + aSeed * 0.65)
                     * (1.0 - formation * 0.76);
                 float previewSelection = 1.0 - step(0.09, burstNoise);
@@ -660,7 +754,10 @@ function createHeroWave(THREE) {
                 );
                 vAlpha = mix(vAlpha, introAlpha, firstCycle);
                 vTint = clamp(
-                    0.35 + aSeed * 0.65 + firstCycle * burstArc * 0.12,
+                    0.3
+                        + aSeed * 0.52
+                        + lustre * 0.28
+                        + firstCycle * burstArc * 0.12,
                     0.0,
                     1.0
                 );
@@ -939,10 +1036,10 @@ function createHeroWave(THREE) {
             handlePreloaderHidden
         );
         surfaceGeometry.dispose();
-        wireGeometry.dispose();
+        silkLineGeometry.dispose();
         driftingGeometry.dispose();
         particleMaterial.dispose();
-        wireMaterial.dispose();
+        silkLineMaterial.dispose();
         driftingMaterial.dispose();
         renderer.dispose();
         renderer.domElement.remove();

@@ -2402,6 +2402,10 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   box-shadow: none;
 }
 
+.portfolio-evidence > .portfolio-disclosure:last-child {
+  border-bottom: 0;
+}
+
 .portfolio-disclosure summary {
   display: flex;
   gap: 1rem;

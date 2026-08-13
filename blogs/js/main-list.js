@@ -117,7 +117,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             archiveTitle: 'Articles',
             fromArchiveTitle: 'From the Archive',
             tabPosts: 'Posts',
-            tabNotes: 'Notes',
             tabSeries: 'Series',
             featuredLabel: 'Featured',
             readPost: 'Read post',
@@ -129,7 +128,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             archiveTitle: 'Articles',
             fromArchiveTitle: 'From the Archive',
             tabPosts: 'Posts',
-            tabNotes: 'Notes',
             tabSeries: 'Series',
             featuredLabel: 'Featured',
             readPost: '글 읽기',
@@ -185,12 +183,10 @@ document.addEventListener('DOMContentLoaded', async function() {
             element.setAttribute('placeholder', copy(lang, element.dataset.placeholderI18n));
         });
 
-        const postCount = sortedPosts.filter((post) => post.category === 'post').length;
-        const noteCount = sortedPosts.filter((post) => post.category === 'note').length;
+        const postCount = sortedPosts.length;
         const seriesCount = new Set(sortedPosts.map((post) => post.series).filter(Boolean)).size;
 
         setText('#posts-count', postCount);
-        setText('#notes-count', noteCount);
         setText('#series-count', seriesCount);
 
         if (langToggleButton) {

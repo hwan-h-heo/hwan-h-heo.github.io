@@ -4,8 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="대각화와 고윳값, SVD와 PCA를 통해 좌표계 변환이 복잡한 선형대수 문제를 어떻게 단순화하는지 살펴보기" />
-    <meta name="keywords" content="note, linear-algebra, Linear Algebra, 3D graphics, computer vision, machine learning" />
+    <meta name="keywords" content="post, linear-algebra, Linear Algebra, 3D graphics, computer vision, machine learning" />
     <meta name="author" content="Hwan Heo" />
+    <meta name="robots" content="noindex, nofollow" />
     <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/posts/change-of-basis-kor/" />
     <link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/change-of-basis/" />
     <link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/change-of-basis-kor/" />
@@ -57,7 +58,7 @@
                 } catch (error) {}
             })();
         </script>
-    <meta name="site-deploy-version" content="93bf107cbbd4c4d5">
+    <meta name="site-deploy-version" content="909f0bceca2a1dc9">
     <script defer src="/assets/js/deploy-refresh.js?v=ee9c6c8f26"></script>
 </head>
 <body class="blog-post-page">
@@ -162,7 +163,7 @@
                             <div class="post-hero-series">
                                 <span class="post-hero-series-label">Series</span>
                                 <span class="post-hero-series-separator" aria-hidden="true">/</span>
-                                <a href="/blogs/series/linear-algebra/">
+                                <a href="/blogs/">
                                     <span class="post-hero-series-name">딥러닝을 위한 선형대수</span>
                                     <span class="post-hero-series-arrow" aria-hidden="true">→</span>
                                 </a>
@@ -184,7 +185,7 @@
                                 <div class="post-intro-topics" aria-label="주제">
                                     <span class="post-intro-topics-label">Topics</span>
                                     <span class="post-intro-topics-separator" aria-hidden="true">/</span>
-                                    <div class="post-tags"><a class="post-tag" href="/blogs/tags/linear-algebra/">Linear Algebra</a></div>
+                                    <div class="post-tags"><span class="post-tag">Linear Algebra</span></div>
                                 </div>
                             </div>
                             <aside class="post-article-info" aria-label="글 정보">
@@ -494,16 +495,23 @@ $$</p>
                         <div class="related-post-grid">
                             
                             <article class="related-post-card">
-                                <a href="/blogs/posts/linear-system-kor/" aria-label="Read Linear System">
-                                    <strong>Linear System</strong>
-                                    <time datetime="2021-09-09">2021년 9월</time>
+                                <a href="/blogs/posts/gemm-on-nvidia-gpus-kor/" aria-label="Read NVIDIA GPU의 GEMM: Naive Kernel에서 Tiled Pipeline까지">
+                                    <strong>NVIDIA GPU의 GEMM: Naive Kernel에서 Tiled Pipeline까지</strong>
+                                    <time datetime="2026-08-12">2026년 8월</time>
                                 </a>
                             </article>
         
                             <article class="related-post-card">
-                                <a href="/blogs/posts/gemm-on-nvidia-gpus-kor/" aria-label="Read NVIDIA GPU의 GEMM: Naive Kernel에서 Tiled Pipeline까지">
-                                    <strong>NVIDIA GPU의 GEMM: Naive Kernel에서 Tiled Pipeline까지</strong>
-                                    <time datetime="2026-08-12">2026년 8월</time>
+                                <a href="/blogs/posts/optimizing-sparse-3d-generation-inference-kor/" aria-label="Read 컴파일러가 놓치는 Sparse 3D Generation Inference 최적화">
+                                    <strong>컴파일러가 놓치는 Sparse 3D Generation Inference 최적화</strong>
+                                    <time datetime="2026-07-27">2026년 7월</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective-kor/" aria-label="Read 3D 생성형 AI 서비스; Varco3D 개발기">
+                                    <strong>3D 생성형 AI 서비스; Varco3D 개발기</strong>
+                                    <time datetime="2026-01-15">2026년 1월</time>
                                 </a>
                             </article>
         
@@ -514,29 +522,15 @@ $$</p>
                                 </a>
                             </article>
         
-                            <article class="related-post-card">
-                                <a href="/blogs/posts/generalized-winding-number-kor/" aria-label="Read Generalized Winding Number">
-                                    <strong>Generalized Winding Number</strong>
-                                    <time datetime="2025-08-09">2025년 8월</time>
-                                </a>
-                            </article>
-        
                         </div>
                     </section>
     
                         <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
-                <a class="post-nav-card is-older" href="/blogs/posts/linear-system-kor/" aria-label="Previous Post: Linear System">
+                <a class="post-nav-card is-explore" href="/blogs/" aria-label="Blog: All posts">
                     <span class="post-nav-kicker">
-                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
+                        Blog <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
                     </span>
-                    <strong>Linear System</strong>
-                </a>
-    
-                <a class="post-nav-card is-explore" href="/blogs/posts/gemm-on-nvidia-gpus-kor/" aria-label="Explore Series: CUDA">
-                    <span class="post-nav-kicker">
-                        Explore Series <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
-                    </span>
-                    <strong>CUDA</strong>
+                    <strong>All posts</strong>
                 </a>
     </nav></div>
                     </div>
@@ -575,7 +569,7 @@ $$</p>
       "status": "published",
       "updated": "2026-08-12",
       "date": "2026-08-12",
-      "category": "note",
+      "category": "post",
       "series": "cuda",
       "languages": [
         "eng",
@@ -641,7 +635,7 @@ $$</p>
       "status": "published",
       "updated": "2025-08-23",
       "date": "2025-08-23",
-      "category": "note",
+      "category": "post",
       "series": "graphics",
       "languages": [
         "eng",
@@ -684,7 +678,7 @@ $$</p>
       "status": "published",
       "updated": "2025-08-09",
       "date": "2025-08-09",
-      "category": "note",
+      "category": "post",
       "series": "graphics",
       "languages": [
         "eng",
@@ -750,7 +744,7 @@ $$</p>
       "status": "published",
       "updated": "2025-03-10",
       "date": "2025-03-10",
-      "category": "note",
+      "category": "post",
       "series": "web-3d",
       "languages": [
         "eng",
@@ -816,7 +810,7 @@ $$</p>
       "status": "published",
       "updated": "2024-09-17",
       "date": "2024-09-17",
-      "category": "note",
+      "category": "post",
       "series": "web-3d",
       "languages": [
         "eng",
@@ -1014,128 +1008,6 @@ $$</p>
         "eng"
       ],
       "slug": "why-positional-encoding-makes-nerf-more-powerful"
-    },
-    {
-      "id": "210910_lin_alg_2",
-      "title_eng": "Change of Basis",
-      "title_kor": "Change of Basis",
-      "subtitle_eng": "Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)",
-      "subtitle_kor": "대각화와 고윳값, SVD와 PCA를 통해 좌표계 변환이 복잡한 선형대수 문제를 어떻게 단순화하는지 살펴보기",
-      "tags": [
-        "Linear Algebra"
-      ],
-      "cover": "/blogs/posts/210910_lin_alg_2/assets/image-1.png",
-      "status": "published",
-      "updated": "2021-09-10",
-      "date": "2021-09-10",
-      "category": "note",
-      "series": "linear-algebra",
-      "languages": [
-        "eng",
-        "kor"
-      ],
-      "slug": "change-of-basis"
-    },
-    {
-      "id": "210909_lin_alg_1",
-      "title_eng": "Linear System",
-      "title_kor": "Linear System",
-      "subtitle_eng": "Building intuition for linear systems and transformations through matrices, basis vectors, and geometric mappings",
-      "subtitle_kor": "행렬과 기저벡터의 관점에서 선형시스템과 선형변환이 공간을 어떻게 바꾸는지 직관적으로 살펴보기",
-      "tags": [
-        "Linear Algebra"
-      ],
-      "cover": "/blogs/posts/210909_lin_alg_1/assets/image.png",
-      "status": "published",
-      "updated": "2021-09-09",
-      "date": "2021-09-09",
-      "category": "note",
-      "series": "linear-algebra",
-      "languages": [
-        "eng",
-        "kor"
-      ],
-      "slug": "linear-system"
-    },
-    {
-      "id": "210602_cv4",
-      "title_eng": "3D Stereo Vision and Epipolar Geometry",
-      "title_kor": "3D Stereo Vision and Epipolar Geometry",
-      "subtitle_eng": "From camera projection to stereo correspondence, deriving the epipolar geometry used to recover 3D structure from two views.",
-      "subtitle_kor": "Camera Projection, Stereo, and Epipolar Geometry",
-      "tags": [
-        "Computer Vision"
-      ],
-      "cover": "/blogs/posts/210602_cv4/assets/svg6.svg",
-      "status": "published",
-      "updated": "2021-06-02",
-      "date": "2021-06-02",
-      "category": "note",
-      "series": "computer-vision",
-      "languages": [
-        "eng"
-      ],
-      "slug": "3d-stereo-vision-and-epipolar-geometry"
-    },
-    {
-      "id": "210502_cv3",
-      "title_eng": "Homography and Image Alignment",
-      "title_kor": "Homography and Image Alignment",
-      "subtitle_eng": "How image transformations, homographies, feature correspondences, and alignment connect in practical computer vision pipelines.",
-      "subtitle_kor": "Image Transformation, Homography, and Correspondence Matching",
-      "tags": [
-        "Computer Vision"
-      ],
-      "cover": "/blogs/posts/210502_cv3/assets/svg4.svg",
-      "status": "published",
-      "updated": "2021-05-02",
-      "date": "2021-05-02",
-      "category": "note",
-      "series": "computer-vision",
-      "languages": [
-        "eng"
-      ],
-      "slug": "homography-and-image-alignment"
-    },
-    {
-      "id": "210402_cv2",
-      "title_eng": "Feature Extraction and Detection",
-      "title_kor": "Feature Extraction and Detection",
-      "subtitle_eng": "A practical tour of image gradients, Sobel and LoG filters, and the feature detection principles built on top of them.",
-      "subtitle_kor": "Image Gradient, Sobel Filter, LoG, and Detection",
-      "tags": [
-        "Computer Vision"
-      ],
-      "cover": "/blogs/posts/210402_cv2/assets/svg1.svg",
-      "status": "published",
-      "updated": "2021-04-02",
-      "date": "2021-04-02",
-      "category": "note",
-      "series": "computer-vision",
-      "languages": [
-        "eng"
-      ],
-      "slug": "feature-extraction-and-detection"
-    },
-    {
-      "id": "210302_cv1",
-      "title_eng": "Image Filter and Morphology",
-      "title_kor": "Image Filter and Morphology",
-      "subtitle_eng": "A practical introduction to spatial image filters and morphology, including erosion, dilation, opening, and closing.",
-      "subtitle_kor": "다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여",
-      "tags": [
-        "Computer Vision"
-      ],
-      "cover": "/blogs/posts/210302_cv1/assets/image-1.jpg",
-      "status": "published",
-      "updated": "2021-03-02",
-      "date": "2021-03-02",
-      "category": "note",
-      "series": "computer-vision",
-      "languages": [
-        "eng"
-      ],
-      "slug": "image-filter-and-morphology"
     }
   ],
   "series": {

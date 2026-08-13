@@ -339,74 +339,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://hwan-h-heo.github.io/blogs/posts/change-of-basis/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/change-of-basis/" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/change-of-basis-kor/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/change-of-basis/" />
-    <lastmod>2021-09-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hwan-h-heo.github.io/blogs/posts/change-of-basis-kor/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/change-of-basis/" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/change-of-basis-kor/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/change-of-basis/" />
-    <lastmod>2021-09-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hwan-h-heo.github.io/blogs/posts/linear-system/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/linear-system/" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/linear-system-kor/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/linear-system/" />
-    <lastmod>2021-09-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hwan-h-heo.github.io/blogs/posts/linear-system-kor/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/linear-system/" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/linear-system-kor/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/linear-system/" />
-    <lastmod>2021-09-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hwan-h-heo.github.io/blogs/posts/3d-stereo-vision-and-epipolar-geometry/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/3d-stereo-vision-and-epipolar-geometry/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/3d-stereo-vision-and-epipolar-geometry/" />
-    <lastmod>2021-06-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hwan-h-heo.github.io/blogs/posts/homography-and-image-alignment/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/homography-and-image-alignment/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/homography-and-image-alignment/" />
-    <lastmod>2021-05-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hwan-h-heo.github.io/blogs/posts/feature-extraction-and-detection/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/feature-extraction-and-detection/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/feature-extraction-and-detection/" />
-    <lastmod>2021-04-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://hwan-h-heo.github.io/blogs/posts/image-filter-and-morphology/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/image-filter-and-morphology/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/image-filter-and-morphology/" />
-    <lastmod>2021-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://hwan-h-heo.github.io/blogs/series/3d-generation/</loc>
     <lastmod>2026-07-27</lastmod>
     <changefreq>monthly</changefreq>
@@ -415,12 +347,6 @@
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/series/web-3d/</loc>
     <lastmod>2025-03-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hwan-h-heo.github.io/blogs/series/computer-vision/</loc>
-    <lastmod>2021-06-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -437,12 +363,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://hwan-h-heo.github.io/blogs/series/linear-algebra/</loc>
-    <lastmod>2021-09-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://hwan-h-heo.github.io/blogs/series/nerf-and-gs/</loc>
     <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
@@ -451,12 +371,6 @@
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/tags/3d-generation/</loc>
     <lastmod>2026-07-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hwan-h-heo.github.io/blogs/tags/computer-vision/</loc>
-    <lastmod>2021-06-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -481,12 +395,6 @@
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/tags/graphics/</loc>
     <lastmod>2025-08-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hwan-h-heo.github.io/blogs/tags/linear-algebra/</loc>
-    <lastmod>2021-09-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

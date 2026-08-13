@@ -67,8 +67,9 @@
         originalId: '',
         lockedLanguages: ['eng'],
         bootstrap: {
-            categories: ['post', 'note'],
+            categories: ['post'],
             languages: ['eng', 'kor'],
+            statuses: ['published', 'unlisted', 'draft'],
             blogHome: {},
             series: {},
             posts: [],
@@ -741,8 +742,9 @@
                 (siteData.featuredPortfolioPosts || []).map((item, index) => [item.id, { ...item, order: index }])
             );
             state.bootstrap = {
-                categories: ['post', 'note'],
+                categories: ['post'],
                 languages: ['eng', 'kor'],
+                statuses: ['published', 'unlisted', 'draft'],
                 blogHome: { ...(siteData.blogHome || {}) },
                 series: siteData.series || {},
                 posts: [...(siteData.posts || [])].sort((a, b) => new Date(b.date) - new Date(a.date)),
@@ -2396,7 +2398,7 @@
             subtitle_kor: metadata.subtitle_kor || '',
             tags: Array.isArray(metadata.tags) ? metadata.tags : [],
             cover: metadata.cover || '',
-            status: metadata.status === 'published' ? 'published' : 'draft',
+            status: (state.bootstrap.statuses || []).includes(metadata.status) ? metadata.status : 'draft',
             updated: metadata.updated || metadata.date || new Date().toISOString().slice(0, 10),
             slug: metadata.slug || '',
             featured: Boolean(metadata.featured),
@@ -2901,18 +2903,18 @@
             errors.push('Updated date must use YYYY-MM-DD.');
         }
 
-        if (payload.post.status === 'published') {
+        if (payload.post.status !== 'draft') {
             if (!payload.post.subtitle_eng) {
-                errors.push('Published posts need an English subtitle.');
+                errors.push('Published and unlisted posts need an English subtitle.');
             }
             if (payload.post.languages.includes('kor') && !payload.post.subtitle_kor) {
-                errors.push('Published Korean posts need a Korean subtitle.');
+                errors.push('Published and unlisted Korean posts need a Korean subtitle.');
             }
             if (!payload.post.cover || payload.post.cover === '/assets/blog_bg.jpeg') {
-                errors.push('Published posts need a post-specific cover image.');
+                errors.push('Published and unlisted posts need a post-specific cover image.');
             }
             if (payload.post.tags.length === 0) {
-                errors.push('Published posts need at least one tag.');
+                errors.push('Published and unlisted posts need at least one tag.');
             }
         }
 
