@@ -411,7 +411,7 @@ quiet `00 / TECHNICAL WRITING · YEAR—YEAR` publication imprint so the section
 subject is immediately legible without adding a separate logo treatment. Use a
 `WRITTEN BY / HWAN HEO` byline on its own following row, right-aligned to the
 copy measure on wide screens and left-aligned on phone layouts. Keep Posts /
-Notes / Series counts in the `02 ARTICLES` tabs instead of duplicating them in
+Series counts in the `02 ARTICLES` tabs instead of duplicating them in
 the Hero. Use a single-line title on wide screens and a single-line standfirst
 where the measure allows it. Keep the wide-screen utility search
 compact enough that its left edge begins beyond the visible title text instead
@@ -504,7 +504,7 @@ featured, archive, and search rows.
 
 On the Blog home, treat Featured and Articles as the two top-level publication
 chapters: `01 FEATURED` and `02 ARTICLES`. Set both in the same short uppercase
-mono grammar with a quiet trailing hairline. Posts, Notes, and Series remain
+mono grammar with a quiet trailing hairline. Posts and Series remain
 unnumbered tabs within Articles; keep their counts and conventional active-tab
 underline so the controls do not compete with the chapter folios. On compact
 layouts, let the tab row move beneath the complete `02 ARTICLES` label and rule.
@@ -531,9 +531,9 @@ current boundary begins with `Neural Rendering Beyond Photography`, marking the
 shift from broader 3D generation and 3D AI writing into the earlier neural-
 rendering body of work. This reverses the opening Archive spread from Featured,
 then marks the archive with a single deliberate shift. Keep `02 ARTICLES` as
-the tab-owning chapter so Posts, Notes, and Series remain coherent, then insert
-one `03 FROM THE ARCHIVE` folio immediately before the configured boundary Post
-or the first qualifying Note. Remove the final current row's bottom hairline at
+the tab-owning chapter so Posts and Series remain coherent, then insert one `03
+FROM THE ARCHIVE` folio immediately before the configured boundary Post. Remove
+the final current row's bottom hairline at
 this boundary so it does not double the new folio rule. Keep all text
 left-aligned and reset to media-first stacked rows on the compact single-column
 layout.
@@ -604,19 +604,24 @@ Use a shared index/table grammar. Do not introduce a separate card system.
   writing. Keep the folio neutral and the adjacent editorial label accented;
   it is margin notation, never a badge or a separate metadata row. Blog-home
   archive rows are the exception: their shared `02 ARTICLES` chapter label
-  provides the index, so individual Posts and Notes do not repeat a folio.
+  provides the index, so individual Posts do not repeat a folio.
 
 ## Interaction And Motion
 
 Motion should confirm an interaction, not advertise itself.
 
 The production portfolio hero is the established Wave and must remain the only
-home-page hero implementation. `js/hero.js` loads it directly; URL parameters,
-article demos, and experimental assets must not replace it or alter its shader,
-timeline, palette, or fallback behavior. Technical visualizations such as the
+home-page hero implementation. Its canonical surface is an asymmetric
+interference field: domain-warped silk folds cross a restrained radial
+diffraction pattern, with sparse cyan-white lustre traveling along the crests.
+Keep the parallel base strands subordinate so the moving highlights, rather
+than a generic orthogonal grid, describe the surface. Preserve the dark ink
+stage, cyan-neutral palette, calm ambient pace, CTA timing, and static fallback.
+`js/hero.js` loads the Wave directly; URL parameters, article demos, and
+experimental assets must not replace it. Technical visualizations such as the
 coarse-to-fine voxel decoder belong to a dedicated Note or demo route. Load
-their scripts and binary assets only inside that opt-in context, with no requests
-or handoff state added to the portfolio home page.
+their scripts and binary assets only inside that opt-in context, with no
+requests or handoff state added to the portfolio home page.
 
 Canonical timing:
 
