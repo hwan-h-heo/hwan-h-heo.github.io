@@ -5,8 +5,9 @@ const { loadSiteData } = require('../blogs/lib/site-data');
 
 const repoRoot = path.join(__dirname, '..');
 const siteData = loadSiteData();
-const postIds = new Set(siteData.posts.map((post) => post.id));
-const postSlugs = new Set(siteData.posts.flatMap((post) => post.languages.map((language) => language === 'eng' ? post.slug : `${post.slug}-kor`)));
+const routablePosts = siteData.routablePosts || siteData.posts;
+const postIds = new Set(routablePosts.map((post) => post.id));
+const postSlugs = new Set(routablePosts.flatMap((post) => post.languages.map((language) => language === 'eng' ? post.slug : `${post.slug}-kor`)));
 const remoteRenderedImagePattern = /^https?:\/\//i;
 const imageExtensionPattern = /\.(png|jpe?g|gif|webp|svg|avif)(\?[^\s)"']*)?$/i;
 const largeMediaWarningBytes = 15 * 1024 * 1024;
@@ -132,7 +133,7 @@ files.forEach((file) => {
 });
 
 const metadataPath = path.join(repoRoot, 'blogs', 'data', 'site-data.json');
-siteData.posts.forEach((post) => {
+routablePosts.forEach((post) => {
     checkReference(metadataPath, { kind: 'image', value: post.cover });
     checkReference(metadataPath, { kind: 'image', value: post.previewImage });
 });

@@ -515,7 +515,6 @@ async function captureScreenshot(page, testCase, width, state, options) {
 async function assertBlogTabs(page) {
     const tabs = [
         ['#posts-tab-control', '#posts-tab'],
-        ['#notes-tab-control', '#notes-tab'],
         ['#series-tab-control', '#series-tab']
     ];
 
@@ -707,12 +706,11 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
         const previewDate = firstPreview?.querySelector('.post-meta');
         const previewTags = firstPreview?.querySelector('.post-tag-row');
         const postArchiveCards = Array.from(document.querySelectorAll('#posts-tab .post-preview'));
-        const noteArchiveCards = Array.from(document.querySelectorAll('#notes-tab .post-preview'));
         return {
             configuredFeaturedLanguage: featuredPost?.languages?.includes('kor') ? 'ko' : 'en',
             configuredFeaturedPostId: featuredPostId,
             configuredArchiveStartPostId: archiveStartPostId,
-            configuredPostCount: siteData.posts.filter((post) => post.category === 'post').length,
+            configuredPostCount: siteData.posts.filter((post) => (post.status || 'published') === 'published').length,
             featuredPostId: document.querySelector('.blog-feature-card')?.dataset.postId || '',
             heroIntroFontFamily: heroIntroStyle.fontFamily,
             heroIntroLetterSpacing: heroIntroStyle.letterSpacing,
@@ -762,9 +760,10 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
                 : false,
             tabCounts: [
                 document.querySelector('#posts-count')?.textContent.trim(),
-                document.querySelector('#notes-count')?.textContent.trim(),
                 document.querySelector('#series-count')?.textContent.trim()
             ],
+            tabControlCount: document.querySelectorAll('.blog-home-tab[role="tab"]').length,
+            hasNotesTab: Boolean(document.querySelector('#notes-tab, #notes-tab-control')),
             featureStartsAfterHero: featureCover && hero
                 ? featureCover.getBoundingClientRect().top >= hero.getBoundingClientRect().bottom
                 : false,
@@ -790,12 +789,11 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
                 && (previewSubtitle.compareDocumentPosition(previewDate) & Node.DOCUMENT_POSITION_FOLLOWING)
                 && (previewDate.compareDocumentPosition(previewTags) & Node.DOCUMENT_POSITION_FOLLOWING)
             ),
-            archiveEraSignatureMatches: [...postArchiveCards, ...noteArchiveCards].every((card) => {
+            archiveEraSignatureMatches: postArchiveCards.every((card) => {
                 return card.classList.contains('post-preview-media-right') === !cardIsFromArchive(card);
             }),
             archiveEraBreaks: [
-                document.querySelector('#posts-tab'),
-                document.querySelector('#notes-tab')
+                document.querySelector('#posts-tab')
             ].map((panel) => {
                 const cards = Array.from(panel.querySelectorAll('.post-preview[data-post-id]'));
                 const marker = panel.querySelector('.blog-home-era-break');
@@ -864,6 +862,10 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
         Number(initialTitleState.tabCounts[0]) === initialTitleState.configuredPostCount,
         'Blog Articles tab count excludes the configured Featured post.'
     );
+    assert(
+        initialTitleState.tabControlCount === 2 && !initialTitleState.hasNotesTab,
+        'Blog home must expose only the Posts and Series tabs.'
+    );
     assert(initialTitleState.featureStartsAfterHero, 'Featured media moved into or behind the image-free editorial cover.');
     assert(initialTitleState.featureOpeningGap >= 56, `Featured begins too close to the Hero: ${initialTitleState.featureOpeningGap}px.`);
     assert(
@@ -896,7 +898,7 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
                 && entry.precedingBorderWidth === '0px'
                 && entry.betweenEras
         )),
-        'Posts or Notes lost the single 03 From the Archive boundary at the media-side transition.'
+        'Posts lost the single 03 From the Archive boundary at the media-side transition.'
     );
     assert(
         initialTitleState.configuredArchiveStartPostId

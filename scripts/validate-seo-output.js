@@ -196,10 +196,10 @@ function checkStaticIndex(siteData, rawSiteData, errors) {
     });
 
     (rawSiteData.posts || [])
-        .filter((post) => post.status === 'draft')
+        .filter((post) => (post.status || 'published') !== 'published')
         .forEach((post) => {
             if ($(`[data-post-id="${post.id}"]`).length || [...hrefs].some((href) => href.includes(post.slug || post.id))) {
-                errors.push(`Draft post "${post.id}" appears in the generated blog index.`);
+                errors.push(`Non-public post "${post.id}" appears in the generated blog index.`);
             }
         });
 
@@ -208,6 +208,42 @@ function checkStaticIndex(siteData, rawSiteData, errors) {
     if (duplicateCardIds.length > 0) {
         errors.push(`Featured/regular post cards are duplicated in the blog index: ${[...new Set(duplicateCardIds)].join(', ')}`);
     }
+}
+
+function checkUnlistedPosts(siteData, errors) {
+    const unlistedPosts = siteData.unlistedPosts || [];
+    const discoveryFiles = [
+        path.join(distRoot, 'blogs', 'index.html'),
+        path.join(distRoot, 'blogs', 'feed.xml'),
+        path.join(distRoot, 'sitemap.xml'),
+        path.join(distRoot, 'google-sitemap.xml'),
+        path.join(distRoot, 'google-sitemap.txt')
+    ];
+    const discoveryContent = discoveryFiles
+        .filter((filePath) => fs.existsSync(filePath))
+        .map(readText)
+        .join('\n');
+
+    unlistedPosts.forEach((post) => {
+        post.languages.forEach((language) => {
+            const route = getPostRoute(post, language);
+            const relativePath = routeToDistRelative(route);
+            const filePath = path.join(distRoot, relativePath);
+            if (!fs.existsSync(filePath)) {
+                errors.push(`Unlisted ${language} route for "${post.id}" was not generated: ${route}`);
+                return;
+            }
+
+            const { $ } = loadHtml(relativePath);
+            const robots = normalizeHref($('meta[name="robots"]').attr('content')).toLowerCase();
+            if (!robots.includes('noindex') || !robots.includes('nofollow')) {
+                errors.push(`Unlisted route must use noindex, nofollow: ${route}`);
+            }
+            if (discoveryContent.includes(route)) {
+                errors.push(`Unlisted route appears in a public discovery surface: ${route}`);
+            }
+        });
+    });
 }
 
 function checkSitemap(siteData, errors) {
@@ -712,6 +748,7 @@ async function main() {
     const siteData = loadSiteData();
 
     checkStaticIndex(siteData, rawSiteData, errors);
+    checkUnlistedPosts(siteData, errors);
     checkSitemap(siteData, errors);
     checkCanonicals(siteData, errors);
     checkHeadingsAndTitles(siteData, errors);

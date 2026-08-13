@@ -21,7 +21,7 @@ const rawSiteData = loadRawSiteData();
 validateSiteData(rawSiteData);
 const siteData = loadSiteData();
 
-siteData.posts.forEach((post) => {
+(siteData.routablePosts || siteData.posts).forEach((post) => {
     if (!post.cover || post.cover === '/assets/blog_bg.jpeg') {
         errors.push(`Post ${post.id} must define a post-specific cover image.`);
     }
@@ -82,4 +82,4 @@ if (errors.length > 0) {
     fail('Content check failed.', errors);
 }
 
-console.log(`Content check passed: ${siteData.posts.length} published posts, ${portfolio.blocks.length} portfolio blocks.`);
+console.log(`Content check passed: ${siteData.posts.length} published posts, ${siteData.unlistedPosts.length} unlisted posts, ${portfolio.blocks.length} portfolio blocks.`);

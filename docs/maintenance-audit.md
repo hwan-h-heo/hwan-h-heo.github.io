@@ -150,7 +150,7 @@ Post metadata is now frontmatter-like JSON rather than Markdown frontmatter. Its
 
 `blogs/build-static.js` renders every configured post and language. Missing configured `content-*.md` files fail the build. It calculates reading time, injects share UI if missing, generates a TOC for headings, normalizes some legacy asset paths, and renders post pages through `blogs/lib/render-post-page.js`.
 
-`blogs/index.html` is a static shell. `blogs/js/main-list.js` fetches `blogs/data/site-data.json`, sorts posts by date, and renders Posts, Notes, and Series tabs in the browser.
+`blogs/index.html` is a static shell. `blogs/js/main-list.js` fetches `blogs/data/site-data.json`, sorts posts by date, and enhances the statically rendered Posts and Series tabs in the browser.
 
 Search is a copied static page. Its client script also depends on `site-data-client.js`.
 

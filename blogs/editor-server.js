@@ -7,6 +7,7 @@ const { normalizeMathMarkdown } = require('./js/markdown-with-math');
 const {
     POST_CATEGORIES,
     POST_LANGUAGES,
+    POST_STATUSES,
     loadRawSiteData,
     validateSiteData,
     writeSiteData
@@ -192,6 +193,7 @@ function buildBootstrapPayload() {
     return {
         categories: POST_CATEGORIES,
         languages: POST_LANGUAGES,
+        statuses: POST_STATUSES,
         blogHome: { ...rawSiteData.blogHome },
         series: rawSiteData.series,
         featuredPortfolioPosts: rawSiteData.featuredPortfolioPosts || [],
@@ -364,28 +366,28 @@ function sanitizePostInput(rawSiteData, payload) {
         errors.push('Slug must use lowercase words separated by hyphens.');
     }
 
-    if (sanitizedPost.status && !['published', 'draft'].includes(sanitizedPost.status)) {
-        errors.push('Status must be published or draft.');
+    if (sanitizedPost.status && !POST_STATUSES.includes(sanitizedPost.status)) {
+        errors.push(`Status must be one of: ${POST_STATUSES.join(', ')}.`);
     }
 
-    if ((sanitizedPost.status || originalPost?.status || 'published') === 'published') {
+    if ((sanitizedPost.status || originalPost?.status || 'published') !== 'draft') {
         if (!(sanitizedPost.slug || originalPost?.slug)) {
-            errors.push('Published posts require a stable slug.');
+            errors.push('Published and unlisted posts require a stable slug.');
         }
         if (!(sanitizedPost.subtitle_eng || originalPost?.subtitle_eng)) {
-            errors.push('Published posts require an English subtitle.');
+            errors.push('Published and unlisted posts require an English subtitle.');
         }
         if (
             sanitizedPost.languages.includes('kor')
             && !(sanitizedPost.subtitle_kor || originalPost?.subtitle_kor)
         ) {
-            errors.push('Published Korean posts require a Korean subtitle.');
+            errors.push('Published and unlisted Korean posts require a Korean subtitle.');
         }
         if (!(sanitizedPost.cover || originalPost?.cover) || (sanitizedPost.cover || originalPost?.cover) === '/assets/blog_bg.jpeg') {
-            errors.push('Published posts require a post-specific cover image.');
+            errors.push('Published and unlisted posts require a post-specific cover image.');
         }
         if ((sanitizedPost.tags || originalPost?.tags || []).length === 0) {
-            errors.push('Published posts require at least one tag.');
+            errors.push('Published and unlisted posts require at least one tag.');
         }
     }
 

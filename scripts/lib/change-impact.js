@@ -122,7 +122,7 @@ function isStaticCopyFile(filePath) {
 }
 
 function analyzeChangedFiles(changedFiles, siteData) {
-    const postById = new Map(siteData.posts.map((post) => [post.id, post]));
+    const postById = new Map((siteData.routablePosts || siteData.posts).map((post) => [post.id, post]));
     const postTargets = new Map();
     const staticFiles = [];
     const fullBuildReasons = [];

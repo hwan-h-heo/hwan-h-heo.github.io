@@ -54,9 +54,7 @@ function renderArchiveEntries(posts, lang, siteData) {
     let archiveStarted = false;
 
     return posts.map((post) => {
-        // Notes are implementation/reference material rather than a dated news
-        // stream, so keep the complete Notes collection above the era break.
-        const fromArchive = post.category === 'post' && isFromArchive(post, siteData);
+        const fromArchive = isFromArchive(post, siteData);
         const fromArchiveHeading = fromArchive && !archiveStarted
             ? `
                         <div class="blog-home-era-break">
@@ -81,14 +79,11 @@ function renderArchiveEntries(posts, lang, siteData) {
 function renderStaticBlogIndex(sourceHtml, siteData) {
     const lang = 'eng';
     const featuredPost = getFeaturedPost(siteData);
-    const allPosts = siteData.posts.filter((post) => post.category === 'post');
+    const allPosts = siteData.posts;
     const regularPosts = allPosts.filter((post) => post.id !== featuredPost?.id);
-    const notes = siteData.posts.filter((post) => post.category === 'note');
     const seriesCount = new Set(siteData.posts.map((post) => post.series).filter(Boolean)).size;
     const postsHtml = renderArchiveEntries(regularPosts, lang, siteData)
         || '<p class="blog-home-empty">No posts yet.</p>';
-    const notesHtml = renderArchiveEntries(notes, lang, siteData)
-        || '<p class="blog-home-empty">No notes yet.</p>';
     const seriesHtml = renderSeriesGroups(siteData, lang)
         || '<p class="blog-home-empty">No series yet.</p>';
 
@@ -119,12 +114,6 @@ function renderStaticBlogIndex(sourceHtml, siteData) {
     );
     html = replaceOrFail(
         html,
-        /<span class="blog-home-tab-count" id="notes-count"><\/span>/,
-        `<span class="blog-home-tab-count" id="notes-count">${notes.length}</span>`,
-        'notes count'
-    );
-    html = replaceOrFail(
-        html,
         /<span class="blog-home-tab-count" id="series-count"><\/span>/,
         `<span class="blog-home-tab-count" id="series-count">${seriesCount}</span>`,
         'series count'
@@ -134,12 +123,6 @@ function renderStaticBlogIndex(sourceHtml, siteData) {
         /(<div class="blog-home-tab-panel is-active" id="posts-tab" role="tabpanel" aria-labelledby="posts-tab-control" tabindex="0">)\s*(<\/div>)/,
         `$1\n${postsHtml}\n                    $2`,
         'posts tab'
-    );
-    html = replaceOrFail(
-        html,
-        /(<div class="blog-home-tab-panel" id="notes-tab" role="tabpanel" aria-labelledby="notes-tab-control" tabindex="0" hidden>)\s*(<\/div>)/,
-        `$1\n${notesHtml}\n                    $2`,
-        'notes tab'
     );
     html = replaceOrFail(
         html,

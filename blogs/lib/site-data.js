@@ -4,8 +4,9 @@ const path = require('path');
 const SITE_DATA_PATH = path.join(__dirname, '..', 'data', 'site-data.json');
 const POST_RELATED_PATH = path.join(__dirname, '..', 'data', 'post-related.json');
 const REPO_ROOT = path.join(__dirname, '..', '..');
-const POST_CATEGORIES = ['post', 'note'];
+const POST_CATEGORIES = ['post'];
 const POST_LANGUAGES = ['eng', 'kor'];
+const POST_STATUSES = ['published', 'unlisted', 'draft'];
 const PORTFOLIO_CATEGORIES = ['research', 'app', 'per'];
 
 const POST_ALLOWED_KEYS = new Set([
@@ -93,7 +94,7 @@ function validatePostShape(post, seriesMap, errors) {
         validateStringField(post, key, errors, `post "${post.id || 'unknown'}"`, false);
     });
 
-    if (post.status && !['published', 'draft'].includes(post.status)) {
+    if (post.status && !POST_STATUSES.includes(post.status)) {
         errors.push(`Invalid status "${post.status}" in post "${post.id}".`);
     }
 
@@ -149,23 +150,23 @@ function validatePostShape(post, seriesMap, errors) {
     });
 
     const status = post.status || 'published';
-    if (status === 'published') {
+    if (status !== 'draft') {
         ['slug', 'subtitle_eng', 'cover', 'updated'].forEach((key) => {
             if (!post[key]) {
-                errors.push(`Published post "${post.id}" must define "${key}".`);
+                errors.push(`Published or unlisted post "${post.id}" must define "${key}".`);
             }
         });
         if (post.languages?.includes('kor') && !post.subtitle_kor) {
-            errors.push(`Published post "${post.id}" must define "subtitle_kor" for Korean content.`);
+            errors.push(`Published or unlisted post "${post.id}" must define "subtitle_kor" for Korean content.`);
         }
         if (!Array.isArray(post.tags) || post.tags.length === 0) {
-            errors.push(`Published post "${post.id}" must define at least one tag.`);
+            errors.push(`Published or unlisted post "${post.id}" must define at least one tag.`);
         }
         if (post.cover === '/assets/blog_bg.jpeg') {
-            errors.push(`Published post "${post.id}" must use a post-specific cover.`);
+            errors.push(`Published or unlisted post "${post.id}" must use a post-specific cover.`);
         }
         if (isExternalUrl(post.cover || '')) {
-            errors.push(`Published post "${post.id}" must use a local cover.`);
+            errors.push(`Published or unlisted post "${post.id}" must use a local cover.`);
         }
     }
 
@@ -377,7 +378,7 @@ function normalizeRelatedByLanguage(relatedConfig = {}) {
 }
 
 function normalizeSiteData(rawSiteData, relatedData = {}) {
-    const posts = rawSiteData.posts
+    const routablePosts = rawSiteData.posts
         .filter((post) => post.status !== 'draft')
         .map((post) => ({
             ...post,
@@ -393,9 +394,11 @@ function normalizeSiteData(rawSiteData, relatedData = {}) {
             relatedByLanguage: normalizeRelatedByLanguage(relatedData[post.id])
         })).sort((a, b) => new Date(b.date) - new Date(a.date));
 
-    const postById = Object.fromEntries(posts.map((post) => [post.id, post]));
-    const slugMapping = Object.fromEntries(posts.map((post) => [post.id, post.slug]));
-    const slugToId = Object.fromEntries(posts.map((post) => [post.slug, post.id]));
+    const posts = routablePosts.filter((post) => post.status === 'published');
+    const unlistedPosts = routablePosts.filter((post) => post.status === 'unlisted');
+    const postById = Object.fromEntries(routablePosts.map((post) => [post.id, post]));
+    const slugMapping = Object.fromEntries(routablePosts.map((post) => [post.id, post.slug]));
+    const slugToId = Object.fromEntries(routablePosts.map((post) => [post.slug, post.id]));
 
     const featuredPortfolioPosts = (rawSiteData.featuredPortfolioPosts || []).map((item) => ({
         ...item,
@@ -404,6 +407,8 @@ function normalizeSiteData(rawSiteData, relatedData = {}) {
 
     return {
         posts,
+        unlistedPosts,
+        routablePosts,
         blogHome: { ...rawSiteData.blogHome },
         series: rawSiteData.series,
         portfolioProjects: rawSiteData.portfolioProjects || [],
@@ -620,6 +625,7 @@ module.exports = {
     POST_RELATED_PATH,
     POST_CATEGORIES,
     POST_LANGUAGES,
+    POST_STATUSES,
     PORTFOLIO_CATEGORIES,
     createSlug,
     isFromArchive,

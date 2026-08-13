@@ -34,7 +34,7 @@
 - [x] Root route `/` is generated in `blogs/dist/index.html`.
 - [x] Portfolio anchors still exist as `#home`, `#about`, `#resume`, `#portfolio`, `#blog`.
 - [x] Portfolio cards render and filter correctly in browser QA.
-- [x] Blog home renders Posts, Notes, and Series tabs in browser QA.
+- [x] Blog home renders Posts and Series tabs in browser QA.
 - [x] Search page returns cards with covers/tags in browser QA.
 - [x] Local HTTP checks passed for root HTML, portfolio block JSON, a representative blog post, and a representative project page.
 - [x] Representative English and Korean post routes exist in `blogs/dist`.

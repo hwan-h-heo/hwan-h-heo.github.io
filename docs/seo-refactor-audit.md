@@ -17,14 +17,15 @@ The build currently:
 
 Post pages are statically rendered for article body content. Markdown lives in `blogs/posts/<id>/content-eng.md` and optional `content-kor.md`; `blogs/build-static.js` parses it with `marked` plus the local math parser, normalizes asset paths, injects share UI and TOC, and writes `/blogs/posts/<slug>/index.html` plus `/blogs/posts/<slug>-kor/index.html`.
 
-The blog homepage is not currently content-first. `blogs/index.html` ships as a shell with empty containers:
+The blog homepage source provides the Posts and Series tab shells:
 
 - `#blog-home-feature`
 - `#posts-tab`
-- `#notes-tab`
 - `#series-tab`
 
-`blogs/js/main-list.js` fetches `/blogs/data/site-data.json` in the browser and injects the featured card, archive cards, notes, and series. With JavaScript disabled, the homepage exposes no post list links.
+`blogs/lib/render-blog-index.js` fills those containers with static post links at
+build time. `blogs/js/main-list.js` then enhances language switching and tab
+interaction in the browser.
 
 ## URL Discovery Flow
 
@@ -68,7 +69,7 @@ Static today:
 Client-rendered today:
 
 - blog homepage featured post;
-- blog homepage post and note archive;
+- blog homepage post archive;
 - blog homepage series list;
 - language switch for homepage content;
 - post series navigation;
@@ -97,7 +98,9 @@ Post metadata currently supports:
 - `status`
 - `languages`
 
-Published posts are validated for stable slug, descriptions, local post-specific cover, tags, and update date. Drafts are filtered out by the normalized site data and are not generated publicly.
+Published and unlisted posts are validated for stable slug, descriptions, local
+post-specific cover, tags, and update date. Drafts are filtered out by the
+normalized site data and are not generated.
 
 Missing or incomplete for SEO:
 
@@ -119,9 +122,12 @@ Because `languages` already identifies English/Korean content variants for the s
 
 For SEO, post navigation should be rendered at build time and deterministic. Series navigation should stay series-scoped, while related-post links should use tags and series overlap rather than randomness.
 
-## Series and Notes Rendering
+## Series Rendering
 
-Series metadata lives under `series` in `blogs/data/site-data.json`. Notes are ordinary posts with `category: "note"`. `blogs/js/main-list.js` renders notes and series only on the client. The former archival `blogs/posts/series.html` list was removed; current series navigation is generated from site data.
+Series metadata lives under `series` in `blogs/data/site-data.json`. All articles
+use `category: "post"`; the blog home exposes Posts and Series views. The former
+archival `blogs/posts/series.html` list was removed, and current series
+navigation is generated from site data.
 
 ## Deployment and GitHub Pages Constraints
 

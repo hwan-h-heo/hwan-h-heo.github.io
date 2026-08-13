@@ -63,17 +63,21 @@ npm run new:post -- "Post Title"
 
 Then edit the generated Markdown and metadata in `blogs/data/site-data.json`.
 
-Set `status` from `draft` to `published` when ready.
+Set `status` from `draft` to `published` when ready. Use `unlisted` for a post
+that must keep its direct URL while remaining absent from the blog home, series
+and tag archives, search, related links, RSS, and sitemaps. Unlisted pages are
+generated with `noindex, nofollow`.
 
-## Add a Note
+## Post Classification
 
-Use `npm run new:post`, then set:
+All articles use the single post category:
 
 ```json
-"category": "note"
+"category": "post"
 ```
 
-Choose the appropriate `series`, `tags`, and `cover`.
+Choose the appropriate `series`, `tags`, and `cover`. Series are presented as a
+separate browsing view on the blog home rather than as a post category.
 
 ## Check Content and Assets
 

@@ -39,14 +39,14 @@ function buildMarkdown() {
         '| --- | --- | --- |'
     ];
 
-    siteData.posts.forEach((post) => {
+    (siteData.routablePosts || siteData.posts).forEach((post) => {
         post.languages.forEach((language) => {
             lines.push(`| \`${post.id}\` | ${language} | \`${getPostRoute(post, language)}\` |`);
         });
     });
 
     lines.push('', '## Legacy Blog ID Routes', '', '| Legacy ID | Canonical English Route |', '| --- | --- |');
-    siteData.posts.forEach((post) => {
+    (siteData.routablePosts || siteData.posts).forEach((post) => {
         lines.push(`| \`/blogs/posts/?id=${post.id}\` | \`${getPostRoute(post, 'eng')}\` |`);
     });
 

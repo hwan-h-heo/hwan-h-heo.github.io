@@ -297,8 +297,8 @@ decorative typeface or louder animation.
   takeaway, use `## TL; DR`. Keep that opening as ordinary paragraphs rather
   than a blockquote or summary list so every article enters the reading flow
   with the same hierarchy.
-- An implementation Note may place one self-contained live figure before the
-  opening section when that artifact is the subject of the Note. Keep the demo
+- An implementation article may place one self-contained live figure before the
+  opening section when that artifact is the subject of the article. Keep the demo
   on the dark Three.js surface, isolate it from the portfolio hero, and provide
   pause, reduced-motion, offscreen-pause, and static-fallback behavior. Use a
   responsive `16:9` frame that becomes `4:3` on compact screens; do not let its
@@ -531,10 +531,10 @@ current boundary begins with `Neural Rendering Beyond Photography`, marking the
 shift from broader 3D generation and 3D AI writing into the earlier neural-
 rendering body of work. This reverses the opening Archive spread from Featured,
 then marks the archive with a single deliberate shift. Keep `02 ARTICLES` as
-the tab-owning chapter so Posts and Series remain coherent, then insert one `03
-FROM THE ARCHIVE` folio immediately before the configured boundary Post. Remove
-the final current row's bottom hairline at
-this boundary so it does not double the new folio rule. Keep all text
+the tab-owning chapter so Posts and Series remain coherent, then insert one
+`03 FROM THE ARCHIVE` folio immediately before the configured boundary Post.
+Remove the final current row's bottom hairline at this boundary so it does not
+double the new folio rule. Keep all text
 left-aligned and reset to media-first stacked rows on the compact single-column
 layout.
 
@@ -584,8 +584,8 @@ Use a shared index/table grammar. Do not introduce a separate card system.
   collapsible Document row in a different chapter context.
 - Publication actions and the compact CV Download link use the light-surface,
   left-origin underline grammar. Neither is rendered as a bordered button.
-- Blog-home preview eyebrows show `SERIES / NAME`. `Post` and `Note` remain data
-  categories for filtering, not visible metadata or per-row folios.
+- Blog-home preview eyebrows show `SERIES / NAME`. The `post` category remains
+  an internal data value, not visible metadata or a per-row folio.
 - The Blog home featured row retains that series context beneath its indexed
   `Featured` label, but uses tighter type rhythm and a compact
   `1.9:1` media crop on desktop and tablet (`2:1` on mobile).
@@ -619,7 +619,7 @@ than a generic orthogonal grid, describe the surface. Preserve the dark ink
 stage, cyan-neutral palette, calm ambient pace, CTA timing, and static fallback.
 `js/hero.js` loads the Wave directly; URL parameters, article demos, and
 experimental assets must not replace it. Technical visualizations such as the
-coarse-to-fine voxel decoder belong to a dedicated Note or demo route. Load
+coarse-to-fine voxel decoder belong to a dedicated article or demo route. Load
 their scripts and binary assets only inside that opt-in context, with no
 requests or handoff state added to the portfolio home page.
 

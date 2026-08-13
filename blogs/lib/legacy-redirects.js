@@ -9,10 +9,11 @@ function loadLegacyRedirects(filePath = LEGACY_REDIRECTS_PATH) {
 
 function validateLegacyRedirects(siteData, redirects = loadLegacyRedirects()) {
     const errors = [];
-    const postIds = new Set(siteData.posts.map((post) => post.id));
+    const posts = siteData.routablePosts || siteData.posts;
+    const postIds = new Set(posts.map((post) => post.id));
     const canonicalTargets = new Set();
 
-    siteData.posts.forEach((post) => {
+    posts.forEach((post) => {
         const expectedTarget = `/blogs/posts/${post.slug}/`;
         if (!redirects[post.id]) {
             errors.push(`Missing legacy redirect mapping for "${post.id}".`);

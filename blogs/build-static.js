@@ -976,7 +976,7 @@ function getTargetLanguages(post, postTargets) {
 function generatePostPages(postTargets = null) {
     const routes = [];
 
-    siteData.posts.forEach((post) => {
+    siteData.routablePosts.forEach((post) => {
         getTargetLanguages(post, postTargets).forEach((lang) => {
             routes.push(generatePostPage(post, lang));
         });
@@ -988,7 +988,7 @@ function generatePostPages(postTargets = null) {
 function validateContentFiles() {
     const missingFiles = [];
 
-    siteData.posts.forEach((post) => {
+    siteData.routablePosts.forEach((post) => {
         post.languages.forEach((lang) => {
             const mdPath = path.join(__dirname, 'posts', post.id, `content-${lang}.md`);
             if (!fs.existsSync(mdPath)) {
@@ -1191,7 +1191,7 @@ async function buildSite() {
     versionStaticAssetReferences({ distDir });
 
     console.log('\nBuild completed successfully.');
-    console.log(`Total posts generated: ${siteData.posts.length}`);
+    console.log(`Total posts generated: ${siteData.routablePosts.length} (${siteData.unlistedPosts.length} unlisted)`);
     console.log(`Output directory: ${distDir}`);
 }
 

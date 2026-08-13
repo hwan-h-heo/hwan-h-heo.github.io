@@ -11,7 +11,7 @@
       "subtitle_eng": "Turning a Manim storyboard into a deterministic, GPU-instanced coarse-to-fine surface decoding animation for the web",
       "subtitle_kor": "Manim으로 구상한 hierarchical decoding을 deterministic hierarchy와 GPU instancing 기반의 웹 애니메이션으로 옮긴 과정",
       "date": "2026-08-03",
-      "category": "note",
+      "category": "post",
       "series": "web-3d",
       "languages": [
         "eng",
@@ -34,7 +34,7 @@
       "subtitle_eng": "Why naive GEMM becomes memory-bound, how tiled reuse changes arithmetic intensity, and where Tensor Cores, schedulers, and libraries fit",
       "subtitle_kor": "Naive GEMM의 memory bottleneck부터 tiled reuse, Tensor Core pipeline, shape별 scheduling과 library 추상화까지",
       "date": "2026-08-12",
-      "category": "note",
+      "category": "post",
       "series": "cuda",
       "languages": [
         "eng",
@@ -55,7 +55,7 @@
       "subtitle_eng": "How fusion removes materialized intermediates—and when synchronization, resource pressure, and numerical behavior erase the gain",
       "subtitle_kor": "중간 tensor의 materialization을 없애는 원리와 synchronization, resource pressure, numerical contract까지",
       "date": "2026-08-04",
-      "category": "note",
+      "category": "post",
       "series": "cuda",
       "languages": [
         "eng",
@@ -76,7 +76,7 @@
       "subtitle_eng": "How tiled online softmax reduces attention memory traffic, from FA1–FA4 pipelines to backward recomputation and backend selection",
       "subtitle_kor": "Tiled online softmax의 원리부터 FA1–FA4 pipeline, backward recomputation, determinism과 backend 선택까지",
       "date": "2026-08-05",
-      "category": "note",
+      "category": "post",
       "series": "cuda",
       "languages": [
         "eng",
@@ -142,7 +142,7 @@
       "subtitle_eng": "A rigorous derivation of why a signed distance field satisfies the Eikonal equation, from its geometric definition to gradient bounds",
       "subtitle_kor": "Signed distance field의 기하학적 정의에서 출발해, gradient의 크기가 왜 Eikonal equation을 만족하는지 엄밀하게 유도해보기",
       "date": "2025-08-23",
-      "category": "note",
+      "category": "post",
       "series": "graphics",
       "languages": [
         "eng",
@@ -185,7 +185,7 @@
       "subtitle_eng": "How Generalized Winding Numbers turn imperfect meshes into robust inside–outside tests for signed distance field construction",
       "subtitle_kor": "불완전하거나 열린 mesh에서도 Generalized Winding Number로 inside/outside를 판별하고 견고한 SDF를 계산하는 방법을 살펴보기",
       "date": "2025-08-09",
-      "category": "note",
+      "category": "post",
       "series": "graphics",
       "languages": [
         "eng",
@@ -250,7 +250,7 @@
       "subtitle_eng": "Comparing Google model-viewer with a custom Three.js pipeline for embedding, controlling, and presenting 3D assets on the web",
       "subtitle_kor": "Google model-viewer와 직접 만든 Three.js viewer를 비교하며, 웹에서 3D asset을 안정적으로 보여주는 방법을 정리해보기",
       "date": "2025-03-10",
-      "category": "note",
+      "category": "post",
       "series": "web-3d",
       "languages": [
         "eng",
@@ -316,7 +316,7 @@
       "subtitle_eng": "A practical Three.js guide to embedding an interactive Gaussian Splatting scene in a website, with no web-graphics background required",
       "subtitle_kor": "Three.js를 이용해 웹사이트에 interactive Gaussian Splatting scene을 삽입하고 제어해보기",
       "date": "2024-09-17",
-      "category": "note",
+      "category": "post",
       "series": "web-3d",
       "languages": [
         "eng",
@@ -530,7 +530,7 @@
       "subtitle_eng": "Diagonalization, Matrix Decomposition and Principal Component Analysis (PCA)",
       "subtitle_kor": "대각화와 고윳값, SVD와 PCA를 통해 좌표계 변환이 복잡한 선형대수 문제를 어떻게 단순화하는지 살펴보기",
       "date": "2021-09-10",
-      "category": "note",
+      "category": "post",
       "series": "linear-algebra",
       "languages": [
         "eng",
@@ -541,7 +541,7 @@
         "Linear Algebra"
       ],
       "cover": "/blogs/posts/210910_lin_alg_2/assets/image-1.png",
-      "status": "published",
+      "status": "unlisted",
       "updated": "2021-09-10"
     },
     {
@@ -551,7 +551,7 @@
       "subtitle_eng": "Building intuition for linear systems and transformations through matrices, basis vectors, and geometric mappings",
       "subtitle_kor": "행렬과 기저벡터의 관점에서 선형시스템과 선형변환이 공간을 어떻게 바꾸는지 직관적으로 살펴보기",
       "date": "2021-09-09",
-      "category": "note",
+      "category": "post",
       "series": "linear-algebra",
       "languages": [
         "eng",
@@ -562,7 +562,7 @@
         "Linear Algebra"
       ],
       "cover": "/blogs/posts/210909_lin_alg_1/assets/image.png",
-      "status": "published",
+      "status": "unlisted",
       "updated": "2021-09-09"
     },
     {
@@ -572,7 +572,7 @@
       "subtitle_eng": "From camera projection to stereo correspondence, deriving the epipolar geometry used to recover 3D structure from two views.",
       "subtitle_kor": "Camera Projection, Stereo, and Epipolar Geometry",
       "date": "2021-06-02",
-      "category": "note",
+      "category": "post",
       "series": "computer-vision",
       "languages": [
         "eng"
@@ -582,7 +582,7 @@
         "Computer Vision"
       ],
       "cover": "/blogs/posts/210602_cv4/assets/svg6.svg",
-      "status": "published",
+      "status": "unlisted",
       "updated": "2021-06-02"
     },
     {
@@ -592,7 +592,7 @@
       "subtitle_eng": "How image transformations, homographies, feature correspondences, and alignment connect in practical computer vision pipelines.",
       "subtitle_kor": "Image Transformation, Homography, and Correspondence Matching",
       "date": "2021-05-02",
-      "category": "note",
+      "category": "post",
       "series": "computer-vision",
       "languages": [
         "eng"
@@ -602,7 +602,7 @@
         "Computer Vision"
       ],
       "cover": "/blogs/posts/210502_cv3/assets/svg4.svg",
-      "status": "published",
+      "status": "unlisted",
       "updated": "2021-05-02"
     },
     {
@@ -612,7 +612,7 @@
       "subtitle_eng": "A practical tour of image gradients, Sobel and LoG filters, and the feature detection principles built on top of them.",
       "subtitle_kor": "Image Gradient, Sobel Filter, LoG, and Detection",
       "date": "2021-04-02",
-      "category": "note",
+      "category": "post",
       "series": "computer-vision",
       "languages": [
         "eng"
@@ -622,7 +622,7 @@
         "Computer Vision"
       ],
       "cover": "/blogs/posts/210402_cv2/assets/svg1.svg",
-      "status": "published",
+      "status": "unlisted",
       "updated": "2021-04-02"
     },
     {
@@ -632,7 +632,7 @@
       "subtitle_eng": "A practical introduction to spatial image filters and morphology, including erosion, dilation, opening, and closing.",
       "subtitle_kor": "다양한 이미지 필터와 Morphology 연산: Erosion & Dilation 에 대하여",
       "date": "2021-03-02",
-      "category": "note",
+      "category": "post",
       "series": "computer-vision",
       "languages": [
         "eng"
@@ -642,7 +642,7 @@
         "Computer Vision"
       ],
       "cover": "/blogs/posts/210302_cv1/assets/image-1.jpg",
-      "status": "published",
+      "status": "unlisted",
       "updated": "2021-03-02"
     }
   ],

@@ -229,6 +229,9 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
     const alternateLinksHtml = getPostAlternates(post)
         .map((alternate) => `    <link rel="alternate" hreflang="${alternate.hreflang}" href="${alternate.href}" />`)
         .join('\n');
+    const robotsMetaHtml = post.status === 'unlisted'
+        ? '    <meta name="robots" content="noindex, nofollow" />\n'
+        : '';
     const staticPostNavigation = renderChronologicalPostNavigation(siteData, post, lang);
     const relatedPostsHtml = renderRelatedPosts(siteData, post, lang);
 
@@ -241,7 +244,8 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
         'machine learning'
     ].join(', ');
     const seriesTitle = post.series ? getSeriesTitle(siteData, post.series, lang) : 'Technical Writing';
-    const seriesHref = post.series ? getSeriesRoute(post.series) : '/blogs/';
+    const hasPublicSeries = post.series && siteData.posts.some((entry) => entry.series === post.series);
+    const seriesHref = hasPublicSeries ? getSeriesRoute(post.series) : '/blogs/';
     const heroSummary = post[`subtitle_${lang}`] || post.subtitle_eng || metaDescription;
     const displayTitleHtml = renderPostDisplayTitle(title);
     const tagHtml = (post.tags || []).length
@@ -314,7 +318,7 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
     <meta name="description" content="${escapeHtml(metaDescription)}" />
     <meta name="keywords" content="${escapeHtml(keywords)}" />
     <meta name="author" content="Hwan Heo" />
-    <link rel="canonical" href="${canonicalUrl}" />
+${robotsMetaHtml}    <link rel="canonical" href="${canonicalUrl}" />
 ${alternateLinksHtml}
     <meta property="og:type" content="article" />
     <meta property="og:url" content="${canonicalUrl}" />
