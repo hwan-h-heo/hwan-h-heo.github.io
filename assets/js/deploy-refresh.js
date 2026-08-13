@@ -5,6 +5,16 @@
     return;
   }
 
+  const currentUrl = new URL(window.location.href);
+  if (currentUrl.searchParams.get('__deploy') === pageVersion) {
+    currentUrl.searchParams.delete('__deploy');
+    window.history.replaceState(
+      window.history.state,
+      '',
+      `${currentUrl.pathname}${currentUrl.search}${currentUrl.hash}`
+    );
+  }
+
   const CHECK_INTERVAL = 60_000;
   let checking = false;
   let lastCheckedAt = 0;
