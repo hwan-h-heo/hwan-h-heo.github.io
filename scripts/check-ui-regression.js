@@ -573,15 +573,14 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
             const hero = document.querySelector('.blog-editorial-hero');
             const title = hero?.querySelector('h1');
             const deck = hero?.querySelector('.blog-home-hero-deck');
-            const visual = hero?.querySelector('.blog-editorial-visual');
-            const leftVisual = hero?.querySelector('.blog-editorial-visual-left');
+            const visuals = Array.from(hero?.querySelectorAll('.blog-editorial-visual') || []);
             const featureLabel = document.querySelector('.blog-feature-label');
             const byline = hero?.querySelector('.blog-publication-byline');
             return {
                 backgroundImage: hero ? getComputedStyle(hero).backgroundImage : '',
                 heroHeight: hero?.getBoundingClientRect().height || Number.POSITIVE_INFINITY,
-                visualDisplay: visual ? getComputedStyle(visual).display : '',
-                leftVisualDisplay: leftVisual ? getComputedStyle(leftVisual).display : '',
+                technicalVisualsHidden: visuals.length === 3
+                    && visuals.every((visual) => getComputedStyle(visual).display === 'none'),
                 featureOpeningGap: featureLabel && hero
                     ? featureLabel.getBoundingClientRect().top - hero.getBoundingClientRect().bottom
                     : Number.NEGATIVE_INFINITY,
@@ -611,7 +610,7 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
             'Compact Blog hero transition spacing is no longer balanced around the Hero edge.'
         );
         assert(
-            compactHeroState.visualDisplay === 'none' && compactHeroState.leftVisualDisplay === 'none',
+            compactHeroState.technicalVisualsHidden,
             'Compact Blog hero retained the wide-screen technical edge crops.'
         );
         assert(compactHeroState.deckBelowTitle, 'Compact Blog hero did not stack the standfirst beneath the title.');
@@ -680,8 +679,9 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
         heroIntroRange.selectNodeContents(heroIntro);
         const heroTitleRange = document.createRange();
         heroTitleRange.selectNodeContents(heroTitle);
-        const heroVisual = document.querySelector('.blog-editorial-visual');
-        const heroLeftVisual = document.querySelector('.blog-editorial-visual-left');
+        const heroHierarchyVisual = document.querySelector('.blog-editorial-visual--hierarchy');
+        const heroSparseVisual = document.querySelector('.blog-editorial-visual--sparse');
+        const heroVarcoVisual = document.querySelector('.blog-editorial-visual--varco');
         const heroByline = document.querySelector('.blog-publication-byline');
         const siteData = await fetch('/blogs/data/site-data.json').then((response) => response.json());
         const featuredPostId = siteData.blogHome?.featuredPostId || '';
@@ -740,16 +740,20 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
                 range.selectNodeContents(heroTitle);
                 return range.getClientRects().length;
             })(),
-            heroVisualBackgroundImage: heroVisual ? getComputedStyle(heroVisual).backgroundImage : '',
-            heroVisualDisplay: heroVisual ? getComputedStyle(heroVisual).display : '',
-            heroLeftVisualBackgroundImage: heroLeftVisual ? getComputedStyle(heroLeftVisual).backgroundImage : '',
-            heroLeftVisualDisplay: heroLeftVisual ? getComputedStyle(heroLeftVisual).display : '',
+            heroHierarchyVisualBackgroundImage: heroHierarchyVisual ? getComputedStyle(heroHierarchyVisual).backgroundImage : '',
+            heroHierarchyVisualDisplay: heroHierarchyVisual ? getComputedStyle(heroHierarchyVisual).display : '',
+            heroSparseVisualBackgroundImage: heroSparseVisual ? getComputedStyle(heroSparseVisual).backgroundImage : '',
+            heroSparseVisualDisplay: heroSparseVisual ? getComputedStyle(heroSparseVisual).display : '',
+            heroVarcoVisualBackgroundImage: heroVarcoVisual ? getComputedStyle(heroVarcoVisual).backgroundImage : '',
+            heroVarcoVisualDisplay: heroVarcoVisual ? getComputedStyle(heroVarcoVisual).display : '',
             heroOverlayBackground: hero ? getComputedStyle(hero, '::before').backgroundImage : '',
-            heroVisualsFillBackground: heroLeftVisual && heroVisual && hero && heroCopy
-                ? Math.abs(heroVisual.getBoundingClientRect().left - hero.getBoundingClientRect().left) <= 0.5
-                    && Math.abs(heroLeftVisual.getBoundingClientRect().right - heroCopy.getBoundingClientRect().right) <= 0.5
-                    && Math.abs(heroVisual.getBoundingClientRect().width - heroLeftVisual.getBoundingClientRect().width) <= 0.5
-                    && heroVisual.getBoundingClientRect().right <= heroLeftVisual.getBoundingClientRect().left + 0.5
+            heroVisualsFillBackground: heroHierarchyVisual && heroSparseVisual && heroVarcoVisual && hero && heroCopy
+                ? Math.abs(heroHierarchyVisual.getBoundingClientRect().left - hero.getBoundingClientRect().left) <= 0.5
+                    && Math.abs(heroVarcoVisual.getBoundingClientRect().right - heroCopy.getBoundingClientRect().right) <= 0.5
+                    && Math.abs(heroHierarchyVisual.getBoundingClientRect().width - heroVarcoVisual.getBoundingClientRect().width) <= 0.5
+                    && Math.abs(heroHierarchyVisual.getBoundingClientRect().right - heroVarcoVisual.getBoundingClientRect().left) <= 0.5
+                    && heroSparseVisual.getBoundingClientRect().left < heroHierarchyVisual.getBoundingClientRect().right
+                    && heroSparseVisual.getBoundingClientRect().right > heroVarcoVisual.getBoundingClientRect().left
                 : false,
             heroDeckIsBelowTitle: heroTitle && heroIntro
                 ? heroIntro.getBoundingClientRect().top >= heroTitle.getBoundingClientRect().bottom
@@ -848,10 +852,12 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
     );
     assert(initialTitleState.heroIntroLineCount === 1, 'Wide Blog editorial-cover standfirst is no longer a single line.');
     assert(
-        initialTitleState.heroVisualDisplay === 'block'
-            && initialTitleState.heroVisualBackgroundImage.includes('sparse-pipeline.png')
-            && initialTitleState.heroLeftVisualDisplay === 'block'
-            && initialTitleState.heroLeftVisualBackgroundImage.includes('remote-d832175607cd.png'),
+        initialTitleState.heroHierarchyVisualDisplay === 'block'
+            && initialTitleState.heroHierarchyVisualBackgroundImage.includes('hero-frame-3-30.webp')
+            && initialTitleState.heroSparseVisualDisplay === 'block'
+            && initialTitleState.heroSparseVisualBackgroundImage.includes('sparse-pipeline.png')
+            && initialTitleState.heroVarcoVisualDisplay === 'block'
+            && initialTitleState.heroVarcoVisualBackgroundImage.includes('remote-d832175607cd.png'),
         'Wide Blog editorial-cover technical edge crops are missing.'
     );
     assert(initialTitleState.heroVisualsFillBackground, 'Blog editorial-cover images no longer split the left-to-copy-edge background stage.');
@@ -1684,13 +1690,21 @@ async function assertEditorIcons(page, width) {
     if (width !== 1200) {
         return;
     }
-    const toggle = page.locator('#sidebar-toggle-button');
-    const initialIcon = await page.locator('#sidebar-toggle-icon use').getAttribute('href');
-    await toggle.click();
-    const changedIcon = await page.locator('#sidebar-toggle-icon use').getAttribute('href');
-    assert(changedIcon && changedIcon !== initialIcon, 'Editor sidebar icon did not change with its collapsed state.');
-    await toggle.click();
-    assert(await page.locator('#sidebar-toggle-icon use').getAttribute('href') === initialIcon, 'Editor sidebar icon did not restore its initial state.');
+    const openToggle = page.locator('#public-tools-button');
+    const closeToggle = page.locator('#sidebar-toggle-button');
+    await openToggle.click();
+    assert(
+        await openToggle.getAttribute('aria-expanded') === 'true'
+            && await closeToggle.isVisible()
+            && (await page.locator('#sidebar-toggle-icon use').getAttribute('href'))?.includes('x-lg'),
+        'Public Editor draft-tools drawer did not open with its close icon.'
+    );
+    await closeToggle.click();
+    assert(
+        await openToggle.getAttribute('aria-expanded') === 'false'
+            && await page.locator('#control-sidebar').getAttribute('aria-hidden') === 'true',
+        'Public Editor draft-tools drawer did not close.'
+    );
 
     await page.waitForFunction(() => document.querySelector('#blog-home-featured-post')?.options.length > 0);
     const blogHomeState = await page.evaluate(async () => {

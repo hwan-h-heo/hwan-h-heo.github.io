@@ -410,17 +410,19 @@ omit the full-bleed background image, and let Featured supply the first content
 image. The Hero copy uses the exact same content measure as Featured and Archive
 below; do not create a narrower inset for the cover. On wide screens only, make
 one visual stage from the Hero's left edge to the shared copy measure's right
-edge, then divide it into two equal, non-overlapping regions. Center the complete
-sparse-representation pipeline in the left region. Right-align the complete
-generated asset-stage image in the right region so the artwork ends with the
-copy measure and leaves the top-bar side as dark tension. Scale both against the
-Hero height with dark space around them; they are background atmosphere rather
-than a full-bleed collage. Cover them with a strong
+edge. Let equal left and right edge regions meet at its midpoint, using the
+hierarchical-decoding frame on the left and the generated asset stage on the
+right, then bridge their seam with the centered sparse-representation pipeline.
+The center visual may overlap the two edge regions; the edge regions themselves
+must meet without a gap, and the right artwork must end with the copy measure so
+the top-bar side retains dark tension. Scale all three against the Hero height
+with dark space around them; they are background atmosphere rather than a
+full-bleed collage. Cover them with a strong
 deep-ink overlay that is darkest around the central copy and lower edge so the
 text retains primary contrast. Reuse the Portfolio Hero name color
 (`rgba(240, 241, 243, 0.88)`) for the Blog title, then step the standfirst and
 publication folios down through the same neutral family instead of returning to
-pure white or blue-gray. Hide both images on compact layouts before they could
+pure white or blue-gray. Hide all three images on compact layouts before they could
 compete with the copy. Connect the cover to the numbered page chapters with one
 quiet `00 / TECHNICAL WRITING · YEAR—YEAR` publication imprint so the section's
 subject is immediately legible without adding a separate logo treatment. Use a

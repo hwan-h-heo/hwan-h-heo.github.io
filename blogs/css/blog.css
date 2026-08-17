@@ -1955,7 +1955,7 @@ html[lang="ko"] .blog-home-hero h1 {
     --blog-editorial-copy-gutter: calc((100% - min(100%, var(--blog-editorial-shell-max))) / 2 + 3rem);
     align-items: flex-end;
     min-height: 280px;
-    padding: 4.45rem 0 2.45rem;
+    padding: 4.45rem 0 2.15rem;
     border-bottom: 0;
     overflow: hidden;
     background: var(--blog-home-cover);
@@ -3329,6 +3329,12 @@ html[lang="ko"] .blog-home-hero h1 {
     }
 }
 
+@media (max-width: 767.98px) {
+    .blog-editorial-visual {
+        display: none;
+    }
+}
+
 @media (max-width: 575.98px) {
     .blog-editorial-visual--hierarchy {
         filter: saturate(0.72) contrast(1.05) brightness(2.2);
@@ -3361,7 +3367,7 @@ html[lang="ko"] .blog-home-hero h1 {
 
     .blog-home-page header.masthead.blog-editorial-hero {
         min-height: 0;
-        padding: 4.3rem 0 1.3rem;
+        padding: 4.3rem 0 1rem;
     }
 
     .blog-feature-read {
