@@ -59,7 +59,7 @@
       "name": "Hwan Heo",
       "role": "Lead 3D AI Research Engineer",
       "affiliation": "NC AI · VARCO 3D",
-      "bodyHtml": "At <strong>NC AI</strong>, I lead research and engineering for the <strong>VARCO 3D team</strong>, developing production 3D AI systems across large-scale generative model training, inference optimization, and graphics algorithms.<br><br>When I'm away from CUDA kernels and mesh pipelines, I'm usually playing guitar, making music, or following an unexpected STEM rabbit hole.",
+      "bodyHtml": "At <strong>NC AI</strong>, I lead research and engineering for the <a href=\"https://3d.varco.ai/explore\" target=\"_blank\" rel=\"noopener noreferrer\"><strong>VARCO 3D</strong></a>, developing production 3D AI systems across large-scale generative model training, inference optimization, and graphics algorithms.<br><br>When I'm away from CUDA kernels and mesh pipelines, I'm usually playing guitar, making music, or following an unexpected STEM rabbit hole.",
       "contactLinks": [
         {
           "label": "Email",
@@ -79,7 +79,6 @@
       "id": "resume",
       "type": "resume",
       "title": "Resume",
-      "summary": "5 entries",
       "cvUrl": "/assets/Hwan_Heo_s_Curriculum_Vitae.pdf",
       "columns": [
         {

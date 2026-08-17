@@ -679,9 +679,13 @@
   "portfolioProjects": [
     {
       "id": "varco3d",
+      "featured": true,
       "allOrder": 0,
       "title": "VARCO 3D",
-      "summary": "Led the production 3D generation stack—from 1B+ native models and CUDA inference to mesh processing, UV unwrapping, and texture delivery.",
+      "summary": "NC AI’s proprietary 3D generative AI service, delivering detailed 1024³ mesh generation, 4K texture synthesis, and production-ready low-poly assets.",
+      "featureDetails": {
+        "contribution": "Trained and accelerated geometry models for production; built CUDA kernels for remeshing, UV unwrapping, and rasterization-based multi-view-to-texture baking."
+      },
       "url": "projects/varco3d/",
       "categories": [
         "app"
@@ -695,9 +699,9 @@
       "organization": "NC AI",
       "period": "2025–Present",
       "accolade": "30K+ users · 300K+ assets generated",
-      "image": "assets/thumbnails/varco3d_thumbnail.webp",
-      "gif": "assets/varco3d_hero.webp",
-      "alt": "VARCO 3D service teaser"
+      "image": "assets/thumbnails/varco3d_community-mixed.webp",
+      "hoverImage": "assets/thumbnails/varco3d_community-mixed-reversed.webp",
+      "alt": "Nine VARCO 3D community assets alternating between textured and geometry views"
     },
     {
       "id": "capa",
@@ -717,9 +721,8 @@
       "organization": "NCSOFT",
       "period": "2024",
       "accolade": "Featured on Hugging Face Daily Papers",
-      "image": "assets/thumbnails/capa_thumbnail.png",
-      "gif": "assets/capa_teaser.webp",
-      "alt": "CaPa teaser"
+      "image": "projects/capa/assets/portfolio-cover.webp",
+      "alt": "CaPa geometry, Janus-free multi-view painting, and final textured mesh pipeline"
     },
     {
       "id": "instant-pose",
