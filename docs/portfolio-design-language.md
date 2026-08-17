@@ -50,7 +50,8 @@ this document.
 The portfolio home already has a coherent modern and editorial base:
 
 - Manrope, Inter, and IBM Plex Mono have distinct roles.
-- Near-black, slate, white, and pale blue surfaces carry most of the design.
+- Near-black, slate, white, cool pale blue, and soft-neutral surfaces carry
+  most of the design.
 - Cards are unframed rows rather than floating panels.
 - Hairlines and whitespace create structure.
 - Radius and shadow are limited to media and utility controls.
@@ -70,6 +71,19 @@ Treat the current portfolio tokens as canonical. Legacy values are not
 precedent for new components.
 
 ## Color Grammar
+
+### Surface roles
+
+| Token | Role |
+| --- | --- |
+| `--color-page` | white default page and About surface |
+| `--color-section` | cool pale-blue Projects surface |
+| `--color-writing-section` | near-white soft-neutral Portfolio Writing surface |
+| `--color-surface` | neutral component and media surface |
+
+Use surface tone only at chapter scale. Keep the Projects chapter cool and the
+Portfolio Writing chapter softly neutral so the long-form index gains rhythm
+without adding more accent colors inside its rows.
 
 ### Neutral hierarchy
 
@@ -239,9 +253,10 @@ decorative typeface or louder animation.
 - Project and Portfolio-home Blog preview rows share their row spacing, media
   treatment, and interaction grammar; their column proportions and metadata
   order may differ to express artifact versus publication.
-- Project and Blog remain on one pale output surface. Separate the two chapters
-  with balanced whitespace rather than a background-color change or an
-  additional divider.
+- Project and Portfolio-home Blog use complementary pale chapter surfaces:
+  Projects stays on cool `--color-section`, while Writing uses the near-white
+  soft-neutral `--color-writing-section`. Preserve balanced whitespace at the
+  transition and do not add another divider.
 - On the Portfolio home, the desktop gutter exposed while the auto-hidden
   sidebar returns at the Hero-to-Projects boundary must use `--color-section`,
   matching the Projects surface without a white transition strip.
@@ -443,6 +458,56 @@ Portfolio Project previews use this order:
 4. Up to two representative technology tags
 5. Institution and year, with one meaningful accolade in the same neutral
    metadata row when available
+
+When a Portfolio project is explicitly marked `featured`, treat it as the
+chapter's opening spread rather than another equal index row. On wide layouts,
+use a media rail capped near `480px` beside a copy rail capped at `600px`. Keep
+the featured media on the chapter's structural left edge. This restrained
+asymmetry gives the copy enough room without making the feature feel like a
+full-width hero; when wider canvases leave additional room, let that unused
+space remain on the outer right.
+Enlarge its title by only one restrained type step, keep its body copy close to
+the standard project scale, and vertically center the copy
+against the media. Give the copy the rhythm of a publication lead: a concise
+service definition followed by one hairline-separated `Contribution` brief.
+Do not repeat the service's output classes as a separate Capabilities row when
+the definition already states them. The brief uses a small mono label and
+compact prose rather than pills, icons, or a feature card.
+Add a larger closing pause, then return every remaining Selected project to the
+same full-width compact row used by the All index: a media rail capped at
+`300px` on the right, copy aligned to the left and to the media's top edge, and
+the common thumbnail border and overlay. Keep this orientation consistent in
+both Selected and All rather than alternating it by row. The left-to-right
+reversal separates the opening feature from the compact index without forcing
+a direct size comparison on one media rail. This feature-to-index shift must
+remain clear without a card surface, badge, background, two-column card spread,
+or additional accent color. Below `768px`, stack projects media-first; signal
+the flagship with its larger title, fuller editorial brief, and closing space
+rather than a different surface.
+
+The VARCO 3D flagship cover uses a deterministic asymmetric mosaic of public
+Explore thumbnails rather than a synthetic hero render. Mix several asset
+categories at unequal panel sizes, preserving breathing room around compact
+objects while allowing the primary panels to carry a fuller crop. The center
+gutter divides material states without cutting an object: the left half begins
+textured and the right half begins as untextured geometry. On fine-pointer hover
+or keyboard focus, crossfade once to a matching image with those states reversed;
+touch layouts retain the initial mixed still. Do not autoplay or loop this
+transition, and remove its duration under reduced-motion preferences. Keep both
+images free of labels, interface chrome, and decorative effects so the asset
+variety and material-state change own the contrast.
+
+The CaPa index cover is a purpose-built `3:1` editorial extraction of the
+official pipeline artwork, not the complete paper figure or a second asset
+mosaic. Present three large stages—generated geometry, geometry surrounded by
+painted multi-view images, and the back-projected 4K textured mesh—as native
+transparent artwork. Contain and vertically center that wide extraction inside
+the common `16 / 9.4` white thumbnail frame so its top and bottom paper space is
+equal. Connect the stages with quiet arrows and retain the source figure's bold
+serif stage labels, including the method-defining `w/o Janus`; do not add
+Portfolio folio numbers inside the artwork. Omit model names, longer paper
+annotations, and the redundant input so the method remains legible at preview
+scale and visually distinct from VARCO 3D.
 
 Portfolio-home Blog previews use a publication-first order:
 

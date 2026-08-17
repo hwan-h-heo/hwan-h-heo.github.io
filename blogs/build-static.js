@@ -181,10 +181,20 @@ function generatePortfolioIndex() {
     let html = fs.readFileSync(indexPath, 'utf8');
 
     (portfolioContent.blocks || []).forEach((block) => {
-        const pattern = new RegExp(`(<section\\b[^>]*data-portfolio-block=["']${escapeRegExp(block.id)}["'][^>]*>)[\\s\\S]*?(</section>)`);
-        html = html.replace(pattern, (match, openingTag, closingTag) => {
+        const pattern = new RegExp(
+            `(<([a-z][\\w:-]*)\\b[^>]*data-portfolio-block=["']${escapeRegExp(block.id)}["'][^>]*>)[\\t\\r\\n ]*(</\\2>)`,
+            'i'
+        );
+        let rendered = false;
+
+        html = html.replace(pattern, (match, openingTag, tagName, closingTag) => {
+            rendered = true;
             return `${openingTag}${renderPortfolioBlock(block)}${closingTag}`;
         });
+
+        if (!rendered) {
+            throw new Error(`Could not render portfolio block "${block.id}": missing empty data-portfolio-block container.`);
+        }
     });
 
     html = html

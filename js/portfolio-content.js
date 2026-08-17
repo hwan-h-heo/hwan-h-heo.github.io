@@ -27,6 +27,13 @@
             `;
         }
 
+        if (project.hoverImage) {
+            return `
+                <img class="portfolio-project-cover-image portfolio-project-cover-image--base" src="${escapeHtml(project.image)}" alt="${escapeHtml(project.alt || project.title)}" decoding="async">
+                <img class="portfolio-project-cover-image portfolio-project-cover-image--hover" src="${escapeHtml(project.hoverImage)}" alt="" aria-hidden="true" decoding="async">
+            `;
+        }
+
         const gifAttrs = project.gif
             ? ` data-static="${escapeHtml(project.image)}" data-gif="${escapeHtml(project.gif)}"`
             : '';
@@ -43,8 +50,36 @@
             .join('');
     }
 
+    function renderProjectFeatureDetails(project) {
+        const featureDetails = project.featureDetails;
+        if (!featureDetails || typeof featureDetails !== 'object') {
+            return '';
+        }
+
+        const details = [
+            ['Capabilities', featureDetails.capabilities],
+            ['Contribution', featureDetails.contribution]
+        ].filter(([, value]) => typeof value === 'string' && value.trim());
+
+        if (!details.length) {
+            return '';
+        }
+
+        return `
+            <dl class="portfolio-project-feature-details">
+                ${details.map(([label, value]) => `
+                    <div class="portfolio-project-feature-detail">
+                        <dt>${escapeHtml(label)}</dt>
+                        <dd>${escapeHtml(value)}</dd>
+                    </div>
+                `).join('')}
+            </dl>
+        `;
+    }
+
     function renderProject(project, index = 0) {
         const selected = isSelectedProject(project, index);
+        const featured = project.featured === true;
         const allOrder = Number.isFinite(Number(project.allOrder)) ? Number(project.allOrder) : index;
         const targetAttrs = project.external ? ' target="_blank" rel="noopener noreferrer"' : '';
         const externalIcon = project.external ? ` ${icons.render('box-arrow-up-right')}` : '';
@@ -55,33 +90,47 @@
             ? '<div class="loading-spinner" style="display: none;"></div>'
             : '';
         const tagsHtml = renderProjectTags(project);
+        const featureDetailsHtml = featured ? renderProjectFeatureDetails(project) : '';
         const accoladeHtml = project.accolade
             ? `<span class="portfolio-project-accolade">${escapeHtml(project.accolade)}</span>`
             : '';
         const hidden = selected ? '' : ' hidden';
+        const coverHtml = `
+            <a class="portfolio-project-cover-link" href="${escapeHtml(project.url)}"${targetAttrs} aria-label="View ${escapeHtml(project.title)}">
+                <span class="portfolio-project-cover">
+                    ${renderMedia(project)}
+                    ${spinnerHtml}
+                </span>
+            </a>
+        `;
+        const headerHtml = `
+            ${eyebrowHtml}
+            <a class="portfolio-project-title-link" href="${escapeHtml(project.url)}"${targetAttrs}>
+                <span class="portfolio-project-title">${escapeHtml(project.title)}${externalIcon}</span>
+            </a>
+        `;
+        const detailsHtml = `
+            <span class="portfolio-project-summary">${escapeHtml(project.summary)}</span>
+            ${featureDetailsHtml}
+            <span class="portfolio-project-tags">${tagsHtml}</span>
+            <span class="portfolio-project-meta">
+                <span>${escapeHtml(project.organization)} / ${escapeHtml(project.period)}</span>
+                ${accoladeHtml}
+            </span>
+        `;
+        const layoutHtml = `
+            <div class="portfolio-project-layout">
+                ${coverHtml}
+                <div class="portfolio-project-body">
+                    ${headerHtml}
+                    ${detailsHtml}
+                </div>
+            </div>
+        `;
 
         return `
-            <article class="portfolio-project-item" data-selected="${selected ? 'true' : 'false'}" data-selected-order="${index}" data-all-order="${allOrder}"${hidden}>
-                <div class="portfolio-project-layout">
-                    <a class="portfolio-project-cover-link" href="${escapeHtml(project.url)}"${targetAttrs} aria-label="View ${escapeHtml(project.title)}">
-                    <span class="portfolio-project-cover">
-                        ${renderMedia(project)}
-                        ${spinnerHtml}
-                    </span>
-                    </a>
-                    <div class="portfolio-project-body">
-                        ${eyebrowHtml}
-                        <a class="portfolio-project-title-link" href="${escapeHtml(project.url)}"${targetAttrs}>
-                            <span class="portfolio-project-title">${escapeHtml(project.title)}${externalIcon}</span>
-                        </a>
-                        <span class="portfolio-project-summary">${escapeHtml(project.summary)}</span>
-                        <span class="portfolio-project-tags">${tagsHtml}</span>
-                        <span class="portfolio-project-meta">
-                            <span>${escapeHtml(project.organization)} / ${escapeHtml(project.period)}</span>
-                            ${accoladeHtml}
-                        </span>
-                    </div>
-                </div>
+            <article class="portfolio-project-item${featured ? ' portfolio-project-item--featured' : ''}" data-project-id="${escapeHtml(project.id)}" data-selected="${selected ? 'true' : 'false'}" data-selected-order="${index}" data-all-order="${allOrder}"${hidden}>
+                ${layoutHtml}
             </article>
         `;
     }

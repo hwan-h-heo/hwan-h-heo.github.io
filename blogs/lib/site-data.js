@@ -273,6 +273,27 @@ function validatePortfolioProjectShape(project, index, errors) {
         errors.push(`"external" must be a boolean in ${label}.`);
     }
 
+    if (project.featured !== undefined && typeof project.featured !== 'boolean') {
+        errors.push(`"featured" must be a boolean in ${label}.`);
+    }
+
+    if (project.featureDetails !== undefined) {
+        if (!project.featureDetails || typeof project.featureDetails !== 'object' || Array.isArray(project.featureDetails)) {
+            errors.push(`"featureDetails" must be an object in ${label}.`);
+        } else {
+            const detailKeys = ['capabilities', 'contribution'].filter((key) => project.featureDetails[key] !== undefined);
+            if (detailKeys.length === 0) {
+                errors.push(`"featureDetails" must define at least one supported detail in ${label}.`);
+            }
+            detailKeys.forEach((key) => {
+                validateStringField(project.featureDetails, key, errors, `${label} featureDetails`);
+            });
+        }
+        if (project.featured !== true) {
+            errors.push(`"featureDetails" requires "featured": true in ${label}.`);
+        }
+    }
+
     validateLocalFileReference(project.url, errors, label, 'url', { allowGeneratedProjectRoute: true });
     ['image', 'gif', 'video', 'poster'].forEach((key) => {
         if (project[key] && isExternalUrl(project[key])) {

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the VARCO 3D community geometry-to-texture showcase video."""
+"""Build VARCO 3D community geometry-to-texture showcase media."""
 
 from __future__ import annotations
 
@@ -33,6 +33,35 @@ TILE_SIZES = {2: 760, 1: 880}
 TILE_GAP_X = 32
 GRID_Y = {2: 190, 1: 158}
 HERO_ASSET_TITLES = ("Feathered Skull Shaman", "Monstrous Feathered Claw")
+PORTFOLIO_COVER_LAYOUT = (
+    ("Fantasy Rogue Miniature", (20, 20, 500, 640), 1.04),
+    ("Selected Ember Eye Relic", (20, 672, 500, 388), 1.0),
+    ("Scene to Props 2026-08-06 15:35", (532, 20, 420, 300), 0.96),
+    ("SciFi Combat Mech", (532, 332, 420, 440), 1.12),
+    ("Geometric Manhole Cover", (532, 784, 420, 276), 1.08),
+    ("Green Crowned King", (964, 20, 450, 490), 1.0),
+    ("Ornate Wooden Armchair", (964, 522, 450, 538), 1.0),
+    ("Marble Pieta Sculpture", (1426, 20, 474, 702), 1.0),
+    ("Black Cruiser Motorcycle", (1426, 734, 474, 326), 1.5),
+)
+PORTFOLIO_COVER_CENTERING = {
+    "Marble Pieta Sculpture": (0.53, 0.5),
+    "Black Cruiser Motorcycle": (0.5, 0.64),
+}
+PORTFOLIO_COVER_HORIZONTAL_OFFSETS = {
+    "Selected Ember Eye Relic": 12,
+}
+PORTFOLIO_COVER_CUSTOM_ASSETS = (
+    {
+        "id": "5e555c26-9c3e-4b6b-a010-d64a9e26dd23",
+        "title": "Selected Ember Eye Relic",
+        "creator": "u285584236",
+        "sharedAt": "",
+        "thumbnail": "https://3d.varco.ai/api/objects/92a5d32f320e3cd30de07ce7de3765f5.png@512",
+        "overlayThumbnail": "https://3d.varco.ai/api/objects/2ee0d38bc3e66ab0fdedc1956150fd0a.png@512",
+        "exploreUrl": "https://3d.varco.ai/assets/5e555c26-9c3e-4b6b-a010-d64a9e26dd23",
+    },
+)
 ACCENT = (53, 207, 255)
 BACKGROUND_TOP = (7, 9, 11)
 BACKGROUND_BOTTOM = (17, 20, 24)
@@ -53,6 +82,21 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", type=Path, default=default_assets / "community-showcase.mp4")
     parser.add_argument("--poster", type=Path, default=default_assets / "community-showcase-poster.webp")
     parser.add_argument("--manifest", type=Path, default=default_assets / "community-showcase.json")
+    parser.add_argument(
+        "--portfolio-cover",
+        type=Path,
+        help="Optional path for a deterministic mixed-state community cover.",
+    )
+    parser.add_argument(
+        "--portfolio-cover-hover",
+        type=Path,
+        help="Optional path for the matching cover with texture and geometry sides reversed.",
+    )
+    parser.add_argument(
+        "--cover-only",
+        action="store_true",
+        help="Build only --portfolio-cover without rebuilding the showcase video.",
+    )
     return parser.parse_args()
 
 
@@ -66,7 +110,7 @@ def absolute_asset_url(path: str) -> str:
     return urllib.parse.urljoin(f"{SITE_ORIGIN}/", path)
 
 
-def fetch_recent_assets(count: int, request_limit: int) -> list[dict[str, str]]:
+def fetch_shared_assets(request_limit: int) -> list[dict[str, str]]:
     payload = {
         "0": {
             "isFeaturedOnly": False,
@@ -107,12 +151,25 @@ def fetch_recent_assets(count: int, request_limit: int) -> list[dict[str, str]]:
             "exploreUrl": f"{SITE_ORIGIN}/assets/{task['id']}",
         })
         seen_titles.add(title_key)
-        if len(selected) == count:
-            break
+
+    return selected
+
+
+def fetch_recent_assets(count: int, request_limit: int) -> list[dict[str, str]]:
+    selected = fetch_shared_assets(request_limit)
 
     if len(selected) < count:
         raise RuntimeError(f"Only found {len(selected)} recent assets with both thumbnails; requested {count}.")
-    return selected
+    return selected[:count]
+
+
+def select_assets_by_title(assets: list[dict[str, str]], titles: tuple[str, ...]) -> list[dict[str, str]]:
+    assets_by_title = {asset["title"]: asset for asset in assets}
+    missing_titles = [title for title in titles if title not in assets_by_title]
+    if missing_titles:
+        quoted_titles = ", ".join(f'"{title}"' for title in missing_titles)
+        raise RuntimeError(f"Could not find portfolio cover assets: {quoted_titles}.")
+    return [assets_by_title[title] for title in titles]
 
 
 def arrange_assets(assets: list[dict[str, str]], layout: tuple[int, ...]) -> list[dict[str, str]]:
@@ -322,6 +379,89 @@ def render_scene(scene_assets: list[dict[str, object]], scene_index: int, scene_
     return frame.convert("RGB")
 
 
+def prepare_portfolio_cover_assets(assets: list[dict[str, str]]) -> list[dict[str, object]]:
+    titles = tuple(title for title, _, _ in PORTFOLIO_COVER_LAYOUT)
+    selected_assets = select_assets_by_title([*assets, *PORTFOLIO_COVER_CUSTOM_ASSETS], titles)
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        return list(executor.map(download_asset_pair, selected_assets))
+
+
+def adjust_thumbnail_scale(image: Image.Image, scale: float) -> Image.Image:
+    if scale == 1:
+        return image
+    if scale < 1:
+        expanded_size = (
+            round(image.width / scale),
+            round(image.height / scale),
+        )
+        expanded = Image.new("RGB", expanded_size, BACKGROUND_TOP)
+        expanded.paste(
+            image,
+            (
+                (expanded.width - image.width) // 2,
+                (expanded.height - image.height) // 2,
+            ),
+        )
+        return expanded
+
+    crop_width = round(image.width / scale)
+    crop_height = round(image.height / scale)
+    left = (image.width - crop_width) // 2
+    top = (image.height - crop_height) // 2
+    return image.crop((left, top, left + crop_width, top + crop_height))
+
+
+def offset_thumbnail_horizontally(image: Image.Image, offset_x: int) -> Image.Image:
+    if offset_x == 0:
+        return image
+
+    shifted = Image.new(image.mode, image.size)
+    shifted.paste(image, (offset_x, 0))
+    if offset_x > 0:
+        left_edge = image.crop((0, 0, 1, image.height)).resize((offset_x, image.height))
+        shifted.paste(left_edge, (0, 0))
+    else:
+        right_edge = image.crop((image.width - 1, 0, image.width, image.height)).resize((-offset_x, image.height))
+        shifted.paste(right_edge, (image.width + offset_x, 0))
+    return shifted
+
+
+def render_portfolio_cover(
+    downloaded_assets: list[dict[str, object]],
+    left_image_key: str,
+    right_image_key: str,
+) -> Image.Image:
+    valid_image_keys = {"geometryImage", "textureImage"}
+    if left_image_key not in valid_image_keys or right_image_key not in valid_image_keys:
+        raise ValueError("Portfolio cover image keys must be geometryImage or textureImage.")
+    downloaded_by_title = {asset["title"]: asset for asset in downloaded_assets}
+    midpoint = CANVAS_SIZE[0] // 2
+
+    cover = BACKGROUND.copy()
+    draw = ImageDraw.Draw(cover)
+    for title, (x, y, width, height), scale in PORTFOLIO_COVER_LAYOUT:
+        if x < midpoint < x + width:
+            raise ValueError(f'Portfolio cover panel "{title}" crosses the state divider.')
+        asset = downloaded_by_title[title]
+        image_key = left_image_key if x + width <= midpoint else right_image_key
+        size = (width, height)
+        tile = ImageOps.fit(
+            adjust_thumbnail_scale(asset[image_key], scale),
+            size,
+            method=Image.Resampling.LANCZOS,
+            centering=PORTFOLIO_COVER_CENTERING.get(title, (0.5, 0.5)),
+        )
+        tile = offset_thumbnail_horizontally(tile, PORTFOLIO_COVER_HORIZONTAL_OFFSETS.get(title, 0))
+        cover.paste(tile, (x, y))
+        draw.rectangle(
+            (x, y, x + width - 1, y + height - 1),
+            outline=(45, 50, 56),
+            width=2,
+        )
+
+    return cover
+
+
 def render_frame(scenes: list[list[dict[str, object]]], layout: tuple[int, ...], time_seconds: float) -> Image.Image:
     scene_index = 0
     scene_start = 0.0
@@ -407,6 +547,26 @@ def write_manifest(assets: list[dict[str, str]], layout: tuple[int, ...], durati
 
 def main() -> None:
     args = parse_args()
+    if args.cover_only and not args.portfolio_cover:
+        raise ValueError("--cover-only requires --portfolio-cover.")
+    if args.portfolio_cover_hover and not args.portfolio_cover:
+        raise ValueError("--portfolio-cover-hover requires --portfolio-cover.")
+
+    if args.portfolio_cover:
+        shared_assets = fetch_shared_assets(args.request_limit)
+        downloaded_assets = prepare_portfolio_cover_assets(shared_assets)
+        cover = render_portfolio_cover(downloaded_assets, "textureImage", "geometryImage")
+        args.portfolio_cover.parent.mkdir(parents=True, exist_ok=True)
+        cover.save(args.portfolio_cover, "WEBP", quality=88, method=6)
+        print(f"Mixed-state portfolio cover: {args.portfolio_cover}")
+        if args.portfolio_cover_hover:
+            hover_cover = render_portfolio_cover(downloaded_assets, "geometryImage", "textureImage")
+            args.portfolio_cover_hover.parent.mkdir(parents=True, exist_ok=True)
+            hover_cover.save(args.portfolio_cover_hover, "WEBP", quality=88, method=6)
+            print(f"Reversed portfolio cover: {args.portfolio_cover_hover}")
+        if args.cover_only:
+            return
+
     layout = tuple(int(value.strip()) for value in args.layout.split(",") if value.strip())
     if not layout or any(asset_count not in TILE_SIZES for asset_count in layout):
         raise ValueError("--layout must contain only scene sizes 1 and 2.")

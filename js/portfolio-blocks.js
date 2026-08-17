@@ -223,7 +223,6 @@
                             <strong>Experience &amp; Education</strong>
                         </span>
                         <span class="portfolio-disclosure-meta resume-disclosure-meta">
-                            <span class="resume-disclosure-count">${escapeHtml(block.summary)}</span>
                             <span class="portfolio-disclosure-state">
                                 <span class="portfolio-disclosure-state-closed">View details</span>
                                 <span class="portfolio-disclosure-state-open">Close</span>
