@@ -1,9 +1,9 @@
 ## System Focus
 
 The practical target of VARCO 3D is not just to synthesize geometry.
-The service path has to produce a textured mesh that is fast to generate, stable to post-process, and usable by downstream 3D workflows.
+The service path extends native high-poly output into 4K PBR-aware textured assets, detail-preserving decimation with baked normals, and animation workflows through AI auto-rigging and retargeting.
 
-I worked across three connected layers, from training 1B+ parameter models from scratch to shipping the GPU-native systems around them:
+I worked across three connected layers, from setting the research direction and training 1B+ parameter models from scratch to shipping the GPU-native systems around them:
 
 1. **Native 3D generation** — train large in-house geometry models rather than relying on slow per-asset SDS optimization.
 2. **Production inference** — profile and rewrite the expensive denoising path so the model can run under service latency constraints.

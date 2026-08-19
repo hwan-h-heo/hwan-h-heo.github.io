@@ -682,9 +682,9 @@
       "featured": true,
       "allOrder": 0,
       "title": "VARCO 3D",
-      "summary": "NC AI’s proprietary 3D generative AI service, delivering detailed 1024³ mesh generation, 4K texture synthesis, and production-ready low-poly assets.",
+      "summary": "NC AI’s proprietary 3D generative AI service, delivering detailed 1024³ meshes, 4K PBR-aware textures, AI auto-rigging and retargeting, and decimated assets with normals baked from native high-poly detail.",
       "featureDetails": {
-        "contribution": "Trained and accelerated geometry models for production; built CUDA kernels for remeshing, UV unwrapping, and rasterization-based multi-view-to-texture baking."
+        "contribution": "Led the VARCO 3D research direction across geometry-model training and acceleration and production CUDA systems for remeshing, UV unwrapping, and rasterization-based multi-view texture baking."
       },
       "url": "projects/varco3d/",
       "categories": [

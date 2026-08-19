@@ -7,8 +7,8 @@
   ],
   "layout": "case-study",
   "overview": [
-    "VARCO 3D is NC AI’s production 3D generative AI service for creating textured meshes using native 3D generation models and GPU-first geometry processing.",
-    "My work spans the full generation stack: training in-house 3D generative models with more than 1B parameters, optimizing their production inference paths, and building GPU-native mesh and texture-processing systems for asset delivery."
+    "VARCO 3D is NC AI’s production 3D generative AI service for creating detailed meshes with 4K PBR-aware textures, AI auto-rigging and retargeting, and decimation with normals baked from native high-poly detail.",
+    "I led the overall research direction while working across the full generation stack: training in-house 3D generative models with more than 1B parameters, optimizing their production inference paths, and building GPU-native mesh and texture-processing systems for asset delivery."
   ],
   "overviewMedia": {
     "src": "./assets/community-showcase.mp4",
@@ -19,16 +19,16 @@
     "captionUrl": "https://3d.varco.ai/explore"
   },
   "contributions": [
-    "Trained dense and sparse in-house 3D generative models with more than 1B parameters.",
+    "Led the overall VARCO 3D research direction and trained dense and sparse in-house 3D generative models with more than 1B parameters.",
     "Reduced 15-step denoising latency by **25.66% without quantization** through forward-path analysis and CUDA kernel optimization.",
     "Built a CUDA mesh pipeline that cleans, remeshes, and decimates geometry from **1M to 1K faces in approximately five seconds**.",
     "Developed a tile-based UV unwrapper that processes meshes with more than **1M faces in under 30 seconds on average**, while maintaining **over 50% UV-space utilization even on challenging inputs**.",
-    "Implemented a CUDA multi-view texture-projection pipeline that generates an **8K texture map in approximately two seconds**."
+    "Implemented a rasterization-based CUDA multi-view texture-projection pipeline that generates an **8K texture map in approximately two seconds**."
   ],
   "details": [
     {
       "label": "Role",
-      "value": "3D Generation and Production R&D"
+      "value": "Research Lead · 3D Generation and Production R&D"
     },
     {
       "label": "Organization",
@@ -57,6 +57,6 @@
       ]
     }
   ],
-  "description": "Case study of VARCO 3D, covering 1B+ native 3D model development, CUDA inference optimization, mesh processing, UV unwrapping, and texture delivery.",
-  "keywords": "VARCO 3D, NC AI, 3D Generation, 3D Generative AI, VecSet-based ShapeVAE, Dense DiT Denoiser, Sparse DC VAE, Sparse DiT Denoiser, CUDA, cuBLASLt, QEM Decimation, UV Unwrapping, Texture Back Projection"
+  "description": "Case study of VARCO 3D, a native 3D generation service with 4K PBR-aware textures, AI auto-rigging and retargeting, detail-preserving decimation, and GPU-native asset processing.",
+  "keywords": "VARCO 3D, NC AI, 3D Generation, 3D Generative AI, AI Auto-Rigging, Motion Retargeting, VecSet-based ShapeVAE, Dense DiT Denoiser, Sparse DC VAE, Sparse DiT Denoiser, CUDA, cuBLASLt, QEM Decimation, UV Unwrapping, Texture Back Projection"
 }

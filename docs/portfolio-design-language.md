@@ -111,6 +111,19 @@ must use at least the surface's `--color-text-soft` or `--blog-color-muted`
 contrast. Reserve faint or subtle values for redundant folios, separators, and
 inactive icons.
 
+On the Portfolio home, chapter markers, numbered Project/Writing folios, and
+row metadata should sit one neutral step above their surrounding separators.
+Keep the type compact, but do not rely on low contrast to make it subordinate.
+On light Portfolio surfaces, use `0.70rem` for chapter, index, eyebrow, and row
+folio labels; use no less than `0.68rem` for compact detail and disclosure
+labels. The About point-cloud affordance may sit at `0.66rem` because it is an
+ancillary enhancement hint. The dark Hero's out-of-flow margin notation remains
+the contained exception and may stay smaller.
+Within a featured Project, a meaningful detail label such as `CONTRIBUTION`
+uses IBM Plex Mono `600` at `0.70rem` and `--color-text-strong`. Keep it neutral
+rather than adding a second cyan signal beside the Project eyebrow, and use
+compact tracking so the label reads as structure instead of faint metadata.
+
 ### Cyan roles
 
 The three canonical cyan tokens are semantic:
@@ -157,7 +170,9 @@ Rules:
 - Optically align Portfolio section headings with the copy beneath them: keep
   description blocks on the structural left edge and apply one shared, subtle
   leftward correction to large Manrope headings instead of adding per-section
-  paragraph margins.
+  paragraph margins. The compact Projects credibility line is the deliberate
+  exception: retain its small positive offset so its smaller glyphs align
+  optically with the display heading above.
 - Keep Portfolio section headings non-interactive. Put section-level navigation
   in a separate compact text action so headings retain one consistent chapter
   role.
@@ -250,9 +265,19 @@ decorative typeface or louder animation.
 - Give the About standfirst and portrait modest visual emphasis without turning
   either into a second hero: the standfirst remains a compact editorial lead,
   and the wide portrait stays near 300px rather than dominating its rail.
+- Continue the Portfolio About `--color-page` surface through the home footer
+  instead of ending on a contrasting strip. Treat the centered footer note as
+  a closing colophon: reuse the About standfirst's Cormorant Garamond italic at
+  a smaller but clearly readable scale and neutral contrast, without adding a
+  divider. From `1600px` upward, let the About chapter's bottom padding grow
+  gently from the standard `80px` to a maximum of `112px`, avoiding both an
+  abrupt short ending and viewport-fitted empty space.
 - Project and Portfolio-home Blog preview rows share their row spacing, media
   treatment, and interaction grammar; their column proportions and metadata
   order may differ to express artifact versus publication.
+- On wide Portfolio layouts, the featured Project row spans the full project
+  index measure: keep its media rail bounded and let its copy rail reach the
+  shell's right edge so it aligns with the standard project rows below.
 - Project and Portfolio-home Blog use complementary pale chapter surfaces:
   Projects stays on cool `--color-section`, while Writing uses the near-white
   soft-neutral `--color-writing-section`. Preserve balanced whitespace at the
@@ -676,6 +701,13 @@ Use a shared index/table grammar. Do not introduce a separate card system.
 ## Interaction And Motion
 
 Motion should confirm an interaction, not advertise itself.
+
+Portfolio-home chapter markers use a neutral active-state shift at the same
+`200px` viewport boundary as the navigation scrollspy. Let the chapter number
+move from `--color-text-soft` to `--color-text` and reveal only a short,
+slightly denser neutral segment at the start of the existing hairline. Do not
+introduce cyan, movement, or a new divider for this state, and remove the color
+transition under reduced motion.
 
 The production portfolio hero is the established Wave and must remain the only
 home-page hero implementation. Its canonical surface is an asymmetric
