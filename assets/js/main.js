@@ -117,9 +117,19 @@
 
     document.querySelectorAll('.navmenu a.active').forEach(link => link.classList.remove('active'));
     activeLink?.classList.add('active');
+
+    document.querySelectorAll('.portfolio-chapter-marker.is-active').forEach(marker => {
+      marker.classList.remove('is-active');
+    });
+    if (activeLink?.hash) {
+      document.querySelector(activeLink.hash)
+        ?.querySelector('.portfolio-chapter-marker')
+        ?.classList.add('is-active');
+    }
   }
   window.addEventListener('load', navmenuScrollspy);
   document.addEventListener('scroll', navmenuScrollspy);
+  document.addEventListener('portfolio:core-ready', navmenuScrollspy);
 
 })();
 

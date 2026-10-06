@@ -45,7 +45,7 @@
         <meta name="twitter:description" content="Technical articles on sparse 3D generation, neural rendering, mesh processing, CUDA kernels, and production inference optimization." />
         <meta name="twitter:image" content="https://hwan-h-heo.github.io/assets/image_fx_.jpg" />
         <script type="application/ld+json">{"@context":"https://schema.org","@type":"Blog","name":"Hwan Heo's Blog","url":"https://hwan-h-heo.github.io/blogs/","description":"Technical articles on sparse 3D generation, neural rendering, mesh processing, CUDA kernels, and production inference optimization.","author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"inLanguage":"en"}</script>
-        <meta name="site-deploy-version" content="dfd47d262a514c61">
+        <meta name="site-deploy-version" content="e32fa14924316176">
     <script defer src="/assets/js/deploy-refresh.js?v=ee9c6c8f26"></script>
 </head>
     <body class="blog-home-page">
@@ -188,7 +188,7 @@
                         <li class="blog-home-tab-item" role="presentation">
                             <button class="blog-home-tab is-active" id="posts-tab-control" data-tab-target="#posts-tab" type="button" role="tab" aria-controls="posts-tab" aria-selected="true" tabindex="0">
                                 <span data-i18n="tabPosts">Posts</span>
-                                <span class="blog-home-tab-count" id="posts-count">21</span>
+                                <span class="blog-home-tab-count" id="posts-count">22</span>
                             </button>
                         </li>
                         <li class="blog-home-tab-item" role="presentation">
@@ -203,6 +203,30 @@
                 <div class="blog-home-tab-content">
                     <div class="blog-home-tab-panel is-active" id="posts-tab" role="tabpanel" aria-labelledby="posts-tab-control" tabindex="0">
 
+        <article class="post-preview post-preview-media-right" data-post-id="260818_quad_remesh" data-post-category="post">
+            <div class="post-card-link">
+                <a href="/blogs/posts/quad-remesh/" class="post-card-cover" aria-label="Read Comprehensive Analysis of Quad Remeshing">
+                    <img src="/assets/generated/blog-covers/260818_quad_remesh.webp" data-blog-cover data-preview-src="/assets/generated/blog-covers/260818_quad_remesh.webp" alt="Comprehensive Analysis of Quad Remeshing cover image" loading="lazy" decoding="async">
+                </a>
+                <div class="post-card-body">
+                    <div class="post-card-eyebrow post-series-context">
+                        <span class="post-series-context-label">SERIES</span>
+                        <span class="post-series-context-separator" aria-hidden="true">/</span>
+                        <span class="post-series-context-value" data-post-series>Computer Graphics</span>
+                    </div>
+                    <h3 class="post-title" lang="en"><a href="/blogs/posts/quad-remesh/">Comprehensive Analysis of Quad Remeshing</a></h3>
+                    <p class="post-subtitle" lang="en">The differential geometry of quad remeshing, from cross fields to integer-grid maps</p>
+                    <p class="post-meta">
+                        <time datetime="2026-10-06">October 6, 2026</time>
+                    </p>
+                    <div class="post-tag-row"><a class="post-tag" href="/blogs/tags/graphics/">Graphics</a></div>
+                </div>
+            </div>
+            <nav class="visually-hidden" aria-label="Available languages">
+                <a href="/blogs/posts/quad-remesh/" hreflang="en">English</a>, <a href="/blogs/posts/quad-remesh-kor/" hreflang="ko">Korean</a>
+            </nav>
+        </article>
+    
         <article class="post-preview post-preview-media-right" data-post-id="260802_cuda_01_gemm" data-post-category="post">
             <div class="post-card-link">
                 <a href="/blogs/posts/gemm-on-nvidia-gpus/" class="post-card-cover" aria-label="Read GEMM on NVIDIA GPUs: From Naive Kernels to Tiled Pipelines">
@@ -694,6 +718,40 @@
 
                     <div class="blog-home-tab-panel" id="series-tab" role="tabpanel" aria-labelledby="series-tab-control" tabindex="0" hidden>
 
+                    <article class="series-group" data-series-id="graphics">
+                        <div class="series-card-header">
+                            <span class="series-card-kicker">Series</span>
+                            <h3 class="series-title" lang="en">
+                                <a href="/blogs/series/graphics/">
+                                    <span data-series-title>Computer Graphics</span>
+                                    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up-right"></use></svg>
+                                </a>
+                            </h3>
+                            <div class="series-card-meta">
+                                <span data-series-count>3 items</span>
+                                <span><span data-series-latest-label>Latest</span> <time datetime="2026-10-06">Oct 2026</time></span>
+                            </div>
+                        </div>
+                        <ol class="series-post-list">
+                            
+                        <li data-series-post-id="260818_quad_remesh">
+                            <a href="/blogs/posts/quad-remesh/" lang="en">Comprehensive Analysis of Quad Remeshing</a>
+                            <span class="post-meta-sm"><time datetime="2026-10-06">Oct 2026</time></span>
+                        </li>
+                
+                        <li data-series-post-id="250823_sdf">
+                            <a href="/blogs/posts/sdf-and-eikonal-equation/" lang="en">SDF and Eikonal Equation</a>
+                            <span class="post-meta-sm"><time datetime="2025-08-23">Aug 2025</time></span>
+                        </li>
+                
+                        <li data-series-post-id="250809_gwn">
+                            <a href="/blogs/posts/generalized-winding-number/" lang="en">Generalized Winding Number</a>
+                            <span class="post-meta-sm"><time datetime="2025-08-09">Aug 2025</time></span>
+                        </li>
+                
+                        </ol>
+                    </article>
+            
                     <article class="series-group" data-series-id="cuda">
                         <div class="series-card-header">
                             <span class="series-card-kicker">Series</span>
@@ -772,35 +830,6 @@
                         <li data-series-post-id="240226_sora">
                             <a href="/blogs/posts/can-sora-understand-3d/" lang="en">Can Sora Understand 3D?</a>
                             <span class="post-meta-sm"><time datetime="2024-02-26">Feb 2024</time></span>
-                        </li>
-                
-                        </ol>
-                    </article>
-            
-                    <article class="series-group" data-series-id="graphics">
-                        <div class="series-card-header">
-                            <span class="series-card-kicker">Series</span>
-                            <h3 class="series-title" lang="en">
-                                <a href="/blogs/series/graphics/">
-                                    <span data-series-title>Computer Graphics</span>
-                                    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up-right"></use></svg>
-                                </a>
-                            </h3>
-                            <div class="series-card-meta">
-                                <span data-series-count>2 items</span>
-                                <span><span data-series-latest-label>Latest</span> <time datetime="2025-08-23">Aug 2025</time></span>
-                            </div>
-                        </div>
-                        <ol class="series-post-list">
-                            
-                        <li data-series-post-id="250823_sdf">
-                            <a href="/blogs/posts/sdf-and-eikonal-equation/" lang="en">SDF and Eikonal Equation</a>
-                            <span class="post-meta-sm"><time datetime="2025-08-23">Aug 2025</time></span>
-                        </li>
-                
-                        <li data-series-post-id="250809_gwn">
-                            <a href="/blogs/posts/generalized-winding-number/" lang="en">Generalized Winding Number</a>
-                            <span class="post-meta-sm"><time datetime="2025-08-09">Aug 2025</time></span>
                         </li>
                 
                         </ol>

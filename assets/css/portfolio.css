@@ -438,7 +438,17 @@ color: var(--accent-color);
   margin: 0;
 }
 .index-page #footer {
+  --background-color: var(--color-page);
+
   border-top: 0;
+}
+
+.index-page #footer .footer-note {
+  color: var(--color-text-soft);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0;
 }
 section, .section { color: var(--default-color); background-color: var(--background-color); padding: 80px 1rem; overflow: clip; }
 
@@ -460,6 +470,11 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   .index-page #footer {
     padding-top: 28px;
     padding-bottom: 28px;
+  }
+}
+@media (min-width: 1600px) {
+  .index-page #about {
+    padding-bottom: clamp(5rem, 5vw, 7rem);
   }
 }
 @media (min-width: 2000px) {
@@ -624,7 +639,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   margin: 0 0 0.72rem;
   color: var(--color-text-faint);
   font-family: var(--mono-font);
-  font-size: 0.6rem;
+  font-size: 0.66rem;
   font-weight: 500;
   letter-spacing: 0;
   line-height: 1.2;
@@ -749,7 +764,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   margin: 0 0 0.58rem;
   color: var(--color-text-soft);
   font-family: var(--mono-font);
-  font-size: 0.66rem;
+  font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0;
   line-height: 1;
@@ -1174,9 +1189,9 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 
 .portfolio-index-label {
   margin: 0;
-  color: var(--color-text-soft);
+  color: var(--color-text);
   font-family: var(--mono-font);
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0;
   line-height: 1;
@@ -1349,7 +1364,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   margin-bottom: 0.44rem;
   color: var(--accent-on-light);
   font-family: var(--mono-font);
-  font-size: 0.66rem;
+  font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -1357,7 +1372,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 
 .portfolio-blog-section .portfolio-blog-preview-eyebrow::before {
   margin-right: 0.18rem;
-  color: var(--color-text-faint);
+  color: var(--color-text-soft);
   content: "W–" counter(portfolio-writing-folio, decimal-leading-zero) " /";
 }
 
@@ -1366,7 +1381,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 }
 
 .portfolio-blog-section .portfolio-blog-preview-date {
-  color: var(--color-text-soft);
+  color: var(--color-text);
   font: inherit;
 }
 
@@ -1456,7 +1471,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 .portfolio-project-tag {
   display: inline-flex;
   align-items: center;
-  color: var(--color-text-soft);
+  color: var(--color-text);
   font-family: var(--default-font);
   font-size: 0.74rem;
   font-weight: 500;
@@ -1483,7 +1498,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   margin-bottom: 0.32rem;
   color: var(--accent-on-light);
   font-family: var(--mono-font);
-  font-size: 0.66rem;
+  font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -2072,9 +2087,9 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 }
 
 .portfolio-chapter-label {
-  color: var(--color-text-soft);
+  color: var(--color-text);
   font-family: var(--mono-font);
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0;
   line-height: 1;
@@ -2082,15 +2097,35 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 }
 
 .portfolio-chapter-label > span {
-  color: var(--color-text-faint);
+  color: var(--color-text-soft);
+  transition: color var(--motion-base) var(--ease-standard);
 }
 
 .portfolio-chapter-rule {
+  position: relative;
   display: block;
   width: 100%;
   min-width: 1.5rem;
   height: 1px;
   background: var(--color-line);
+}
+
+.portfolio-chapter-rule::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: clamp(2rem, 3vw, 2.5rem);
+  background: color-mix(in srgb, var(--color-text-soft), transparent 70%);
+  content: "";
+  opacity: 0;
+  transition: opacity var(--motion-base) var(--ease-standard);
+}
+
+.portfolio-chapter-marker.is-active .portfolio-chapter-label > span {
+  color: var(--color-text);
+}
+
+.portfolio-chapter-marker.is-active .portfolio-chapter-rule::before {
+  opacity: 1;
 }
 
 .portfolio-heading-copy,
@@ -2266,10 +2301,9 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 }
 
 .portfolio-project-item--featured .portfolio-project-layout {
-  grid-template-columns: minmax(0, 480px) minmax(0, 600px);
+  grid-template-columns: minmax(0, 480px) minmax(0, 1fr);
   gap: var(--portfolio-project-spread-gap);
   align-items: center;
-  justify-content: start;
 }
 
 .portfolio-project-item--featured .portfolio-project-cover-link {
@@ -2280,8 +2314,8 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 .portfolio-project-item--featured .portfolio-project-body {
   width: 100%;
   justify-content: center;
-  max-width: 600px;
-  margin-inline: auto;
+  max-width: none;
+  margin-inline: 0;
   padding-top: 0;
 }
 
@@ -2349,11 +2383,11 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 }
 
 .portfolio-project-feature-detail dt {
-  color: var(--color-text-faint);
+  color: var(--color-text-strong);
   font-family: var(--mono-font);
-  font-size: 0.62rem;
-  font-weight: 500;
-  letter-spacing: 0.055em;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   line-height: 1.35;
   text-transform: uppercase;
 }
@@ -2453,7 +2487,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   margin-bottom: 0.44rem;
   color: var(--accent-on-light);
   font-family: var(--mono-font);
-  font-size: 0.66rem;
+  font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -2461,7 +2495,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 
 .portfolio-project-eyebrow::before {
   margin-right: 0.5rem;
-  color: var(--color-text-faint);
+  color: var(--color-text-soft);
   content: "P–" counter(portfolio-project-folio, decimal-leading-zero) " /";
 }
 
@@ -2528,7 +2562,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   gap: 0.2rem 0.55rem;
   align-items: center;
   margin-top: 0.56rem;
-  color: var(--color-text-soft);
+  color: var(--color-text);
   font-size: 0.74rem;
   line-height: 1.35;
 }
@@ -2597,7 +2631,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   margin-bottom: 0.12rem;
   color: var(--accent-editorial);
   font-family: var(--mono-font);
-  font-size: 0.62rem;
+  font-size: 0.68rem;
   font-weight: 500;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -2607,7 +2641,7 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   display: inline-flex;
   gap: 0.8rem;
   align-items: center;
-  color: #64748b;
+  color: var(--color-text);
   font-size: 0.73rem;
   white-space: nowrap;
 }
@@ -2684,9 +2718,9 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 .portfolio-publication::before {
   content: "0" counter(publication);
   padding-top: 0.14rem;
-  color: #94a3b8;
+  color: var(--color-text-soft);
   font-family: var(--mono-font);
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   font-weight: 500;
   line-height: 1.45;
   letter-spacing: 0;
@@ -2794,9 +2828,9 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 
 .portfolio-talk time {
   padding-top: 0.14rem;
-  color: var(--color-text-soft);
+  color: var(--color-text);
   font-family: var(--mono-font);
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0;
 }
@@ -3133,6 +3167,8 @@ section, .section { color: var(--default-color); background-color: var(--backgro
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .portfolio-chapter-label > span,
+  .portfolio-chapter-rule::before,
   .portfolio-blog-all-link,
   .portfolio-blog-all-link::after,
   .portfolio-blog-section .portfolio-blog-preview-title,

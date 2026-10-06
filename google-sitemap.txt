@@ -1,5 +1,7 @@
 https://hwan-h-heo.github.io/
 https://hwan-h-heo.github.io/blogs/
+https://hwan-h-heo.github.io/blogs/posts/quad-remesh/
+https://hwan-h-heo.github.io/blogs/posts/quad-remesh-kor/
 https://hwan-h-heo.github.io/blogs/posts/gemm-on-nvidia-gpus/
 https://hwan-h-heo.github.io/blogs/posts/gemm-on-nvidia-gpus-kor/
 https://hwan-h-heo.github.io/blogs/posts/optimizing-sparse-3d-generation-inference/

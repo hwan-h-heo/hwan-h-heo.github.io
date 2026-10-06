@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="en" class="sidebar-collapsed blog-sidebar-rail">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="The differential geometry of quad remeshing, from cross fields to integer-grid maps" />
+    <meta name="keywords" content="post, graphics, Graphics, 3D graphics, computer vision, machine learning" />
+    <meta name="author" content="Hwan Heo" />
+    <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/posts/quad-remesh/" />
+    <link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/quad-remesh/" />
+    <link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/quad-remesh-kor/" />
+    <link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/quad-remesh/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://hwan-h-heo.github.io/blogs/posts/quad-remesh/" />
+    <meta property="og:title" content="Comprehensive Analysis of Quad Remeshing" />
+    <meta property="og:description" content="The differential geometry of quad remeshing, from cross fields to integer-grid maps" />
+    <meta property="og:image" content="https://hwan-h-heo.github.io/blogs/posts/260818_quad_remesh/assets/armadillo_final_quads.png" />
+    <meta property="og:site_name" content="HwanHeo's Blog" />
+    <meta property="article:published_time" content="2026-10-06T00:00:00.000Z" />
+    <meta property="article:modified_time" content="2026-10-06T00:00:00.000Z" />
+    <meta property="article:author" content="Hwan Heo" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://hwan-h-heo.github.io/blogs/posts/quad-remesh/" />
+    <meta name="twitter:title" content="Comprehensive Analysis of Quad Remeshing" />
+    <meta name="twitter:description" content="The differential geometry of quad remeshing, from cross fields to integer-grid maps" />
+    <meta name="twitter:image" content="https://hwan-h-heo.github.io/blogs/posts/260818_quad_remesh/assets/armadillo_final_quads.png" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Comprehensive Analysis of Quad Remeshing","description":"The differential geometry of quad remeshing, from cross fields to integer-grid maps","url":"https://hwan-h-heo.github.io/blogs/posts/quad-remesh/","mainEntityOfPage":"https://hwan-h-heo.github.io/blogs/posts/quad-remesh/","image":["https://hwan-h-heo.github.io/blogs/posts/260818_quad_remesh/assets/armadillo_final_quads.png"],"author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"publisher":{"@type":"Person","name":"Hwan Heo"},"datePublished":"2026-10-06","dateModified":"2026-10-06","inLanguage":"en"}</script>
+
+    <title>Comprehensive Analysis of Quad Remeshing | Hwan Heo</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="/blogs/css/blog.css?v=1378b085bd" rel="stylesheet" />
+    <link href="/blogs/css/sidebar.css?v=975e92b635" rel="stylesheet" />
+    <link href="/css/sidebar-nav.css?v=6503f0effb" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5feaa1dfce" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=dc5dd44b65" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
+    <script src="/js/sidebar-controller.js?v=3db1bd5d00" data-sidebar-mode="rail"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RF7ETSKPK9');
+    </script>
+        <script>
+            (function() {
+                try {
+                    const storedTheme = localStorage.getItem('blog-theme');
+                    const theme = storedTheme === 'dark' || storedTheme === 'light' ? storedTheme : 'light';
+                    document.documentElement.dataset.theme = theme;
+                } catch (error) {}
+            })();
+        </script>
+    <meta name="site-deploy-version" content="e32fa14924316176">
+    <script defer src="/assets/js/deploy-refresh.js?v=ee9c6c8f26"></script>
+</head>
+<body class="blog-post-page">
+    <header id="header" class="header blog-sidebar dark-background" data-sidebar-mode="rail">
+        <div class="profile-img">
+            <img src="/assets/icon.webp" alt="Portrait illustration of Hwan Heo">
+        </div>
+
+        <a href="/blogs/" class="logo">
+            <span class="sitename">Hwan's Blog</span>
+        </a>
+
+        <div class="social-links">
+            <a href="https://github.com/hwanhuh" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
+            <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
+            <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
+            <a href="mailto:hwan.heo.ai@gmail.com" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
+        </div>
+
+        <nav id="navmenu" class="navmenu" aria-label="Blog navigation">
+            <ul>
+                <li>
+                    <a href="/blogs/" class="active" aria-current="location">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house"></use></svg>
+                        <span>Blog Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/" class="sidebar-external-link">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-briefcase"></use></svg>
+                        <span>Portfolio</span>
+                        <svg class="site-icon sidebar-external-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-labs">
+            <details class="sidebar-labs-menu">
+                <summary>
+                    <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-tools"></use></svg>
+                    <span>Labs</span>
+                    <svg class="site-icon sidebar-labs-chevron" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
+                </summary>
+                <div class="sidebar-labs-panel">
+                    <div class="sidebar-rail-panel-heading" aria-hidden="true">
+                        <span>Labs / 02</span>
+                        <small>Tools &amp; experiments</small>
+                    </div>
+                    <a href="/blogs/3DViewer/">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg>
+                        <span class="sidebar-labs-copy"><strong>3D Viewer</strong><small>Inspect 3D assets</small></span>
+                    </a>
+                    <a href="/blogs/editor/">
+                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg>
+                        <span class="sidebar-labs-copy"><strong>Markdown Editor</strong><small>Draft long-form posts</small></span>
+                    </a>
+                </div>
+            </details>
+        </div>
+
+        <div class="sidebar-contents">
+            <button class="sidebar-contents-toggle" type="button" aria-label="Open contents" aria-controls="post-toc" aria-expanded="false">
+                <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-list-ul"></use></svg>
+                <span>Contents</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="main blog-post-main">
+        <nav class="post-site-nav" id="mainNav" aria-label="Post utilities">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-utility-column">
+                        <a class="post-nav-home" href="/blogs/" aria-label="Back to Blog Home">
+                            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg>
+                            <span>Blog Home</span>
+                        </a>
+                        <ul class="post-nav-actions">
+                            <li class="post-nav-action post-nav-search-item">
+                                <form id="post-nav-search-form" class="post-nav-search" role="search" data-collapsible-search>
+                                    <label class="visually-hidden" for="post-nav-search-input">Search blog posts</label>
+                                    <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
+                                    <button type="submit" aria-label="Search" aria-controls="post-nav-search-input" aria-expanded="false">
+                                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
+                                    </button>
+                                </form>
+                            </li>
+                            <li class="post-nav-action"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><svg class="site-icon theme-toggle-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg></button></li>
+                            <li class="post-nav-action"><a href="/blogs/posts/quad-remesh-kor/" class="post-nav-language-link" data-language-target="kor" aria-label="한국어로 전환" title="한국어로 전환">가</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <header class="masthead post-masthead">
+            <div class="blog-shell post-hero-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-hero-column">
+                        <div class="post-heading">
+                            <div class="post-hero-series">
+                                <span class="post-hero-series-label">Series</span>
+                                <span class="post-hero-series-separator" aria-hidden="true">/</span>
+                                <a href="/blogs/series/graphics/">
+                                    <span class="post-hero-series-name">Computer Graphics</span>
+                                    <span class="post-hero-series-arrow" aria-hidden="true">→</span>
+                                </a>
+                            </div>
+                            <h1>Comprehensive Analysis of Quad Remeshing</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <article class="post-article">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-hero-column post-intro-column">
+                        <div class="post-intro-layout">
+                            <div class="post-intro-copy">
+                                <p class="post-intro-deck">The differential geometry of quad remeshing, from cross fields to integer-grid maps</p>
+                                <div class="post-intro-topics" aria-label="Topics">
+                                    <span class="post-intro-topics-label">Topics</span>
+                                    <span class="post-intro-topics-separator" aria-hidden="true">/</span>
+                                    <div class="post-tags"><a class="post-tag" href="/blogs/tags/graphics/">Graphics</a></div>
+                                </div>
+                            </div>
+                            <aside class="post-article-info" aria-label="Article details">
+                                <ul>
+                                    <li data-post-detail="author">
+                                        <strong>Author</strong>
+                                        <span>Hwan Heo</span>
+                                    </li>
+                                    <li data-post-detail="published">
+                                        <strong>Published</strong>
+                                        <time datetime="2026-10-06">October 6, 2026</time>
+                                    </li>
+                                    <li data-post-detail="reading">
+                                        <strong>Reading</strong>
+                                        <span class="post-detail-reading">37 min read</span>
+                                    </li>
+                                </ul>
+                            </aside>
+                        </div>
+                    </div>
+                    <div class="post-reading-column main-content">
+                        <nav id="post-toc" class="toc" aria-label="Table of contents"><div class="toc-title">On This Page</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Quad Remeshing: Cross Field &amp; Integer-Grid Map" aria-label="Quad Remeshing: Cross Field &amp; Integer-Grid Map"><span class="toc-link-text">Quad Remeshing: Cross Field &amp; Integer-Grid Map</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="1. Triangle Pairing &amp; Lattice" aria-label="1. Triangle Pairing &amp; Lattice"><span class="toc-link-text">1. Triangle Pairing &amp; Lattice</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-2" title="Integer Lattice" aria-label="Integer Lattice"><span class="toc-link-text">Integer Lattice</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="Chart &amp; Seam" aria-label="Chart &amp; Seam"><span class="toc-link-text">Chart &amp; Seam</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-4" title="2. Singularity &amp; Topology" aria-label="2. Singularity &amp; Topology"><span class="toc-link-text">2. Singularity &amp; Topology</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="Valence &amp; Index" aria-label="Valence &amp; Index"><span class="toc-link-text">Valence &amp; Index</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="Euler Characteristic" aria-label="Euler Characteristic"><span class="toc-link-text">Euler Characteristic</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-7" title="3. Cross Field" aria-label="3. Cross Field"><span class="toc-link-text">3. Cross Field</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="Parallel Transport" aria-label="Parallel Transport"><span class="toc-link-text">Parallel Transport</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-9" title="4-RoSy Representation" aria-label="4-RoSy Representation"><span class="toc-link-text">4-RoSy Representation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="Field Optimization" aria-label="Field Optimization"><span class="toc-link-text">Field Optimization</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-11" title="4. Winding &amp; Branch Lifting" aria-label="4. Winding &amp; Branch Lifting"><span class="toc-link-text">4. Winding &amp; Branch Lifting</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-12" title="Winding &amp; Singularity Index" aria-label="Winding &amp; Singularity Index"><span class="toc-link-text">Winding &amp; Singularity Index</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-13" title="Branch Lifting &amp; Cut" aria-label="Branch Lifting &amp; Cut"><span class="toc-link-text">Branch Lifting &amp; Cut</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-14" title="Streamline &amp; Coordinate Grid" aria-label="Streamline &amp; Coordinate Grid"><span class="toc-link-text">Streamline &amp; Coordinate Grid</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-15" title="5. Coordinate Solve" aria-label="5. Coordinate Solve"><span class="toc-link-text">5. Coordinate Solve</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-16" title="1D Parameterization" aria-label="1D Parameterization"><span class="toc-link-text">1D Parameterization</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-17" title="Sizing Field" aria-label="Sizing Field"><span class="toc-link-text">Sizing Field</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-18" title="Integrability &amp; Least Squares" aria-label="Integrability &amp; Least Squares"><span class="toc-link-text">Integrability &amp; Least Squares</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-19" title="6. Integer-Grid Map" aria-label="6. Integer-Grid Map"><span class="toc-link-text">6. Integer-Grid Map</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-20" title="Integer Transition" aria-label="Integer Transition"><span class="toc-link-text">Integer Transition</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-21" title="Cycle Period" aria-label="Cycle Period"><span class="toc-link-text">Cycle Period</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-22" title="Singularity Coordinates" aria-label="Singularity Coordinates"><span class="toc-link-text">Singularity Coordinates</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-23" title="Mixed-Integer Optimization" aria-label="Mixed-Integer Optimization"><span class="toc-link-text">Mixed-Integer Optimization</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-24" title="7. Quad Extraction" aria-label="7. Quad Extraction"><span class="toc-link-text">7. Quad Extraction</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-25" title="Fold-over &amp; Map Validity" aria-label="Fold-over &amp; Map Validity"><span class="toc-link-text">Fold-over &amp; Map Validity</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-26" title="Cell Connectivity" aria-label="Cell Connectivity"><span class="toc-link-text">Cell Connectivity</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-27" title="Geometry Cleanup" aria-label="Geometry Cleanup"><span class="toc-link-text">Geometry Cleanup</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-28" title="8. Fundamentals &amp; Implementation" aria-label="8. Fundamentals &amp; Implementation"><span class="toc-link-text">8. Fundamentals &amp; Implementation</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
+    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
+</button>
+
+<div id="myshare_modal" class="share_modal" role="status" aria-live="polite" aria-hidden="true">
+    <div class="share_modal-content">
+        <button class="share_modal_close" type="button" aria-label="Dismiss">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-x-lg"></use></svg>
+        </button>
+        <span class="share_modal-icon" aria-hidden="true">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-check2"></use></svg>
+        </span>
+        <span class="share_modal-message">
+            <strong>Link copied</strong>
+            <small>Post URL is ready to share.</small>
+        </span>
+        <div class="copy_indicator-container">
+            <div class="copy_indicator" id="share_modalIndicator"></div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="/blogs/posts/260818_quad_remesh/assets/quad-remesh.css?v=cd5ca9de8f">
+<script defer src="/blogs/posts/260818_quad_remesh/assets/quad-remesh.js?v=8ac2db05f4"></script>
+
+<h2 id="toc-heading-0">Quad Remeshing: Cross Field &amp; Integer-Grid Map</h2>
+<p>When you look at a well-designed quad mesh, something stands out before the individual quads: the edge loops around the eyes, the long strips across the cheeks, and the grid bending with the shape of a joint. Individual faces may be slightly distorted, yet neighboring faces carry the same flow forward. How can we recover this structure from a triangle mesh?</p>
+<p>Pairing two adjacent triangles gives us a quad easily enough. Repeating this choice across the mesh, however, will not produce a loop around an eye on its own. Directions and spacing must agree across distant regions, and wherever the number of grid rows changes, the connectivity must accommodate that change.</p>
+<p>This post explores quad remeshing by <strong>computing a direction field on the surface and placing an integer grid in coordinates aligned with that field</strong>. Remeshing algorithms do not all follow the same steps, but understanding this approach explains why cross fields, singularities, parameterization, and mixed-integer optimization appear together in one problem.</p>
+<p><img src="/blogs/posts/260818_quad_remesh/assets/armadillo_pipeline_10k.webp" alt="The progression from a direction field through coordinates and an integer grid to a quad mesh" loading="lazy" decoding="async"></p>
+<p>The Armadillo example was remeshed with the custom <a href="https://github.com/hwanhuh/CUDA-Lattice-Quadratice-Solver">CUDA-accelerated, CoMISo-like integer PDE solver</a> used in Varco3D. The computations are illustrated with Manim videos on simple surfaces.</p>
+<h2 id="toc-heading-1">1. Triangle Pairing &amp; Lattice</h2>
+<p>Let the input triangle mesh be $M=(V,E,F)$. We assume a manifold surface with consistently oriented faces, two faces incident on each interior edge, and one face incident on each boundary edge.</p>
+<p>Pairing adjacent triangles based only on their local shape can improve the quality of individual quads to some extent. It does not guarantee that a direction chosen on one face will continue onto the next. Following opposite edges may lead to a zigzagging flow or a short closed loop, and some triangles may remain unpaired.</p>
+<figure class="post-media quad-remesh-video post-media--editorial">
+  <video controls loop muted playsinline preload="none" width="1280" height="720" poster="/blogs/posts/260818_quad_remesh/assets/manim/pairing-vs-lattice.webp" aria-label="Local pairing removes interior triangle edges; a globally aligned lattice organizes directions across the surface.">
+    <source src="/blogs/posts/260818_quad_remesh/assets/manim/pairing-vs-lattice.mp4" type="video/mp4">
+    <a href="/blogs/posts/260818_quad_remesh/assets/manim/pairing-vs-lattice.mp4">View MP4</a>
+  </video>
+  <figcaption><span class="post-figure-index">FIG. 01</span><span class="post-figure-caption">Local pairing removes interior triangle edges; a globally aligned lattice organizes directions across the surface.</span></figcaption>
+</figure>
+
+<p>The triangle mesh provides the substrate for computing directions and coordinates: a <em>computational carrier</em>. The final quad vertices and edges are created on this substrate, so they need not follow the connectivity of the input triangles. To build new connectivity, we first need to decide how the grid should flow across the surface.</p>
+<p>It helps to separate the properties of a surface grid into four components.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>What it determines</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Orientation</td>
+<td>The directions of the two quad axes</td>
+</tr>
+<tr>
+<td>Scale</td>
+<td>Grid spacing and density</td>
+</tr>
+<tr>
+<td>Phase</td>
+<td>Where the grid lines actually lie</td>
+</tr>
+<tr>
+<td>Topology</td>
+<td>How strips and loops connect, and where the number of rows changes</td>
+</tr>
+</tbody></table>
+<p>Consider two planar grids with identical orientation and spacing. Shifting one by half a cell places its vertices at different positions. Their orientation and scale agree, but their phase differs. Wrapping the grid around a curved surface also requires the number of cells around a loop to fit. Even if the first three components are locally well chosen, the final connection can still fail to line up.</p>
+<p>A cross field specifies orientation, while a sizing field specifies spacing. The positions of the lines are determined by solving for coordinates, and integer constraints on seams and cycles make the global connectivity consistent. The preferred orientation and density depend on the application. A mesh intended for deformation may call for a different grid than one intended to preserve sharp features.</p>
+<h3 id="toc-heading-2">Integer Lattice</h3>
+<p>Let us first express the desired result in coordinates. Given two planar coordinates $u,v$, we can draw the integer lines</p>
+<p>$$
+u=k,\qquad v=l,\qquad k,l\in\mathbb Z
+$$</p>
+<p>Their intersections become grid vertices, and each region $[k,k+1]\times[l,l+1]$ enclosed by adjacent integer lines becomes a cell.</p>
+<p>We can do the same on a surface patch $C_i$ by assigning it a coordinate map</p>
+<p>$$
+\Phi_i=(u_i,v_i):C_i\rightarrow\mathbb R^2
+$$</p>
+<p>The integer grid drawn in the parameter plane is then pulled back onto the surface. With a suitable map, we obtain the following correspondence.</p>
+<p>$$
+\begin{aligned}
+\text{integer lattice point}&amp;\longleftrightarrow\text{quad vertex},\\
+\text{integer grid segment}&amp;\longleftrightarrow\text{quad edge},\\
+\text{unit square}&amp;\longleftrightarrow\text{quad face}.
+\end{aligned}
+$$</p>
+<figure class="post-media quad-remesh-video post-media--editorial">
+  <video controls loop muted playsinline preload="none" width="1280" height="720" poster="/blogs/posts/260818_quad_remesh/assets/manim/grid-extraction.webp" aria-label="Integer cells in UV are interpolated within the triangles and pulled back onto the original surface as quads.">
+    <source src="/blogs/posts/260818_quad_remesh/assets/manim/grid-extraction.mp4" type="video/mp4">
+    <a href="/blogs/posts/260818_quad_remesh/assets/manim/grid-extraction.mp4">View MP4</a>
+  </video>
+  <figcaption><span class="post-figure-index">FIG. 02</span><span class="post-figure-caption">Integer cells in UV are interpolated within the triangles and pulled back onto the original surface as quads.</span></figcaption>
+</figure>
+
+<p>A single grid line may cross many input triangles. Nor does every input vertex need integer coordinates: new vertices and lines are created where the interpolated $u,v$ values within the triangles become integers. This is why the resolution of the input mesh and that of the output quads must be distinguished.</p>
+<h3 id="toc-heading-3">Chart &amp; Seam</h3>
+<p>A closed surface cannot be covered by a single planar coordinate system without overlap or singularities. In practice, we cut the surface into charts and store separate coordinate copies on either side of each cut, or seam.</p>
+<figure class="post-media quad-remesh-video post-media--editorial">
+  <video controls loop muted playsinline preload="none" width="1280" height="720" poster="/blogs/posts/260818_quad_remesh/assets/manim/cut-charts.webp" aria-label="Duplicating seam coordinates across two charts preserves their correspondence to the original surface points.">
+    <source src="/blogs/posts/260818_quad_remesh/assets/manim/cut-charts.mp4" type="video/mp4">
+    <a href="/blogs/posts/260818_quad_remesh/assets/manim/cut-charts.mp4">View MP4</a>
+  </video>
+  <figcaption><span class="post-figure-index">FIG. 03</span><span class="post-figure-caption">Duplicating seam coordinates across two charts preserves their correspondence to the original surface points.</span></figcaption>
+</figure>
+
+<p>Flattening each chart well in isolation is not enough. Even when a surface point has two coordinate representations, grid lines must continue across the seam. A square grid is unchanged by a $90^\circ$ rotation or a translation by an integer number of cells, so these transformations can serve as the transition rules between charts. This is where the integer constraints of an integer-grid map come from, as we will see later.</p>
+<p>Joining the grid across charts introduces another problem that cannot be resolved merely by choosing coordinate origins. On a surface such as a sphere, the connectivity of the grid itself must change somewhere.</p>
+<h2 id="toc-heading-4">2. Singularity &amp; Topology</h2>
+<p>In a planar square grid, four edges and four faces meet at each interior vertex. The number of incident edges is called the valence, so a regular vertex has valence $4$. At a corner of a cube, only three faces meet, giving it valence $3$. Such a vertex is called an extraordinary vertex or an irregular vertex.</p>
+<p>Even if each face of a cube is finely subdivided, only three grid directions still meet at each of its eight original corners. New vertices inside the faces and along the original edges have valence $4$, but the connectivity at the eight corners remains. Rounding the cube into a shape close to a sphere does not change this relationship.</p>
+<h3 id="toc-heading-5">Valence &amp; Index</h3>
+<p>If we view a regular vertex as four $90^\circ$ sectors, we can count vertices of other valences in the same way. For a vertex where $n_v$ sectors meet, define the index as</p>
+<p>$$
+I_v=\frac{4-n_v}{4}
+$$</p>
+<p>This counts the combinatorial sectors of the square grid, rather than actual angles in 3D. The corner angles of a curved quad need not be exactly $90^\circ$.</p>
+<table>
+<thead>
+<tr>
+<th align="right">Valence</th>
+<th align="right">Index</th>
+<th>Difference from a regular vertex</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">$3$</td>
+<td align="right">$+\frac14$</td>
+<td>One sector missing</td>
+</tr>
+<tr>
+<td align="right">$4$</td>
+<td align="right">$0$</td>
+<td>Four sectors meet</td>
+</tr>
+<tr>
+<td align="right">$5$</td>
+<td align="right">$-\frac14$</td>
+<td>One extra sector</td>
+</tr>
+</tbody></table>
+<p>The difference also appears in the grid directions around the vertex. Choose one axis as $+u$ near a corner of a cube, then follow the same branch as you move onto neighboring faces. After passing through three sectors and returning to the starting face, a quarter-turn remains between the initial branch and an adjacent branch. Depending on the traversal direction and sign convention, this can be written as $+u\rightarrow+v$ or $+u\rightarrow-v$.</p>
+<p>The cross formed by all four branches looks identical after a $90^\circ$ rotation. Which branch we called $+u$, however, has changed. A point around which the original direction labels cannot be restored after a full loop is associated with a cross-field singularity. On a curved surface, the rotation contributed by the surface itself must also be accounted for. We will examine the actual computation after introducing tangent frames.</p>
+<h3 id="toc-heading-6">Euler Characteristic</h3>
+<p>The number of such vertices is also tied to the topology of the surface. In an all-quad mesh without boundary, each face has four edges and each edge is shared by two faces, so $4F=2E$. The sum of all vertex valences is $2E$, giving</p>
+<p>$$
+\begin{aligned}
+\sum_v\left(4-\operatorname{val}(v)\right)
+&amp;=4V-2E\\
+&amp;=4V-4F\\
+&amp;=4(V-E+F)\\
+&amp;=4\chi(M).
+\end{aligned}
+$$</p>
+<p>The sum of the indices therefore equals the Euler characteristic. Here, $V,E,F$ denote the numbers of vertices, edges, and faces, respectively.</p>
+<p>$$
+\boxed{\sum_v I_v=\chi(M)}
+$$</p>
+<p>The surface of a cube is homeomorphic to a sphere, with $\chi(S^2)=2$. If every singularity has valence-$3$, exactly eight are required because $8\times\frac14=2$. The eight corners of a cube provide an example. Other spherical meshes may also contain valence-$5$ or higher-valence vertices, but the sum of the indices must still be $2$.</p>
+<p>A torus, by contrast, has $\chi(T^2)=0$, so a quad grid with only regular vertices is possible. Positive and negative indices may also coexist as long as their sum is $0$. On a surface with boundary, contributions from the boundary and its corners must be included; the interior-vertex formula alone is insufficient.</p>
+<p>Good remeshing cannot simply mean eliminating every irregular vertex. It must satisfy the index required by the surface while placing the necessary singularities where they suit the shape and grid flow. Let us now express this structure as a direction field on the input triangles.</p>
+<h2 id="toc-heading-7">3. Cross Field</h2>
+<figure class="post-media quad-remesh-video post-media--editorial">
+  <video controls loop muted playsinline preload="none" width="1280" height="720" poster="/blogs/posts/260818_quad_remesh/assets/manim/carrier-patch.webp" aria-label="Crosses on three neighboring faces, with the highlighted face shown in an orthonormal basis. A·B·C correspond in both views.">
+    <source src="/blogs/posts/260818_quad_remesh/assets/manim/carrier-patch.mp4" type="video/mp4">
+    <a href="/blogs/posts/260818_quad_remesh/assets/manim/carrier-patch.mp4">View MP4</a>
+  </video>
+  <figcaption><span class="post-figure-index">FIG. 04</span><span class="post-figure-caption">Crosses on three neighboring faces, with the highlighted face shown in an orthonormal basis. A·B·C correspond in both views.</span></figcaption>
+</figure>
+
+<p>For quad edges to follow the surface, their directions must lie in the tangent plane at each point. Given the unit normal $\mathbf n_p$ at a point $p$, the tangent plane is</p>
+<p>$$
+T_pM=\left\{\mathbf v\in\mathbb R^3\;\middle|\;\mathbf v\cdot\mathbf n_p=0\right\}
+$$</p>
+<p>Each face of a triangle mesh is planar, so we can assign an orthonormal basis $B_f=(\mathbf b_{f,1},\mathbf b_{f,2})$ to each face $f$ and express a direction with a single angle.</p>
+<p>$$
+\mathbf d_f(\theta_f)
+=\cos\theta_f\,\mathbf b_{f,1}+\sin\theta_f\,\mathbf b_{f,2}
+$$</p>
+<h3 id="toc-heading-8">Parallel Transport</h3>
+<p>The difficulty is that neighboring faces use different tangent planes and bases. Having $\theta=0$ on both faces does not mean the directions agree in 3D. Conversely, directions that continue naturally along the surface can have different recorded angles when their bases differ.</p>
+<p>Imagine two sheets of paper joined along an edge. Rotate one triangle about the shared edge to unfold both triangles into the same plane. Rotate its drawn arrow along with it, then read the arrow in the neighboring face&#39;s basis. This operation is discrete parallel transport.</p>
+<figure class="post-media quad-remesh-video post-media--editorial">
+  <video controls loop muted playsinline preload="none" width="1280" height="720" poster="/blogs/posts/260818_quad_remesh/assets/manim/parallel-transport.webp" aria-label="The face and its arrow are unfolded together about the shared edge before comparing directions.">
+    <source src="/blogs/posts/260818_quad_remesh/assets/manim/parallel-transport.mp4" type="video/mp4">
+    <a href="/blogs/posts/260818_quad_remesh/assets/manim/parallel-transport.mp4">View MP4</a>
+  </video>
+  <figcaption><span class="post-figure-index">FIG. 05</span><span class="post-figure-caption">The face and its arrow are unfolded together about the shared edge before comparing directions.</span></figcaption>
+</figure>
+
+<p>Let $\alpha_{fg}$ be the angle added when transporting a direction from face $f$ to face $g$. Then</p>
+<p>$$
+\mathcal T_{f\rightarrow g}(\theta_f)=\theta_f+\alpha_{fg}
+$$</p>
+<p>We apply this correction before comparing neighboring directions, propagating a branch, or tracing a curve.</p>
+<h3 id="toc-heading-9">4-RoSy Representation</h3>
+<p>The edges of a square grid have no forward or backward orientation, and swapping the names of the two axes leaves the grid direction unchanged. Thus, in addition to $\mathbf d\sim-\mathbf d$, we have $\theta\sim\theta+\frac\pi2$. The direction represented on a face is a set of four branches:</p>
+<p>$$
+\mathcal C_f=\left\{\theta_f,\theta_f+\frac\pi2,\theta_f+\pi,\theta_f+\frac{3\pi}2\right\}
+$$</p>
+<p>Assigning this set across the surface gives a cross field, also called a 4-RoSy field. If we arbitrarily select one of the four branches on each face and compare their angles, even identical crosses can appear to differ by $90^\circ$. Multiplying the angle by four and storing it as a point on the unit circle removes this redundancy.</p>
+<p>$$
+\mathbf q_f=\begin{pmatrix}\cos4\theta_f\\\sin4\theta_f\end{pmatrix},
+\qquad z_f=e^{i4\theta_f}
+$$</p>
+<p>Since $e^{i4(\theta_f+\pi/2)}=e^{i4\theta_f}$, all four branches map to the same value. In this representation, parallel transport becomes the 2D rotation $\mathcal R(4\alpha_{fg})$.</p>
+<h3 id="toc-heading-10">Field Optimization</h3>
+<p>We now want neighboring crosses to agree after transport, while aligning with prescribed directions at sharp edges or boundaries. A conceptual energy for these requirements is</p>
+<p>$$
+\begin{aligned}
+E_{\mathrm{cross}}
+=&amp;\sum_{(f,g)}w_{fg}
+\left\|\mathbf q_g-\mathcal R(4\alpha_{fg})\mathbf q_f\right\|^2\\
+&amp;+\sum_f\lambda_f\left\|\mathbf q_f-\mathbf q_f^\star\right\|^2
+\end{aligned}
+$$</p>
+<p>In the first term, $w_{fg}$ controls how strongly smoothness is enforced between neighboring faces. In the second, $\mathbf q_f^\star$ is a preferred direction derived from the geometry, and $\lambda_f$ reflects its reliability and importance.</p>
+<p>For example, one axis of the cross can be aligned with the tangent of a sharp edge. Principal curvature directions are also useful, but they become unstable in nearly flat regions or where the two principal curvatures are similar. Strongly constraining these regions can make the field follow noise, so the guide weights are reduced there.</p>
+<p>The angle is recovered from the computed $\mathbf q_f$ using</p>
+<p>$$
+\theta_f=\frac14\operatorname{atan2}(q_{f,y},q_{f,x})
+$$</p>
+<p>This angle is still defined modulo $\frac\pi2$. The quadratic energy above also does not guarantee unit length. In particular, minimizing the smoothness term without any guides admits the solution in which every $\mathbf q_f$ is zero, so normalization, anchors, or other additional measures are needed.</p>
+<p><img src="/blogs/posts/260818_quad_remesh/assets/armadillo_cross_field.png" alt="A 4-RoSy cross field computed on the Armadillo" loading="lazy" decoding="async"></p>
+<p>We can now see which way the grid should point on the surface. Each cross, however, still lacks coordinate-axis labels. We have not yet chosen which branch to call $+u$ or checked whether that choice can be propagated consistently across neighboring faces. The singularity seen earlier at the cube corner reappears at this stage. Singularities of a field solved in the complex representation are encoded in its winding; directly controlling their positions or indices requires additional constraints or postprocessing.</p>
+<h2 id="toc-heading-11">4. Winding &amp; Branch Lifting</h2>
+<p>A cross on a single face tells us little about nearby singularities. We need to follow neighboring faces around a loop. Just as we traced a grid axis around the cube, we choose one branch of the computed field and keep following it.</p>
+<h3 id="toc-heading-12">Winding &amp; Singularity Index</h3>
+<p>Trace a branch through the three ideal quad sectors around a valence-$3$ vertex. On returning to the starting point, the cross looks the same, but the selected branch has rotated by a quarter-turn.</p>
+<figure class="post-media quad-remesh-video post-media--editorial">
+  <video controls loop muted playsinline preload="none" width="1280" height="720" poster="/blogs/posts/260818_quad_remesh/assets/manim/branch-holonomy.webp" aria-label="Following the three sectors around a valence-3 vertex changes the selected branch by 90°.">
+    <source src="/blogs/posts/260818_quad_remesh/assets/manim/branch-holonomy.mp4" type="video/mp4">
+    <a href="/blogs/posts/260818_quad_remesh/assets/manim/branch-holonomy.mp4">View MP4</a>
+  </video>
+  <figcaption><span class="post-figure-index">FIG. 06</span><span class="post-figure-caption">Following the three sectors around a valence-3 vertex changes the selected branch by 90°.</span></figcaption>
+</figure>
+
+<p>We can express this through phase winding. Choose a continuous reference frame on a small disk enclosing a singularity and follow the phase of $z=e^{i4\theta}$. If the continuously unwrapped phase changes by $2\pi m_\gamma$ over one traversal of a loop $\gamma$, then</p>
+<p>$$
+m_\gamma=\frac{1}{2\pi}\Delta_\gamma\arg z,
+\qquad
+\boxed{I_\gamma=\frac{m_\gamma}{4}}
+$$</p>
+<p>Because the stored angle was multiplied by four, the cross index is $\frac14$ of the winding. For the sector defect of a valence-$3$ vertex, $m_\gamma=1$ and $I_\gamma=+\frac14$.</p>
+<p>On an actual triangle mesh, each face has an independent frame, so simply adding raw angles does not recover this value. Parallel transport between neighboring faces and the geometric holonomy around the loop must both be included. In particular, omitting the angle defect at a polyhedral vertex conflates surface curvature with a field singularity.</p>
+<details class="quad-note" id="detail-holonomy">
+<summary>Mathematical Notes · Holonomy, Index, Monodromy</summary>
+
+<p><strong>Holonomy of parallel transport itself.</strong> Holonomy is the rotation that remains after a tangent vector is parallel transported around a closed path $\gamma$ and compared in the starting tangent plane. If a small positively oriented path encloses a disk $D$, then, with a fixed orientation convention, the rotation of the Levi-Civita connection is</p>
+<p>$$
+h_\gamma\equiv\int_D K\,dA\pmod{2\pi}
+$$</p>
+<p>In a polyhedral metric, where curvature is concentrated at interior vertices $v$ of the triangle mesh, the corresponding quantity is the angle defect</p>
+<p>$$
+\Omega_v=2\pi-\sum_{f\ni v}\beta_{f,v}
+$$</p>
+<p>Here, $\beta_{f,v}$ is the actual corner angle of an input triangle. This rotation belongs to <strong>the surface connection</strong>, so it is defined even before a particular cross field is chosen. <a href="https://www.geometry.caltech.edu/pubs/CDS10.pdf">Crane et al.&#39;s account of discrete connections</a> illustrates this distinction through triangle unfolding.</p>
+<p><strong>The field index also includes relative rotation.</strong> With $\alpha_{fg}$ denoting the transport angle from $f\to g$ defined earlier, let the small difference between the transported cross and the neighboring cross be</p>
+<p>$$
+\delta_{fg}=\operatorname{wrap}_{(-\pi/4,\,\pi/4]}
+\left(\theta_g-\theta_f-\alpha_{fg}\right)
+$$</p>
+<p>The wrap operation selects a representative by adding or subtracting multiples of $\pi/2$. For a positively oriented vertex fan and consistent sign conventions, the index is</p>
+<p>$$
+\boxed{I_v=\frac1{2\pi}\left(\Omega_v+\sum_{(f,g)\in\partial v}\delta_{fg}\right)}
+$$</p>
+<p>The rotation of the field between faces and the geometric rotation must be <strong>combined</strong> to obtain a value in $\frac14\mathbb Z$. Counting only $\sum\delta_{fg}$, or calling $\Omega_v$ alone the cross index, confuses distinct quantities. This formula applies to the chosen discrete matching. If a difference falls at $\pm\pi/4$ or the rotation between samples is too large, matching ambiguities must also be handled. <a href="https://graphics.rwth-aachen.de/media/papers/bommes_zimmer_2009_siggraph_011.pdf">The singularity-index formulation in MIQ</a> likewise uses both angle defects and frame transitions.</p>
+<p>At a regular point of a smooth surface, the curvature integral around a small loop may be nonzero while the field index remains $0$. Conversely, a cross field on a flat disk can have a nonzero index if it is undefined at the center. Curvature and singularities are therefore related, but they carry different information.</p>
+<p><strong>Branch monodromy captures the discrete part of this information.</strong> If lifting and tracing a branch around a loop changes its branch number by $q_\gamma\in\mathbb Z_4$, the rotational component of the grid is $R^{q_\gamma}$. The sign relating $q_\gamma$ to $4I_\gamma$ can change with the direction in which axis transitions are recorded. Either way, modulo $4$ information cannot distinguish indices that differ by an integer. The affine monodromy of a coordinate chart includes a translation as well as this rotation.</p>
+<p>The video in the main text shows branch rotation through ideal quad sectors. It does not imply that the actual angle defect of the curved carrier is exactly $\pi/2$. A cut can prevent this loop from closing within a chart, allowing the remaining branch transition to be recorded in the seam equations.</p>
+</details>
+
+<h3 id="toc-heading-13">Branch Lifting &amp; Cut</h3>
+<p>To solve for coordinates, we must choose one branch as $+u$ and its adjacent branch as $+v$. On a seed face without a singularity, set</p>
+<p>$$
+\mathbf e_u=\mathbf d(\theta),
+\qquad
+\mathbf e_v=\mathbf d\left(\theta+\frac\pi2\right)
+$$</p>
+<p>When moving to a neighboring face, parallel transport $\mathbf e_u$ and choose the closest of that face&#39;s four cross branches as the new $\mathbf e_u$. Propagating this choice along the dual graph of face adjacencies is branch lifting.</p>
+<p>We can, however, reach the same face by different paths. If a $+\frac14$ singularity lies between them, one path may require the rightward branch to be $+u$, while the other requires the upward branch. Both requirements cannot hold within the same region.</p>
+<p>A cut moves this conflict to the boundary of the coordinate system. We cut so that the two paths do not meet again within one chart, treating vertices and edges on opposite sides of the seam as separate copies in the coordinate solve. Branch labels are chosen consistently within each chart, and the axis change across each seam is recorded separately. The singularity remains, but the inconsistency in defining coordinates becomes a transition between charts.</p>
+<p>Changes in branch labels between adjacent faces can be recorded as rotations in $C_4$. The group $C_4$ consists of $0,1,2,3$ quarter-turns. The next figure denotes these rotations by $R_{ff}$.</p>
+<figure class="post-media post-media--editorial">
+<img src="/blogs/posts/260818_quad_remesh/assets/armadillo_rff_propagation.webp" alt="Following connected branch transitions" loading="lazy" decoding="async">
+<figcaption><span class="post-figure-index">FIG. 07</span><span class="post-figure-caption">Thick lines mark connected branch transitions, and red points mark singularities. The order in which the lines appear is intended to show their connectivity.</span></figcaption>
+</figure>
+<p>The positions of these lines depend on how the representative branch is chosen on each face. What matters is the mismatch that remains after accumulating transitions around a loop. Cutting all these lines does not, by itself, guarantee valid charts. Even a transition with rotation $0$ may need to be cut to open a handle or cycle, and additional cuts may reduce distortion.</p>
+<details class="quad-note" id="detail-cut">
+<summary>Implementation Notes · Cut Graph &amp; Seam</summary>
+
+<p>A cut <strong>duplicates the connectivity used to store coordinates</strong>; it does not open a gap in the 3D surface. An input vertex $p$ is split into chart copies $p^+,p^-$, with their coordinates related by $\Phi_-(p^-)=R^r\Phi_+(p^+)+\mathbf t$. Even if the pieces are drawn apart on screen, they retain the identity of the original surface point. For piecewise-linear coordinates, applying the same affine transition at both endpoints of a seam edge ensures, by linear interpolation, that the relation also holds along its interior.</p>
+<p>Resolving branch-label conflicts and making the parameter domain a disk are distinct tasks. Moving singularities to the boundary can still leave handles or non-contractible cycles. Conversely, drawing a plausible network of lines does not establish that its complement consists of valid charts. Face adjacencies must actually be cut, and boundary loops and connected components must be checked.</p>
+<p>A spanning tree of the triangle dual graph provides one way to understand the implementation. Start with all faces separated and attach them one at a time along tree edges. In a construction using separate triangle copies, without additional vertex identifications, the result is a disk. This can introduce many cuts, however, so practical algorithms restore some connections or add cuts while accounting for branch constraints, chart size, boundaries, and distortion. The edges with $R_{ff}\ne0$ alone therefore do not necessarily form a sufficient cut graph. An orientation chart with consistent branch choices, a parameterization chart used to solve coordinates, and a coarse quad patch bounded by separatrices may all differ.</p>
+<p>Crossing seam transformations $G_1=(R_1,\mathbf t_1)$ and $G_2=(R_2,\mathbf t_2)$ in sequence gives the composition</p>
+<p>$$
+G_2\circ G_1=(R_2R_1,\ R_2\mathbf t_1+\mathbf t_2)
+$$</p>
+<p>Translations can simply be added only in the special case without rotation. The reverse seam is also not chosen independently; it is set to</p>
+<p>$$
+G^{-1}=(R^{-1},-R^{-1}\mathbf t)
+$$</p>
+<p>Accumulating loop holonomy with these rules lets us check the reciprocal and cycle conditions together with the phase of the integer grid.</p>
+<p>Changing the reference branch or coordinate origin within a chart changes the representation of individual seams. The transformation around a full loop, however, changes only by conjugation with the reference-chart transformation, preserving connectivity properties such as whether it is the identity. The cut location is a choice of representation, but the monodromy that must be recorded across it cannot be omitted.</p>
+</details>
+
+<details class="quad-note" id="detail-gauss">
+<summary>Mathematical Notes · Theorema Egregium</summary>
+
+<p>Gauss&#39;s <strong>Theorema Egregium</strong> states that Gaussian curvature $K$ is determined by the first fundamental form: the intrinsic metric of the surface. A local isometry $\Phi$ satisfies</p>
+<p>$$
+\langle d\Phi_p(\mathbf a),d\Phi_p(\mathbf b)\rangle
+=\langle\mathbf a,\mathbf b\rangle
+$$</p>
+<p>for every pair of tangent vectors, so it also preserves curvature. The plane has curvature $0$. Mapping an open region with $K(p)\ne0$ to the plane must therefore introduce metric distortion. This is a local statement about smooth surfaces. Reading <a href="https://www.silviofanzon.com/2024-Differential-Geometry-Notes/sections/chap_4.html#conclusion-fts-and-theorema-egregium">the theorem alongside the definition of isometry</a> makes the assumptions explicit.</p>
+<p>Every face of a triangle mesh is flat and can individually be unfolded without changing lengths. The difficulty arises when the triangles are joined again. If the angles around an interior vertex do not sum to $2\pi$, its fan cannot close in the plane without overlap or a gap. Cutting through the vertex can open the fan, but it does not remove the angle defect encountered when the two seams are glued back together. Cutting a region with distributed smooth curvature likewise leaves the interior $K$ away from the cut unchanged.</p>
+<figure class="post-media quad-remesh-video post-media--editorial">
+  <video controls loop muted playsinline preload="none" width="1280" height="720" poster="/blogs/posts/260818_quad_remesh/assets/manim/gauss-and-cuts.webp" aria-label="A sphere unfolds with distortion, while a cylinder unfolds isometrically. Adding a cut does not change curvature.">
+    <source src="/blogs/posts/260818_quad_remesh/assets/manim/gauss-and-cuts.mp4" type="video/mp4">
+    <a href="/blogs/posts/260818_quad_remesh/assets/manim/gauss-and-cuts.mp4">View MP4</a>
+  </video>
+  <figcaption><span class="post-figure-index">FIG. 08</span><span class="post-figure-caption">A sphere unfolds with distortion, while a cylinder unfolds isometrically. Adding a cut does not change curvature.</span></figcaption>
+</figure>
+
+<p>The spherical triangle in the video has three geodesic sides and three interior angles of $\pi/2$. Gauss–Bonnet also gives</p>
+<p>$$
+\alpha+\beta+\gamma-\pi=\int_D K\,dA
+$$</p>
+<p>so the angle sum on the sphere exceeds $\pi$. An isometry must preserve both geodesics and angles, which a straight-sided planar triangle cannot satisfy here. This comparison goes beyond an animation that merely flattens a 3D silhouette.</p>
+<p>The lateral surface of a cylinder provides the opposite example. Up to a translation of the origin, consider the deformation</p>
+<p>$$
+X_k(s,z)=\left(\frac{\sin ks}{k},\frac{1-\cos ks}{k},z\right),
+\qquad X_0(s,z)=(s,0,z)
+$$</p>
+<p>At $k=1/r$ it is a cylinder, and as $k\to0$ it becomes a planar strip. At every stage, $\|\partial_sX_k\|=\|\partial_zX_k\|=1$ and $\partial_sX_k\cdot\partial_zX_k=0$, so the metric remains $ds^2+dz^2$. The video moves the same material points using this formula. A single seam is still needed because the circumferential coordinate is periodic.</p>
+<p>Thus, <strong>whether a surface can be flattened without distortion</strong> is a question about its metric, while <strong>whether a single coordinate system and branch can be defined globally</strong> is a question about topology and monodromy. A cut moves the second problem to chart boundaries. Smaller charts can help reduce distortion, but they cannot create an isometry forbidden by Theorema Egregium.</p>
+</details>
+
+<h3 id="toc-heading-14">Streamline &amp; Coordinate Grid</h3>
+<p>Within a chart with assigned branches, we can also trace curves along the direction field. A streamline satisfies</p>
+<p>$$
+\gamma&#39;(s)=\mathbf e_u(\gamma(s))
+$$</p>
+<p>Each time it crosses a triangle boundary, the direction is transported and the next branch is selected. Connecting separatrices—special streamlines incident on singularities—can produce a layout that divides the surface into large quad patches.</p>
+<p>Tracing several streamlines from arbitrary starting points does not ensure that equal numbers of grid cells fit between them or that the lines match at opposite boundaries. Following directions and determining the spacing and positions of an entire grid are separate requirements. Some methods first construct an explicit layout; here, we solve for chart coordinates $u,v$ and extract their integer lines. The next quantity to choose is the grid spacing.</p>
+<h2 id="toc-heading-15">5. Coordinate Solve</h2>
+<p>After branch lifting, each face has two directions $\mathbf e_{u,f},\mathbf e_{v,f}$. Assigning the desired spacing specifies the directions and rates at which $u,v$ should increase. Whether the requirements on all faces can be realized by a single coordinate function must still be solved separately.</p>
+<h3 id="toc-heading-16">1D Parameterization</h3>
+<p>On a segment of length $\ell_i$, suppose the coordinate should increase by $1$ for every physical distance $h_i$. The endpoint values should then satisfy</p>
+<p>$$
+\frac{u_{i+1}-u_i}{\ell_i}\approx\frac1{h_i},
+\qquad
+u_{i+1}-u_i\approx\frac{\ell_i}{h_i}
+$$</p>
+<p>For an open line with no additional endpoint constraints, we can fix the value at one point and accumulate these differences in order.</p>
+<p>Conflicts appear when endpoint values or closed paths impose additional conditions. If the desired increments sum to $10.4$ but the full path must span exactly $10$ cells, not every segment&#39;s requirement can be met exactly. We must decide how much to adjust each segment. Least squares is one way to distribute the discrepancy over the full path.</p>
+<p>On a surface, these requirements are coupled across many triangles and loops at once. Accumulating coordinates along different paths must give the same value on arrival, a stronger condition than choosing a good direction independently on each face.</p>
+<h3 id="toc-heading-17">Sizing Field</h3>
+<p>Let $h_{u,f},h_{v,f}$ be the target spacings along the two directions on face $f$. To make each coordinate increase by roughly $1$ over its corresponding spacing, define the target gradients as</p>
+<p>$$
+\mathbf g_{u,f}=\frac1{h_{u,f}}\mathbf e_{u,f},
+\qquad
+\mathbf g_{v,f}=\frac1{h_{v,f}}\mathbf e_{v,f}
+$$</p>
+<p>A smaller $h$ gives a larger gradient and a denser grid. Equal spacings give isotropic sizing; different spacings give anisotropic sizing, with different densities along the two axes.</p>
+<p>Larger spacing can be assigned to flat regions and smaller spacing to regions of high curvature or fine detail. Externally prescribed densities, for example from a user brush or a simulation&#39;s resolution requirements, can also be incorporated. Abrupt changes in spacing between neighboring faces tend to create long, thin cells, so the sizing field is smoothed and its rate of change limited. With anisotropic sizing, the ratio between the two axis spacings is also kept from becoming excessive.</p>
+<p>This also suggests a relationship to the target count. If the target directions are orthogonal and the actual spacing follows the target closely, a cell has area approximately $h_u h_v$, so the required density can be estimated by</p>
+<p>$$
+N_{\mathrm{target}}\approx\int_M\frac1{h_u(p)h_v(p)}\,dA
+$$</p>
+<p>For uniform spacing $h$, this becomes $N\approx A(M)/h^2$. This is an approximation for choosing the sizing, rather than an exact output count accounting for integer seam constraints, singularities, and postprocessing.</p>
+<p>The coordinates should now satisfy $\nabla_Mu_f\approx\mathbf g_{u,f}$ and $\nabla_Mv_f\approx\mathbf g_{v,f}$. One distinction matters when reading these directions: $\nabla_Mu$ points in the direction of increasing $u$, while the isoline $u=k$ is perpendicular to that gradient. If the targets are followed exactly, the grid lines $u=k$ run along $\mathbf e_v$, and the lines $v=l$ run along $\mathbf e_u$.</p>
+<h3 id="toc-heading-18">Integrability &amp; Least Squares</h3>
+<p>A cross field supplies directions, but neither gradient magnitudes nor coordinate origins. Adding magnitudes through sizing does not guarantee that the resulting field is the gradient of a function. For example, the integral of the gradient of a single-valued function around a closed path must be $0$, while an independently specified target field may not satisfy this condition. The cross field and sizing describe the desired coordinate derivatives; the solver finds actual coordinate functions whose derivatives approximate these targets.</p>
+<p>The most direct energy is an area-weighted least-squares objective.</p>
+<p>$$
+\begin{aligned}
+E_{\mathrm{coord}}(u,v)
+=&amp;\sum_f A_f\left\|\nabla_Mu_f-\mathbf g_{u,f}\right\|^2\\
+&amp;+\sum_f A_f\left\|\nabla_Mv_f-\mathbf g_{v,f}\right\|^2.
+\end{aligned}
+$$</p>
+<p>Here, $A_f$ is the triangle area. Both directional alignment and agreement with the target spacing are evaluated in this energy. It minimizes deviation from the target gradients, so this objective alone does not prevent every form of distortion or triangle inversion.</p>
+<p>On a triangle mesh, $u,v$ are stored at each chart vertex and interpolated linearly inside each face. With linear basis functions $\phi_1,\phi_2,\phi_3$ on a triangle,</p>
+<p>$$
+\nabla_Mu_f
+=u_1\nabla_M\phi_1+u_2\nabla_M\phi_2+u_3\nabla_M\phi_3
+$$</p>
+<p>Since the gradient is linear in the vertex values, the full problem is a sparse quadratic least-squares problem. Adding a constant to a coordinate leaves its gradient unchanged, so any remaining freedom in the origin must be removed, for example by fixing a reference point.</p>
+<p>With the seams and integer variables fixed, the interior equilibrium conditions of this least-squares problem give the Poisson-type equations</p>
+<p>$$
+\Delta_Mu=\operatorname{div}_M\mathbf g_u,
+\qquad
+\Delta_Mv=\operatorname{div}_M\mathbf g_v
+$$</p>
+<p>These adjust the variation in coordinate values to match the local inflow and outflow of the target fields. The solution must also satisfy the prescribed boundary, feature, and seam conditions.</p>
+<p>Local and global integrability are distinct. On a simply connected planar domain, being curl-free is the key condition. On a surface with non-contractible loops, such as a torus, a nonzero period—the integral around a full loop—can remain even when the local curl vanishes. Flattening a region where Gaussian curvature is not $0$ also cannot preserve both lengths and angles, so some distortion must be accepted.</p>
+<p>Solving for coordinates reconciles these requirements. So far, however, every coordinate value has been allowed to be real. To close the actual grid, we must choose an integer number of cells, as in the earlier $10.4$-cell example. These choices become the integer variables in the next step.</p>
+<h2 id="toc-heading-19">6. Integer-Grid Map</h2>
+<p>After cutting into charts, the same 3D point $p$ has different coordinates on either side of a seam. Write the transition from chart $i$ to chart $j$ as</p>
+<p>$$
+\Phi_j(p)=R^{r_{ij}}\Phi_i(p)+\mathbf t_{ij},
+\qquad
+R=\begin{pmatrix}0&amp;-1\\1&amp;0\end{pmatrix},
+\quad r_{ij}\in\{0,1,2,3\}
+$$</p>
+<p>Here, $R^{r_{ij}}$ specifies how many quarter-turns relate the two chart axes, and $\mathbf t_{ij}$ is the difference between their coordinate origins. Once branch lifting and cuts have been chosen, the rotations are usually already fixed. We now need to solve for coordinates and translations together.</p>
+<h3 id="toc-heading-20">Integer Transition</h3>
+<p>The equation above can relate the coordinates across a seam even with real-valued translations. For the integer grids themselves to coincide, however, we need</p>
+<p>$$
+\mathbf t_{ij}\in\mathbb Z^2
+$$</p>
+<p>Quarter-turn rotations and integer translations preserve the integer lattice exactly:</p>
+<p>$$
+R^{r_{ij}}\mathbb Z^2+\mathbf t_{ij}=\mathbb Z^2
+$$</p>
+<p>Consider the simple case without rotation, with $\mathbf t_{ij}=(0.4,0)^T$. The line $u=k$ in chart $i$ corresponds to $u=k+0.4$ in chart $j$. The directions and spacing agree, but the line does not coincide with the integer lines on the other side. Extracting the grids independently in this state can produce broken edges or T-junctions at the seam, and cell boundaries may fail to close.</p>
+<figure class="post-media quad-remesh-video post-media--editorial">
+  <video controls loop muted playsinline preload="none" width="1280" height="720" poster="/blogs/posts/260818_quad_remesh/assets/manim/integer-seam.webp" aria-label="Integer translations align the grids, while a shift of 0.4 cells creates a mismatch at the seam.">
+    <source src="/blogs/posts/260818_quad_remesh/assets/manim/integer-seam.mp4" type="video/mp4">
+    <a href="/blogs/posts/260818_quad_remesh/assets/manim/integer-seam.mp4">View MP4</a>
+  </video>
+  <figcaption><span class="post-figure-index">FIG. 09</span><span class="post-figure-caption">Integer translations align the grids, while a shift of 0.4 cells creates a mismatch at the seam.</span></figcaption>
+</figure>
+
+<h3 id="toc-heading-21">Cycle Period</h3>
+<p>After matching one seam, we must check consistency around a loop crossing several seams. Composing the coordinate transformations along a loop $\gamma$ gives</p>
+<p>$$
+G_\gamma(\mathbf x)=R_\gamma\mathbf x+\mathbf t_\gamma
+$$</p>
+<p>For a loop that encloses no singularity and can be contracted to a point, we need $R_\gamma=I$ and $\mathbf t_\gamma=\mathbf0$: returning to the same location must not change the coordinates.</p>
+<p>A loop enclosing a singularity may have $R_\gamma\ne I$. The $+\frac14$ index seen earlier corresponds to a quarter-turn of the axes. Along a non-contractible loop, such as one around a torus handle, a translational period $\mathbf t_\gamma\ne\mathbf0$ may remain even when the rotation is $I$.</p>
+<p>For example, gluing two sides of a rectangle to form a cylinder with seam translation $(n,0)$ places $n$ cells around its circumference. Changing $n$ does more than slightly move nearby coordinates: it changes the number of cells around the cylinder. On a general surface, integer periods likewise count the grid cells accumulated along a loop. This is why integer variables affect the final connectivity.</p>
+<h3 id="toc-heading-22">Singularity Coordinates</h3>
+<p>The position of a singularity has its own compatibility condition. If the transformation around a loop is $G_\gamma(\mathbf x)=R_\gamma\mathbf x+\mathbf t_\gamma$, its center must satisfy</p>
+<p>$$
+(I-R_\gamma)\mathbf x_s=\mathbf t_\gamma
+$$</p>
+<p>For example, the fixed point of a $90^\circ$ rotation with $\mathbf t_\gamma=(1,0)^T$ is $(\frac12,\frac12)^T$. Integer translations alone therefore do not guarantee that singularities lie on integer-grid vertices.</p>
+<p>To extract a singularity $s$ as an extraordinary vertex, we must also constrain its coordinates to</p>
+<p>$$
+\mathbf x_s=\Phi(s)\in\mathbb Z^2
+$$</p>
+<p>This places the valence-$3$/$5$ vertices discussed earlier at intersections of integer lines, rather than inside cells.</p>
+<p>In the implementation used here, seam translations are restricted to $\mathbf t_{ij}\in2\mathbb Z^2$. This condition is preserved under composition of seam transitions, so the fixed point of the quarter-turn monodromy at a valence-$3$/$5$ singularity lies at integer coordinates. This stronger restriction on translations satisfies the singularity&#39;s integer-coordinate condition.</p>
+<h3 id="toc-heading-23">Mixed-Integer Optimization</h3>
+<p>Let $\mathbf x$ collect the real-valued coordinates of all chart vertices, and let $\mathbf z$ represent the integer degrees of freedom for seam translations, periods, and singularity coordinates. A mixed-integer problem can generally be written as</p>
+<p>$$
+\begin{aligned}
+\min_{\mathbf x,\mathbf z}\quad&amp;f(\mathbf x,\mathbf z)\\
+\text{subject to}\quad&amp;A\mathbf x+B\mathbf z=\mathbf b,\\
+&amp;C\mathbf x+D\mathbf z\le\mathbf d,\\
+&amp;\mathbf x\in\mathbb R^n,\quad\mathbf z\in\mathbb Z^m
+\end{aligned}
+$$</p>
+<p>A quadratic objective with linear constraints gives an MIQP. For $\mathbf y=(\mathbf x^T,\mathbf z^T)^T$, a general quadratic objective has the form $\frac12\mathbf y^TQ\mathbf y+\mathbf q^T\mathbf y$ and may include cross terms between continuous and integer variables.</p>
+<p>For the coordinate energy from the previous section, the structure is easier to read in the following special form.</p>
+<p>$$
+\begin{aligned}
+\min_{\mathbf x,\mathbf z}\quad&amp;\frac12\mathbf x^TH\mathbf x+\mathbf c^T\mathbf x\\
+\text{subject to}\quad&amp;A\mathbf x+B\mathbf z=\mathbf b,\\
+&amp;C\mathbf x+D\mathbf z\le\mathbf d,\\
+&amp;\mathbf x\in\mathbb R^n,\quad\mathbf z\in\mathbb Z^m.
+\end{aligned}
+$$</p>
+<p>The terms $H,\mathbf c$ encode the energy for matching the desired directions and spacing. Equality constraints enforce seam and cycle compatibility; inequalities can impose variable bounds or additional conditions as needed. Even without an energy term directly on the integer variables, their chosen values change the feasible coordinates and the resulting distortion. A general positive-determinant condition, however, cannot simply be expressed by the linear inequalities in this formulation.</p>
+<p>Once the integer variables are fixed, the remaining coordinate problem can be handled by a sparse quadratic solve. The difficult part is choosing the integer combination. A practical approach first relaxes the integer constraints to obtain a continuous solution, then repeatedly fixes some variables to integers and resolves the rest. The rounding, fixing, and re-solving strategies in CoMISo follow this approach.</p>
+<details class="quad-note" id="detail-comiso">
+<summary>Algorithm Notes · CoMISo Greedy Rounding</summary>
+
+<p>Here we examine CoMISo&#39;s classic <strong>iterative greedy rounding</strong> approach. This is distinct from an exact MIQP solver that searches the possible integer combinations, and it is not a description of every backend added later. The account follows <a href="https://graphics.rwth-aachen.de/media/papers/bommes_2011_cas1_1.pdf">the algorithm described by Bommes, Zimmer, and Kobbelt</a> and <a href="https://www.graphics.rwth-aachen.de/software/comiso/">CoMISo&#39;s elimination of equality constraints</a>.</p>
+<p><strong>1. Solve the continuous problem with equality constraints incorporated.</strong> Eliminate seam and feature constraints to retain only feasible coordinates, then temporarily relax integrality and find the quadratic energy&#39;s minimizer. Rather than treating every input UV value as a rounding candidate, maintain a separate index set $\mathcal I$ for degrees of freedom that must be integer, such as translations or designated corners.</p>
+<p>Elimination must preserve the integer lattice as well. Computing a general real-valued nullspace basis and declaring arbitrary reduced variables integer does not preserve the original integer constraints. The paper eliminates continuous variables first and discusses cases in which a constraint involving only integer variables can, after normalization, safely eliminate a variable with coefficient $\pm1$. The same guarantee cannot be extended to an arbitrary integer equality system without these conditions.</p>
+<p><strong>2. Choose the candidate closest to an integer in the current solution.</strong> Let $\mathcal I_k$ be the set of candidates not yet fixed. The basic greedy rule is</p>
+<p>$$
+j=\operatorname*{argmin}_{i\in\mathcal I_k}
+\left|y_i^{(k)}-\operatorname{round}(y_i^{(k)})\right|,
+\qquad m_j=\operatorname{round}(y_j^{(k)})
+$$</p>
+<p>Then add $y_j=m_j$ as a new equality. This is a heuristic that tries small perturbations first, rather than a proof of a globally optimal choice over the integer-feasible set.</p>
+<p><strong>3. Substitute the fixed values into the remaining equations and solve again.</strong> Write the reduced energy as $E(\mathbf y)=\frac12\mathbf y^T H\mathbf y-\mathbf b^T\mathbf y$, and partition the variables into the accumulated fixed set $F$ and the remaining free set $U$. The next solve is</p>
+<p>$$
+H_{UU}\mathbf y_U=\mathbf b_U-H_{UF}\mathbf m_F
+$$</p>
+<p>An implementation may retain identity rows and columns at fixed-variable positions instead of removing those rows and columns. In either case, the fixed values contribute to the right-hand side, and the next integer candidate is selected from the <strong>updated solution</strong>.</p>
+<p>In a sparse system, the residual initially affected by fixing one variable may also be local. The paper&#39;s three-level solver applies local Gauss–Seidel there; if it does not converge within the configured iteration limit, it proceeds to conjugate gradient and then sparse Cholesky. Each level can be disabled, so a run does not necessarily use all three. The method also includes simultaneous rounding of candidates with influence bounds ensuring that they do not alter one another&#39;s rounding decisions. Spatial distance alone is not taken as evidence of independence.</p>
+<p>Repeat until $\mathcal I_k$ is empty. Since previously chosen integers remain fixed, the feasible set of an exactly solved continuous subproblem shrinks, and its minimum energy cannot decrease. Seam residuals, integer residuals, and map validity must still be checked at the end. These checks are distinct from certifying a global optimum.</p>
+<figure class="post-media quad-remesh-video post-media--editorial">
+  <video controls loop muted playsinline preload="none" width="1280" height="720" poster="/blogs/posts/260818_quad_remesh/assets/manim/lattice-fixing.webp" aria-label="After fixing each integer, the remaining coordinates are solved again before choosing the next candidate.">
+    <source src="/blogs/posts/260818_quad_remesh/assets/manim/lattice-fixing.mp4" type="video/mp4">
+    <a href="/blogs/posts/260818_quad_remesh/assets/manim/lattice-fixing.mp4">View MP4</a>
+  </video>
+  <figcaption><span class="post-figure-index">FIG. 10</span><span class="post-figure-caption">After fixing each integer, the remaining coordinates are solved again before choosing the next candidate.</span></figcaption>
+</figure>
+
+<p>The video reproduces this procedure with a small KKT system. The initial relaxation for the four integer variables $(t_u,t_v,c_u,c_v)$ is</p>
+<p>$$
+(t_u,t_v,c_u,c_v)
+\approx(4.913835,\ 0.691573,\ 6.628090,\ 1.911269)
+$$</p>
+<p>The actual computation proceeds as follows.</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Newly fixed constraint</th>
+<th align="right">Energy after re-solving</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Relaxation</td>
+<td>None</td>
+<td align="right">$4.904531$</td>
+</tr>
+<tr>
+<td>1</td>
+<td>$t_u=5$</td>
+<td align="right">$4.905699$</td>
+</tr>
+<tr>
+<td>2</td>
+<td>$c_v=2$</td>
+<td align="right">$4.906447$</td>
+</tr>
+<tr>
+<td>3</td>
+<td>$t_v=1$</td>
+<td align="right">$4.921409$</td>
+</tr>
+<tr>
+<td>4</td>
+<td>$c_u=6$</td>
+<td align="right">$5.003745$</td>
+</tr>
+</tbody></table>
+<p>Immediately rounding the initial $c_u=6.628090$ would give $7$. After fixing $t_v=1$ and solving again, however, $c_u\approx6.471282$, so the final choice is $6$. This is a concrete reason why the result differs from rounding all initial values at once.</p>
+</details>
+
+<p>Translations must not be rounded independently for each seam, because in general</p>
+<p>$$
+\operatorname{round}(\mathbf a+\mathbf b)
+\ne\operatorname{round}(\mathbf a)+\operatorname{round}(\mathbf b)
+$$</p>
+<p>For example, without rotation, three seam translations in one coordinate may be $0.4,0.4,-0.8$. Their sum is $0$, but rounding them individually to $0,0,-1$ gives a sum of $-1$. Small adjustments to individual seams can shift an entire loop by one cell.</p>
+<p>Integer decisions must therefore be made on variables that satisfy the seam and cycle constraints. After choosing integers, we solve the continuous coordinates again while keeping those values fixed. The degrees of freedom that determine grid connectivity must be integer; most triangle-corner UV values remain real throughout.</p>
+<p>We now have coordinates whose integer grids match across charts, whose loops close with the prescribed cell counts, and whose singularities lie on grid vertices. One issue remains: if the coordinates invert or collapse triangles, extracting valid quads can still be difficult even when the integer lines match.</p>
+<h2 id="toc-heading-24">7. Quad Extraction</h2>
+<h3 id="toc-heading-25">Fold-over &amp; Map Validity</h3>
+<p>Read the vertices of an oriented input triangle in the order $A\rightarrow B\rightarrow C$. Its signed UV area tells us whether the orientation is preserved:</p>
+<p>$$
+A_f^{\mathrm{UV}}=\frac12\det\left(\Phi(B)-\Phi(A),\Phi(C)-\Phi(A)\right)
+$$</p>
+<p>Taking the reference orientation as positive, a negative area indicates a fold-over, while $0$ indicates degeneracy. Equivalently, the local Jacobian $J_f$ of the coordinate map</p>
+<p>$$
+\begin{aligned}
+\det J_f&gt;0&amp;\quad\text{orientation preservation},\\
+\det J_f=0&amp;\quad\text{degeneracy},\\
+\det J_f&lt;0&amp;\quad\text{fold-over}.
+\end{aligned}
+$$</p>
+<p>gives the same classification.</p>
+<figure class="post-media post-media--editorial">
+<img src="/blogs/posts/260818_quad_remesh/assets/armadillo_foldover_geometry.png" alt="Valid unfolding and a fold-over for two triangles" loading="lazy" decoding="async">
+<figcaption><span class="post-figure-index">FIG. 11</span><span class="post-figure-caption">The center shows a valid unfolding; the right shows a comparison with one face flipped. The red region is the overlap.</span></figcaption>
+</figure>
+<p>In these regions, pulling a unit cell back onto the surface can produce a tangled boundary or an interior that is not a valid disk. The energy matching directions and spacing does not guarantee the determinant&#39;s sign. Integer seam constraints specify how the grid connects, but they do not prevent triangle inversions.</p>
+<p>Practical parameterization methods use distortion barriers or orientation-preserving constraints, and may relax sizing in problematic regions or split charts and solve again. Even preserving the orientation of every triangle does not automatically guarantee that the entire chart is free of overlap.</p>
+<p>This connects the motivations behind <a href="https://publications.rwth-aachen.de/record/133928">Mixed-Integer Quadrangulation</a> and <a href="https://ris.uni-paderborn.de/record/60452">Integer-Grid Maps for Reliable Quad Meshing</a>. MIQ treats field-aligned seamless parameterization together with integer constraints, while IGM proposes incorporating the conditions for valid quad extraction into the formulation.</p>
+<p>However, my attempts to implement IGM did not reproduce the reliability described in the paper. The current implementation uses MIQ-style integer constraints with separate validity checks.</p>
+<h3 id="toc-heading-26">Cell Connectivity</h3>
+<p>In an ideal integer-grid map, vertices come from $\Phi^{-1}(\mathbb Z^2)$ and edges from the isolines $u=k$ and $v=l$. Knowing where the segments lie, however, does not complete the mesh connectivity. We must identify whether two intersections found on opposite sides of a seam are the same vertex, connect segments in order to form closed boundaries, and verify that each boundary encloses a single cell.</p>
+<p>Numerical error complicates this process. When an integer line nearly passes through an input vertex, neighboring triangles may interpret the same intersection slightly differently. In very thin UV triangles, distinct events can appear almost coincident. Simply merging nearby coordinates can remove a necessary edge or create an incorrect face.</p>
+<figure class="post-media post-media--editorial">
+<img src="/blogs/posts/260818_quad_remesh/assets/armadillo_patch_sequence.png" alt="Stages from the cross field to the extracted quads" loading="lazy" decoding="async">
+<figcaption><span class="post-figure-index">FIG. 12</span><span class="post-figure-caption">Coordinates and integer lines turn the direction field into quad connectivity.</span></figcaption>
+</figure>
+<p>Extraction therefore records not only the coordinates of an intersection but also which triangle and edge it came from. Shared edges and seam transitions identify matching events, and the edge order around each vertex determines how cell boundaries connect. A resulting loop can be used as a face only after confirming that it is closed, correctly oriented, and bounds a single disk.</p>
+<p><a href="https://www.graphics.rwth-aachen.de/publication/03204/">QEx: Robust Quad Mesh Extraction</a> addresses consistent recovery of this connectivity from numerically imperfect parameterizations, including the handling of local fold-overs.</p>
+<h3 id="toc-heading-27">Geometry Cleanup</h3>
+<p>Once connectivity is established, vertex positions and face shapes can still be improved. Generated vertices are projected onto the original surface and smoothed tangentially; points constrained to features or boundaries are placed accordingly. This stage also includes improving quad angles, aspect ratios, and scaled Jacobians, and cleaning up very short edges or small faces.</p>
+<p>The strips and singularity placement established earlier must be respected. Aggressive Laplacian smoothing can erode sharp features, and removing unnecessary valence-$3$/$5$ pairs can alter the surrounding flow, losing the benefits of the coordinate stage. Finally, we also check for self-intersections, non-manifold configurations, and distance error relative to the original surface.</p>
+<p><img src="/blogs/posts/260818_quad_remesh/assets/armadillo_final_quads.png" alt="The final quad-dominant mesh" loading="lazy" decoding="async"></p>
+<h2 id="toc-heading-28">8. Fundamentals &amp; Implementation</h2>
+<p>Quad remeshing requires direction fields, coordinates, integer constraints, and extraction to work together. Cross-field directions are translated into coordinates, integer constraints on seams and cycles are enforced, and the grid is reconstructed as an actual mesh.</p>
+<p>Understanding the underlying mathematics and graphics concepts made implementation and optimization much easier. Knowing what each stage must solve and which conditions it must satisfy makes it clear what to ask an agent to do and how to check the result. This implementation, built on a custom CUDA solver, is used in Varco3D. After switching to it, we did not renew the contract for the commercial application QuadRemesher.</p>
+<p>Without understanding the core ideas, simply asking an agent to “build me QuadRemesher” makes it difficult to get beyond combining publicly available algorithms. To improve an implementation in the desired direction, we need to be able to identify which stage and which conditions to revisit when the result goes wrong.</p>
+<p>Even when vibe coding, I found it essential to have a solid grasp of the fundamentals. Understanding the structure of the problem and working with an agent to implement and validate it lets us improve and optimize the algorithm for the results we want.</p>
+
+                    </div>
+                    <div class="post-reading-column post-end-matter">
+                        <section class="post-author-note" aria-labelledby="post-author-name">
+                            <img class="post-author-portrait" src="/assets/profile4-author.png" alt="Hwan Heo" loading="lazy">
+                            <div class="post-author-copy">
+                                <span class="post-author-kicker">Written by</span>
+                                <h2 id="post-author-name">Hwan Heo</h2>
+                                <p>Lead 3D AI Research Engineer building production systems across large-scale 3D generation, CUDA inference, and graphics pipelines.</p>
+                                <div class="post-author-links" aria-label="Author links">
+                                    <a href="mailto:hwan.heo.ai@gmail.com">Email</a>
+                                    <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                                </div>
+                            </div>
+                        </section>
+                        
+                    <section class="related-posts" aria-labelledby="related-posts-heading">
+                        <h2 id="related-posts-heading">Related Posts</h2>
+                        <div class="related-post-grid">
+                            
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/sdf-and-eikonal-equation/" aria-label="Read SDF and Eikonal Equation">
+                                    <strong>SDF and Eikonal Equation</strong>
+                                    <time datetime="2025-08-23">Aug 2025</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/generalized-winding-number/" aria-label="Read Generalized Winding Number">
+                                    <strong>Generalized Winding Number</strong>
+                                    <time datetime="2025-08-09">Aug 2025</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/gemm-on-nvidia-gpus/" aria-label="Read GEMM on NVIDIA GPUs: From Naive Kernels to Tiled Pipelines">
+                                    <strong>GEMM on NVIDIA GPUs: From Naive Kernels to Tiled Pipelines</strong>
+                                    <time datetime="2026-08-12">Aug 2026</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/optimizing-sparse-3d-generation-inference/" aria-label="Read What the Compiler Missed in Sparse 3D Inference">
+                                    <strong>What the Compiler Missed in Sparse 3D Inference</strong>
+                                    <time datetime="2026-07-27">Jul 2026</time>
+                                </a>
+                            </article>
+        
+                        </div>
+                    </section>
+    
+                        <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
+                <a class="post-nav-card is-older" href="/blogs/posts/sdf-and-eikonal-equation/" aria-label="Previous Post: SDF and Eikonal Equation">
+                    <span class="post-nav-kicker">
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
+                    </span>
+                    <strong>SDF and Eikonal Equation</strong>
+                </a>
+    
+                <a class="post-nav-card is-explore" href="/blogs/posts/gemm-on-nvidia-gpus/" aria-label="Explore Series: CUDA">
+                    <span class="post-nav-kicker">
+                        Explore Series <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
+                    </span>
+                    <strong>CUDA</strong>
+                </a>
+    </nav></div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <button id="scroll-top" class="scroll-top button_top post-scroll-top" type="button" aria-label="Back to top">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up"></use></svg>
+        </button>
+
+        <footer class="blog-post-footer">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column">
+                        <div class="blog-footer-note">Copyright © Hwan Heo</div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        window.siteData = {
+  "posts": [
+    {
+      "id": "260818_quad_remesh",
+      "title_eng": "Comprehensive Analysis of Quad Remeshing",
+      "title_kor": "Quad Remesh 톺아보기",
+      "subtitle_eng": "The differential geometry of quad remeshing, from cross fields to integer-grid maps",
+      "subtitle_kor": "Manifold 위의 정수격자 설계. Tri-mesh decimation 과는 근본적으로 다른 접근법을 가진 Quad remeshing 을 이해해보기.",
+      "tags": [
+        "Graphics"
+      ],
+      "cover": "/blogs/posts/260818_quad_remesh/assets/armadillo_final_quads.png",
+      "status": "published",
+      "updated": "2026-10-06",
+      "date": "2026-10-06",
+      "category": "post",
+      "series": "graphics",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "quad-remesh"
+    },
+    {
+      "id": "260802_cuda_01_gemm",
+      "title_eng": "GEMM on NVIDIA GPUs: From Naive Kernels to Tiled Pipelines",
+      "title_kor": "NVIDIA GPU의 GEMM: Naive Kernel에서 Tiled Pipeline까지",
+      "subtitle_eng": "Why naive GEMM becomes memory-bound, how tiled reuse changes arithmetic intensity, and where Tensor Cores, schedulers, and libraries fit",
+      "subtitle_kor": "Naive GEMM의 memory bottleneck부터 tiled reuse, Tensor Core pipeline, shape별 scheduling과 library 추상화까지",
+      "tags": [
+        "CUDA"
+      ],
+      "cover": "/blogs/posts/260802_cuda_01_gemm/assets/cover.webp",
+      "status": "published",
+      "updated": "2026-08-12",
+      "date": "2026-08-12",
+      "category": "post",
+      "series": "cuda",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "gemm-on-nvidia-gpus"
+    },
+    {
+      "id": "260727_sparse_3d",
+      "title_eng": "What the Compiler Missed in Sparse 3D Inference",
+      "title_kor": "컴파일러가 놓치는 Sparse 3D Generation Inference 최적화",
+      "subtitle_eng": "Why generic compiler paths underperform on dynamic sparse 3D generative models—and how null-context attention removal and model-aware CUDA kernels cut inference latency.",
+      "subtitle_kor": "torch.compile과 TensorRT가 실패하는 Sparse 3D Generation model에서 Null-Context Attention 제거와 custom CUDA Fusion으로 forward latency 줄이는 방법",
+      "tags": [
+        "3D Generation",
+        "Generative AI",
+        "CUDA"
+      ],
+      "cover": "/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png",
+      "status": "published",
+      "updated": "2026-07-27",
+      "date": "2026-07-27",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "optimizing-sparse-3d-generation-inference"
+    },
+    {
+      "id": "260115_Varco3D",
+      "title_eng": "VARCO 3D: A Year in Review — 2025 Retrospective",
+      "title_kor": "3D 생성형 AI 서비스; Varco3D 개발기",
+      "subtitle_eng": "How a fast-follower team tracked the evolution of 3D AI to build an in-house generative 3D service—from VecSet VAEs to Voxel-conditioned 3D DiTs.",
+      "subtitle_kor": "3D VecSet VAEs 에서부터 Hunyuan3D 3.0의 Voxel-conditioned 3D DiTs까지 추적하며 자체 3D 생성형 AI 서비스를 구축해 간 과정",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif",
+      "status": "published",
+      "updated": "2026-01-15",
+      "date": "2026-01-15",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "varco3d-a-year-in-review-2025-retrospective"
+    },
+    {
+      "id": "250823_sdf",
+      "title_eng": "SDF and Eikonal Equation",
+      "title_kor": "SDF 와 Eikonal Equation 의 관계는?",
+      "subtitle_eng": "A rigorous derivation of why a signed distance field satisfies the Eikonal equation, from its geometric definition to gradient bounds",
+      "subtitle_kor": "Signed distance field의 기하학적 정의에서 출발해, gradient의 크기가 왜 Eikonal equation을 만족하는지 엄밀하게 유도해보기",
+      "tags": [
+        "Graphics"
+      ],
+      "cover": "/blogs/posts/250823_sdf/assets/remote-12d4629724c7.png",
+      "status": "published",
+      "updated": "2025-08-23",
+      "date": "2025-08-23",
+      "category": "post",
+      "series": "graphics",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "sdf-and-eikonal-equation"
+    },
+    {
+      "id": "250810_flow",
+      "title_eng": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
+      "title_kor": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
+      "subtitle_eng": "Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow",
+      "subtitle_kor": "Rectified Flow의 생성 경로가 왜 직선으로 수렴하는지, 물리학과 기하학, optimal transport의 관점에서 살펴보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250810_flow/assets/remote-40629d4b233a.png",
+      "status": "published",
+      "updated": "2025-08-10",
+      "date": "2025-08-10",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models"
+    },
+    {
+      "id": "250809_gwn",
+      "title_eng": "Generalized Winding Number",
+      "title_kor": "Generalized Winding Number",
+      "subtitle_eng": "How Generalized Winding Numbers turn imperfect meshes into robust inside–outside tests for signed distance field construction",
+      "subtitle_kor": "불완전하거나 열린 mesh에서도 Generalized Winding Number로 inside/outside를 판별하고 견고한 SDF를 계산하는 방법을 살펴보기",
+      "tags": [
+        "Graphics"
+      ],
+      "cover": "/blogs/posts/250809_gwn/assets/image.png",
+      "status": "published",
+      "updated": "2025-08-09",
+      "date": "2025-08-09",
+      "category": "post",
+      "series": "graphics",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "generalized-winding-number"
+    },
+    {
+      "id": "250710_building_large_3d_2",
+      "title_eng": "Building Large 3D Generative Model (2) VAE and DiT Deep Dive",
+      "title_kor": "Large 3D Generative Model 구축하기 (2) VAE and DiT 분석",
+      "subtitle_eng": "Comparing vecset and sparse-voxel VAE–DiT architectures, from 3D representation and compression to shape-generation design",
+      "subtitle_kor": "Vecset과 sparse voxel이 3D shape을 표현하는 방식부터 VAE와 DiT 구조, 생성 모델 설계의 차이까지 비교해보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250710_building_large_3d_2/assets/image-13.png",
+      "status": "published",
+      "updated": "2025-07-10",
+      "date": "2025-07-10",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "building-large-3d-generative-model-2-vae-and-dit-deep-dive"
+    },
+    {
+      "id": "250702_building_large_3d_1",
+      "title_eng": "Building Large 3D Generative Model (1) Data pre-processing",
+      "title_kor": "Large 3D Generative Model 구축하기 (1) 데이터 전처리",
+      "subtitle_eng": "Preparing training-ready 3D data through watertight mesh conversion, surface sampling, and salient-edge-aware preprocessing",
+      "subtitle_kor": "대규모 3D 생성 모델의 학습 데이터를 위해 watertight mesh 변환, surface sampling, salient edge 추출 과정을 정리해보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250702_building_large_3d_1/assets/image-10.png",
+      "status": "published",
+      "updated": "2025-07-02",
+      "date": "2025-07-02",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "building-large-3d-generative-model-1-data-pre-processing"
+    },
+    {
+      "id": "250310_model_viewer",
+      "title_eng": "3D Model Viewer in Web",
+      "title_kor": "커스텀 3D 웹뷰어 만들기",
+      "subtitle_eng": "Comparing Google model-viewer with a custom Three.js pipeline for embedding, controlling, and presenting 3D assets on the web",
+      "subtitle_kor": "Google model-viewer와 직접 만든 Three.js viewer를 비교하며, 웹에서 3D asset을 안정적으로 보여주는 방법을 정리해보기",
+      "tags": [
+        "Web 3D",
+        "Three.js"
+      ],
+      "cover": "/blogs/posts/250310_model_viewer/assets/image.png",
+      "status": "published",
+      "updated": "2025-03-10",
+      "date": "2025-03-10",
+      "category": "post",
+      "series": "web-3d",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "3d-model-viewer-in-web"
+    },
+    {
+      "id": "250302_3d_latent_diffusion",
+      "title_eng": "An Era of 3D Generation",
+      "title_kor": "3D 생성 모델의 시대",
+      "subtitle_eng": "Tracing 3D latent diffusion from ShapeVAE to TRELLIS and Hunyuan3D, and comparing how modern systems represent and generate shape",
+      "subtitle_kor": "ShapeVAE에서 TRELLIS와 Hunyuan3D까지, 3D latent diffusion이 shape을 표현하고 생성하는 방식 톺아보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser-poster.jpg",
+      "status": "published",
+      "updated": "2025-03-02",
+      "date": "2025-03-02",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "an-era-of-3d-generation"
+    },
+    {
+      "id": "250106_tomography",
+      "title_eng": "Neural Rendering Beyond Photography",
+      "title_kor": "X-Ray 와 NeRF",
+      "subtitle_eng": "Applying NeRF and Gaussian Splatting beyond photography to X-ray tomography, plus a lightweight viewer workflow built with Viser.",
+      "subtitle_kor": "NeRF와 Gaussian Splatting을 X-ray tomography에 적용하는 원리를 살펴보고, Viser 기반 viewer 제작 팁까지 살펴보기",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/250106_tomography/assets/image1.png",
+      "status": "published",
+      "updated": "2025-01-06",
+      "date": "2025-01-06",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "neural-rendering-beyond-photography"
+    },
+    {
+      "id": "240917_3djs",
+      "title_eng": "Add Gaussian Splatting to Your Website",
+      "title_kor": "웹사이트에 3D GS 삽입하기",
+      "subtitle_eng": "A practical Three.js guide to embedding an interactive Gaussian Splatting scene in a website, with no web-graphics background required",
+      "subtitle_kor": "Three.js를 이용해 웹사이트에 interactive Gaussian Splatting scene을 삽입하고 제어해보기",
+      "tags": [
+        "Web 3D",
+        "Three.js"
+      ],
+      "cover": "/assets/guitar.jpeg",
+      "status": "published",
+      "updated": "2024-09-17",
+      "date": "2024-09-17",
+      "category": "post",
+      "series": "web-3d",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "add-gaussian-splatting-to-your-website"
+    },
+    {
+      "id": "240823_grt",
+      "title_eng": "Don't Rasterize, But Ray Trace 3D Gaussian",
+      "title_kor": "3D Gaussian Ray Tracing 톺아보기",
+      "subtitle_eng": "How NVIDIA’s 3D Gaussian Ray Tracing replaces splat rasterization with differentiable ray tracing—and what that changes.",
+      "subtitle_kor": "NVIDIA의 3D Gaussian Ray Tracing이 splat rasterization을 differentiable ray tracing으로 바꾸는 방식과 장점에 대한 심층 분석",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240823_grt/assets/teaser.gif",
+      "status": "published",
+      "updated": "2024-08-23",
+      "date": "2024-08-23",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "dont-rasterize-but-ray-trace-3d-gaussian"
+    },
+    {
+      "id": "240805_gs",
+      "title_eng": "A Comprehensive Analysis of Gaussian Splatting Rasterization",
+      "title_kor": "Gaussian Splatting Rasterization 완벽 분석",
+      "subtitle_eng": "A ground-up guide to Gaussian Splatting and differentiable rasterization, tracing the mathematics through its CUDA implementation—from projection and covariance to sorting and alpha blending.",
+      "subtitle_kor": "수식과 CUDA rasterizer 코드를 직접 대응시키며 따라가보는 Gaussian Splatting 완전 해설",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240805_gs/assets/garden.gif",
+      "status": "published",
+      "updated": "2024-08-05",
+      "date": "2024-08-05",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "a-comprehensive-analysis-of-gaussian-splatting-rasterization"
+    },
+    {
+      "id": "240721_sfm",
+      "title_eng": "Radiance Fields from Deep-based Structure-from-Motion",
+      "subtitle_eng": "Comparing VGGSfM and MASt3R as learned Structure-from-Motion pipelines for camera estimation and radiance-field reconstruction.",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240721_sfm/assets/sfm.jpg",
+      "status": "published",
+      "updated": "2024-07-21",
+      "date": "2024-07-21",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng"
+      ],
+      "slug": "radiance-fields-from-deep-based-structure-from-motion"
+    },
+    {
+      "id": "240602_2dgs",
+      "title_eng": "Under the 3D: Geometrically Accurate 2D Gaussian Splatting",
+      "title_kor": "2D Gaussian Splatting 톺아보기",
+      "subtitle_eng": "How 2D Gaussian Splatting replaces volumetric blobs with oriented disks to improve surface geometry and mesh reconstruction",
+      "subtitle_kor": "2D Gaussian Splatting이 volumetric blob 대신 oriented disk를 사용해 surface geometry와 mesh reconstruction을 개선하는 원리를 살펴보기",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240602_2dgs/assets/teaser.gif",
+      "status": "published",
+      "updated": "2024-06-02",
+      "date": "2024-06-02",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "under-the-3d-geometrically-accurate-2d-gaussian-splatting"
+    },
+    {
+      "id": "240426_diffusion_depth",
+      "title_eng": "Is Diffusion's Estimated Depth Really Good?",
+      "title_kor": "Diffusion 으로 추정한 Depth 진짜 좋나요?",
+      "subtitle_eng": "Evaluating diffusion-estimated depth by turning Marigold predictions into textured meshes and inspecting their geometric consistency.",
+      "subtitle_kor": "Diffusion 으로 추정한 Depth Map 을 이용해 Textured Mesh 만들어보기 (feat. Marigold)",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/240426_diffusion_depth/assets/teaser.jpeg",
+      "status": "published",
+      "updated": "2024-04-26",
+      "date": "2024-04-26",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "is-diffusions-estimated-depth-really-good"
+    },
+    {
+      "id": "240226_sora",
+      "title_eng": "Can Sora Understand 3D?",
+      "title_kor": "Sora 가 상상하는 3D World",
+      "subtitle_eng": "Testing whether video generation models encode enough 3D consistency to reconstruct radiance fields from their synthesized views",
+      "subtitle_kor": "Video Generative AI 로부터 NeRF reconstruction 해보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/240226_sora/assets/big-sur-gs-poster.jpg",
+      "status": "published",
+      "updated": "2024-02-26",
+      "date": "2024-02-26",
+      "category": "post",
+      "series": "3d-generation",
+      "languages": [
+        "eng"
+      ],
+      "slug": "can-sora-understand-3d"
+    },
+    {
+      "id": "231130_nerf_in_game",
+      "title_eng": "Can NeRF be used in Game?",
+      "title_kor": "NeRF 를 게임 제작에서 이용할 수 있을까?",
+      "subtitle_eng": "Examining the quality, rendering, and production constraints that limit NeRF in games—and the workarounds available today",
+      "subtitle_kor": "NeRF의 단점을 통해 살펴보는 Neural Rendering 기술이 게임에 적용되기 위해 넘어야 할 과제들",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/231130_nerf_in_game/assets/VID_4_NeRF_obeject_in_blender-poster.jpg",
+      "status": "published",
+      "updated": "2023-11-30",
+      "date": "2023-11-30",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng"
+      ],
+      "slug": "can-nerf-be-used-in-game"
+    },
+    {
+      "id": "230202_ngp",
+      "title_eng": "Instant-NGP Review & Re-Implementation",
+      "title_kor": "Instant-NGP 리뷰 및 재구현",
+      "subtitle_eng": "Reviewing Instant-NGP’s multi-resolution hash encoding and rebuilding its NeRF pipeline step by step in PyTorch",
+      "subtitle_kor": "PyTorch Re-Implementation을 통해 수식과 코드 단위로 상세 리뷰해보는 Instant-NGP",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/230202_ngp/assets/ngp_nerf.gif",
+      "status": "published",
+      "updated": "2023-02-02",
+      "date": "2023-02-02",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng"
+      ],
+      "slug": "instant-ngp-review-re-implementation"
+    },
+    {
+      "id": "211128_fourier",
+      "title_eng": "Why Positional Encoding Makes NeRF more Powerful",
+      "title_kor": "Position Encoding 이 NeRF 에서 필수적인 이유",
+      "subtitle_eng": "Review of Fourier Features Let Networks Learn High-Frequency Functions",
+      "subtitle_kor": "Fourier Features Let Networks Learn High-Frequency Functions 리뷰",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/211128_fourier/assets/main.png",
+      "status": "published",
+      "updated": "2021-11-28",
+      "date": "2021-11-28",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng"
+      ],
+      "slug": "why-positional-encoding-makes-nerf-more-powerful"
+    }
+  ],
+  "series": {
+    "cuda": {
+      "eng": "CUDA",
+      "kor": "CUDA"
+    },
+    "nerf-and-gs": {
+      "eng": "Radiance Fields & Gaussian Splatting",
+      "kor": "Radiance Fields & Gaussian Splatting"
+    },
+    "3d-generation": {
+      "eng": "3D AI",
+      "kor": "3D AI"
+    },
+    "web-3d": {
+      "eng": "3D in Web",
+      "kor": "웹에서 3D 구현하기"
+    },
+    "linear-algebra": {
+      "eng": "Linear Algebra for Deep Learning",
+      "kor": "딥러닝을 위한 선형대수"
+    },
+    "computer-vision": {
+      "eng": "Classical Computer Vision",
+      "kor": "고전 Computer Vision"
+    },
+    "graphics": {
+      "eng": "Computer Graphics",
+      "kor": "Computer Graphics"
+    }
+  }
+};
+        window.blogPostPageConfig = {
+  "postId": "260818_quad_remesh",
+  "lang": "eng",
+  "alternateLang": "kor",
+  "alternateHref": "/blogs/posts/quad-remesh-kor/",
+  "runtimeFeatures": {
+    "katex": true,
+    "prism": false,
+    "modelViewer": false,
+    "modelViewerTextureToggle": false,
+    "three": false,
+    "tween": false,
+    "simpleModelViewer": false,
+    "gaussianSplats": false
+  }
+};
+    </script>
+
+    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+    <script src="/blogs/js/blog-shell.js?v=456de34605"></script>
+    <script src="/blogs/js/post-page.js?v=181bf06e84"></script>
+        <script>
+            initBlogShell({
+                formSelector: '#post-nav-search-form',
+                inputSelector: '#post-nav-search-input'
+            });
+        </script>
+</body>
+</html>
