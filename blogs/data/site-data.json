@@ -17,7 +17,7 @@
       "title_kor": "Quad Remesh 톺아보기",
       "subtitle_eng": "The differential geometry of quad remeshing, from cross fields to integer-grid maps",
       "subtitle_kor": "Manifold 위의 정수격자 설계. Tri-mesh decimation 과는 근본적으로 다른 접근법을 가진 Quad remeshing 을 이해해보기.",
-      "cover": "/blogs/posts/260818_quad_remesh/assets/armadillo_final_quads.png",
+      "cover": "/blogs/posts/260818_quad_remesh/assets/cover.webp",
       "status": "published",
       "updated": "2026-10-06",
       "slug": "quad-remesh",
