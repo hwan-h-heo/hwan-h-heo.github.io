@@ -10,7 +10,6 @@
 })(typeof window !== 'undefined' ? window : null, function(root) {
     const icons = root?.SiteIcons || require('../assets/js/site-icons');
     const CONTENT_PATH = '/content/portfolio/home.json';
-    const HERO_SCROLL_CUE_ENABLED = true;
 
     function escapeHtml(value) {
         return String(value || '')
@@ -22,72 +21,57 @@
     }
 
     function renderHeroActions(actions) {
-        return (actions || []).map((action, index) => {
-            const style = ['section', 'download'].includes(action.style)
-                ? action.style
-                : 'section';
-            const isSectionLink = (action.url || '').startsWith('#');
-            const download = action.download ? ' download' : '';
-            const trailingIcon = action.download
-                ? 'download'
-                : isSectionLink
-                    ? 'arrow-down-right'
-                    : 'arrow-up-right';
-            return `
-                <a class="hero-action hero-action--${style}" href="${escapeHtml(action.url)}"${download}>
-                    <small class="hero-action-index" aria-hidden="true">${String(index + 1).padStart(2, '0')}</small>
-                    <span class="hero-action-label">${escapeHtml(action.label)}</span>
-                    ${icons.render(trailingIcon)}
-                </a>
-            `;
-        }).join('');
+        return (actions || []).map((action, index) => `
+            <a href="${escapeHtml(action.url)}" data-form="${index}">
+                <span class="pbr-action-index" aria-hidden="true">${String(index + 1).padStart(2, '0')}</span>
+                <span class="pbr-action-label">${escapeHtml(action.label)}</span>
+                <span aria-hidden="true">↘</span>
+            </a>
+        `).join('');
     }
 
     function renderHeroLead(block) {
         const lines = Array.isArray(block.leadLines) && block.leadLines.length
             ? block.leadLines
             : [block.lead];
-        return lines
-            .filter((line) => line)
-            .map((line) => `<span class="hero-lead-line">${escapeHtml(line)}</span>`)
-            .join('\n');
-    }
-
-    function renderHeroScrollCue() {
-        if (!HERO_SCROLL_CUE_ENABLED) {
-            return '';
-        }
-
-        return `
-            <a href="#portfolio" class="scroll-down-arrow" aria-label="Scroll to portfolio">
-                ${icons.render('chevron-down')}
-            </a>
-        `;
+        return lines.filter(Boolean)
+            .map(line => `<span class="pbr-lead-line">${escapeHtml(line)}</span>`)
+            .join(' ');
     }
 
     function renderHero(block) {
         const subtitle = block.subtitle || (block.typedItems || []).join(' · ');
         return `
-            <div class="hero-content">
-                <div class="hero-imprint" aria-hidden="true">
-                    <span>00 / Portfolio</span>
-                    <span class="hero-imprint-rule"></span>
+            <picture class="pbr-poster">
+                <source media="(max-width:600px)" srcset="/assets/hero/sculpture/poster-390.webp">
+                <source media="(max-width:900px)" srcset="/assets/hero/sculpture/poster-768.webp">
+                <img src="/assets/hero/sculpture/poster-1440.webp" alt="" aria-hidden="true" fetchpriority="high">
+            </picture>
+            <div class="pbr-scene" role="img" aria-label="An eroded stone form in a monumental limestone aperture, lit by raking white light"></div>
+            <div class="pbr-veil"></div>
+            <header class="pbr-masthead">
+                <a class="pbr-signature" href="#home">${escapeHtml(block.title)}</a>
+                <nav aria-label="Main navigation"><a class="pbr-about-link" href="#about">About</a></nav>
+            </header>
+            <div class="pbr-intro">
+                <div class="pbr-title">
+                    <p class="pbr-folio">00 / PORTFOLIO</p>
+                    <h1 class="pbr-name">${escapeHtml(block.title)}</h1>
                 </div>
-                <h1>${escapeHtml(block.title)}</h1>
-                <div class="hero-deck">
-                    <div class="hero-role-block">
-                        <p class="subtitle">
-                            <span class="hero-subtitle-text">${escapeHtml(subtitle)}</span>
-                        </p>
-                        <p class="hero-affiliation">${escapeHtml(block.affiliation)}</p>
+                <div class="pbr-copy">
+                    <div class="pbr-identity">
+                        <p class="pbr-role">${escapeHtml(subtitle)}</p>
+                        <p class="pbr-affiliation">${escapeHtml(block.affiliation)}</p>
                     </div>
-                    <p class="lead">${renderHeroLead(block)}</p>
-                </div>
-                <div class="hero-actions">
-                    ${renderHeroActions(block.actions)}
+                    <p class="pbr-lead">${renderHeroLead(block)}</p>
+                    <div class="pbr-actions">${renderHeroActions(block.actions)}</div>
                 </div>
             </div>
-            ${renderHeroScrollCue()}
+            <div class="pbr-foot"><div class="pbr-foot-left">
+                <span>3D generation · Systems · Graphics</span>
+                <button class="pbr-motion" type="button" aria-pressed="true" hidden>Motion on</button>
+            </div></div>
+            <a class="pbr-scroll-cue" href="#portfolio" aria-label="Scroll to Projects">${icons.render('chevron-down')}</a>
         `;
     }
 

@@ -215,32 +215,26 @@ Rules:
   wash, one neutral hairline, and a short editorial-accent cap; do not add a
   quotation glyph, rounded card, shadow, or semantic label that may misclassify
   the content.
+- Optional mathematical derivations in articles use native `details` elements,
+  initially closed, with a descriptive `summary`, top and bottom hairlines,
+  and a visible keyboard focus. Keep the content in the reading column and
+  allow wide equations to scroll within the disclosure. Use article-local
+  styles for an article-specific treatment. Short explanatory videos retain
+  the numbered figure grammar, use a static poster and native playback controls,
+  and load on demand. Articles may opt into muted playback while a video is in
+  view; pause it offscreen, in hidden tabs, and inside closed disclosures.
+  Honor manual pauses and keep playback manual under reduced-motion preferences.
 
 The core editorial quality comes from scale, weight, alignment, and rhythm. It
 does not depend on serif type beyond the contained About standfirst accent.
 
-On the Portfolio Hero, keep the display name at its established restrained
-scale and place the quiet mono `00 / PORTFOLIO` folio and hairline above it as an
-out-of-flow margin notation; it must not push the identity block downward. Then
-stack the role, affiliation, and practice statement on a bounded reading rail.
-On wide layouts, keep the folio and display name as the composition's
-left-aligned anchor, right-align only the role-and-affiliation identity block,
-and return the practice statement and CTA contents to the left reading edge.
-Reset the identity block to left alignment on compact screens. Use the Portfolio
-chapter-heading family for the Project, Blog, and About CTA labels so the cover
-leads directly into the publication index; keep their numbers in mono and
-keep the three CTAs in compact content-led spans rather than stretching them
-across the deck width. On compact screens, let the same links share the available
-touch width evenly. Maintain one
-consistent, generous vertical rhythm from folio to name and name to deck, then
-allow one modestly larger pause before the CTA index so navigation does not read
-as another row of identity copy. Give each CTA a top-edge hairline and reveal
-its stronger action rule from the left on interaction, making the row read as a
-three-column publication index rather than a set of bottom-underlined buttons.
-Keep those resting CTA rules optically lighter than the Hero folio hairline so
-the navigation remains subordinate. Keep the Wave as the Hero's only
-atmospheric element so the typography supplies the identity without another
-decorative typeface or louder animation.
+On the Portfolio Hero, use the approved monochrome sculpture composition. Keep
+all identity copy left-aligned, with the small `00 / PORTFOLIO` folio outside the
+name's flow. Separate name/role/affiliation from the three-line practice paragraph
+with a larger vertical pause. Keep Projects / Blogs as the two compact numbered
+chapter links, and only About in the upper-right masthead. The canonical cover
+sizes, material, motion and responsive rules are specified below in Interaction
+And Motion and implemented in `assets/css/hero-sculpture.css`.
 
 ## Layout And Spacing
 
@@ -709,18 +703,65 @@ slightly denser neutral segment at the start of the existing hairline. Do not
 introduce cyan, movement, or a new divider for this state, and remove the color
 transition under reduced motion.
 
-The production portfolio hero is the established Wave and must remain the only
-home-page hero implementation. Its canonical surface is an asymmetric
-interference field: domain-warped silk folds cross a restrained radial
-diffraction pattern, with sparse cyan-white lustre traveling along the crests.
-Keep the parallel base strands subordinate so the moving highlights, rather
-than a generic orthogonal grid, describe the surface. Preserve the dark ink
-stage, cyan-neutral palette, calm ambient pace, CTA timing, and static fallback.
-`js/hero.js` loads the Wave directly; URL parameters, article demos, and
-experimental assets must not replace it. Technical visualizations such as the
-coarse-to-fine voxel decoder belong to a dedicated article or demo route. Load
-their scripts and binary assets only inside that opt-in context, with no
-requests or handoff state added to the portfolio home page.
+The production portfolio hero is the approved v22 sculpture cover, replacing the
+former Wave. `js/hero.js` and `js/hero-sculpture/` own its source; the build emits
+`assets/js/hero-sculpture.js`. Its styles are isolated in
+`assets/css/hero-sculpture.css`, while copy remains in
+`content/portfolio/home.json`. Do not load old Wave or article-demo code on home.
+
+The cover uses a monochrome stone environment informed by onformative's AI Sculpting
+spatial studies. A deep flared aperture and an original uneven carved form replace
+the earlier ribbon/spiral composition. Build atmosphere through the relative scale
+of architecture and sculpture, raking neutral light, cast/contact shadows and
+multiscale mineral surface variation. Keep metalness and clearcoat at zero; avoid
+colored rim lights, polished floor reflections and screen-space grain. Texture is
+part of the material and affects diffuse response, roughness and surface normals.
+
+Place the name, role, practice paragraph and adjacent Projects / Blogs in
+the dark left margin as a readable editorial caption. Use real Manrope Regular
+outlines for the moderate display name and practice statement: a CSS 400/500 request
+must not silently fall back to the older 600/700-only font subset.
+Keep role and affiliation in smaller Inter, and the out-of-flow folio in quiet mono.
+Keep the identity block's position fixed when opening the vertical rhythm: lower
+the practice statement and its chapter links with a larger gap after affiliation.
+Set the practice paragraph at 16 px on desktop and 15 px on small phones,
+with 1.72 line height and a bounded reading width. Distill it to three complete
+phrases: building 3D generative systems, geometric representations, and efficient
+GPU inference. Give each phrase its own line at standard viewport sizes, retaining
+ordinary spaces in the accessible text. Allow phrases to wrap under text zoom;
+do not shrink the font or force no-wrap to preserve the line count.
+Keep decorative geometry clear of actual text/action bounds during pointer motion.
+Projects / Blogs are unfilled chapter links with small mono numbers, Space Grotesk
+labels, a single resting top hairline and the established hover line/arrow response.
+Keep these labels compact at 12 px, with shorter rules on a 264 px action rail.
+Align each small number and label on the same vertical center; do not independently
+baseline-align the number against a centered label or add an upward offset.
+Do not add a surrounding button frame or a filled primary action. Keep at least
+44 px touch height. On compact screens, move the spatial scene below the introduction
+and retain both primary actions in the first viewport. CTA hover or keyboard focus
+may subtly emphasize the sculpture or architecture.
+The cover masthead keeps the signature at left and only About at right, including
+on mobile. Projects and Blogs already have primary chapter links in the reading
+area; do not duplicate them in the masthead merely to fill the upper-right space.
+
+Place a quiet down-chevron link to Projects at the bottom center of the first
+viewport, with a 44 px hit area. Keep it visible even when a compact cover exceeds
+the viewport height. Reuse the first-party chevron icon and restrained vertical
+pulse; disable the pulse under Motion off or reduced motion. Keep keyboard focus
+visible and honor reduced motion for the native section scroll.
+
+The carved form refines from coarse to finished once on initial
+load, over about four seconds. Map downward scroll to the reverse of that same
+surface sequence; scrolling back restores its refinement. Keep the form's authored
+orientation fixed, with no tipping. Complete the reverse traversal over the first
+72% of the cover's scroll distance. During the entrance, retract only the surface
+already formed, so early scroll cannot jump to a finished mesh. Do not restart the
+entrance clock on resize, scroll or reentry. Pause offscreen, in hidden tabs and
+under manual Motion off; stop rendering when the sampled state settles. Use the
+finished poster for reduced motion or data saving; a live reduced-motion change
+resolves either intro or scroll refinement to its final surface. The footer retains only Motion,
+without a Refine form or study link. Source organization, font licenses,
+reproducible builds and focused checks are documented in `docs/hero-sculpture.md`.
 
 Canonical timing:
 
@@ -736,10 +777,9 @@ Rules:
 - Animate `transform`, `opacity`, color, and underline scale.
 - Do not animate dimensions, padding, or grid tracks on hover.
 - Keep movement within 1 to 4px.
-- Treat the Wave canvas as the spatial-motion exception: on desktop, pointer
-  input may drive a damped camera parallax and surface tilt so the field reads
-  as a 3D scene. Keep the combined edge response within roughly 10 degrees,
-  preserve the authored ambient drift, and use a smaller envelope for touch.
+- Treat the sculpture canvas as the spatial-motion exception: fine-pointer input
+  may drive restrained damped camera parallax, and scroll reverses the refinement
+  surface. Keep the authored object orientation fixed and stop rendering at rest.
 - Treat the About portrait point cloud as a progressive enhancement. Keep its
   colored points orthographically aligned to one flat depth plane at rest; on
   fine-pointer hover, restore the authored depth gradually and allow only a

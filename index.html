@@ -1,38 +1,23 @@
 <!DOCTYPE html>
-<html lang="en" class="hero-wave-pending">
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Hwan Heo | Lead 3D AI Research Engineer</title>
-  <meta name="description" content="Portfolio of Hwan Heo, a Lead 3D AI Research Engineer building production generative systems across native 3D representations, large-model training, CUDA inference, and graphics." />
+  <meta name="description" content="Portfolio of Hwan Heo, a Lead 3D AI Research Engineer building 3D generative systems, from geometric representations to efficient GPU inference." />
   <meta name="author" content="Hwan Heo" />
   <link rel="canonical" href="https://hwan-h-heo.github.io/" />
   <meta property="og:title" content="Hwan Heo | Lead 3D AI Research Engineer" />
-  <meta property="og:description" content="Building production-scale 3D generative systems from native representations and large-model training to CUDA inference and graphics pipelines." />
+  <meta property="og:description" content="Building 3D generative systems, from geometric representations to efficient GPU inference." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://hwan-h-heo.github.io/" />
   <meta property="og:image" content="https://hwan-h-heo.github.io/assets/icon.webp" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Hwan Heo | Lead 3D AI Research Engineer" />
-  <meta name="twitter:description" content="Building production-scale 3D generative systems from native representations and large-model training to CUDA inference and graphics pipelines." />
+  <meta name="twitter:description" content="Building 3D generative systems, from geometric representations to efficient GPU inference." />
   <meta name="twitter:image" content="https://hwan-h-heo.github.io/assets/icon.webp" />
-  <noscript>
-    <style>
-      #preloader { display: none !important; }
-      .scroll-down-arrow {
-        opacity: 1 !important;
-        transform: translateX(-50%) !important;
-      }
-      .index-page .hero::before {
-        background:
-          linear-gradient(90deg, rgba(16, 16, 17, 0.98) 0%, rgba(16, 16, 17, 0.9) 36%, rgba(16, 16, 17, 0.2) 76%),
-          url("/assets/hero-bg-3d-ai-candidate.png") center / cover no-repeat !important;
-        background-color: #101011 !important;
-        background-blend-mode: normal, luminosity !important;
-      }
-    </style>
-  </noscript>
+  <noscript><style>#preloader { display: none !important; }</style></noscript>
 
   <!-- Favicons -->
   <link href="assets/favicon.ico" rel="icon">
@@ -51,22 +36,9 @@
   <!-- Main CSS File -->
   <link href="assets/css/portfolio.css" rel="stylesheet">
   <link href="css/sidebar-nav.css" rel="stylesheet">
+  <link href="assets/css/hero-sculpture.css" rel="stylesheet">
+  <link rel="preload" href="assets/hero/sculpture/fonts/manrope-variable.ttf" as="font" type="font/ttf" crossorigin>
 
-  <script>
-    window.setTimeout(function releaseDelayedHero() {
-      const root = document.documentElement;
-      if (!root.classList.contains('hero-wave-pending')) return;
-
-      const hero = document.getElementById('home');
-      root.dataset.heroWaveBypassed = 'true';
-      root.classList.remove('hero-wave-pending');
-      root.classList.add('hero-wave-fallback');
-      hero?.classList.remove('hero-intro-sweeping');
-      hero?.classList.add('hero-intro-visible', 'hero-cta-visible');
-      hero?.style.removeProperty('--hero-reveal-opacity');
-      document.dispatchEvent(new CustomEvent('portfolio:hero-cta-visible'));
-    }, window.matchMedia('(max-width: 767px)').matches ? 3000 : 3800);
-  </script>
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
@@ -108,7 +80,7 @@
 
   <main class="main">
     <!-- Hero Section -->
-    <section id="home" class="hero section dark-background" data-portfolio-block="home" data-section-ready="false"></section><!-- /Hero Section -->
+    <section id="home" class="pbr-hero" aria-label="Hwan Heo portfolio cover" data-portfolio-block="home" data-section-ready="false"></section><!-- /Hero Section -->
 
     <!-- Portfolio Section -->
     <section id="portfolio" class="portfolio section light-background" data-portfolio-view="selected" data-section-ready="false">
@@ -241,7 +213,7 @@
   <script src="js/portfolio-content.js"></script>
   <script src="js/portfolio-blog-preview.js"></script>
   <script type="module" src="js/about-portrait.js"></script>
-  <script type="module" src="js/hero.js"></script>
+  <script defer src="assets/js/hero-sculpture.js"></script>
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>

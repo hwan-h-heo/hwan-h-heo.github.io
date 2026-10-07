@@ -4,7 +4,7 @@
   "description": "Hwan Heo's portfolio site with integrated blog",
   "scripts": {
     "setup": "npm install && npm --prefix blogs install",
-    "build": "npm --prefix blogs run build",
+    "build": "npm run build:hero && npm --prefix blogs run build",
     "build:incremental": "npm --prefix blogs run build:incremental",
     "dev": "npm --prefix blogs run dev",
     "deploy": "npm run verify && npm --prefix blogs run deploy:dist",
@@ -24,10 +24,14 @@
     "validate:seo": "node scripts/validate-seo-output.js",
     "verify": "npm run check:content && npm run check:assets && npm run audit:assets && npm run build && npm run validate:seo && npm run check:legacy-ui && npm run check:render && npm run check:ui",
     "verify:production": "node scripts/check-rendered-site.js --production",
-    "freeze:routes": "node scripts/freeze-route-compatibility.js"
+    "freeze:routes": "node scripts/freeze-route-compatibility.js",
+    "build:hero": "node scripts/build-hero.js",
+    "check:hero": "node scripts/check-hero.js"
   },
   "devDependencies": {
     "cheerio": "^1.2.0",
-    "playwright": "^1.61.1"
+    "esbuild": "0.25.12",
+    "playwright": "^1.61.1",
+    "three": "0.180.0"
   }
 }
