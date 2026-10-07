@@ -7,7 +7,7 @@
       "title": "Hwan Heo",
       "subtitle": "Lead 3D AI Research Engineer",
       "affiliation": "NC AI · VARCO 3D",
-      "lead": "Building production-scale 3D generative systems across native representations, large-model training, scalable inference, and graphics algorithms.",
+      "lead": "Building 3D generative systems, from geometric representations to efficient GPU inference.",
       "actions": [
         {
           "label": "Projects",
@@ -15,13 +15,8 @@
           "style": "section"
         },
         {
-          "label": "Blog",
+          "label": "Blogs",
           "url": "#blog",
-          "style": "section"
-        },
-        {
-          "label": "About",
-          "url": "#about",
           "style": "section"
         }
       ],
@@ -46,6 +41,11 @@
           "url": "mailto:hwan.heo.ai@gmail.com",
           "icon": "envelope-fill"
         }
+      ],
+      "leadLines": [
+        "Building 3D generative systems,",
+        "from geometric representations",
+        "to efficient GPU inference."
       ]
     },
     {

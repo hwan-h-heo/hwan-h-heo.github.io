@@ -1,0 +1,248 @@
+@font-face { font-family: "Manrope Cover"; font-style: normal; font-weight: 200 800; font-display: swap; src: url("../hero/sculpture/fonts/manrope-variable.ttf") format("truetype"); }
+@font-face {
+  font-family: "Hero IBM Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../hero/sculpture/fonts/ibm-plex-mono-400.ttf") format('truetype');
+}
+@font-face {
+  font-family: "Hero Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../hero/sculpture/fonts/inter-400.ttf") format('truetype');
+}
+@font-face {
+  font-family: "Hero Space Grotesk";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../hero/sculpture/fonts/space-grotesk-500.ttf") format('truetype');
+}
+/* Home-only sculpture cover. Source and behavior: docs/hero-sculpture.md. */
+.pbr-hero { position: relative; isolation: isolate; overflow: hidden; height: 100svh; min-height: 720px; width: 100%; padding: 0; color: #d9dddf; font-family: "Hero Inter", Inter, sans-serif; font-synthesis: none; scroll-margin-top: 0; }
+.pbr-hero * { box-sizing: border-box; }
+.pbr-hero h1, .pbr-hero p, .pbr-hero figure { margin: 0; }
+.pbr-hero a { color: inherit; text-decoration: none; }
+.pbr-hero button { font: inherit; color: inherit; cursor: pointer; }
+.pbr-hero a:focus-visible, .pbr-hero button:focus-visible { outline: 2px solid #86aaba; outline-offset: 6px; }
+.pbr-hero [hidden] { display: none !important; }
+.pbr-poster { position: absolute; inset: 0; z-index: -3; }
+.pbr-poster img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.pbr-scene { position: absolute; inset: 0; z-index: -2; opacity: 0; transition: opacity .6s; }
+.pbr-scene.is-ready { opacity: 1; }
+.pbr-scene canvas { display: block; width: 100%; height: 100%; }
+.pbr-static .pbr-scene { display: none; }
+.pbr-veil { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.pbr-masthead { position: absolute; z-index: 2; inset: 30px 6vw auto; display: flex; align-items: center; justify-content: space-between; font-size: 12px; }
+.pbr-masthead nav { display: flex; }
+.pbr-masthead nav a { min-height: 44px; display: flex; align-items: center; }
+.pbr-masthead nav a:hover { text-decoration: underline; text-underline-offset: 5px; }
+.pbr-intro { position: absolute; }
+.pbr-actions { display: flex; align-items: center; }
+.pbr-hero .pbr-actions a { display: inline-flex; align-items: center; }
+.pbr-hero .pbr-actions a span:last-child { margin-left: auto; }
+.pbr-foot { position: absolute; bottom: 27px; inset-inline: 6vw; display: flex; align-items: center; gap: 20px; font-size: 10px; }
+.pbr-foot-left { display: flex; align-items: center; gap: 24px; }
+.pbr-hero .pbr-motion { background: none; border: 0; padding: 12px 0; min-width: 65px; min-height: 44px; font-size: 10px; text-align: left; }
+.pbr-motion:disabled { cursor: default; }
+.pbr-motion:hover { text-decoration: underline; }
+@media (max-width: 600px) {
+    .pbr-masthead { inset: 15px 24px auto; font-size: 11px; }
+    .pbr-foot { inset-inline: 24px; bottom: 17px; font-size: 9px; }
+    .pbr-foot-left > span { display: none; }
+    .pbr-hero .pbr-motion { font-size: 9px; }
+}
+@media (prefers-reduced-motion: reduce) { .pbr-scene { transition: none; } }
+
+/* Restore the production hero's top-edge rule and small arrow response. */
+.pbr-hero .pbr-actions a {
+    position: relative;
+    overflow: hidden;
+    min-height: 44px;
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, .1);
+    padding: .58rem .08rem .62rem;
+    color: rgba(238, 241, 245, .8);
+    font-family: "Hero Space Grotesk", Manrope, sans-serif;
+    font-size: .8rem;
+    font-weight: 500;
+    transition: color var(--motion-base, 240ms) var(--ease-standard, ease),
+        transform var(--motion-slow, 360ms) var(--ease-emphasized, cubic-bezier(.22, 1, .36, 1));
+}
+.pbr-hero .pbr-actions a::after {
+    content: "";
+    position: absolute;
+    inset: -1px 0 auto;
+    height: 2px;
+    background: var(--action-underline-dark, rgba(226, 232, 240, .48));
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 480ms var(--ease-emphasized, cubic-bezier(.22, 1, .36, 1));
+}
+.pbr-hero .pbr-actions a span:last-child {
+    opacity: .58;
+    transition: opacity var(--motion-base, 240ms) var(--ease-standard, ease),
+        transform var(--motion-slow, 360ms) var(--ease-emphasized, cubic-bezier(.22, 1, .36, 1));
+}
+.pbr-hero .pbr-actions a:is(:hover, :focus-visible) { color: #fff; transform: translateY(-1px); }
+.pbr-hero .pbr-actions a:is(:hover, :focus-visible)::after { transform: scaleX(1); }
+.pbr-hero .pbr-actions a:is(:hover, :focus-visible) span:last-child { opacity: 1; transform: translate(1px, 1px); }
+.pbr-hero .pbr-actions a:focus-visible { outline: 2px solid #86aaba; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+    .pbr-hero .pbr-actions a,
+    .pbr-hero .pbr-actions a::after,
+    .pbr-hero .pbr-actions a span:last-child { transition: none; }
+    .pbr-hero .pbr-actions a:is(:hover, :focus-visible),
+    .pbr-hero .pbr-actions a:is(:hover, :focus-visible) span:last-child { transform: none; }
+}
+
+/* Quiet typography and chapter links against the accepted monochrome stone scene. */
+.pbr-hero { background: #111; --action-underline-dark: #d0d0cc; }
+/* Avoid showing the finished poster through the initial coarse canvas fade. */
+.pbr-entering .pbr-poster { visibility: hidden; }
+.pbr-hero .pbr-intro {
+    inset: 28.5% auto auto 6vw;
+    transform: none;
+    width: 375px;
+    max-width: 35vw;
+    text-align: left;
+}
+.pbr-title { position: relative; }
+.pbr-hero .pbr-name {
+    color: #efefeb;
+    font-family: "Manrope Cover", Manrope, sans-serif;
+    font-size: clamp(48px, 4vw, 60px);
+    font-weight: 400;
+    line-height: 1.12;
+    white-space: nowrap;
+    letter-spacing: 0;
+}
+.pbr-folio {
+    position: absolute;
+    inset: auto auto calc(100% + 28px) 0;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    color: #b7b7b1;
+    font: 400 9px/1.5 "Hero IBM Plex Mono", monospace;
+}
+.pbr-folio::before { content: ""; width: 28px; height: 1px; background: #d0d0cc70; }
+.pbr-copy { margin-top: 20px; }
+.pbr-hero .pbr-role { margin: 0; font-size: 13px; line-height: 1.65; font-weight: 400; color: #cbcbc5; }
+.pbr-hero .pbr-affiliation { margin-top: 4px; font-size: 11.5px; line-height: 1.65; color: #adada7; }
+.pbr-hero .pbr-lead {
+    margin: clamp(68px, 8.2vh, 90px) 0 0;
+    max-width: 355px;
+    font-family: "Manrope Cover", Manrope, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.72;
+    color: #deded8;
+    letter-spacing: 0;
+    text-wrap: wrap;
+}
+/* Break at complete phrases; allow each phrase to reflow under text zoom. */
+.pbr-hero .pbr-lead-line { display: block; }
+.pbr-hero .pbr-actions { margin: 24px 0 0; gap: 22px; width: 264px; max-width: 100%; }
+.pbr-hero .pbr-actions a {
+    flex: 1;
+    min-width: 0;
+    min-height: 44px;
+    gap: 0;
+    border: 0;
+    border-top: 1px solid #cecec72e;
+    border-radius: 0;
+    padding: 10px 0;
+    font-family: "Hero Space Grotesk", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #e5e5df;
+    background: transparent;
+}
+.pbr-hero .pbr-actions .pbr-action-index {
+    align-self: center;
+    font: 400 9px/1 "Hero IBM Plex Mono", monospace;
+    color: #b2b2aa;
+    margin: 0 9px 0 0;
+}
+.pbr-hero .pbr-action-label { line-height: 1; }
+.pbr-hero .pbr-actions a span:last-child { font: 400 15px/1 "Hero IBM Plex Mono", monospace; opacity: .62; }
+.pbr-hero .pbr-actions a::after { inset-block-start: -1px; }
+.pbr-hero .pbr-actions a:is(:hover, :focus-visible) { color: #fff; background: transparent; }
+.pbr-hero .pbr-veil {
+    background: linear-gradient(90deg, #0a0a0acc 0%, #0b0b0b7a 29%, transparent 53%),
+        linear-gradient(0deg, #0a0a0a9c, transparent 18%, transparent 88%, #09090945);
+}
+.pbr-hero .pbr-masthead a { color: #c9c9c3; font-weight: 400; }
+.pbr-hero .pbr-masthead .pbr-about-link { display: flex; min-width: 44px; justify-content: flex-end; }
+.pbr-hero .pbr-foot { color: #b6b6af; }
+.pbr-hero .pbr-scroll-cue {
+    position: absolute;
+    z-index: 3;
+    /* Compact covers can exceed the viewport; keep the cue in the first screen. */
+    top: min(calc(100svh - 64px), calc(100% - 64px));
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    color: #d4d4ce;
+}
+.pbr-scroll-cue .site-icon {
+    display: block;
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+    animation: pbr-scroll-chevron 2.35s ease-in-out infinite;
+}
+.pbr-scroll-cue:is(:hover, :focus-visible) .site-icon {
+    animation: none;
+    opacity: 1;
+    transform: translateY(2px);
+}
+.pbr-hero:has(.pbr-motion[aria-pressed="false"]) .pbr-scroll-cue .site-icon { animation: none; }
+@keyframes pbr-scroll-chevron {
+    0%, 28% { opacity: .4; transform: translateY(-1px); }
+    62% { opacity: .85; transform: translateY(0); }
+    100% { opacity: .4; transform: translateY(2px); }
+}
+@media (prefers-reduced-motion: reduce) {
+    html:has(.pbr-hero) { scroll-behavior: auto; }
+    .pbr-scroll-cue .site-icon { animation: none; }
+    .pbr-scroll-cue:is(:hover, :focus-visible) .site-icon { transform: none; }
+}
+@media (min-width: 901px) and (max-height: 800px) {
+    .pbr-hero .pbr-intro { top: 25%; }
+    .pbr-folio { bottom: calc(100% + 24px); }
+    .pbr-hero .pbr-name { font-size: 50px; }
+    .pbr-copy { margin-top: 18px; }
+    .pbr-hero .pbr-lead { margin-top: 60px; }
+}
+@media (max-width: 1100px) and (min-width: 901px) {
+    .pbr-hero .pbr-intro { width: 335px; max-width: 36vw; }
+    .pbr-hero .pbr-name { font-size: 46px; }
+    .pbr-hero .pbr-role { font-size: 12px; }
+}
+@media (max-width: 900px) {
+    .pbr-hero { min-height: 940px; }
+    .pbr-hero .pbr-intro { inset: 177px auto auto 6vw; width: 400px; max-width: calc(100% - 12vw); }
+    .pbr-hero .pbr-name { font-size: 52px; }
+    .pbr-hero .pbr-lead { margin-top: 62px; }
+    .pbr-hero .pbr-veil { background: linear-gradient(180deg, #0a0a0ab3 0%, #0b0b0b85 37%, transparent 68%, #09090960 100%); }
+}
+@media (max-width: 600px) {
+    .pbr-hero { min-height: 880px; }
+    .pbr-hero .pbr-intro { top: 145px; left: 24px; width: calc(100% - 48px); max-width: none; }
+    .pbr-hero .pbr-name { font-size: clamp(40px, 11.3vw, 46px); }
+    .pbr-folio { bottom: calc(100% + 22px); }
+    .pbr-copy { margin-top: 17px; }
+    .pbr-hero .pbr-role { font-size: 12px; }
+    .pbr-hero .pbr-affiliation { font-size: 11px; margin-top: 4px; }
+    .pbr-hero .pbr-lead { font-size: 15px; margin-top: 56px; }
+    .pbr-hero .pbr-actions { margin-top: 22px; }
+}

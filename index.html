@@ -1,38 +1,23 @@
 <!DOCTYPE html>
-<html lang="en" class="hero-wave-pending">
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Hwan Heo | Lead 3D AI Research Engineer</title>
-  <meta name="description" content="Portfolio of Hwan Heo, a Lead 3D AI Research Engineer building production generative systems across native 3D representations, large-model training, CUDA inference, and graphics." />
+  <meta name="description" content="Portfolio of Hwan Heo, a Lead 3D AI Research Engineer building 3D generative systems, from geometric representations to efficient GPU inference." />
   <meta name="author" content="Hwan Heo" />
   <link rel="canonical" href="https://hwan-h-heo.github.io/" />
   <meta property="og:title" content="Hwan Heo | Lead 3D AI Research Engineer" />
-  <meta property="og:description" content="Building production-scale 3D generative systems from native representations and large-model training to CUDA inference and graphics pipelines." />
+  <meta property="og:description" content="Building 3D generative systems, from geometric representations to efficient GPU inference." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://hwan-h-heo.github.io/" />
   <meta property="og:image" content="https://hwan-h-heo.github.io/assets/icon.webp" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Hwan Heo | Lead 3D AI Research Engineer" />
-  <meta name="twitter:description" content="Building production-scale 3D generative systems from native representations and large-model training to CUDA inference and graphics pipelines." />
+  <meta name="twitter:description" content="Building 3D generative systems, from geometric representations to efficient GPU inference." />
   <meta name="twitter:image" content="https://hwan-h-heo.github.io/assets/icon.webp" />
-  <noscript>
-    <style>
-      #preloader { display: none !important; }
-      .scroll-down-arrow {
-        opacity: 1 !important;
-        transform: translateX(-50%) !important;
-      }
-      .index-page .hero::before {
-        background:
-          linear-gradient(90deg, rgba(16, 16, 17, 0.98) 0%, rgba(16, 16, 17, 0.9) 36%, rgba(16, 16, 17, 0.2) 76%),
-          url("/assets/hero-bg-3d-ai-candidate.png") center / cover no-repeat !important;
-        background-color: #101011 !important;
-        background-blend-mode: normal, luminosity !important;
-      }
-    </style>
-  </noscript>
+  <noscript><style>#preloader { display: none !important; }</style></noscript>
 
   <!-- Favicons -->
   <link href="assets/favicon.ico" rel="icon">
@@ -51,22 +36,9 @@
   <!-- Main CSS File -->
   <link href="assets/css/portfolio.css?v=eb11a21519" rel="stylesheet">
   <link href="css/sidebar-nav.css?v=6503f0effb" rel="stylesheet">
+  <link href="assets/css/hero-sculpture.css?v=0c8981a3e6" rel="stylesheet">
+  <link rel="preload" href="assets/hero/sculpture/fonts/manrope-variable.ttf" as="font" type="font/ttf" crossorigin>
 
-  <script>
-    window.setTimeout(function releaseDelayedHero() {
-      const root = document.documentElement;
-      if (!root.classList.contains('hero-wave-pending')) return;
-
-      const hero = document.getElementById('home');
-      root.dataset.heroWaveBypassed = 'true';
-      root.classList.remove('hero-wave-pending');
-      root.classList.add('hero-wave-fallback');
-      hero?.classList.remove('hero-intro-sweeping');
-      hero?.classList.add('hero-intro-visible', 'hero-cta-visible');
-      hero?.style.removeProperty('--hero-reveal-opacity');
-      document.dispatchEvent(new CustomEvent('portfolio:hero-cta-visible'));
-    }, window.matchMedia('(max-width: 767px)').matches ? 3000 : 3800);
-  </script>
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
@@ -77,7 +49,7 @@
       gtag('config', 'G-RF7ETSKPK9');
   </script>
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://hwan-h-heo.github.io/#person","name":"Hwan Heo","alternateName":"허환","url":"https://hwan-h-heo.github.io","jobTitle":"Lead 3D AI Research Engineer","worksFor":{"@type":"Organization","name":"NC AI"},"alumniOf":{"@type":"CollegeOrUniversity","name":"Korea University"},"sameAs":["https://scholar.google.com/citations?user=RulvYTkAAAAJ","https://github.com/hwanhuh","https://www.linkedin.com/in/hwan-heo-0905korea/"],"knowsAbout":["3D generative AI","Neural rendering","CUDA inference optimization","Computer graphics"]},{"@type":"ScholarlyArticle","name":"CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation","author":[{"@type":"Person","name":"Hwan Heo"},{"@type":"Person","name":"Jangyeong Kim"},{"@type":"Person","name":"Seongyeong Lee"},{"@type":"Person","name":"Jeong-A Wi"},{"@type":"Person","name":"Junyoung Choi"},{"@type":"Person","name":"Sangjun Ahn"}],"url":"https://arxiv.org/abs/2501.09433","isPartOf":{"@type":"CreativeWork","name":"Technical Report, Featured on Hugging Face Daily Papers, TLDR AI"}},{"@type":"ScholarlyArticle","name":"DreamSurfels: Generative Gaussian Surfels for Geometrically Accurate 3D Content Creation","author":[{"@type":"Person","name":"Hwan Heo"},{"@type":"Person","name":"Sangjun Ahn"}],"url":"https://hwan-h-heo.github.io/#portfolio","isPartOf":{"@type":"CreativeWork","name":"The 15th International Conference on ICT Convergence (ICTC), Oct 2024 Oral presentation, domestic conference"}},{"@type":"ScholarlyArticle","name":"Robust Camera Pose Refinement for Multi-Resolution Hash Encoding","author":[{"@type":"Person","name":"Hwan Heo"},{"@type":"Person","name":"Taekyung Kim"},{"@type":"Person","name":"J. Lee"},{"@type":"Person","name":"Jiyoung Lee"},{"@type":"Person","name":"Soohyun Kim"},{"@type":"Person","name":"Hyunwoo J. Kim"},{"@type":"Person","name":"Jin-Hwa Kim"}],"url":"https://dl.acm.org/doi/10.5555/3618408.3618936","isPartOf":{"@type":"CreativeWork","name":"The 40th International Conference on Machine Learning (ICML), Jul 2023"}},{"@type":"ScholarlyArticle","name":"Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild","author":[{"@type":"Person","name":"Jaewon Lee"},{"@type":"Person","name":"Injae Kim"},{"@type":"Person","name":"Hwan Heo"},{"@type":"Person","name":"Hyunwoo J. Kim"}],"url":"https://arxiv.org/abs/2303.03966","isPartOf":{"@type":"CreativeWork","name":"preprint, arXiv 2023"}}]}</script>
-    <meta name="site-deploy-version" content="9c350603aae17213">
+    <meta name="site-deploy-version" content="d7a5a69c2ef2992d">
     <script defer src="/assets/js/deploy-refresh.js?v=ee9c6c8f26"></script>
 </head>
 
@@ -111,49 +83,49 @@
 
   <main class="main">
     <!-- Hero Section -->
-    <section id="home" class="hero section dark-background" data-portfolio-block="home" data-section-ready="false">
-            <div class="hero-content">
-                <div class="hero-imprint" aria-hidden="true">
-                    <span>00 / Portfolio</span>
-                    <span class="hero-imprint-rule"></span>
+    <section id="home" class="pbr-hero" aria-label="Hwan Heo portfolio cover" data-portfolio-block="home" data-section-ready="false">
+            <picture class="pbr-poster">
+                <source media="(max-width:600px)" srcset="/assets/hero/sculpture/poster-390.webp">
+                <source media="(max-width:900px)" srcset="/assets/hero/sculpture/poster-768.webp">
+                <img src="/assets/hero/sculpture/poster-1440.webp" alt="" aria-hidden="true" fetchpriority="high">
+            </picture>
+            <div class="pbr-scene" role="img" aria-label="An eroded stone form in a monumental limestone aperture, lit by raking white light"></div>
+            <div class="pbr-veil"></div>
+            <header class="pbr-masthead">
+                <a class="pbr-signature" href="#home">Hwan Heo</a>
+                <nav aria-label="Main navigation"><a class="pbr-about-link" href="#about">About</a></nav>
+            </header>
+            <div class="pbr-intro">
+                <div class="pbr-title">
+                    <p class="pbr-folio">00 / PORTFOLIO</p>
+                    <h1 class="pbr-name">Hwan Heo</h1>
                 </div>
-                <h1>Hwan Heo</h1>
-                <div class="hero-deck">
-                    <div class="hero-role-block">
-                        <p class="subtitle">
-                            <span class="hero-subtitle-text">Lead 3D AI Research Engineer</span>
-                        </p>
-                        <p class="hero-affiliation">NC AI · VARCO 3D</p>
+                <div class="pbr-copy">
+                    <div class="pbr-identity">
+                        <p class="pbr-role">Lead 3D AI Research Engineer</p>
+                        <p class="pbr-affiliation">NC AI · VARCO 3D</p>
                     </div>
-                    <p class="lead"><span class="hero-lead-line">Building production-scale 3D generative systems across native representations, large-model training, scalable inference, and graphics algorithms.</span></p>
-                </div>
-                <div class="hero-actions">
-                    
-                <a class="hero-action hero-action--section" href="#portfolio">
-                    <small class="hero-action-index" aria-hidden="true">01</small>
-                    <span class="hero-action-label">Projects</span>
-                    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-down-right"></use></svg>
-                </a>
-            
-                <a class="hero-action hero-action--section" href="#blog">
-                    <small class="hero-action-index" aria-hidden="true">02</small>
-                    <span class="hero-action-label">Blog</span>
-                    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-down-right"></use></svg>
-                </a>
-            
-                <a class="hero-action hero-action--section" href="#about">
-                    <small class="hero-action-index" aria-hidden="true">03</small>
-                    <span class="hero-action-label">About</span>
-                    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-down-right"></use></svg>
-                </a>
-            
-                </div>
-            </div>
-            
-            <a href="#portfolio" class="scroll-down-arrow" aria-label="Scroll to portfolio">
-                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
+                    <p class="pbr-lead"><span class="pbr-lead-line">Building 3D generative systems,</span> <span class="pbr-lead-line">from geometric representations</span> <span class="pbr-lead-line">to efficient GPU inference.</span></p>
+                    <div class="pbr-actions">
+            <a href="#portfolio" data-form="0">
+                <span class="pbr-action-index" aria-hidden="true">01</span>
+                <span class="pbr-action-label">Projects</span>
+                <span aria-hidden="true">↘</span>
             </a>
         
+            <a href="#blog" data-form="1">
+                <span class="pbr-action-index" aria-hidden="true">02</span>
+                <span class="pbr-action-label">Blogs</span>
+                <span aria-hidden="true">↘</span>
+            </a>
+        </div>
+                </div>
+            </div>
+            <div class="pbr-foot"><div class="pbr-foot-left">
+                <span>3D generation · Systems · Graphics</span>
+                <button class="pbr-motion" type="button" aria-pressed="true" hidden>Motion on</button>
+            </div></div>
+            <a class="pbr-scroll-cue" href="#portfolio" aria-label="Scroll to Projects"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg></a>
         </section><!-- /Hero Section -->
 
     <!-- Portfolio Section -->
@@ -797,11 +769,11 @@
   </div>
   <script src="blogs/js/site-data-client.js?v=5320e49fbf"></script>
   <script src="blogs/js/blog-cover-media.js?v=f16969bf34"></script>
-  <script src="js/portfolio-blocks.js?v=0974f6aa67"></script>
+  <script src="js/portfolio-blocks.js?v=514e5a0bfe"></script>
   <script src="js/portfolio-content.js?v=a207587172"></script>
   <script src="js/portfolio-blog-preview.js?v=7a97ae5887"></script>
   <script type="module" src="js/about-portrait.js?v=eda91a256b"></script>
-  <script type="module" src="js/hero.js?v=a19db541f1"></script>
+  <script defer src="assets/js/hero-sculpture.js?v=336dba47b5"></script>
 
   <!-- Main JS File -->
   <script src="assets/js/main.js?v=995c2d3267"></script>
