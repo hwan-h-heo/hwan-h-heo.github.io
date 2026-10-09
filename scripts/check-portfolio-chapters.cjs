@@ -119,12 +119,13 @@ fs.mkdirSync(out,{recursive:true});
         assert.equal(await direct.evaluate(()=>performance.getEntriesByType('resource').some(item=>item.name.includes('/assets/js/hero-sculpture.js'))),false);
         assert.equal(await direct.evaluate(()=>portfolioHero.state().decoding.phase),'static');
         await direct.locator('#about .edition-next a[rel="next"]').click(); await direct.waitForFunction(()=>document.body.dataset.chapter==='home');
+        await direct.waitForFunction(()=>portfolioHero.state().ready && portfolioHero.state().settled);
         await direct.mouse.move(1200,250); await direct.waitForFunction(()=>portfolioHero.state().settled && portfolioHero.state().px>.5);
         assert.equal(await direct.evaluate(()=>portfolioHero.state().decoding.plays),0);
         await direct.close();
 
         const mobile=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
-        await mobile.goto(base); await mobile.waitForFunction(()=>portfolioHero.state().settled && portfolioHero.state().decoding?.phase==='static');
+        await mobile.goto(base); await mobile.waitForFunction(()=>portfolioHero.state().ready && portfolioHero.state().settled && portfolioHero.state().decoding?.phase==='static');
         const resting=await mobile.evaluate(()=>portfolioHero.state());
         await mobile.waitForTimeout(500); assert.equal((await mobile.evaluate(()=>portfolioHero.state())).frames,resting.frames);
         await mobile.screenshot({path:path.join(out,'v32-mobile-rest.png')});

@@ -85,11 +85,21 @@
                 body.classList.remove('edition-changing');
                 body.dataset.ready = 'true';
                 if (!focus && document.referrer && new URL(document.referrer).pathname !== '/') {
-                    try {
-                        const saved = JSON.parse(sessionStorage.getItem('portfolio-return-focus') || 'null');
-                        if (saved?.chapter === id) incoming.querySelector(`a[href="${CSS.escape(saved.href)}"]`)?.focus({preventScroll:true});
-                        sessionStorage.removeItem('portfolio-return-focus');
-                    } catch {}
+                    const restoreReturnFocus = () => {
+                        try {
+                            const saved = JSON.parse(sessionStorage.getItem('portfolio-return-focus') || 'null');
+                            sessionStorage.removeItem('portfolio-return-focus');
+                            // Native fragment navigation can focus the section at
+                            // load. Restore after it, without stealing newer input.
+                            const active = document.activeElement;
+                            if (current === id && saved?.chapter === id
+                                && [body, document.documentElement, incoming].includes(active)) {
+                                incoming.querySelector(`a[href="${CSS.escape(saved.href)}"]`)?.focus({preventScroll:true});
+                            }
+                        } catch {}
+                    };
+                    if (document.readyState === 'complete') restoreReturnFocus();
+                    else addEventListener('pageshow', restoreReturnFocus, {once:true});
                 }
                 if (focus) {
                     const destination = id === 'home' ? lastCoverLink : incoming.querySelector('h2');

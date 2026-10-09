@@ -58,8 +58,10 @@ fs.mkdirSync(out,{recursive:true});
             await page.waitForFunction(() => document.body.dataset.chapter === 'portfolio');
             assert.equal(await page.locator('#portfolio').getAttribute('data-portfolio-view'),'all');
             assert(Math.abs(await page.locator('#portfolio').evaluate(node => node.scrollTop)-before) < 4,'Reload must restore All view and scroll');
-            // A fresh URL from the detail header uses the same saved native scroll and filter.
-            await goto(page,'/'+href);
+            // Leave through the actual project link again so the return control
+            // can restore that departure's focus as well as scroll and filter.
+            await selectedLink.click();
+            await page.waitForURL(url => url.pathname.includes('/projects/'));
             await page.locator('.case-breadcrumb').click();
             await page.waitForFunction(() => document.body.dataset.chapter === 'portfolio');
             assert.equal(await page.locator('#portfolio').getAttribute('data-portfolio-view'),'all');
