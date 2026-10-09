@@ -34,10 +34,10 @@
   <script src="js/site-theme.js?v=0d82cf4a85"></script>
 
   <!-- Main CSS File -->
-  <link href="assets/css/portfolio.css?v=eb11a21519" rel="stylesheet">
+  <link href="assets/css/portfolio.css?v=6350213ea3" rel="stylesheet">
   <link href="assets/css/site-theme.css?v=447d8e8b5f" rel="stylesheet">
   <link href="assets/css/hero-sculpture.css?v=3c549372bf" rel="stylesheet">
-  <link href="assets/css/portfolio-chapters.css?v=8003f5a19a" rel="stylesheet">
+  <link href="assets/css/portfolio-chapters.css?v=2e384a76ae" rel="stylesheet">
   <link rel="preload" href="assets/hero/sculpture/fonts/manrope-variable.ttf" as="font" type="font/ttf" crossorigin>
 
 
@@ -50,7 +50,7 @@
       gtag('config', 'G-RF7ETSKPK9');
   </script>
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://hwan-h-heo.github.io/#person","name":"Hwan Heo","alternateName":"허환","url":"https://hwan-h-heo.github.io","jobTitle":"Lead 3D AI Research Engineer","worksFor":{"@type":"Organization","name":"NC AI"},"alumniOf":{"@type":"CollegeOrUniversity","name":"Korea University"},"sameAs":["https://scholar.google.com/citations?user=RulvYTkAAAAJ","https://github.com/hwanhuh","https://www.linkedin.com/in/hwan-heo-0905korea/"],"knowsAbout":["3D generative AI","Neural rendering","CUDA inference optimization","Computer graphics"]},{"@type":"ScholarlyArticle","name":"CaPa: Carve-n-Paint Synthesis for Efficient 4K Textured Mesh Generation","author":[{"@type":"Person","name":"Hwan Heo"},{"@type":"Person","name":"Jangyeong Kim"},{"@type":"Person","name":"Seongyeong Lee"},{"@type":"Person","name":"Jeong-A Wi"},{"@type":"Person","name":"Junyoung Choi"},{"@type":"Person","name":"Sangjun Ahn"}],"url":"https://arxiv.org/abs/2501.09433","isPartOf":{"@type":"CreativeWork","name":"Technical Report, Featured on Hugging Face Daily Papers, TLDR AI"}},{"@type":"ScholarlyArticle","name":"DreamSurfels: Generative Gaussian Surfels for Geometrically Accurate 3D Content Creation","author":[{"@type":"Person","name":"Hwan Heo"},{"@type":"Person","name":"Sangjun Ahn"}],"url":"https://hwan-h-heo.github.io/#portfolio","isPartOf":{"@type":"CreativeWork","name":"The 15th International Conference on ICT Convergence (ICTC), Oct 2024 Oral presentation, domestic conference"}},{"@type":"ScholarlyArticle","name":"Robust Camera Pose Refinement for Multi-Resolution Hash Encoding","author":[{"@type":"Person","name":"Hwan Heo"},{"@type":"Person","name":"Taekyung Kim"},{"@type":"Person","name":"J. Lee"},{"@type":"Person","name":"Jiyoung Lee"},{"@type":"Person","name":"Soohyun Kim"},{"@type":"Person","name":"Hyunwoo J. Kim"},{"@type":"Person","name":"Jin-Hwa Kim"}],"url":"https://dl.acm.org/doi/10.5555/3618408.3618936","isPartOf":{"@type":"CreativeWork","name":"The 40th International Conference on Machine Learning (ICML), Jul 2023"}},{"@type":"ScholarlyArticle","name":"Semantic-aware Occlusion Filtering Neural Radiance Fields in the Wild","author":[{"@type":"Person","name":"Jaewon Lee"},{"@type":"Person","name":"Injae Kim"},{"@type":"Person","name":"Hwan Heo"},{"@type":"Person","name":"Hyunwoo J. Kim"}],"url":"https://arxiv.org/abs/2303.03966","isPartOf":{"@type":"CreativeWork","name":"preprint, arXiv 2023"}}]}</script>
-    <meta name="site-deploy-version" content="f786aadf1249f249">
+    <meta name="site-deploy-version" content="159d64fea2cd4eea">
     <script defer src="/assets/js/deploy-refresh.js?v=ee9c6c8f26"></script>
 </head>
 
@@ -63,7 +63,7 @@
     <nav class="edition-nav" aria-label="Portfolio chapters">
       <a class="edition-nav-cover" href="#home"><span>00</span> Cover</a>
       <a class="edition-nav-work" href="#portfolio"><span>01</span> Projects</a>
-      <a class="edition-nav-work" href="#blog"><span>02</span> Blogs</a>
+      <a class="edition-nav-work" href="#blog"><span>02</span> Blog</a>
       <a href="#about"><span>03</span> About</a>
     </nav>
     <button class="edition-tone" type="button" aria-label="Switch to light theme" aria-pressed="true"><span class="edition-tone-icon" aria-hidden="true">◐</span><span class="edition-tone-label">Light</span></button>
@@ -71,7 +71,8 @@
   <div class="edition-status" aria-live="polite" aria-atomic="true"></div>
   <main class="main">
     <!-- Hero Section -->
-    <section id="home" class="pbr-hero" aria-label="Hwan Heo portfolio cover" data-portfolio-block="home" data-section-ready="false">
+    <div class="edition-story" data-chapter-story="home">
+      <section id="home" class="pbr-hero" aria-label="Hwan Heo portfolio cover" data-portfolio-block="home" data-section-ready="false">
             <picture class="pbr-poster">
                 <source media="(max-width:600px)" srcset="/assets/hero/sculpture/poster-390.webp">
                 <source media="(max-width:900px)" srcset="/assets/hero/sculpture/poster-768.webp">
@@ -100,20 +101,22 @@
         
             <a href="#blog" data-form="1">
                 <span class="pbr-action-index" aria-hidden="true">02</span>
-                <span class="pbr-action-label">Blogs</span>
+                <span class="pbr-action-label">Blog</span>
                 <span aria-hidden="true">↘</span>
             </a>
         </div>
                 </div>
             </div>
-            <div class="pbr-foot"><div class="pbr-foot-left">
-                <span>3D generation · Systems · Graphics</span>
+            <div class="pbr-controls">
                 <button class="pbr-motion" type="button" aria-pressed="true" hidden>Motion on</button>
-            </div></div>
+            </div>
+            <div class="pbr-foot"><span>3D generation · Systems · Graphics</span></div>
             <span class="edition-cover-folio" aria-hidden="true">00 — Cover</span>
         </section><!-- /Hero Section -->
+    </div>
 
     <!-- Portfolio Section -->
+    <div class="edition-story" data-chapter-story="portfolio">
     <section id="portfolio" aria-labelledby="edition-title-portfolio" tabindex="-1" class="portfolio section light-background edition-chapter" data-portfolio-view="selected" data-section-ready="false">
 
       <!-- Section Title -->
@@ -531,11 +534,13 @@
       </div>
       <nav class="edition-next" aria-label="Previous and next chapters">
         <a href="#home" rel="prev" aria-label="Previous chapter: Cover"><span class="edition-direction" aria-hidden="true">←</span><span class="edition-next-number">00</span> Cover</a>
-        <a href="#blog" rel="next" aria-label="Next chapter: Blogs"><span class="edition-next-number">02</span> Blogs<span class="edition-direction" aria-hidden="true">→</span></a>
+        <a href="#blog" rel="next" aria-label="Next chapter: Blog"><span class="edition-next-number">02</span> Blog<span class="edition-direction" aria-hidden="true">→</span></a>
       </nav>
       <footer class="edition-colophon"><p class="footer-note">A small collection of work, research, and ideas gathered along the way.</p></footer>
     </section>
+    </div>
     <!-- Blog Section -->
+    <div class="edition-story" data-chapter-story="blog">
     <section id="blog" aria-labelledby="edition-title-blog" tabindex="-1" class="portfolio-blog-section section light-background edition-chapter" data-section-ready="false">
       <!-- Section Title -->
       <div class="portfolio-shell section-title portfolio-blog-section-heading">
@@ -544,7 +549,7 @@
           <span class="portfolio-chapter-rule"></span>
         </div>
         <div class="portfolio-blog-heading-copy">
-          <h2 id="edition-title-blog" tabindex="-1">Blogs</h2>
+          <h2 id="edition-title-blog" tabindex="-1">Blog</h2>
           <p>Essays and technical notes on building 3D generative systems:<br/>from representations and model training to CUDA kernels, geometry processing, and production&nbsp;engineering.</p>
         </div>
         <a class="portfolio-blog-all-link" href="blogs/" target="_blank" rel="noopener noreferrer">
@@ -571,8 +576,10 @@
       </nav>
       <footer class="edition-colophon"><p class="footer-note">A small collection of work, research, and ideas gathered along the way.</p></footer>
     </section><!-- /Blog Section -->
+    </div>
 
     <!-- About Section -->
+    <div class="edition-story" data-chapter-story="about">
     <section id="about" aria-labelledby="edition-title-about" tabindex="-1" class="about section edition-chapter">
       <div data-portfolio-block="about" data-section-ready="false">
             <div class="portfolio-shell section-title about-section-heading">
@@ -603,8 +610,8 @@
                     <div class="content about-copy">
                         <p class="about-bio">At <strong>NC AI</strong>, I lead research and engineering for the <a href="https://3d.varco.ai/explore" target="_blank" rel="noopener noreferrer"><strong>VARCO 3D</strong></a>, developing production 3D AI systems across large-scale generative model training, inference optimization, and graphics algorithms.<br><br>When I'm away from CUDA kernels and mesh pipelines, I'm usually playing guitar, making music, or following an unexpected STEM rabbit hole.</p>
                         
-            <aside class="about-contact" aria-label="Contact">
-                <p class="about-contact-label">Contact</p>
+            <aside class="about-contact" aria-label="Contact and profiles">
+                <p class="about-contact-label">Contact &amp; profiles</p>
                 <div class="about-contact-links">
                 <a class="about-contact-link" href="mailto:hwan.heo.ai@gmail.com">
                     <svg class="site-icon about-contact-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope"></use></svg>
@@ -620,6 +627,24 @@
                     <span class="about-contact-copy">
                         <strong>LinkedIn</strong>
                         <small>hwan-heo-0905korea</small>
+                    </span>
+                    <svg class="site-icon about-contact-arrow" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
+                </a>
+            
+                <a class="about-contact-link" href="https://github.com/hwanhuh" target="_blank" rel="noopener noreferrer">
+                    <svg class="site-icon about-contact-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg>
+                    <span class="about-contact-copy">
+                        <strong>GitHub</strong>
+                        <small>hwanhuh</small>
+                    </span>
+                    <svg class="site-icon about-contact-arrow" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
+                </a>
+            
+                <a class="about-contact-link" href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" target="_blank" rel="noopener noreferrer">
+                    <svg class="site-icon about-contact-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg>
+                    <span class="about-contact-copy">
+                        <strong>Google Scholar</strong>
+                        <small>Publications &amp; citations</small>
                     </span>
                     <svg class="site-icon about-contact-arrow" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
                 </a>
@@ -739,21 +764,22 @@
             </div>
         </div>
       <nav class="edition-next" aria-label="Previous and next chapters">
-        <a href="#blog" rel="prev" aria-label="Previous chapter: Blogs"><span class="edition-direction" aria-hidden="true">←</span><span class="edition-next-number">02</span> Blogs</a>
+        <a href="#blog" rel="prev" aria-label="Previous chapter: Blog"><span class="edition-direction" aria-hidden="true">←</span><span class="edition-next-number">02</span> Blog</a>
         <a href="#home" rel="next" aria-label="Next chapter: Cover"><span class="edition-next-number">00</span> Cover<span class="edition-direction" aria-hidden="true">→</span></a>
       </nav>
       <footer class="edition-colophon"><p class="footer-note">A small collection of work, research, and ideas gathered along the way.</p></footer>
     </section><!-- /About Section -->
+    </div>
   </main>
 
   <div class="edition-footer" aria-hidden="true"><span>Hwan Heo / 3D AI</span><span class="edition-page-number">00 / 03</span></div>
   <script src="blogs/js/site-data-client.js?v=5320e49fbf"></script>
   <script src="blogs/js/blog-cover-media.js?v=f16969bf34"></script>
-  <script src="js/portfolio-blocks.js?v=39be71e955"></script>
+  <script src="js/portfolio-blocks.js?v=0ee27a37d7"></script>
   <script src="js/portfolio-content.js?v=5afb0f58ca"></script>
   <script src="js/portfolio-blog-preview.js?v=08a551feff"></script>
-  <script defer src="js/hero-loader.js?v=45a348eff3" data-bundle="/assets/js/hero-sculpture.js?v=46f2603253"></script>
-  <script src="js/portfolio-chapters.js?v=5899436fc6"></script>
+  <script defer src="js/hero-loader.js?v=45a348eff3" data-bundle="/assets/js/hero-sculpture.js?v=b83f522d90"></script>
+  <script src="js/portfolio-chapters.js?v=28efc612f3"></script>
   <script src="js/portfolio-media.js?v=e4651849b5"></script>
 
   <!-- Main JS File -->

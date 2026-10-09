@@ -64,10 +64,10 @@
                     <div class="pbr-actions">${renderHeroActions(block.actions)}</div>
                 </div>
             </div>
-            <div class="pbr-foot"><div class="pbr-foot-left">
-                <span>3D generation · Systems · Graphics</span>
+            <div class="pbr-controls">
                 <button class="pbr-motion" type="button" aria-pressed="true" hidden>Motion on</button>
-            </div></div>
+            </div>
+            <div class="pbr-foot"><span>3D generation · Systems · Graphics</span></div>
             <span class="edition-cover-folio" aria-hidden="true">00 — Cover</span>
         `;
     }
@@ -97,8 +97,8 @@
         }).join('');
 
         return `
-            <aside class="about-contact" aria-label="Contact">
-                <p class="about-contact-label">Contact</p>
+            <aside class="about-contact" aria-label="Contact and profiles">
+                <p class="about-contact-label">Contact &amp; profiles</p>
                 <div class="about-contact-links">${linkHtml}</div>
             </aside>
         `;

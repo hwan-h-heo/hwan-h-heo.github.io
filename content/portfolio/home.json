@@ -15,7 +15,7 @@
           "style": "section"
         },
         {
-          "label": "Blogs",
+          "label": "Blog",
           "url": "#blog",
           "style": "section"
         }
@@ -76,6 +76,18 @@
           "value": "hwan-heo-0905korea",
           "url": "https://www.linkedin.com/in/hwan-heo-0905korea/",
           "icon": "linkedin"
+        },
+        {
+          "label": "GitHub",
+          "value": "hwanhuh",
+          "url": "https://github.com/hwanhuh",
+          "icon": "github"
+        },
+        {
+          "label": "Google Scholar",
+          "value": "Publications & citations",
+          "url": "https://scholar.google.com/citations?user=RulvYTkAAAAJ",
+          "icon": "mortarboard-fill"
         }
       ]
     },
