@@ -67,8 +67,10 @@
             <div class="pbr-controls">
                 <button class="pbr-motion" type="button" aria-pressed="true" hidden>Motion on</button>
             </div>
-            <div class="pbr-foot"><span>3D Generation · Geometry · Systems</span></div>
-            <span class="edition-cover-folio" aria-hidden="true">00 — Cover</span>
+            <div class="edition-cover-footer">
+                <div class="pbr-foot"><span>3D Generation · Geometry · Systems</span></div>
+                <span class="edition-cover-folio" aria-hidden="true">00 — Cover</span>
+            </div>
         `;
     }
 
