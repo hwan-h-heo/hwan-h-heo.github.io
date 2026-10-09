@@ -120,76 +120,6 @@ function renderConditionalBodyScripts(runtimeFeatures) {
     return scripts.join('\n');
 }
 
-function renderPostSidebar(lang) {
-    const contentsLabel = lang === 'kor' ? '목차 열기' : 'Open contents';
-
-    return `    <header id="header" class="header blog-sidebar dark-background" data-sidebar-mode="rail">
-        <div class="profile-img">
-            <img src="/assets/icon.webp" alt="Portrait illustration of Hwan Heo">
-        </div>
-
-        <a href="/blogs/" class="logo">
-            <span class="sitename">Hwan's Blog</span>
-        </a>
-
-        <div class="social-links">
-            <a href="https://github.com/hwanhuh" aria-label="GitHub">${renderSiteIcon('github')}</a>
-            <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" aria-label="LinkedIn">${renderSiteIcon('linkedin')}</a>
-            <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" aria-label="Google Scholar">${renderSiteIcon('mortarboard-fill')}</a>
-            <a href="mailto:hwan.heo.ai@gmail.com" aria-label="Email">${renderSiteIcon('envelope-fill')}</a>
-        </div>
-
-        <nav id="navmenu" class="navmenu" aria-label="Blog navigation">
-            <ul>
-                <li>
-                    <a href="/blogs/" class="active" aria-current="location">
-                        ${renderSiteIcon('house', { className: 'navicon' })}
-                        <span>Blog Home</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/" class="sidebar-external-link">
-                        ${renderSiteIcon('briefcase', { className: 'navicon' })}
-                        <span>Portfolio</span>
-                        ${renderSiteIcon('box-arrow-up-right', { className: 'sidebar-external-icon' })}
-                    </a>
-                </li>
-            </ul>
-        </nav>
-
-        <div class="sidebar-labs">
-            <details class="sidebar-labs-menu">
-                <summary>
-                    ${renderSiteIcon('tools', { className: 'navicon' })}
-                    <span>Labs</span>
-                    ${renderSiteIcon('chevron-down', { className: 'sidebar-labs-chevron' })}
-                </summary>
-                <div class="sidebar-labs-panel">
-                    <div class="sidebar-rail-panel-heading" aria-hidden="true">
-                        <span>Labs / 02</span>
-                        <small>Tools &amp; experiments</small>
-                    </div>
-                    <a href="/blogs/3DViewer/">
-                        ${renderSiteIcon('box', { className: 'navicon' })}
-                        <span class="sidebar-labs-copy"><strong>3D Viewer</strong><small>Inspect 3D assets</small></span>
-                    </a>
-                    <a href="/blogs/editor/">
-                        ${renderSiteIcon('pencil-square', { className: 'navicon' })}
-                        <span class="sidebar-labs-copy"><strong>Markdown Editor</strong><small>Draft long-form posts</small></span>
-                    </a>
-                </div>
-            </details>
-        </div>
-
-        <div class="sidebar-contents">
-            <button class="sidebar-contents-toggle" type="button" aria-label="${contentsLabel}" aria-controls="post-toc" aria-expanded="false">
-                ${renderSiteIcon('list-ul', { className: 'navicon' })}
-                <span>Contents</span>
-            </button>
-        </div>
-    </header>`;
-}
-
 function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime, runtimeFeatures = {}, siteData }) {
     const activeRuntimeFeatures = {
         katex: Boolean(runtimeFeatures.katex),
@@ -311,7 +241,7 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
     };
 
     return `<!DOCTYPE html>
-<html lang="${lang === 'eng' ? 'en' : 'ko'}" class="sidebar-collapsed blog-sidebar-rail">
+<html lang="${lang === 'eng' ? 'en' : 'ko'}">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -340,13 +270,10 @@ ${alternateLinksHtml}
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link href="/blogs/css/blog.css" rel="stylesheet" />
-    <link href="/blogs/css/sidebar.css" rel="stylesheet" />
-    <link href="/css/sidebar-nav.css" rel="stylesheet" />
     <link href="/blogs/css/typography.css" rel="stylesheet" />
     <link href="/blogs/css/post.css" rel="stylesheet" />
     <link href="/assets/css/site-icons.css" rel="stylesheet" />
     <script src="/assets/js/site-icons.js"></script>
-    <script src="/js/sidebar-controller.js" data-sidebar-mode="rail"></script>
 ${renderConditionalHeadAssets(activeRuntimeFeatures)}
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
@@ -356,28 +283,33 @@ ${renderConditionalHeadAssets(activeRuntimeFeatures)}
         gtag('js', new Date());
         gtag('config', 'G-RF7ETSKPK9');
     </script>
-        <script>
-            (function() {
-                try {
-                    const storedTheme = localStorage.getItem('blog-theme');
-                    const theme = storedTheme === 'dark' || storedTheme === 'light' ? storedTheme : 'light';
-                    document.documentElement.dataset.theme = theme;
-                } catch (error) {}
-            })();
-        </script>
+        <script src="/js/site-theme.js"></script>
+    <link href="/assets/css/site-theme.css" rel="stylesheet">
+    <link href="/blogs/css/site-reading.css" rel="stylesheet">
 </head>
-<body class="blog-post-page">
-${renderPostSidebar(lang)}
+<body class="blog-post-page site-reading">
 
     <main class="main blog-post-main">
         <nav class="post-site-nav" id="mainNav" aria-label="Post utilities">
             <div class="blog-shell">
                 <div class="post-reading-row">
                     <div class="post-reading-column post-utility-column">
-                        <a class="post-nav-home" href="/blogs/" aria-label="Back to Blog Home">
-                            ${renderSiteIcon('arrow-left')}
-                            <span>Blog Home</span>
-                        </a>
+                        <div class="blog-utility-start">
+                            <a class="post-nav-home" href="/blogs/" aria-label="Back to Blog Home">
+                                ${renderSiteIcon('arrow-left')}
+                                <span class="post-nav-home-label">Blog<span class="post-nav-home-suffix"> Home</span></span>
+                            </a>
+                            <div class="blog-destinations">
+                                <a href="/">Portfolio</a>
+                                <details class="blog-labs">
+                                    <summary>Labs</summary>
+                                    <div class="blog-labs-panel">
+                                        <a href="/blogs/3DViewer/">3D Viewer</a>
+                                        <a href="/blogs/editor/">Markdown Editor</a>
+                                    </div>
+                                </details>
+                            </div>
+                        </div>
                         <ul class="post-nav-actions">
                             <li class="post-nav-action post-nav-search-item">
                                 <form id="post-nav-search-form" class="post-nav-search" role="search" data-collapsible-search>
@@ -479,6 +411,10 @@ ${renderPostSidebar(lang)}
                 <div class="post-reading-row">
                     <div class="post-reading-column">
                         <div class="blog-footer-note">Copyright © Hwan Heo</div>
+                        <nav class="blog-publication-links" aria-label="Publication links">
+                            <a href="/blogs/">Blog Home</a>
+                            <a href="/">Portfolio ↗</a>
+                        </nav>
                     </div>
                 </div>
             </div>

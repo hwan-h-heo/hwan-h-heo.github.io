@@ -20,6 +20,10 @@
           "style": "section"
         }
       ],
+      "profileLink": {
+        "label": "About me",
+        "url": "#about"
+      },
       "links": [
         {
           "label": "GitHub",

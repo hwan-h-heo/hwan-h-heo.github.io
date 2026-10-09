@@ -2354,6 +2354,10 @@ html[lang="ko"] .blog-home-hero h1 {
     padding: 0;
 }
 
+.blog-feature-copy > * {
+    flex-shrink: 0;
+}
+
 .blog-feature-copy.is-height-fitted .blog-feature-read {
     margin-top: auto;
 }
@@ -2449,7 +2453,7 @@ html[lang="ko"] .blog-home-hero h1 {
 .blog-feature-subtitle {
     display: block;
     max-width: 100%;
-    margin: 0.42rem 0 0;
+    margin: 1rem 0 0;
     color: #48515f;
     font-size: 0.9rem;
     line-height: 1.58;
@@ -2469,6 +2473,7 @@ html[lang="ko"] .blog-home-hero h1 {
 
 .blog-feature-copy .post-tag-row {
     margin-top: 0.26rem;
+    font-size: 0.66rem;
     line-height: 1.3;
 }
 
@@ -3541,7 +3546,7 @@ html[lang="ko"] .blog-home-hero h1 {
 
     .blog-feature-subtitle {
         display: block;
-        margin-top: 0.42rem;
+        margin-top: 0.75rem;
         font-size: 0.84rem;
     }
 
@@ -3620,7 +3625,8 @@ html[data-theme="dark"] #copyButton {
     box-shadow: none;
 }
 
-html[data-theme="dark"] #copyButton:hover {
+html[data-theme="dark"] #copyButton:hover,
+html[data-theme="dark"] #copyButton:focus-visible {
     border-color: rgba(77, 215, 180, 0.3);
     color: #8debd3;
     background: rgba(21, 30, 41, 0.96);

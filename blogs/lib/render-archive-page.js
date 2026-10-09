@@ -73,27 +73,32 @@ function renderArchivePage({ title, description, canonicalPath, posts, siteData,
         <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <link href="/blogs/css/blog.css" rel="stylesheet" />
-        <link href="/blogs/css/sidebar.css" rel="stylesheet" />
         <link href="/blogs/css/typography.css" rel="stylesheet" />
         <link href="/assets/css/site-icons.css" rel="stylesheet" />
         <script src="/assets/js/site-icons.js"></script>
-        <script>
-            (function() {
-                try {
-                    const storedTheme = localStorage.getItem('blog-theme');
-                    const theme = storedTheme === 'dark' || storedTheme === 'light' ? storedTheme : 'light';
-                    document.documentElement.dataset.theme = theme;
-                } catch (error) {}
-            })();
-        </script>
+        <script src="/js/site-theme.js"></script>
+        <link href="/assets/css/site-theme.css" rel="stylesheet">
+        <link href="/blogs/css/site-reading.css" rel="stylesheet">
     </head>
-    <body class="blog-home-page blog-archive-page">
+    <body class="blog-home-page blog-archive-page site-reading">
         <main class="main blog-home-main">
             <nav class="blog-home-topbar" id="blogHomeTopbar" aria-label="Blog utilities">
-                <a class="blog-home-back" href="/blogs/" aria-label="Back to blog home">
-                    ${renderSiteIcon('arrow-left')}
-                    <span>Blog</span>
-                </a>
+                <div class="blog-utility-start">
+                    <a class="blog-home-back" href="/blogs/" aria-label="Back to blog home">
+                        ${renderSiteIcon('arrow-left')}
+                        <span>Blog</span>
+                    </a>
+                    <div class="blog-destinations">
+                        <a href="/">Portfolio</a>
+                        <details class="blog-labs">
+                            <summary>Labs</summary>
+                            <div class="blog-labs-panel">
+                                <a href="/blogs/3DViewer/">3D Viewer</a>
+                                <a href="/blogs/editor/">Markdown Editor</a>
+                            </div>
+                        </details>
+                    </div>
+                </div>
                 <div class="blog-home-toolbar-actions">
                     <form id="blog-home-search-form" class="blog-home-search" role="search" data-collapsible-search>
                         <label class="visually-hidden" for="blog-home-search-input">Search posts</label>

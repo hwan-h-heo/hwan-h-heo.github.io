@@ -59,7 +59,7 @@ function createCases(siteData) {
             id: 'portfolio',
             path: '/',
             type: 'portfolio',
-            coreSelectors: ['#home', '#about', '#portfolio-projects', '#portfolio-blog-posts'],
+            coreSelectors: ['#home', '.edition-header', '.pbr-actions'],
             widths: responsiveWidths.portfolio
         },
         {
@@ -402,6 +402,11 @@ async function inspectLayout(page, testCase, width) {
 }
 
 async function assertSiteIcons(page, testCase) {
+    if (testCase.type === 'portfolio' && await page.evaluate(() => document.body.dataset.chapter === 'home')) return;
+    if (testCase.type === 'project') {
+        assert(await page.locator('.edition-nav a').count() === 4, 'Project chapter navigation is incomplete.');
+        return;
+    }
     const state = await page.evaluate((pageType) => {
         const iconRoots = [document, ...Array.from(document.querySelectorAll('*'))
             .map((element) => element.shadowRoot)
@@ -440,7 +445,7 @@ async function assertSiteIcons(page, testCase) {
             return fill === 'none' || fill === 'rgba(0, 0, 0, 0)';
         }).length;
         const keySelector = {
-            portfolio: '#navmenu .navicon',
+            portfolio: '.edition-nav',
             project: '#navmenu .navicon',
             'blog-home': '.blog-home-search .site-icon',
             'blog-search': '.blog-home-search .site-icon',
@@ -579,8 +584,9 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
             return {
                 backgroundImage: hero ? getComputedStyle(hero).backgroundImage : '',
                 heroHeight: hero?.getBoundingClientRect().height || Number.POSITIVE_INFINITY,
-                technicalVisualsHidden: visuals.length === 3
-                    && visuals.every((visual) => getComputedStyle(visual).display === 'none'),
+                technicalVisualsHidden: visuals.length === 3 && visuals.every((visual) => getComputedStyle(visual).display === 'none'),
+                sharedScene: getComputedStyle(document.body, '::before').backgroundImage.includes('/assets/hero/sculpture/poster-')
+                    && getComputedStyle(hero).backgroundColor === 'rgb(16, 16, 17)',
                 featureOpeningGap: featureLabel && hero
                     ? featureLabel.getBoundingClientRect().top - hero.getBoundingClientRect().bottom
                     : Number.NEGATIVE_INFINITY,
@@ -602,7 +608,7 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
                     : false
             };
         });
-        assert(compactHeroState.backgroundImage === 'none', 'Compact Blog hero restored a photographic background.');
+        assert(compactHeroState.backgroundImage === 'none' && compactHeroState.sharedScene, 'Compact Blog banner or its underlying sculpture backdrop is missing.');
         assert(compactHeroState.heroHeight <= 400, `Compact Blog hero grew beyond 400px: ${compactHeroState.heroHeight}px.`);
         assert(compactHeroState.featureOpeningGap >= 30, `Compact Featured begins too close to the Hero: ${compactHeroState.featureOpeningGap}px.`);
         assert(
@@ -679,9 +685,6 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
         heroIntroRange.selectNodeContents(heroIntro);
         const heroTitleRange = document.createRange();
         heroTitleRange.selectNodeContents(heroTitle);
-        const heroHierarchyVisual = document.querySelector('.blog-editorial-visual--hierarchy');
-        const heroSparseVisual = document.querySelector('.blog-editorial-visual--sparse');
-        const heroVarcoVisual = document.querySelector('.blog-editorial-visual--varco');
         const heroByline = document.querySelector('.blog-publication-byline');
         const siteData = await fetch('/blogs/data/site-data.json').then((response) => response.json());
         const featuredPostId = siteData.blogHome?.featuredPostId || '';
@@ -740,21 +743,19 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
                 range.selectNodeContents(heroTitle);
                 return range.getClientRects().length;
             })(),
-            heroHierarchyVisualBackgroundImage: heroHierarchyVisual ? getComputedStyle(heroHierarchyVisual).backgroundImage : '',
-            heroHierarchyVisualDisplay: heroHierarchyVisual ? getComputedStyle(heroHierarchyVisual).display : '',
-            heroSparseVisualBackgroundImage: heroSparseVisual ? getComputedStyle(heroSparseVisual).backgroundImage : '',
-            heroSparseVisualDisplay: heroSparseVisual ? getComputedStyle(heroSparseVisual).display : '',
-            heroVarcoVisualBackgroundImage: heroVarcoVisual ? getComputedStyle(heroVarcoVisual).backgroundImage : '',
-            heroVarcoVisualDisplay: heroVarcoVisual ? getComputedStyle(heroVarcoVisual).display : '',
-            heroOverlayBackground: hero ? getComputedStyle(hero, '::before').backgroundImage : '',
-            heroVisualsFillBackground: heroHierarchyVisual && heroSparseVisual && heroVarcoVisual && hero && heroCopy
-                ? Math.abs(heroHierarchyVisual.getBoundingClientRect().left - hero.getBoundingClientRect().left) <= 0.5
-                    && Math.abs(heroVarcoVisual.getBoundingClientRect().right - heroCopy.getBoundingClientRect().right) <= 0.5
-                    && Math.abs(heroHierarchyVisual.getBoundingClientRect().width - heroVarcoVisual.getBoundingClientRect().width) <= 0.5
-                    && Math.abs(heroHierarchyVisual.getBoundingClientRect().right - heroVarcoVisual.getBoundingClientRect().left) <= 0.5
-                    && heroSparseVisual.getBoundingClientRect().left < heroHierarchyVisual.getBoundingClientRect().right
-                    && heroSparseVisual.getBoundingClientRect().right > heroVarcoVisual.getBoundingClientRect().left
-                : false,
+            sharedScene: getComputedStyle(document.body, '::before').backgroundImage.includes('/assets/hero/sculpture/poster-')
+                && getComputedStyle(document.body, '::before').position === 'fixed'
+                && getComputedStyle(document.body, '::before').pointerEvents === 'none'
+                && !document.querySelector('.pbr-scene'),
+            restoredBanner: getComputedStyle(hero).backgroundColor === 'rgb(16, 16, 17)'
+                && getComputedStyle(hero, '::before').backgroundImage.includes('linear-gradient')
+                && ['hierarchy', 'sparse', 'varco'].every((name, index) => {
+                    const visual = hero.querySelector(`.blog-editorial-visual--${name}`);
+                    const assets = ['hero-frame-3-30.webp', 'sparse-pipeline.png', 'remote-d832175607cd.png'];
+                    return visual && getComputedStyle(visual).display === 'block'
+                        && getComputedStyle(visual).backgroundImage.includes(assets[index]);
+                }),
+            expectedTitleColor: 'rgba(240, 241, 243, 0.88)',
             heroDeckIsBelowTitle: heroTitle && heroIntro
                 ? heroIntro.getBoundingClientRect().top >= heroTitle.getBoundingClientRect().bottom
                 : false,
@@ -845,23 +846,17 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
     assert(initialTitleState.heroByline === 'Written by / Hwan Heo', 'Blog editorial-cover author byline is missing or changed.');
     assert(initialTitleState.articlesChapter === '02 Articles', 'Blog Home writing chapter is no longer labeled 02 Articles.');
     assert(initialTitleState.heroTitleLineCount === 1, 'Wide Blog editorial-cover title is no longer a single line.');
-    assert(initialTitleState.heroSearchClearsTitle, 'Wide Blog utility search overlaps the Hero title field.');
+    assert(await page.evaluate(() => {
+        const title = document.querySelector('.blog-home-hero-copy h1').getBoundingClientRect();
+        const search = document.querySelector('.blog-home-search').getBoundingClientRect();
+        return Math.min(title.right,search.right)-Math.max(title.left,search.left)<=1 || Math.min(title.bottom,search.bottom)-Math.max(title.top,search.top)<=1;
+    }), 'Wide Blog utility search overlaps the Hero title.');
     assert(
-        initialTitleState.heroTitleColor === 'rgba(240, 241, 243, 0.88)',
-        'Blog Hero title no longer shares the Portfolio Hero name color.'
+        initialTitleState.heroTitleColor === initialTitleState.expectedTitleColor,
+        'Blog banner title lost its original light-on-dark treatment.'
     );
     assert(initialTitleState.heroIntroLineCount === 1, 'Wide Blog editorial-cover standfirst is no longer a single line.');
-    assert(
-        initialTitleState.heroHierarchyVisualDisplay === 'block'
-            && initialTitleState.heroHierarchyVisualBackgroundImage.includes('hero-frame-3-30.webp')
-            && initialTitleState.heroSparseVisualDisplay === 'block'
-            && initialTitleState.heroSparseVisualBackgroundImage.includes('sparse-pipeline.png')
-            && initialTitleState.heroVarcoVisualDisplay === 'block'
-            && initialTitleState.heroVarcoVisualBackgroundImage.includes('remote-d832175607cd.png'),
-        'Wide Blog editorial-cover technical edge crops are missing.'
-    );
-    assert(initialTitleState.heroVisualsFillBackground, 'Blog editorial-cover images no longer split the left-to-copy-edge background stage.');
-    assert(initialTitleState.heroOverlayBackground.includes('linear-gradient'), 'Blog editorial-cover images lost their dark contrast overlay.');
+    assert(initialTitleState.sharedScene && initialTitleState.restoredBanner, 'Blog must retain its original collage banner above the static sculpture reading backdrop.');
     assert(initialTitleState.heroDeckIsBelowTitle, 'Wide Blog hero standfirst no longer sits beneath its title.');
     assert(initialTitleState.heroBylineFollowsDeck, 'Wide Blog hero byline no longer follows the standfirst on a right-aligned line.');
     assert(
@@ -872,7 +867,7 @@ async function assertBlogHomeInteractions(page, testCase, width, options) {
         initialTitleState.tabControlCount === 2 && !initialTitleState.hasNotesTab,
         'Blog home must expose only the Posts and Series tabs.'
     );
-    assert(initialTitleState.featureStartsAfterHero, 'Featured media moved into or behind the image-free editorial cover.');
+    assert(initialTitleState.featureStartsAfterHero, 'Featured media moved into or behind the editorial opening.');
     assert(initialTitleState.featureOpeningGap >= 56, `Featured begins too close to the Hero: ${initialTitleState.featureOpeningGap}px.`);
     assert(
         Math.abs(initialTitleState.featureOpeningGap - initialTitleState.standfirstToHeroEdge) <= 0.5,
@@ -1007,6 +1002,14 @@ async function assertPostNavigation(page, width) {
         const bodyStyle = getComputedStyle(document.body);
         const masthead = document.querySelector('.post-masthead');
         const mastheadStyle = getComputedStyle(masthead);
+        // Transparent article openings inherit the plain reading surface.
+        function visibleBackground(element) {
+            for (let node = element; node; node = node.parentElement) {
+                const color = getComputedStyle(node).backgroundColor;
+                if (color !== 'transparent' && color !== 'rgba(0, 0, 0, 0)') return color;
+            }
+            return 'rgba(0, 0, 0, 0)';
+        }
         const sidebar = document.querySelector('#header');
         const sidebarToggle = document.querySelector('.sidebar-mobile-toggle');
         const mainContent = document.querySelector('.main-content');
@@ -1078,7 +1081,7 @@ async function assertPostNavigation(page, width) {
             introHasAccentRule: getComputedStyle(introDeck, '::before').content !== 'none',
             languageVisible: getComputedStyle(document.querySelector('[data-language-target]')).display !== 'none',
             mainWidth: mainContent?.getBoundingClientRect().width || 0,
-            mastheadBackground: mastheadStyle.backgroundColor,
+            mastheadBackground: visibleBackground(masthead),
             mastheadBorderBottom: mastheadStyle.borderBottomWidth,
             pageBackground: bodyStyle.backgroundColor,
             postHomeVisible: Boolean(postHomeLink && getComputedStyle(postHomeLink).display !== 'none'),
@@ -1094,7 +1097,7 @@ async function assertPostNavigation(page, width) {
             seriesLinkHref: seriesLink?.getAttribute('href') || '',
             seriesLinkDecoration: seriesLink ? getComputedStyle(seriesLink).textDecorationLine : '',
             sidebarRight: sidebar?.getBoundingClientRect().right || 0,
-            sidebarToggleVisible: getComputedStyle(sidebarToggle).display !== 'none',
+            sidebarToggleVisible: Boolean(sidebarToggle && getComputedStyle(sidebarToggle).display !== 'none'),
             themeVisible: getComputedStyle(document.querySelector('[data-theme-toggle]')).display !== 'none',
             topicAfterDeck,
             topicColor: heroTopic ? getComputedStyle(heroTopic).color : '',
@@ -1155,7 +1158,7 @@ async function assertPostNavigation(page, width) {
     );
     assert(
         state.titleFontFamily.includes('Manrope')
-            && state.titleFontWeight === '700'
+            && state.titleFontWeight === '650'
             && ['0px', 'normal'].includes(state.titleLetterSpacing)
             && state.titleTextWrap === 'balance',
         `Post title no longer matches project-detail typography: ${JSON.stringify({
@@ -1183,17 +1186,8 @@ async function assertPostNavigation(page, width) {
         assert(state.heroWidth > state.mainWidth + 40, 'Post opening no longer widens beyond the article reading measure.');
     }
 
-    if (width < 1200) {
-        assert(
-            !state.sidebarToggleVisible && state.sidebarRight <= 2 && state.postHomeVisible,
-            'Compact post utility row did not replace the sidebar trigger with Blog Home.'
-        );
-    } else {
-        assert(
-            !state.sidebarToggleVisible && state.sidebarRight > 60 && !state.postHomeVisible,
-            'Desktop post sidebar or compact-only Blog Home state is incorrect.'
-        );
-    }
+    assert(!state.sidebarToggleVisible && state.sidebarRight === 0 && state.postHomeVisible,
+        'The independent post must expose Blog Home without a sidebar at every width.');
 }
 
 async function assertBlogArchiveUtilities(page, testCase, width) {
@@ -1222,7 +1216,8 @@ async function assertBlogArchiveUtilities(page, testCase, width) {
             countRadius: countStyle?.borderRadius || '',
             editorialHero: Boolean(hero)
                 && getComputedStyle(hero).backgroundImage === 'none'
-                && getComputedStyle(hero).backgroundColor === 'rgb(16, 16, 17)',
+                && getComputedStyle(hero).backgroundColor === 'rgba(0, 0, 0, 0)'
+                && getComputedStyle(document.body, '::before').backgroundImage.includes('/assets/hero/sculpture/poster-'),
             editorialImprint: document.querySelector('.blog-editorial-imprint')?.textContent.replace(/\s+/g, ' ').trim() || '',
             editorialSectionHeading: sectionHeading?.textContent.replace(/\s+/g, ' ').trim() || '',
             previewHierarchyValid: previews.every((card) => {
@@ -1274,7 +1269,7 @@ async function assertBlogArchiveUtilities(page, testCase, width) {
             && state.searchBackground === 'rgba(0, 0, 0, 0)',
         `${testCase.id} restored the legacy pill search field.`
     );
-    assert(state.editorialHero, `${testCase.id} did not adopt the dark editorial utility cover.`);
+    assert(state.editorialHero, `${testCase.id} does not share the sculpture scene with the reading surface.`);
     assert(
         state.editorialImprint.startsWith(testCase.type === 'blog-search'
             ? '00 / Search Index'
@@ -1358,16 +1353,16 @@ async function assertPostInteractions(page, testCase, width, options) {
     }
 
     if (width === 390 || width === 1440) {
+        assert(await page.locator('.edition-header').count() === 0, 'Blog posts must keep only their own navigation.');
         await page.evaluate(() => {
-            const masthead = document.querySelector('.masthead');
-            const headerHeight = masthead?.offsetHeight || 260;
+            const headerHeight = document.querySelector('.masthead')?.offsetHeight || 260;
             const pinStart = Math.max(96, Math.min(headerHeight * 0.5, headerHeight - 72));
             window.scrollTo(0, pinStart + 12);
         });
         await page.waitForFunction(() => document.querySelector('#mainNav')?.classList.contains('is-fixed'));
-        const hiddenNavBottom = await page.locator('#mainNav').evaluate((element) => element.getBoundingClientRect().bottom);
+        const hiddenNavBottom = await page.locator('#mainNav').evaluate(element => element.getBoundingClientRect().bottom);
         assert(hiddenNavBottom <= 1, 'Post utility row flashes into view when first entering its fixed state.');
-        await page.evaluate(() => window.scrollTo(0, 0));
+        await page.evaluate(() => window.scrollTo(0,0));
         await page.waitForFunction(() => !document.querySelector('#mainNav')?.classList.contains('is-fixed'));
     }
 
@@ -1447,6 +1442,11 @@ async function assertNestedToc(page, testCase) {
             window.scrollTo(0, target.getBoundingClientRect().top + window.scrollY - 180);
         }
     }, initialState.targetId);
+    if (page.viewportSize().width < 1600) {
+        await page.locator('.post-contents').evaluate(el => { el.open = true; });
+        assert(await page.locator(`.post-contents a[href="#${initialState.targetId}"]`).isVisible(), 'Nested compact Contents link is hidden.');
+        return;
+    }
     await page.waitForFunction((targetId) => {
         const childItem = document.querySelector(`.toc a[href="#${CSS.escape(targetId)}"]`)?.closest('li');
         const parentItem = childItem?.parentElement?.closest('li');
@@ -1531,159 +1531,44 @@ async function assertLightbox(page, testCase, width, options) {
 }
 
 async function assertSharedSidebar(page, testCase, width, options) {
-    const railOnlyTypes = ['blog-home', 'post', 'viewer', 'editor'];
-    const checksCompactSidebar = width === 390 && ['project', 'post'].includes(testCase.type);
-    const checksDesktopSidebar = width === 1200 && (testCase.type === 'project' || railOnlyTypes.includes(testCase.type));
-    if (!checksCompactSidebar && !checksDesktopSidebar) {
+    if (testCase.type === 'project') {
+        assert(await page.locator('.edition-header').isVisible(), 'Project reading header is missing.');
+        assert(await page.locator('.sidebar-mobile-toggle').count() === 0, 'Project restored a second navigation control.');
         return;
     }
-
-    if (width < 1200) {
-        if (testCase.type === 'post') {
-            const compactState = await page.evaluate(() => ({
-                homeVisible: getComputedStyle(document.querySelector('.post-nav-home')).display !== 'none',
-                toggleVisible: getComputedStyle(document.querySelector('.sidebar-mobile-toggle')).display !== 'none'
-            }));
-            assert(compactState.homeVisible && !compactState.toggleVisible, 'Compact post restored the conflicting mobile sidebar trigger.');
-            return;
+    const isPost = testCase.type.endsWith('post');
+    if (testCase.type === 'blog-home' || isPost) {
+        assert(await page.locator('#header,.sidebar-mobile-toggle,.edition-header').count() === 0,
+            'The publication restored portfolio navigation.');
+        assert(await page.locator('.main').evaluate(el => getComputedStyle(el).marginLeft === '0px'),
+            'The publication still reserves space for a sidebar.');
+        if (isPost) {
+            assert(await page.locator('.post-nav-home').isVisible(), 'Blog Home is missing from the original utility row.');
+            const contents = page.locator('.post-contents');
+            if (width < 1600 && await contents.count()) {
+                await contents.locator('summary').click();
+                assert(await contents.locator('nav').isVisible(), 'Compact Contents did not open.');
+                await contents.locator('summary').click();
+            }
         }
-        const toggle = page.locator('.sidebar-mobile-toggle');
-        await toggle.click();
-        const openState = await page.evaluate(() => {
-            const header = document.querySelector('#header');
-            const nav = document.querySelector('#mainNav');
-            const toggleButton = document.querySelector('.sidebar-mobile-toggle');
-            return {
-                expanded: toggleButton?.getAttribute('aria-expanded'),
-                headerOpen: header?.classList.contains('header-show'),
-                headerZ: Number.parseInt(getComputedStyle(header).zIndex, 10) || 0,
-                icon: toggleButton?.querySelector('.site-icon use')?.getAttribute('href'),
-                navFixed: Boolean(nav?.classList.contains('is-fixed')),
-                navZ: nav ? Number.parseInt(getComputedStyle(nav).zIndex, 10) || 0 : 0,
-                overlayZ: Number.parseInt(getComputedStyle(document.body, '::before').zIndex, 10) || 0,
-                rootOpen: document.documentElement.classList.contains('sidebar-mobile-open'),
-                toggleZ: Number.parseInt(getComputedStyle(toggleButton).zIndex, 10) || 0
-            };
-        });
-        assert(openState.expanded === 'true' && openState.headerOpen && openState.rootOpen, `${testCase.id} mobile sidebar did not open.`);
-        assert(openState.icon?.endsWith('#icon-x'), 'Shared mobile sidebar did not switch to its close icon.');
-        await captureScreenshot(page, testCase, width, 'sidebar-open', options);
-        await page.keyboard.press('Escape');
-        const closedState = await page.evaluate(() => ({
-            expanded: document.querySelector('.sidebar-mobile-toggle')?.getAttribute('aria-expanded'),
-            focused: document.activeElement === document.querySelector('.sidebar-mobile-toggle'),
-            headerOpen: document.querySelector('#header')?.classList.contains('header-show'),
-            icon: document.querySelector('.sidebar-mobile-toggle .site-icon use')?.getAttribute('href')
-        }));
-        assert(closedState.expanded === 'false' && !closedState.headerOpen && closedState.focused, 'Escape did not close the mobile sidebar and restore focus.');
-        assert(closedState.icon?.endsWith('#icon-list'), 'Shared mobile sidebar did not restore its menu icon.');
         return;
     }
-
-    if (railOnlyTypes.includes(testCase.type)) {
-        const railState = await page.evaluate(() => {
-            const header = document.querySelector('#header');
-            return {
-                collapsed: document.documentElement.classList.contains('sidebar-collapsed'),
-                headerWidth: header?.getBoundingClientRect().width || 0,
-                collapseToggleCount: document.querySelectorAll('.sidebar-collapse-toggle').length
-            };
-        });
-        assert(
-            railState.collapsed && railState.headerWidth <= 80 && railState.collapseToggleCount === 0,
-            `${testCase.id} sidebar is no longer a fixed desktop rail: ${JSON.stringify(railState)}`
-        );
-
-        const labsSummary = page.locator('.sidebar-labs-menu > summary');
-        await labsSummary.click();
-        const collapsedLabsState = await page.evaluate(() => {
-            const header = document.querySelector('#header');
-            const menu = document.querySelector('.sidebar-labs-menu');
-            const panel = menu?.querySelector('.sidebar-labs-panel');
-            const headerRect = header?.getBoundingClientRect();
-            const panelRect = panel?.getBoundingClientRect();
-            return {
-                collapsed: document.documentElement.classList.contains('sidebar-collapsed'),
-                headerWidth: headerRect?.width || 0,
-                open: Boolean(menu?.open),
-                panelDisplay: panel ? getComputedStyle(panel).display : 'none',
-                panelLeft: panelRect?.left || 0,
-                sidebarRight: headerRect?.right || 0
-            };
-        });
-        assert(
-            collapsedLabsState.collapsed
-                && collapsedLabsState.headerWidth <= 80
-                && collapsedLabsState.open
-                && collapsedLabsState.panelDisplay === 'grid'
-                && collapsedLabsState.panelLeft >= collapsedLabsState.sidebarRight - 1,
-            `Collapsed Labs did not open as a rail overlay: ${JSON.stringify(collapsedLabsState)}`
-        );
-        await page.keyboard.press('Escape');
-        assert(
-            await page.locator('.sidebar-labs-menu').evaluate((element) => !element.open && document.activeElement === element.querySelector('summary')),
-            'Escape did not close the collapsed Labs overlay and restore focus.'
-        );
-
-        if (testCase.type !== 'post') {
-            return;
-        }
-
-        const contentsToggle = page.locator('.sidebar-contents-toggle');
-        await contentsToggle.click();
-        const contentsState = await page.evaluate(() => {
-            const header = document.querySelector('#header');
-            const toc = document.querySelector('.toc');
-            const tocRect = toc?.getBoundingClientRect();
-            return {
-                expanded: document.querySelector('.sidebar-contents-toggle')?.getAttribute('aria-expanded'),
-                visible: toc?.classList.contains('is-visible'),
-                ariaHidden: toc?.getAttribute('aria-hidden'),
-                tocLeft: tocRect?.left || 0,
-                sidebarRight: header?.getBoundingClientRect().right || 0
-            };
-        });
-        assert(
-            contentsState.expanded === 'true'
-                && contentsState.visible
-                && contentsState.ariaHidden === 'false'
-                && contentsState.tocLeft >= contentsState.sidebarRight - 1,
-            `Post Contents did not open as a rail flyout: ${JSON.stringify(contentsState)}`
-        );
-
-        await page.keyboard.press('Escape');
-        assert(
-            await contentsToggle.evaluate((element) => element.getAttribute('aria-expanded') === 'false' && document.activeElement === element),
-            'Escape did not close the Contents flyout and restore focus.'
-        );
-        await page.evaluate(() => window.scrollTo(0, 0));
+    if (width !== 1200 || !['viewer', 'editor'].includes(testCase.type)) {
         return;
     }
-
-    const collapseToggle = page.locator('.sidebar-collapse-toggle');
-    assert(await collapseToggle.getAttribute('aria-expanded') === 'false', 'Desktop sidebar did not honor its default collapsed preference.');
-    await collapseToggle.click();
-    await page.waitForFunction(() => {
-        const header = document.querySelector('#header');
-        const main = document.querySelector('.header ~ main');
-        return !document.documentElement.classList.contains('sidebar-collapsed')
-            && (header?.getBoundingClientRect().right || 0) > 250
-            && (main?.getBoundingClientRect().left || 0) >= (header?.getBoundingClientRect().right || 0) - 2;
-    });
-    const expandedState = await page.evaluate(() => {
-        const header = document.querySelector('#header');
-        const main = document.querySelector('.header ~ main');
-        return {
-            collapsed: document.documentElement.classList.contains('sidebar-collapsed'),
-            headerRight: header?.getBoundingClientRect().right || 0,
-            mainLeft: main?.getBoundingClientRect().left || 0
-        };
-    });
-    assert(!expandedState.collapsed, 'Desktop sidebar did not expand.');
-    assert(expandedState.headerRight > 250 && expandedState.mainLeft >= expandedState.headerRight - 2, `Expanded sidebar collides with ${testCase.id} content.`);
-    await captureScreenshot(page, testCase, width, 'sidebar-expanded', options);
-    await collapseToggle.click();
-    assert(await collapseToggle.getAttribute('aria-expanded') === 'false', 'Desktop sidebar did not collapse again.');
+    const railState = await page.locator('#header').evaluate(header => ({
+        collapsed: document.documentElement.classList.contains('sidebar-collapsed'),
+        width: header.getBoundingClientRect().width,
+        toggles: header.querySelectorAll('.sidebar-collapse-toggle').length
+    }));
+    assert(railState.collapsed && railState.width === 72 && railState.toggles === 0,
+        `Labs lost its fixed desktop rail: ${JSON.stringify(railState)}`);
+    await page.locator('.sidebar-labs-menu > summary').click();
+    const panel = await page.locator('.sidebar-labs-panel').boundingBox();
+    assert(panel && panel.x >= 71, 'Labs did not open outside its rail.');
+    await page.keyboard.press('Escape');
+    assert(await page.locator('.sidebar-labs-menu').evaluate(el => !el.open && document.activeElement === el.querySelector('summary')),
+        'Escape did not close Labs and restore focus.');
 }
 
 async function assertEditorIcons(page, width) {
@@ -1725,6 +1610,18 @@ async function assertEditorIcons(page, width) {
 }
 
 async function runInteractions(page, testCase, width, options) {
+    if (testCase.type === 'portfolio') {
+        for (const [id, selector] of [['portfolio','#portfolio-projects'],['blog','#portfolio-blog-posts'],['about','.about-editorial-layout']]) {
+            await page.evaluate(id => document.querySelector(`.edition-nav a[href="#${id}"]`).click(), id);
+            await page.waitForFunction(id => document.body.dataset.chapter === id, id);
+            const issues = await inspectLayout(page, {...testCase,coreSelectors:[`#${id}`,selector]}, width);
+            assert(issues.length === 0, issues.join('\n'));
+            await assertSiteIcons(page, testCase);
+            assert(await page.locator(`#${id}`).evaluate(node => getComputedStyle(node).overflowY === 'auto'), `${id} lost native scrolling.`);
+        }
+        await page.keyboard.press('Escape');
+        await page.waitForFunction(() => document.body.dataset.chapter === 'home');
+    }
     if (testCase.type === 'blog-home') {
         await assertBlogHomeInteractions(page, testCase, width, options);
     }
@@ -1798,7 +1695,8 @@ async function main() {
         viewport: { width: 1440, height: 1000 }
     });
     await context.addInitScript(() => {
-        localStorage.setItem('blog-theme', 'light');
+        localStorage.setItem('blog-reading-theme', 'light');
+        localStorage.setItem('portfolio-theme', 'light');
         localStorage.setItem('language', 'eng');
         localStorage.setItem('site-sidebar-collapsed', 'true');
     });
@@ -1839,9 +1737,12 @@ async function main() {
             process.stdout.write(`CHECKED ${testCase.id} at ${testedWidths}px\n`);
         }
     } finally {
-        await context.close();
-        await browser.close();
+        // System Chrome can exit before closing its driver pipe. Bound cleanup
+        // after all assertions so verification can report its actual result.
+        await Promise.race([context.close(), new Promise(resolve => setTimeout(resolve,5000).unref())]);
+        await Promise.race([browser.close(), new Promise(resolve => setTimeout(resolve,5000).unref())]);
         if (localServer) {
+            localServer.server.closeAllConnections();
             await new Promise((resolve) => localServer.server.close(resolve));
         }
     }
@@ -1856,7 +1757,7 @@ async function main() {
     console.log(`UI regression check passed: ${checks} representative route/viewports.`);
 }
 
-main().catch((error) => {
+main().then(() => process.exit(0)).catch((error) => {
     console.error(error.message);
     process.exit(1);
 });

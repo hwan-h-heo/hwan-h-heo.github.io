@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
-import { createMeshRefinement } from './hero-sculpture/mesh-refinement.js';
+import { createCachedStage, movingStoneMaterial } from './hero-sculpture/cached-stage.js';
+import { createMeshRefinement } from './hero-sculpture/intro-refinement.js';
 import { makeStoneTexture, stoneMaterial } from './hero-sculpture/stone-material.js';
 import { contactShadow } from './hero-sculpture/contact-shadow.js';
 import { carvedGeometry, apertureGeometry, stoneBlock } from './hero-sculpture/stone-geometry.js';
@@ -9,7 +10,7 @@ import { carvedGeometry, apertureGeometry, stoneBlock } from './hero-sculpture/s
 // supports a source checkout whose content is mounted after DOMContentLoaded.
 function initializeHero() {
     const cover = document.querySelector('.pbr-hero');
-    if (!cover?.querySelector('.pbr-scene') || cover.dataset.rendererStarted) return;
+    if (!cover?.querySelector('.pbr-scene') || cover.dataset.rendererStarted || ['portfolio','blog','about'].includes(location.hash.slice(1))) return;
     cover.dataset.rendererStarted = 'true';
     startHero();
 }
@@ -21,8 +22,18 @@ function startHero() {
     const motion = cover.querySelector('.pbr-motion');
     motion.hidden = false;
     let refinement;
-    let renderer, scene, camera, sculptures, base, look, frame = 0;
+    let renderer, scene, camera, sculptures, base, look, frame = 0, wakeTimer = 0;
     let visible = true, paused = reduced.matches, ready = false, failed = false, settled = false;
+    let chapterActive = !['portfolio', 'blog', 'about'].includes(location.hash.slice(1));
+    let manualPaused = false, lastDraw = -Infinity;
+    try { manualPaused = localStorage.getItem('portfolio-motion') === 'off'; } catch {}
+    paused = manualPaused || reduced.matches;
+    const FRAME_MS = 1000 / 30;
+    let scheduledInterval = FRAME_MS, viewDirty = true, stageDirty = true;
+    let cachedStage, stillMaterial, movingMaterial, staticParts = [], supportTable;
+    let movingSamples = 0, movingDuration = 0, slowSamples = 0, previousMoved = false, performancePaused = false;
+    let viewWidth = 0, viewHeight = 0, introResolved = false;
+    const work = {shadowUpdates:0,groundContactUpdates:0,formContactUpdates:0,geometryUpdates:0,stageBakes:0,fullSceneFrames:0,compositeFrames:0,pointerUpdates:0};
     let reducedApplied = reduced.matches;
     let tx = 0, ty = 0, px = 0, py = 0, frames = 0, triangleCount = 0, firstFrameMs = 0;
     const geometryCounts = {}, started = performance.now();
@@ -30,7 +41,6 @@ function startHero() {
     const supportedForms = [], contacts = [], poseMatrix = new THREE.Matrix4(), point = new THREE.Vector3();
     const supports = [{ x: 2.25, z: .15, halfX: .84, halfZ: .66, height: .86 }];
     const actionForms = [], actionWeights = [0, 0];
-    let hoveredForm = -1, focusedForm = -1;
     const stageParts = {};
 
     function syncMotion() {
@@ -82,12 +92,14 @@ function startHero() {
         studioEnvironment();
         sculptures = new THREE.Group(); scene.add(sculptures);
         const texture = makeStoneTexture(renderer);
-        const mineral = stoneMaterial(texture, { color: '#c2c2c2', scale: .68, relief: .012 });
+        const mineral = stillMaterial = stoneMaterial(texture, { color: '#c2c2c2', scale: .68, relief: .012 });
+        movingMaterial = movingStoneMaterial(texture);
         const wall = stoneMaterial(texture, { color: '#aaaaaa', scale: .30, relief: .018 });
         const ground = stoneMaterial(texture, { color: '#999999', scale: .32, relief: .012 });
         const main = add(carvedGeometry(), mineral, 'carved-form', 2.25, .87, .15);
         main.rotation.set(-.08, -.30, -.10);
         refinement = createMeshRefinement(main);
+        refinement.applyMaterial(movingMaterial); stageParts.main = main;
         stageParts.mainPlinth = add(stoneBlock(1.62, .86, 1.28), wall, 'stone-block', 2.25, 0, .15);
         const aperture = add(apertureGeometry(), stoneMaterial(texture, { color: '#aaaaaa', scale: .30, relief: .018 }), 'aperture', 2.7, 2.95, -2.4);
         aperture.rotation.y = -.10;
@@ -98,7 +110,9 @@ function startHero() {
         floor.rotation.x = -Math.PI / 2; floor.castShadow = false;
         // A low foreground slab catches the raking light and anchors the scene's depth.
         stageParts.foreground = add(stoneBlock(12, .12, 2.2), ground, 'foreground-slab', 1.5, -.12, 4.5);
-        const objects = sculptures.children.filter(o => o !== floor && o !== back);
+        // The floor's contact comes from the stationary architecture/plinth.
+        // The form's separate contact is on top of the plinth, not the floor.
+        const objects = sculptures.children.filter(o => o !== main && o !== floor && o !== back);
         contacts.push(
             contactShadow(renderer, objects, { x: 2.2, y: -.024, z: .15, size: 14, height: 1.4, opacity: .6 }),
             contactShadow(renderer, [main], { x: 2.25, y: .862, z: .15, size: 2.8, height: .8, opacity: .7 }),
@@ -113,13 +127,30 @@ function startHero() {
         area('#ffffff', .16, 7, 4, [2, 2, 8], [2, 2, 0]);
         const key = new THREE.SpotLight('#ffffff', 210, 35, .65, .65, 2);
         key.position.set(-1.8, 7.4, 5); key.target.position.set(2.5, 1.5, -1.5);
-        key.castShadow = true; key.shadow.mapSize.setScalar(cover.clientWidth <= 600 ? 1024 : 2048);
+        key.castShadow = true; key.shadow.mapSize.setScalar(1024);
         key.shadow.camera.near = .5; key.shadow.camera.far = 28;
         key.shadow.bias = -.00012; key.shadow.normalBias = .016;
-        key.shadow.radius = 10; key.shadow.blurSamples = 12;
+        key.shadow.radius = 5; key.shadow.blurSamples = 8;
         scene.add(key, key.target);
         scene.add(new THREE.HemisphereLight('#ffffff', '#242424', .12));
         camera = new THREE.PerspectiveCamera(36, 1, .1, 100);
+        staticParts = sculptures.children.filter(object => object !== pivot);
+        cachedStage = createCachedStage(renderer);
+        // Fixed camera/orientation permits a one-time support lookup. Animation
+        // never scans 4,825 vertices or recalculates normals on the main thread.
+        pivot.updateMatrix(); main.updateMatrix();
+        poseMatrix.multiplyMatrices(pivot.matrix, main.matrix);
+        supportTable = new Float32Array(129);
+        for (let sample = 0; sample < supportTable.length; sample++) {
+            let correction = -Infinity;
+            for (let i = 0; i < main.geometry.attributes.position.count; i++) {
+                refinement.samplePosition(i, sample / 128, point).applyMatrix4(poseMatrix);
+                let height = -.025;
+                for (const block of supports) if (Math.abs(point.x - block.x) <= block.halfX && Math.abs(point.z - block.z) <= block.halfZ) height = Math.max(height, block.height);
+                correction = Math.max(correction, height + .004 - point.y);
+            }
+            supportTable[sample] = correction;
+        }
     }
 
     function positionCamera() {
@@ -127,41 +158,36 @@ function startHero() {
         camera.lookAt(look); camera.updateMatrixWorld();
     }
     function readScroll() {
-        if (staticPreferred || paused || reduced.matches || failed) return;
-        const rect = cover.getBoundingClientRect();
-        scrollTarget = THREE.MathUtils.clamp(-rect.top / (rect.height * .72), 0, 1);
-        if (Math.abs(scrollTarget - scrollProgress) > .0001) { settled = false; request(); }
+        // The cover is fixed. Wheel/touch gestures only reveal the
+        // existing chapter link; refinement runs only on initial load.
+        scrollTarget = scrollProgress = 0;
     }
-    function fitSurfaceToSupport(geometryChanged = false) {
+    function fitSurfaceToSupport(geometryChanged = false, progress = refinement.state().surfaceProgress) {
         if (!supportDirty && !geometryChanged) return;
-        for (const item of supportedForms) {
-            item.pivot.position.y = item.support;
-            // Keep the changing coarse/fine surface in contact with its plinth.
-            // Its authored orientation stays fixed throughout refinement.
-            {
-                item.pivot.updateMatrix(); item.mesh.updateMatrix();
-                poseMatrix.multiplyMatrices(item.pivot.matrix, item.mesh.matrix);
-                const positions = item.mesh.geometry.attributes.position;
-                let correction = -Infinity;
-                // The finite stone block and ground constrain the actual surface.
-                for (let i = 0; i < positions.count; i++) {
-                    point.fromBufferAttribute(positions, i).applyMatrix4(poseMatrix);
-                    let support = -.025;
-                    for (const block of supports) {
-                        if (Math.abs(point.x - block.x) <= block.halfX && Math.abs(point.z - block.z) <= block.halfZ) support = Math.max(support, block.height);
-                    }
-                    correction = Math.max(correction, support + .004 - point.y);
-                }
-                item.pivot.position.y += correction;
-            }
-        }
-        for (const contact of contacts) contact.userData.update();
-        renderer.shadowMap.needsUpdate = true;
+        const value = progress * 128, index = Math.min(127, Math.floor(value));
+        supportedForms[0].pivot.position.y = supportedForms[0].support +
+            THREE.MathUtils.lerp(supportTable[index], supportTable[index + 1], value - index);
         supportDirty = false;
+    }
+    function bakeStage() {
+        const sampled = refinement.state().surfaceProgress;
+        refinement.sampleForCache(1); fitSurfaceToSupport(true, 1);
+        stageParts.main.material = stillMaterial;
+        stageParts.main.receiveShadow = true;
+        contacts[0].userData.update(); contacts[1].userData.update();
+        work.groundContactUpdates++; work.formContactUpdates++; work.shadowUpdates++;
+        cachedStage.bake(scene, camera, () => {renderer.shadowMap.needsUpdate = true;}, hidden => {stageParts.main.visible = !hidden;});
+        work.stageBakes++; work.fullSceneFrames += 2;
+        refinement.sampleForCache(sampled); fitSurfaceToSupport(true, sampled);
+        stageDirty = false;
     }
     function resize() {
         if (!renderer || !camera) return;
         const w = cover.clientWidth, h = cover.clientHeight, mobile = w <= 900;
+        if (w === viewWidth && h === viewHeight) return;
+        viewWidth = w; viewHeight = h;
+        const ratio = capture ? 1 : Math.min(devicePixelRatio, w <= 600 ? 1 : 1.25, Math.sqrt(1800000 / (w * h)));
+        renderer.setPixelRatio(ratio);
         renderer.setSize(w, h); camera.aspect = w / h; camera.fov = mobile ? 42 : 36;
         camera.updateProjectionMatrix();
         base = mobile ? new THREE.Vector3(4.2, 4.8, 13.5) : new THREE.Vector3(4.0, 3.7, 14);
@@ -170,50 +196,99 @@ function startHero() {
         sculptures.scale.setScalar(mobile ? .76 : 1);
         stageParts.aperture.position.y = mobile ? 2.30 : 2.95;
         supportDirty = true;
-        positionCamera(); readScroll(); renderer.shadowMap.needsUpdate = true;
-        settled = false; request();
+        viewDirty = stageDirty = true; positionCamera(); readScroll();
+        if (paused || !chapterActive) {
+            if (chapterActive) { fitSurfaceToSupport(true); render(); viewDirty = false; }
+        } else { settled = false; request(); }
     }
     function render() {
-        renderer.render(scene, camera); frames++;
-        if (!refinement?.active) cover.classList.remove('pbr-entering');
-        if (!firstFrameMs) firstFrameMs = performance.now() - started;
-        host.classList.add('is-ready'); cover.querySelector('.pbr-load')?.setAttribute('hidden', '');
+        if (stageDirty) bakeStage();
+        const highQuality = paused || capture || !refinement.active;
+        stageParts.main.material = highQuality ? stillMaterial : movingMaterial;
+        stageParts.main.receiveShadow = highQuality;
+        if (highQuality) {
+            // One still render restores the full material/environment/self-shadow
+            // path; there are no subsequent frames while paused.
+            renderer.render(scene, camera); work.fullSceneFrames++;
+        } else {
+            for (const object of staticParts) object.visible = false;
+            const environment = scene.environment; scene.environment = null;
+            cachedStage.render(scene, camera); scene.environment = environment;
+            for (const object of staticParts) object.visible = true;
+            work.compositeFrames++;
+        }
+        frames++;
+        if (!introResolved && refinement?.state().phase !== 'intro') {
+            introResolved = true; cover.classList.remove('pbr-entering');
+        }
+        if (!firstFrameMs) {
+            firstFrameMs = performance.now() - started;
+            host.classList.add('is-ready'); cover.querySelector('.pbr-load')?.setAttribute('hidden', '');
+        }
     }
     function draw(now) {
         frame = 0;
-        if (!visible || document.hidden || failed) return;
+        if (!chapterActive || !visible || document.hidden || failed) return;
         // A media change can become observable before its change event is delivered.
         // Resolve it in the active frame as well, rather than leaving a coarse form frozen.
         if (reduced.matches !== reducedApplied) { syncReducedMotion(); return; }
-        px += (tx - px) * .19; py += (ty - py) * .19;
-        scrollProgress += (scrollTarget - scrollProgress) * .16;
-        const pointerSettled = Math.abs(tx - px) + Math.abs(ty - py) <= .002;
-        const scrollSettled = Math.abs(scrollTarget - scrollProgress) <= .0005;
-        if (pointerSettled) { px = tx; py = ty; }
-        if (scrollSettled) scrollProgress = scrollTarget;
+        // Keep the entrance bounded at 30 fps. Pointer response follows the
+        // production RAF cadence and .19 damping; stop all callbacks at rest.
+        if (refinement.active && now - lastDraw < FRAME_MS - .5) { request(); return; }
+        const frameDuration = now - lastDraw;
+        lastDraw = now;
         const geometryChanged = !paused && !reduced.matches && (refinement?.update(now, scrollProgress) || false);
-        let actionsSettled = true;
-        if (!paused && !reduced.matches) {
-            const selected = focusedForm >= 0 ? focusedForm : hoveredForm;
-            actionForms.forEach(({ mesh, color }, index) => {
-                const target = selected < 0 ? 0 : selected === index ? 1 : -.35;
-                actionWeights[index] += (target - actionWeights[index]) * .19;
-                if (Math.abs(target - actionWeights[index]) < .003) actionWeights[index] = target;
-                else actionsSettled = false;
-                // A small albedo response links the HTML action to its form while
-                // retaining the same roughness, lights, silhouette and shadows.
-                mesh.material.color.copy(color).multiplyScalar(1 + .12 * actionWeights[index]);
-            });
+        if (geometryChanged) work.geometryUpdates++;
+        const previousX = px, previousY = py;
+        if (!refinement.active && !paused && !reduced.matches) {
+            // Exact production pointer damping and camera offsets (js/hero.js).
+            px += (tx - px) * .19; py += (ty - py) * .19;
+            if (Math.abs(tx - px) + Math.abs(ty - py) < .002) {px = tx; py = ty;}
         }
-        settled = pointerSettled && scrollSettled && actionsSettled && (!refinement?.active || paused || reduced.matches);
-        fitSurfaceToSupport(geometryChanged); positionCamera(); render();
+        const pointerChanged = px !== previousX || py !== previousY;
+        const pointerSettled = px === tx && py === ty;
+        settled = paused || reduced.matches || (!refinement.active && pointerSettled);
+        fitSurfaceToSupport(geometryChanged);
+        if (pointerChanged) {positionCamera(); work.pointerUpdates++;}
+        if (viewDirty || geometryChanged || pointerChanged) { render(); viewDirty = false; }
+        // A sustained inability to reach even ~18 fps resolves to a finished,
+        // still cover. A single delayed frame or endpoint hold cannot trip it.
+        if (geometryChanged && previousMoved && !paused) {
+            movingSamples++; movingDuration += frameDuration; if (frameDuration > 55) slowSamples++;
+            if (movingSamples >= 48) {
+                const slow = movingDuration / movingSamples > 55 && slowSamples >= 24;
+                movingSamples = movingDuration = slowSamples = 0;
+                if (slow) {
+                    performancePaused = manualPaused = paused = true;
+                    refinement.finish(); fitSurfaceToSupport(true); positionCamera(); render();
+                    settled = true; syncMotion(); cancelScheduled();
+                }
+            }
+        }
+        previousMoved = geometryChanged;
         if (!settled) request();
     }
-    function request() {
-        if (!staticPreferred && !frame && visible && !document.hidden && !failed) frame = requestAnimationFrame(draw);
+    function cancelScheduled() {
+        cancelAnimationFrame(frame); clearTimeout(wakeTimer); frame = wakeTimer = 0;
+    }
+    function request(interval = refinement?.active ? FRAME_MS : 0) {
+        if (staticPreferred || !chapterActive || frame || !visible || document.hidden || failed) return;
+        if (wakeTimer) {
+            if (interval >= scheduledInterval) return;
+            clearTimeout(wakeTimer); wakeTimer = 0;
+        }
+        scheduledInterval = interval;
+        // Sleep between display frames instead of waking on every 60/120 Hz RAF.
+        // A small lead leaves time for the browser to align with the target paint.
+        const delay = Math.max(0, lastDraw + interval - performance.now() - 8);
+        if (delay > 1) wakeTimer = setTimeout(() => {
+            wakeTimer = 0;
+            if (chapterActive && visible && !document.hidden && !failed) frame = requestAnimationFrame(draw);
+        }, delay);
+        else frame = requestAnimationFrame(draw);
     }
     function fail(error) {
-        failed = true; cancelAnimationFrame(frame); frame = 0;
+        failed = true; cancelScheduled();
         cover.classList.add('pbr-static'); cover.classList.remove('pbr-entering'); motion.hidden = true;
         cover.querySelector('.pbr-load')?.setAttribute('hidden', '');
         console.warn('Using the static portfolio cover:', error?.message || error);
@@ -225,7 +300,6 @@ function startHero() {
         RectAreaLightUniformsLib.init();
         THREE.ColorManagement.enabled = true;
         renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'low-power' });
-        renderer.setPixelRatio(capture ? 1 : Math.min(devicePixelRatio, cover.clientWidth <= 600 ? 1 : 1.5));
         renderer.outputColorSpace = THREE.SRGBColorSpace;
         renderer.toneMapping = THREE.AgXToneMapping; renderer.toneMappingExposure = .95;
         renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.VSMShadowMap;
@@ -233,68 +307,79 @@ function startHero() {
         host.appendChild(renderer.domElement);
         renderer.domElement.addEventListener('webglcontextlost', e => { e.preventDefault(); fail('WebGL context lost'); });
         buildScene(); ready = true;
-        // Start coarse before the first visible frame, then refine once. Resize,
-        // visibility changes resume it; scroll retracts the same nested surface.
-        if (!capture && !paused) { cover.classList.add('pbr-entering'); refinement.start(); }
+        // Refine once on a cover load; direct reading links begin finished.
+        if (!capture && !paused && chapterActive && cover.dataset.intro !== 'finished') { cover.classList.add('pbr-entering'); refinement.start(); }
         resize();
+        if (!chapterActive || cover.dataset.intro === 'finished' || paused) { refinement.finish(); fitSurfaceToSupport(true); positionCamera(); render(); }
         new ResizeObserver(resize).observe(cover);
         new IntersectionObserver(([entry]) => {
             // Browser ratios can round .01 down; inspect actual visible pixels.
             visible = entry.isIntersecting && entry.intersectionRect.width > 0 && entry.intersectionRect.height > 0;
-            if (visible) { refinement?.resume(); readScroll(); if (!settled) request(); }
-            else if (!visible) { cancelAnimationFrame(frame); frame = 0; }
+            if (visible) { if (chapterActive) refinement?.resume(); previousMoved = false; readScroll(); if (!settled) request(); }
+            else if (!visible) cancelScheduled();
         }, { threshold: [0, .01] }).observe(cover);
     } catch (error) { fail(error); }
 
-    cover.addEventListener('pointermove', e => {
-        if (staticPreferred || paused || reduced.matches || !fine.matches || e.pointerType === 'touch' || failed) return;
-        const r = cover.getBoundingClientRect();
-        tx = (e.clientX - r.left) / r.width * 2 - 1; ty = 1 - (e.clientY - r.top) / r.height * 2;
-        settled = false; request();
+    function acceptsPointer(event) {
+        return ready && !failed && !staticPreferred && chapterActive && !paused && !reduced.matches && fine.matches && event.pointerType !== 'touch';
+    }
+    cover.addEventListener('pointermove', event => {
+        if (!acceptsPointer(event)) return;
+        const x = THREE.MathUtils.clamp(event.clientX / viewWidth * 2 - 1, -1, 1);
+        const y = THREE.MathUtils.clamp(1 - event.clientY / viewHeight * 2, -1, 1);
+        if (Math.abs(x - tx) + Math.abs(y - ty) < .002) return;
+        tx = x; ty = y; settled = false; request();
     });
-    cover.addEventListener('pointerleave', e => {
-        if (staticPreferred || paused || e.pointerType === 'touch' || failed) return;
+    cover.addEventListener('pointerleave', event => {
+        if (!acceptsPointer(event) || (tx === 0 && ty === 0)) return;
         tx = ty = 0; settled = false; request();
     });
-    window.addEventListener('scroll', readScroll, { passive: true });
-    for (const link of cover.querySelectorAll('.pbr-actions [data-form]')) {
-        const index = Number(link.dataset.form);
-        const refresh = () => {
-            if (staticPreferred || paused || reduced.matches || failed) return;
-            settled = false; request();
-        };
-        link.addEventListener('pointerenter', e => { if (e.pointerType === 'touch') return; hoveredForm = index; refresh(); });
-        link.addEventListener('pointerleave', () => { hoveredForm = -1; refresh(); });
-        link.addEventListener('focus', () => { focusedForm = index; refresh(); });
-        link.addEventListener('blur', () => { focusedForm = -1; refresh(); });
-    }
     motion.addEventListener('click', () => {
-        paused = !paused; syncMotion();
+        performancePaused = false; movingSamples = movingDuration = slowSamples = 0; previousMoved = false;
+        manualPaused = !manualPaused;
+        try { localStorage.setItem('portfolio-motion', manualPaused ? 'off' : 'on'); } catch {}
+        paused = manualPaused || reduced.matches; syncMotion();
         // Pausing freezes the current camera instead of starting another transition.
-        if (paused) { tx = px; ty = py; scrollTarget = scrollProgress; settled = true; cancelAnimationFrame(frame); frame = 0; }
+        if (paused) {
+            tx = px; ty = py; scrollTarget = scrollProgress; settled = true; cancelScheduled();
+            if (refinement.active) {refinement.finish(); fitSurfaceToSupport(true); positionCamera();}
+            render();
+        }
         else { refinement?.resume(); tx = ty = 0; readScroll(); settled = false; request(); }
     });
     function syncReducedMotion() {
         if (reducedApplied === reduced.matches) return;
         reducedApplied = reduced.matches;
-        paused = reducedApplied; syncMotion();
+        paused = manualPaused || reducedApplied; syncMotion();
         if (paused) {
-            tx = px; ty = py; scrollTarget = scrollProgress; settled = true; cancelAnimationFrame(frame); frame = 0;
+            tx = px; ty = py; scrollTarget = scrollProgress; settled = true; cancelScheduled();
             // Switching to reduced motion leaves the authored final surface in place.
-            if (ready && !failed && refinement) { refinement.finish(); fitSurfaceToSupport(true); render(); }
+            if (ready && !failed && refinement) { refinement.finish(); fitSurfaceToSupport(true); positionCamera(); render(); }
         }
-        else { refinement?.resume(); readScroll(); settled = false; request(); }
+        else { if (chapterActive) refinement?.resume(); readScroll(); settled = false; request(); }
     }
     reduced.addEventListener('change', syncReducedMotion);
     document.addEventListener('visibilitychange', () => {
-        if (document.hidden) { cancelAnimationFrame(frame); frame = 0; }
-        else if (!settled) { refinement?.resume(); request(); }
+        if (document.hidden) cancelScheduled();
+        else if (chapterActive && !settled) { refinement?.resume(); previousMoved = false; request(); }
     });
     window.portfolioHero = {
+        setChapterActive(active) {
+            chapterActive = !!active;
+            if (!chapterActive) {
+                cancelScheduled();
+                if (refinement?.active) { refinement.finish(); fitSurfaceToSupport(true); viewDirty = true; }
+            }
+            else if (!paused && !staticPreferred && !failed) {
+                refinement?.resume(); previousMoved = false; settled = false; request();
+            }
+        },
         state: () => ({ engine: 'WebGL rasterization', ready, failed, staticPreferred, visible, paused, settled,
-            framePending: !!frame, frames, triangles: triangleCount, geometryCounts, px, py, firstFrameMs,
-            scrollProgress, scrollTarget, decoding: refinement?.state(), actionEmphasis: [...actionWeights],
-            tilts: supportedForms.map(o => ({ x: o.pivot.rotation.x, z: o.pivot.rotation.z })) }),
+            suspended: !chapterActive,
+            framePending: !!(frame || wakeTimer), frames, triangles: triangleCount, geometryCounts, px, py, firstFrameMs,
+            work: {...work}, performancePaused, renderMode: 'intro-once-production-parallax', pixelRatio: renderer?.getPixelRatio(),
+            cameraOffset:{x:px * .22,y:py * .12}, scrollProgress, scrollTarget, decoding: refinement?.state(), actionEmphasis: [...actionWeights],
+            tilts: supportedForms.map(o => ({ x: o.pivot.rotation.x, y: o.pivot.rotation.y, z: o.pivot.rotation.z })) }),
         layout: () => {
             if (!ready || failed) return [];
             const bounds = host.getBoundingClientRect(), projected = new THREE.Vector3();
@@ -315,6 +400,7 @@ function startHero() {
     };
 
 }
+window.initializePortfolioHero = initializeHero;
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initializeHero, { once: true });
 else initializeHero();
 document.addEventListener('portfolio:core-ready', initializeHero, { once: true });

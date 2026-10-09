@@ -1,0 +1,90 @@
+@font-face { font-family: "Manrope Cover"; font-style: normal; font-weight: 200 800; font-display: swap; src: url("../hero/sculpture/fonts/manrope-variable.ttf") format("truetype"); }
+@font-face {
+  font-family: "Site IBM Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../hero/sculpture/fonts/ibm-plex-mono-400.ttf") format('truetype');
+}
+@font-face {
+  font-family: "Site Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../hero/sculpture/fonts/inter-400.ttf") format('truetype');
+}
+@font-face {
+  font-family: "Site Space Grotesk";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../hero/sculpture/fonts/space-grotesk-500.ttf") format('truetype');
+}
+
+:root {
+    --ed-ink:#1e2b36; --ed-strong:#344553; --ed-copy:#505f6b;
+    --ed-soft:#596873; --ed-faint:#7e8b96;
+    --ed-editorial:#2f6d7d; --ed-interactive:#176b87; --ed-link:#405f6b;
+    --ed-line:rgba(36,57,72,.2); --ed-line-soft:rgba(36,57,72,.12);
+    --ed-action-line:rgba(64,95,107,.46); --ed-focus:#176b87;
+    --ed-paper:#e9e8e1; --ed-header:rgba(236,235,229,.9);
+    --ed-ease:cubic-bezier(.22,1,.36,1);
+    --heading-font:'Manrope Cover','Noto Sans KR',sans-serif;
+    --default-font:'Site Inter','Inter','Noto Sans KR',sans-serif;
+    --mono-font:'Site IBM Plex Mono','IBM Plex Mono',monospace;
+}
+html[data-theme="dark"] {
+    --ed-ink:#e9ecef; --ed-strong:#cfd8e0; --ed-copy:#b2bfcb;
+    --ed-soft:#929fad; --ed-faint:#737f8a;
+    --ed-editorial:#83afb9; --ed-interactive:#78c8dc; --ed-link:#bdced4;
+    --ed-line:rgba(184,201,213,.2); --ed-line-soft:rgba(184,201,213,.12);
+    --ed-action-line:rgba(184,201,213,.46); --ed-focus:#78c8dc;
+    --ed-paper:#111113; --ed-header:rgba(17,17,19,.88);
+}
+/* Native same-tab document navigation retains history, scroll and new-tab behavior. */
+@view-transition { navigation:auto; }
+::view-transition-group(root),
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration:360ms;
+    animation-timing-function:cubic-bezier(.25,.1,.25,1);
+}
+/* Capture complete theme colors, without a second layer of CSS color easing. */
+html.is-theme-changing,
+html.is-theme-changing *,
+html.is-theme-changing *::before,
+html.is-theme-changing *::after { transition:none!important; }
+/* Let repeated theme clicks reach the root while its contents are captured. */
+html.is-theme-changing::view-transition { pointer-events:none; }
+@media (prefers-reduced-motion:reduce) {
+    @view-transition { navigation:none; }
+}
+.edition-header { position:fixed; z-index:20; top:0; left:0; right:0; height:96px; padding:0 6vw; display:flex; align-items:center; gap:32px; color:var(--ed-ink); background:var(--ed-header); transition:background 420ms ease,color 420ms ease; backdrop-filter:blur(12px); }
+.edition-header a { color:inherit; text-decoration:none; }
+.edition-brand { display:flex; align-items:center; min-height:44px; margin-right:auto; font:400 12px/1.5 'Site Inter',sans-serif; white-space:nowrap; }
+.edition-brand-note { padding-left:6px; color:var(--ed-soft); font-size:11px; }
+.edition-nav { display:flex; align-items:center; gap:30px; }
+.edition-nav a { position:relative; display:flex; align-items:center; gap:9px; min-height:44px; font:400 12px/1.2 'Site Inter',sans-serif; }
+.edition-nav a span { font:400 9px/1 'Site IBM Plex Mono',monospace; color:var(--ed-soft); }
+.edition-nav a::after { content:''; position:absolute; height:1px; bottom:7px; left:0; right:0; background:currentColor; transform:scaleX(0); transform-origin:left; transition:transform 480ms cubic-bezier(.22,1,.36,1); }
+.edition-nav a:is(:hover,:focus-visible,[aria-current="page"])::after { transform:scaleX(1); }
+.edition-site[data-surface="reading"] .edition-nav a:is(:hover,:focus-visible) { color:var(--ed-interactive); }
+.edition-site[data-surface="reading"] .edition-nav a[aria-current="page"] span { color:var(--ed-interactive); }
+.edition-site[data-surface="reading"] .edition-nav a::after { background:var(--ed-interactive); }
+.edition-tone { padding:0; min-width:54px; min-height:44px; border:0; background:none; color:inherit; display:flex; align-items:center; justify-content:flex-end; gap:7px; font:400 10px 'Site Inter',sans-serif; cursor:pointer; }
+.edition-tone-icon { font-size:17px; line-height:1; }
+.edition-tone:is(:hover,:focus-visible) { color:var(--ed-interactive); }
+
+.edition-header :is(a,button):focus-visible { outline:2px solid var(--ed-focus); outline-offset:4px; }
+@media (max-width:1100px) { .edition-brand-note { display:none; } .edition-nav { gap:22px; } }
+@media (max-width:600px) {
+    .edition-header { height:108px; padding:12px 24px 8px; align-items:flex-start; flex-wrap:wrap; gap:0 12px; }
+    .edition-brand { min-height:44px; font-size:11px; }
+    .edition-nav { order:3; width:100%; justify-content:space-between; gap:12px; }
+    .edition-nav a { font-size:11px; gap:6px; }
+    .edition-nav a span { font-size:8px; }
+    .edition-tone { min-height:44px; font-size:10px; }
+}
+@media (prefers-reduced-motion:reduce) { .edition-header *, .edition-header *::after { transition:none!important; } }
+.edition-nav a:is(:hover,:focus-visible,[aria-current="page"]) { color:var(--ed-interactive); }
+.edition-nav a[aria-current="page"] span { color:var(--ed-interactive); }

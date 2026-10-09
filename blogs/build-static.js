@@ -6,6 +6,7 @@ const { parseMarkdownWithMath } = require('./js/markdown-with-math');
 const { copyRecursiveSync, ensureDirSync } = require('./lib/fs-utils');
 const { generateBlogCoverPreviews } = require('./lib/blog-cover-assets');
 const { normalizeContentImageAccessibility } = require('./lib/content-image-accessibility');
+const { createContentImageSurfaceNormalizer } = require('./lib/content-image-surfaces');
 const { loadSiteData } = require('./lib/site-data');
 const { SITE_URL } = require('./lib/site-config');
 const { stampDeploymentVersion } = require('./lib/deployment-version');
@@ -41,6 +42,7 @@ const siteData = loadSiteData();
 const legacyRedirects = loadLegacyRedirects();
 const distDir = path.join(__dirname, 'dist');
 const repoRoot = path.join(__dirname, '..');
+const normalizeContentImageSurfaces = createContentImageSurfaceNormalizer({ repoRoot });
 
 function parseArguments(argv) {
     const options = {
@@ -897,7 +899,11 @@ function normalizePostContent(post, content, htmlContent, lang) {
 
     if (!content.includes('<nav class="toc">')) {
         const { tocHtml, contentHtml } = generateTOC(updatedHtmlContent, lang);
-        updatedHtmlContent = tocHtml ? `<nav id="post-toc" class="toc" aria-label="Table of contents">${tocHtml}</nav>${contentHtml}` : contentHtml;
+        const contentsLabel = lang === 'kor' ? '목차' : 'Contents';
+        const inlineTocHtml = tocHtml.replace(/<div class="toc-title">.*?<\/div>/, '');
+        updatedHtmlContent = tocHtml
+            ? `<details class="post-contents"><summary>${contentsLabel}</summary><nav aria-label="${contentsLabel}">${inlineTocHtml}</nav></details><nav id="post-toc" class="toc" aria-label="Table of contents">${tocHtml}</nav>${contentHtml}`
+            : contentHtml;
     }
 
     if (!updatedHtmlContent.includes('id="post-toc"')) {
@@ -928,7 +934,7 @@ function normalizePostContent(post, content, htmlContent, lang) {
     return updatedHtmlContent;
 }
 
-function generatePostPage(post, lang) {
+async function generatePostPage(post, lang) {
     const mdPath = path.join(__dirname, 'posts', post.id, `content-${lang}.md`);
     if (!fs.existsSync(mdPath)) {
         throw new Error(`Missing content file: ${mdPath}`);
@@ -938,7 +944,7 @@ function generatePostPage(post, lang) {
     const { content, frontmatter } = parsePostMarkdownSource(mdContent);
 
     const parsedHtml = parseMarkdownWithMath(content, (source) => marked.parse(source));
-    const normalizedHtml = normalizePostContent(post, content, parsedHtml, lang);
+    const normalizedHtml = await normalizeContentImageSurfaces(normalizePostContent(post, content, parsedHtml, lang));
     const runtimeFeatures = inferPostRuntimeFeatures({
         post,
         contentSource: content,
@@ -983,14 +989,14 @@ function getTargetLanguages(post, postTargets) {
     return post.languages.filter((lang) => languages.has(lang));
 }
 
-function generatePostPages(postTargets = null) {
+async function generatePostPages(postTargets = null) {
     const routes = [];
 
-    siteData.routablePosts.forEach((post) => {
-        getTargetLanguages(post, postTargets).forEach((lang) => {
-            routes.push(generatePostPage(post, lang));
-        });
-    });
+    for (const post of siteData.routablePosts) {
+        for (const lang of getTargetLanguages(post, postTargets)) {
+            routes.push(await generatePostPage(post, lang));
+        }
+    }
 
     return routes;
 }
@@ -1192,7 +1198,7 @@ async function buildSite() {
     generateBlogIndex();
     generateLegacyRedirectPages();
     generateArchivePages();
-    generatePostPages();
+    await generatePostPages();
     generateSitemap();
     generateFeed();
     generateRobotsTxt();
@@ -1232,7 +1238,7 @@ async function buildIncremental(options = {}) {
         copyPostSource(postId);
     });
     await generateBlogCoverPreviews({ siteData, repoRoot, distDir });
-    const generatedRoutes = generatePostPages(impact.postTargets);
+    const generatedRoutes = await generatePostPages(impact.postTargets);
     generateBlogIndex();
     generateLegacyRedirectPages();
     generateArchivePages();

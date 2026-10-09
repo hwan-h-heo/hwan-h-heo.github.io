@@ -71,7 +71,7 @@ function versionStaticAssetReferences({ distDir }) {
         const source = fs.readFileSync(htmlPath, 'utf8');
         let pageReferences = 0;
         const html = source.replace(
-            /\b(href|src)=(['"])([^'"]+)\2/g,
+            /\b(href|src|data-bundle)=(['"])([^'"]+)\2/g,
             (fullMatch, attribute, quote, value) => {
                 const versioned = getVersionedAsset(value, htmlPath, distDir, hashCache);
                 if (!versioned) {
@@ -99,7 +99,7 @@ function findUnversionedStaticAssetReferences({ distDir }) {
 
     collectHtmlFiles(distDir).forEach((htmlPath) => {
         const html = fs.readFileSync(htmlPath, 'utf8');
-        const attributes = html.matchAll(/\b(?:href|src)=(['"])([^'"]+)\1/g);
+        const attributes = html.matchAll(/\b(?:href|src|data-bundle)=(['"])([^'"]+)\1/g);
         for (const match of attributes) {
             const value = match[2];
             if (isExternalUrl(value)) {

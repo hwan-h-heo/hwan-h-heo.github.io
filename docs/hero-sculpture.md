@@ -1,6 +1,6 @@
 # Portfolio sculpture cover
 
-The approved v22 study is the production home hero. Copy is authored in
+The approved v32 fixed cover is integrated in the production sources. Copy is authored in
 `content/portfolio/home.json` and rendered by `js/portfolio-blocks.js` at build
 time, including the poster and navigation. The three phrase lines are:
 
@@ -12,8 +12,11 @@ to efficient GPU inference.
 
 `assets/css/hero-sculpture.css` contains the cover's isolated styles. Name, role
 and affiliation retain the study's placement. The paragraph uses Manrope Regular
-at 16 px desktop / 15 px mobile; both 12 px chapter links keep 44 px hit targets.
-The masthead keeps About, and the bottom chevron links to Projects.
+at 16 px desktop / 15 px mobile; the two 12 px chapter links keep 44 px hit targets.
+Projects/Blogs share the primary CTA row. A smaller underlined About me link sits
+below the affiliation with its own 44 px touch target, using the existing desktop
+pause before the practice statement. The Cover masthead keeps only the signature;
+the fixed layout has no bottom chevron or automatic chapter scroll.
 
 ## Rendering and source
 
@@ -25,12 +28,20 @@ Material metalness and clearcoat are zero. There is no ray tracing or model asse
 download. The About portrait and article viewers retain their existing r150 runtime.
 
 Refinement starts coarse before its first canvas frame and plays once over four
-seconds. Scroll samples that same surface in reverse over 72% of the cover height;
-the object stays upright. Scrolling during the entrance retracts only the fraction
-already formed. Rendering stops at rest and offscreen, and Motion off freezes the
-current state. Reduced motion, data saving, unavailable WebGL and context loss use
-the authored responsive posters. JavaScript failure still leaves copy, navigation
-and the poster visible, with the inactive motion control hidden.
+seconds, using GPU ancestor interpolation. There is no reverse scroll or replay.
+Afterward, fine pointers move only the camera by ±0.22 / ±0.12 world units, with
+0.19 per-frame damping and a 0.002 settling threshold. The geometry remains fixed.
+The entrance is capped at 30 fps and uses a cached HDR/depth stage; finished
+pointer frames use the original PBR material and cached shadows. Pixel count is
+capped at 1.8 million, DPR at 1.25 (1 on phones). Both RAF and wake timers stop at
+rest, in reading chapters, offscreen and in hidden tabs.
+
+The lightweight `js/hero-loader.js` skips the bundle entirely on reduced-motion,
+data-saving and directly opened reading pages. A later reading-to-Cover return
+loads the finished scene without replaying intro. Reduced-motion changes,
+unavailable WebGL, blocked bundle downloads and context loss retain the original
+responsive posters. Manual Motion is persisted separately as `portfolio-motion`.
+The home no longer loads the About point-cloud runtime.
 
 `npm run build:hero` bundles the pinned root `three` and `esbuild` versions into
 `assets/js/hero-sculpture.js` and its linked license notice. These generated assets
@@ -42,7 +53,9 @@ module imports. Do not deploy the all-in-one experimental preview HTML.
 ## Fonts and assets
 
 The accepted cover fonts are self-hosted under `assets/hero/sculpture/fonts/`
-using cover-only family names. Other sections keep their established fonts.
+using explicit cover/shared family names. `site-theme.css` shares the same local
+Manrope, Inter, IBM Plex Mono and Space Grotesk roles with the reading surfaces;
+Korean glyphs retain the established Noto Sans KR fallback.
 Font sources are Google Fonts' Manrope, Inter, IBM Plex Mono and Space Grotesk;
 the SIL Open Font License notices are retained alongside them:
 
@@ -60,8 +73,11 @@ was onformative's sculptural spatial composition; no reference mesh or image is 
 
 Run `npm run build`, `npm run check:hero` and the affected home render check:
 `node scripts/check-rendered-site.js --route=/`. The hero check covers the three
-phrase lines, touch targets, intro, reverse scroll, idle rendering, pause,
-responsive placement and static fallback. Use existing content, asset and SEO
+phrase lines, touch targets, intro once, gesture cues, idle rendering, pause,
+responsive placement and static fallback. `node scripts/check-portfolio-chapters.cjs`
+checks CTA timing/native input; `node scripts/check-portfolio-integration.cjs` checks
+direct URLs, history, theme, saved filters/disclosures and lazy-load races.
+Use existing content, asset and SEO
 validation before publishing the static output with
 `npm --prefix blogs run deploy:dist`.
 

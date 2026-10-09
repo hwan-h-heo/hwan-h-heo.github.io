@@ -12,15 +12,7 @@
         <link href="../css/typography.css" rel="stylesheet" />
         <link href="/assets/css/site-icons.css" rel="stylesheet" />
         <script src="/assets/js/site-icons.js"></script>
-        <script>
-            (function() {
-                try {
-                    const storedTheme = localStorage.getItem('blog-theme');
-                    const theme = storedTheme === 'dark' || storedTheme === 'light' ? storedTheme : 'light';
-                    document.documentElement.dataset.theme = theme;
-                } catch (error) {}
-            })();
-        </script>
+        <script src="/js/site-theme.js"></script>
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -28,14 +20,28 @@
             gtag('js', new Date());
             gtag('config', 'G-RF7ETSKPK9');
         </script>
+        <link href="/assets/css/site-theme.css" rel="stylesheet">
+        <link href="/blogs/css/site-reading.css" rel="stylesheet">
     </head>
-    <body class="blog-home-page blog-archive-page blog-search-page">
+    <body class="blog-home-page blog-archive-page blog-search-page site-reading">
         <main class="main blog-home-main">
             <nav class="blog-home-topbar" id="blogHomeTopbar" aria-label="Blog utilities">
-                <a class="blog-home-back" href="../" aria-label="Back to blog home">
-                    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg>
-                    <span>Blog</span>
-                </a>
+                <div class="blog-utility-start">
+                    <a class="blog-home-back" href="../" aria-label="Back to blog home">
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg>
+                        <span>Blog</span>
+                    </a>
+                    <div class="blog-destinations">
+                        <a href="/">Portfolio</a>
+                        <details class="blog-labs">
+                            <summary>Labs</summary>
+                            <div class="blog-labs-panel">
+                                <a href="/blogs/3DViewer/">3D Viewer</a>
+                                <a href="/blogs/editor/">Markdown Editor</a>
+                            </div>
+                        </details>
+                    </div>
+                </div>
                 <div class="blog-home-toolbar-actions">
                     <form id="search-form" class="blog-home-search" role="search" data-collapsible-search>
                         <label class="visually-hidden" for="search-input">Search posts</label>

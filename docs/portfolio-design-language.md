@@ -27,8 +27,13 @@ Everything else should stay quiet enough to support the work.
 ## Source Of Truth
 
 Portfolio tokens and shared portfolio components live in
-`assets/css/portfolio.css`. Project-page-only rules live in
-`assets/css/project-detail.css`. The shared responsive sidebar lives in
+`assets/css/portfolio.css`. The accepted fixed-chapter home layout lives in `assets/css/portfolio-chapters.css`.
+The shared palette, local font roles and reading masthead live in
+`assets/css/site-theme.css`, with a pre-paint preference in `js/site-theme.js`.
+Project-page rules live in `assets/css/project-detail.css`; `blogs/css/site-reading.css`
+shares the sculpture backdrop and local type with the blog while preserving its native
+content palette and reading components.
+The shared responsive Labs sidebar lives in
 `css/sidebar-nav.css`. Portfolio and project markup is framework-free; the
 responsive `portfolio-shell` and the About/Project component layouts are owned
 by these stylesheets rather than by generic framework utility classes.
@@ -76,14 +81,14 @@ precedent for new components.
 
 | Token | Role |
 | --- | --- |
-| `--color-page` | white default page and About surface |
+| `--color-page` | legacy paper alias; fixed chapters use a transparent reading scrim |
 | `--color-section` | cool pale-blue Projects surface |
 | `--color-writing-section` | near-white soft-neutral Portfolio Writing surface |
 | `--color-surface` | neutral component and media surface |
 
-Use surface tone only at chapter scale. Keep the Projects chapter cool and the
-Portfolio Writing chapter softly neutral so the long-form index gains rhythm
-without adding more accent colors inside its rows.
+The accepted v32 home uses one dark-default reading scrim across Projects, Blogs
+and About. Light paper is an optional persisted theme. The older pale chapter
+surfaces remain compatibility tokens for reusable preview rules.
 
 ### Neutral hierarchy
 
@@ -176,6 +181,9 @@ Rules:
 - Keep Portfolio section headings non-interactive. Put section-level navigation
   in a separate compact text action so headings retain one consistent chapter
   role.
+- Let the Portfolio Blogs description use up to 700 px at its existing type size,
+  so the full desktop description occupies two lines. Keep “production engineering”
+  together; allow the paragraph to reflow naturally on narrower screens.
 - Keep letter spacing at `0` in new portfolio styles.
 - Use uppercase mono labels sparingly and keep them short.
 - Treat the Portfolio About standfirst as descriptive copy, not structure: use
@@ -231,8 +239,10 @@ does not depend on serif type beyond the contained About standfirst accent.
 On the Portfolio Hero, use the approved monochrome sculpture composition. Keep
 all identity copy left-aligned, with the small `00 / PORTFOLIO` folio outside the
 name's flow. Separate name/role/affiliation from the three-line practice paragraph
-with a larger vertical pause. Keep Projects / Blogs as the two compact numbered
-chapter links, and only About in the upper-right masthead. The canonical cover
+with a larger vertical pause. Keep Projects / Blogs as two compact numbered
+chapter links below that paragraph. Put a small underlined `About me ↗` link
+below the affiliation as part of the identity group. The cover masthead carries
+only the signature; reading chapters retain their full navigation. The canonical cover
 sizes, material, motion and responsive rules are specified below in Interaction
 And Motion and implemented in `assets/css/hero-sculpture.css`.
 
@@ -340,21 +350,22 @@ And Motion and implemented in `assets/css/hero-sculpture.css`.
   helps establish that the artifact is a 3D scene, clamp it to a subtle authored
   envelope (currently ±10 degrees around the submitted view) and generate any
   visibility-culling assets against that complete envelope.
-- Public Blog, Post, and Labs surfaces keep the shared dark desktop sidebar as
-  a fixed `72px` activity rail; they do not expose its `300px` expanded state.
-  The portrait and Blog, Portfolio, and Labs destinations remain the permanent
-  rail grammar. Search, theme, and language stay in a slim, right-aligned
-  utility row because they are familiar reading-context tools and must not be
-  duplicated in the rail. On posts between `1200px` and `1599px`, add one
-  contextual Contents trigger that opens the existing TOC as a transient rail
-  flyout; at `1600px` and above, retain the persistent right-side TOC and hide
-  that trigger. Do not add a separate reading-progress edge: the browser
-  scrollbar and, on wide screens, the active TOC already communicate reading
-  position. On compact screens, replace the sidebar trigger
-  with a borderless `Blog Home` link at the left edge of the utility row. The
-  post search icon expands an inline text field before navigating to results;
-  opening search must not discard the current reading context, and the Home
-  label may recede while the field is open to preserve input width.
+- Public Blog and Post pages are an independent publication without the
+  portfolio masthead or sidebar. The home has a quiet `Hwan’s Blog` imprint in
+  its existing utility row; posts show `Blog Home` there at every width. Search,
+  theme and language remain in that one row. Keep a visible Portfolio link and
+  a compact Labs disclosure (3D Viewer / Markdown Editor) in this same row on
+  home, post, search and archive pages. Footer links are supplementary. On
+  phones, destinations recede while the inline search field is expanded; Labs
+  closes on Escape or outside interaction and preserves keyboard navigation.
+  Below 1600px, a native Contents disclosure before the body keeps the nested
+  heading index reachable, including on mobile. At 1600px and above, retain the
+  persistent right-margin TOC after entering the body. Do not add a reading
+  progress edge or another navigation bar. Public Labs keep their existing
+  72px icon rail; the publication does not load that rail's CSS or controller.
+  The post search icon expands an inline field before navigating to results;
+  opening search must not discard the reading context, and the Home label may
+  recede to preserve input width on phones.
 - The public Markdown Editor uses that same dark sidebar as its only persistent
   left rail. Keep browser and Drive draft utilities in a transient right-side
   `Draft tools` drawer, and omit repository publishing, existing-post loading,
@@ -374,8 +385,8 @@ And Motion and implemented in `assets/css/hero-sculpture.css`.
   `Languages` field. Apply the same current-right / archive-left media signature,
   collapsing back to media-first rows on mobile. Wherever a mobile sidebar
   remains available, its scrim and panel must stack above any fixed utility bar.
-- Do not render breadcrumbs before a long-form blog article when the persistent
-  sidebar already provides the return paths.
+- Do not add breadcrumbs before a long-form blog article; the original utility
+  row provides the Blog Home return path.
 - Close each article with an editorial author note containing a portrait, name,
   professional scope, and restrained `Email` and `LinkedIn` links in English in
   every locale. Treat it as a signature rather than another navigation menu,
@@ -439,7 +450,7 @@ with dark space around them; they are background atmosphere rather than a
 full-bleed collage. Cover them with a strong
 deep-ink overlay that is darkest around the central copy and lower edge so the
 text retains primary contrast. Reuse the Portfolio Hero name color
-(`rgba(240, 241, 243, 0.88)`) for the Blog title, then step the standfirst and
+(`#efefeb`) for the Blog title, then step the standfirst and
 publication folios down through the same neutral family instead of returning to
 pure white or blue-gray. Hide all three images on compact layouts before they could
 compete with the copy. Connect the cover to the numbered page chapters with one
@@ -626,9 +637,13 @@ layout.
 
 Featured titles and subtitles are never clipped with a line clamp. Let the
 browser fit both through a small, bounded type-size adjustment after fonts load;
-on the side-by-side layout, the complete series-to-action copy stack must not
+keep the copy stack's flex children from shrinking their line boxes. Reserve
+16 px between the title and subtitle, reduced to 12 px on compact phones. The
+tag row uses its actual tag font size for line-height, not the body font size.
+On the side-by-side layout, the complete series-to-action copy stack must not
 exceed the cover height. If text still needs more room at the minimum readable
-size, preserve the full text instead of hiding it. Give Korean feature titles
+size, release the fixed copy height and preserve the full text instead of hiding
+it or compressing its spacing. Give Korean feature titles
 the full copy width, retain natural word boundaries with `keep-all`, and balance
 both the title and subtitle across their natural line counts so a single
 short word never remains as an isolated final line. Keep the Featured technology
@@ -696,17 +711,281 @@ Use a shared index/table grammar. Do not introduce a separate card system.
 
 Motion should confirm an interaction, not advertise itself.
 
-Portfolio-home chapter markers use a neutral active-state shift at the same
-`200px` viewport boundary as the navigation scrollspy. Let the chapter number
-move from `--color-text-soft` to `--color-text` and reveal only a short,
-slightly denser neutral segment at the start of the existing hairline. Do not
-introduce cyan, movement, or a new divider for this state, and remove the color
-transition under reduced motion.
+### Fixed editorial chapters (v32)
 
-The production portfolio hero is the approved v22 sculpture cover, replacing the
+The approved v32 design is integrated in the authored home, project template and
+blog surfaces. Its reference sources remain under
+`_workspace/2026-10-08-portfolio-editions/`. The rules below are canonical for
+`.edition-site`; the earlier v22 continuous-scroll behavior is historical.
+Projects, Blogs and About occupy the same viewport and crossfade
+over the same fixed cover scene. Dark is the default reading surface; pale paper
+is an optional reading theme. Keep the canvas and camera in place while paused,
+without a second captured-image layer, crop, zoom or background swap. Fade in a
+neutral charcoal reading scrim, hiding most detail behind the reading column and
+retaining faint architectural detail at the outer margin. Do not invert lighting.
+The portfolio removes the down-scroll cue and sidebar. Keep the cover's name,
+role, three-line practice statement and unfilled Projects / Blogs links, with a
+secondary About link under the affiliation.
+
+The fixed cover decouples refinement from page scroll. Play the original
+four-second coarse-to-fine entrance once on a cover load, then hold the completed
+surface permanently. Do not add an idle refinement loop, reverse it on scroll,
+or replay it on chapter return or Motion on. Direct reading-chapter links begin
+with a finished surface and do not play the intro on return to Cover.
+
+After the entrance, retain the original published homepage's camera parallax:
+normalized pointer coordinates translate the camera by at most ±0.22 world units
+horizontally and ±0.12 vertically, looking at the same fixed target. Use the
+original 0.19 damping per animation frame and 0.002 settling threshold. Do not
+rotate the form or alter its support pose in response to the pointer. Pointer
+leave eases back to the authored camera. The one-time entrance is capped at
+30 fps; pointer easing uses the original display-frame cadence. Cancel all
+RAF/timer work once settled. Touch input has no parallax. Motion off pauses 3D
+only; re-enabling it never restarts refinement. Suspend the renderer in reading
+chapters, hidden tabs and offscreen. Reduced motion, data saving and WebGL failure
+retain the static fallback.
+
+The intro uploads ancestor surfaces, endpoint normals and the refinement schedule
+once and blends them in the vertex shader. It reuses the stage's cached HDR color
+and depth while the moving form uses the lighter mineral material. The completed
+form and its pointer response use the authored PBR materials. Keep finished-pose
+contact/cast shadows cached until viewport geometry changes. Camera movement does
+not invalidate these world-space shadows because geometry and lights stay fixed.
+Use a 1024 px shadow map and at most 1.8 million visible pixels (DPR up to 1.25,
+1 on phones). A persistently slow entrance may resolve directly to its final
+still pose.
+
+Gesture cues use the same left-to-right top rule as a real CTA hover: `scaleX`
+from a left origin over 480 ms with `cubic-bezier(.22,1,.36,1)`. The rule leads;
+label/index/arrow color follows after 100 ms over 300 ms. Avoid an immediate
+full-strength flash. On the cover, downward wheel or an upward finger swipe hints
+at Projects; upward intent has no chapter destination. Use quiet cyan for the
+rule (`#91c3cd` at 65% opacity), a subdued `#bed2d3` label and `#a8bdbe` index.
+Actual hover/focus retains the clearer `#91c3cd` interactive role. Keep arrow
+movement within 1 px for hints and 2 px for direct interaction.
+Reserve 4 px inside each cover CTA's right edge so the moving arrow stays within
+the clipped link, without changing the full-width top rule or overall CTA width.
+
+On an idle cover, reuse that same quiet Projects rule sweep after six seconds
+without pointer, touch, keyboard or focus activity. Show it for 1.4 seconds, then
+rest seven seconds before repeating. Any interaction immediately clears the idle
+cue; actual hover/focus and gesture hints take priority. Pause it outside Cover,
+in hidden tabs and for reduced motion. This is a decorative cue, never a focus
+change, live-region announcement or 3D animation. Use one quiet-period timeout
+and one pulse expiry, with no per-frame polling or pointer-event timer churn.
+
+In Projects, Blogs and About, downward scrolling hints at the right Next link.
+Upward scrolling clears any pending gesture hint without emphasizing either link;
+reading back through a long page must not imply previous-chapter navigation. Use the reading palette's
+muted editorial color for hints and interactive color for direct hover/focus.
+Preserve the page's native scrolling: hints never navigate, capture input, move
+focus, jump to the footer, or drive the 3D object. Support wheel, touch, keyboard
+scroll keys and scrollbar movement. Ignore pinch/zoom and horizontal gestures.
+Accumulate 18 px of vertical wheel intent within a 500 ms gap, resetting that
+accumulator when direction changes; touch requires 24 px. Keep feedback visible
+until 2.4 seconds after the latest gesture. Repeated input extends one timestamp
+without restarting the rule animation or writing the DOM on every event.
+
+Direct hover or keyboard selection clears a gesture cue and blocks highlighting
+the other action. Keep upward scrolling free of automatic CTA emphasis; Previous
+responds only to direct hover or keyboard focus. Never leave both emphasized. When pointer and keyboard
+selections differ, the latest direct interaction owns the color and rule while
+the keyboard focus outline remains available. Clear hints on chapter changes and
+ignore programmatic scroll restoration. Motion off preserves these UI transitions;
+only the system's reduced-motion preference removes their animated movement.
+
+Carry the original palette's semantic roles into the reading chapters. Keep the
+sculpture and its background monochrome. Titles are off-white; emphasized copy,
+body and metadata descend through distinct slate values. Project type and Blog
+series labels use a muted cyan; active navigation, filter state, focus and action
+feedback use a clearer cyan. Inline links rest in a quiet blue-gray. Folios,
+dates, institutions and tags remain neutral. Do not flatten accent tokens to the
+heading color or use cyan for entire paragraphs. Preserve the same roles in the
+optional light tone with darker values appropriate to paper.
+
+| Preview role | Dark | Light |
+| --- | --- | --- |
+| Heading / `--ed-ink` | `#e9ecef` | `#1e2b36` |
+| Emphasis / `--ed-strong` | `#cfd8e0` | `#344553` |
+| Body / `--ed-copy` | `#b2bfcb` | `#505f6b` |
+| Metadata / `--ed-soft` | `#929fad` | `#596873` |
+| Editorial / `--ed-editorial` | `#83afb9` | `#2f6d7d` |
+| Interactive / `--ed-interactive` | `#78c8dc` | `#176b87` |
+| Inline link / `--ed-link` | `#bdced4` | `#405f6b` |
+
+Reserve `--ed-faint` for redundant decoration, and keep readable text at metadata
+contrast or above. Map the original portfolio tokens to these roles within the
+chapter, including separate standard and soft hairlines and tone-aware focus.
+
+Projects and Blogs share a 16 px gap between the chapter title and its description
+on desktop and mobile.
+
+Restore the compact editorial hierarchy: 36 px desktop / 30 px mobile chapter
+headings, 23 px featured project titles, 19 px project titles, 22 px blog titles
+and 14 px reading copy. Keep titles in medium/semibold weights and the About
+standfirst near 20 px. Keep desktop blog media at 300 px and featured project
+media at 420 px. Paper-backed diagrams remain intact as compact figure plates:
+apply a scoped 0.72 brightness multiplier on dark surfaces (0.86 on hover/focus)
+to the whole plate, including letterboxing. Mark these assets individually;
+do not key out white pixels, invert, blend away or regenerate diagrams. Other
+thumbnails keep their original image colors. Public detail views retain originals.
+The static About cutout uses a dedicated editorial alpha mask eroded by a 4 px disk
+at the original 1049 × 925 resolution, then lightly feathered. Keep the visible
+RGB pixels intact and never expand the original alpha. This removes the source
+matte's pale contour on charcoal without changing the face or adding a backing
+plate. Keep the original portrait and depth assets unchanged; the fixed home does not
+load the point-cloud enhancement.
+
+Each chapter scrolls internally, never into the next chapter. Bottom navigation
+follows Cover → Projects → Blogs → About → Cover: left arrow is the preceding
+chapter, right arrow the following chapter. About closes the sequence with an
+explicit `Cover →` action. Keep the arrows at the outer edges of their
+labels and align numbers and labels vertically. The persistent chapter index,
+brand link, Escape, browser history and direct hashes keep all chapters reachable.
+Bound the bottom navigation to a centered 440 px rail with two separate short
+top hairlines and a 36 px gap, rather than one full-content-width rule.
+Keep at least 44 px touch height and use
+the established left-origin rule response on hover and focus. Restore the original
+footer note below navigation in each independently scrollable chapter: “A small
+collection of work, research, and ideas gathered along the way.” Keep its original
+Cormorant Garamond italic at 16 px, neutral metadata color, centered and unframed.
+It belongs to the content flow; the tiny fixed folio is not a replacement for it.
+Move keyboard focus to the incoming heading, make hidden
+chapters inert, and restore cover focus when returning. Fade outgoing text over
+220 ms and introduce incoming text after 240 ms with a 440 ms fade, keeping motion
+within 3 px. The reading scrim starts immediately and eases over 720 ms; chapter
+changes leave it unchanged. Reduced motion removes these transitions. Freeze the
+live renderer in place while reading, falling back to an embedded responsive
+poster when required. Returning to the cover
+resumes the existing scene without replaying its introduction. Preserve the
+actual project/blog content, filters and disclosures. All project links use the native project routes generated by the common template.
+Portfolio Blog links retain their new-tab behavior and use local article routes
+so preview builds and deployed pages share the same navigation. This separation
+is intentional: the Blog is an independent, information-dense reading destination
+with its own theme preference. Do not merge its theme or tab policy with Portfolio.
+Same-tab navigation between the home, project pages and Blog documents uses a
+360 ms native root crossfade where cross-document View Transitions are supported.
+Keep browser navigation, modified clicks, new tabs, anchors and history native;
+never delay the link with an opacity timer or replace documents with fetched HTML.
+Retain existing chapter fades for same-document navigation. Reduced motion and
+unsupported browsers use ordinary document navigation without a fade.
+
+The common project template follows the approved VARCO3D reference and extends the same dark-default palette,
+header, navigation, typography and accent roles to long-form reading. Preserve
+the actual project prose, contributions, metadata and original video pixels.
+Use native document scrolling, a 720 px reading column and a quiet right-hand
+metadata/contents column inside the 1180 px shell. Keep the title at 40 px,
+section headings at 24 px and body at 15 px / 1.75; on phones use 28 px, 22 px
+and 14 px respectively. Metadata remains 10–12 px. Below 800 px, metadata follows
+the overview figure in the single-column flow. The faint cover atmosphere is a
+static image under a charcoal veil; do not run another 3D scene behind the text.
+Pause the embedded showcase when offscreen, hidden or explicitly paused, and
+start paused for reduced motion or data saving. Keep figure colors intact,
+provide a quiet play/pause control, and preserve the optional light surface.
+Previous/next project links use the compact 440 px rail. This layout is scoped to `.case-study` and applies to every generated project.
+Retain authored image sizes within the reading rail, make video/iframe media
+responsive, and contain wide equations and tables in native horizontal scroll.
+
+### Cover material and compatibility rules
+
+The home owns chapter navigation in `js/portfolio-chapters.js`; its hidden chapters
+are inert. Selected/All, disclosures and each chapter scroll position survive
+reloads and detail return through session storage. A native project return restores
+the departure link focus. The Blog is an independent publication: keep its original
+utility row and editorial reading layout without the portfolio chapter masthead
+or sidebar. Shared page backdrops, local fonts and compact type connect it to
+the portfolio while the Blog retains its own original color system. Use
+`Hwan’s Blog` in the home utility row and the existing Blog Home return on posts.
+On phones, shorten `Blog Home` to `Blog` beside the left arrow; keep the destination
+visible even for readers entering through a direct article link.
+Preserve the post utility row's scroll-away/reveal-on-up behavior. Dark remains
+the portfolio default; the independent Blog defaults to light. Portfolio and Labs
+must be reachable in this utility row, without
+scrolling to the footer or introducing a second bar. Compact Contents is a native
+disclosure before the article; wide reading uses the existing right-margin index.
+These indexes derive from the same generated heading tree with no duplicate IDs.
+
+The Blog home, search and archives reuse the actual Portfolio sculpture render,
+not just its background color. One decorative fixed pseudo-element uses the
+existing responsive `assets/hero/sculpture/poster-{1440,768,390}.webp` frames
+behind listing content and its footer. Keep those listing surfaces transparent.
+Article pages use a plain paper or charcoal background throughout, with no scene
+pseudo-element or poster download, to keep long-form reading distraction-free. Preserve
+the home's original dark banner above this backdrop, including its hierarchical
+decoding, sparse-inference and VARCO3D collage, typography and contrast overlay.
+The banner remains dark in both reading themes; its original mobile layout hides
+the collage below 768px. Let the same viewport-aligned sculpture frame appear
+very faintly beneath the collage: a fixed decorative layer at 18% opacity, clipped
+to the banner and beneath its original contrast overlay. Keep this dark banner
+layer independent of the light reading veil. The shared sculpture remains visible
+below the banner at its established reading strength.
+Use a neutral charcoal veil in dark mode
+and a warm paper veil in light mode: strongest beneath the reading column,
+lighter at the outer margin so the form, architecture and shadows remain visible.
+Keep the dark scene subordinate to reading: use a 96% charcoal veil near the
+central copy, easing to 84% at the far edge. Phones use the portrait frame with
+a 97.8–95% veil. Keep native document scrolling;
+do not load the hero runtime, WebGL, animation or pointer tracking on the Blog.
+The image is decorative, cannot intercept input and is omitted in print. Sticky
+utility backing uses `--ed-header`. Search and archive openings adapt their text
+and controls to the reading theme over the shared scene. Home banner controls
+keep their light-on-dark treatment until the utility row scrolls onto content.
+Blog content ink and syntax colors remain owned by `blogs/css/blog.css`,
+`typography.css` and `post.css`, including the established green accent hierarchy.
+Do not remap the whole Blog to Portfolio `--ed-*` tokens or replace its syntax hues.
+Light article code blocks and tables stay at the page paper's brightness, with
+a faint slate tint from the native Blog line color (30% line, 70% paper). Do not
+mix white into panels: brighter rectangles interrupt the continuous reading
+surface. Inline code, table headers and quotes use a 3% ink wash over this panel;
+alternate table rows use just 1%. Keep rules soft with an 8% ink mix into paper.
+Define these article-only surfaces in `site-reading.css`. Preserve the native
+syntax hue hierarchy while adjusting text lightness for readable comments,
+punctuation, language labels, literals and strings against these quiet surfaces.
+Preserve dark component colors, caption and feedback ink colors;
+copy-code hover uses the same light panel wash. Copy-link and its confirmation
+surface use the light panel instead of white; hover and keyboard focus use the
+muted panel with the native green accent. Dark keyboard focus matches dark hover.
+Apply narrow fixes to actual
+theme mismatches, such as unlabelled code blocks missing the dark text color.
+Keep tables horizontally scrollable, with
+4 px corners, soft rules and subtle alternate rows. Preserve article media source
+pixels. In light articles, white-backed figures blend into paper with `multiply`;
+the build marks local PNG/WebP/JPEG figures with opaque white corners and substantial
+white space as `data-reading-surface="paper"`. Transparent cutouts, ordinary photos,
+animated media, dark mode and enlarged dialog images keep their original display.
+An authored `data-reading-surface="original"` opts out; `"paper"` can explicitly opt in.
+Detection runs only at build time, with no reader-side image analysis or extra downloads.
+The scrolled utility row keeps
+native Blog text and control colors over the shared backdrop. Copy-link stays outside the left reading margin;
+reset legacy sidebar positioning offsets explicitly when the rail is absent.
+
+`js/site-theme.js` applies the theme before CSS paints, with independent preferences:
+Portfolio home and project details use `portfolio-theme`, defaulting to dark;
+the standalone Blog under `/blogs/` uses `blog-reading-theme`, defaulting to light.
+The Blogs preview chapter belongs to the Portfolio and uses its preference.
+Migrate the former `site-theme` into the Portfolio only. Ignore the old mirrored
+`blog-theme` for the new Blog preference so a prior Portfolio choice cannot
+override its light default. Theme toggles, URL overrides, new tabs, storage events
+and BFCache `pageshow` synchronize only within the relevant area. The cover itself
+remains monochrome ink in either Portfolio reading theme.
+User-initiated theme toggles reuse the 360 ms whole-screen crossfade across
+Portfolio chapters, project details and Blog pages. Capture complete old/new
+palettes by suppressing per-element CSS transitions only during the fade. Keep
+the overlay non-interactive; rapid toggles resolve to the latest choice without
+moving focus or reading position. Initial paint, stored-preference sync, hidden
+tabs, reduced motion and unsupported browsers apply the theme immediately.
+Manual 3D Motion is stored separately as `portfolio-motion`. It never suppresses UI
+feedback or plays the entrance again.
+
+The lightweight `js/hero-loader.js` avoids the WebGL bundle on reduced-motion,
+data-saving and directly opened reading pages. Direct reading-to-Cover and a later
+reduced-motion release initialize only the finished geometry. A bundle completing
+after chapter departure does not create a renderer until Cover is active again.
+
+The production portfolio hero is the approved v32 sculpture cover, replacing the
 former Wave. `js/hero.js` and `js/hero-sculpture/` own its source; the build emits
-`assets/js/hero-sculpture.js`. Its styles are isolated in
-`assets/css/hero-sculpture.css`, while copy remains in
+`assets/js/hero-sculpture.js`. Its material and base cover styles are in
+`assets/css/hero-sculpture.css`, with fixed layout in `portfolio-chapters.css`, while copy remains in
 `content/portfolio/home.json`. Do not load old Wave or article-demo code on home.
 
 The cover uses a monochrome stone environment informed by onformative's AI Sculpting
@@ -722,8 +1001,17 @@ the dark left margin as a readable editorial caption. Use real Manrope Regular
 outlines for the moderate display name and practice statement: a CSS 400/500 request
 must not silently fall back to the older 600/700-only font subset.
 Keep role and affiliation in smaller Inter, and the out-of-flow folio in quiet mono.
-Keep the identity block's position fixed when opening the vertical rhythm: lower
-the practice statement and its chapter links with a larger gap after affiliation.
+Keep name, role and affiliation fixed. Place `About me ↗` immediately below the
+affiliation, in 11.5 px muted text with a faint underline and a 44 px touch height.
+It is a secondary profile link without a number or button frame. On desktop,
+accommodate it within the existing pause before the practice statement, keeping
+that statement and the primary chapter links in their established positions.
+Its hover and keyboard focus share the primary CTA response: a 480 ms underline
+sweep from left to right over the faint resting line, 300 ms accent color, a 1 px
+lift and a 2 px rightward arrow motion. Keep only the selected Cover link highlighted,
+including when focus and pointer target different links. Reduced motion keeps
+the color and line feedback immediate, with no lift or arrow translation.
+Allow a little more height on phones so the link and practice copy remain separate.
 Set the practice paragraph at 16 px on desktop and 15 px on small phones,
 with 1.72 line height and a bounded reading width. Distill it to three complete
 phrases: building 3D generative systems, geometric representations, and efficient
@@ -733,16 +1021,18 @@ do not shrink the font or force no-wrap to preserve the line count.
 Keep decorative geometry clear of actual text/action bounds during pointer motion.
 Projects / Blogs are unfilled chapter links with small mono numbers, Space Grotesk
 labels, a single resting top hairline and the established hover line/arrow response.
-Keep these labels compact at 12 px, with shorter rules on a 264 px action rail.
+Keep these labels compact at 12 px, with short rules on a 264 px action rail that
+shrinks to the available width. Use a 22 px gap.
 Align each small number and label on the same vertical center; do not independently
 baseline-align the number against a centered label or add an upward offset.
 Do not add a surrounding button frame or a filled primary action. Keep at least
 44 px touch height. On compact screens, move the spatial scene below the introduction
-and retain both primary actions in the first viewport. CTA hover or keyboard focus
+and retain both primary actions and the profile link in the first viewport. CTA hover or keyboard focus
 may subtly emphasize the sculpture or architecture.
-The cover masthead keeps the signature at left and only About at right, including
-on mobile. Projects and Blogs already have primary chapter links in the reading
-area; do not duplicate them in the masthead merely to fill the upper-right space.
+The cover masthead keeps only the signature at left, including on mobile. The
+primary actions and the About identity link are already within the introduction;
+do not duplicate them in the cover masthead merely to fill the upper-right space. Reading chapters
+keep the full masthead navigation.
 
 Place a quiet down-chevron link to Projects at the bottom center of the first
 viewport, with a 44 px hit area. Keep it visible even when a compact cover exceeds
@@ -750,18 +1040,11 @@ the viewport height. Reuse the first-party chevron icon and restrained vertical
 pulse; disable the pulse under Motion off or reduced motion. Keep keyboard focus
 visible and honor reduced motion for the native section scroll.
 
-The carved form refines from coarse to finished once on initial
-load, over about four seconds. Map downward scroll to the reverse of that same
-surface sequence; scrolling back restores its refinement. Keep the form's authored
-orientation fixed, with no tipping. Complete the reverse traversal over the first
-72% of the cover's scroll distance. During the entrance, retract only the surface
-already formed, so early scroll cannot jump to a finished mesh. Do not restart the
-entrance clock on resize, scroll or reentry. Pause offscreen, in hidden tabs and
-under manual Motion off; stop rendering when the sampled state settles. Use the
-finished poster for reduced motion or data saving; a live reduced-motion change
-resolves either intro or scroll refinement to its final surface. The footer retains only Motion,
-without a Refine form or study link. Source organization, font licenses,
-reproducible builds and focused checks are documented in `docs/hero-sculpture.md`.
+The carved form refines once on the first cover load over about four seconds,
+then remains finished. The fixed chapter layout never reverses geometry on scroll.
+The active rules for scheduling, parallax, pause and fallback are specified above.
+Keep source organization and font licenses in `docs/hero-sculpture.md` aligned
+with the reproducible build.
 
 Canonical timing:
 
@@ -778,8 +1061,7 @@ Rules:
 - Do not animate dimensions, padding, or grid tracks on hover.
 - Keep movement within 1 to 4px.
 - Treat the sculpture canvas as the spatial-motion exception: fine-pointer input
-  may drive restrained damped camera parallax, and scroll reverses the refinement
-  surface. Keep the authored object orientation fixed and stop rendering at rest.
+  may drive restrained damped camera parallax, while the finished surface stays fixed. Keep the authored object orientation fixed and stop rendering at rest.
 - Treat the About portrait point cloud as a progressive enhancement. Keep its
   colored points orthographically aligned to one flat depth plane at rest; on
   fine-pointer hover, restore the authored depth gradually and allow only a
@@ -864,8 +1146,9 @@ links use underline motion only. Do not translate their text or icons on hover.
   open so the control does not sit over long-form headings and preview media.
 - Blog-home back-to-top remains desktop-only, while long-form post pages keep
   the compact control available on mobile as an end-to-top reading affordance.
-- Long-form TOC and share controls are desktop-only reading rails. Anchor both
-  to the shared reading-column tokens so they remain outside the article body.
+- Persistent long-form TOC and share controls are desktop-only reading rails.
+  Anchor both to the shared reading-column tokens so they remain outside the
+  article body; compact screens use the native Contents disclosure above it.
 
 ## Change Checklist
 

@@ -1,4 +1,6 @@
 const { render: renderSiteIcon } = require('../../assets/js/site-icons');
+const { renderSiteHeader } = require('./site-header');
+const cheerio = require('cheerio');
 
 function escapeHtml(value) {
     return String(value || '')
@@ -11,84 +13,6 @@ function escapeHtml(value) {
 
 function renderInlineStrong(value) {
     return escapeHtml(value).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-}
-
-function renderProjectSidebarNav(projectNav) {
-    if (!projectNav || !Array.isArray(projectNav.items) || projectNav.items.length < 2) {
-        return '';
-    }
-
-    const currentItem = projectNav.items.find((item) => item.slug === projectNav.currentSlug);
-    if (!currentItem) {
-        return '';
-    }
-
-    const items = projectNav.items
-        .filter((item) => item.slug !== projectNav.currentSlug)
-        .map((item, index) => {
-            return `          <a href="../${escapeHtml(item.slug)}/"><span class="project-selector-index">${String(index + 1).padStart(2, '0')}</span><span>${escapeHtml(item.label)}</span></a>`;
-        })
-        .join('\n');
-
-    return `        <li class="project-nav-selector">
-          <details>
-            <summary aria-current="page">
-              ${renderSiteIcon('grid', { className: 'navicon' })}
-              <span class="project-selector-copy"><small>Switch project</small><strong>${escapeHtml(currentItem.label)}</strong></span>
-              ${renderSiteIcon('chevron-down', { className: 'project-selector-toggle' })}
-            </summary>
-            <div class="project-selector-options">
-${items}
-            </div>
-          </details>
-        </li>`;
-}
-
-function renderProjectNavItems(projectNav) {
-    const projectSidebarNav = renderProjectSidebarNav(projectNav);
-    return `        <li><a href="../../#home">${renderSiteIcon('house', { className: 'navicon' })}Home</a></li>
-        <li><a href="../../#portfolio" class="active">${renderSiteIcon('images', { className: 'navicon' })} Projects</a></li>
-${projectSidebarNav}
-        <li><a href="../../blogs/">${renderSiteIcon('keyboard', { className: 'navicon' })} Blog</a></li>
-        <li><a href="../../#about">${renderSiteIcon('person', { className: 'navicon' })} About</a></li>`;
-}
-
-function renderProjectPager(projectNav) {
-    if (!projectNav || !projectNav.previous || !projectNav.next) {
-        return '';
-    }
-
-    return `<div class="portfolio-shell project-page-nav">
-        <a class="project-page-nav-link project-page-nav-prev" href="../${escapeHtml(projectNav.previous.slug)}/">
-          <span class="project-page-nav-kicker">${renderSiteIcon('arrow-left')} Previous Project</span>
-          <strong>${escapeHtml(projectNav.previous.label)}</strong>
-        </a>
-        <a class="project-page-nav-link project-page-nav-next" href="../${escapeHtml(projectNav.next.slug)}/">
-          <span class="project-page-nav-kicker">Next Project ${renderSiteIcon('arrow-right')}</span>
-          <strong>${escapeHtml(projectNav.next.label)}</strong>
-        </a>
-      </div>`;
-}
-
-function normalizeProjectInfoLabels(contentHtml) {
-    return String(contentHtml || '').replace(
-        /(<div class="portfolio-info">[\s\S]*?<\/div>)/g,
-        (block) => block.replace(/(<strong>[^<]+<\/strong>):\s*/g, '$1')
-    );
-}
-
-function renderProjectHero(project) {
-    const title = project.title || 'Project';
-    const heroTitle = project.heroTitle || title;
-    const subtitles = Array.isArray(project.subtitles) ? project.subtitles : [];
-
-    return `      <div class="portfolio-shell project-hero-shell">
-        <div class="project-hero-header">
-          <span class="project-hero-kicker">Project Case Study</span>
-          <h1><span class="text-gradient">${heroTitle}</span></h1>
-          ${subtitles.length ? `<div class="project-hero-meta">${subtitles.map((subtitle) => `<span>${escapeHtml(subtitle)}</span>`).join('')}</div>` : ''}
-        </div>
-      </div>`;
 }
 
 function renderProjectDetailItem(detail) {
@@ -118,97 +42,6 @@ function renderProjectDetailItem(detail) {
     return `              <li><strong>${label}</strong>${valueHtml}</li>`;
 }
 
-function renderProjectOverviewMedia(media) {
-    if (!media || !media.src) {
-        return '';
-    }
-
-    const caption = media.caption ? escapeHtml(media.caption) : '';
-    const captionLinkLabel = media.captionLinkLabel
-        ? escapeHtml(media.captionLinkLabel)
-        : '';
-    const captionUrl = media.captionUrl ? String(media.captionUrl) : '';
-    const captionExternalAttrs = /^https?:\/\//i.test(captionUrl)
-        ? ' target="_blank" rel="noopener noreferrer"'
-        : '';
-    const captionLinkHtml = captionLinkLabel && captionUrl
-        ? `<a href="${escapeHtml(captionUrl)}"${captionExternalAttrs}>${captionLinkLabel}</a>`
-        : '';
-    const captionHtml = caption || captionLinkHtml
-        ? `<figcaption>${caption}${caption && captionLinkHtml ? ' ' : ''}${captionLinkHtml}</figcaption>`
-        : '';
-    const posterAttr = media.poster ? ` poster="${escapeHtml(media.poster)}"` : '';
-    const ariaLabelAttr = media.ariaLabel
-        ? ` aria-label="${escapeHtml(media.ariaLabel)}"`
-        : '';
-
-    return `<figure class="project-overview-media">
-                <video autoplay muted loop playsinline preload="metadata"${posterAttr}${ariaLabelAttr}>
-                  <source src="${escapeHtml(media.src)}" type="${escapeHtml(media.mimeType || 'video/mp4')}">
-                </video>
-                ${captionHtml}
-              </figure>`;
-}
-
-function renderCaseStudyDetailsInner(project, contentHtml, projectNav = null) {
-    const overview = Array.isArray(project.overview) ? project.overview.filter(Boolean) : [];
-    const overviewMediaHtml = renderProjectOverviewMedia(project.overviewMedia);
-    const contributions = Array.isArray(project.contributions)
-        ? project.contributions.filter(Boolean)
-        : [];
-    const details = Array.isArray(project.details) ? project.details.filter(Boolean) : [];
-    const pagerHtml = renderProjectPager(projectNav);
-
-    return `${renderProjectHero(project)}
-
-      <div class="portfolio-shell portfolio-details-container project-case-study-overview project-overview-shell">
-        <div class="project-overview-layout">
-          <div class="project-overview-copy">
-            <div class="portfolio-description project-overview">
-              <h2>Project Overview</h2>
-              ${overview.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('\n              ')}
-              ${overviewMediaHtml}
-              ${contributions.length ? `<div class="project-contributions">
-                <p>Core contributions</p>
-                <ul>
-${contributions.map((contribution) => `                  <li>${renderInlineStrong(contribution)}</li>`).join('\n')}
-                </ul>
-              </div>` : ''}
-            </div>
-          </div>
-          <div class="project-overview-meta">
-            <aside class="portfolio-info">
-              <h3>Project Details</h3>
-              <ul>
-${details.map(renderProjectDetailItem).join('\n')}
-              </ul>
-            </aside>
-          </div>
-        </div>
-      </div>
-
-      <div class="portfolio-shell project-case-study-shell">
-        <article class="portfolio-description project-case-study-article">
-${contentHtml}
-        </article>
-      </div>
-${pagerHtml}`;
-}
-
-function renderProjectDetailsInner(project, contentHtml, projectNav = null) {
-    if (project.layout === 'case-study') {
-        return renderCaseStudyDetailsInner(project, contentHtml, projectNav);
-    }
-
-    const normalizedContentHtml = normalizeProjectInfoLabels(contentHtml);
-    const pagerHtml = renderProjectPager(projectNav);
-
-    return `${renderProjectHero(project)}
-
-${normalizedContentHtml}
-${pagerHtml}`;
-}
-
 function renderMathRuntime(contentHtml) {
     if (!/(\$\$|\\\(|\\\[|(?:^|[^\\])\$[^$\n]+\$)/m.test(String(contentHtml || ''))) {
         return '';
@@ -220,108 +53,79 @@ function renderMathRuntime(contentHtml) {
 
 function renderProjectPage({ project, contentHtml, projectNav = null }) {
     const title = project.title || 'Project';
-    const description = project.description || '';
-    const keywords = project.keywords || '';
-    const detailsInner = renderProjectDetailsInner(project, contentHtml, projectNav);
-    const mathRuntime = renderMathRuntime(contentHtml);
-
+    const heroTitle = project.heroTitle || title;
+    const colon = heroTitle.indexOf(':');
+    const heroHtml = colon >= 0 ? `<span>${escapeHtml(heroTitle.slice(0,colon+1))}</span>${escapeHtml(heroTitle.slice(colon+1).trim())}` : escapeHtml(heroTitle);
+    const $ = cheerio.load(contentHtml, null, false);
+    const entries = [['overview','Overview']];
+    const usedIds = new Set(['overview','contributions']);
+    if (project.contributions?.length) entries.push(['contributions','Core contributions']);
+    $('h2').each((_, node) => {
+        const heading = $(node), label = heading.text();
+        const base = heading.attr('id') || label.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'section';
+        let id = base, suffix = 2;
+        while (usedIds.has(id)) id = `${base}-${suffix++}`;
+        usedIds.add(id); heading.attr('id',id); entries.push([id,label]);
+    });
+    // Keep every authored node, including MathJax source, figures and code.
+    const article = $.html();
+    const media = project.overviewMedia;
+    const mediaHtml = media?.src ? `<figure class="case-visual project-overview-media">
+        <video muted loop playsinline preload="none" poster="${escapeHtml(media.poster || '')}" aria-label="${escapeHtml(media.ariaLabel || 'Project showcase')}">
+            <source src="${escapeHtml(media.src)}" type="${escapeHtml(media.mimeType || 'video/mp4')}">
+        </video>
+        <div class="case-caption"><figcaption>${escapeHtml(media.caption || '')} ${media.captionUrl ? `<a href="${escapeHtml(media.captionUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(media.captionLinkLabel || 'Source')}</a>` : ''}</figcaption><button class="case-media-toggle" type="button">Play</button></div>
+    </figure>` : '';
+    const pager = projectNav?.previous && projectNav?.next ? `<nav class="edition-next project-page-nav" aria-label="Previous and next projects">
+        <a class="project-page-nav-prev" href="../${escapeHtml(projectNav.previous.slug)}/" rel="prev"><span>← Previous project</span><strong>${escapeHtml(projectNav.previous.label)}</strong></a>
+        <a class="project-page-nav-next" href="../${escapeHtml(projectNav.next.slug)}/" rel="next"><span>Next project →</span><strong>${escapeHtml(projectNav.next.label)}</strong></a>
+    </nav>` : '';
     return `<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>${escapeHtml(title)}</title>
-  <meta content="${escapeHtml(description)}" name="description">
-  <meta content="${escapeHtml(keywords)}" name="keywords">
-
-  <link href="../../assets/favicon.ico" rel="icon">
-  <link href="../../assets/favicon.ico" rel="apple-touch-icon">
-
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <script src="../../assets/js/site-icons.js"></script>
-  <script src="../../js/sidebar-controller.js"></script>
-  <link href="../../assets/css/portfolio.css" rel="stylesheet">
-  <link href="../../assets/css/project-detail.css" rel="stylesheet">
-  <link href="/blogs/css/scroll-progress.css" rel="stylesheet">
-  <link href="../../assets/css/site-icons.css" rel="stylesheet">
-${mathRuntime}
-  <link href="../../css/sidebar-nav.css" rel="stylesheet">
-
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
-  <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-RF7ETSKPK9');
-  </script>
-</head>
-
-<body class="portfolio-details-page">
-  <header id="header" class="header dark-background">
-    <div class="profile-img">
-      <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="sidebar-profile-image">
-    </div>
-
-    <a href="../../" class="logo">
-      <span class="sitename">Hwan Heo</span>
-    </a>
-
-    <div class="social-links">
-      <a href="https://github.com/hwanhuh" class="github" aria-label="GitHub">${renderSiteIcon('github')}</a>
-      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin" aria-label="LinkedIn">${renderSiteIcon('linkedin')}</a>
-      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram" aria-label="Google Scholar">${renderSiteIcon('mortarboard-fill')}</a>
-      <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus" aria-label="Email">${renderSiteIcon('envelope-fill')}</a>
-    </div>
-
-    <nav id="navmenu" class="navmenu">
-      <ul>
-${renderProjectNavItems(projectNav)}
-      </ul>
-    </nav>
-  </header>
-
-  <main class="main">
-    <div class="page-title dark-background">
-      <div class="portfolio-shell">
-        <nav class="breadcrumbs" aria-label="Breadcrumb">
-          <ol>
-            <li><a href="../../">Home</a></li>
-            <li><a href="../../#portfolio">Projects</a></li>
-            <li class="current">${escapeHtml(title)}</li>
-          </ol>
-        </nav>
-      </div>
-    </div>
-
-    <section id="portfolio-details" class="portfolio-details section">
-${detailsInner}
-    </section>
-  </main>
-
-  <footer id="footer" class="footer light-background">
-    <div class="portfolio-shell">
-      <div class="copyright">
-        <p>© <span>Copyright</span> <strong class="project-footer-owner sitename">Hwan Heo</strong> <span>All Rights Reserved</span></p>
-      </div>
-    </div>
-  </footer>
-
-  <button id="scroll-top" class="scroll-top project-scroll-top" type="button" aria-label="Back to top">
-    ${renderSiteIcon('arrow-up')}
-  </button>
-
-  <script src="../../assets/js/main.js"></script>
-  <script src="/blogs/js/scroll-progress.js"></script>
-</body>
-
-</html>
-`;
+<html lang="en"><head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>${escapeHtml(title)}</title><meta name="description" content="${escapeHtml(project.description || '')}"><meta name="keywords" content="${escapeHtml(project.keywords || '')}">
+    <link href="/assets/favicon.ico" rel="icon">
+    <script src="/js/site-theme.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="/assets/css/site-theme.css" rel="stylesheet">
+    <link href="/assets/css/portfolio-chapters.css" rel="stylesheet">
+    <link href="/assets/css/project-detail.css" rel="stylesheet">
+    <link href="/assets/css/site-icons.css" rel="stylesheet">
+    <script src="/assets/js/site-icons.js"></script>
+${renderMathRuntime(contentHtml)}
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-RF7ETSKPK9');</script>
+</head><body class="edition-site case-study portfolio-details-page" data-surface="reading" data-chapter="detail">
+    <a class="case-skip" href="#overview">Skip to project</a>
+    <div class="case-atmosphere" aria-hidden="true"></div>
+${renderSiteHeader()}
+    <main id="main" class="portfolio-details"><div class="case-shell">
+        <header class="case-opening project-hero-header">
+            <a class="case-breadcrumb" href="/#portfolio"><span aria-hidden="true">←</span> Projects</a>
+            <p class="case-kicker">01 / PROJECT CASE STUDY</p>
+            <h1>${heroHtml}</h1>
+            <p class="case-byline">${(project.subtitles || []).map(value => `<span>${escapeHtml(value)}</span>`).join('')}</p>
+        </header>
+        <div class="case-layout">
+            <section class="case-overview project-overview" aria-labelledby="overview"><h2 id="overview">Project Overview</h2>
+                ${(project.overview || []).map(value => `<p>${escapeHtml(value)}</p>`).join('')}
+            </section>
+            <aside class="case-meta" aria-label="Project details">
+                <div class="portfolio-info"><h2>Project Details</h2><ul>${(project.details || []).map(renderProjectDetailItem).join('')}</ul></div>
+                <nav class="case-contents" aria-label="On this page"><h2>In this case study</h2><ol>${entries.map(([id,label],index) => `<li><a href="#${id}"><span aria-hidden="true">${String(index+1).padStart(2,'0')}</span>${escapeHtml(label)}</a></li>`).join('')}</ol></nav>
+                ${projectNav?.items ? `<details class="case-project-switch"><summary>Other projects</summary>${projectNav.items.filter(item => item.slug !== projectNav.currentSlug).map(item => `<a href="../${escapeHtml(item.slug)}/">${escapeHtml(item.label)}</a>`).join('')}</details>` : ''}
+            </aside>
+            ${mediaHtml}
+            <div class="case-body">
+                ${project.contributions?.length ? `<section class="case-contributions project-contributions" aria-labelledby="contributions"><h2 id="contributions">Core contributions</h2><ul>${project.contributions.map(value => `<li>${renderInlineStrong(value)}</li>`).join('')}</ul></section>` : ''}
+                <article class="case-article project-case-study-article">${article}</article>
+            </div>
+        </div>
+        <div class="case-ending">${pager}</div>
+    </div></main>
+    <footer class="case-footer"><div class="case-shell"><p>© Hwan Heo. All Rights Reserved.</p><a href="/#portfolio">Back to Projects ↑</a></div></footer>
+    <script src="/js/project-detail.js"></script>
+</body></html>`;
 }
 
-module.exports = {
-    renderProjectPage
-};
+module.exports = { renderProjectPage };

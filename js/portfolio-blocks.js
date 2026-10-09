@@ -49,10 +49,6 @@
             </picture>
             <div class="pbr-scene" role="img" aria-label="An eroded stone form in a monumental limestone aperture, lit by raking white light"></div>
             <div class="pbr-veil"></div>
-            <header class="pbr-masthead">
-                <a class="pbr-signature" href="#home">${escapeHtml(block.title)}</a>
-                <nav aria-label="Main navigation"><a class="pbr-about-link" href="#about">About</a></nav>
-            </header>
             <div class="pbr-intro">
                 <div class="pbr-title">
                     <p class="pbr-folio">00 / PORTFOLIO</p>
@@ -62,6 +58,7 @@
                     <div class="pbr-identity">
                         <p class="pbr-role">${escapeHtml(subtitle)}</p>
                         <p class="pbr-affiliation">${escapeHtml(block.affiliation)}</p>
+                        ${block.profileLink ? `<a class="pbr-profile-link" href="${escapeHtml(block.profileLink.url)}"><span>${escapeHtml(block.profileLink.label)}</span><span aria-hidden="true">↗</span></a>` : ''}
                     </div>
                     <p class="pbr-lead">${renderHeroLead(block)}</p>
                     <div class="pbr-actions">${renderHeroActions(block.actions)}</div>
@@ -71,7 +68,7 @@
                 <span>3D generation · Systems · Graphics</span>
                 <button class="pbr-motion" type="button" aria-pressed="true" hidden>Motion on</button>
             </div></div>
-            <a class="pbr-scroll-cue" href="#portfolio" aria-label="Scroll to Projects">${icons.render('chevron-down')}</a>
+            <span class="edition-cover-folio" aria-hidden="true">00 — Cover</span>
         `;
     }
 
@@ -119,7 +116,7 @@
                     <span class="portfolio-chapter-rule"></span>
                 </div>
                 <div class="about-heading-copy">
-                    <h2>${escapeHtml(block.title)}</h2>
+                    <h2 id="edition-title-about" tabindex="-1">${escapeHtml(block.title)}</h2>
                 </div>
             </div>
 
@@ -127,13 +124,10 @@
                 <div class="about-editorial-layout">
                     <p class="about-standfirst">${block.introHtml || ''}</p>
                     <figure class="about-profile-note">
-                        <div class="about-media" data-about-portrait${depthAttribute}>
-                            <img src="${escapeHtml(block.image)}" class="about-profile-image" alt="${escapeHtml(block.imageAlt)}" loading="lazy" decoding="async">
+                        <div class="about-media">
+                            <img src="/assets/profile4-editorial.png" class="about-profile-image" alt="${escapeHtml(block.imageAlt)}" loading="lazy" decoding="async">
                         </div>
                         <figcaption class="about-identity">
-                            <p class="about-portrait-affordance" aria-hidden="true">
-                                <span>Point cloud</span><span class="about-portrait-affordance-hint">/ Hover for depth</span>
-                            </p>
                             <h3 class="about-name">${escapeHtml(block.name || block.role)}</h3>
                             <p class="about-meta">
                                 <span class="about-role">${escapeHtml(block.role)}</span>

@@ -132,8 +132,53 @@
 .pbr-copy { margin-top: 20px; }
 .pbr-hero .pbr-role { margin: 0; font-size: 13px; line-height: 1.65; font-weight: 400; color: #cbcbc5; }
 .pbr-hero .pbr-affiliation { margin-top: 4px; font-size: 11.5px; line-height: 1.65; color: #adada7; }
+.pbr-hero .pbr-profile-link {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    width: fit-content;
+    min-height: 44px;
+    color: #b7c1c1;
+    font-size: 11.5px;
+    line-height: 1.5;
+    text-decoration: none;
+    transition: color 300ms ease, transform 360ms var(--ed-ease, cubic-bezier(.22,1,.36,1));
+}
+.pbr-hero .pbr-profile-link span:first-child { position: relative; }
+.pbr-hero .pbr-profile-link span:first-child::before,
+.pbr-hero .pbr-profile-link span:first-child::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 -3px;
+    height: 1px;
+    background: rgba(183,193,193,.3);
+    pointer-events: none;
+}
+.pbr-hero .pbr-profile-link span:first-child::after {
+    background: var(--ed-cover-action, #91c3cd);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 480ms cubic-bezier(.22,1,.36,1);
+}
+.pbr-hero .pbr-profile-link span:last-child {
+    font: 400 12px/1 "Hero IBM Plex Mono", monospace;
+    opacity: .62;
+    transition: opacity var(--motion-base, 240ms) var(--ease-standard, ease),
+        transform var(--motion-slow, 360ms) var(--ease-emphasized, cubic-bezier(.22,1,.36,1));
+}
+.pbr-hero .pbr-profile-link:is(:hover, :focus-visible, .is-action-active) { color: var(--ed-cover-action, #91c3cd); }
+.pbr-hero .pbr-profile-link:is(:hover, :focus-visible) { transform: translateY(-1px); }
+.pbr-hero .pbr-profile-link:is(:hover, :focus-visible, .is-action-active) span:first-child::after { transform: scaleX(1); }
+.pbr-hero .pbr-profile-link:is(:hover, :focus-visible, .is-action-active) span:last-child { opacity: 1; transform: translateX(2px); }
+@media (prefers-reduced-motion: reduce) {
+    .pbr-hero .pbr-profile-link,
+    .pbr-hero .pbr-profile-link span:first-child::after,
+    .pbr-hero .pbr-profile-link span:last-child { transition: none; }
+    .pbr-hero .pbr-profile-link:is(:hover, :focus-visible, .is-action-active),
+    .pbr-hero .pbr-profile-link:is(:hover, :focus-visible, .is-action-active) span:last-child { transform: none; }
+}
 .pbr-hero .pbr-lead {
-    margin: clamp(68px, 8.2vh, 90px) 0 0;
+    margin: clamp(24px, calc(8.2vh - 44px), 46px) 0 0;
     max-width: 355px;
     font-family: "Manrope Cover", Manrope, sans-serif;
     font-size: 16px;
@@ -154,7 +199,8 @@
     border: 0;
     border-top: 1px solid #cecec72e;
     border-radius: 0;
-    padding: 10px 0;
+    /* Keep the 2px hover translation inside the clipped CTA. */
+    padding: 10px 4px 10px 0;
     font-family: "Hero Space Grotesk", sans-serif;
     font-size: 12px;
     font-weight: 500;
@@ -232,7 +278,7 @@
     .pbr-hero { min-height: 940px; }
     .pbr-hero .pbr-intro { inset: 177px auto auto 6vw; width: 400px; max-width: calc(100% - 12vw); }
     .pbr-hero .pbr-name { font-size: 52px; }
-    .pbr-hero .pbr-lead { margin-top: 62px; }
+    .pbr-hero .pbr-lead { margin-top: 18px; }
     .pbr-hero .pbr-veil { background: linear-gradient(180deg, #0a0a0ab3 0%, #0b0b0b85 37%, transparent 68%, #09090960 100%); }
 }
 @media (max-width: 600px) {
@@ -243,6 +289,6 @@
     .pbr-copy { margin-top: 17px; }
     .pbr-hero .pbr-role { font-size: 12px; }
     .pbr-hero .pbr-affiliation { font-size: 11px; margin-top: 4px; }
-    .pbr-hero .pbr-lead { font-size: 15px; margin-top: 56px; }
+    .pbr-hero .pbr-lead { font-size: 15px; margin-top: 12px; }
     .pbr-hero .pbr-actions { margin-top: 22px; }
 }

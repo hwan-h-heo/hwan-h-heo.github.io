@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             <article class="portfolio-blog-preview-item">
               <div class="portfolio-blog-preview-layout">
                 <a href="${escapeHtml(getPostUrl(item.post, 'eng'))}" target="_blank" rel="noopener noreferrer" class="portfolio-blog-preview-cover-link" aria-label="Read ${escapeHtml(title)}">
-                  <span class="portfolio-blog-preview-cover">
+                  <span class="portfolio-blog-preview-cover${item.id === '260201_sparse' || getPostUrl(item.post, 'eng').includes('optimizing-sparse-3d-generation-inference') ? ' edition-media-plate' : ''}">
                     <img src="${escapeHtml(preview)}" data-blog-cover data-preview-src="${escapeHtml(preview)}"${autoplaySource}${animatedSource} alt="${escapeHtml(imageAlt)}" loading="lazy" decoding="async">
                   </span>
                 </a>

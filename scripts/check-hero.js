@@ -43,24 +43,23 @@ async function main() {
                 });
                 return { lines, actions, overflow: document.documentElement.scrollWidth > innerWidth,
                     leadSize: getComputedStyle(hero.querySelector('.pbr-lead')).fontSize,
-                    about: hero.querySelector('.pbr-masthead nav').textContent.trim(), height: hero.clientHeight };
+                    about: hero.querySelector('.pbr-profile-link span').textContent.trim(), height: hero.clientHeight };
             });
             assert.deepEqual(layout.lines, [1, 1, 1]); assert(!layout.overflow);
-            assert.equal(layout.leadSize, width <= 600 ? '15px' : '16px');
-            assert.equal(layout.about, 'About');
+            assert.equal(layout.leadSize, width <= 600 ? (height <= 720 ? '14px' : '15px') : '16px');
+            assert.equal(layout.about, 'About me');
             assert.deepEqual(layout.actions.map(a => a.label), ['Projects', 'Blogs']);
             assert(layout.actions.every(a => a.height >= 44 && a.bottom < height && a.size === '12px'));
 
-            await page.evaluate(top => scrollTo({ top, behavior: 'instant' }), layout.height * .36);
-            await page.waitForFunction(() => portfolioHero.state().settled && Math.abs(portfolioHero.state().scrollProgress - .5) < .003);
-            const reversed = await page.evaluate(() => portfolioHero.state());
-            assert(Math.abs(reversed.decoding.progress - .5) < .003);
-            assert(reversed.tilts.every(t => t.x === 0 && t.z === 0));
+            const finished = await page.evaluate(() => portfolioHero.state());
+            await page.evaluate(() => dispatchEvent(new WheelEvent('wheel',{deltaY:120})));
             await page.waitForTimeout(300);
-            assert.equal(await page.evaluate(() => portfolioHero.state().frames), reversed.frames, 'Rendering must stop at rest');
-            await page.evaluate(() => scrollTo({ top: 0, behavior: 'instant' }));
-            await page.waitForFunction(() => portfolioHero.state().settled && portfolioHero.state().decoding.progress === 1);
-            assert.equal(await page.evaluate(() => portfolioHero.state().decoding.plays), 1);
+            const afterGesture = await page.evaluate(() => portfolioHero.state());
+            assert.equal(afterGesture.decoding.progress,1);
+            assert.equal(afterGesture.decoding.plays,1);
+            assert.equal(afterGesture.frames,finished.frames,'Gesture cues must not render or reverse geometry');
+            assert.equal(await page.evaluate(() => scrollY),0);
+            assert(afterGesture.tilts.every(t => t.x === 0 && t.y === 0 && t.z === 0));
 
             // Programmatic activation avoids scrolling the mobile footer into view.
             await page.evaluate(() => document.querySelector('.pbr-motion').click());
@@ -69,15 +68,13 @@ async function main() {
             await page.waitForTimeout(300);
             assert.equal(await page.evaluate(() => portfolioHero.state().frames), paused.frames);
             if (width === 1440) {
-                for (const selector of ['.pbr-actions a[href="#portfolio"]', '.pbr-actions a[href="#blog"]', '.pbr-about-link']) {
+                for (const selector of ['.pbr-actions a[href="#portfolio"]', '.pbr-actions a[href="#blog"]', '.pbr-profile-link']) {
                     await page.evaluate(() => scrollTo({ top: 0, behavior: 'instant' }));
                     const link = page.locator(selector), hash = await link.getAttribute('href');
                     await link.focus(); await page.keyboard.press('Enter');
-                    await page.waitForFunction(hash => {
-                        const rect = document.querySelector(hash).getBoundingClientRect();
-                        const atEnd = scrollY + innerHeight >= document.documentElement.scrollHeight - 2;
-                        return location.hash === hash && (Math.abs(rect.top) < 160 || (atEnd && rect.top < innerHeight && rect.bottom > 0));
-                    }, hash);
+                    await page.waitForFunction(hash => location.hash === hash && document.body.dataset.chapter === hash.slice(1),hash);
+                    await page.keyboard.press('Escape');
+                    await page.waitForFunction(() => document.body.dataset.chapter === 'home');
                 }
             }
             await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -87,7 +84,7 @@ async function main() {
             assert(await page.locator('.pbr-poster img').evaluate(el => el.complete && el.naturalWidth > 0));
             assert(await page.locator('.pbr-motion').isHidden());
             assert.deepEqual(errors, []); assert.deepEqual(retiredRequests, []);
-            console.log(`Hero ${width}px: layout, reverse refinement, idle, pause and reduced motion passed.`);
+            console.log(`Hero ${width}px: layout, fixed refinement, idle, pause and reduced motion passed.`);
             await page.close();
         }
         for (const javascriptEnabled of [false, true]) {
@@ -96,6 +93,7 @@ async function main() {
             await page.goto(base);
             assert(await page.locator('.pbr-name').isVisible());
             assert.equal(await page.locator('.pbr-actions a').count(), 2);
+            assert(await page.locator('.pbr-profile-link').isVisible());
             assert(await page.locator('.pbr-motion').isHidden());
             assert(await page.locator('.pbr-poster img').evaluate(el => el.complete && el.naturalWidth > 0));
             await page.close();
