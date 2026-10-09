@@ -1387,16 +1387,22 @@ async function assertPostInteractions(page, testCase, width, options) {
         }));
         assert(themeState.theme === 'dark', 'Post theme toggle did not switch to dark mode.');
         assert(themeState.icon?.endsWith('#icon-sun'), 'Post theme toggle did not switch to the sun icon.');
-        await page.waitForFunction(() => {
-            const body = getComputedStyle(document.body).backgroundColor;
-            return body === getComputedStyle(document.querySelector('.post-masthead')).backgroundColor
-                && body === getComputedStyle(document.querySelector('#mainNav')).backgroundColor;
+        const darkSurfaceState = await page.evaluate(() => {
+            // The unpinned article header is transparent in both themes.
+            // Compare the visible surface, as assertPostNavigation does.
+            function visibleBackground(element) {
+                for (let node = element; node; node = node.parentElement) {
+                    const color = getComputedStyle(node).backgroundColor;
+                    if (color !== 'transparent' && color !== 'rgba(0, 0, 0, 0)') return color;
+                }
+                return 'rgba(0, 0, 0, 0)';
+            }
+            return {
+                body: visibleBackground(document.body),
+                masthead: visibleBackground(document.querySelector('.post-masthead')),
+                utilities: visibleBackground(document.querySelector('#mainNav'))
+            };
         });
-        const darkSurfaceState = await page.evaluate(() => ({
-            body: getComputedStyle(document.body).backgroundColor,
-            masthead: getComputedStyle(document.querySelector('.post-masthead')).backgroundColor,
-            utilities: getComputedStyle(document.querySelector('#mainNav')).backgroundColor
-        }));
         assert(
             darkSurfaceState.body === darkSurfaceState.masthead && darkSurfaceState.body === darkSurfaceState.utilities,
             `Dark post opening no longer reads as one continuous surface: ${JSON.stringify(darkSurfaceState)}`
@@ -1546,9 +1552,12 @@ async function assertSharedSidebar(page, testCase, width, options) {
             assert(await page.locator('.post-nav-home').isVisible(), 'Blog Home is missing from the original utility row.');
             const contents = page.locator('.post-contents');
             if (width < 1600 && await contents.count()) {
+                // The nested-TOC check may leave this same disclosure open.
+                if (await contents.evaluate(element => element.open)) await contents.locator('summary').click();
                 await contents.locator('summary').click();
                 assert(await contents.locator('nav').isVisible(), 'Compact Contents did not open.');
                 await contents.locator('summary').click();
+                assert(!await contents.locator('nav').isVisible(), 'Compact Contents did not close.');
             }
         }
         return;
