@@ -1,0 +1,51 @@
+/* Article-local mathematical disclosures; native details owns interaction. */
+.main-content .quad-note {
+    margin: 1.8rem 0;
+    padding: 0;
+    border-block: 1px solid var(--blog-color-line, #dce5ee);
+    min-width: 0;
+}
+
+.main-content .quad-note > summary {
+    padding: 1rem 0;
+    color: var(--blog-color-heading, #1f2a34);
+    font-size: 0.94rem;
+    font-weight: 600;
+    line-height: 1.65;
+    cursor: pointer;
+}
+
+.main-content .quad-note > summary::marker {
+    color: var(--blog-color-accent-strong, #0d6f5a);
+}
+
+.main-content .quad-note > summary:focus-visible {
+    outline: 2px solid var(--blog-color-accent-strong, #0d6f5a);
+    outline-offset: 3px;
+}
+
+.main-content .quad-note[open] {
+    padding-bottom: 1rem;
+}
+
+.main-content .quad-note[open] > summary {
+    border-bottom: 1px solid var(--blog-color-line-soft, #e1e8ed);
+    margin-bottom: 1.1rem;
+}
+
+.main-content .quad-note .katex-display {
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-block: 0.2rem;
+}
+
+.main-content .quad-note table {
+    font-size: 0.88em;
+}
+
+.main-content .quad-remesh-video video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #0b1016;
+}
