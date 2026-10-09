@@ -1,142 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Neural Rendering in Game Engine</title>
-  <meta content="Case study of a 360-video-to-Gaussian-Splatting pipeline with fisheye CUDA rasterization and Unity and Unreal Engine deployment." name="description">
-  <meta content="" name="keywords">
-
-  <link href="../../assets/favicon.ico" rel="icon">
-  <link href="../../assets/favicon.ico" rel="apple-touch-icon">
-
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <script src="../../assets/js/site-icons.js?v=76c23064c5"></script>
-  <script src="../../js/sidebar-controller.js?v=3db1bd5d00"></script>
-  <link href="../../assets/css/portfolio.css?v=eb11a21519" rel="stylesheet">
-  <link href="../../assets/css/project-detail.css?v=143930b0ee" rel="stylesheet">
-  <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet">
-  <link href="../../assets/css/site-icons.css?v=32957b8b04" rel="stylesheet">
+<html lang="en"><head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Neural Rendering in Game Engine</title><meta name="description" content="Case study of a 360-video-to-Gaussian-Splatting pipeline with fisheye CUDA rasterization and Unity and Unreal Engine deployment."><meta name="keywords" content="">
+    <link href="/assets/favicon.ico" rel="icon">
+    <script src="/js/site-theme.js?v=0d82cf4a85"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="/assets/css/site-theme.css?v=447d8e8b5f" rel="stylesheet">
+    <link href="/assets/css/portfolio-chapters.css?v=8003f5a19a" rel="stylesheet">
+    <link href="/assets/css/project-detail.css?v=80d9909770" rel="stylesheet">
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet">
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
   <script src="../../js/mathjax-config.js?v=10bb88679c"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <link href="../../css/sidebar-nav.css?v=6503f0effb" rel="stylesheet">
-
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
-  <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-RF7ETSKPK9');
-  </script>
-    <meta name="site-deploy-version" content="d7a5a69c2ef2992d">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-RF7ETSKPK9');</script>
+    <meta name="site-deploy-version" content="f786aadf1249f249">
     <script defer src="/assets/js/deploy-refresh.js?v=ee9c6c8f26"></script>
-</head>
-
-<body class="portfolio-details-page">
-  <header id="header" class="header dark-background">
-    <div class="profile-img">
-      <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="sidebar-profile-image">
-    </div>
-
-    <a href="../../" class="logo">
-      <span class="sitename">Hwan Heo</span>
-    </a>
-
-    <div class="social-links">
-      <a href="https://github.com/hwanhuh" class="github" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
-      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
-      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
-      <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
-    </div>
-
-    <nav id="navmenu" class="navmenu">
-      <ul>
-        <li><a href="../../#home"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house"></use></svg>Home</a></li>
-        <li><a href="../../#portfolio" class="active"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-images"></use></svg> Projects</a></li>
-        <li class="project-nav-selector">
-          <details>
-            <summary aria-current="page">
-              <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-grid"></use></svg>
-              <span class="project-selector-copy"><small>Switch project</small><strong>Neural Rendering in Game Engine</strong></span>
-              <svg class="site-icon project-selector-toggle" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
-            </summary>
-            <div class="project-selector-options">
-          <a href="../varco3d/"><span class="project-selector-index">01</span><span>VARCO 3D</span></a>
-          <a href="../capa/"><span class="project-selector-index">02</span><span>CaPa</span></a>
-          <a href="../instant_pose/"><span class="project-selector-index">03</span><span>Instant Pose for Hash-Grid NeRFs</span></a>
-          <a href="../2dgs_viewer/"><span class="project-selector-index">04</span><span>2D GS Viewer</span></a>
-          <a href="../deepsfm/"><span class="project-selector-index">05</span><span>Deep SfM for Radiance Fields</span></a>
-            </div>
-          </details>
-        </li>
-        <li><a href="../../blogs/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-keyboard"></use></svg> Blog</a></li>
-        <li><a href="../../#about"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-person"></use></svg> About</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main class="main">
-    <div class="page-title dark-background">
-      <div class="portfolio-shell">
-        <nav class="breadcrumbs" aria-label="Breadcrumb">
-          <ol>
-            <li><a href="../../">Home</a></li>
-            <li><a href="../../#portfolio">Projects</a></li>
-            <li class="current">Neural Rendering in Game Engine</li>
-          </ol>
-        </nav>
-      </div>
-    </div>
-
-    <section id="portfolio-details" class="portfolio-details section">
-      <div class="portfolio-shell project-hero-shell">
-        <div class="project-hero-header">
-          <span class="project-hero-kicker">Project Case Study</span>
-          <h1><span class="text-gradient">Neural Rendering in Game Engine</span></h1>
-          <div class="project-hero-meta"><span>NCSOFT Research</span><span>Real-time Neural Rendering</span></div>
-        </div>
-      </div>
-
-      <div class="portfolio-shell portfolio-details-container project-case-study-overview project-overview-shell">
-        <div class="project-overview-layout">
-          <div class="project-overview-copy">
-            <div class="portfolio-description project-overview">
-              <h2>Project Overview</h2>
-              <p>I led an applied research effort to move neural rendering from offline reconstruction into Unity and Unreal Engine. The pipeline covered 360-video capture, fisheye-aware Gaussian Splatting, scene optimization, and engine integration.</p>
-              <p>The core challenge was preserving quality while changing camera models, reducing millions of Gaussians, and fitting a research representation into real engine budgets.</p>
-              
-              <div class="project-contributions">
-                <p>Core contributions</p>
-                <ul>
-                  <li>Built a 360-video capture-to-Gaussian-Splatting pipeline for large scenes.</li>
-                  <li>Implemented a custom CUDA Gaussian rasterizer for native fisheye camera supervision.</li>
-                  <li>Integrated Unity and Unreal Engine scenes with contribution-aware pruning for particle limits.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="project-overview-meta">
-            <aside class="portfolio-info">
-              <h3>Project Details</h3>
-              <ul>
-              <li><strong>Role</strong>Research Lead, Real-time Neural Rendering</li>
-              <li><strong>Organization</strong>NCSOFT Research</li>
-              <li><strong>Output</strong>Interactive Unity and Unreal Engine scenes</li>
-              <li><strong>Related Writing</strong><a href="/blogs/posts/can-nerf-be-used-in-game/">Can NeRF be Used in Game?</a></li>
-              </ul>
+</head><body class="edition-site case-study portfolio-details-page" data-surface="reading" data-chapter="detail">
+    <a class="case-skip" href="#overview">Skip to project</a>
+    <div class="case-atmosphere" aria-hidden="true"></div>
+<header class="edition-header">
+    <a class="edition-brand" href="/#home" aria-label="Hwan Heo — return to cover">Hwan Heo<span class="edition-brand-note"> / Selected work &amp; writing</span></a>
+    <nav class="edition-nav" aria-label="Portfolio chapters"><a href="/#home"><span>00</span> Cover</a><a href="/#portfolio" aria-current="page"><span>01</span> Projects</a><a href="/#blog"><span>02</span> Blogs</a><a href="/#about"><span>03</span> About</a></nav>
+    <button class="edition-tone" type="button" aria-label="Switch to light theme" aria-pressed="true"><span class="edition-tone-icon" aria-hidden="true">◐</span><span class="edition-tone-label">Light</span></button>
+</header>
+    <main id="main" class="portfolio-details"><div class="case-shell">
+        <header class="case-opening project-hero-header">
+            <a class="case-breadcrumb" href="/#portfolio"><span aria-hidden="true">←</span> Projects</a>
+            <p class="case-kicker">01 / PROJECT CASE STUDY</p>
+            <h1>Neural Rendering in Game Engine</h1>
+            <p class="case-byline"><span>NCSOFT Research</span><span>Real-time Neural Rendering</span></p>
+        </header>
+        <div class="case-layout">
+            <section class="case-overview project-overview" aria-labelledby="overview"><h2 id="overview">Project Overview</h2>
+                <p>I led an applied research effort to move neural rendering from offline reconstruction into Unity and Unreal Engine. The pipeline covered 360-video capture, fisheye-aware Gaussian Splatting, scene optimization, and engine integration.</p><p>The core challenge was preserving quality while changing camera models, reducing millions of Gaussians, and fitting a research representation into real engine budgets.</p>
+            </section>
+            <aside class="case-meta" aria-label="Project details">
+                <div class="portfolio-info"><h2>Project Details</h2><ul>              <li><strong>Role</strong>Research Lead, Real-time Neural Rendering</li>              <li><strong>Organization</strong>NCSOFT Research</li>              <li><strong>Output</strong>Interactive Unity and Unreal Engine scenes</li>              <li><strong>Related Writing</strong><a href="/blogs/posts/can-nerf-be-used-in-game/">Can NeRF be Used in Game?</a></li></ul></div>
+                <nav class="case-contents" aria-label="On this page"><h2>In this case study</h2><ol><li><a href="#overview"><span aria-hidden="true">01</span>Overview</a></li><li><a href="#contributions"><span aria-hidden="true">02</span>Core contributions</a></li><li><a href="#neural-rendering-with-360-video"><span aria-hidden="true">03</span>Neural Rendering with 360 Video</a></li><li><a href="#gaussian-splatting-in-game-engines"><span aria-hidden="true">04</span>Gaussian Splatting in Game Engines</a></li><li><a href="#result"><span aria-hidden="true">05</span>Result</a></li></ol></nav>
+                <details class="case-project-switch"><summary>Other projects</summary><a href="../varco3d/">VARCO 3D</a><a href="../capa/">CaPa</a><a href="../instant_pose/">Instant Pose for Hash-Grid NeRFs</a><a href="../2dgs_viewer/">2D GS Viewer</a><a href="../deepsfm/">Deep SfM for Radiance Fields</a></details>
             </aside>
-          </div>
-        </div>
-      </div>
-
-      <div class="portfolio-shell project-case-study-shell">
-        <article class="portfolio-description project-case-study-article">
-<h2>Neural Rendering with 360 Video</h2>
-<iframe width="720" height="405" src="https://www.youtube.com/embed/3OqbvUaoNFw?si=GxEnL9nG7fuVT0x0" title="Neural rendering game-engine pipeline overview" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            
+            <div class="case-body">
+                <section class="case-contributions project-contributions" aria-labelledby="contributions"><h2 id="contributions">Core contributions</h2><ul><li>Built a 360-video capture-to-Gaussian-Splatting pipeline for large scenes.</li><li>Implemented a custom CUDA Gaussian rasterizer for native fisheye camera supervision.</li><li>Integrated Unity and Unreal Engine scenes with contribution-aware pruning for particle limits.</li></ul></section>
+                <article class="case-article project-case-study-article"><h2 id="neural-rendering-with-360-video">Neural Rendering with 360 Video</h2>
+<iframe width="720" height="405" src="https://www.youtube.com/embed/3OqbvUaoNFw?si=GxEnL9nG7fuVT0x0" title="Neural rendering game-engine pipeline overview" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen=""></iframe>
 
 <h3>Capturing Large Scenes with a 360 Camera</h3>
 <p>To capture large scenes efficiently, I used 360-degree video as the ground-truth source for novel-view synthesis.
@@ -153,7 +61,7 @@ The results were suboptimal because the stitching process introduced seams and g
 This avoided panorama stitching, but the standard Gaussian rasterizer assumed a pinhole camera and could not project splats into fisheye views.
 I therefore developed a <strong>custom CUDA Gaussian rasterization module</strong> for the fisheye camera model, extending the reconstruction pipeline to work directly with the original rays.</p>
 <table>
-  <tr>
+  <tbody><tr>
     <th>Fisheye camera model</th>
     <th>Spherical camera model</th>
   </tr>
@@ -172,22 +80,22 @@ I therefore developed a <strong>custom CUDA Gaussian rasterization module</stron
     <td><img src="assets/3_comparison_02_final.jpg" alt="Fisheye-supervised reconstruction result two" class="project-media" loading="lazy" decoding="async"></td>
     <td><img src="assets/3_comparison_02_first.jpg" alt="Spherical reconstruction result two" class="project-media" loading="lazy" decoding="async"></td>
   </tr>
-</table>
+</tbody></table>
 
 <p>The resulting scene was reconstructed directly from the dual-fisheye capture:</p>
-<iframe width="720" height="405" src="https://www.youtube.com/embed/ISm-IL3HzmM?si=OyIAPB1Cgc70ADXU" title="Gaussian Splatting scene reconstructed from 360-camera footage" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe width="720" height="405" src="https://www.youtube.com/embed/ISm-IL3HzmM?si=OyIAPB1Cgc70ADXU" title="Gaussian Splatting scene reconstructed from 360-camera footage" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen=""></iframe>
 
-<h2>Gaussian Splatting in Game Engines</h2>
+<h2 id="gaussian-splatting-in-game-engines">Gaussian Splatting in Game Engines</h2>
 <p>With the reconstructed scene, I moved the representation into Unity and Unreal Engine, where it could be combined with normal engine controls and interactive content.</p>
 <p>For Unity, I implemented the Gaussian rasterization path and reduced representation cost with vector quantization.
 The following virtual-world demo combines the reconstructed scene with a neural avatar, also produced with a Radiance Field technique.</p>
-<iframe width="720" height="405" src="https://www.youtube.com/embed/p5YXFOXWeW0?si=padif0-DUOVX4PHV" title="Interactive Gaussian Splatting and neural avatar scene in Unity" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe width="720" height="405" src="https://www.youtube.com/embed/p5YXFOXWeW0?si=padif0-DUOVX4PHV" title="Interactive Gaussian Splatting and neural avatar scene in Unity" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen=""></iframe>
 
 <h3>Contribution-Based Pruning for Unreal Engine</h3>
 <p>The Unreal Engine path exposed a different limitation.
 The tested Niagara setup could render roughly two million particles effectively, while a complete reconstructed scene often contained more than six million Gaussians.
-Without optimization, the scene could not fit the engine&#39;s practical particle budget.</p>
-<p>I defined each Gaussian&#39;s <strong>contribution</strong> as its accumulated alpha-composited influence over all training images:</p>
+Without optimization, the scene could not fit the engine's practical particle budget.</p>
+<p>I defined each Gaussian's <strong>contribution</strong> as its accumulated alpha-composited influence over all training images:</p>
 <p>$$
 C = \sum_{k=1}^{n} C_k,
 \qquad
@@ -199,7 +107,7 @@ $$</p>
 <p>This score measures how much a splat actually contributes to rendered pixels rather than pruning only by opacity or geometric size.
 I removed the least-contributing Gaussians, briefly refined the retained scene, and repeated the prune-and-refine process for a small number of steps.</p>
 <table>
-  <tr>
+  <tbody><tr>
     <th>Original scene in Unreal Engine</th>
     <th>Pruned and refined scene</th>
   </tr>
@@ -207,44 +115,22 @@ I removed the least-contributing Gaussians, briefly refined the retained scene, 
     <td><img src="assets/UE_org.png" alt="Original Gaussian Splatting scene in Unreal Engine" class="project-media" loading="lazy" decoding="async"></td>
     <td><img src="assets/UE_pruned.png" alt="Pruned Gaussian Splatting scene in Unreal Engine" class="project-media" loading="lazy" decoding="async"></td>
   </tr>
-</table>
+</tbody></table>
 
-<h2>Result</h2>
+<h2 id="result">Result</h2>
 <p>The final demonstration runs the pruned Gaussian Splatting scene interactively inside Unreal Engine.
 The project established the practical boundaries of the complete pipeline: camera-model errors at capture time, representation cost at engine import, and the pruning signal required to preserve quality under a hard runtime budget.</p>
-<iframe width="720" height="405" src="https://www.youtube.com/embed/FzoZVsvgVW0?si=GWOYlR0Ho8pgj2Cf" title="Pruned Gaussian Splatting scene running in Unreal Engine" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe width="720" height="405" src="https://www.youtube.com/embed/FzoZVsvgVW0?si=GWOYlR0Ho8pgj2Cf" title="Pruned Gaussian Splatting scene running in Unreal Engine" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen=""></iframe>
 
 <p>For broader context, see <a href="/blogs/posts/can-nerf-be-used-in-game/">Can NeRF be Used in Game?</a>.</p>
-
-        </article>
-      </div>
-<div class="portfolio-shell project-page-nav">
-        <a class="project-page-nav-link project-page-nav-prev" href="../deepsfm/">
-          <span class="project-page-nav-kicker"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Project</span>
-          <strong>Deep SfM for Radiance Fields</strong>
-        </a>
-        <a class="project-page-nav-link project-page-nav-next" href="../varco3d/">
-          <span class="project-page-nav-kicker">Next Project <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg></span>
-          <strong>VARCO 3D</strong>
-        </a>
-      </div>
-    </section>
-  </main>
-
-  <footer id="footer" class="footer light-background">
-    <div class="portfolio-shell">
-      <div class="copyright">
-        <p>© <span>Copyright</span> <strong class="project-footer-owner sitename">Hwan Heo</strong> <span>All Rights Reserved</span></p>
-      </div>
-    </div>
-  </footer>
-
-  <button id="scroll-top" class="scroll-top project-scroll-top" type="button" aria-label="Back to top">
-    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up"></use></svg>
-  </button>
-
-  <script src="../../assets/js/main.js?v=995c2d3267"></script>
-  <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
-</body>
-
-</html>
+</article>
+            </div>
+        </div>
+        <div class="case-ending"><nav class="edition-next project-page-nav" aria-label="Previous and next projects">
+        <a class="project-page-nav-prev" href="../deepsfm/" rel="prev"><span>← Previous project</span><strong>Deep SfM for Radiance Fields</strong></a>
+        <a class="project-page-nav-next" href="../varco3d/" rel="next"><span>Next project →</span><strong>VARCO 3D</strong></a>
+    </nav></div>
+    </div></main>
+    <footer class="case-footer"><div class="case-shell"><p>© Hwan Heo. All Rights Reserved.</p><a href="/#portfolio">Back to Projects ↑</a></div></footer>
+    <script src="/js/project-detail.js?v=0eeaf26c69"></script>
+</body></html>

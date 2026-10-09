@@ -19,30 +19,35 @@
         <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"CUDA Articles","description":"Technical articles tagged CUDA, covering implementation details and research notes by Hwan Heo.","url":"https://hwan-h-heo.github.io/blogs/tags/cuda/","isPartOf":{"@type":"Blog","name":"Hwan Heo's Blog","url":"https://hwan-h-heo.github.io/blogs/"}}</script>
         <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        <link href="/blogs/css/blog.css?v=1378b085bd" rel="stylesheet" />
-        <link href="/blogs/css/sidebar.css?v=975e92b635" rel="stylesheet" />
+        <link href="/blogs/css/blog.css?v=3052e0a1b5" rel="stylesheet" />
         <link href="/blogs/css/typography.css?v=5feaa1dfce" rel="stylesheet" />
         <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
         <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
-        <script>
-            (function() {
-                try {
-                    const storedTheme = localStorage.getItem('blog-theme');
-                    const theme = storedTheme === 'dark' || storedTheme === 'light' ? storedTheme : 'light';
-                    document.documentElement.dataset.theme = theme;
-                } catch (error) {}
-            })();
-        </script>
-    <meta name="site-deploy-version" content="d7a5a69c2ef2992d">
+        <script src="/js/site-theme.js?v=0d82cf4a85"></script>
+        <link href="/assets/css/site-theme.css?v=447d8e8b5f" rel="stylesheet">
+        <link href="/blogs/css/site-reading.css?v=aaca67a1d0" rel="stylesheet">
+        <meta name="site-deploy-version" content="f786aadf1249f249">
     <script defer src="/assets/js/deploy-refresh.js?v=ee9c6c8f26"></script>
 </head>
-    <body class="blog-home-page blog-archive-page">
+    <body class="blog-home-page blog-archive-page site-reading">
         <main class="main blog-home-main">
             <nav class="blog-home-topbar" id="blogHomeTopbar" aria-label="Blog utilities">
-                <a class="blog-home-back" href="/blogs/" aria-label="Back to blog home">
-                    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg>
-                    <span>Blog</span>
-                </a>
+                <div class="blog-utility-start">
+                    <a class="blog-home-back" href="/blogs/" aria-label="Back to blog home">
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg>
+                        <span>Blog</span>
+                    </a>
+                    <div class="blog-destinations">
+                        <a href="/">Portfolio</a>
+                        <details class="blog-labs">
+                            <summary>Labs</summary>
+                            <div class="blog-labs-panel">
+                                <a href="/blogs/3DViewer/">3D Viewer</a>
+                                <a href="/blogs/editor/">Markdown Editor</a>
+                            </div>
+                        </details>
+                    </div>
+                </div>
                 <div class="blog-home-toolbar-actions">
                     <form id="blog-home-search-form" class="blog-home-search" role="search" data-collapsible-search>
                         <label class="visually-hidden" for="blog-home-search-input">Search posts</label>
@@ -141,8 +146,8 @@
         </main>
         <script src="/blogs/js/site-data-client.js?v=5320e49fbf"></script>
         <script src="/blogs/js/blog-cover-media.js?v=f16969bf34"></script>
-        <script src="/blogs/js/blog-shell.js?v=456de34605"></script>
-        <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
+        <script src="/blogs/js/blog-shell.js?v=2108ee26e6"></script>
+        <script src="/blogs/js/theme-toggle.js?v=02f1278dd5"></script>
         <script>
             initBlogShell({ formSelector: '#blog-home-search-form', inputSelector: '#blog-home-search-input' });
             (function() {

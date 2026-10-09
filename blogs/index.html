@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="sidebar-collapsed blog-sidebar-rail">
+<html lang="en">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -10,7 +10,7 @@
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <!-- Blog styles -->
-        <link href="css/blog.css?v=1378b085bd" rel="stylesheet" />
+        <link href="css/blog.css?v=3052e0a1b5" rel="stylesheet" />
         <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
         <script>
@@ -19,20 +19,11 @@
             gtag('js', new Date());
             gtag('config', 'G-RF7ETSKPK9');
         </script>
-        <script>
-            (function() {
-                try {
-                    const storedTheme = localStorage.getItem('blog-theme');
-                    const theme = storedTheme === 'dark' || storedTheme === 'light' ? storedTheme : 'light';
-                    document.documentElement.dataset.theme = theme;
-                } catch (error) {}
-            })();
-        </script>
+        <script src="/js/site-theme.js?v=0d82cf4a85"></script>
     <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
-    <script src="../js/sidebar-controller.js?v=3db1bd5d00" data-sidebar-mode="rail"></script>
-    <link href="css/sidebar.css?v=975e92b635" rel="stylesheet">
-    <link href="../css/sidebar-nav.css?v=6503f0effb" rel="stylesheet">
     <link href="css/typography.css?v=5feaa1dfce" rel="stylesheet">
+    <link href="/assets/css/site-theme.css?v=447d8e8b5f" rel="stylesheet">
+    <link href="/blogs/css/site-reading.css?v=aaca67a1d0" rel="stylesheet">
             <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/" />
         <link rel="alternate" type="application/rss+xml" title="Hwan Heo's Blog" href="/blogs/feed.xml" />
         <meta property="og:type" content="website" />
@@ -45,66 +36,25 @@
         <meta name="twitter:description" content="Technical articles on sparse 3D generation, neural rendering, mesh processing, CUDA kernels, and production inference optimization." />
         <meta name="twitter:image" content="https://hwan-h-heo.github.io/assets/image_fx_.jpg" />
         <script type="application/ld+json">{"@context":"https://schema.org","@type":"Blog","name":"Hwan Heo's Blog","url":"https://hwan-h-heo.github.io/blogs/","description":"Technical articles on sparse 3D generation, neural rendering, mesh processing, CUDA kernels, and production inference optimization.","author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"inLanguage":"en"}</script>
-    <meta name="site-deploy-version" content="d7a5a69c2ef2992d">
+        <meta name="site-deploy-version" content="f786aadf1249f249">
     <script defer src="/assets/js/deploy-refresh.js?v=ee9c6c8f26"></script>
 </head>
-    <body class="blog-home-page">
-        <header id="header" class="header blog-sidebar dark-background" data-sidebar-mode="rail">
-            <div class="profile-img">
-              <img src="../assets/icon.webp" alt="Portrait illustration of Hwan Heo">
-            </div>
-        
-            <a href="./" class="logo">
-              <span class="sitename">Hwan's Blog</span>
-            </a>
-
-            <div class="social-links">
-              <a href="https://github.com/hwanhuh" class="github" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
-              <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
-              <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
-              <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
-            </div>
-        
-            <nav id="navmenu" class="navmenu">
-                <ul>
-                    <li><a href="./" class="active"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house"></use></svg>Blog Home</a></li>
-                    <li>
-                        <a href="../" class="sidebar-external-link">
-                            <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-briefcase"></use></svg>
-                            <span>Portfolio</span>
-                            <svg class="site-icon sidebar-external-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-
-            <div class="sidebar-labs">
-                <details class="sidebar-labs-menu">
-                    <summary>
-                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-tools"></use></svg>
-                        <span>Labs</span>
-                        <svg class="site-icon sidebar-labs-chevron" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
-                    </summary>
-                    <div class="sidebar-labs-panel">
-                        <div class="sidebar-rail-panel-heading" aria-hidden="true">
-                            <span>Labs / 02</span>
-                            <small>Tools &amp; experiments</small>
-                        </div>
-                        <a href="./3DViewer/">
-                            <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg>
-                            <span class="sidebar-labs-copy"><strong>3D Viewer</strong><small>Inspect 3D assets</small></span>
-                        </a>
-                        <a href="./editor/">
-                            <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg>
-                            <span class="sidebar-labs-copy"><strong>Markdown Editor</strong><small>Draft long-form posts</small></span>
-                        </a>
-                    </div>
-                </details>
-            </div>
-
-        </header>
+    <body class="blog-home-page site-reading">
         <main class="main blog-home-main">
         <nav class="blog-home-topbar" id="blogHomeTopbar" aria-label="Blog utilities">
+            <div class="blog-utility-start">
+                <a class="blog-publication-brand" href="/blogs/">Hwan’s Blog</a>
+                <div class="blog-destinations">
+                    <a href="/">Portfolio</a>
+                    <details class="blog-labs">
+                        <summary>Labs</summary>
+                        <div class="blog-labs-panel">
+                            <a href="/blogs/3DViewer/">3D Viewer</a>
+                            <a href="/blogs/editor/">Markdown Editor</a>
+                        </div>
+                    </details>
+                </div>
+            </div>
             <div class="blog-home-toolbar-actions">
                 <form id="blog-home-search-form" class="blog-home-search" role="search" data-collapsible-search>
                     <label class="visually-hidden" for="blog-home-search-input">Search posts</label>
@@ -941,15 +891,20 @@
                 <div class="blog-home-footer-row">
                     <div class="blog-home-footer-copy">
                         <div class="blog-footer-note">Copyright &copy; Hwan Heo</div>
+                        <nav class="blog-publication-links" aria-label="Elsewhere">
+                            <a href="/">Portfolio ↗</a>
+                            <a href="/blogs/3DViewer/">3D Viewer</a>
+                            <a href="/blogs/editor/">Markdown Editor</a>
+                        </nav>
                     </div>
                 </div>
             </div>
         </footer>
         <script src="./js/site-data-client.js?v=5320e49fbf"></script>
         <script src="./js/blog-cover-media.js?v=f16969bf34"></script>
-        <script src="./js/blog-shell.js?v=456de34605"></script>
-        <script src="./js/theme-toggle.js?v=32f6914d64"></script>
-        <script src="./js/main-list.js?v=e1adb8ba5c"></script>
+        <script src="./js/blog-shell.js?v=2108ee26e6"></script>
+        <script src="./js/theme-toggle.js?v=02f1278dd5"></script>
+        <script src="./js/main-list.js?v=ef1de6a893"></script>
         <script>
             initBlogShell({ formSelector: '#blog-home-search-form', inputSelector: '#blog-home-search-input' });
         </script>

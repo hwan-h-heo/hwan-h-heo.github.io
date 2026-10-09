@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" class="sidebar-collapsed blog-sidebar-rail">
+<html lang="ko">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -29,14 +29,11 @@
     <title>웹사이트에 3D GS 삽입하기 | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css?v=1378b085bd" rel="stylesheet" />
-    <link href="/blogs/css/sidebar.css?v=975e92b635" rel="stylesheet" />
-    <link href="/css/sidebar-nav.css?v=6503f0effb" rel="stylesheet" />
+    <link href="/blogs/css/blog.css?v=3052e0a1b5" rel="stylesheet" />
     <link href="/blogs/css/typography.css?v=5feaa1dfce" rel="stylesheet" />
     <link href="/blogs/css/post.css?v=dc5dd44b65" rel="stylesheet" />
     <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
     <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
-    <script src="/js/sidebar-controller.js?v=3db1bd5d00" data-sidebar-mode="rail"></script>
     <script type="importmap">
         {
             "imports": {
@@ -56,94 +53,35 @@
         gtag('js', new Date());
         gtag('config', 'G-RF7ETSKPK9');
     </script>
-        <script>
-            (function() {
-                try {
-                    const storedTheme = localStorage.getItem('blog-theme');
-                    const theme = storedTheme === 'dark' || storedTheme === 'light' ? storedTheme : 'light';
-                    document.documentElement.dataset.theme = theme;
-                } catch (error) {}
-            })();
-        </script>
-    <meta name="site-deploy-version" content="d7a5a69c2ef2992d">
+        <script src="/js/site-theme.js?v=0d82cf4a85"></script>
+    <link href="/assets/css/site-theme.css?v=447d8e8b5f" rel="stylesheet">
+    <link href="/blogs/css/site-reading.css?v=aaca67a1d0" rel="stylesheet">
+    <meta name="site-deploy-version" content="f786aadf1249f249">
     <script defer src="/assets/js/deploy-refresh.js?v=ee9c6c8f26"></script>
 </head>
-<body class="blog-post-page">
-    <header id="header" class="header blog-sidebar dark-background" data-sidebar-mode="rail">
-        <div class="profile-img">
-            <img src="/assets/icon.webp" alt="Portrait illustration of Hwan Heo">
-        </div>
-
-        <a href="/blogs/" class="logo">
-            <span class="sitename">Hwan's Blog</span>
-        </a>
-
-        <div class="social-links">
-            <a href="https://github.com/hwanhuh" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
-            <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
-            <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
-            <a href="mailto:hwan.heo.ai@gmail.com" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
-        </div>
-
-        <nav id="navmenu" class="navmenu" aria-label="Blog navigation">
-            <ul>
-                <li>
-                    <a href="/blogs/" class="active" aria-current="location">
-                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house"></use></svg>
-                        <span>Blog Home</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/" class="sidebar-external-link">
-                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-briefcase"></use></svg>
-                        <span>Portfolio</span>
-                        <svg class="site-icon sidebar-external-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-
-        <div class="sidebar-labs">
-            <details class="sidebar-labs-menu">
-                <summary>
-                    <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-tools"></use></svg>
-                    <span>Labs</span>
-                    <svg class="site-icon sidebar-labs-chevron" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
-                </summary>
-                <div class="sidebar-labs-panel">
-                    <div class="sidebar-rail-panel-heading" aria-hidden="true">
-                        <span>Labs / 02</span>
-                        <small>Tools &amp; experiments</small>
-                    </div>
-                    <a href="/blogs/3DViewer/">
-                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg>
-                        <span class="sidebar-labs-copy"><strong>3D Viewer</strong><small>Inspect 3D assets</small></span>
-                    </a>
-                    <a href="/blogs/editor/">
-                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg>
-                        <span class="sidebar-labs-copy"><strong>Markdown Editor</strong><small>Draft long-form posts</small></span>
-                    </a>
-                </div>
-            </details>
-        </div>
-
-        <div class="sidebar-contents">
-            <button class="sidebar-contents-toggle" type="button" aria-label="목차 열기" aria-controls="post-toc" aria-expanded="false">
-                <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-list-ul"></use></svg>
-                <span>Contents</span>
-            </button>
-        </div>
-    </header>
+<body class="blog-post-page site-reading">
 
     <main class="main blog-post-main">
         <nav class="post-site-nav" id="mainNav" aria-label="Post utilities">
             <div class="blog-shell">
                 <div class="post-reading-row">
                     <div class="post-reading-column post-utility-column">
-                        <a class="post-nav-home" href="/blogs/" aria-label="Back to Blog Home">
-                            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg>
-                            <span>Blog Home</span>
-                        </a>
+                        <div class="blog-utility-start">
+                            <a class="post-nav-home" href="/blogs/" aria-label="Back to Blog Home">
+                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg>
+                                <span class="post-nav-home-label">Blog<span class="post-nav-home-suffix"> Home</span></span>
+                            </a>
+                            <div class="blog-destinations">
+                                <a href="/">Portfolio</a>
+                                <details class="blog-labs">
+                                    <summary>Labs</summary>
+                                    <div class="blog-labs-panel">
+                                        <a href="/blogs/3DViewer/">3D Viewer</a>
+                                        <a href="/blogs/editor/">Markdown Editor</a>
+                                    </div>
+                                </details>
+                            </div>
+                        </div>
                         <ul class="post-nav-actions">
                             <li class="post-nav-action post-nav-search-item">
                                 <form id="post-nav-search-form" class="post-nav-search" role="search" data-collapsible-search>
@@ -214,7 +152,7 @@
                         </div>
                     </div>
                     <div class="post-reading-column main-content">
-                        <nav id="post-toc" class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="TL; DR" aria-label="TL; DR"><span class="toc-link-text">TL; DR</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-1" title="About the Project" aria-label="About the Project"><span class="toc-link-text">About the Project</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="Step-by-Step" aria-label="Step-by-Step"><span class="toc-link-text">Step-by-Step</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="Step 1: Project Setup (CDN-based)" aria-label="Step 1: Project Setup (CDN-based)"><span class="toc-link-text">Step 1: Project Setup (CDN-based)</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="Step 2: HTML Structure" aria-label="Step 2: HTML Structure"><span class="toc-link-text">Step 2: HTML Structure</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="Example Result of Custom GS Scene" aria-label="Example Result of Custom GS Scene"><span class="toc-link-text">Example Result of Custom GS Scene</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-6" title="Closing" aria-label="Closing"><span class="toc-link-text">Closing</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
+                        <details class="post-contents"><summary>목차</summary><nav aria-label="목차"><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="TL; DR" aria-label="TL; DR"><span class="toc-link-text">TL; DR</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-1" title="About the Project" aria-label="About the Project"><span class="toc-link-text">About the Project</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="Step-by-Step" aria-label="Step-by-Step"><span class="toc-link-text">Step-by-Step</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="Step 1: Project Setup (CDN-based)" aria-label="Step 1: Project Setup (CDN-based)"><span class="toc-link-text">Step 1: Project Setup (CDN-based)</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="Step 2: HTML Structure" aria-label="Step 2: HTML Structure"><span class="toc-link-text">Step 2: HTML Structure</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="Example Result of Custom GS Scene" aria-label="Example Result of Custom GS Scene"><span class="toc-link-text">Example Result of Custom GS Scene</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-6" title="Closing" aria-label="Closing"><span class="toc-link-text">Closing</span></a></li></ol></nav></details><nav id="post-toc" class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="TL; DR" aria-label="TL; DR"><span class="toc-link-text">TL; DR</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-1" title="About the Project" aria-label="About the Project"><span class="toc-link-text">About the Project</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="Step-by-Step" aria-label="Step-by-Step"><span class="toc-link-text">Step-by-Step</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="Step 1: Project Setup (CDN-based)" aria-label="Step 1: Project Setup (CDN-based)"><span class="toc-link-text">Step 1: Project Setup (CDN-based)</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="Step 2: HTML Structure" aria-label="Step 2: HTML Structure"><span class="toc-link-text">Step 2: HTML Structure</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="Example Result of Custom GS Scene" aria-label="Example Result of Custom GS Scene"><span class="toc-link-text">Example Result of Custom GS Scene</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-6" title="Closing" aria-label="Closing"><span class="toc-link-text">Closing</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
@@ -447,6 +385,10 @@ function update() {
                 <div class="post-reading-row">
                     <div class="post-reading-column">
                         <div class="blog-footer-note">Copyright © Hwan Heo</div>
+                        <nav class="blog-publication-links" aria-label="Publication links">
+                            <a href="/blogs/">Blog Home</a>
+                            <a href="/">Portfolio ↗</a>
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -982,9 +924,9 @@ function update() {
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/components/prism-core.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="/blogs/js/code-copy.js?v=e6b60656e4"></script>
-    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
-    <script src="/blogs/js/blog-shell.js?v=456de34605"></script>
-    <script src="/blogs/js/post-page.js?v=181bf06e84"></script>
+    <script src="/blogs/js/theme-toggle.js?v=02f1278dd5"></script>
+    <script src="/blogs/js/blog-shell.js?v=2108ee26e6"></script>
+    <script src="/blogs/js/post-page.js?v=55a8de0ff8"></script>
         <script>
             initBlogShell({
                 formSelector: '#post-nav-search-form',

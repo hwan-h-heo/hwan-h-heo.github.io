@@ -1,148 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"><head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>VARCO 3D: Production 3D Generative AI</title><meta name="description" content="Case study of VARCO 3D, a native 3D generation service with 4K PBR-aware textures, AI auto-rigging and retargeting, detail-preserving decimation, and GPU-native asset processing."><meta name="keywords" content="VARCO 3D, NC AI, 3D Generation, 3D Generative AI, AI Auto-Rigging, Motion Retargeting, VecSet-based ShapeVAE, Dense DiT Denoiser, Sparse DC VAE, Sparse DiT Denoiser, CUDA, cuBLASLt, QEM Decimation, UV Unwrapping, Texture Back Projection">
+    <link href="/assets/favicon.ico" rel="icon">
+    <script src="/js/site-theme.js?v=0d82cf4a85"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="/assets/css/site-theme.css?v=447d8e8b5f" rel="stylesheet">
+    <link href="/assets/css/portfolio-chapters.css?v=8003f5a19a" rel="stylesheet">
+    <link href="/assets/css/project-detail.css?v=80d9909770" rel="stylesheet">
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet">
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
 
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>VARCO 3D: Production 3D Generative AI</title>
-  <meta content="Case study of VARCO 3D, a native 3D generation service with 4K PBR-aware textures, AI auto-rigging and retargeting, detail-preserving decimation, and GPU-native asset processing." name="description">
-  <meta content="VARCO 3D, NC AI, 3D Generation, 3D Generative AI, AI Auto-Rigging, Motion Retargeting, VecSet-based ShapeVAE, Dense DiT Denoiser, Sparse DC VAE, Sparse DiT Denoiser, CUDA, cuBLASLt, QEM Decimation, UV Unwrapping, Texture Back Projection" name="keywords">
-
-  <link href="../../assets/favicon.ico" rel="icon">
-  <link href="../../assets/favicon.ico" rel="apple-touch-icon">
-
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <script src="../../assets/js/site-icons.js?v=76c23064c5"></script>
-  <script src="../../js/sidebar-controller.js?v=3db1bd5d00"></script>
-  <link href="../../assets/css/portfolio.css?v=eb11a21519" rel="stylesheet">
-  <link href="../../assets/css/project-detail.css?v=143930b0ee" rel="stylesheet">
-  <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet">
-  <link href="../../assets/css/site-icons.css?v=32957b8b04" rel="stylesheet">
-
-  <link href="../../css/sidebar-nav.css?v=6503f0effb" rel="stylesheet">
-
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
-  <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-RF7ETSKPK9');
-  </script>
-    <meta name="site-deploy-version" content="d7a5a69c2ef2992d">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-RF7ETSKPK9');</script>
+    <meta name="site-deploy-version" content="f786aadf1249f249">
     <script defer src="/assets/js/deploy-refresh.js?v=ee9c6c8f26"></script>
-</head>
-
-<body class="portfolio-details-page">
-  <header id="header" class="header dark-background">
-    <div class="profile-img">
-      <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="sidebar-profile-image">
-    </div>
-
-    <a href="../../" class="logo">
-      <span class="sitename">Hwan Heo</span>
-    </a>
-
-    <div class="social-links">
-      <a href="https://github.com/hwanhuh" class="github" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
-      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
-      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
-      <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
-    </div>
-
-    <nav id="navmenu" class="navmenu">
-      <ul>
-        <li><a href="../../#home"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house"></use></svg>Home</a></li>
-        <li><a href="../../#portfolio" class="active"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-images"></use></svg> Projects</a></li>
-        <li class="project-nav-selector">
-          <details>
-            <summary aria-current="page">
-              <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-grid"></use></svg>
-              <span class="project-selector-copy"><small>Switch project</small><strong>VARCO 3D</strong></span>
-              <svg class="site-icon project-selector-toggle" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
-            </summary>
-            <div class="project-selector-options">
-          <a href="../capa/"><span class="project-selector-index">01</span><span>CaPa</span></a>
-          <a href="../instant_pose/"><span class="project-selector-index">02</span><span>Instant Pose for Hash-Grid NeRFs</span></a>
-          <a href="../2dgs_viewer/"><span class="project-selector-index">03</span><span>2D GS Viewer</span></a>
-          <a href="../deepsfm/"><span class="project-selector-index">04</span><span>Deep SfM for Radiance Fields</span></a>
-          <a href="../nerf_in_game/"><span class="project-selector-index">05</span><span>Neural Rendering in Game Engine</span></a>
-            </div>
-          </details>
-        </li>
-        <li><a href="../../blogs/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-keyboard"></use></svg> Blog</a></li>
-        <li><a href="../../#about"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-person"></use></svg> About</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main class="main">
-    <div class="page-title dark-background">
-      <div class="portfolio-shell">
-        <nav class="breadcrumbs" aria-label="Breadcrumb">
-          <ol>
-            <li><a href="../../">Home</a></li>
-            <li><a href="../../#portfolio">Projects</a></li>
-            <li class="current">VARCO 3D: Production 3D Generative AI</li>
-          </ol>
-        </nav>
-      </div>
-    </div>
-
-    <section id="portfolio-details" class="portfolio-details section">
-      <div class="portfolio-shell project-hero-shell">
-        <div class="project-hero-header">
-          <span class="project-hero-kicker">Project Case Study</span>
-          <h1><span class="text-gradient">VARCO 3D: Production 3D Generative AI</span></h1>
-          <div class="project-hero-meta"><span>NC AI</span><span>Production 3D Generation</span></div>
-        </div>
-      </div>
-
-      <div class="portfolio-shell portfolio-details-container project-case-study-overview project-overview-shell">
-        <div class="project-overview-layout">
-          <div class="project-overview-copy">
-            <div class="portfolio-description project-overview">
-              <h2>Project Overview</h2>
-              <p>VARCO 3D is NC AI’s production 3D generative AI service for creating detailed meshes with 4K PBR-aware textures, AI auto-rigging and retargeting, and decimation with normals baked from native high-poly detail.</p>
-              <p>I led the overall research direction while working across the full generation stack: training in-house 3D generative models with more than 1B parameters, optimizing their production inference paths, and building GPU-native mesh and texture-processing systems for asset delivery.</p>
-              <figure class="project-overview-media">
-                <video autoplay muted loop playsinline preload="metadata" poster="./assets/community-showcase-poster.webp" aria-label="Recent VARCO 3D community creations transitioning from geometry to textured assets">
-                  <source src="./assets/community-showcase.mp4" type="video/mp4">
-                </video>
-                <figcaption>Ten recent creations published on <a href="https://3d.varco.ai/explore" target="_blank" rel="noopener noreferrer">VARCO 3D Explore.</a></figcaption>
-              </figure>
-              <div class="project-contributions">
-                <p>Core contributions</p>
-                <ul>
-                  <li>Led the overall VARCO 3D research direction and trained dense and sparse in-house 3D generative models with more than 1B parameters.</li>
-                  <li>Reduced 15-step denoising latency by <strong>25.66% without quantization</strong> through forward-path analysis and CUDA kernel optimization.</li>
-                  <li>Built a CUDA mesh pipeline that cleans, remeshes, and decimates geometry from <strong>1M to 1K faces in approximately five seconds</strong>.</li>
-                  <li>Developed a tile-based UV unwrapper that processes meshes with more than <strong>1M faces in under 30 seconds on average</strong>, while maintaining <strong>over 50% UV-space utilization even on challenging inputs</strong>.</li>
-                  <li>Implemented a rasterization-based CUDA multi-view texture-projection pipeline that generates an <strong>8K texture map in approximately two seconds</strong>.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="project-overview-meta">
-            <aside class="portfolio-info">
-              <h3>Project Details</h3>
-              <ul>
-              <li><strong>Role</strong>Research Lead · 3D Generation and Production R&amp;D</li>
-              <li><strong>Organization</strong>NC AI</li>
-              <li><strong>Scale</strong>1B+ parameter models · 1M-face meshes · 8K textures</li>
-              <li><strong>Service</strong><a href="https://3d.varco.ai/" target="_blank" rel="noopener noreferrer">VARCO 3D</a></li>
-              <li><strong>Related Technical Writing</strong><span class="project-detail-links"><a href="/blogs/posts/optimizing-sparse-3d-generation-inference/">Sparse 3D Inference Optimization</a><a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/">VARCO 3D: A Year in Review</a></span></li>
-              </ul>
+</head><body class="edition-site case-study portfolio-details-page" data-surface="reading" data-chapter="detail">
+    <a class="case-skip" href="#overview">Skip to project</a>
+    <div class="case-atmosphere" aria-hidden="true"></div>
+<header class="edition-header">
+    <a class="edition-brand" href="/#home" aria-label="Hwan Heo — return to cover">Hwan Heo<span class="edition-brand-note"> / Selected work &amp; writing</span></a>
+    <nav class="edition-nav" aria-label="Portfolio chapters"><a href="/#home"><span>00</span> Cover</a><a href="/#portfolio" aria-current="page"><span>01</span> Projects</a><a href="/#blog"><span>02</span> Blogs</a><a href="/#about"><span>03</span> About</a></nav>
+    <button class="edition-tone" type="button" aria-label="Switch to light theme" aria-pressed="true"><span class="edition-tone-icon" aria-hidden="true">◐</span><span class="edition-tone-label">Light</span></button>
+</header>
+    <main id="main" class="portfolio-details"><div class="case-shell">
+        <header class="case-opening project-hero-header">
+            <a class="case-breadcrumb" href="/#portfolio"><span aria-hidden="true">←</span> Projects</a>
+            <p class="case-kicker">01 / PROJECT CASE STUDY</p>
+            <h1><span>VARCO 3D:</span>Production 3D Generative AI</h1>
+            <p class="case-byline"><span>NC AI</span><span>Production 3D Generation</span></p>
+        </header>
+        <div class="case-layout">
+            <section class="case-overview project-overview" aria-labelledby="overview"><h2 id="overview">Project Overview</h2>
+                <p>VARCO 3D is NC AI’s production 3D generative AI service for creating detailed meshes with 4K PBR-aware textures, AI auto-rigging and retargeting, and decimation with normals baked from native high-poly detail.</p><p>I led the overall research direction while working across the full generation stack: training in-house 3D generative models with more than 1B parameters, optimizing their production inference paths, and building GPU-native mesh and texture-processing systems for asset delivery.</p>
+            </section>
+            <aside class="case-meta" aria-label="Project details">
+                <div class="portfolio-info"><h2>Project Details</h2><ul>              <li><strong>Role</strong>Research Lead · 3D Generation and Production R&amp;D</li>              <li><strong>Organization</strong>NC AI</li>              <li><strong>Scale</strong>1B+ parameter models · 1M-face meshes · 8K textures</li>              <li><strong>Service</strong><a href="https://3d.varco.ai/" target="_blank" rel="noopener noreferrer">VARCO 3D</a></li>              <li><strong>Related Technical Writing</strong><span class="project-detail-links"><a href="/blogs/posts/optimizing-sparse-3d-generation-inference/">Sparse 3D Inference Optimization</a><a href="/blogs/posts/varco3d-a-year-in-review-2025-retrospective/">VARCO 3D: A Year in Review</a></span></li></ul></div>
+                <nav class="case-contents" aria-label="On this page"><h2>In this case study</h2><ol><li><a href="#overview"><span aria-hidden="true">01</span>Overview</a></li><li><a href="#contributions"><span aria-hidden="true">02</span>Core contributions</a></li><li><a href="#system-focus"><span aria-hidden="true">03</span>System Focus</a></li><li><a href="#architecture-shift"><span aria-hidden="true">04</span>Architecture Shift</a></li><li><a href="#production-inference-optimization"><span aria-hidden="true">05</span>Production Inference Optimization</a></li><li><a href="#mesh-and-texture-delivery"><span aria-hidden="true">06</span>Mesh and Texture Delivery</a></li></ol></nav>
+                <details class="case-project-switch"><summary>Other projects</summary><a href="../capa/">CaPa</a><a href="../instant_pose/">Instant Pose for Hash-Grid NeRFs</a><a href="../2dgs_viewer/">2D GS Viewer</a><a href="../deepsfm/">Deep SfM for Radiance Fields</a><a href="../nerf_in_game/">Neural Rendering in Game Engine</a></details>
             </aside>
-          </div>
-        </div>
-      </div>
-
-      <div class="portfolio-shell project-case-study-shell">
-        <article class="portfolio-description project-case-study-article">
-<h2>System Focus</h2>
+            <figure class="case-visual project-overview-media">
+        <video muted loop playsinline preload="none" poster="./assets/community-showcase-poster.webp" aria-label="Recent VARCO 3D community creations transitioning from geometry to textured assets">
+            <source src="./assets/community-showcase.mp4" type="video/mp4">
+        </video>
+        <div class="case-caption"><figcaption>Ten recent creations published on <a href="https://3d.varco.ai/explore" target="_blank" rel="noopener noreferrer">VARCO 3D Explore.</a></figcaption><button class="case-media-toggle" type="button">Play</button></div>
+    </figure>
+            <div class="case-body">
+                <section class="case-contributions project-contributions" aria-labelledby="contributions"><h2 id="contributions">Core contributions</h2><ul><li>Led the overall VARCO 3D research direction and trained dense and sparse in-house 3D generative models with more than 1B parameters.</li><li>Reduced 15-step denoising latency by <strong>25.66% without quantization</strong> through forward-path analysis and CUDA kernel optimization.</li><li>Built a CUDA mesh pipeline that cleans, remeshes, and decimates geometry from <strong>1M to 1K faces in approximately five seconds</strong>.</li><li>Developed a tile-based UV unwrapper that processes meshes with more than <strong>1M faces in under 30 seconds on average</strong>, while maintaining <strong>over 50% UV-space utilization even on challenging inputs</strong>.</li><li>Implemented a rasterization-based CUDA multi-view texture-projection pipeline that generates an <strong>8K texture map in approximately two seconds</strong>.</li></ul></section>
+                <article class="case-article project-case-study-article"><h2 id="system-focus">System Focus</h2>
 <p>The practical target of VARCO 3D is not just to synthesize geometry.
 The service path extends native high-poly output into 4K PBR-aware textured assets, detail-preserving decimation with baked normals, and animation workflows through AI auto-rigging and retargeting.</p>
 <p>I worked across three connected layers, from setting the research direction and training 1B+ parameter models from scratch to shipping the GPU-native systems around them:</p>
@@ -151,7 +56,7 @@ The service path extends native high-poly output into 4K PBR-aware textured asse
 <li><strong>Production inference</strong> — profile and rewrite the expensive denoising path so the model can run under service latency constraints.</li>
 <li><strong>Mesh and texture processing</strong> — convert generated geometry into cleaned, decimated, unwrapped, textured mesh assets.</li>
 </ol>
-<h2>Architecture Shift</h2>
+<h2 id="architecture-shift">Architecture Shift</h2>
 <p>The model stack moved from dense latent generation to sparse active-structure generation.
 That shift mattered because it changed both the training target and the serving bottleneck.</p>
 <h3>VARCO 3D 1.0</h3>
@@ -162,7 +67,7 @@ That shift mattered because it changed both the training target and the serving 
 <p>The second stack moved generation onto active sparse 3D structure for higher-detail outputs and a more scalable inference path.
 Sparse assets are less uniform at runtime, however: token count and active layout vary by input.
 Serving therefore needed model-aware profiling and custom CUDA work rather than only generic graph-level acceleration.</p>
-<h2>Production Inference Optimization</h2>
+<h2 id="production-inference-optimization">Production Inference Optimization</h2>
 <p>On the VARCO 3D 2.0 sparse denoiser, I profiled the forward path and identified null-context attention as arithmetic the model did not need to repeat.
 The optimized path replaces unconditional cross-attention with a fixed-vector path, then fuses memory-bound tensor operations through custom CUDA kernels and cuBLASLt epilogues.</p>
 <p>Across ten production assets with 3,664 to 30,227 active tokens, the combined path reduced CUDA-synchronized 15-step denoising latency by <strong>25.66% on average</strong> on A100 BF16.
@@ -170,7 +75,7 @@ The gain came from forward-path and kernel optimization alone, without quantizin
 <p>This was not a benchmark-only shortcut.
 The optimized path entered production serving with numerical validation and fallback rules around the fused kernels.</p>
 <p><a href="/blogs/posts/optimizing-sparse-3d-generation-inference/">Read the VARCO 3D 2.0 inference optimization write-up</a></p>
-<h2>Mesh and Texture Delivery</h2>
+<h2 id="mesh-and-texture-delivery">Mesh and Texture Delivery</h2>
 <p>To extend geometry generation into textured-mesh delivery, I implemented and optimized the post-generation pipeline around GPU execution:</p>
 <ul>
 <li><strong>CUDA-based topology cleaning, remeshing, and QEM decimation</strong> that robustly reduces meshes from 1M to 1K faces in about five seconds.</li>
@@ -180,36 +85,14 @@ The optimized path entered production serving with numerical validation and fall
 <li><strong>CUDA rasterizer–based back-projection</strong> with visibility-aware view selection and blending that projects multi-view generated images into an 8K UV texture map in approximately two seconds.</li>
 </ul>
 <p>This layer is where the generated result becomes a deployable asset: cleaned geometry, controlled face count, valid UVs, and texture maps produced without a slow CPU-bound handoff.</p>
-
-        </article>
-      </div>
-<div class="portfolio-shell project-page-nav">
-        <a class="project-page-nav-link project-page-nav-prev" href="../nerf_in_game/">
-          <span class="project-page-nav-kicker"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Project</span>
-          <strong>Neural Rendering in Game Engine</strong>
-        </a>
-        <a class="project-page-nav-link project-page-nav-next" href="../capa/">
-          <span class="project-page-nav-kicker">Next Project <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg></span>
-          <strong>CaPa</strong>
-        </a>
-      </div>
-    </section>
-  </main>
-
-  <footer id="footer" class="footer light-background">
-    <div class="portfolio-shell">
-      <div class="copyright">
-        <p>© <span>Copyright</span> <strong class="project-footer-owner sitename">Hwan Heo</strong> <span>All Rights Reserved</span></p>
-      </div>
-    </div>
-  </footer>
-
-  <button id="scroll-top" class="scroll-top project-scroll-top" type="button" aria-label="Back to top">
-    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up"></use></svg>
-  </button>
-
-  <script src="../../assets/js/main.js?v=995c2d3267"></script>
-  <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
-</body>
-
-</html>
+</article>
+            </div>
+        </div>
+        <div class="case-ending"><nav class="edition-next project-page-nav" aria-label="Previous and next projects">
+        <a class="project-page-nav-prev" href="../nerf_in_game/" rel="prev"><span>← Previous project</span><strong>Neural Rendering in Game Engine</strong></a>
+        <a class="project-page-nav-next" href="../capa/" rel="next"><span>Next project →</span><strong>CaPa</strong></a>
+    </nav></div>
+    </div></main>
+    <footer class="case-footer"><div class="case-shell"><p>© Hwan Heo. All Rights Reserved.</p><a href="/#portfolio">Back to Projects ↑</a></div></footer>
+    <script src="/js/project-detail.js?v=0eeaf26c69"></script>
+</body></html>

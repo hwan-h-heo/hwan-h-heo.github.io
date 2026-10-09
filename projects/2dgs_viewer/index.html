@@ -1,202 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"><head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>2D GS Viewer</title><meta name="description" content="Case study of an open-source 2D Gaussian Splatting workspace for training, diagnostics, editing, transforms, camera paths, and mesh export."><meta name="keywords" content="2D Gaussian Splatting, Viewer, Visualization, Editing, Rendering, Viser, Portfolio">
+    <link href="/assets/favicon.ico" rel="icon">
+    <script src="/js/site-theme.js?v=0d82cf4a85"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="/assets/css/site-theme.css?v=447d8e8b5f" rel="stylesheet">
+    <link href="/assets/css/portfolio-chapters.css?v=8003f5a19a" rel="stylesheet">
+    <link href="/assets/css/project-detail.css?v=80d9909770" rel="stylesheet">
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet">
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
 
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>2D GS Viewer</title>
-  <meta content="Case study of an open-source 2D Gaussian Splatting workspace for training, diagnostics, editing, transforms, camera paths, and mesh export." name="description">
-  <meta content="2D Gaussian Splatting, Viewer, Visualization, Editing, Rendering, Viser, Portfolio" name="keywords">
-
-  <link href="../../assets/favicon.ico" rel="icon">
-  <link href="../../assets/favicon.ico" rel="apple-touch-icon">
-
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <script src="../../assets/js/site-icons.js?v=76c23064c5"></script>
-  <script src="../../js/sidebar-controller.js?v=3db1bd5d00"></script>
-  <link href="../../assets/css/portfolio.css?v=eb11a21519" rel="stylesheet">
-  <link href="../../assets/css/project-detail.css?v=143930b0ee" rel="stylesheet">
-  <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet">
-  <link href="../../assets/css/site-icons.css?v=32957b8b04" rel="stylesheet">
-
-  <link href="../../css/sidebar-nav.css?v=6503f0effb" rel="stylesheet">
-
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
-  <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-RF7ETSKPK9');
-  </script>
-    <meta name="site-deploy-version" content="d7a5a69c2ef2992d">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-RF7ETSKPK9');</script>
+    <meta name="site-deploy-version" content="f786aadf1249f249">
     <script defer src="/assets/js/deploy-refresh.js?v=ee9c6c8f26"></script>
-</head>
-
-<body class="portfolio-details-page">
-  <header id="header" class="header dark-background">
-    <div class="profile-img">
-      <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="sidebar-profile-image">
-    </div>
-
-    <a href="../../" class="logo">
-      <span class="sitename">Hwan Heo</span>
-    </a>
-
-    <div class="social-links">
-      <a href="https://github.com/hwanhuh" class="github" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
-      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
-      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
-      <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
-    </div>
-
-    <nav id="navmenu" class="navmenu">
-      <ul>
-        <li><a href="../../#home"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house"></use></svg>Home</a></li>
-        <li><a href="../../#portfolio" class="active"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-images"></use></svg> Projects</a></li>
-        <li class="project-nav-selector">
-          <details>
-            <summary aria-current="page">
-              <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-grid"></use></svg>
-              <span class="project-selector-copy"><small>Switch project</small><strong>2D GS Viewer</strong></span>
-              <svg class="site-icon project-selector-toggle" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
-            </summary>
-            <div class="project-selector-options">
-          <a href="../varco3d/"><span class="project-selector-index">01</span><span>VARCO 3D</span></a>
-          <a href="../capa/"><span class="project-selector-index">02</span><span>CaPa</span></a>
-          <a href="../instant_pose/"><span class="project-selector-index">03</span><span>Instant Pose for Hash-Grid NeRFs</span></a>
-          <a href="../deepsfm/"><span class="project-selector-index">04</span><span>Deep SfM for Radiance Fields</span></a>
-          <a href="../nerf_in_game/"><span class="project-selector-index">05</span><span>Neural Rendering in Game Engine</span></a>
-            </div>
-          </details>
-        </li>
-        <li><a href="../../blogs/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-keyboard"></use></svg> Blog</a></li>
-        <li><a href="../../#about"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-person"></use></svg> About</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main class="main">
-    <div class="page-title dark-background">
-      <div class="portfolio-shell">
-        <nav class="breadcrumbs" aria-label="Breadcrumb">
-          <ol>
-            <li><a href="../../">Home</a></li>
-            <li><a href="../../#portfolio">Projects</a></li>
-            <li class="current">2D GS Viewer</li>
-          </ol>
-        </nav>
-      </div>
-    </div>
-
-    <section id="portfolio-details" class="portfolio-details section">
-      <div class="portfolio-shell project-hero-shell">
-        <div class="project-hero-header">
-          <span class="project-hero-kicker">Project Case Study</span>
-          <h1><span class="text-gradient">2D Gaussian Splatting Viewer</span></h1>
-          <div class="project-hero-meta"><span>Open-source 3D Tooling</span><span>Released 2024</span></div>
-        </div>
-      </div>
-
-      <div class="portfolio-shell portfolio-details-container project-case-study-overview project-overview-shell">
-        <div class="project-overview-layout">
-          <div class="project-overview-copy">
-            <div class="portfolio-description project-overview">
-              <h2>Project Overview</h2>
-              <p>I built the 2D Gaussian Splatting Viewer to turn a research release into a workflow people could inspect, edit, and extend. The original implementation produced a new surface-oriented representation, but diagnosing a reconstruction still required separate scripts and one-off visualizations.</p>
-              <p>The Viser application brought training, renderer diagnostics, scene editing, transforms, camera paths, and mesh export into one interface. It grew from a personal debugging tool into a public utility for the 2DGS community.</p>
-              
-              <div class="project-contributions">
-                <p>Core contributions</p>
-                <ul>
-                  <li>Built and maintained a broadly adopted public Viser workflow for 2DGS.</li>
-                  <li>Connected live training with RGB, normal, depth, distortion, edge, and curvature diagnostics.</li>
-                  <li>Implemented crop, edit/save, rigid transforms, camera-path preview, and mesh export.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="project-overview-meta">
-            <aside class="portfolio-info">
-              <h3>Project Details</h3>
-              <ul>
-              <li><strong>Role</strong>Creator and Maintainer</li>
-              <li><strong>Community</strong>160+ GitHub stars</li>
-              <li><strong>Technology</strong>Python, Viser, CUDA rasterization, 2DGS</li>
-              <li><strong>Project</strong><a href="https://github.com/hwanhuh/2D-GS-Viser-Viewer" target="_blank" rel="noopener noreferrer">GitHub Repository</a></li>
-              </ul>
+</head><body class="edition-site case-study portfolio-details-page" data-surface="reading" data-chapter="detail">
+    <a class="case-skip" href="#overview">Skip to project</a>
+    <div class="case-atmosphere" aria-hidden="true"></div>
+<header class="edition-header">
+    <a class="edition-brand" href="/#home" aria-label="Hwan Heo — return to cover">Hwan Heo<span class="edition-brand-note"> / Selected work &amp; writing</span></a>
+    <nav class="edition-nav" aria-label="Portfolio chapters"><a href="/#home"><span>00</span> Cover</a><a href="/#portfolio" aria-current="page"><span>01</span> Projects</a><a href="/#blog"><span>02</span> Blogs</a><a href="/#about"><span>03</span> About</a></nav>
+    <button class="edition-tone" type="button" aria-label="Switch to light theme" aria-pressed="true"><span class="edition-tone-icon" aria-hidden="true">◐</span><span class="edition-tone-label">Light</span></button>
+</header>
+    <main id="main" class="portfolio-details"><div class="case-shell">
+        <header class="case-opening project-hero-header">
+            <a class="case-breadcrumb" href="/#portfolio"><span aria-hidden="true">←</span> Projects</a>
+            <p class="case-kicker">01 / PROJECT CASE STUDY</p>
+            <h1>2D Gaussian Splatting Viewer</h1>
+            <p class="case-byline"><span>Open-source 3D Tooling</span><span>Released 2024</span></p>
+        </header>
+        <div class="case-layout">
+            <section class="case-overview project-overview" aria-labelledby="overview"><h2 id="overview">Project Overview</h2>
+                <p>I built the 2D Gaussian Splatting Viewer to turn a research release into a workflow people could inspect, edit, and extend. The original implementation produced a new surface-oriented representation, but diagnosing a reconstruction still required separate scripts and one-off visualizations.</p><p>The Viser application brought training, renderer diagnostics, scene editing, transforms, camera paths, and mesh export into one interface. It grew from a personal debugging tool into a public utility for the 2DGS community.</p>
+            </section>
+            <aside class="case-meta" aria-label="Project details">
+                <div class="portfolio-info"><h2>Project Details</h2><ul>              <li><strong>Role</strong>Creator and Maintainer</li>              <li><strong>Community</strong>160+ GitHub stars</li>              <li><strong>Technology</strong>Python, Viser, CUDA rasterization, 2DGS</li>              <li><strong>Project</strong><a href="https://github.com/hwanhuh/2D-GS-Viser-Viewer" target="_blank" rel="noopener noreferrer">GitHub Repository</a></li></ul></div>
+                <nav class="case-contents" aria-label="On this page"><h2>In this case study</h2><ol><li><a href="#overview"><span aria-hidden="true">01</span>Overview</a></li><li><a href="#contributions"><span aria-hidden="true">02</span>Core contributions</a></li><li><a href="#key-features"><span aria-hidden="true">03</span>Key Features</a></li><li><a href="#open-source"><span aria-hidden="true">04</span>Open Source</a></li></ol></nav>
+                <details class="case-project-switch"><summary>Other projects</summary><a href="../varco3d/">VARCO 3D</a><a href="../capa/">CaPa</a><a href="../instant_pose/">Instant Pose for Hash-Grid NeRFs</a><a href="../deepsfm/">Deep SfM for Radiance Fields</a><a href="../nerf_in_game/">Neural Rendering in Game Engine</a></details>
             </aside>
-          </div>
-        </div>
-      </div>
-
-      <div class="portfolio-shell project-case-study-shell">
-        <article class="portfolio-description project-case-study-article">
-<h2>Key Features</h2>
+            
+            <div class="case-body">
+                <section class="case-contributions project-contributions" aria-labelledby="contributions"><h2 id="contributions">Core contributions</h2><ul><li>Built and maintained a broadly adopted public Viser workflow for 2DGS.</li><li>Connected live training with RGB, normal, depth, distortion, edge, and curvature diagnostics.</li><li>Implemented crop, edit/save, rigid transforms, camera-path preview, and mesh export.</li></ul></section>
+                <article class="case-article project-case-study-article"><h2 id="key-features">Key Features</h2>
 <h3>Rendering diagnostics</h3>
-<video autoplay muted loop playsinline preload="metadata" aria-label="Rendering diagnostics in the 2D Gaussian Splatting viewer" class="project-media project-video">
+<video autoplay="" muted="" loop="" playsinline="" preload="metadata" aria-label="Rendering diagnostics in the 2D Gaussian Splatting viewer" class="project-media project-video">
   <source src="assets/rendering-suite.mp4" type="video/mp4">
 </video>
 
 <p>RGB, edge, normal, depth, distortion, and curvature outputs share one rendering suite.</p>
 <h3>Training inside the viewer</h3>
-<video autoplay muted loop playsinline preload="metadata" aria-label="Interactive 2D Gaussian Splatting training workflow" class="project-media project-video">
+<video autoplay="" muted="" loop="" playsinline="" preload="metadata" aria-label="Interactive 2D Gaussian Splatting training workflow" class="project-media project-video">
   <source src="assets/training-workflow.mp4" type="video/mp4">
 </video>
 
 <p>Training, camera navigation, and intermediate render modes share one application.</p>
 <h3>Crop and general controls</h3>
-<video autoplay muted loop playsinline preload="metadata" aria-label="Crop and general scene controls" class="project-media project-video">
+<video autoplay="" muted="" loop="" playsinline="" preload="metadata" aria-label="Crop and general scene controls" class="project-media project-video">
   <source src="assets/general-controls.mp4" type="video/mp4">
 </video>
 
 <p>Crop regions, point-cloud display, disk visualization, and render-path preview remain synchronized.</p>
 <h3>Editing and mesh export</h3>
-<video autoplay muted loop playsinline preload="metadata" aria-label="Splat editing and mesh export" class="project-media project-video">
+<video autoplay="" muted="" loop="" playsinline="" preload="metadata" aria-label="Splat editing and mesh export" class="project-media project-video">
   <source src="assets/editing-and-export.mp4" type="video/mp4">
 </video>
 
 <p>Users can edit and save splats, then export the surface as a mesh.</p>
 <h3>Rigid scene transforms</h3>
-<video autoplay muted loop playsinline preload="metadata" aria-label="Rigid transforms for a Gaussian Splatting scene" class="project-media project-video">
+<video autoplay="" muted="" loop="" playsinline="" preload="metadata" aria-label="Rigid transforms for a Gaussian Splatting scene" class="project-media project-video">
   <source src="assets/rigid-transform.mp4" type="video/mp4">
 </video>
 
 <p>Position, rotation, and scale can be adjusted in place.</p>
-<h2>Open Source</h2>
+<h2 id="open-source">Open Source</h2>
 <p>The repository has evolved through more than one hundred commits and attracted over 160 GitHub stars.</p>
-
-        </article>
-      </div>
-<div class="portfolio-shell project-page-nav">
-        <a class="project-page-nav-link project-page-nav-prev" href="../instant_pose/">
-          <span class="project-page-nav-kicker"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Project</span>
-          <strong>Instant Pose for Hash-Grid NeRFs</strong>
-        </a>
-        <a class="project-page-nav-link project-page-nav-next" href="../deepsfm/">
-          <span class="project-page-nav-kicker">Next Project <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg></span>
-          <strong>Deep SfM for Radiance Fields</strong>
-        </a>
-      </div>
-    </section>
-  </main>
-
-  <footer id="footer" class="footer light-background">
-    <div class="portfolio-shell">
-      <div class="copyright">
-        <p>© <span>Copyright</span> <strong class="project-footer-owner sitename">Hwan Heo</strong> <span>All Rights Reserved</span></p>
-      </div>
-    </div>
-  </footer>
-
-  <button id="scroll-top" class="scroll-top project-scroll-top" type="button" aria-label="Back to top">
-    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up"></use></svg>
-  </button>
-
-  <script src="../../assets/js/main.js?v=995c2d3267"></script>
-  <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
-</body>
-
-</html>
+</article>
+            </div>
+        </div>
+        <div class="case-ending"><nav class="edition-next project-page-nav" aria-label="Previous and next projects">
+        <a class="project-page-nav-prev" href="../instant_pose/" rel="prev"><span>← Previous project</span><strong>Instant Pose for Hash-Grid NeRFs</strong></a>
+        <a class="project-page-nav-next" href="../deepsfm/" rel="next"><span>Next project →</span><strong>Deep SfM for Radiance Fields</strong></a>
+    </nav></div>
+    </div></main>
+    <footer class="case-footer"><div class="case-shell"><p>© Hwan Heo. All Rights Reserved.</p><a href="/#portfolio">Back to Projects ↑</a></div></footer>
+    <script src="/js/project-detail.js?v=0eeaf26c69"></script>
+</body></html>

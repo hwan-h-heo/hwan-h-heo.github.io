@@ -53,6 +53,10 @@ document.addEventListener('DOMContentLoaded', async function() {
                 break;
             }
         }
+        if (copyElement.scrollHeight > copyElement.clientHeight + 0.5) {
+            copyElement.style.removeProperty('height');
+            copyElement.classList.remove('is-height-fitted');
+        }
     }
 
     function scheduleFeaturedCopyFit() {

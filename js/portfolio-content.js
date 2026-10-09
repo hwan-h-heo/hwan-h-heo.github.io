@@ -21,7 +21,7 @@
     function renderMedia(project) {
         if (project.video) {
             return `
-                <video poster="${escapeHtml(project.poster || '')}" loop muted playsinline>
+                <video preload="none" poster="${escapeHtml(project.poster || '')}" loop muted playsinline>
                     <source src="${escapeHtml(project.video)}" type="video/mp4">
                 </video>
             `;
@@ -97,7 +97,7 @@
         const hidden = selected ? '' : ' hidden';
         const coverHtml = `
             <a class="portfolio-project-cover-link" href="${escapeHtml(project.url)}"${targetAttrs} aria-label="View ${escapeHtml(project.title)}">
-                <span class="portfolio-project-cover">
+                <span class="portfolio-project-cover${['capa', 'instant-pose', 'deepsfm'].includes(project.id) ? ' edition-media-plate' : ''}">
                     ${renderMedia(project)}
                     ${spinnerHtml}
                 </span>
@@ -185,6 +185,7 @@
     function setPortfolioView(section, view) {
         const resolvedView = view === 'all' ? 'all' : 'selected';
         section.dataset.portfolioView = resolvedView;
+        try { sessionStorage.setItem('portfolio-project-view', resolvedView); } catch {}
 
         const projectList = section.querySelector('.portfolio-project-list');
         const orderKey = resolvedView === 'all' ? 'allOrder' : 'selectedOrder';
@@ -210,7 +211,8 @@
     }
 
     function initPortfolioViewToggle(section) {
-        if (!section) return;
+        if (!section || section.dataset.filtersBound === 'true') return;
+        section.dataset.filtersBound = 'true';
 
         const projectItems = Array.from(section.querySelectorAll('.portfolio-project-item'));
         const counts = {
@@ -227,7 +229,9 @@
             control.addEventListener('click', activate);
         });
 
-        setPortfolioView(section, section.dataset.portfolioView || 'selected');
+        let view = section.dataset.portfolioView || 'selected';
+        try { view = sessionStorage.getItem('portfolio-project-view') || view; } catch {}
+        setPortfolioView(section, view);
     }
 
     const api = {
@@ -249,6 +253,7 @@
         const projectContainer = document.getElementById('portfolio-projects');
         const publicationsContainer = document.getElementById('portfolio-publications');
         const talksContainer = document.getElementById('portfolio-talks');
+        if (projectContainer?.querySelector('.portfolio-project-item')) initPortfolioViewToggle(section);
         const markReady = () => {
             if (!section) return;
             section.dataset.sectionReady = 'true';

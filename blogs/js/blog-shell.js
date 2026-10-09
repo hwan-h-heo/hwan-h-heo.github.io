@@ -1,4 +1,32 @@
 (function() {
+    function setupDestinations() {
+        const labs = document.querySelector('.blog-labs');
+        if (!labs || labs.dataset.initialized === 'true') {
+            return;
+        }
+
+        document.addEventListener('pointerdown', (event) => {
+            if (!labs.contains(event.target)) {
+                labs.open = false;
+            }
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && labs.open) {
+                labs.open = false;
+                labs.querySelector('summary').focus();
+            }
+        });
+        labs.addEventListener('focusout', () => {
+            requestAnimationFrame(() => {
+                if (!labs.contains(document.activeElement)) {
+                    labs.open = false;
+                }
+            });
+        });
+        window.addEventListener('pageshow', () => { labs.open = false; });
+        labs.dataset.initialized = 'true';
+    }
+
     function setupScrollTop() {
         const scrollTop = document.querySelector('.scroll-top');
 
@@ -143,6 +171,7 @@
 
     window.initBlogShell = function initBlogShell(options = {}) {
         const run = function() {
+            setupDestinations();
             setupScrollTop();
             setupHomeTopbar();
 

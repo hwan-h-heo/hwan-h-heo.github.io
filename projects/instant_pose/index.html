@@ -1,143 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</title>
-  <meta content="ICML 2023 case study on stabilizing camera-pose gradients while retaining the rapid convergence of hash-grid Neural Radiance Fields." name="description">
-  <meta content="" name="keywords">
-
-  <link href="../../assets/favicon.ico" rel="icon">
-  <link href="../../assets/favicon.ico" rel="apple-touch-icon">
-
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <script src="../../assets/js/site-icons.js?v=76c23064c5"></script>
-  <script src="../../js/sidebar-controller.js?v=3db1bd5d00"></script>
-  <link href="../../assets/css/portfolio.css?v=eb11a21519" rel="stylesheet">
-  <link href="../../assets/css/project-detail.css?v=143930b0ee" rel="stylesheet">
-  <link href="/blogs/css/scroll-progress.css?v=db7d02c698" rel="stylesheet">
-  <link href="../../assets/css/site-icons.css?v=32957b8b04" rel="stylesheet">
+<html lang="en"><head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</title><meta name="description" content="ICML 2023 case study on stabilizing camera-pose gradients while retaining the rapid convergence of hash-grid Neural Radiance Fields."><meta name="keywords" content="">
+    <link href="/assets/favicon.ico" rel="icon">
+    <script src="/js/site-theme.js?v=0d82cf4a85"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="/assets/css/site-theme.css?v=447d8e8b5f" rel="stylesheet">
+    <link href="/assets/css/portfolio-chapters.css?v=8003f5a19a" rel="stylesheet">
+    <link href="/assets/css/project-detail.css?v=80d9909770" rel="stylesheet">
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet">
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
   <script src="../../js/mathjax-config.js?v=10bb88679c"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <link href="../../css/sidebar-nav.css?v=6503f0effb" rel="stylesheet">
-
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
-  <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-RF7ETSKPK9');
-  </script>
-    <meta name="site-deploy-version" content="d7a5a69c2ef2992d">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-RF7ETSKPK9');</script>
+    <meta name="site-deploy-version" content="f786aadf1249f249">
     <script defer src="/assets/js/deploy-refresh.js?v=ee9c6c8f26"></script>
-</head>
-
-<body class="portfolio-details-page">
-  <header id="header" class="header dark-background">
-    <div class="profile-img">
-      <img src="../../assets/icon.webp" alt="Portrait illustration of Hwan Heo" class="sidebar-profile-image">
-    </div>
-
-    <a href="../../" class="logo">
-      <span class="sitename">Hwan Heo</span>
-    </a>
-
-    <div class="social-links">
-      <a href="https://github.com/hwanhuh" class="github" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
-      <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" class="linkedin" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
-      <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" class="instagram" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
-      <a href="mailto:hwan.heo.ai@gmail.com" class="google-plus" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
-    </div>
-
-    <nav id="navmenu" class="navmenu">
-      <ul>
-        <li><a href="../../#home"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house"></use></svg>Home</a></li>
-        <li><a href="../../#portfolio" class="active"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-images"></use></svg> Projects</a></li>
-        <li class="project-nav-selector">
-          <details>
-            <summary aria-current="page">
-              <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-grid"></use></svg>
-              <span class="project-selector-copy"><small>Switch project</small><strong>Instant Pose for Hash-Grid NeRFs</strong></span>
-              <svg class="site-icon project-selector-toggle" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
-            </summary>
-            <div class="project-selector-options">
-          <a href="../varco3d/"><span class="project-selector-index">01</span><span>VARCO 3D</span></a>
-          <a href="../capa/"><span class="project-selector-index">02</span><span>CaPa</span></a>
-          <a href="../2dgs_viewer/"><span class="project-selector-index">03</span><span>2D GS Viewer</span></a>
-          <a href="../deepsfm/"><span class="project-selector-index">04</span><span>Deep SfM for Radiance Fields</span></a>
-          <a href="../nerf_in_game/"><span class="project-selector-index">05</span><span>Neural Rendering in Game Engine</span></a>
-            </div>
-          </details>
-        </li>
-        <li><a href="../../blogs/"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-keyboard"></use></svg> Blog</a></li>
-        <li><a href="../../#about"><svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-person"></use></svg> About</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main class="main">
-    <div class="page-title dark-background">
-      <div class="portfolio-shell">
-        <nav class="breadcrumbs" aria-label="Breadcrumb">
-          <ol>
-            <li><a href="../../">Home</a></li>
-            <li><a href="../../#portfolio">Projects</a></li>
-            <li class="current">Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</li>
-          </ol>
-        </nav>
-      </div>
-    </div>
-
-    <section id="portfolio-details" class="portfolio-details section">
-      <div class="portfolio-shell project-hero-shell">
-        <div class="project-hero-header">
-          <span class="project-hero-kicker">Project Case Study</span>
-          <h1><span class="text-gradient">Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</span></h1>
-          <div class="project-hero-meta"><span>ICML 2023</span><span>NAVER AI Lab · Korea University</span></div>
-        </div>
-      </div>
-
-      <div class="portfolio-shell portfolio-details-container project-case-study-overview project-overview-shell">
-        <div class="project-overview-layout">
-          <div class="project-overview-copy">
-            <div class="portfolio-description project-overview">
-              <h2>Project Overview</h2>
-              <p>We traced the failure of joint camera-pose refinement with multi-resolution hash encoding to oscillating coordinate gradients across hash-grid cells, then redesigned the backward interpolation path with smooth weights while retaining the original trilinear forward pass.</p>
-              <p>The resulting method stabilizes SE(3) pose refinement, achieves state-of-the-art registration accuracy, and preserves hash encoding&#39;s efficiency, with training iterations running roughly 20× faster than BARF and GARF.</p>
-              
-              <div class="project-contributions">
-                <p>Core contributions</p>
-                <ul>
-                  <li>Identified oscillating coordinate gradients as the failure mode of hash-grid pose refinement.</li>
-                  <li>Designed smooth backward interpolation with a straight-through trilinear forward path.</li>
-                  <li>Added level-wise curriculum training for stable coarse-to-fine registration.</li>
-                  <li>Achieved state-of-the-art camera registration with training iterations running roughly 20× faster than BARF and GARF.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="project-overview-meta">
-            <aside class="portfolio-info">
-              <h3>Project Details</h3>
-              <ul>
-              <li><strong>Role</strong>First Author, Research Lead</li>
-              <li><strong>Publication</strong>ICML 2023</li>
-              <li><strong>Organization</strong>NAVER AI Lab, Korea University</li>
-              <li><strong>Efficiency</strong>Training iterations roughly 20× faster than BARF and GARF</li>
-              <li><strong>Paper</strong><a href="https://proceedings.mlr.press/v202/heo23a.html" target="_blank" rel="noopener noreferrer">PMLR Proceedings</a></li>
-              </ul>
+</head><body class="edition-site case-study portfolio-details-page" data-surface="reading" data-chapter="detail">
+    <a class="case-skip" href="#overview">Skip to project</a>
+    <div class="case-atmosphere" aria-hidden="true"></div>
+<header class="edition-header">
+    <a class="edition-brand" href="/#home" aria-label="Hwan Heo — return to cover">Hwan Heo<span class="edition-brand-note"> / Selected work &amp; writing</span></a>
+    <nav class="edition-nav" aria-label="Portfolio chapters"><a href="/#home"><span>00</span> Cover</a><a href="/#portfolio" aria-current="page"><span>01</span> Projects</a><a href="/#blog"><span>02</span> Blogs</a><a href="/#about"><span>03</span> About</a></nav>
+    <button class="edition-tone" type="button" aria-label="Switch to light theme" aria-pressed="true"><span class="edition-tone-icon" aria-hidden="true">◐</span><span class="edition-tone-label">Light</span></button>
+</header>
+    <main id="main" class="portfolio-details"><div class="case-shell">
+        <header class="case-opening project-hero-header">
+            <a class="case-breadcrumb" href="/#portfolio"><span aria-hidden="true">←</span> Projects</a>
+            <p class="case-kicker">01 / PROJECT CASE STUDY</p>
+            <h1>Robust Camera Pose Refinement for Multi-Resolution Hash Encoding</h1>
+            <p class="case-byline"><span>ICML 2023</span><span>NAVER AI Lab · Korea University</span></p>
+        </header>
+        <div class="case-layout">
+            <section class="case-overview project-overview" aria-labelledby="overview"><h2 id="overview">Project Overview</h2>
+                <p>We traced the failure of joint camera-pose refinement with multi-resolution hash encoding to oscillating coordinate gradients across hash-grid cells, then redesigned the backward interpolation path with smooth weights while retaining the original trilinear forward pass.</p><p>The resulting method stabilizes SE(3) pose refinement, achieves state-of-the-art registration accuracy, and preserves hash encoding&#39;s efficiency, with training iterations running roughly 20× faster than BARF and GARF.</p>
+            </section>
+            <aside class="case-meta" aria-label="Project details">
+                <div class="portfolio-info"><h2>Project Details</h2><ul>              <li><strong>Role</strong>First Author, Research Lead</li>              <li><strong>Publication</strong>ICML 2023</li>              <li><strong>Organization</strong>NAVER AI Lab, Korea University</li>              <li><strong>Efficiency</strong>Training iterations roughly 20× faster than BARF and GARF</li>              <li><strong>Paper</strong><a href="https://proceedings.mlr.press/v202/heo23a.html" target="_blank" rel="noopener noreferrer">PMLR Proceedings</a></li></ul></div>
+                <nav class="case-contents" aria-label="On this page"><h2>In this case study</h2><ol><li><a href="#overview"><span aria-hidden="true">01</span>Overview</a></li><li><a href="#contributions"><span aria-hidden="true">02</span>Core contributions</a></li><li><a href="#method"><span aria-hidden="true">03</span>Method</a></li><li><a href="#experiments"><span aria-hidden="true">04</span>Experiments</a></li></ol></nav>
+                <details class="case-project-switch"><summary>Other projects</summary><a href="../varco3d/">VARCO 3D</a><a href="../capa/">CaPa</a><a href="../2dgs_viewer/">2D GS Viewer</a><a href="../deepsfm/">Deep SfM for Radiance Fields</a><a href="../nerf_in_game/">Neural Rendering in Game Engine</a></details>
             </aside>
-          </div>
-        </div>
-      </div>
-
-      <div class="portfolio-shell project-case-study-shell">
-        <article class="portfolio-description project-case-study-article">
-<h2>Method</h2>
+            
+            <div class="case-body">
+                <section class="case-contributions project-contributions" aria-labelledby="contributions"><h2 id="contributions">Core contributions</h2><ul><li>Identified oscillating coordinate gradients as the failure mode of hash-grid pose refinement.</li><li>Designed smooth backward interpolation with a straight-through trilinear forward path.</li><li>Added level-wise curriculum training for stable coarse-to-fine registration.</li><li>Achieved state-of-the-art camera registration with training iterations running roughly 20× faster than BARF and GARF.</li></ul></section>
+                <article class="case-article project-case-study-article"><h2 id="method">Method</h2>
 <h3>Multi-Resolution Hash Encoding</h3>
 <p><img src="assets/hash_grid.png" alt="Multi-resolution hash encoding" class="project-media" loading="lazy" decoding="async"></p>
 <ol>
@@ -228,7 +134,7 @@ w_{i,l}
 $$</p>
 <p>where $\tilde{\delta}(w_{i,l})$ denotes a value detached from the computational graph.
 The two smooth terms cancel numerically in the forward pass, while the desired smooth derivative remains during back-propagation.</p>
-<h2>Experiments</h2>
+<h2 id="experiments">Experiments</h2>
 <h3>Camera-Pose Refinement Progress</h3>
 <p>Red lines denote pose-error vectors between the ground-truth cameras and the optimized poses.</p>
 <p><img src="assets/vis_pose.png" alt="Camera-pose refinement progress" class="project-media" loading="lazy" decoding="async"></p>
@@ -237,7 +143,7 @@ The two smooth terms cancel numerically in the forward pass, while the desired s
 
 <ul>
 <li>Runs each training iteration roughly <strong>20× faster</strong> than the BARF and GARF pose-refinement baselines.</li>
-<li>Retains Instant-NGP&#39;s fast convergence instead of trading registration stability for a slower positional encoding.</li>
+<li>Retains Instant-NGP's fast convergence instead of trading registration stability for a slower positional encoding.</li>
 <li>Retains the reconstruction accuracy of multi-resolution hash encoding.</li>
 <li>Improves the stability of joint camera-pose refinement.</li>
 </ul>
@@ -246,36 +152,14 @@ The two smooth terms cancel numerically in the forward pass, while the desired s
 
 <p>Across synthetic and real novel-view-synthesis datasets, the method improved camera registration while retaining rapid neural-rendering convergence.
 The work was published at <strong>ICML 2023</strong>, where the paper reported state-of-the-art pose-refinement performance.</p>
-
-        </article>
-      </div>
-<div class="portfolio-shell project-page-nav">
-        <a class="project-page-nav-link project-page-nav-prev" href="../capa/">
-          <span class="project-page-nav-kicker"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Project</span>
-          <strong>CaPa</strong>
-        </a>
-        <a class="project-page-nav-link project-page-nav-next" href="../2dgs_viewer/">
-          <span class="project-page-nav-kicker">Next Project <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg></span>
-          <strong>2D GS Viewer</strong>
-        </a>
-      </div>
-    </section>
-  </main>
-
-  <footer id="footer" class="footer light-background">
-    <div class="portfolio-shell">
-      <div class="copyright">
-        <p>© <span>Copyright</span> <strong class="project-footer-owner sitename">Hwan Heo</strong> <span>All Rights Reserved</span></p>
-      </div>
-    </div>
-  </footer>
-
-  <button id="scroll-top" class="scroll-top project-scroll-top" type="button" aria-label="Back to top">
-    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up"></use></svg>
-  </button>
-
-  <script src="../../assets/js/main.js?v=995c2d3267"></script>
-  <script src="/blogs/js/scroll-progress.js?v=943c5bebad"></script>
-</body>
-
-</html>
+</article>
+            </div>
+        </div>
+        <div class="case-ending"><nav class="edition-next project-page-nav" aria-label="Previous and next projects">
+        <a class="project-page-nav-prev" href="../capa/" rel="prev"><span>← Previous project</span><strong>CaPa</strong></a>
+        <a class="project-page-nav-next" href="../2dgs_viewer/" rel="next"><span>Next project →</span><strong>2D GS Viewer</strong></a>
+    </nav></div>
+    </div></main>
+    <footer class="case-footer"><div class="case-shell"><p>© Hwan Heo. All Rights Reserved.</p><a href="/#portfolio">Back to Projects ↑</a></div></footer>
+    <script src="/js/project-detail.js?v=0eeaf26c69"></script>
+</body></html>

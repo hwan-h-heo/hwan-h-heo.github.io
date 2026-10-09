@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" class="sidebar-collapsed blog-sidebar-rail">
+<html lang="ko">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -29,14 +29,11 @@
     <title>From Flow Matching to Optimal Transport: A Physics-based View of Generative Models (Korean) | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css?v=1378b085bd" rel="stylesheet" />
-    <link href="/blogs/css/sidebar.css?v=975e92b635" rel="stylesheet" />
-    <link href="/css/sidebar-nav.css?v=6503f0effb" rel="stylesheet" />
+    <link href="/blogs/css/blog.css?v=3052e0a1b5" rel="stylesheet" />
     <link href="/blogs/css/typography.css?v=5feaa1dfce" rel="stylesheet" />
     <link href="/blogs/css/post.css?v=dc5dd44b65" rel="stylesheet" />
     <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
     <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
-    <script src="/js/sidebar-controller.js?v=3db1bd5d00" data-sidebar-mode="rail"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -48,94 +45,35 @@
         gtag('js', new Date());
         gtag('config', 'G-RF7ETSKPK9');
     </script>
-        <script>
-            (function() {
-                try {
-                    const storedTheme = localStorage.getItem('blog-theme');
-                    const theme = storedTheme === 'dark' || storedTheme === 'light' ? storedTheme : 'light';
-                    document.documentElement.dataset.theme = theme;
-                } catch (error) {}
-            })();
-        </script>
-    <meta name="site-deploy-version" content="d7a5a69c2ef2992d">
+        <script src="/js/site-theme.js?v=0d82cf4a85"></script>
+    <link href="/assets/css/site-theme.css?v=447d8e8b5f" rel="stylesheet">
+    <link href="/blogs/css/site-reading.css?v=aaca67a1d0" rel="stylesheet">
+    <meta name="site-deploy-version" content="f786aadf1249f249">
     <script defer src="/assets/js/deploy-refresh.js?v=ee9c6c8f26"></script>
 </head>
-<body class="blog-post-page">
-    <header id="header" class="header blog-sidebar dark-background" data-sidebar-mode="rail">
-        <div class="profile-img">
-            <img src="/assets/icon.webp" alt="Portrait illustration of Hwan Heo">
-        </div>
-
-        <a href="/blogs/" class="logo">
-            <span class="sitename">Hwan's Blog</span>
-        </a>
-
-        <div class="social-links">
-            <a href="https://github.com/hwanhuh" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
-            <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
-            <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
-            <a href="mailto:hwan.heo.ai@gmail.com" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
-        </div>
-
-        <nav id="navmenu" class="navmenu" aria-label="Blog navigation">
-            <ul>
-                <li>
-                    <a href="/blogs/" class="active" aria-current="location">
-                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house"></use></svg>
-                        <span>Blog Home</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/" class="sidebar-external-link">
-                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-briefcase"></use></svg>
-                        <span>Portfolio</span>
-                        <svg class="site-icon sidebar-external-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-
-        <div class="sidebar-labs">
-            <details class="sidebar-labs-menu">
-                <summary>
-                    <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-tools"></use></svg>
-                    <span>Labs</span>
-                    <svg class="site-icon sidebar-labs-chevron" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
-                </summary>
-                <div class="sidebar-labs-panel">
-                    <div class="sidebar-rail-panel-heading" aria-hidden="true">
-                        <span>Labs / 02</span>
-                        <small>Tools &amp; experiments</small>
-                    </div>
-                    <a href="/blogs/3DViewer/">
-                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg>
-                        <span class="sidebar-labs-copy"><strong>3D Viewer</strong><small>Inspect 3D assets</small></span>
-                    </a>
-                    <a href="/blogs/editor/">
-                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg>
-                        <span class="sidebar-labs-copy"><strong>Markdown Editor</strong><small>Draft long-form posts</small></span>
-                    </a>
-                </div>
-            </details>
-        </div>
-
-        <div class="sidebar-contents">
-            <button class="sidebar-contents-toggle" type="button" aria-label="목차 열기" aria-controls="post-toc" aria-expanded="false">
-                <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-list-ul"></use></svg>
-                <span>Contents</span>
-            </button>
-        </div>
-    </header>
+<body class="blog-post-page site-reading">
 
     <main class="main blog-post-main">
         <nav class="post-site-nav" id="mainNav" aria-label="Post utilities">
             <div class="blog-shell">
                 <div class="post-reading-row">
                     <div class="post-reading-column post-utility-column">
-                        <a class="post-nav-home" href="/blogs/" aria-label="Back to Blog Home">
-                            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg>
-                            <span>Blog Home</span>
-                        </a>
+                        <div class="blog-utility-start">
+                            <a class="post-nav-home" href="/blogs/" aria-label="Back to Blog Home">
+                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg>
+                                <span class="post-nav-home-label">Blog<span class="post-nav-home-suffix"> Home</span></span>
+                            </a>
+                            <div class="blog-destinations">
+                                <a href="/">Portfolio</a>
+                                <details class="blog-labs">
+                                    <summary>Labs</summary>
+                                    <div class="blog-labs-panel">
+                                        <a href="/blogs/3DViewer/">3D Viewer</a>
+                                        <a href="/blogs/editor/">Markdown Editor</a>
+                                    </div>
+                                </details>
+                            </div>
+                        </div>
                         <ul class="post-nav-actions">
                             <li class="post-nav-action post-nav-search-item">
                                 <form id="post-nav-search-form" class="post-nav-search" role="search" data-collapsible-search>
@@ -206,7 +144,7 @@
                         </div>
                     </div>
                     <div class="post-reading-column main-content">
-                        <nav id="post-toc" class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Abstract" aria-label="Abstract"><span class="toc-link-text">Abstract</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="Introduction" aria-label="Introduction"><span class="toc-link-text">Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="Part A. Flow Matching" aria-label="Part A. Flow Matching"><span class="toc-link-text">Part A. Flow Matching</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-3" title="1. Normalizing Flow" aria-label="1. Normalizing Flow"><span class="toc-link-text">1. Normalizing Flow</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="1.1. What is Flow" aria-label="1.1. What is Flow"><span class="toc-link-text">1.1. What is Flow</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="1.2. Likelihood of Normalizing Flow" aria-label="1.2. Likelihood of Normalizing Flow"><span class="toc-link-text">1.2. Likelihood of Normalizing Flow</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-6" title="2. Continuous Normalizing Flow" aria-label="2. Continuous Normalizing Flow"><span class="toc-link-text">2. Continuous Normalizing Flow</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="2.1. Continuous Flow" aria-label="2.1. Continuous Flow"><span class="toc-link-text">2.1. Continuous Flow</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.2. Likelihood of CNF" aria-label="2.2. Likelihood of CNF"><span class="toc-link-text">2.2. Likelihood of CNF</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-9" title="3. Flow Matching" aria-label="3. Flow Matching"><span class="toc-link-text">3. Flow Matching</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="3.1. Conditional Flow Matching" aria-label="3.1. Conditional Flow Matching"><span class="toc-link-text">3.1. Conditional Flow Matching</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-11" title="3.2. Final Training Algorithm" aria-label="3.2. Final Training Algorithm"><span class="toc-link-text">3.2. Final Training Algorithm</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-12" title="3.3. Rectified Flow" aria-label="3.3. Rectified Flow"><span class="toc-link-text">3.3. Rectified Flow</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-13" title="Part B. Rectified Flow and Optimal Transport" aria-label="Part B. Rectified Flow and Optimal Transport"><span class="toc-link-text">Part B. Rectified Flow and Optimal Transport</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-14" title="4. Optimal Transport" aria-label="4. Optimal Transport"><span class="toc-link-text">4. Optimal Transport</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-15" title="4.1. What is Optimal Transport" aria-label="4.1. What is Optimal Transport"><span class="toc-link-text">4.1. What is Optimal Transport</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-16" title="4.2. Dynamic Optimal Port" aria-label="4.2. Dynamic Optimal Port"><span class="toc-link-text">4.2. Dynamic Optimal Port</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-17" title="5. Classical Mechnics" aria-label="5. Classical Mechnics"><span class="toc-link-text">5. Classical Mechnics</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-18" title="5.1. What is Action" aria-label="5.1. What is Action"><span class="toc-link-text">5.1. What is Action</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-19" title="5.2. Euler-Lagrange Equation" aria-label="5.2. Euler-Lagrange Equation"><span class="toc-link-text">5.2. Euler-Lagrange Equation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-20" title="5.3. Action in Optimal Transport" aria-label="5.3. Action in Optimal Transport"><span class="toc-link-text">5.3. Action in Optimal Transport</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-21" title="5.4. Why Recitifed-Flow is Linear?" aria-label="5.4. Why Recitifed-Flow is Linear?"><span class="toc-link-text">5.4. Why Recitifed-Flow is Linear?</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-22" title="6. Rectified Flow on Manifolf" aria-label="6. Rectified Flow on Manifolf"><span class="toc-link-text">6. Rectified Flow on Manifolf</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-23" title="6.1. Dynamics on a Manifold" aria-label="6.1. Dynamics on a Manifold"><span class="toc-link-text">6.1. Dynamics on a Manifold</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-24" title="6.2. Flow Matching on a Manifold" aria-label="6.2. Flow Matching on a Manifold"><span class="toc-link-text">6.2. Flow Matching on a Manifold</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-25" title="6.3. Geodesic Flow" aria-label="6.3. Geodesic Flow"><span class="toc-link-text">6.3. Geodesic Flow</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-26" title="7. Last Dicussion: Why Linear?" aria-label="7. Last Dicussion: Why Linear?"><span class="toc-link-text">7. Last Dicussion: Why Linear?</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
+                        <details class="post-contents"><summary>목차</summary><nav aria-label="목차"><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Abstract" aria-label="Abstract"><span class="toc-link-text">Abstract</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="Introduction" aria-label="Introduction"><span class="toc-link-text">Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="Part A. Flow Matching" aria-label="Part A. Flow Matching"><span class="toc-link-text">Part A. Flow Matching</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-3" title="1. Normalizing Flow" aria-label="1. Normalizing Flow"><span class="toc-link-text">1. Normalizing Flow</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="1.1. What is Flow" aria-label="1.1. What is Flow"><span class="toc-link-text">1.1. What is Flow</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="1.2. Likelihood of Normalizing Flow" aria-label="1.2. Likelihood of Normalizing Flow"><span class="toc-link-text">1.2. Likelihood of Normalizing Flow</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-6" title="2. Continuous Normalizing Flow" aria-label="2. Continuous Normalizing Flow"><span class="toc-link-text">2. Continuous Normalizing Flow</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="2.1. Continuous Flow" aria-label="2.1. Continuous Flow"><span class="toc-link-text">2.1. Continuous Flow</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.2. Likelihood of CNF" aria-label="2.2. Likelihood of CNF"><span class="toc-link-text">2.2. Likelihood of CNF</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-9" title="3. Flow Matching" aria-label="3. Flow Matching"><span class="toc-link-text">3. Flow Matching</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="3.1. Conditional Flow Matching" aria-label="3.1. Conditional Flow Matching"><span class="toc-link-text">3.1. Conditional Flow Matching</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-11" title="3.2. Final Training Algorithm" aria-label="3.2. Final Training Algorithm"><span class="toc-link-text">3.2. Final Training Algorithm</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-12" title="3.3. Rectified Flow" aria-label="3.3. Rectified Flow"><span class="toc-link-text">3.3. Rectified Flow</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-13" title="Part B. Rectified Flow and Optimal Transport" aria-label="Part B. Rectified Flow and Optimal Transport"><span class="toc-link-text">Part B. Rectified Flow and Optimal Transport</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-14" title="4. Optimal Transport" aria-label="4. Optimal Transport"><span class="toc-link-text">4. Optimal Transport</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-15" title="4.1. What is Optimal Transport" aria-label="4.1. What is Optimal Transport"><span class="toc-link-text">4.1. What is Optimal Transport</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-16" title="4.2. Dynamic Optimal Port" aria-label="4.2. Dynamic Optimal Port"><span class="toc-link-text">4.2. Dynamic Optimal Port</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-17" title="5. Classical Mechnics" aria-label="5. Classical Mechnics"><span class="toc-link-text">5. Classical Mechnics</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-18" title="5.1. What is Action" aria-label="5.1. What is Action"><span class="toc-link-text">5.1. What is Action</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-19" title="5.2. Euler-Lagrange Equation" aria-label="5.2. Euler-Lagrange Equation"><span class="toc-link-text">5.2. Euler-Lagrange Equation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-20" title="5.3. Action in Optimal Transport" aria-label="5.3. Action in Optimal Transport"><span class="toc-link-text">5.3. Action in Optimal Transport</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-21" title="5.4. Why Recitifed-Flow is Linear?" aria-label="5.4. Why Recitifed-Flow is Linear?"><span class="toc-link-text">5.4. Why Recitifed-Flow is Linear?</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-22" title="6. Rectified Flow on Manifolf" aria-label="6. Rectified Flow on Manifolf"><span class="toc-link-text">6. Rectified Flow on Manifolf</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-23" title="6.1. Dynamics on a Manifold" aria-label="6.1. Dynamics on a Manifold"><span class="toc-link-text">6.1. Dynamics on a Manifold</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-24" title="6.2. Flow Matching on a Manifold" aria-label="6.2. Flow Matching on a Manifold"><span class="toc-link-text">6.2. Flow Matching on a Manifold</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-25" title="6.3. Geodesic Flow" aria-label="6.3. Geodesic Flow"><span class="toc-link-text">6.3. Geodesic Flow</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-26" title="7. Last Dicussion: Why Linear?" aria-label="7. Last Dicussion: Why Linear?"><span class="toc-link-text">7. Last Dicussion: Why Linear?</span></a></li></ol></nav></details><nav id="post-toc" class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Abstract" aria-label="Abstract"><span class="toc-link-text">Abstract</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="Introduction" aria-label="Introduction"><span class="toc-link-text">Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-2" title="Part A. Flow Matching" aria-label="Part A. Flow Matching"><span class="toc-link-text">Part A. Flow Matching</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-3" title="1. Normalizing Flow" aria-label="1. Normalizing Flow"><span class="toc-link-text">1. Normalizing Flow</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="1.1. What is Flow" aria-label="1.1. What is Flow"><span class="toc-link-text">1.1. What is Flow</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-5" title="1.2. Likelihood of Normalizing Flow" aria-label="1.2. Likelihood of Normalizing Flow"><span class="toc-link-text">1.2. Likelihood of Normalizing Flow</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-6" title="2. Continuous Normalizing Flow" aria-label="2. Continuous Normalizing Flow"><span class="toc-link-text">2. Continuous Normalizing Flow</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="2.1. Continuous Flow" aria-label="2.1. Continuous Flow"><span class="toc-link-text">2.1. Continuous Flow</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.2. Likelihood of CNF" aria-label="2.2. Likelihood of CNF"><span class="toc-link-text">2.2. Likelihood of CNF</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-9" title="3. Flow Matching" aria-label="3. Flow Matching"><span class="toc-link-text">3. Flow Matching</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="3.1. Conditional Flow Matching" aria-label="3.1. Conditional Flow Matching"><span class="toc-link-text">3.1. Conditional Flow Matching</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-11" title="3.2. Final Training Algorithm" aria-label="3.2. Final Training Algorithm"><span class="toc-link-text">3.2. Final Training Algorithm</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-12" title="3.3. Rectified Flow" aria-label="3.3. Rectified Flow"><span class="toc-link-text">3.3. Rectified Flow</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-13" title="Part B. Rectified Flow and Optimal Transport" aria-label="Part B. Rectified Flow and Optimal Transport"><span class="toc-link-text">Part B. Rectified Flow and Optimal Transport</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-14" title="4. Optimal Transport" aria-label="4. Optimal Transport"><span class="toc-link-text">4. Optimal Transport</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-15" title="4.1. What is Optimal Transport" aria-label="4.1. What is Optimal Transport"><span class="toc-link-text">4.1. What is Optimal Transport</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-16" title="4.2. Dynamic Optimal Port" aria-label="4.2. Dynamic Optimal Port"><span class="toc-link-text">4.2. Dynamic Optimal Port</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-17" title="5. Classical Mechnics" aria-label="5. Classical Mechnics"><span class="toc-link-text">5. Classical Mechnics</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-18" title="5.1. What is Action" aria-label="5.1. What is Action"><span class="toc-link-text">5.1. What is Action</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-19" title="5.2. Euler-Lagrange Equation" aria-label="5.2. Euler-Lagrange Equation"><span class="toc-link-text">5.2. Euler-Lagrange Equation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-20" title="5.3. Action in Optimal Transport" aria-label="5.3. Action in Optimal Transport"><span class="toc-link-text">5.3. Action in Optimal Transport</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-21" title="5.4. Why Recitifed-Flow is Linear?" aria-label="5.4. Why Recitifed-Flow is Linear?"><span class="toc-link-text">5.4. Why Recitifed-Flow is Linear?</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-22" title="6. Rectified Flow on Manifolf" aria-label="6. Rectified Flow on Manifolf"><span class="toc-link-text">6. Rectified Flow on Manifolf</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-23" title="6.1. Dynamics on a Manifold" aria-label="6.1. Dynamics on a Manifold"><span class="toc-link-text">6.1. Dynamics on a Manifold</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-24" title="6.2. Flow Matching on a Manifold" aria-label="6.2. Flow Matching on a Manifold"><span class="toc-link-text">6.2. Flow Matching on a Manifold</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-25" title="6.3. Geodesic Flow" aria-label="6.3. Geodesic Flow"><span class="toc-link-text">6.3. Geodesic Flow</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-26" title="7. Last Dicussion: Why Linear?" aria-label="7. Last Dicussion: Why Linear?"><span class="toc-link-text">7. Last Dicussion: Why Linear?</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
@@ -234,7 +172,7 @@
 <h2 id="toc-heading-1">Introduction</h2>
 <p>최근 생성 모델의 흐름은 크게 두 가지 접근법으로 나눌 수 있다. </p>
 <p>하나는 노이즈에서부터 점차 이미지를 생성해나가는 <strong>Diffusion Model</strong> 이고, 다른 하나는 노이즈와 이미지를 직접적으로 잇는 <strong>Flow</strong> 기반 모델이다.</p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-37fd8aba8f3c.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — Introduction" loading="lazy" decoding="async">
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-37fd8aba8f3c.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — Introduction" loading="lazy" decoding="async" data-reading-surface="paper">
 
 <p>특히 Diffusion Model 은 복잡한 <strong>Stochastic Differential Equation (SDE)</strong> 을 기반으로 한다. 이는 마치 입자가 무작위적인 힘에 의해 이리저리 흔들리며 움직이는 &#39;<a href="https://en.wikipedia.org/wiki/Brownian_motion">Brownina Motion</a>&#39; 처럼, 구불구불하고 예측 불가능한 경로를 통해 샘플을 생성하는 방식이다. 이는 뛰어난 성능을 보였지만, 본질적으로 수많은 단계를 거쳐야 하기 때문에 느린 생성 속도라는 단점을 안고 있었다.</p>
 <p>이러한 배경 속에서, &quot;더 빠르고, 더 효율적인 생성 방법은 없을까?&quot;라는 질문에 대한 대답으로 <strong>Ordinary Differential Equation (ODE)</strong> 기반의 framework 가 주목받기 시작했다. ODE 는 SDE 와 달리 무작위성 (stochastic) 이 배제된 <strong>deterministic path</strong> 를 따른다. 즉, 출발점과 도착점이 정해지면 그 사이의 경로는 단 하나로 명확하게 결정된다.</p>
@@ -507,8 +445,8 @@ $$</p>
 </tr>
 </thead>
 <tbody><tr>
-<td><img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-921b9ad95d66.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.1.1. Conditional Probability Path, figure 2" loading="lazy" decoding="async"></td>
-<td><img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-c74959385540.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.1.1. Conditional Probability Path, figure 3" loading="lazy" decoding="async"></td>
+<td><img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-921b9ad95d66.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.1.1. Conditional Probability Path, figure 2" loading="lazy" decoding="async" data-reading-surface="paper"></td>
+<td><img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-c74959385540.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.1.1. Conditional Probability Path, figure 3" loading="lazy" decoding="async" data-reading-surface="paper"></td>
 </tr>
 </tbody></table>
 <hr>
@@ -559,7 +497,7 @@ $$</p>
 \end{aligned}
 $$</p>
 <p>이는 알 수 없는 $u_t$에 대한 regression problem 을, 우리가 직접 설계하여 정답을 알고 있는 $u_t(\cdot|x_1)$에 대한 regression problem 로 완벽하게 대체할 수 있음을 의미한다.</p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-63e35c0aefb1.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.1.2. Conditional Flow Matching" loading="lazy" decoding="async">
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-63e35c0aefb1.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.1.2. Conditional Flow Matching" loading="lazy" decoding="async" data-reading-surface="paper">
 
 
 <hr>
@@ -570,12 +508,12 @@ $$</p>
 x_t = \phi_t(x_0|x_1) = \sigma_t(x_1)x_0 + \mu_t(x_1)
 $$</p>
 <p>이는 <em><strong>standard normal distribution (base distribution, $p_0$)에서 샘플링한 노이즈 $x_0$ 를 시간 $t$의 target distribution $p_t(x|x_1)$ 위의 한 점 $x_t$ 로 deterministic 하게 매핑하는 함수</strong></em>이다. </p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-d2c5fec78d21.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.1.3. Sampling w/ Conditional Flow" loading="lazy" decoding="async">
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-d2c5fec78d21.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.1.3. Sampling w/ Conditional Flow" loading="lazy" decoding="async" data-reading-surface="paper">
 
 <p>이 덕분에 우리는 복잡한 분포에서 샘플링할 필요 없이, 간단한 덧셈과 곱셈만으로 학습에 필요한 데이터 $x_t$를 생성할 수 있다.</p>
 <hr>
 <h3 id="toc-heading-11">3.2. Final Training Algorithm</h3>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-eb0c00175b28.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.2. Final Training Algorithm" loading="lazy" decoding="async">
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-eb0c00175b28.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.2. Final Training Algorithm" loading="lazy" decoding="async" data-reading-surface="paper">
 
 
 <p>이 모든 과정을 종합하면, 최종 학습 알고리즘은 다음과 같이 단순해진다.</p>
@@ -591,7 +529,7 @@ $</li>
 </ol>
 <p>결론적으로 Flow Matching 은 학습 과정에서 ODE 를 풀 필요가 전혀 없으며, 두 점을 잇는 path 의 기울기를 예측하는 간단한 regression 문제로 변환된다. </p>
 <p>이 <strong><em>&#39;두 점을 잇는 deterministic path&#39;</em></strong> 라는 아이디어는 DDIM 의 핵심 통찰과도 맞닿아 있으며, Flow Matching 은 이를 학습 패러다임 자체에 녹여내어 생성 모델의 학습 효율성을 극적으로 끌어올렸다.</p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-50de32e5117c.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.2. Final Training Algorithm, figure 2" loading="lazy" decoding="async">
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-50de32e5117c.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.2. Final Training Algorithm, figure 2" loading="lazy" decoding="async" data-reading-surface="paper">
 
 
 <hr>
@@ -619,7 +557,7 @@ $$</p>
 <p>신경망은 중간 지점 $x_t$를 보고, 최종 목적지에서 출발지를 뺀 방향 벡터 ($x_1 - x_0$) 를 맞추는 <em><strong>아주 간단한 regression 문제</strong></em> 를 풀게 된다. 이 단순함이 비약적인 학습 속도와 안정성을 가져온다.</p>
 <p>마지막으로 Rectified Flow 은 또다른 장점이 존재한다. </p>
 <p>한 번의 학습으로 얻어진 coupling $(Z_0, Z_1)$ 은 초기 노이즈와 데이터의 독립적인 coupling $(X_0, X_1)$ 보다 이미 훨씬 정돈된 (less entangled) 상태이다. 만약 우리가 이 $(Z_0, Z_1)$ 을 새로운 &#39;데이터&#39;로 삼아 다시 한번 Rectified Flow 를 학습시키면 어떻게 될까? Rectified Flow 연구진은 이 <em><strong>&#39;Reflow&#39;</strong></em> 과정을 반복할수록 샘플들의 이동 경로가 기하급수적으로 직선에 가까워짐을 보였다.
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-8c73a4d78896.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.3. Rectified Flow" loading="lazy" decoding="async"></p>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-8c73a4d78896.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 3.3. Rectified Flow" loading="lazy" decoding="async" data-reading-surface="paper"></p>
 <p>이는 단 몇 번의 반복만으로도 거의 완벽한 직선 경로를 학습할 수 있다는 의미이며, 생성 과정에서 필요한 ODE 스텝 수를 획기적으로 줄여 (심지어 단 한 스텝으로도) 매우 빠른 샘플링을 가능하게 한다.</p>
 <p>이제 우리는 <em><strong>어떻게</strong></em> Flow Matching을 통해 직선 경로를 학습할 수 있는지 알게 되었다. 하지만 근본적인 질문이 남는다.</p>
 <blockquote>
@@ -633,7 +571,7 @@ $$</p>
 <h2 id="toc-heading-14">4. Optimal Transport</h2>
 <h3 id="toc-heading-15">4.1. What is Optimal Transport</h3>
 <p>먼저 <a href="https://en.wikipedia.org/wiki/Transportation_theory_(mathematics)">optimal transport</a> 를 직관적으로 이해해보자. 여기 흙이 쌓여있는 언덕 ($X$, 소스 분포)이 있고, 이 흙을 모두 파내서 어딘가에 있는 구덩이 ($Y$, 타겟 분포)를 메워야 한다고 상상해보자.</p>
-<img style='width:100%' src="/blogs/posts/250810_flow/assets/remote-526387c8d0ca.png" width="100%" alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 4.1. What is Optimal Transport" loading="lazy" decoding="async">
+<img style='width:100%' src="/blogs/posts/250810_flow/assets/remote-526387c8d0ca.png" width="100%" alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 4.1. What is Optimal Transport" loading="lazy" decoding="async" data-reading-surface="paper">
 
 <p>이때 &quot;가장 효율적으로&quot; 흙을 옮기려면 어떻게 해야 할까? </p>
 <p>&#39;효율적&#39;이라는 것은 총 이동 비용(Cost)을 최소화하는 것을 의미한다. 최적 수송은 바로 이 문제, 즉 한 확률 분포 (흙더미)를 다른 확률 분포 (구덩이)로 변환하는 데 필요한 <strong>최소 비용의 Transport Plan</strong>을 찾는 수학 이론이다.</p>
@@ -757,7 +695,7 @@ $$</p>
 $$
 {v_t(x) = -\nabla \phi(x, t)}
 $$</p>
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-2bbef7285be8.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 5.3.2. Constrained Euler-Lagrange Equation" loading="lazy" decoding="async">
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-2bbef7285be8.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 5.3.2. Constrained Euler-Lagrange Equation" loading="lazy" decoding="async" data-reading-surface="paper">
 - Vector field (right) and corresponding scalar potential (left).
 
 <p><strong>Density $p$ 에 대한 functional derivative</strong></p>
@@ -809,7 +747,7 @@ $$</p>
 $$</p>
 <p>Action 을 최소화하고 continuity equation 을 만족하는 최적의 흐름을 따르는 모든 입자의 <strong>가속도는 0</strong> 이다. 이는 각 입자가 시작점 $z_0$에서 도착점 $z_1$까지 <strong>등속 직선 운동</strong>을 한다는 것을 수학적으로 증명한다.</p>
 <p>이것이 바로 Rectified Flow가 두 분포의 샘플 $z_0, z_1$을 뽑아 그 사이를 잇는 <strong>직선 경로</strong>를 학습의 목표로 삼는 강력한 이론적 배경이다. 모델이 학습하는 속도 벡터 $$v = z_1 - z_0$$는 이 최적 경로의 속도장에 해당한다.
-<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-40629d4b233a.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 5.4. Why Recitifed-Flow is Linear?" loading="lazy" decoding="async"></p>
+<img style='width:100%' src='/blogs/posts/250810_flow/assets/remote-40629d4b233a.png' alt="From Flow Matching to Optimal Transport: A Physics-based View of Generative Models — 5.4. Why Recitifed-Flow is Linear?" loading="lazy" decoding="async" data-reading-surface="paper"></p>
 <p>따라서 Rectified Flow가 채택한 &#39;직선 경로&#39; $z_t = (1-t)z_0 + t z_1$ 는 임의의 선택이 아니라, <strong>물리 법칙과 수학적 최적화에 근거한 가장 자연스럽고 효율적인 경로</strong>라고 해석할 수 있다.</p>
 <hr>
 <h2 id="toc-heading-22">6. Rectified Flow on Manifolf</h2>
@@ -1021,6 +959,10 @@ $$
                 <div class="post-reading-row">
                     <div class="post-reading-column">
                         <div class="blog-footer-note">Copyright © Hwan Heo</div>
+                        <nav class="blog-publication-links" aria-label="Publication links">
+                            <a href="/blogs/">Blog Home</a>
+                            <a href="/">Portfolio ↗</a>
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -1554,9 +1496,9 @@ $$
 };
     </script>
 
-    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
-    <script src="/blogs/js/blog-shell.js?v=456de34605"></script>
-    <script src="/blogs/js/post-page.js?v=181bf06e84"></script>
+    <script src="/blogs/js/theme-toggle.js?v=02f1278dd5"></script>
+    <script src="/blogs/js/blog-shell.js?v=2108ee26e6"></script>
+    <script src="/blogs/js/post-page.js?v=55a8de0ff8"></script>
         <script>
             initBlogShell({
                 formSelector: '#post-nav-search-form',

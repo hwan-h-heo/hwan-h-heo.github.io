@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="sidebar-collapsed blog-sidebar-rail">
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -29,14 +29,11 @@
     <title>VARCO 3D: A Year in Review — 2025 Retrospective | Hwan Heo</title>
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="/blogs/css/blog.css?v=1378b085bd" rel="stylesheet" />
-    <link href="/blogs/css/sidebar.css?v=975e92b635" rel="stylesheet" />
-    <link href="/css/sidebar-nav.css?v=6503f0effb" rel="stylesheet" />
+    <link href="/blogs/css/blog.css?v=3052e0a1b5" rel="stylesheet" />
     <link href="/blogs/css/typography.css?v=5feaa1dfce" rel="stylesheet" />
     <link href="/blogs/css/post.css?v=dc5dd44b65" rel="stylesheet" />
     <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
     <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
-    <script src="/js/sidebar-controller.js?v=3db1bd5d00" data-sidebar-mode="rail"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -48,94 +45,35 @@
         gtag('js', new Date());
         gtag('config', 'G-RF7ETSKPK9');
     </script>
-        <script>
-            (function() {
-                try {
-                    const storedTheme = localStorage.getItem('blog-theme');
-                    const theme = storedTheme === 'dark' || storedTheme === 'light' ? storedTheme : 'light';
-                    document.documentElement.dataset.theme = theme;
-                } catch (error) {}
-            })();
-        </script>
-    <meta name="site-deploy-version" content="d7a5a69c2ef2992d">
+        <script src="/js/site-theme.js?v=0d82cf4a85"></script>
+    <link href="/assets/css/site-theme.css?v=447d8e8b5f" rel="stylesheet">
+    <link href="/blogs/css/site-reading.css?v=aaca67a1d0" rel="stylesheet">
+    <meta name="site-deploy-version" content="f786aadf1249f249">
     <script defer src="/assets/js/deploy-refresh.js?v=ee9c6c8f26"></script>
 </head>
-<body class="blog-post-page">
-    <header id="header" class="header blog-sidebar dark-background" data-sidebar-mode="rail">
-        <div class="profile-img">
-            <img src="/assets/icon.webp" alt="Portrait illustration of Hwan Heo">
-        </div>
-
-        <a href="/blogs/" class="logo">
-            <span class="sitename">Hwan's Blog</span>
-        </a>
-
-        <div class="social-links">
-            <a href="https://github.com/hwanhuh" aria-label="GitHub"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-github"></use></svg></a>
-            <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" aria-label="LinkedIn"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-linkedin"></use></svg></a>
-            <a href="https://scholar.google.com/citations?user=RulvYTkAAAAJ" aria-label="Google Scholar"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-mortarboard-fill"></use></svg></a>
-            <a href="mailto:hwan.heo.ai@gmail.com" aria-label="Email"><svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-envelope-fill"></use></svg></a>
-        </div>
-
-        <nav id="navmenu" class="navmenu" aria-label="Blog navigation">
-            <ul>
-                <li>
-                    <a href="/blogs/" class="active" aria-current="location">
-                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-house"></use></svg>
-                        <span>Blog Home</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/" class="sidebar-external-link">
-                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-briefcase"></use></svg>
-                        <span>Portfolio</span>
-                        <svg class="site-icon sidebar-external-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box-arrow-up-right"></use></svg>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-
-        <div class="sidebar-labs">
-            <details class="sidebar-labs-menu">
-                <summary>
-                    <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-tools"></use></svg>
-                    <span>Labs</span>
-                    <svg class="site-icon sidebar-labs-chevron" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-chevron-down"></use></svg>
-                </summary>
-                <div class="sidebar-labs-panel">
-                    <div class="sidebar-rail-panel-heading" aria-hidden="true">
-                        <span>Labs / 02</span>
-                        <small>Tools &amp; experiments</small>
-                    </div>
-                    <a href="/blogs/3DViewer/">
-                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-box"></use></svg>
-                        <span class="sidebar-labs-copy"><strong>3D Viewer</strong><small>Inspect 3D assets</small></span>
-                    </a>
-                    <a href="/blogs/editor/">
-                        <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-pencil-square"></use></svg>
-                        <span class="sidebar-labs-copy"><strong>Markdown Editor</strong><small>Draft long-form posts</small></span>
-                    </a>
-                </div>
-            </details>
-        </div>
-
-        <div class="sidebar-contents">
-            <button class="sidebar-contents-toggle" type="button" aria-label="Open contents" aria-controls="post-toc" aria-expanded="false">
-                <svg class="site-icon navicon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-list-ul"></use></svg>
-                <span>Contents</span>
-            </button>
-        </div>
-    </header>
+<body class="blog-post-page site-reading">
 
     <main class="main blog-post-main">
         <nav class="post-site-nav" id="mainNav" aria-label="Post utilities">
             <div class="blog-shell">
                 <div class="post-reading-row">
                     <div class="post-reading-column post-utility-column">
-                        <a class="post-nav-home" href="/blogs/" aria-label="Back to Blog Home">
-                            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg>
-                            <span>Blog Home</span>
-                        </a>
+                        <div class="blog-utility-start">
+                            <a class="post-nav-home" href="/blogs/" aria-label="Back to Blog Home">
+                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg>
+                                <span class="post-nav-home-label">Blog<span class="post-nav-home-suffix"> Home</span></span>
+                            </a>
+                            <div class="blog-destinations">
+                                <a href="/">Portfolio</a>
+                                <details class="blog-labs">
+                                    <summary>Labs</summary>
+                                    <div class="blog-labs-panel">
+                                        <a href="/blogs/3DViewer/">3D Viewer</a>
+                                        <a href="/blogs/editor/">Markdown Editor</a>
+                                    </div>
+                                </details>
+                            </div>
+                        </div>
                         <ul class="post-nav-actions">
                             <li class="post-nav-action post-nav-search-item">
                                 <form id="post-nav-search-form" class="post-nav-search" role="search" data-collapsible-search>
@@ -206,7 +144,7 @@
                         </div>
                     </div>
                     <div class="post-reading-column main-content">
-                        <nav id="post-toc" class="toc" aria-label="Table of contents"><div class="toc-title">On This Page</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Introduction" aria-label="Introduction"><span class="toc-link-text">Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="1. Back to 2024" aria-label="1. Back to 2024"><span class="toc-link-text">1. Back to 2024</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-2" title="1.1 Non-Native 3D Generation" aria-label="1.1 Non-Native 3D Generation"><span class="toc-link-text">1.1 Non-Native 3D Generation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="1.2 Texture Generative AI" aria-label="1.2 Texture Generative AI"><span class="toc-link-text">1.2 Texture Generative AI</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="1.3 Beyond SDS; Native 3D Generation" aria-label="1.3 Beyond SDS; Native 3D Generation"><span class="toc-link-text">1.3 Beyond SDS; Native 3D Generation</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-5" title="2. Pursue SOTA: 3D Sovereign AI" aria-label="2. Pursue SOTA: 3D Sovereign AI"><span class="toc-link-text">2. Pursue SOTA: 3D Sovereign AI</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="2.1 Varco3D-alpha" aria-label="2.1 Varco3D-alpha"><span class="toc-link-text">2.1 Varco3D-alpha</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="2.2 SOTA Sparse Voxel Method" aria-label="2.2 SOTA Sparse Voxel Method"><span class="toc-link-text">2.2 SOTA Sparse Voxel Method</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.3 Varco3D 1.0-preview" aria-label="2.3 Varco3D 1.0-preview"><span class="toc-link-text">2.3 Varco3D 1.0-preview</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-9" title="3. Back to VecSet" aria-label="3. Back to VecSet"><span class="toc-link-text">3. Back to VecSet</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="3.1 Lattice" aria-label="3.1 Lattice"><span class="toc-link-text">3.1 Lattice</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-11" title="3.2 FlashVDM; Vice-Versa of Lattice?" aria-label="3.2 FlashVDM; Vice-Versa of Lattice?"><span class="toc-link-text">3.2 FlashVDM; Vice-Versa of Lattice?</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-12" title="3.3 Varco3D-Lattice" aria-label="3.3 Varco3D-Lattice"><span class="toc-link-text">3.3 Varco3D-Lattice</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-13" title="4. Next Step in 3D Generation" aria-label="4. Next Step in 3D Generation"><span class="toc-link-text">4. Next Step in 3D Generation</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-14" title="4.1 Sparse Voxel vs. VecSet" aria-label="4.1 Sparse Voxel vs. VecSet"><span class="toc-link-text">4.1 Sparse Voxel vs. VecSet</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-15" title="4.2 Beyond SDF: Trellis 2 &amp; Faith-Contouring" aria-label="4.2 Beyond SDF: Trellis 2 &amp; Faith-Contouring"><span class="toc-link-text">4.2 Beyond SDF: Trellis 2 &amp; Faith-Contouring</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-16" title="Epilogue" aria-label="Epilogue"><span class="toc-link-text">Epilogue</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
+                        <details class="post-contents"><summary>Contents</summary><nav aria-label="Contents"><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Introduction" aria-label="Introduction"><span class="toc-link-text">Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="1. Back to 2024" aria-label="1. Back to 2024"><span class="toc-link-text">1. Back to 2024</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-2" title="1.1 Non-Native 3D Generation" aria-label="1.1 Non-Native 3D Generation"><span class="toc-link-text">1.1 Non-Native 3D Generation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="1.2 Texture Generative AI" aria-label="1.2 Texture Generative AI"><span class="toc-link-text">1.2 Texture Generative AI</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="1.3 Beyond SDS; Native 3D Generation" aria-label="1.3 Beyond SDS; Native 3D Generation"><span class="toc-link-text">1.3 Beyond SDS; Native 3D Generation</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-5" title="2. Pursue SOTA: 3D Sovereign AI" aria-label="2. Pursue SOTA: 3D Sovereign AI"><span class="toc-link-text">2. Pursue SOTA: 3D Sovereign AI</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="2.1 Varco3D-alpha" aria-label="2.1 Varco3D-alpha"><span class="toc-link-text">2.1 Varco3D-alpha</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="2.2 SOTA Sparse Voxel Method" aria-label="2.2 SOTA Sparse Voxel Method"><span class="toc-link-text">2.2 SOTA Sparse Voxel Method</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.3 Varco3D 1.0-preview" aria-label="2.3 Varco3D 1.0-preview"><span class="toc-link-text">2.3 Varco3D 1.0-preview</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-9" title="3. Back to VecSet" aria-label="3. Back to VecSet"><span class="toc-link-text">3. Back to VecSet</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="3.1 Lattice" aria-label="3.1 Lattice"><span class="toc-link-text">3.1 Lattice</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-11" title="3.2 FlashVDM; Vice-Versa of Lattice?" aria-label="3.2 FlashVDM; Vice-Versa of Lattice?"><span class="toc-link-text">3.2 FlashVDM; Vice-Versa of Lattice?</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-12" title="3.3 Varco3D-Lattice" aria-label="3.3 Varco3D-Lattice"><span class="toc-link-text">3.3 Varco3D-Lattice</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-13" title="4. Next Step in 3D Generation" aria-label="4. Next Step in 3D Generation"><span class="toc-link-text">4. Next Step in 3D Generation</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-14" title="4.1 Sparse Voxel vs. VecSet" aria-label="4.1 Sparse Voxel vs. VecSet"><span class="toc-link-text">4.1 Sparse Voxel vs. VecSet</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-15" title="4.2 Beyond SDF: Trellis 2 &amp; Faith-Contouring" aria-label="4.2 Beyond SDF: Trellis 2 &amp; Faith-Contouring"><span class="toc-link-text">4.2 Beyond SDF: Trellis 2 &amp; Faith-Contouring</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-16" title="Epilogue" aria-label="Epilogue"><span class="toc-link-text">Epilogue</span></a></li></ol></nav></details><nav id="post-toc" class="toc" aria-label="Table of contents"><div class="toc-title">On This Page</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="Introduction" aria-label="Introduction"><span class="toc-link-text">Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="1. Back to 2024" aria-label="1. Back to 2024"><span class="toc-link-text">1. Back to 2024</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-2" title="1.1 Non-Native 3D Generation" aria-label="1.1 Non-Native 3D Generation"><span class="toc-link-text">1.1 Non-Native 3D Generation</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="1.2 Texture Generative AI" aria-label="1.2 Texture Generative AI"><span class="toc-link-text">1.2 Texture Generative AI</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="1.3 Beyond SDS; Native 3D Generation" aria-label="1.3 Beyond SDS; Native 3D Generation"><span class="toc-link-text">1.3 Beyond SDS; Native 3D Generation</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-5" title="2. Pursue SOTA: 3D Sovereign AI" aria-label="2. Pursue SOTA: 3D Sovereign AI"><span class="toc-link-text">2. Pursue SOTA: 3D Sovereign AI</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="2.1 Varco3D-alpha" aria-label="2.1 Varco3D-alpha"><span class="toc-link-text">2.1 Varco3D-alpha</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="2.2 SOTA Sparse Voxel Method" aria-label="2.2 SOTA Sparse Voxel Method"><span class="toc-link-text">2.2 SOTA Sparse Voxel Method</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-8" title="2.3 Varco3D 1.0-preview" aria-label="2.3 Varco3D 1.0-preview"><span class="toc-link-text">2.3 Varco3D 1.0-preview</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-9" title="3. Back to VecSet" aria-label="3. Back to VecSet"><span class="toc-link-text">3. Back to VecSet</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="3.1 Lattice" aria-label="3.1 Lattice"><span class="toc-link-text">3.1 Lattice</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-11" title="3.2 FlashVDM; Vice-Versa of Lattice?" aria-label="3.2 FlashVDM; Vice-Versa of Lattice?"><span class="toc-link-text">3.2 FlashVDM; Vice-Versa of Lattice?</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-12" title="3.3 Varco3D-Lattice" aria-label="3.3 Varco3D-Lattice"><span class="toc-link-text">3.3 Varco3D-Lattice</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-13" title="4. Next Step in 3D Generation" aria-label="4. Next Step in 3D Generation"><span class="toc-link-text">4. Next Step in 3D Generation</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-14" title="4.1 Sparse Voxel vs. VecSet" aria-label="4.1 Sparse Voxel vs. VecSet"><span class="toc-link-text">4.1 Sparse Voxel vs. VecSet</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-15" title="4.2 Beyond SDF: Trellis 2 &amp; Faith-Contouring" aria-label="4.2 Beyond SDF: Trellis 2 &amp; Faith-Contouring"><span class="toc-link-text">4.2 Beyond SDF: Trellis 2 &amp; Faith-Contouring</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-16" title="Epilogue" aria-label="Epilogue"><span class="toc-link-text">Epilogue</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
     <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
 </button>
 
@@ -293,7 +231,7 @@ $$</p>
 </figure>
 <p>Through such ShapeVAE, training a Diffusion Model or Flow Matching model from a latent space that compresses meshes with hundreds of thousands of faces into roughly 2K–8K token length is the basic framework of <strong>&#39;3D Native Generative Models.&#39;</strong></p>
 <figure class="post-media post-media--editorial">
-<img src="/blogs/posts/260115_Varco3D/assets/remote-5e3e4b4b19ce.png" alt="VARCO 3D: A Year in Review — 2025 Retrospective — 1.3 Beyond SDS; Native 3D Generation, figure 2" loading="lazy" decoding="async">
+<img src="/blogs/posts/260115_Varco3D/assets/remote-5e3e4b4b19ce.png" alt="VARCO 3D: A Year in Review — 2025 Retrospective — 1.3 Beyond SDS; Native 3D Generation, figure 2" loading="lazy" decoding="async" data-reading-surface="paper">
 <figcaption><span class="post-figure-index">FIG. 04</span><span class="post-figure-caption">Sample results from <a href="https://nju-3dv.github.io/projects/Direct3D/">Direct3D</a>, one of the 3D DiT models trained on ShapeVAE</span></figcaption>
 </figure>
 <p>I judged that by combining this 3D native geometry generation research with the ideas from Texture Copilot, it would be possible to build a complete pipeline that circumvents SDS&#39;s chronic problems. Based on this belief, at the end of 2024, I undertook the CaPa project, which involved directly training ShapeVAE and DiT models, as well as designing attention modules for multi-view generation to solve the Janus problem in texturing.</p>
@@ -389,7 +327,7 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
 <p>Do you remember that sparse voxel-based methodologies (Sparc3D, etc.) dramatically improved training efficiency and quality by separating global shape and local detail generation?</p>
 <p><a href="https://lattice3d.github.io/"><strong>Lattice</strong></a> is the core structure behind Hunyuan3D 2.5/3.0&#39;s geometry generation model released by Tencent. Like Sparc3D and others, it applies a two-stage approach to the VecSet methodology—first generating a global shape, then using that result as guidance to generate local details.
 <em>(In fact, considering the release timing of Hunyuan3D 2.5, it appears that Tencent internally validated and completed training on the coarse-to-fine structure much earlier than research like Sparc3D)</em></p>
-<img src='/blogs/posts/260115_Varco3D/assets/remote-41022b09f050.png' width=50% alt="VARCO 3D: A Year in Review — 2025 Retrospective — 3.1 Lattice" loading="lazy" decoding="async">
+<img src='/blogs/posts/260115_Varco3D/assets/remote-41022b09f050.png' width=50% alt="VARCO 3D: A Year in Review — 2025 Retrospective — 3.1 Lattice" loading="lazy" decoding="async" data-reading-surface="paper">
 
 <p>Specifically, it consists of the following two-stage pipeline:</p>
 <ul>
@@ -409,7 +347,7 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
 
 <p>Beyond octree-decoding, an important characteristic of VecSet VAE reported in FlashVDM is that <strong>when the VecSet VAE Decoder receives point queries to decode SDF values, spatially adjacent point queries focus only on attention with similar latent tokens.</strong> Reversing this discovery leads to the conclusion that VecSet&#39;s latent tokens already have a close relationship with spatial location and inherently possess strong locality.</p>
 <p>This leads to the assumption that if positional information is provided correctly, fine details can be filled in without needing to relearn the entire structure. In other words, if we can convey the connection to 3D spatial location when training/inferring the DiT model, we can design a refinement model that knows information about the global shape, just like sparse voxel methodologies. The DiT doesn&#39;t create shapes from scratch in empty space, but rather focuses only on local detail generation while receiving strong guidance about the global shape.</p>
-<p><img src="/blogs/posts/260115_Varco3D/assets/remote-34753712de5b.png" alt="VARCO 3D: A Year in Review — 2025 Retrospective — 3.2 FlashVDM; Vice-Versa of Lattice?, figure 3" loading="lazy" decoding="async"></p>
+<p><img src="/blogs/posts/260115_Varco3D/assets/remote-34753712de5b.png" alt="VARCO 3D: A Year in Review — 2025 Retrospective — 3.2 FlashVDM; Vice-Versa of Lattice?, figure 3" loading="lazy" decoding="async" data-reading-surface="paper"></p>
 <p>Lattice drastically shortened training efficiency and enabled a coarse-to-fine structure in VecSet by voxelizing the coarse mesh, then injecting the sampled representative coordinates through RoPE embedding.</p>
 <p>There are also incidental benefits of voxelization. While existing VecSet accepts <em>&#39;any point coordinates&#39;</em> in space as input, voxelization causes RoPE embedding to concentrate on points on a regular grid, significantly reducing the search space for the generative model. By providing inductive bias, the model rapidly acquires spatial prior knowledge.</p>
 <hr>
@@ -452,7 +390,7 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
 <p><strong><em>Disadvantage</em> — Instability</strong>: There are significant shortcomings in terms of training and inference stability. Token length varies for each piece of data, and the number of active voxels at $128^3$ resolution alone averages over 80K. Additionally, because all active voxels are used, the quality is highly dependent on the quality of active voxels.</p>
 <p>At this token length, full attention training is practically impossible, so one must either use Sliding Window Attention like Swin Transformer or downsample to 64/32 resolution for full attention and then upsample again, which introduces structural instability in the process.</p>
 <figure class="post-media post-media--editorial post-media--narrow" style="--post-figure-media-width: 70%;">
-<img src='/blogs/posts/260115_Varco3D/assets/remote-dfc4c3230951.png' width=70% alt="VARCO 3D: A Year in Review — 2025 Retrospective — Sparse Voxel" loading="lazy" decoding="async">
+<img src='/blogs/posts/260115_Varco3D/assets/remote-dfc4c3230951.png' width=70% alt="VARCO 3D: A Year in Review — 2025 Retrospective — Sparse Voxel" loading="lazy" decoding="async" data-reading-surface="paper">
 <figcaption><span class="post-figure-index">FIG. 09</span><span class="post-figure-caption">Direct3D-S2&#39;s 3D sliding window attention mechanism</span></figcaption>
 </figure>
 <hr>
@@ -466,7 +404,7 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
 <p>All the methods described so far have been under the shadow of SDF (Signed Distance Function). SDF is a value that indicates how far a point in space is from an object&#39;s surface (Distance) and whether it is inside or outside (Sign). This is converted to a mesh through the Marching Cubes algorithm, but there is a critical constraint: <strong>&#39;it must be a closed object (watertight).&#39;</strong> Since only sealed shapes that do not leak water can be represented, there were clear limitations in generating &#39;open surfaces&#39; such as torn collar edges, thin paper, or cross-sections of transparent glass.</p>
 <p>Recently released <a href="https://microsoft.github.io/TRELLIS.2/">Trellis-2</a> and <a href="https://github.com/Luo-Yihao/FaithC">FaithC</a> chose an approach where AI directly predicts <strong>QEM (Quadric Error Metric)</strong> parameters instead of predicting SDF values to solve this problem.</p>
 <figure class="post-media post-media--editorial">
-<img src="/blogs/posts/260115_Varco3D/assets/remote-9fc346759c86.png" alt="VARCO 3D: A Year in Review — 2025 Retrospective — 4.2 Beyond SDF: Trellis 2 &amp; Faith-Contouring" loading="lazy" decoding="async">
+<img src="/blogs/posts/260115_Varco3D/assets/remote-9fc346759c86.png" alt="VARCO 3D: A Year in Review — 2025 Retrospective — 4.2 Beyond SDF: Trellis 2 &amp; Faith-Contouring" loading="lazy" decoding="async" data-reading-surface="paper">
 <figcaption><span class="post-figure-index">FIG. 10</span><span class="post-figure-caption"><em>Illustration of FaithC</em></span></figcaption>
 </figure>
 <p>Of course, there are clear trade-offs with this approach as well. The biggest problem I noticed through direct generation was &#39;topological discontinuity&#39;—in simple terms, the phenomenon of results being torn. I believe this occurs because, with the strong continuity constraint of SDF removed, the predicted values of each voxel generated by the model fail to connect smoothly with each other.</p>
@@ -564,6 +502,10 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
                 <div class="post-reading-row">
                     <div class="post-reading-column">
                         <div class="blog-footer-note">Copyright © Hwan Heo</div>
+                        <nav class="blog-publication-links" aria-label="Publication links">
+                            <a href="/blogs/">Blog Home</a>
+                            <a href="/">Portfolio ↗</a>
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -1097,9 +1039,9 @@ As shown in the figure, the decoding of Sparse Voxel VAE maps a <em>low-resoluti
 };
     </script>
 
-    <script src="/blogs/js/theme-toggle.js?v=32f6914d64"></script>
-    <script src="/blogs/js/blog-shell.js?v=456de34605"></script>
-    <script src="/blogs/js/post-page.js?v=181bf06e84"></script>
+    <script src="/blogs/js/theme-toggle.js?v=02f1278dd5"></script>
+    <script src="/blogs/js/blog-shell.js?v=2108ee26e6"></script>
+    <script src="/blogs/js/post-page.js?v=55a8de0ff8"></script>
         <script>
             initBlogShell({
                 formSelector: '#post-nav-search-form',
