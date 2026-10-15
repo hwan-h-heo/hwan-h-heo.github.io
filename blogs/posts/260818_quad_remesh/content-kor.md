@@ -11,7 +11,7 @@
 
 ![Direction field, 좌표, integer grid에서 quad mesh로 이어지는 과정](./assets/armadillo_pipeline_10k.webp)
 
-Armadillo 예시는 Varco3D에서 사용하는 자체 구현 [CUDA 가속 CoMISo-like integer PDE solver](https://github.com/hwanhuh/CUDA-Lattice-Quadratice-Solver)로 만든 quad remesh 결과다. 계산 과정은 간단한 표면 위의 Manim 영상으로 살펴본다.
+Armadillo 예시는 Varco3D에서 사용하는 자체 구현 [CUDA 가속 CoMISo-like integer PDE solver](https://github.com/hwanhuh/CUDA-Lattice-Quadratice-Solver)로 만든 quad remesh 결과다. 계산 과정은 간단한 표면 위의 Manim 그림과 영상으로 살펴본다.
 
 ## 1. Triangle Pairing & Lattice
 
@@ -19,12 +19,9 @@ Armadillo 예시는 Varco3D에서 사용하는 자체 구현 [CUDA 가속 CoMISo
 
 인접한 삼각형을 국소적인 모양만 보고 묶으면 각 사각형의 품질은 어느 정도 좋아질 수 있다. 그러나 어떤 face에서 고른 방향이 다음 face에서도 이어진다는 보장은 없다. 마주 보는 edge를 따라가다 보면 흐름이 지그재그로 꺾이거나 짧은 loop로 닫히고, 짝을 찾지 못한 삼각형이 남기도 한다.
 
-<figure class="post-media quad-remesh-video">
-  <video controls loop muted playsinline preload="none" width="1280" height="720" poster="/blogs/posts/260818_quad_remesh/assets/manim/pairing-vs-lattice.webp" aria-label="삼각형의 내부 edge를 지우는 local pairing과, 표면 전체에 방향을 맞춘 grid의 비교.">
-    <source src="/blogs/posts/260818_quad_remesh/assets/manim/pairing-vs-lattice.mp4" type="video/mp4">
-    <a href="/blogs/posts/260818_quad_remesh/assets/manim/pairing-vs-lattice.mp4">MP4 영상 보기</a>
-  </video>
-  <figcaption>삼각형의 내부 edge를 지우는 local pairing과, 표면 전체에 방향을 맞춘 grid의 비교.</figcaption>
+<figure class="post-media quad-remesh-still">
+  <img src="/blogs/posts/260818_quad_remesh/assets/manim/stills/pairing-vs-lattice.webp" width="1600" height="814" loading="lazy" decoding="async" data-reading-surface="original" alt="선택한 local triangle pair와 짧은 flow fragment를, 같은 표면 위 quad mesh의 연속적인 strip과 비교한 그림.">
+  <figcaption>왼쪽은 선택한 local triangle pair와 짧은 flow fragment, 오른쪽은 같은 표면 위에 별도로 구성한 quad mesh의 연속적인 strip을 보여 준다.</figcaption>
 </figure>
 
 Triangle mesh는 방향과 좌표를 계산하는 바탕, 즉 *calculation carrier*다. 최종 quad의 vertex와 edge는 그 위에 새로 생기므로 입력 삼각형의 연결을 그대로 따를 필요가 없다. 이렇게 연결을 새로 정하려면 표면 전체에서 grid가 어떻게 흘러갈지부터 정해야 한다.
@@ -82,12 +79,9 @@ $$
 
 닫힌 곡면 전체에 겹침이나 singularity 없이 하나의 평면 좌표를 줄 수는 없다. 실제 계산에서는 표면을 잘라 여러 chart로 다루고, 절단선인 seam 양쪽에 좌표의 복사본을 둔다.
 
-<figure class="post-media quad-remesh-video">
-  <video controls loop muted playsinline preload="none" width="1280" height="720" poster="/blogs/posts/260818_quad_remesh/assets/manim/cut-charts.webp" aria-label="Seam의 좌표를 두 chart에 복제해도 원본 표면점의 대응은 유지된다.">
-    <source src="/blogs/posts/260818_quad_remesh/assets/manim/cut-charts.mp4" type="video/mp4">
-    <a href="/blogs/posts/260818_quad_remesh/assets/manim/cut-charts.mp4">MP4 영상 보기</a>
-  </video>
-  <figcaption>Seam의 좌표를 두 chart에 복제해도 원본 표면점의 대응은 유지된다.</figcaption>
+<figure class="post-media quad-remesh-still">
+  <img src="/blogs/posts/260818_quad_remesh/assets/manim/stills/cut-charts.webp" width="1600" height="1066" loading="lazy" decoding="async" data-reading-surface="original" alt="보라색 seam 양쪽의 두 chart와, 점선으로 연결된 대응점 C⁺와 C⁻.">
+  <figcaption>보라색 seam 양쪽의 C⁺와 C⁻는 같은 원본 표면점의 좌표 복사본이다. 두 chart의 좌표는 seam transition으로 연결된다.</figcaption>
 </figure>
 
 각 chart를 따로 잘 펴는 것만으로는 부족하다. 같은 표면점을 두 좌표로 표현하더라도 seam을 건너는 grid line은 이어져야 한다. square grid는 $90^\circ$ 회전하거나 정수 칸만큼 이동해도 같은 grid이므로, 이 두 변환을 chart 사이의 연결 규칙으로 삼을 수 있다. 뒤에서 살펴볼 integer-grid map의 integer constraint가 여기서 나온다.
@@ -148,12 +142,9 @@ $$
 
 ## 3. Cross Field
 
-<figure class="post-media quad-remesh-video">
-  <video controls loop muted playsinline preload="none" width="1280" height="720" poster="/blogs/posts/260818_quad_remesh/assets/manim/carrier-patch.webp" aria-label="이웃한 세 face의 cross와, 강조한 face를 orthonormal basis로 다시 본 모습. A·B·C가 양쪽에서 대응한다.">
-    <source src="/blogs/posts/260818_quad_remesh/assets/manim/carrier-patch.mp4" type="video/mp4">
-    <a href="/blogs/posts/260818_quad_remesh/assets/manim/carrier-patch.mp4">MP4 영상 보기</a>
-  </video>
-  <figcaption>이웃한 세 face의 cross와, 강조한 face를 orthonormal basis로 다시 본 모습. A·B·C가 양쪽에서 대응한다.</figcaption>
+<figure class="post-media quad-remesh-still">
+  <img src="/blogs/posts/260818_quad_remesh/assets/manim/stills/carrier-patch.webp" width="1600" height="824" loading="lazy" decoding="async" data-reading-surface="original" alt="이웃한 세 face의 cross와, 강조한 face를 local orthonormal basis로 표현한 모습. A·B·C는 양쪽에서 같은 vertex다.">
+  <figcaption>왼쪽에서 강조한 face를 오른쪽의 orthonormal basis로 다시 표현했다. A·B·C는 양쪽에서 같은 vertex다.</figcaption>
 </figure>
 
 Quad의 edge가 표면을 따라가려면 그 방향도 각 점의 tangent plane 안에 있어야 한다. 점 $p$의 unit normal을 $\mathbf n_p$라고 하면
@@ -523,12 +514,12 @@ $$
 
 회전이 없는 간단한 경우에 $\mathbf t_{ij}=(0.4,0)^T$라고 해 보자. Chart $i$의 $u=k$인 선은 chart $j$에서 $u=k+0.4$인 선에 대응한다. 방향과 간격은 같아도 상대편의 integer line과는 만나지 않는다. 이 상태로 양쪽에서 각각 grid를 꺼내면 seam에서 edge가 끊기거나 T-junction이 생기고, cell 경계가 닫히지 않을 수 있다.
 
-<figure class="post-media quad-remesh-video">
-  <video controls loop muted playsinline preload="none" width="1280" height="720" poster="/blogs/posts/260818_quad_remesh/assets/manim/integer-seam.webp" aria-label="Integer translation에서는 grid가 맞지만, 0.4칸 옮기면 seam에서 어긋난다.">
-    <source src="/blogs/posts/260818_quad_remesh/assets/manim/integer-seam.mp4" type="video/mp4">
-    <a href="/blogs/posts/260818_quad_remesh/assets/manim/integer-seam.mp4">MP4 영상 보기</a>
-  </video>
-  <figcaption>Integer translation에서는 grid가 맞지만, 0.4칸 옮기면 seam에서 어긋난다.</figcaption>
+<figure class="post-media quad-remesh-still">
+  <picture>
+    <source media="(max-width: 600px)" srcset="/blogs/posts/260818_quad_remesh/assets/manim/stills/integer-seam-mobile.webp" width="800" height="1192">
+    <img src="/blogs/posts/260818_quad_remesh/assets/manim/stills/integer-seam.webp" width="1600" height="594" loading="lazy" decoding="async" data-reading-surface="original" alt="Integer translation으로 seam의 교차점이 맞는 grid와, 0.4칸의 fractional offset으로 T-junction이 생긴 grid의 비교.">
+  </picture>
+  <figcaption>Integer translation에서는 seam을 가로질러 grid가 이어진다. 0.4칸의 fractional offset을 두면 교차점이 어긋나 T-junction이 생긴다.</figcaption>
 </figure>
 
 ### Cycle Period
@@ -563,9 +554,40 @@ $$
 
 로 함께 제약해야 한다. 그래야 앞서 본 valence-$3$/$5$ vertex가 cell 내부가 아니라 integer line의 교차점에 놓인다.
 
-이 글의 자체 구현에서는 seam translation을 $\mathbf t_{ij}\in2\mathbb Z^2$로 제한한다. 이 조건은 seam 변환을 합성해도 유지되므로, valence-$3$/$5$의 quarter-turn monodromy에서 fixed point가 integer coordinates에 놓이게 된다. 일반적인 integer translation보다 강한 조건으로 해당 singularity의 integer coordinates 조건을 만족시킨 것이다.
+이 조건을 solve에 반영하는 방법은 하나가 아니다. 일반적인 integer translation을 유지하면서 singularity의 좌표를 직접 제약할 수도 있고, translation 자체를 더 강하게 제한할 수도 있다.
+
+**$\mathbb Z^2$ seam translation + explicit singularity constraint.** Seam translation은 $\mathbf t_{ij}\in\mathbb Z^2$로 두고, singularity마다 기준 chart $i_s$를 하나 골라
+
+$$
+\Phi_{i_s}(s)=\mathbf k_s,
+\qquad \mathbf k_s\in\mathbb Z^2
+$$
+
+를 seam과 cycle의 equality constraint에 함께 넣는다. 같은 singularity의 다른 chart copy는 integer-grid transition으로 연결되므로 그 좌표도 정수가 된다. 회전이 고정되어 있다면 이 좌표 연결은 linear equality이고, singularity의 UV를 integer DOF로 지정하거나 별도의 integer variable $\mathbf k_s$와 연결해 구현할 수 있다. 좌표를 먼저 푼 뒤 singularity만 따로 반올림하는 것이 아니라, seam translation과 singularity 좌표를 같은 mixed-integer solve 안에서 결정하는 방식이다. [MIQ의 parameterization formulation (§5)](https://graphics.rwth-aachen.de/media/papers/bommes_zimmer_2009_siggraph_011.pdf)도 integer singularity location과 seam compatibility를 함께 다룬다.
+
+**$2\mathbb Z^2$ seam translation.** VARCO3D에 적용된 자체 구현에서는 모든 seam translation을 $\mathbf t_{ij}=2\mathbf z_{ij}$, $\mathbf z_{ij}\in\mathbb Z^2$로 제한한다. Quarter-turn은 even lattice를 보존하므로 seam 변환을 합성한 $\mathbf t_\gamma$도 짝수다. 그러면 valence-$3$/$5$의 quarter-turn monodromy에서 fixed point가 integer coordinates에 놓인다. 이 경우에는 singularity 좌표의 정수성이 더 강한 translation 조건에서 따라온다.
+
+다만 이는 **충분조건이며 필요한 조건보다 강하다.** 예를 들어 $R_\gamma=R$이고 $\mathbf t_\gamma=(a,b)^T$라면
+
+$$
+\mathbf x_s=\frac12
+\begin{pmatrix}a-b\\a+b\end{pmatrix}
+$$
+
+이므로, $a,b$가 둘 다 짝수일 필요 없이 같은 parity이면 된다. $(a,b)=(1,1)$도 integer fixed point $(0,1)^T$를 준다. 같은 chart 좌표계에서 이런 홀수 성분의 translation까지 허용할 수 있는 것이 explicit singularity constraint 방식과의 차이다.
+
+| 방식 | 장점 | 제약과 대가 |
+|---|---|---|
+| $\mathbb Z^2$ + explicit singularity constraint | Singularity의 정수성을 직접 보장하면서 허용 가능한 integer translation을 유지한다 | Singularity의 integer DOF와 seam/cycle equality의 결합을 solver에서 처리해야 한다 |
+| 모든 seam에 $2\mathbb Z^2$ | 여기서 다루는 quarter-turn singularity의 정수성이 translation 조건에서 따라온다 | 조건이 필요한 범위보다 강해, 허용 가능한 phase와 period 조합 일부를 제외한다 |
+
+예를 들어 회전이 없는 cycle에서는 합성된 period도 $2\mathbb Z^2$에 속한다. 앞서 본 실린더의 period가 $(n,0)^T$인 경우에는 같은 grid scale에서 $n$을 짝수로만 선택할 수 있다. 이런 제한은 더 낮은 distortion을 주는 후보를 제외할 수 있다. 구현의 일부를 단순하게 만들 수는 있어도 더 빠른 solve나 더 좋은 품질을 보장하는 조건은 아니다. 따라서 $2\mathbb Z^2$는 이 구현에서 채택한 보수적인 선택으로 이해해야 한다. 일반적인 formulation에서는 $\mathbb Z^2$ transition과 singularity의 integer-coordinate constraint를 함께 다룰 수 있으며, 위의 quarter-turn에 대한 보장을 모든 종류의 singularity에 그대로 확장해서도 안 된다.
 
 ### Mixed-Integer Optimization
+
+여기서 문제의 성격이 근본적으로 달라진다. 앞서의 cross field와 coordinate solve는 주로 continuous variable을 다루지만, integer-grid map에서는 grid가 몇 칸으로 닫힐지, seam 사이에 몇 칸의 offset을 둘지까지 이산적으로 결정해야 한다. 각 정수 선택은 주변의 continuous coordinates와 다른 정수 선택을 동시에 제약한다.
+
+따라서 각 변수를 독립적으로 가장 가까운 정수로 반올림하는 것만으로는 전체적으로 일관된 grid를 얻을 수 없다. 결국 수많은 정수 조합 중 seam과 cycle의 일관성을 만족하면서 distortion까지 낮은 해를 찾아야 하는, 결합된 combinatorial optimization 문제가 된다.
 
 Chart vertex의 real-valued coordinates를 모두 모은 vector를 $\mathbf x$, seam translation이나 period, singularity의 integer coordinates를 나타내는 integer degrees of freedom을 $\mathbf z$라고 하자. Mixed-integer problem은 일반적으로
 
