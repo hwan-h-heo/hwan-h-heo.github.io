@@ -20,7 +20,7 @@ Armadillo 예시는 Varco3D에서 사용하는 자체 구현 [CUDA 가속 CoMISo
 인접한 삼각형을 국소적인 모양만 보고 묶으면 각 사각형의 품질은 어느 정도 좋아질 수 있다. 그러나 어떤 face에서 고른 방향이 다음 face에서도 이어진다는 보장은 없다. 마주 보는 edge를 따라가다 보면 흐름이 지그재그로 꺾이거나 짧은 loop로 닫히고, 짝을 찾지 못한 삼각형이 남기도 한다.
 
 <figure class="post-media quad-remesh-still">
-  <img src="/blogs/posts/260818_quad_remesh/assets/manim/stills/pairing-vs-lattice.webp" width="1600" height="814" loading="lazy" decoding="async" data-reading-surface="original" alt="선택한 local triangle pair와 짧은 flow fragment를, 같은 표면 위 quad mesh의 연속적인 strip과 비교한 그림.">
+  <img src="/blogs/posts/260818_quad_remesh/assets/manim/stills/pairing-vs-lattice.webp?v=9028527a48" width="1600" height="1162" loading="lazy" decoding="async" data-reading-surface="original" alt="선택한 local triangle pair와 짧은 flow fragment를, 같은 표면 위 quad mesh의 연속적인 strip과 비교한 그림.">
   <figcaption>왼쪽은 선택한 local triangle pair와 짧은 flow fragment, 오른쪽은 같은 표면 위에 별도로 구성한 quad mesh의 연속적인 strip을 보여 준다.</figcaption>
 </figure>
 

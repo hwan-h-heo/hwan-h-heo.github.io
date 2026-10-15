@@ -20,7 +20,7 @@ Let the input triangle mesh be $M=(V,E,F)$. We assume a manifold surface with co
 Pairing adjacent triangles based only on their local shape can improve the quality of individual quads to some extent. It does not guarantee that a direction chosen on one face will continue onto the next. Following opposite edges may lead to a zigzagging flow or a short closed loop, and some triangles may remain unpaired.
 
 <figure class="post-media quad-remesh-still">
-  <img src="/blogs/posts/260818_quad_remesh/assets/manim/stills/pairing-vs-lattice.webp" width="1600" height="814" loading="lazy" decoding="async" data-reading-surface="original" alt="Selected local triangle pairs and short flow fragments, compared with continuous strips on a quad mesh of the same surface.">
+  <img src="/blogs/posts/260818_quad_remesh/assets/manim/stills/pairing-vs-lattice.webp?v=9028527a48" width="1600" height="1162" loading="lazy" decoding="async" data-reading-surface="original" alt="Selected local triangle pairs and short flow fragments, compared with continuous strips on a quad mesh of the same surface.">
   <figcaption>Left: selected local triangle pairs and short flow fragments. Right: coherent strips on a separately constructed quad mesh of the same surface.</figcaption>
 </figure>
 

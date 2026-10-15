@@ -11,8 +11,10 @@ and posters remain available here.
 
 The four images in `stills/` are native Manim renders of the completed source
 scenes, with a tighter camera frame and without video-only titles, narration, or
-context insets. They are not captures from the encoded videos. Their WebP exports
-are 1600px wide at quality 88, totaling about 191 KiB. Integer transitions also
+context insets. The pairing comparison also brings the two panels closer
+together before framing, keeping each mesh and its labels as one group.
+They are not captures from the encoded videos. Their WebP exports
+are 1600px wide at quality 88, totaling about 226 KiB. Integer transitions also
 have an 800px-wide stacked variant for screens up to 600px, adding about 26 KiB.
 The browser selects one layout without downloading both. `stills/manifest.json`
 records dimensions, sizes, source scene names, and source-file hashes.
