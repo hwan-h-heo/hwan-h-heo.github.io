@@ -6,6 +6,14 @@
     <description>Technical articles on sparse 3D generation, neural rendering, mesh processing, CUDA kernels, and production inference optimization.</description>
     <language>en</language>
     <item>
+      <title>From PCG to Muon: The Geometry of Preconditioners and Optimizers</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/from-pcg-to-muon/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/from-pcg-to-muon/</guid>
+      <pubDate>Thu, 22 Oct 2026 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>From sparse quadratic solvers in quad remeshing to deep learning optimizers</description>
+    </item>
+    <item>
       <title>Comprehensive Analysis of Quad Remeshing</title>
       <link>https://hwan-h-heo.github.io/blogs/posts/quad-remesh/</link>
       <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/quad-remesh/</guid>

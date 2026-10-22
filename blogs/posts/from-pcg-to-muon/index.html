@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="From sparse quadratic solvers in quad remeshing to deep learning optimizers" />
+    <meta name="keywords" content="post, graphics, Optimization, Linear Algebra, CUDA, Graphics, 3D graphics, computer vision, machine learning" />
+    <meta name="author" content="Hwan Heo" />
+    <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/posts/from-pcg-to-muon/" />
+    <link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/from-pcg-to-muon/" />
+    <link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/from-pcg-to-muon-kor/" />
+    <link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/from-pcg-to-muon/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://hwan-h-heo.github.io/blogs/posts/from-pcg-to-muon/" />
+    <meta property="og:title" content="From PCG to Muon: The Geometry of Preconditioners and Optimizers" />
+    <meta property="og:description" content="From sparse quadratic solvers in quad remeshing to deep learning optimizers" />
+    <meta property="og:image" content="https://hwan-h-heo.github.io/blogs/posts/261022_pcg_muon/assets/cover-sculptural-paths-v2.webp" />
+    <meta property="og:site_name" content="HwanHeo's Blog" />
+    <meta property="article:published_time" content="2026-10-22T00:00:00.000Z" />
+    <meta property="article:modified_time" content="2026-10-22T00:00:00.000Z" />
+    <meta property="article:author" content="Hwan Heo" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://hwan-h-heo.github.io/blogs/posts/from-pcg-to-muon/" />
+    <meta name="twitter:title" content="From PCG to Muon: The Geometry of Preconditioners and Optimizers" />
+    <meta name="twitter:description" content="From sparse quadratic solvers in quad remeshing to deep learning optimizers" />
+    <meta name="twitter:image" content="https://hwan-h-heo.github.io/blogs/posts/261022_pcg_muon/assets/cover-sculptural-paths-v2.webp" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"From PCG to Muon: The Geometry of Preconditioners and Optimizers","description":"From sparse quadratic solvers in quad remeshing to deep learning optimizers","url":"https://hwan-h-heo.github.io/blogs/posts/from-pcg-to-muon/","mainEntityOfPage":"https://hwan-h-heo.github.io/blogs/posts/from-pcg-to-muon/","image":["https://hwan-h-heo.github.io/blogs/posts/261022_pcg_muon/assets/cover-sculptural-paths-v2.webp"],"author":{"@type":"Person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io"},"publisher":{"@type":"Person","name":"Hwan Heo"},"datePublished":"2026-10-22","dateModified":"2026-10-22","inLanguage":"en"}</script>
+
+    <title>From PCG to Muon: The Geometry of Preconditioners and Optimizers | Hwan Heo</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="/blogs/css/blog.css?v=654f9b4e65" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5feaa1dfce" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=dc5dd44b65" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RF7ETSKPK9');
+    </script>
+        <script src="/js/site-theme.js?v=0d82cf4a85"></script>
+    <link href="/assets/css/site-theme.css?v=447d8e8b5f" rel="stylesheet">
+    <link href="/blogs/css/site-reading.css?v=aaca67a1d0" rel="stylesheet">
+    <meta name="site-deploy-version" content="36b4d477897ebbdb">
+    <script defer src="/assets/js/deploy-refresh.js?v=ee9c6c8f26"></script>
+</head>
+<body class="blog-post-page site-reading">
+
+    <main class="main blog-post-main">
+        <nav class="post-site-nav" id="mainNav" aria-label="Post utilities">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-utility-column">
+                        <div class="blog-utility-start">
+                            <a class="post-nav-home" href="/blogs/" aria-label="Back to Blog Home">
+                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg>
+                                <span class="post-nav-home-label">Blog<span class="post-nav-home-suffix"> Home</span></span>
+                            </a>
+                            <div class="blog-destinations">
+                                <a href="/">Portfolio</a>
+                                <details class="blog-labs">
+                                    <summary>Labs</summary>
+                                    <div class="blog-labs-panel">
+                                        <a href="/blogs/3DViewer/">3D Viewer</a>
+                                        <a href="/blogs/editor/">Markdown Editor</a>
+                                    </div>
+                                </details>
+                            </div>
+                        </div>
+                        <ul class="post-nav-actions">
+                            <li class="post-nav-action post-nav-search-item">
+                                <form id="post-nav-search-form" class="post-nav-search" role="search" data-collapsible-search>
+                                    <label class="visually-hidden" for="post-nav-search-input">Search blog posts</label>
+                                    <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
+                                    <button type="submit" aria-label="Search" aria-controls="post-nav-search-input" aria-expanded="false">
+                                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
+                                    </button>
+                                </form>
+                            </li>
+                            <li class="post-nav-action"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><svg class="site-icon theme-toggle-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg></button></li>
+                            <li class="post-nav-action"><a href="/blogs/posts/from-pcg-to-muon-kor/" class="post-nav-language-link" data-language-target="kor" aria-label="한국어로 전환" title="한국어로 전환">가</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <header class="masthead post-masthead">
+            <div class="blog-shell post-hero-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-hero-column">
+                        <div class="post-heading">
+                            <div class="post-hero-series">
+                                <span class="post-hero-series-label">Series</span>
+                                <span class="post-hero-series-separator" aria-hidden="true">/</span>
+                                <a href="/blogs/series/graphics/">
+                                    <span class="post-hero-series-name">Computer Graphics</span>
+                                    <span class="post-hero-series-arrow" aria-hidden="true">→</span>
+                                </a>
+                            </div>
+                            <h1>From PCG to Muon: The Geometry of Preconditioners and Optimizers</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <article class="post-article">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-hero-column post-intro-column">
+                        <div class="post-intro-layout">
+                            <div class="post-intro-copy">
+                                <p class="post-intro-deck">From sparse quadratic solvers in quad remeshing to deep learning optimizers</p>
+                                <div class="post-intro-topics" aria-label="Topics">
+                                    <span class="post-intro-topics-label">Topics</span>
+                                    <span class="post-intro-topics-separator" aria-hidden="true">/</span>
+                                    <div class="post-tags"><span class="post-tag">Optimization</span><span class="post-tag-separator" aria-hidden="true">·</span><span class="post-tag">Linear Algebra</span><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/cuda/">CUDA</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/graphics/">Graphics</a></div>
+                                </div>
+                            </div>
+                            <aside class="post-article-info" aria-label="Article details">
+                                <ul>
+                                    <li data-post-detail="author">
+                                        <strong>Author</strong>
+                                        <span>Hwan Heo</span>
+                                    </li>
+                                    <li data-post-detail="published">
+                                        <strong>Published</strong>
+                                        <time datetime="2026-10-22">October 22, 2026</time>
+                                    </li>
+                                    <li data-post-detail="reading">
+                                        <strong>Reading</strong>
+                                        <span class="post-detail-reading">19 min read</span>
+                                    </li>
+                                </ul>
+                            </aside>
+                        </div>
+                    </div>
+                    <div class="post-reading-column main-content">
+                        <details class="post-contents"><summary>Contents</summary><nav aria-label="Contents"><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="1. Background: Quad Remeshing &amp; DiT" aria-label="1. Background: Quad Remeshing &amp; DiT"><span class="toc-link-text">1. Background: Quad Remeshing &amp; DiT</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="2. Quadratic Objectives &amp; Conjugate Gradient" aria-label="2. Quadratic Objectives &amp; Conjugate Gradient"><span class="toc-link-text">2. Quadratic Objectives &amp; Conjugate Gradient</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-2" title="H-Conjugacy: Preserving Earlier Progress" aria-label="H-Conjugacy: Preserving Earlier Progress"><span class="toc-link-text">H-Conjugacy: Preserving Earlier Progress</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-3" title="3. Preconditioning: The Geometry of a Norm" aria-label="3. Preconditioning: The Geometry of a Norm"><span class="toc-link-text">3. Preconditioning: The Geometry of a Norm</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="2×2 Block-Jacobi vs. Incomplete Cholesky (IC)" aria-label="2×2 Block-Jacobi vs. Incomplete Cholesky (IC)"><span class="toc-link-text">2×2 Block-Jacobi vs. Incomplete Cholesky (IC)</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-5" title="4. Adam and Muon" aria-label="4. Adam and Muon"><span class="toc-link-text">4. Adam and Muon</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="Adam: Gradient-Based Diagonal Scaling" aria-label="Adam: Gradient-Based Diagonal Scaling"><span class="toc-link-text">Adam: Gradient-Based Diagonal Scaling</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="Muon: Steepest Descent in the Spectral Norm" aria-label="Muon: Steepest Descent in the Spectral Norm"><span class="toc-link-text">Muon: Steepest Descent in the Spectral Norm</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-8" title="5. Experiments: Deep Learning Optimizers for Quad Remeshing" aria-label="5. Experiments: Deep Learning Optimizers for Quad Remeshing"><span class="toc-link-text">5. Experiments: Deep Learning Optimizers for Quad Remeshing</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-9" title="Deep Learning Optimizers with Line Search" aria-label="Deep Learning Optimizers with Line Search"><span class="toc-link-text">Deep Learning Optimizers with Line Search</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="Evaluation Criteria" aria-label="Evaluation Criteria"><span class="toc-link-text">Evaluation Criteria</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-11" title="6. Results" aria-label="6. Results"><span class="toc-link-text">6. Results</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-12" title="IC(0)-PCG vs. Block-Jacobi PCG" aria-label="IC(0)-PCG vs. Block-Jacobi PCG"><span class="toc-link-text">IC(0)-PCG vs. Block-Jacobi PCG</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-13" title="Convergence Rates of GD, Adam, and Muon" aria-label="Convergence Rates of GD, Adam, and Muon"><span class="toc-link-text">Convergence Rates of GD, Adam, and Muon</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-14" title="7. Reshaping for Muon" aria-label="7. Reshaping for Muon"><span class="toc-link-text">7. Reshaping for Muon</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-15" title="Physical UV Pairs vs. the Hessian" aria-label="Physical UV Pairs vs. the Hessian"><span class="toc-link-text">Physical UV Pairs vs. the Hessian</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-16" title="Muon&#39;s Gram Matrix" aria-label="Muon&#39;s Gram Matrix"><span class="toc-link-text">Muon&#39;s Gram Matrix</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-17" title="8. Closing Thoughts" aria-label="8. Closing Thoughts"><span class="toc-link-text">8. Closing Thoughts</span></a></li></ol></nav></details><nav id="post-toc" class="toc" aria-label="Table of contents"><div class="toc-title">On This Page</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="1. Background: Quad Remeshing &amp; DiT" aria-label="1. Background: Quad Remeshing &amp; DiT"><span class="toc-link-text">1. Background: Quad Remeshing &amp; DiT</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="2. Quadratic Objectives &amp; Conjugate Gradient" aria-label="2. Quadratic Objectives &amp; Conjugate Gradient"><span class="toc-link-text">2. Quadratic Objectives &amp; Conjugate Gradient</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-2" title="H-Conjugacy: Preserving Earlier Progress" aria-label="H-Conjugacy: Preserving Earlier Progress"><span class="toc-link-text">H-Conjugacy: Preserving Earlier Progress</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-3" title="3. Preconditioning: The Geometry of a Norm" aria-label="3. Preconditioning: The Geometry of a Norm"><span class="toc-link-text">3. Preconditioning: The Geometry of a Norm</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="2×2 Block-Jacobi vs. Incomplete Cholesky (IC)" aria-label="2×2 Block-Jacobi vs. Incomplete Cholesky (IC)"><span class="toc-link-text">2×2 Block-Jacobi vs. Incomplete Cholesky (IC)</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-5" title="4. Adam and Muon" aria-label="4. Adam and Muon"><span class="toc-link-text">4. Adam and Muon</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="Adam: Gradient-Based Diagonal Scaling" aria-label="Adam: Gradient-Based Diagonal Scaling"><span class="toc-link-text">Adam: Gradient-Based Diagonal Scaling</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="Muon: Steepest Descent in the Spectral Norm" aria-label="Muon: Steepest Descent in the Spectral Norm"><span class="toc-link-text">Muon: Steepest Descent in the Spectral Norm</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-8" title="5. Experiments: Deep Learning Optimizers for Quad Remeshing" aria-label="5. Experiments: Deep Learning Optimizers for Quad Remeshing"><span class="toc-link-text">5. Experiments: Deep Learning Optimizers for Quad Remeshing</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-9" title="Deep Learning Optimizers with Line Search" aria-label="Deep Learning Optimizers with Line Search"><span class="toc-link-text">Deep Learning Optimizers with Line Search</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-10" title="Evaluation Criteria" aria-label="Evaluation Criteria"><span class="toc-link-text">Evaluation Criteria</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-11" title="6. Results" aria-label="6. Results"><span class="toc-link-text">6. Results</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-12" title="IC(0)-PCG vs. Block-Jacobi PCG" aria-label="IC(0)-PCG vs. Block-Jacobi PCG"><span class="toc-link-text">IC(0)-PCG vs. Block-Jacobi PCG</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-13" title="Convergence Rates of GD, Adam, and Muon" aria-label="Convergence Rates of GD, Adam, and Muon"><span class="toc-link-text">Convergence Rates of GD, Adam, and Muon</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-14" title="7. Reshaping for Muon" aria-label="7. Reshaping for Muon"><span class="toc-link-text">7. Reshaping for Muon</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-15" title="Physical UV Pairs vs. the Hessian" aria-label="Physical UV Pairs vs. the Hessian"><span class="toc-link-text">Physical UV Pairs vs. the Hessian</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-16" title="Muon&#39;s Gram Matrix" aria-label="Muon&#39;s Gram Matrix"><span class="toc-link-text">Muon&#39;s Gram Matrix</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-17" title="8. Closing Thoughts" aria-label="8. Closing Thoughts"><span class="toc-link-text">8. Closing Thoughts</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
+    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
+</button>
+
+<div id="myshare_modal" class="share_modal" role="status" aria-live="polite" aria-hidden="true">
+    <div class="share_modal-content">
+        <button class="share_modal_close" type="button" aria-label="Dismiss">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-x-lg"></use></svg>
+        </button>
+        <span class="share_modal-icon" aria-hidden="true">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-check2"></use></svg>
+        </span>
+        <span class="share_modal-message">
+            <strong>Link copied</strong>
+            <small>Post URL is ready to share.</small>
+        </span>
+        <div class="copy_indicator-container">
+            <div class="copy_indicator" id="share_modalIndicator"></div>
+        </div>
+    </div>
+</div>
+
+<h2 id="toc-heading-0">1. Background: Quad Remeshing &amp; DiT</h2>
+<p>My research work this year has centered on two projects.</p>
+<p>One is training a high-quality image-conditioned 3D generative model based on a DiT. The other is developing a high-quality quad remesher for VARCO3D. Beyond their shared focus on 3D, graphics algorithms and generative model training differ considerably in both their implementation and the literature they draw on.</p>
+<p>To briefly describe the remeshing problem: I first compute a cross field on the input triangle mesh to specify how the quads should align, then solve for a globally consistent <em>integer coordinate system</em> that follows this field as closely as possible. This can be viewed as a Poisson-type PDE that brings the gradients of the unknown coordinates as close as possible to the prescribed directions. Integer constraints on how the mesh surface connects, however, turn it into a mixed-integer quadratic (MIQ) optimization problem.</p>
+<p>I covered the full pipeline in my earlier post, <a href="/blogs/posts/quad-remesh/">Comprehensive Analysis of Quad Remeshing</a>.</p>
+<figure class="post-media post-media--editorial">
+<img src="/blogs/posts/261022_pcg_muon/assets/quadlattice_showcase_tri_input.webp" alt="GPU-accelerated quad remeshing results" loading="lazy" decoding="async">
+<figcaption><span class="post-figure-index">FIG. 01</span><span class="post-figure-caption">Results from the GPU-accelerated quad remesher. Left: input triangle meshes. Right: the resulting quad meshes and execution times.</span></figcaption>
+</figure>
+<p>MIQ problems are NP-hard in general. Rather than search over every integer assignment, my implementation accelerates a <strong>relax-and-fix</strong> approach on the GPU: first solve the continuous relaxation, choose some variables to round and fix, then minimize the energy over the remaining variables. This is an approximate method that alternates between integer decisions and continuous optimization.</p>
+<p>While accelerating this computation in CUDA, I found that parallelizing the operations was only part of the problem. The numerical method—and how many iterations it needed to reach the target accuracy—mattered just as much. After comparing several configurations, I settled on 2×2 block-Jacobi PCG (Preconditioned Conjugate Gradient), which was the fastest in practice, as the default solver.</p>
+<p>Meanwhile, in my DiT training experiments for 3D generation, I was trying the Muon optimizer on matrix-valued parameters. Muon required some extra care: non-matrix parameters still needed an optimizer such as AdamW, and compared with the familiar AdamW setup, improving update speed required optimizing the kernels myself.</p>
+<p>Muon&#39;s update rule reminded me of the PCG solver I was using in the remesher. Neither PCG nor Muon uses the gradient directly. Both try to stabilize and accelerate updates through a kind of coordinate transformation.</p>
+<blockquote>
+<p>Could numerical preconditioners and deep learning optimizers be serving fundamentally similar roles? How would they behave on the same quadratic objective? Could Muon or Adam work for quad remeshing?</p>
+</blockquote>
+<hr>
+<h2 id="toc-heading-1">2. Quadratic Objectives &amp; Conjugate Gradient</h2>
+<p>Let us start with a simple quadratic objective. Assuming that $H$ is symmetric positive definite (SPD), the objective, its gradient, and the optimality condition are</p>
+<p>$$
+f(x)=\frac12x^\top Hx-b^\top x
+$$
+$$
+g(x)=Hx-b,\qquad Hx^*=b
+$$</p>
+<p>Gradient descent (GD) moves against the current gradient:</p>
+<p>$$
+x_{k+1}=x_k-\eta g_k
+$$</p>
+<p>For a fixed Euclidean step length, this is the direction that decreases the first-order approximation of the objective the most. It becomes inefficient, however, when the curvature differs across axes.</p>
+<p>For example, in</p>
+<p>$$
+f(x_1,x_2)=50x_1^2+\frac12x_2^2
+$$</p>
+<p>the curvature along $x_1$ is 100 times that along $x_2$. Reducing the step size enough to avoid divergence in the high-curvature direction makes convergence in the flatter direction extremely slow.</p>
+<p>Even exact line search, which finds the optimal step length along the gradient at every iteration, does not resolve this problem. After a line search, the new gradient is orthogonal to the previous search direction, but later steps need not preserve the optimality already achieved along that direction. This produces the familiar zigzagging path through long, narrow elliptical contours. Its behavior is governed by the curvature imbalance, expressed by the condition number $\kappa(H)=\lambda_{\max}(H)/\lambda_{\min}(H)$.</p>
+<h3 id="toc-heading-2">H-Conjugacy: Preserving Earlier Progress</h3>
+<p>Conjugate Gradient (CG) requires its search directions to be orthogonal under an inner product defined by the objective&#39;s curvature $H$, rather than under the Euclidean inner product. This is called <strong>$H$-conjugacy</strong>:</p>
+<p>$$
+p_i^\top Hp_j=0\qquad(i\ne j)
+$$</p>
+<p>If the current point $x$ has already been optimized along $p_i$, then $p_i^\top g(x)=0$. After moving in a new direction $p_j$, the gradient component along $p_i$ is</p>
+<p>$$
+p_i^\top g(x+\alpha p_j)
+=
+\underbrace{p_i^\top g(x)}_{0}
++
+\alpha\underbrace{p_i^\top Hp_j}_{0}
+=0
+$$</p>
+<p>Moving in a new $H$-conjugate direction therefore preserves optimality along the directions we have already optimized. CG uses this property to expand its search space.</p>
+<p>Define the residual as</p>
+<p>$$
+r_k=b-Hx_k=-g_k
+$$</p>
+<p>Starting with the initial direction $p_0=r_0$, the algorithm needs only the following short recurrence:</p>
+<p>$$
+\begin{aligned}
+x_{k+1}&amp;=x_k+\alpha_kp_k,
+&amp;
+\alpha_k&amp;=\frac{r_k^\top r_k}{p_k^\top Hp_k},\\
+r_{k+1}&amp;=r_k-\alpha_kHp_k,\\
+p_{k+1}&amp;=r_{k+1}+\beta_kp_k,
+&amp;
+\beta_k&amp;=\frac{r_{k+1}^\top r_{k+1}}{r_k^\top r_k}.
+\end{aligned}
+$$</p>
+<p>For a fixed SPD quadratic in exact arithmetic, CG reaches the exact solution in at most as many iterations as there are variables. In floating-point arithmetic, rounding errors gradually erode orthogonality and conjugacy, so this theoretical finite-step convergence cannot be taken literally.</p>
+<p>From an implementation perspective, CG&#39;s appeal is that it uses curvature information through a single sparse matrix-vector multiplication (SpMV), $Hp_k$, per iteration, without ever forming the inverse Hessian. This SpMV was also the main operation I was optimizing in CUDA.</p>
+<p>Mixing the previous direction $p_k$ into the current direction may look like momentum in deep learning. The distinction is that ordinary momentum accumulates past gradients with a fixed coefficient, whereas CG recomputes $\beta_k$ at every step specifically to preserve conjugacy with the previous direction.</p>
+<hr>
+<h2 id="toc-heading-3">3. Preconditioning: The Geometry of a Norm</h2>
+<p>Even when CG chooses its search directions efficiently, an unfavorable Hessian eigenvalue distribution can still make convergence slow. <strong>Preconditioning transforms the coordinate system itself</strong> to address this.</p>
+<p>Introduce an SPD matrix $M$ that approximates $H$, and change coordinates using</p>
+<p>$$
+x=M^{-1/2}y
+$$</p>
+<p>The Hessian in the new coordinates becomes</p>
+<p>$$
+\widetilde H=M^{-1/2}HM^{-1/2}
+$$</p>
+<p>Ideally, if $M=H$, then $\widetilde H=I$, giving equal curvature in every direction. The elongated elliptical geometry that hinders convergence becomes a spherical geometry that is much easier to optimize.</p>
+<p>Computing $H^{-1}$ is too expensive in practice. The goal is therefore to find an $M$ that is inexpensive to apply while sufficiently reducing the curvature imbalance in $\widetilde H$. PCG applies CG to this transformed problem.</p>
+<p>Another way to view preconditioning is as a change in the metric used to measure update size, from the Euclidean norm to the $M$-norm:</p>
+<p>$$
+\|\Delta x\|_M^2=\Delta x^\top M\Delta x
+$$</p>
+<p>Minimizing a first-order approximation under the corresponding quadratic penalty gives</p>
+<p>$$
+\Delta x^*
+=
+\arg\min_{\Delta x}
+\left[
+g^\top\Delta x+
+\frac{1}{2\eta}\Delta x^\top M\Delta x
+\right]
+=
+-\eta M^{-1}g
+$$</p>
+<p>The direction of <em>steepest descent</em> thus depends on more than the gradient at the current point. It also depends on the geometry in which we measure the step.</p>
+<p>Standard PCG applies this transformation to the residual, computing $z_k=M^{-1}r_k$ and updating as follows:</p>
+<p>$$
+p_{k+1}=z_{k+1}+\beta_kp_k, \qquad
+\alpha_k=\frac{r_k^\top z_k}{p_k^\top Hp_k}, \qquad
+\beta_k=\frac{r_{k+1}^\top z_{k+1}}{r_k^\top z_k}
+$$</p>
+<h3 id="toc-heading-4">2×2 Block-Jacobi vs. Incomplete Cholesky (IC)</h3>
+<p>The remesher&#39;s 2×2 block-Jacobi preconditioner groups strongly coupled variables into pairs and extracts their Hessian submatrices. If $B_i$ denotes the indices of a selected pair, its diagonal block is</p>
+<p>$$
+H[B_i,B_i]
+=
+\begin{pmatrix}
+a_i&amp;c_i\\
+c_i&amp;b_i
+\end{pmatrix}
+$$</p>
+<p>Unlike scalar Jacobi, which uses only diagonal entries, this captures the cross term $c_i$ between the two variables. It ignores coupling outside the block, but each 2×2 block can be inverted completely independently, making it well suited to GPU parallelism.</p>
+<p>Incomplete Cholesky (IC), by comparison, constructs a sparse approximate factorization $H\approx LL^\top$. By capturing coupling over a wider range of variables, it can substantially reduce the number of iterations needed to converge. Applying the preconditioner, $z_k=M^{-1}r_k$, however, requires two triangular solves (SpSV) per iteration:</p>
+<p>$$
+Ly=r,\qquad L^\top z=y
+$$</p>
+<p>Triangular solves have inherent sequential dependencies: some variables cannot be solved until earlier results are available. The available parallelism also depends heavily on the matrix&#39;s sparsity pattern. <a href="https://docs.nvidia.com/cuda/archive/12.8.1/incomplete-lu-cholesky/index.html">NVIDIA Docs</a></p>
+<p>Ultimately, total solve time is the product of <strong>the number of iterations needed to converge</strong> and <strong>the cost of each iteration</strong>. This tradeoff showed up clearly in the experiments below.</p>
+<h2 id="toc-heading-5">4. Adam and Muon</h2>
+<p>Deep learning optimizers also transform the gradient before using it, but they construct those transformations from different information than numerical preconditioners do.</p>
+<h3 id="toc-heading-6">Adam: Gradient-Based Diagonal Scaling</h3>
+<p>Adam maintains exponential moving averages (EMAs) of the gradient&#39;s first and second moments:</p>
+<p>$$
+m_t=\beta_1m_{t-1}+(1-\beta_1)g_t, \qquad
+v_t=\beta_2v_{t-1}+(1-\beta_2)g_t^{\odot2}
+$$</p>
+<p>Using the bias-corrected estimates $\hat m_t$ and $\hat v_t$, its update is</p>
+<p>$$
+\Delta x_t = -\eta \frac{\hat m_t}{\sqrt{\hat v_t}+\epsilon}
+$$</p>
+<p>Writing the denominator as a diagonal matrix $D_t$ gives</p>
+<p>$$
+\Delta x_t=-\eta D_t^{-1}\hat m_t
+$$</p>
+<p>In this form, Adam looks like <strong>momentum with adaptive diagonal preconditioning</strong>.</p>
+<p>Unlike Jacobi PCG, which uses the actual diagonal of the Hessian, Adam uses an average of squared gradients observed along its optimization trajectory. Averaging gradient magnitudes does not recover the objective&#39;s Hessian. In a noise-free, deterministic quadratic such as the one in these experiments, $g(x)=Hx-b$ is available exactly, so Adam&#39;s $v_t$ depends entirely on the path taken from the starting point.</p>
+<h3 id="toc-heading-7">Muon: Steepest Descent in the Spectral Norm</h3>
+<p>Muon operates on parameters that take the form of two-dimensional matrices. Let $B_t$ be the matrix obtained by combining momentum and Nesterov acceleration. An idealized Muon orthogonalizes this matrix by setting all positive singular values to 1—more precisely, by extracting the orthogonal factor of its polar decomposition:</p>
+<p>$$
+B_t=U_r\Sigma_rV_r^\top
+\quad\Longrightarrow\quad
+Q_t=U_rV_r^\top
+$$</p>
+<p>Instead of performing an expensive SVD at every step, practical implementations approximate this transformation with a polynomial using Newton–Schulz iterations. They use only a few iterations and do not guarantee that the result matches the exact polar factor.</p>
+<p>The geometry of this operation can also be understood as a change of norm. Setting momentum aside for a moment, let $G$ be the current gradient matrix. Consider minimizing the linearized loss subject to a bound on the spectral norm $\|\cdot\|_2$, the largest singular value of a matrix:</p>
+<p>$$
+\min_{\|\Delta W\|_2\leq\eta}
+\langle G,\Delta W\rangle
+\quad\Longrightarrow\quad
+\Delta W^*=-\eta U_rV_r^\top
+$$</p>
+<p>Muon&#39;s orthogonalization thus finds a <strong>steepest-descent direction under the spectral norm</strong>.</p>
+<p>For a linear layer $y=Wa$, the output change caused by a weight update satisfies</p>
+<p>$$
+\|\Delta W a\|_2 \leq \|\Delta W\|_2\|a\|_2
+$$</p>
+<p>The design treats the parameters as an operator mapping inputs to outputs, rather than as a flat vector, and controls the change in the output accordingly.</p>
+<ul>
+<li>This interpretation of optimizers as steepest descent under particular norms is also developed in work such as <em>Old Optimizer, New Norm</em>. <a href="https://arxiv.org/abs/2409.20325">arXiv</a></li>
+<li><a href="https://jeremybernste.in/writing/deriving-muon">Jeremy Bernstein&#39;s derivation of Muon</a></li>
+</ul>
+<p>We can now see both the connection and the distinction between PCG and Muon. Both change the metric governing a step, but they act on different objects. PCG tries to flatten the <strong>eigenvalue spectrum of the objective&#39;s Hessian</strong>, while Muon flattens the <strong>singular-value spectrum of the update matrix itself</strong>.</p>
+<p>The resemblance between the two was what prompted this post.</p>
+<hr>
+<h2 id="toc-heading-8">5. Experiments: Deep Learning Optimizers for Quad Remeshing</h2>
+<p>After working through the theory, I still wanted to know whether Muon or Adam could be useful in the MIQ solve for quad remeshing. I ran experiments to compare both their convergence behavior and their actual computational cost on hardware.</p>
+<p>I compared six methods on matrices extracted from real remeshing problems: GD, CG, 2×2 block-Jacobi PCG, IC(0)-PCG, Adam, and Muon. To isolate quadratic solver performance, I held all other conditions fixed and measured only the MIQ energy minimization. The experiments ran on an NVIDIA B300 GPU, with FP64 used throughout.</p>
+<h3 id="toc-heading-9">Deep Learning Optimizers with Line Search</h3>
+<p>Running deep learning optimizers with fixed learning rates can make the comparison depend heavily on how well each learning rate has been tuned.</p>
+<p>To compare the <strong>quality of the search directions</strong> they produce, I combined GD, Adam, and Muon with exact quadratic line search, denoting them <strong>GD-LS, Adam-LS, and Muon-LS</strong> in the experiments:</p>
+<p>$$
+x_{\mathrm{new}}=x+\alpha^* d,
+\qquad
+\alpha^*=-\frac{g^\top d}{d^\top Hd}
+$$</p>
+<p>Adam retained its momentum estimates. Muon used momentum of 0.95, Nesterov acceleration, and five Newton–Schulz steps, with weight decay disabled. If a momentum-based direction was not a descent direction, I replaced it with the residual direction for that step and reset the momentum buffer.</p>
+<ul>
+<li>For idealized Muon without momentum, $Q=\operatorname{Polar}(G)$, the numerator in the line search becomes the nuclear norm $\|G\|_*$. The optimal step length is then $\alpha^* = \frac{\|G\|_*}{\langle Q,\mathcal H[Q]\rangle}$. Taking this optimal step still does not give the directions CG-style conjugacy.</li>
+</ul>
+<h3 id="toc-heading-10">Evaluation Criteria</h3>
+<p>I used two separate settings for a fair comparison:</p>
+<ol>
+<li><strong>Continuous relaxation:</strong> Replay only the initial continuous optimization stage under the same conditions.</li>
+<li><strong>Fixed integer assignment:</strong> Fix the final integer assignment selected by the default solver, initialize all free coordinates to zero, and solve the resulting single quadratic.</li>
+</ol>
+<p>I measured convergence using the physical energy to compare how much each method reduced the actual remeshing objective. If $E_{\mathrm{ref}}$ is the energy reached by the default solver, I measured the iterations and time required to satisfy</p>
+<p>$$
+E\leq E_{\mathrm{ref}}
++10^{-5}\max(|E_{\mathrm{ref}}|,1)
+$$</p>
+<p>This energy includes only the least-squares terms, excluding the gauge terms added for numerical stability. The criterion therefore does not measure the error relative to the exact optimum or require an identical residual.</p>
+<p>Although the theoretical discussion assumes SPD matrices, the extracted systems contain coordinates that are completely masked to zero, making the full matrices positive semidefinite (PSD). The experiments ran without issue on the active subspace with compatible right-hand sides.</p>
+<hr>
+<h2 id="toc-heading-11">6. Results</h2>
+<h3 id="toc-heading-12">IC(0)-PCG vs. Block-Jacobi PCG</h3>
+<p>For the fixed-integer problems, the average iteration counts and execution times required to reach the target energy were:</p>
+<table>
+<thead>
+<tr>
+<th align="right">2×2 block-Jacobi PCG</th>
+<th align="right">IC(0)-PCG</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">142 iterations / <strong>4.318 ms</strong></td>
+<td align="right"><strong>49 iterations</strong> / 103.946 ms</td>
+</tr>
+</tbody></table>
+<p>As expected, IC(0) reduced the iteration count by roughly <strong>a factor of 3</strong>. Yet its actual GPU elapsed time was <strong>24 times longer</strong>.</p>
+<p>These timings already exclude the factorization cost of constructing the preconditioner. Kernel profiling showed that the two triangular solves per iteration, implemented with cuSPARSE SpSV, consumed most of the GPU execution time. Capturing more coupling information reduced the step count, but the sequential dependencies involved in applying that information prevented the solver from making good use of the GPU&#39;s parallel resources. The 2×2 block-Jacobi method needed more steps, but each was cheap and fully parallel, giving it a substantial advantage in total time.</p>
+<ul>
+<li>This result is specific to IC(0) with natural ordering and the current cuSPARSE implementation. Coloring or other reorderings could change the outcome.</li>
+</ul>
+<h3 id="toc-heading-13">Convergence Rates of GD, Adam, and Muon</h3>
+<p>The following table shows the fraction of runs that reached the target energy within a budget of 20,000 iterations. Failure here means the method did not converge within the budget, rather than that it diverged.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th align="right">Continuous relaxation</th>
+<th align="right">Fixed integer assignment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CG</td>
+<td align="right">79%</td>
+<td align="right">100%</td>
+</tr>
+<tr>
+<td>2×2 block-Jacobi PCG</td>
+<td align="right">100%</td>
+<td align="right">100%</td>
+</tr>
+<tr>
+<td>IC(0)-PCG</td>
+<td align="right">100%</td>
+<td align="right">100%</td>
+</tr>
+<tr>
+<td>GD-LS</td>
+<td align="right"><strong>0%</strong></td>
+<td align="right"><strong>53%</strong></td>
+</tr>
+<tr>
+<td>Adam-LS</td>
+<td align="right"><strong>0%</strong></td>
+<td align="right">100%</td>
+</tr>
+<tr>
+<td>Muon-LS</td>
+<td align="right"><strong>0%</strong></td>
+<td align="right"><strong>21%</strong></td>
+</tr>
+</tbody></table>
+<p>On the easier fixed-integer problems, Adam-LS reached the target in all cases, but was <strong>8.6–25.8 times slower</strong> than block-Jacobi. Muon-LS converged only for the smallest MIQ setting; in the other cases, it still had not reached the target after all 20,000 iterations.</p>
+<table>
+<thead>
+<tr>
+<th>Continuous Relaxation</th>
+<th>Fixed Integer Assignment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="/blogs/posts/261022_pcg_muon/assets/continuous-convergence-mean.png" alt="Mean convergence curves for continuous relaxation" loading="lazy" decoding="async" data-reading-surface="paper"></td>
+<td><img src="/blogs/posts/261022_pcg_muon/assets/fixed_integer-convergence-mean.png" alt="Mean convergence curves with fixed integer assignments" loading="lazy" decoding="async" data-reading-surface="paper"></td>
+</tr>
+</tbody></table>
+<p>Muon&#39;s difficulty was not just the computational cost of running Newton–Schulz iterations at every step. It also needed far too many optimization iterations.</p>
+<p>Deep learning typically involves substantial stochastic noise and no explicitly available Hessian. These sparse quadratic problems instead provide an exact Hessian and demand high-accuracy solutions. In this setting, equalizing the singular values of the update matrix could not replace PCG&#39;s conjugacy and curvature correction.</p>
+<hr>
+<h2 id="toc-heading-14">7. Reshaping for Muon</h2>
+<p>There was another detail to examine in these experiments. A DiT&#39;s linear layers have a natural two-dimensional structure defined by their input and output dimensions, whereas the remesher&#39;s variables form a one-dimensional vector. Applying Muon requires reshaping that vector into a matrix somehow.</p>
+<p>Initially, I kept the original variable ordering and tried matrix widths of 1, 2, 8, 32, and 128, padding unused entries with zeros and restoring the original vector after each update.</p>
+<figure class="post-media post-media--editorial post-media--narrow" style="--post-figure-media-width: 70%;">
+    <img src="/blogs/posts/261022_pcg_muon/assets/muon-shapes-mean.png" style="width: 70%;" alt="Mean Muon-LS convergence curves for different matrix widths" loading="lazy" decoding="async" data-reading-surface="paper">
+    <figcaption><span class="post-figure-index">FIG. 02</span><span class="post-figure-caption">Mean Muon-LS convergence for matrix widths 1, 2, 8, 32, and 128, with the remaining energy gap normalized by its initial value.</span></figcaption>
+</figure>
+
+<p>Increasing the width did not consistently improve convergence. In fact, width 1 sometimes reached a lower energy later in the solve.</p>
+<ul>
+<li>At width 1, the transformation normalizes the entire vector, so exact line search cancels out its scaling effect. Momentum and Nesterov acceleration are still present, however, so the trajectory differs from pure GD-LS. An idealized polar-LS method with momentum removed completely and width set to 1 is exactly equivalent to GD-LS.</li>
+</ul>
+<h3 id="toc-heading-15">Physical UV Pairs vs. the Hessian</h3>
+<blockquote>
+<p>What if, instead of splitting the vector arbitrarily, I built the matrix around the problem&#39;s geometric meaning?</p>
+</blockquote>
+<p>The remeshing variables come from a two-dimensional coordinate map, $(u_i,v_i)$, at each vertex. By tracing the data indices, I recovered roughly 93–99% of the active variables as actual $(u_i,v_i)$ pairs belonging to the same vertex, arranged them in an $N\times 2$ matrix, and ran Muon again.</p>
+<p>This physically meaningful UV pairing still performed no better than the original arbitrary width-2 arrangement.</p>
+<p>While inspecting the Hessian entries to understand why, I found something interesting. In every $2\times 2$ diagonal Hessian block corresponding to a recovered physical $(u_i,v_i)$ pair, the cross terms were zero:</p>
+<p>$$
+H[\{u_i,v_i\},\{u_i,v_i\}]
+=
+\begin{pmatrix}
+a_i&amp;0\\
+0&amp;b_i
+\end{pmatrix}
+$$</p>
+<p>There was no direct cross term between $u_i$ and $v_i$ at the same vertex. This does not mean that the U and V variable groups are entirely uncoupled; other coupling, such as that introduced by boundary conditions, may still exist.</p>
+<p>Had I built a 2×2 block-Jacobi preconditioner around these physical UV pairs, it would have behaved exactly like scalar Jacobi because the cross terms vanish. The existing solver&#39;s 2×2 block-Jacobi routine, by contrast, greedily pairs variables with <strong>large off-diagonal entries $c_i$ in the actual Hessian</strong>, regardless of their physical meaning. Variables that form a physical pair were not the same variables that were strongly coupled numerically.</p>
+<h3 id="toc-heading-16">Muon&#39;s Gram Matrix</h3>
+<p>Even if those cross terms had been nonzero, the $2\times 2$ matrices used by block-Jacobi and width-2 Muon would still contain entirely different information.</p>
+<p>For an $N\times 2$ gradient matrix $G$, consider the ideal polar transformation</p>
+<p>$$
+Q=G(G^\top G)^{-1/2}
+$$</p>
+<p>The matrix whose inverse square root is taken here is the global Gram matrix</p>
+<p>$$
+G^\top G
+=
+\begin{pmatrix}
+\sum_i g_{u_i}^2 &amp; \sum_i g_{u_i}g_{v_i}\\
+\sum_i g_{u_i}g_{v_i} &amp; \sum_i g_{v_i}^2
+\end{pmatrix}
+$$</p>
+<p>Block-Jacobi individually inverts the local curvature $H[B_i,B_i]$ for each pair of variables. Muon normalizes global correlations between axes, aggregating gradients over all vertices. Both may involve $2\times 2$ matrix operations, but what they correct is different.</p>
+<hr>
+<h2 id="toc-heading-17">8. Closing Thoughts</h2>
+<p>I am naturally drawn to algorithms that are mathematically elegant and rigorous. IC seemed promising because it captures more coupling between variables than block-Jacobi does. It did substantially reduce the iteration count. Once I accounted for the cost of applying that correction on the GPU, though, the simple 2×2 block-Jacobi method was much faster. My expectation about convergence was right, but it did not translate into the speedup I needed.</p>
+<p>Muon followed a similar pattern. I initially thought of it as correcting a matrix imbalance in much the same way as block-Jacobi, then found that it was slow when I applied it. Had I stopped at the performance comparison, I would still not have understood why. Examining the different information carried by local Hessian blocks and the global Gram matrix, and the distinction between physical UV pairs and the strongly coupled pairs chosen by the solver, helped me understand how far the initial analogy could be trusted.</p>
+<p>Over the past few months of developing a quad remesher and training 3D generative models, I have repeatedly found that turning a theoretically attractive idea into a practical performance improvement is a separate problem. Even a good hypothesis needs to be tested on real data and hardware. Convergence rates matter, but so does the price paid to achieve them. IC(0) can converge in fewer iterations yet run much more slowly on a GPU, and Muon may deliver worse results than the AdamW I was already using (billion-scale image-to-3D runs showed no qualitative gains and slower updates).</p>
+<p>Coding agents have made implementing and running these comparisons much less demanding. These days, I often find it more useful to try a candidate directly than to spend a long time debating it. I do not think this makes theoretical understanding less important. If anything, it makes it more important. A result that says “this is slow” does not tell me whether to discard the method, improve the implementation, or change how the variables are grouped. To make that decision, I still need to examine the mathematics, the data, and the code together. Here, that meant isolating the cost of triangular solves for IC, and looking separately at how Muon&#39;s matrices were assembled and what information its operations used. Those checks helped me decide what to try next with the GPU time I had.</p>
+<p>To close, here is a preview of a billion-scale image-to-3D model I am training from scratch, with a release planned for the end of the year. In qualitative comparisons so far, generation has been more consistent than with TRELLIS.2, and the geometry has followed the input image much more closely.</p>
+<figure class="post-media post-media--editorial" data-generation-comparison>
+    <picture>
+        <source media="(max-width: 600px)" srcset="/blogs/posts/261022_pcg_muon/assets/image-to-3d-comparison-mobile.webp" width="704" height="2220">
+        <img src="/blogs/posts/261022_pcg_muon/assets/image-to-3d-comparison.webp" width="2048" height="740" loading="lazy" decoding="async" data-reading-surface="original" alt="Dragon-themed armor: the input image, geometry from a billion-scale image-to-3D model being trained from scratch, and geometry from TRELLIS.2, in that order">
+    </picture>
+    <figcaption><span class="post-figure-index">FIG. 03</span><span class="post-figure-caption">A qualitative comparison: <a href="/blogs/posts/261022_pcg_muon/assets/image-to-3d-input.webp">Input</a>, <a href="/blogs/posts/261022_pcg_muon/assets/image-to-3d-ours.webp">Ours</a>, and <a href="/blogs/posts/261022_pcg_muon/assets/image-to-3d-trellis2.webp">TRELLIS.2</a>, in that order.</span></figcaption>
+</figure>
+
+                    </div>
+                    <div class="post-reading-column post-end-matter">
+                        <section class="post-author-note" aria-labelledby="post-author-name">
+                            <img class="post-author-portrait" src="/assets/profile4-author.png" alt="Hwan Heo" loading="lazy">
+                            <div class="post-author-copy">
+                                <span class="post-author-kicker">Written by</span>
+                                <h2 id="post-author-name">Hwan Heo</h2>
+                                <p>Lead 3D AI Research Engineer building production systems across large-scale 3D generation, CUDA inference, and graphics pipelines.</p>
+                                <div class="post-author-links" aria-label="Author links">
+                                    <a href="mailto:hwan.heo.ai@gmail.com">Email</a>
+                                    <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                                </div>
+                            </div>
+                        </section>
+                        
+                    <section class="related-posts" aria-labelledby="related-posts-heading">
+                        <h2 id="related-posts-heading">Related Posts</h2>
+                        <div class="related-post-grid">
+                            
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/quad-remesh/" aria-label="Read Comprehensive Analysis of Quad Remeshing">
+                                    <strong>Comprehensive Analysis of Quad Remeshing</strong>
+                                    <time datetime="2026-10-06">Oct 2026</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/sdf-and-eikonal-equation/" aria-label="Read SDF and Eikonal Equation">
+                                    <strong>SDF and Eikonal Equation</strong>
+                                    <time datetime="2025-08-23">Aug 2025</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/generalized-winding-number/" aria-label="Read Generalized Winding Number">
+                                    <strong>Generalized Winding Number</strong>
+                                    <time datetime="2025-08-09">Aug 2025</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/gemm-on-nvidia-gpus/" aria-label="Read GEMM on NVIDIA GPUs: From Naive Kernels to Tiled Pipelines">
+                                    <strong>GEMM on NVIDIA GPUs: From Naive Kernels to Tiled Pipelines</strong>
+                                    <time datetime="2026-08-12">Aug 2026</time>
+                                </a>
+                            </article>
+        
+                        </div>
+                    </section>
+    
+                        <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation">
+                <a class="post-nav-card is-older" href="/blogs/posts/quad-remesh/" aria-label="Previous Post: Comprehensive Analysis of Quad Remeshing">
+                    <span class="post-nav-kicker">
+                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg> Previous Post
+                    </span>
+                    <strong>Comprehensive Analysis of Quad Remeshing</strong>
+                </a>
+    
+                <a class="post-nav-card is-explore" href="/blogs/posts/gemm-on-nvidia-gpus/" aria-label="Explore Series: CUDA">
+                    <span class="post-nav-kicker">
+                        Explore Series <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
+                    </span>
+                    <strong>CUDA</strong>
+                </a>
+    </nav></div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <button id="scroll-top" class="scroll-top button_top post-scroll-top" type="button" aria-label="Back to top">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up"></use></svg>
+        </button>
+
+        <footer class="blog-post-footer">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column">
+                        <div class="blog-footer-note">Copyright © Hwan Heo</div>
+                        <nav class="blog-publication-links" aria-label="Publication links">
+                            <a href="/blogs/">Blog Home</a>
+                            <a href="/">Portfolio ↗</a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        window.siteData = {
+  "posts": [
+    {
+      "id": "261022_pcg_muon",
+      "title_eng": "From PCG to Muon: The Geometry of Preconditioners and Optimizers",
+      "title_kor": "From PCG to Muon: Preconditioner와 Optimizer의 기하학",
+      "subtitle_eng": "From sparse quadratic solvers in quad remeshing to deep learning optimizers",
+      "subtitle_kor": "Quad Remeshing의 Sparse Quadratic Solver에서 Deep Learning Optimizer까지",
+      "tags": [
+        "Optimization",
+        "Linear Algebra",
+        "CUDA",
+        "Graphics"
+      ],
+      "cover": "/blogs/posts/261022_pcg_muon/assets/cover-sculptural-paths-v2.webp",
+      "status": "published",
+      "updated": "2026-10-22",
+      "date": "2026-10-22",
+      "category": "post",
+      "series": "graphics",
+      "additionalSeries": [
+        "3d-generation"
+      ],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "from-pcg-to-muon"
+    },
+    {
+      "id": "260818_quad_remesh",
+      "title_eng": "Comprehensive Analysis of Quad Remeshing",
+      "title_kor": "Quad Remesh 톺아보기",
+      "subtitle_eng": "The differential geometry of quad remeshing, from cross fields to integer-grid maps",
+      "subtitle_kor": "Manifold 위의 integer grid 설계. Tri-mesh decimation 과는 근본적으로 다른 접근법을 가진 Quad remeshing 을 이해해보기.",
+      "tags": [
+        "Graphics"
+      ],
+      "cover": "/blogs/posts/260818_quad_remesh/assets/cover-dragon.webp",
+      "status": "published",
+      "updated": "2026-10-06",
+      "date": "2026-10-06",
+      "category": "post",
+      "series": "graphics",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "quad-remesh"
+    },
+    {
+      "id": "260802_cuda_01_gemm",
+      "title_eng": "GEMM on NVIDIA GPUs: From Naive Kernels to Tiled Pipelines",
+      "title_kor": "NVIDIA GPU의 GEMM: Naive Kernel에서 Tiled Pipeline까지",
+      "subtitle_eng": "Why naive GEMM becomes memory-bound, how tiled reuse changes arithmetic intensity, and where Tensor Cores, schedulers, and libraries fit",
+      "subtitle_kor": "Naive GEMM의 memory bottleneck부터 tiled reuse, Tensor Core pipeline, shape별 scheduling과 library 추상화까지",
+      "tags": [
+        "CUDA"
+      ],
+      "cover": "/blogs/posts/260802_cuda_01_gemm/assets/cover.webp",
+      "status": "published",
+      "updated": "2026-08-12",
+      "date": "2026-08-12",
+      "category": "post",
+      "series": "cuda",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "gemm-on-nvidia-gpus"
+    },
+    {
+      "id": "260727_sparse_3d",
+      "title_eng": "What the Compiler Missed in Sparse 3D Inference",
+      "title_kor": "컴파일러가 놓치는 Sparse 3D Generation Inference 최적화",
+      "subtitle_eng": "Why generic compiler paths underperform on dynamic sparse 3D generative models—and how null-context attention removal and model-aware CUDA kernels cut inference latency.",
+      "subtitle_kor": "torch.compile과 TensorRT가 실패하는 Sparse 3D Generation model에서 Null-Context Attention 제거와 custom CUDA Fusion으로 forward latency 줄이는 방법",
+      "tags": [
+        "3D Generation",
+        "Generative AI",
+        "CUDA"
+      ],
+      "cover": "/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png",
+      "status": "published",
+      "updated": "2026-07-27",
+      "date": "2026-07-27",
+      "category": "post",
+      "series": "3d-generation",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "optimizing-sparse-3d-generation-inference"
+    },
+    {
+      "id": "260115_Varco3D",
+      "title_eng": "VARCO 3D: A Year in Review — 2025 Retrospective",
+      "title_kor": "3D 생성형 AI 서비스; Varco3D 개발기",
+      "subtitle_eng": "How a fast-follower team tracked the evolution of 3D AI to build an in-house generative 3D service—from VecSet VAEs to Voxel-conditioned 3D DiTs.",
+      "subtitle_kor": "3D VecSet VAEs 에서부터 Hunyuan3D 3.0의 Voxel-conditioned 3D DiTs까지 추적하며 자체 3D 생성형 AI 서비스를 구축해 간 과정",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif",
+      "status": "published",
+      "updated": "2026-01-15",
+      "date": "2026-01-15",
+      "category": "post",
+      "series": "3d-generation",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "varco3d-a-year-in-review-2025-retrospective"
+    },
+    {
+      "id": "250823_sdf",
+      "title_eng": "SDF and Eikonal Equation",
+      "title_kor": "SDF 와 Eikonal Equation 의 관계는?",
+      "subtitle_eng": "A rigorous derivation of why a signed distance field satisfies the Eikonal equation, from its geometric definition to gradient bounds",
+      "subtitle_kor": "Signed distance field의 기하학적 정의에서 출발해, gradient의 크기가 왜 Eikonal equation을 만족하는지 엄밀하게 유도해보기",
+      "tags": [
+        "Graphics"
+      ],
+      "cover": "/blogs/posts/250823_sdf/assets/remote-12d4629724c7.png",
+      "status": "published",
+      "updated": "2025-08-23",
+      "date": "2025-08-23",
+      "category": "post",
+      "series": "graphics",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "sdf-and-eikonal-equation"
+    },
+    {
+      "id": "250810_flow",
+      "title_eng": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
+      "title_kor": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
+      "subtitle_eng": "Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow",
+      "subtitle_kor": "Rectified Flow의 생성 경로가 왜 직선으로 수렴하는지, 물리학과 기하학, optimal transport의 관점에서 살펴보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250810_flow/assets/remote-40629d4b233a.png",
+      "status": "published",
+      "updated": "2025-08-10",
+      "date": "2025-08-10",
+      "category": "post",
+      "series": "3d-generation",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models"
+    },
+    {
+      "id": "250809_gwn",
+      "title_eng": "Generalized Winding Number",
+      "title_kor": "Generalized Winding Number",
+      "subtitle_eng": "How Generalized Winding Numbers turn imperfect meshes into robust inside–outside tests for signed distance field construction",
+      "subtitle_kor": "불완전하거나 열린 mesh에서도 Generalized Winding Number로 inside/outside를 판별하고 견고한 SDF를 계산하는 방법을 살펴보기",
+      "tags": [
+        "Graphics"
+      ],
+      "cover": "/blogs/posts/250809_gwn/assets/image.png",
+      "status": "published",
+      "updated": "2025-08-09",
+      "date": "2025-08-09",
+      "category": "post",
+      "series": "graphics",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "generalized-winding-number"
+    },
+    {
+      "id": "250710_building_large_3d_2",
+      "title_eng": "Building Large 3D Generative Model (2) VAE and DiT Deep Dive",
+      "title_kor": "Large 3D Generative Model 구축하기 (2) VAE and DiT 분석",
+      "subtitle_eng": "Comparing vecset and sparse-voxel VAE–DiT architectures, from 3D representation and compression to shape-generation design",
+      "subtitle_kor": "Vecset과 sparse voxel이 3D shape을 표현하는 방식부터 VAE와 DiT 구조, 생성 모델 설계의 차이까지 비교해보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250710_building_large_3d_2/assets/image-13.png",
+      "status": "published",
+      "updated": "2025-07-10",
+      "date": "2025-07-10",
+      "category": "post",
+      "series": "3d-generation",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "building-large-3d-generative-model-2-vae-and-dit-deep-dive"
+    },
+    {
+      "id": "250702_building_large_3d_1",
+      "title_eng": "Building Large 3D Generative Model (1) Data pre-processing",
+      "title_kor": "Large 3D Generative Model 구축하기 (1) 데이터 전처리",
+      "subtitle_eng": "Preparing training-ready 3D data through watertight mesh conversion, surface sampling, and salient-edge-aware preprocessing",
+      "subtitle_kor": "대규모 3D 생성 모델의 학습 데이터를 위해 watertight mesh 변환, surface sampling, salient edge 추출 과정을 정리해보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250702_building_large_3d_1/assets/image-10.png",
+      "status": "published",
+      "updated": "2025-07-02",
+      "date": "2025-07-02",
+      "category": "post",
+      "series": "3d-generation",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "building-large-3d-generative-model-1-data-pre-processing"
+    },
+    {
+      "id": "250310_model_viewer",
+      "title_eng": "3D Model Viewer in Web",
+      "title_kor": "커스텀 3D 웹뷰어 만들기",
+      "subtitle_eng": "Comparing Google model-viewer with a custom Three.js pipeline for embedding, controlling, and presenting 3D assets on the web",
+      "subtitle_kor": "Google model-viewer와 직접 만든 Three.js viewer를 비교하며, 웹에서 3D asset을 안정적으로 보여주는 방법을 정리해보기",
+      "tags": [
+        "Web 3D",
+        "Three.js"
+      ],
+      "cover": "/blogs/posts/250310_model_viewer/assets/image.png",
+      "status": "published",
+      "updated": "2025-03-10",
+      "date": "2025-03-10",
+      "category": "post",
+      "series": "web-3d",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "3d-model-viewer-in-web"
+    },
+    {
+      "id": "250302_3d_latent_diffusion",
+      "title_eng": "An Era of 3D Generation",
+      "title_kor": "3D 생성 모델의 시대",
+      "subtitle_eng": "Tracing 3D latent diffusion from ShapeVAE to TRELLIS and Hunyuan3D, and comparing how modern systems represent and generate shape",
+      "subtitle_kor": "ShapeVAE에서 TRELLIS와 Hunyuan3D까지, 3D latent diffusion이 shape을 표현하고 생성하는 방식 톺아보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser-poster.jpg",
+      "status": "published",
+      "updated": "2025-03-02",
+      "date": "2025-03-02",
+      "category": "post",
+      "series": "3d-generation",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "an-era-of-3d-generation"
+    },
+    {
+      "id": "250106_tomography",
+      "title_eng": "Neural Rendering Beyond Photography",
+      "title_kor": "X-Ray 와 NeRF",
+      "subtitle_eng": "Applying NeRF and Gaussian Splatting beyond photography to X-ray tomography, plus a lightweight viewer workflow built with Viser.",
+      "subtitle_kor": "NeRF와 Gaussian Splatting을 X-ray tomography에 적용하는 원리를 살펴보고, Viser 기반 viewer 제작 팁까지 살펴보기",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/250106_tomography/assets/image1.png",
+      "status": "published",
+      "updated": "2025-01-06",
+      "date": "2025-01-06",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "neural-rendering-beyond-photography"
+    },
+    {
+      "id": "240917_3djs",
+      "title_eng": "Add Gaussian Splatting to Your Website",
+      "title_kor": "웹사이트에 3D GS 삽입하기",
+      "subtitle_eng": "A practical Three.js guide to embedding an interactive Gaussian Splatting scene in a website, with no web-graphics background required",
+      "subtitle_kor": "Three.js를 이용해 웹사이트에 interactive Gaussian Splatting scene을 삽입하고 제어해보기",
+      "tags": [
+        "Web 3D",
+        "Three.js"
+      ],
+      "cover": "/assets/guitar.jpeg",
+      "status": "published",
+      "updated": "2024-09-17",
+      "date": "2024-09-17",
+      "category": "post",
+      "series": "web-3d",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "add-gaussian-splatting-to-your-website"
+    },
+    {
+      "id": "240823_grt",
+      "title_eng": "Don't Rasterize, But Ray Trace 3D Gaussian",
+      "title_kor": "3D Gaussian Ray Tracing 톺아보기",
+      "subtitle_eng": "How NVIDIA’s 3D Gaussian Ray Tracing replaces splat rasterization with differentiable ray tracing—and what that changes.",
+      "subtitle_kor": "NVIDIA의 3D Gaussian Ray Tracing이 splat rasterization을 differentiable ray tracing으로 바꾸는 방식과 장점에 대한 심층 분석",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240823_grt/assets/teaser.gif",
+      "status": "published",
+      "updated": "2024-08-23",
+      "date": "2024-08-23",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "dont-rasterize-but-ray-trace-3d-gaussian"
+    },
+    {
+      "id": "240805_gs",
+      "title_eng": "A Comprehensive Analysis of Gaussian Splatting Rasterization",
+      "title_kor": "Gaussian Splatting Rasterization 완벽 분석",
+      "subtitle_eng": "A ground-up guide to Gaussian Splatting and differentiable rasterization, tracing the mathematics through its CUDA implementation—from projection and covariance to sorting and alpha blending.",
+      "subtitle_kor": "수식과 CUDA rasterizer 코드를 직접 대응시키며 따라가보는 Gaussian Splatting 완전 해설",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240805_gs/assets/garden.gif",
+      "status": "published",
+      "updated": "2024-08-05",
+      "date": "2024-08-05",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "a-comprehensive-analysis-of-gaussian-splatting-rasterization"
+    },
+    {
+      "id": "240721_sfm",
+      "title_eng": "Radiance Fields from Deep-based Structure-from-Motion",
+      "subtitle_eng": "Comparing VGGSfM and MASt3R as learned Structure-from-Motion pipelines for camera estimation and radiance-field reconstruction.",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240721_sfm/assets/sfm.jpg",
+      "status": "published",
+      "updated": "2024-07-21",
+      "date": "2024-07-21",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "additionalSeries": [],
+      "languages": [
+        "eng"
+      ],
+      "slug": "radiance-fields-from-deep-based-structure-from-motion"
+    },
+    {
+      "id": "240602_2dgs",
+      "title_eng": "Under the 3D: Geometrically Accurate 2D Gaussian Splatting",
+      "title_kor": "2D Gaussian Splatting 톺아보기",
+      "subtitle_eng": "How 2D Gaussian Splatting replaces volumetric blobs with oriented disks to improve surface geometry and mesh reconstruction",
+      "subtitle_kor": "2D Gaussian Splatting이 volumetric blob 대신 oriented disk를 사용해 surface geometry와 mesh reconstruction을 개선하는 원리를 살펴보기",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240602_2dgs/assets/teaser.gif",
+      "status": "published",
+      "updated": "2024-06-02",
+      "date": "2024-06-02",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "under-the-3d-geometrically-accurate-2d-gaussian-splatting"
+    },
+    {
+      "id": "240426_diffusion_depth",
+      "title_eng": "Is Diffusion's Estimated Depth Really Good?",
+      "title_kor": "Diffusion 으로 추정한 Depth 진짜 좋나요?",
+      "subtitle_eng": "Evaluating diffusion-estimated depth by turning Marigold predictions into textured meshes and inspecting their geometric consistency.",
+      "subtitle_kor": "Diffusion 으로 추정한 Depth Map 을 이용해 Textured Mesh 만들어보기 (feat. Marigold)",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/240426_diffusion_depth/assets/teaser.jpeg",
+      "status": "published",
+      "updated": "2024-04-26",
+      "date": "2024-04-26",
+      "category": "post",
+      "series": "3d-generation",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "is-diffusions-estimated-depth-really-good"
+    },
+    {
+      "id": "240226_sora",
+      "title_eng": "Can Sora Understand 3D?",
+      "title_kor": "Sora 가 상상하는 3D World",
+      "subtitle_eng": "Testing whether video generation models encode enough 3D consistency to reconstruct radiance fields from their synthesized views",
+      "subtitle_kor": "Video Generative AI 로부터 NeRF reconstruction 해보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/240226_sora/assets/big-sur-gs-poster.jpg",
+      "status": "published",
+      "updated": "2024-02-26",
+      "date": "2024-02-26",
+      "category": "post",
+      "series": "3d-generation",
+      "additionalSeries": [],
+      "languages": [
+        "eng"
+      ],
+      "slug": "can-sora-understand-3d"
+    },
+    {
+      "id": "231130_nerf_in_game",
+      "title_eng": "Can NeRF be used in Game?",
+      "title_kor": "NeRF 를 게임 제작에서 이용할 수 있을까?",
+      "subtitle_eng": "Examining the quality, rendering, and production constraints that limit NeRF in games—and the workarounds available today",
+      "subtitle_kor": "NeRF의 단점을 통해 살펴보는 Neural Rendering 기술이 게임에 적용되기 위해 넘어야 할 과제들",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/231130_nerf_in_game/assets/VID_4_NeRF_obeject_in_blender-poster.jpg",
+      "status": "published",
+      "updated": "2023-11-30",
+      "date": "2023-11-30",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "additionalSeries": [],
+      "languages": [
+        "eng"
+      ],
+      "slug": "can-nerf-be-used-in-game"
+    },
+    {
+      "id": "230202_ngp",
+      "title_eng": "Instant-NGP Review & Re-Implementation",
+      "title_kor": "Instant-NGP 리뷰 및 재구현",
+      "subtitle_eng": "Reviewing Instant-NGP’s multi-resolution hash encoding and rebuilding its NeRF pipeline step by step in PyTorch",
+      "subtitle_kor": "PyTorch Re-Implementation을 통해 수식과 코드 단위로 상세 리뷰해보는 Instant-NGP",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/230202_ngp/assets/ngp_nerf.gif",
+      "status": "published",
+      "updated": "2023-02-02",
+      "date": "2023-02-02",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "additionalSeries": [],
+      "languages": [
+        "eng"
+      ],
+      "slug": "instant-ngp-review-re-implementation"
+    },
+    {
+      "id": "211128_fourier",
+      "title_eng": "Why Positional Encoding Makes NeRF more Powerful",
+      "title_kor": "Position Encoding 이 NeRF 에서 필수적인 이유",
+      "subtitle_eng": "Review of Fourier Features Let Networks Learn High-Frequency Functions",
+      "subtitle_kor": "Fourier Features Let Networks Learn High-Frequency Functions 리뷰",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/211128_fourier/assets/main.png",
+      "status": "published",
+      "updated": "2021-11-28",
+      "date": "2021-11-28",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "additionalSeries": [],
+      "languages": [
+        "eng"
+      ],
+      "slug": "why-positional-encoding-makes-nerf-more-powerful"
+    }
+  ],
+  "series": {
+    "cuda": {
+      "eng": "CUDA",
+      "kor": "CUDA"
+    },
+    "nerf-and-gs": {
+      "eng": "Radiance Fields & Gaussian Splatting",
+      "kor": "Radiance Fields & Gaussian Splatting"
+    },
+    "3d-generation": {
+      "eng": "3D AI",
+      "kor": "3D AI"
+    },
+    "web-3d": {
+      "eng": "3D in Web",
+      "kor": "웹에서 3D 구현하기"
+    },
+    "linear-algebra": {
+      "eng": "Linear Algebra for Deep Learning",
+      "kor": "딥러닝을 위한 선형대수"
+    },
+    "computer-vision": {
+      "eng": "Classical Computer Vision",
+      "kor": "고전 Computer Vision"
+    },
+    "graphics": {
+      "eng": "Computer Graphics",
+      "kor": "Computer Graphics"
+    }
+  }
+};
+        window.blogPostPageConfig = {
+  "postId": "261022_pcg_muon",
+  "lang": "eng",
+  "alternateLang": "kor",
+  "alternateHref": "/blogs/posts/from-pcg-to-muon-kor/",
+  "runtimeFeatures": {
+    "katex": true,
+    "prism": false,
+    "modelViewer": false,
+    "modelViewerTextureToggle": false,
+    "three": false,
+    "tween": false,
+    "simpleModelViewer": false,
+    "gaussianSplats": false
+  }
+};
+    </script>
+
+    <script src="/blogs/js/theme-toggle.js?v=02f1278dd5"></script>
+    <script src="/blogs/js/blog-shell.js?v=2108ee26e6"></script>
+    <script src="/blogs/js/post-page.js?v=55a8de0ff8"></script>
+        <script>
+            initBlogShell({
+                formSelector: '#post-nav-search-form',
+                inputSelector: '#post-nav-search-input'
+            });
+        </script>
+</body>
+</html>

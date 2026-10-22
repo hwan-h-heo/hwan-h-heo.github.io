@@ -11,6 +11,24 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://hwan-h-heo.github.io/blogs/posts/from-pcg-to-muon/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/from-pcg-to-muon/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/from-pcg-to-muon-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/from-pcg-to-muon/" />
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/posts/from-pcg-to-muon-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/from-pcg-to-muon/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/from-pcg-to-muon-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/from-pcg-to-muon/" />
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/quad-remesh/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/quad-remesh/" />
     <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/quad-remesh-kor/" />
@@ -358,7 +376,7 @@
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/series/3d-generation/</loc>
-    <lastmod>2026-07-27</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -370,7 +388,7 @@
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/series/graphics/</loc>
-    <lastmod>2026-10-06</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -394,7 +412,7 @@
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/tags/cuda/</loc>
-    <lastmod>2026-08-12</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -412,7 +430,7 @@
   </url>
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/tags/graphics/</loc>
-    <lastmod>2026-10-06</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

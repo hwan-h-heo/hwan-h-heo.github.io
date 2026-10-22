@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
 
         const postCount = sortedPosts.length;
-        const seriesCount = new Set(sortedPosts.map((post) => post.series).filter(Boolean)).size;
+        const seriesCount = new Set(sortedPosts.flatMap(window.siteDataClient.getPostSeriesIds)).size;
 
         setText('#posts-count', postCount);
         setText('#series-count', seriesCount);
@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     function updateSeriesGroups(lang) {
         seriesContainer?.querySelectorAll('.series-group[data-series-id]').forEach((group) => {
-            const posts = sortedPosts.filter((post) => post.series === group.dataset.seriesId);
+            const posts = sortedPosts.filter((post) => window.siteDataClient.getPostSeriesIds(post).includes(group.dataset.seriesId));
             const latestPost = posts[0];
             const seriesTitle = siteData.series[group.dataset.seriesId]?.[lang]
                 || siteData.series[group.dataset.seriesId]?.eng
