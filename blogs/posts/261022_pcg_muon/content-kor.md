@@ -1,4 +1,4 @@
-## 1. Background: Quad Remeshing & DiT 
+## Background: Quad Remeshing & DiT 
 
 내가 올해 진행한 주요 연구 업무는 크게 두 가지였다. 
 
@@ -31,7 +31,7 @@ PCG도, Muon도 모두 gradient 를 그대로 사용하지 않고 일종의 '좌
 
 ---
 
-## 2. Quadratic Objective & Conjugate Gradient
+## 1. Quadratic Objective & Conjugate Gradient
 
 간단한 이차 목적함수에서 출발해 보자. 행렬 $H$가 Symmetric Positive Definite (SPD)라고 가정할 때, 목적함수와 gradient, 최적성 조건은 다음과 같다.
 
@@ -107,7 +107,7 @@ $$
 
 ---
 
-## 3. Preconditioning: Geometry of Norm
+## 2. Preconditioning: Geometry of Norm
 
 CG가 탐색 방향을 효율적으로 고르더라도, Hessian의 eigenvalue 분포가 불리하면 여전히 수렴이 느려진다. 
 이때 사용할 수 있는 방법이 **좌표계 자체를 변환하는 preconditioning** 이다. 
@@ -173,7 +173,7 @@ $$
 
 결국 수치해법의 전체 속도는 **수렴에 필요한 iteration 수**와 **1회 iteration당 계산 비용**의 곱으로 결정되며, 이 트레이드오프가 뒤이어 다룰 실험 결과에 그대로 나타났다.
 
-## 4. Adam and Muon Optimizer
+## 3. Adam and Muon Optimizer
 
 딥러닝 optimizer들도 gradient를 그대로 쓰지 않고 변형하지만, 변환 행렬을 만들 때 참조하는 정보가 수치해석의 preconditioner와는 다르다.
 
@@ -233,7 +233,7 @@ PCG는 objective function **Hessian의 eigenvalue spectrum**을 평탄화하려 
 
 ---
 
-## 5. Experiments: DL Optimizer in Quad Remeshing
+## 4. Experiments: DL Optimizer in Quad Remeshing
 
 이론을 정리한 후에 남은 궁금증은 "Quad Remeshing의 MIQ 풀이에서도 Muon/Adam을 쓸 수 있는가" 였다. 
 이에 대한 실제 실험을 진행하면서 수렴 거동과 하드웨어에서의 실제 계산 비용을 비교해 보았다.
@@ -277,7 +277,7 @@ $$
 
 ---
 
-## 6. Results
+## 5. Results
 
 ### IC(0)-PCG vs. Block-Jacobi PCG
 
@@ -323,7 +323,7 @@ Muon이 고전한 이유는 매 스텝 Newton–Schulz 반복을 도는 계산 �
 
 ---
 
-## 7. Muon Reshaping
+## 6. Muon Reshaping
 
 실험 과정에서 짚고 넘어가야 할 부분이 하나 더 있었다. DiT의 linear layer는 입출력 차원이라는 명확한 2차원 행렬 구조를 가지지만, remesher의 변수는 1차원 벡터다. 
 Muon을 적용하려면 이 벡터를 어떤 형태로든 2차원 행렬로 reshape 해야한다.
@@ -384,7 +384,7 @@ Block-Jacobi가 각 지역 변수쌍의 국소 curvature $H[B_i,B_i]$를 개별�
 
 ---
 
-## 8. 정리하며
+## 정리하며
 
 수학적으로 아름답고 엄밀한 알고리즘을 보면 자연스럽게 끌린다. 
 명쾌한 가설과 그럴듯한 이론적 근거가 있다면 좋은 결과를 기대하기 마련이다. 

@@ -1,4 +1,4 @@
-## 1. Background: Quad Remeshing & DiT
+## Background: Quad Remeshing & DiT
 
 My research work this year has centered on two projects.
 
@@ -24,7 +24,7 @@ Muon's update rule reminded me of the PCG solver I was using in the remesher. Ne
 
 ---
 
-## 2. Quadratic Objectives & Conjugate Gradient
+## 1. Quadratic Objectives & Conjugate Gradient
 
 Let us start with a simple quadratic objective. Assuming that $H$ is symmetric positive definite (SPD), the objective, its gradient, and the optimality condition are
 
@@ -102,7 +102,7 @@ Mixing the previous direction $p_k$ into the current direction may look like mom
 
 ---
 
-## 3. Preconditioning: The Geometry of a Norm
+## 2. Preconditioning: The Geometry of a Norm
 
 Even when CG chooses its search directions efficiently, an unfavorable Hessian eigenvalue distribution can still make convergence slow. **Preconditioning transforms the coordinate system itself** to address this.
 
@@ -177,7 +177,7 @@ Triangular solves have inherent sequential dependencies: some variables cannot b
 
 Ultimately, total solve time is the product of **the number of iterations needed to converge** and **the cost of each iteration**. This tradeoff showed up clearly in the experiments below.
 
-## 4. Adam and Muon
+## 3. Adam and Muon
 
 Deep learning optimizers also transform the gradient before using it, but they construct those transformations from different information than numerical preconditioners do.
 
@@ -246,7 +246,7 @@ The resemblance between the two was what prompted this post.
 
 ---
 
-## 5. Experiments: Deep Learning Optimizers for Quad Remeshing
+## 4. Experiments: Deep Learning Optimizers for Quad Remeshing
 
 After working through the theory, I still wanted to know whether Muon or Adam could be useful in the MIQ solve for quad remeshing. I ran experiments to compare both their convergence behavior and their actual computational cost on hardware.
 
@@ -288,7 +288,7 @@ Although the theoretical discussion assumes SPD matrices, the extracted systems 
 
 ---
 
-## 6. Results
+## 5. Results
 
 ### IC(0)-PCG vs. Block-Jacobi PCG
 
@@ -329,7 +329,7 @@ Deep learning typically involves substantial stochastic noise and no explicitly 
 
 ---
 
-## 7. Reshaping for Muon
+## 6. Reshaping for Muon
 
 There was another detail to examine in these experiments. A DiT's linear layers have a natural two-dimensional structure defined by their input and output dimensions, whereas the remesher's variables form a one-dimensional vector. Applying Muon requires reshaping that vector into a matrix somehow.
 
@@ -392,7 +392,7 @@ Block-Jacobi individually inverts the local curvature $H[B_i,B_i]$ for each pair
 
 ---
 
-## 8. Closing Thoughts
+## Closing Thoughts
 
 I am naturally drawn to algorithms that are mathematically elegant and rigorous. IC seemed promising because it captures more coupling between variables than block-Jacobi does. It did substantially reduce the iteration count. Once I accounted for the cost of applying that correction on the GPU, though, the simple 2×2 block-Jacobi method was much faster. My expectation about convergence was right, but it did not translate into the speedup I needed.
 
