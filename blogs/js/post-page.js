@@ -144,29 +144,21 @@
     }
 
     function setupImageLightboxes() {
-        document.querySelectorAll('[data-image-lightbox-target]').forEach((trigger) => {
-            const targetSelector = trigger.getAttribute('data-image-lightbox-target');
-            const dialog = targetSelector ? document.querySelector(targetSelector) : null;
+        if (typeof HTMLDialogElement === 'undefined' || !HTMLDialogElement.prototype.showModal) {
+            return;
+        }
 
-            if (!(dialog instanceof HTMLDialogElement)) {
-                return;
+        const labels = window.blogPostPageConfig?.lang === 'kor'
+            ? { enlarge: '이미지 크게 보기', close: '확대 이미지 닫기', original: '원본 크기', fit: '화면에 맞추기' }
+            : { enlarge: 'Enlarge image', close: 'Close enlarged image', original: 'Actual size', fit: 'Fit to screen' };
+        const controllers = new Map();
+
+        function controllerFor(dialog) {
+            if (controllers.has(dialog)) {
+                return controllers.get(dialog);
             }
-
             const closeButton = dialog.querySelector('[data-image-lightbox-close]');
-            let returnFocus = trigger;
-
-            function openLightbox() {
-                if (dialog.open) {
-                    return;
-                }
-
-                returnFocus = document.activeElement instanceof HTMLElement
-                    ? document.activeElement
-                    : trigger;
-                document.documentElement.classList.add('post-image-lightbox-open');
-                dialog.showModal();
-                window.requestAnimationFrame(() => closeButton?.focus());
-            }
+            let returnFocus = null;
 
             function closeLightbox() {
                 if (dialog.open) {
@@ -174,10 +166,9 @@
                 }
             }
 
-            trigger.addEventListener('click', openLightbox);
             closeButton?.addEventListener('click', closeLightbox);
             dialog.addEventListener('click', (event) => {
-                if (event.target === dialog) {
+                if (event.target === dialog || event.target.hasAttribute('data-image-lightbox-stage')) {
                     closeLightbox();
                 }
             });
@@ -185,6 +176,145 @@
                 document.documentElement.classList.remove('post-image-lightbox-open');
                 if (returnFocus?.isConnected) {
                     returnFocus.focus({ preventScroll: true });
+                }
+            });
+
+            const controller = {
+                open(trigger) {
+                    if (dialog.open) {
+                        return;
+                    }
+                    returnFocus = trigger;
+                    document.documentElement.classList.add('post-image-lightbox-open');
+                    dialog.showModal();
+                    closeButton?.focus({ preventScroll: true });
+                }
+            };
+            controllers.set(dialog, controller);
+            return controller;
+        }
+
+        document.querySelectorAll('[data-image-lightbox-target]').forEach((trigger) => {
+            const targetSelector = trigger.getAttribute('data-image-lightbox-target');
+            const dialog = targetSelector ? document.querySelector(targetSelector) : null;
+            if (dialog instanceof HTMLDialogElement) {
+                trigger.addEventListener('click', () => controllerFor(dialog).open(trigger));
+            }
+        });
+
+        const images = Array.from(document.querySelectorAll('.main-content img')).filter((image) => {
+            return !image.closest('a, button, dialog, [role="button"], [aria-hidden="true"], [data-image-lightbox="off"]');
+        });
+        if (!images.length) {
+            return;
+        }
+
+        const dialog = document.createElement('dialog');
+        dialog.id = 'post-image-lightbox';
+        dialog.className = 'post-image-lightbox post-image-lightbox--auto';
+        dialog.setAttribute('aria-label', labels.enlarge);
+        dialog.innerHTML = `
+            <div class="post-image-lightbox-frame">
+                <div class="post-image-lightbox-toolbar">
+                    <button class="post-image-lightbox-zoom" type="button" aria-pressed="false">
+                        ${icons.render('fullscreen')}
+                    </button>
+                    <button class="post-image-lightbox-close" type="button" data-image-lightbox-close>
+                        ${icons.render('x-lg')}
+                    </button>
+                </div>
+                <div class="post-image-lightbox-stage" data-image-lightbox-stage></div>
+                <div class="post-image-lightbox-caption" id="post-image-lightbox-caption">
+                    <span class="post-image-lightbox-index"></span>
+                    <span class="post-image-lightbox-title"></span>
+                </div>
+            </div>`;
+        document.body.appendChild(dialog);
+
+        const controller = controllerFor(dialog);
+        const imageElement = document.createElement('img');
+        imageElement.className = 'post-image-lightbox-image';
+        imageElement.decoding = 'async';
+        const captionElement = dialog.querySelector('.post-image-lightbox-caption');
+        const indexElement = dialog.querySelector('.post-image-lightbox-index');
+        const titleElement = dialog.querySelector('.post-image-lightbox-title');
+        const stage = dialog.querySelector('.post-image-lightbox-stage');
+        const zoomButton = dialog.querySelector('.post-image-lightbox-zoom');
+        const zoomIcon = zoomButton.querySelector('.site-icon');
+        dialog.querySelector('[data-image-lightbox-close]').setAttribute('aria-label', labels.close);
+
+        function updateZoomAvailability() {
+            if (!dialog.open) {
+                return;
+            }
+            const bounds = imageElement.getBoundingClientRect();
+            const canZoom = dialog.classList.contains('is-zoomed')
+                || imageElement.naturalWidth > bounds.width + 1
+                || imageElement.naturalHeight > bounds.height + 1;
+            zoomButton.disabled = !canZoom;
+            dialog.classList.toggle('can-zoom', canZoom);
+        }
+
+        function setZoom(zoomed) {
+            dialog.classList.toggle('is-zoomed', zoomed);
+            zoomButton.setAttribute('aria-pressed', String(zoomed));
+            const zoomLabel = zoomed ? labels.fit : labels.original;
+            zoomButton.setAttribute('aria-label', zoomLabel);
+            zoomButton.setAttribute('title', zoomLabel);
+            icons.set(zoomIcon, zoomed ? 'fullscreen-exit' : 'fullscreen');
+            stage.scrollTo(0, 0);
+            updateZoomAvailability();
+        }
+
+        function toggleZoom() {
+            if (!zoomButton.disabled) {
+                setZoom(!dialog.classList.contains('is-zoomed'));
+            }
+        }
+
+        zoomButton.addEventListener('click', toggleZoom);
+        imageElement.addEventListener('click', toggleZoom);
+        imageElement.addEventListener('load', updateZoomAvailability);
+        window.addEventListener('resize', updateZoomAvailability);
+
+        images.forEach((image) => {
+            const description = image.alt.trim();
+            image.setAttribute('role', 'button');
+            image.setAttribute('tabindex', '0');
+            image.setAttribute('aria-haspopup', 'dialog');
+            image.setAttribute('aria-controls', dialog.id);
+            image.setAttribute('aria-label', description ? `${labels.enlarge}: ${description}` : labels.enlarge);
+            image.setAttribute('data-image-lightbox-target', `#${dialog.id}`);
+            image.setAttribute('data-image-lightbox-auto-trigger', '');
+
+            function openImage() {
+                imageElement.src = image.currentSrc || image.src;
+                imageElement.alt = image.alt;
+                if (!imageElement.isConnected) {
+                    stage.appendChild(imageElement);
+                }
+                const caption = image.closest('figure')?.querySelector('figcaption');
+                const index = caption?.querySelector('.post-figure-index')?.innerText || '';
+                const captionText = caption?.querySelector('.post-figure-caption')?.innerText || caption?.innerText;
+                indexElement.textContent = index;
+                indexElement.hidden = !index;
+                titleElement.textContent = (captionText || description).replace(/\s+/g, ' ').trim();
+                captionElement.hidden = !titleElement.textContent;
+                if (titleElement.textContent) {
+                    dialog.setAttribute('aria-describedby', captionElement.id);
+                } else {
+                    dialog.removeAttribute('aria-describedby');
+                }
+                dialog.setAttribute('aria-label', description || labels.enlarge);
+                controller.open(image);
+                setZoom(false);
+            }
+
+            image.addEventListener('click', openImage);
+            image.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openImage();
                 }
             });
         });

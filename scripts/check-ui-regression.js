@@ -1482,17 +1482,29 @@ async function assertDisclosure(page, testCase, width, options) {
 }
 
 async function assertLightbox(page, testCase, width, options) {
-    const trigger = page.locator('[data-image-lightbox-target]').first();
+    const triggers = [
+        page.locator('img[data-image-lightbox-auto-trigger]').first(),
+        page.locator('.post-image-lightbox-trigger[data-image-lightbox-target]').first()
+    ];
+    for (const trigger of triggers) {
+        if (await trigger.count()) {
+            await assertImageDialog(page, trigger, testCase, width, options);
+        }
+    }
+}
+
+async function assertImageDialog(page, trigger, testCase, width, options) {
     const targetSelector = await trigger.getAttribute('data-image-lightbox-target');
     assert(targetSelector, 'Image lightbox trigger has no target.');
     await trigger.evaluate((element) => {
-        element.querySelector('img')?.setAttribute('loading', 'eager');
+        const image = element.matches('img') ? element : element.querySelector('img');
+        image?.setAttribute('loading', 'eager');
         element.scrollIntoView({ block: 'center' });
     });
-    await page.waitForFunction(() => {
-        const image = document.querySelector('[data-image-lightbox-target] img');
+    await page.waitForFunction((element) => {
+        const image = element.matches('img') ? element : element.querySelector('img');
         return !(image instanceof HTMLImageElement) || image.naturalWidth > 0;
-    }, null, { timeout: 15000 });
+    }, await trigger.elementHandle(), { timeout: 15000 });
     await trigger.click();
     await page.waitForFunction((selector) => {
         const dialog = document.querySelector(selector);
@@ -1523,13 +1535,15 @@ async function assertLightbox(page, testCase, width, options) {
     await page.waitForFunction((selector) => !document.querySelector(selector)?.open, targetSelector);
     assert(await trigger.evaluate((element) => document.activeElement === element), 'Escape did not restore focus to the image lightbox trigger.');
 
-    await trigger.click();
+    await trigger.focus();
+    await page.keyboard.press('Enter');
     await page.waitForFunction((selector) => document.querySelector(selector)?.open, targetSelector);
     await page.mouse.click(2, 2);
     await page.waitForFunction((selector) => !document.querySelector(selector)?.open, targetSelector);
     assert(await trigger.evaluate((element) => document.activeElement === element), 'Backdrop click did not close the image lightbox and restore focus.');
 
-    await trigger.click();
+    await trigger.focus();
+    await page.keyboard.press('Space');
     await page.waitForFunction((selector) => document.querySelector(selector)?.open, targetSelector);
     await page.locator(`${targetSelector} [data-image-lightbox-close]`).click();
     await page.waitForFunction((selector) => !document.querySelector(selector)?.open, targetSelector);

@@ -955,6 +955,24 @@ white space as `data-reading-surface="paper"`. Transparent cutouts, ordinary pho
 animated media, dark mode and enlarged dialog images keep their original display.
 An authored `data-reading-surface="original"` opts out; `"paper"` can explicitly opt in.
 Detection runs only at build time, with no reader-side image analysis or extra downloads.
+
+Article images open in a native modal dialog on click, Enter or Space. Preserve
+their authored inline sizes and responsive picture sources, and replace the
+small hover enlargement with a zoom cursor and visible keyboard focus. Keep
+existing image links, interactive controls and authored dialogs intact;
+`data-image-lightbox="off"` opts an image or its container out.
+The viewer uses a neutral charcoal backdrop in both reading themes, showing the
+original image colors within the viewport. Keep the viewer unframed and without
+panel shadows. Its zoom and close controls are small, borderless icons in the
+upper margin with 44 px hit areas; reserve green for keyboard focus. Place the
+caption beneath the image, using the article's small mono figure index and muted
+sans-serif description, rather than a toolbar title. Keep this caption attached
+to short images on phones as well as to larger desktop figures.
+Offer actual-size viewing with native
+scrolling for detailed plots and tall figures. Close by Escape, backdrop click
+or the close control, lock background scrolling while open and return focus to
+the originating image without changing the reading position.
+
 The scrolled utility row keeps
 native Blog text and control colors over the shared backdrop. Copy-link stays outside the left reading margin;
 reset legacy sidebar positioning offsets explicitly when the rail is absent.
