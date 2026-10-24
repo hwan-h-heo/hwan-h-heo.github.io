@@ -48,7 +48,7 @@ async function main() {
             assert.deepEqual(layout.lines, [1, 1, 1]); assert(!layout.overflow);
             assert.equal(layout.leadSize, width <= 600 ? (height <= 720 ? '14px' : '15px') : '16px');
             assert.equal(layout.about, 'About me');
-            assert.deepEqual(layout.actions.map(a => a.label), ['Projects', 'Blogs']);
+            assert.deepEqual(layout.actions.map(a => a.label), ['Projects', 'Blog']);
             assert(layout.actions.every(a => a.height >= 44 && a.bottom < height && a.size === '12px'));
 
             const finished = await page.evaluate(() => portfolioHero.state());
@@ -57,7 +57,7 @@ async function main() {
             const afterGesture = await page.evaluate(() => portfolioHero.state());
             assert.equal(afterGesture.decoding.progress,1);
             assert.equal(afterGesture.decoding.plays,1);
-            assert.equal(afterGesture.frames,finished.frames,'Gesture cues must not render or reverse geometry');
+            assert.equal(afterGesture.frames,finished.frames,'A synthetic wheel event must not render or reverse geometry');
             assert.equal(await page.evaluate(() => scrollY),0);
             assert(afterGesture.tilts.every(t => t.x === 0 && t.y === 0 && t.z === 0));
 

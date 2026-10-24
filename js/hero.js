@@ -10,7 +10,7 @@ import { carvedGeometry, apertureGeometry, stoneBlock } from './hero-sculpture/s
 // supports a source checkout whose content is mounted after DOMContentLoaded.
 function initializeHero() {
     const cover = document.querySelector('.pbr-hero');
-    if (!cover?.querySelector('.pbr-scene') || cover.dataset.rendererStarted || ['portfolio','blog','about'].includes(location.hash.slice(1))) return;
+    if (!cover?.querySelector('.pbr-scene') || cover.dataset.rendererStarted || cover.dataset.chapterActive === 'false' || ['portfolio','blog','about'].includes(location.hash.slice(1))) return;
     cover.dataset.rendererStarted = 'true';
     startHero();
 }
@@ -183,7 +183,7 @@ function startHero() {
     }
     function resize() {
         if (!renderer || !camera) return;
-        const w = cover.clientWidth, h = cover.clientHeight, mobile = w <= 900;
+        const w = host.clientWidth, h = host.clientHeight, mobile = w <= 900;
         if (w === viewWidth && h === viewHeight) return;
         viewWidth = w; viewHeight = h;
         const ratio = capture ? 1 : Math.min(devicePixelRatio, w <= 600 ? 1 : 1.25, Math.sqrt(1800000 / (w * h)));
@@ -311,7 +311,7 @@ function startHero() {
         if (!capture && !paused && chapterActive && cover.dataset.intro !== 'finished') { cover.classList.add('pbr-entering'); refinement.start(); }
         resize();
         if (!chapterActive || cover.dataset.intro === 'finished' || paused) { refinement.finish(); fitSurfaceToSupport(true); positionCamera(); render(); }
-        new ResizeObserver(resize).observe(cover);
+        new ResizeObserver(resize).observe(host);
         new IntersectionObserver(([entry]) => {
             // Browser ratios can round .01 down; inspect actual visible pixels.
             visible = entry.isIntersecting && entry.intersectionRect.width > 0 && entry.intersectionRect.height > 0;

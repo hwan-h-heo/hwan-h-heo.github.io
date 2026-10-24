@@ -57,6 +57,9 @@ const { startStaticServer } = require('./check-rendered-site');
 
         await page.locator('.edition-nav a[href="#blog"]').click();
         await page.waitForFunction(() => document.body.dataset.chapter === 'blog');
+        // Let the document snapshot finish before Playwright scrolls a link into
+        // view; its click retries otherwise move the root behind that snapshot.
+        await page.waitForFunction(() => !document.body.classList.contains('edition-selecting'));
         const [blog] = await Promise.all([
             context.waitForEvent('page'),
             page.locator('.portfolio-blog-all-link').click()

@@ -1636,11 +1636,12 @@ async function runInteractions(page, testCase, width, options) {
     if (testCase.type === 'portfolio') {
         for (const [id, selector] of [['portfolio','#portfolio-projects'],['blog','#portfolio-blog-posts'],['about','.about-editorial-layout']]) {
             await page.evaluate(id => document.querySelector(`.edition-nav a[href="#${id}"]`).click(), id);
-            await page.waitForFunction(id => document.body.dataset.chapter === id, id);
+            await page.waitForFunction(id => document.body.dataset.chapter === id && Number(getComputedStyle(document.getElementById(id)).opacity) > .99, id);
             const issues = await inspectLayout(page, {...testCase,coreSelectors:[`#${id}`,selector]}, width);
             assert(issues.length === 0, issues.join('\n'));
             await assertSiteIcons(page, testCase);
-            assert(await page.locator(`#${id}`).evaluate(node => getComputedStyle(node).overflowY === 'auto'), `${id} lost native scrolling.`);
+            assert(await page.locator(`#${id}`).evaluate((node,continuous) => getComputedStyle(node).overflowY === (continuous ? 'visible' : 'auto'), width <= 900), `${id} lost its responsive scrolling mode.`);
+            assert((await page.evaluate(() => scrollY > 0)) === (width <= 900), `${id} must use the correct scroll container.`);
         }
         await page.keyboard.press('Escape');
         await page.waitForFunction(() => document.body.dataset.chapter === 'home');

@@ -6,17 +6,21 @@ time, including the poster and navigation. The three phrase lines are:
 
 ```text
 Building 3D generative systems,
-from geometric representations
-to efficient GPU inference.
+from model design and training
+to geometry processing.
 ```
 
 `assets/css/hero-sculpture.css` contains the cover's isolated styles. Name, role
 and affiliation retain the study's placement. The paragraph uses Manrope Regular
 at 16 px desktop / 15 px mobile; the two 12 px chapter links keep 44 px hit targets.
-Projects/Blogs share the primary CTA row. A smaller underlined About me link sits
+Projects/Blog share the primary CTA row. A smaller underlined About me link sits
 below the affiliation with its own 44 px touch target, using the existing desktop
 pause before the practice statement. The Cover masthead keeps only the signature;
 the fixed layout has no bottom chevron or automatic chapter scroll.
+
+The bottom work-scope line reads `3D Generation · Geometry · Systems`, alongside
+the `00 — Cover` folio. At 900 px and below, the shared footer aligns both labels
+on one text baseline, with the work scope at left and the folio at right.
 
 ## Rendering and source
 

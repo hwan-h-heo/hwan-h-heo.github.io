@@ -60,7 +60,7 @@
     <nav class="edition-nav" aria-label="Portfolio chapters">
       <a class="edition-nav-cover" href="#home"><span>00</span> Cover</a>
       <a class="edition-nav-work" href="#portfolio"><span>01</span> Projects</a>
-      <a class="edition-nav-work" href="#blog"><span>02</span> Blogs</a>
+      <a class="edition-nav-work" href="#blog"><span>02</span> Blog</a>
       <a href="#about"><span>03</span> About</a>
     </nav>
     <button class="edition-tone" type="button" aria-label="Switch to light theme" aria-pressed="true"><span class="edition-tone-icon" aria-hidden="true">◐</span><span class="edition-tone-label">Light</span></button>
@@ -68,9 +68,12 @@
   <div class="edition-status" aria-live="polite" aria-atomic="true"></div>
   <main class="main">
     <!-- Hero Section -->
-    <section id="home" class="pbr-hero" aria-label="Hwan Heo portfolio cover" data-portfolio-block="home" data-section-ready="false"></section><!-- /Hero Section -->
+    <div class="edition-story" data-chapter-story="home">
+      <section id="home" class="pbr-hero" aria-label="Hwan Heo portfolio cover" data-portfolio-block="home" data-section-ready="false"></section><!-- /Hero Section -->
+    </div>
 
     <!-- Portfolio Section -->
+    <div class="edition-story" data-chapter-story="portfolio">
     <section id="portfolio" aria-labelledby="edition-title-portfolio" tabindex="-1" class="portfolio section light-background edition-chapter" data-portfolio-view="selected" data-section-ready="false">
 
       <!-- Section Title -->
@@ -139,11 +142,13 @@
       </div>
       <nav class="edition-next" aria-label="Previous and next chapters">
         <a href="#home" rel="prev" aria-label="Previous chapter: Cover"><span class="edition-direction" aria-hidden="true">←</span><span class="edition-next-number">00</span> Cover</a>
-        <a href="#blog" rel="next" aria-label="Next chapter: Blogs"><span class="edition-next-number">02</span> Blogs<span class="edition-direction" aria-hidden="true">→</span></a>
+        <a href="#blog" rel="next" aria-label="Next chapter: Blog"><span class="edition-next-number">02</span> Blog<span class="edition-direction" aria-hidden="true">→</span></a>
       </nav>
       <footer class="edition-colophon"><p class="footer-note">A small collection of work, research, and ideas gathered along the way.</p></footer>
     </section>
+    </div>
     <!-- Blog Section -->
+    <div class="edition-story" data-chapter-story="blog">
     <section id="blog" aria-labelledby="edition-title-blog" tabindex="-1" class="portfolio-blog-section section light-background edition-chapter" data-section-ready="false">
       <!-- Section Title -->
       <div class="portfolio-shell section-title portfolio-blog-section-heading">
@@ -152,7 +157,7 @@
           <span class="portfolio-chapter-rule"></span>
         </div>
         <div class="portfolio-blog-heading-copy">
-          <h2 id="edition-title-blog" tabindex="-1">Blogs</h2>
+          <h2 id="edition-title-blog" tabindex="-1">Blog</h2>
           <p>Essays and technical notes on building 3D generative systems:<br/>from representations and model training to CUDA kernels, geometry processing, and production&nbsp;engineering.</p>
         </div>
         <a class="portfolio-blog-all-link" href="blogs/" target="_blank" rel="noopener noreferrer">
@@ -179,17 +184,20 @@
       </nav>
       <footer class="edition-colophon"><p class="footer-note">A small collection of work, research, and ideas gathered along the way.</p></footer>
     </section><!-- /Blog Section -->
+    </div>
 
     <!-- About Section -->
+    <div class="edition-story" data-chapter-story="about">
     <section id="about" aria-labelledby="edition-title-about" tabindex="-1" class="about section edition-chapter">
       <div data-portfolio-block="about" data-section-ready="false"></div>
       <div id="resume" class="resume resume-subsection" data-portfolio-block="resume" data-section-ready="false"></div>
       <nav class="edition-next" aria-label="Previous and next chapters">
-        <a href="#blog" rel="prev" aria-label="Previous chapter: Blogs"><span class="edition-direction" aria-hidden="true">←</span><span class="edition-next-number">02</span> Blogs</a>
+        <a href="#blog" rel="prev" aria-label="Previous chapter: Blog"><span class="edition-direction" aria-hidden="true">←</span><span class="edition-next-number">02</span> Blog</a>
         <a href="#home" rel="next" aria-label="Next chapter: Cover"><span class="edition-next-number">00</span> Cover<span class="edition-direction" aria-hidden="true">→</span></a>
       </nav>
       <footer class="edition-colophon"><p class="footer-note">A small collection of work, research, and ideas gathered along the way.</p></footer>
     </section><!-- /About Section -->
+    </div>
   </main>
 
   <div class="edition-footer" aria-hidden="true"><span>Hwan Heo / 3D AI</span><span class="edition-page-number">00 / 03</span></div>

@@ -27,7 +27,7 @@ Everything else should stay quiet enough to support the work.
 ## Source Of Truth
 
 Portfolio tokens and shared portfolio components live in
-`assets/css/portfolio.css`. The accepted fixed-chapter home layout lives in `assets/css/portfolio-chapters.css`.
+`assets/css/portfolio.css`. The responsive chapter layout lives in `assets/css/portfolio-chapters.css`.
 The shared palette, local font roles and reading masthead live in
 `assets/css/site-theme.css`, with a pre-paint preference in `js/site-theme.js`.
 Project-page rules live in `assets/css/project-detail.css`; `blogs/css/site-reading.css`
@@ -81,12 +81,12 @@ precedent for new components.
 
 | Token | Role |
 | --- | --- |
-| `--color-page` | legacy paper alias; fixed chapters use a transparent reading scrim |
+| `--color-page` | legacy paper alias; reading chapters use a transparent shared scrim |
 | `--color-section` | cool pale-blue Projects surface |
 | `--color-writing-section` | near-white soft-neutral Portfolio Writing surface |
 | `--color-surface` | neutral component and media surface |
 
-The accepted v32 home uses one dark-default reading scrim across Projects, Blogs
+The accepted v32 home uses one dark-default reading scrim across Projects, Blog
 and About. Light paper is an optional persisted theme. The older pale chapter
 surfaces remain compatibility tokens for reusable preview rules.
 
@@ -181,7 +181,7 @@ Rules:
 - Keep Portfolio section headings non-interactive. Put section-level navigation
   in a separate compact text action so headings retain one consistent chapter
   role.
-- Let the Portfolio Blogs description use up to 700 px at its existing type size,
+- Let the Portfolio Blog description use up to 700 px at its existing type size,
   so the full desktop description occupies two lines. Keep “production engineering”
   together; allow the paragraph to reflow naturally on narrower screens.
 - Keep letter spacing at `0` in new portfolio styles.
@@ -218,6 +218,12 @@ Rules:
   the caption centered on a related, readable measure rather than letting it
   span the full article column. Keep ordinary explanatory paragraphs and
   multi-item lists in the body.
+- Prefer tightly framed static renders for concept diagrams whose comparison
+  or correspondence is clear in a single view. Keep motion for explanations
+  where rotation, step order, or a changing solution carries the meaning.
+  Render static variants from their source scenes and deliver them as WebP.
+  If comparison labels become too small on phones, use a stacked source variant
+  selected through `picture` at 600px; retain one shared caption.
 - Long-form blockquotes act as editorial annotations because source content uses
   them for questions, theorems, summaries, and quotations. Use a faint neutral
   wash, one neutral hairline, and a short editorial-accent cap; do not add a
@@ -239,7 +245,7 @@ does not depend on serif type beyond the contained About standfirst accent.
 On the Portfolio Hero, use the approved monochrome sculpture composition. Keep
 all identity copy left-aligned, with the small `00 / PORTFOLIO` folio outside the
 name's flow. Separate name/role/affiliation from the three-line practice paragraph
-with a larger vertical pause. Keep Projects / Blogs as two compact numbered
+with a larger vertical pause. Keep Projects / Blog as two compact numbered
 chapter links below that paragraph. Put a small underlined `About me ↗` link
 below the affiliation as part of the identity group. The cover masthead carries
 only the signature; reading chapters retain their full navigation. The canonical cover
@@ -269,6 +275,10 @@ And Motion and implemented in `assets/css/hero-sculpture.css`.
 - Give the About standfirst and portrait modest visual emphasis without turning
   either into a second hero: the standfirst remains a compact editorial lead,
   and the wide portrait stays near 300px rather than dominating its rail.
+- On phone layouts, follow the About standfirst with the portrait, name, role and
+  affiliation, then the biography and contact/profile links. Keep the portrait
+  beside its identity caption in one compact row so the person is visible before
+  the longer biography; size the image to its own grid column.
 - Continue the Portfolio About `--color-page` surface through the home footer
   instead of ending on a contrasting strip. Treat the centered footer note as
   a closing colophon: reuse the About standfirst's Cormorant Garamond italic at
@@ -560,6 +570,13 @@ the Portfolio-home Blog preview's persistent external-destination signal. Open
 Portfolio-to-Blog navigation in a new tab because the Blog is treated as an
 independent publication brand rather than another Portfolio section.
 
+The PCG/Muon writing cover uses a compact graphite saddle sculpture with muted
+contour lines. Highlight two schematic update paths with visible iteration
+markers: cyan for Muon and silver-white for PCG. Place a small readable label
+beside each path, with the contours subordinate to the trajectories. Preserve
+soft neutral lighting and keep the paths and labels inside the central `2:1`
+crop for Portfolio previews and Blog Featured.
+
 On the Portfolio home, use a complementary desktop orientation to mark the
 transition from selected work into writing: Project previews place media on the
 left and copy on the right, while Blog previews place copy on the left and media
@@ -641,7 +658,9 @@ keep the copy stack's flex children from shrinking their line boxes. Reserve
 16 px between the title and subtitle, reduced to 12 px on compact phones. The
 tag row uses its actual tag font size for line-height, not the body font size.
 On the side-by-side layout, the complete series-to-action copy stack must not
-exceed the cover height. If text still needs more room at the minimum readable
+exceed the cover height. Keep the media-to-copy gutter between `32px` and `48px`
+so longer headlines have room within the existing type-size limits.
+If text still needs more room at the minimum readable
 size, release the fixed copy height and preserve the full text instead of hiding
 it or compressing its spacing. Give Korean feature titles
 the full copy width, retain natural word boundaries with `keep-all`, and balance
@@ -664,8 +683,15 @@ than introducing a titled Resume subsection or cards:
   the file format as separate metadata.
 - Use one opening hairline above Document and one inter-row hairline above
   Career. Leave the final Career disclosure open without a closing rule.
-- Give the expanded index a generous top inset so its category labels do not
-  attach visually to the disclosure rule.
+- Match the expanded career index's top inset to the Projects publication rows:
+  use `1.25rem` on desktop and `1.15rem` at 767 px and below. Apply this space
+  between the disclosure summary and the Experience/Education category labels;
+  preserve the existing spacing inside the index entries.
+- Within `.edition-site`, keep the expanded career index subordinate to the
+  14 px About biography: entry titles use 14 px at weight 600, descriptions and
+  bullet lists use 13 px / 1.7, affiliations use 12 px, and periods use 11 px.
+  Use the same scale on desktop and mobile; keep the compact category labels
+  and disclosure controls in their established index roles.
 - equal Experience and Education columns
 - period aligned separately from entry content
 - neutral descriptions and metadata
@@ -687,6 +713,10 @@ Use a shared index/table grammar. Do not introduce a separate card system.
   left-origin underline grammar. Neither is rendered as a bordered button.
 - Blog-home preview eyebrows show `SERIES / NAME`. The `post` category remains
   an internal data value, not visible metadata or a per-row folio.
+- A post listed in multiple series keeps its primary series in preview labels,
+  the article header, and previous/next navigation. Include it once in every
+  selected series group and archive, while keeping one article URL per language
+  and counting it once in the overall article total.
 - The Blog home featured row retains that series context beneath its indexed
   `Featured` label, but uses tighter type rhythm and a compact
   `1.9:1` media crop on desktop and tablet (`2:1` on mobile).
@@ -711,20 +741,34 @@ Use a shared index/table grammar. Do not introduce a separate card system.
 
 Motion should confirm an interaction, not advertise itself.
 
-### Fixed editorial chapters (v32)
+### Responsive editorial chapters
 
-The approved v32 design is integrated in the authored home, project template and
-blog surfaces. Its reference sources remain under
-`_workspace/2026-10-08-portfolio-editions/`. The rules below are canonical for
-`.edition-site`; the earlier v22 continuous-scroll behavior is historical.
-Projects, Blogs and About occupy the same viewport and crossfade
-over the same fixed cover scene. Dark is the default reading surface; pale paper
+The v32 palette, typography and cover scene remain the visual foundation of the
+authored home, project template and blog surfaces. Its reference sources remain
+under `_workspace/2026-10-08-portfolio-editions/`. The rules below are canonical
+for `.edition-site`. Above 900 px, restore the fixed desktop chapters: Cover
+fills the viewport and Projects, Blog and About scroll independently between
+the 96 px masthead and 38 px page folio. Explicit chapter links fade the outgoing
+copy over 220 ms, select the incoming chapter after 240 ms, then reveal it over
+440 ms with a 3 px translation. The scene and reading scrim stay in place between
+reading chapters. Wheel and keyboard scrolling stay within the selected chapter;
+they never automatically select another chapter. Inactive desktop chapters are
+inert and hidden from the accessibility tree. Preserve each chapter's reading
+position when revisiting it.
+
+At 900 px and below, Cover, Projects, Blog and About form one native document
+scroll. Every chapter remains fully visible in normal flow and accessibility
+order. The previous chapter's ending and the next chapter's beginning can share
+the viewport; scrolling never pins, replaces or crossfades whole chapters. Resize
+across the breakpoint preserves the selected chapter, its reading offset,
+Selected/All state and open disclosures without replaying the cover entrance.
+Dark is the default reading surface; pale paper
 is an optional reading theme. Keep the canvas and camera in place while paused,
 without a second captured-image layer, crop, zoom or background swap. Fade in a
 neutral charcoal reading scrim, hiding most detail behind the reading column and
 retaining faint architectural detail at the outer margin. Do not invert lighting.
 The portfolio removes the down-scroll cue and sidebar. Keep the cover's name,
-role, three-line practice statement and unfilled Projects / Blogs links, with a
+role, three-line practice statement and unfilled Projects / Blog links, with a
 secondary About link under the affiliation.
 
 The fixed cover decouples refinement from page scroll. Play the original
@@ -755,44 +799,53 @@ Use a 1024 px shadow map and at most 1.8 million visible pixels (DPR up to 1.25,
 1 on phones). A persistently slow entrance may resolve directly to its final
 still pose.
 
-Gesture cues use the same left-to-right top rule as a real CTA hover: `scaleX`
-from a left origin over 480 ms with `cubic-bezier(.22,1,.36,1)`. The rule leads;
-label/index/arrow color follows after 100 ms over 300 ms. Avoid an immediate
-full-strength flash. On the cover, downward wheel or an upward finger swipe hints
-at Projects; upward intent has no chapter destination. Use quiet cyan for the
-rule (`#91c3cd` at 65% opacity), a subdued `#bed2d3` label and `#a8bdbe` index.
-Actual hover/focus retains the clearer `#91c3cd` interactive role. Keep arrow
-movement within 1 px for hints and 2 px for direct interaction.
+CTA hover/focus uses a left-to-right top rule: `scaleX` from a left origin over
+480 ms with `cubic-bezier(.22,1,.36,1)`. Actual hover/focus retains the clearer
+`#91c3cd` interactive role. Keep arrow movement within 2 px for direct interaction.
 Reserve 4 px inside each cover CTA's right edge so the moving arrow stays within
 the clipped link, without changing the full-width top rule or overall CTA width.
 
 On an idle cover, reuse that same quiet Projects rule sweep after six seconds
-without pointer, touch, keyboard or focus activity. Show it for 1.4 seconds, then
+without pointer, touch, scrolling, keyboard or focus activity. Show it for 1.4 seconds, then
 rest seven seconds before repeating. Any interaction immediately clears the idle
-cue; actual hover/focus and gesture hints take priority. Pause it outside Cover,
+cue; actual hover/focus takes priority. Use quiet cyan for the idle rule
+(`#91c3cd` at 65% opacity), a subdued `#bed2d3` label and `#a8bdbe` index.
+Keep the idle arrow movement within 1 px. Pause it outside Cover,
 in hidden tabs and for reduced motion. This is a decorative cue, never a focus
 change, live-region announcement or 3D animation. Use one quiet-period timeout
 and one pulse expiry, with no per-frame polling or pointer-event timer churn.
 
-In Projects, Blogs and About, downward scrolling hints at the right Next link.
-Upward scrolling clears any pending gesture hint without emphasizing either link;
-reading back through a long page must not imply previous-chapter navigation. Use the reading palette's
-muted editorial color for hints and interactive color for direct hover/focus.
-Preserve the page's native scrolling: hints never navigate, capture input, move
-focus, jump to the footer, or drive the 3D object. Support wheel, touch, keyboard
-scroll keys and scrollbar movement. Ignore pinch/zoom and horizontal gestures.
-Accumulate 18 px of vertical wheel intent within a 500 ms gap, resetting that
-accumulator when direction changes; touch requires 24 px. Keep feedback visible
-until 2.4 seconds after the latest gesture. Repeated input extends one timestamp
-without restarting the rule animation or writing the DOM on every event.
+On mobile, wheel, touch, keyboard scroll keys and scrollbar dragging move the root document.
+Do not intercept gestures, add synthetic inertia or require another input at a
+chapter boundary. Scroll-intent CTA hints are disabled in this mode. On desktop,
+retain the quiet forward-link hint without intercepting scrolling or moving
+focus; upward scrolling clears it. Direct hover and keyboard focus
+retain the action rule; when they differ, the latest direct interaction owns the
+color while the keyboard focus outline remains available.
 
-Direct hover or keyboard selection clears a gesture cue and blocks highlighting
-the other action. Keep upward scrolling free of automatic CTA emphasis; Previous
-responds only to direct hover or keyboard focus. Never leave both emphasized. When pointer and keyboard
-selections differ, the latest direct interaction owns the color and rule while
-the keyboard focus outline remains available. Clear hints on chapter changes and
-ignore programmatic scroll restoration. Motion off preserves these UI transitions;
-only the system's reduced-motion preference removes their animated movement.
+On mobile, keep chapter separation in spacing and the existing indexed marker. Add 56 px
+to the standard top padding for Blog and About. The cover copy scrolls naturally
+with the document; its scene, poster and veil remain fixed to the viewport.
+Size the WebGL camera and renderer from this fixed scene host, including short
+landscape viewports where the cover copy requires more document height.
+
+During continuous mobile scrolling, use subtle motion on the backdrop and chapter heading only. The charcoal scrim's
+target follows a smoothstep across the first 72% of a viewport of scrolling after
+the full cover copy fits, with a 480 ms opacity ease to soften fast wheel input.
+It stays unchanged across Projects, Blog and About. On the first entry of each
+heading, move its marker and title by just 6 px while fading from 70% to full
+opacity over 500/600 ms. The body and media stay fully opaque. Trigger this once
+near the viewport edge; reverse scrolling never restarts an entrance or hides
+read content. Observe content size changes so filters, disclosures, font loading
+and resizing update navigation anchors while preserving the current position.
+
+On mobile, nearby chapter links use native smooth scrolling through the document. A distant
+chapter selection uses the established 360 ms document crossfade when supported;
+fall back to native smooth scrolling. Scroll updates the current index and hash
+without pushing a history entry or moving keyboard focus. Explicit selection
+moves focus to the destination heading. Motion off pauses 3D only. System reduced
+motion disables decorative heading and backdrop transitions and uses immediate
+navigation. Printing retains ordinary document flow and reveals all content.
 
 Carry the original palette's semantic roles into the reading chapters. Keep the
 sculpture and its background monochrome. Titles are off-white; emphasized copy,
@@ -817,7 +870,7 @@ Reserve `--ed-faint` for redundant decoration, and keep readable text at metadat
 contrast or above. Map the original portfolio tokens to these roles within the
 chapter, including separate standard and soft hairlines and tone-aware focus.
 
-Projects and Blogs share a 16 px gap between the chapter title and its description
+Projects and Blog share a 16 px gap between the chapter title and its description
 on desktop and mobile.
 
 Restore the compact editorial hierarchy: 36 px desktop / 30 px mobile chapter
@@ -836,25 +889,28 @@ matte's pale contour on charcoal without changing the face or adding a backing
 plate. Keep the original portrait and depth assets unchanged; the fixed home does not
 load the point-cloud enhancement.
 
-Each chapter scrolls internally, never into the next chapter. Bottom navigation
-follows Cover → Projects → Blogs → About → Cover: left arrow is the preceding
-chapter, right arrow the following chapter. About closes the sequence with an
-explicit `Cover →` action. Keep the arrows at the outer edges of their
-labels and align numbers and labels vertically. The persistent chapter index,
-brand link, Escape, browser history and direct hashes keep all chapters reachable.
-Bound the bottom navigation to a centered 440 px rail with two separate short
-top hairlines and a 36 px gap, rather than one full-content-width rule.
-Keep at least 44 px touch height and use
-the established left-origin rule response on hover and focus. Restore the original
-footer note below navigation in each independently scrollable chapter: “A small
-collection of work, research, and ideas gathered along the way.” Keep its original
-Cormorant Garamond italic at 16 px, neutral metadata color, centered and unframed.
-It belongs to the content flow; the tiny fixed folio is not a replacement for it.
-Move keyboard focus to the incoming heading, make hidden
-chapters inert, and restore cover focus when returning. Fade outgoing text over
-220 ms and introduce incoming text after 240 ms with a 440 ms fade, keeping motion
-within 3 px. The reading scrim starts immediately and eases over 720 ms; chapter
-changes leave it unchanged. Reduced motion removes these transitions. Freeze the
+Continuous mobile scrolling follows Cover → Projects → Blog → About. Hide each
+chapter's Previous/Next CTA rail and the fixed page-number footer. Chapters end
+with their actual content and flow into the next marker. Keep the closing
+colophon, `A small collection of work, research, and ideas gathered along the way.`,
+once at the end of About on mobile. Desktop fixed chapters retain their
+Previous/Next rails, the same closing colophon in each chapter, and the 38 px
+page-number footer from the fixed-chapter design.
+The persistent chapter index, brand link, Escape, browser history and direct
+hashes keep all chapters reachable. Retain the cover's bottom work-scope line
+(`3D Generation · Geometry · Systems`) and `00 — Cover` folio. At widths of 900 px
+and below, place them in one footer row with a shared text baseline, the work scope
+at left and the folio at right. Use a 16 px minimum gap; let the work scope wrap
+under text zoom while keeping the folio intact. Retain the cover gutters and the
+work-scope line's bottom inset: 27 px on tablets and 10 px at 600 px and below.
+Keep the functional
+Motion toggle in the cover's upper-right header area with at least 44 px touch
+height. On mobile, the current index changes as an incoming heading reaches the upper reading
+area; keep a margin of 22% of the reading stage (up to 180 px) so tiny layout
+adjustments around an anchor cannot flicker the index or hash.
+Keep all mobile chapters in document and accessibility order; native keyboard focus and
+browser Find can reveal future content. Restore cover focus after explicit
+return, and preserve focus during ordinary scrolling. Freeze the
 live renderer in place while reading, falling back to an embedded responsive
 poster when required. Returning to the cover
 resumes the existing scene without replaying its introduction. Preserve the
@@ -888,16 +944,23 @@ responsive, and contain wide equations and tables in native horizontal scroll.
 
 ### Cover material and compatibility rules
 
-The home owns chapter navigation in `js/portfolio-chapters.js`; its hidden chapters
-are inert. Selected/All, disclosures and each chapter scroll position survive
+The home owns chapter navigation and its measured scroll ranges in
+`js/portfolio-chapters.js`. Selected/All, disclosures and chapter reading position survive
 reloads and detail return through session storage. A native project return restores
-the departure link focus. The Blog is an independent publication: keep its original
+the departure link focus. History stores the navigation mode and relative chapter
+offset so resizing does not confuse root document scroll with desktop section scroll.
+The Blog is an independent publication: keep its original
 utility row and editorial reading layout without the portfolio chapter masthead
 or sidebar. Shared page backdrops, local fonts and compact type connect it to
 the portfolio while the Blog retains its own original color system. Use
 `Hwan’s Blog` in the home utility row and the existing Blog Home return on posts.
 On phones, shorten `Blog Home` to `Blog` beside the left arrow; keep the destination
 visible even for readers entering through a direct article link.
+The post `Blog Home` return reveals a quiet neutral 1px rule beneath its text
+label, using left-origin `scaleX(0)` to `scaleX(1)` over 480ms with
+`cubic-bezier(.22,1,.36,1)`. Keep the arrow stationary and leave the line hidden
+at rest. Keyboard focus reveals the same line with a visible focus outline;
+reduced-motion preferences remove the transition.
 Preserve the post utility row's scroll-away/reveal-on-up behavior. Dark remains
 the portfolio default; the independent Blog defaults to light. Portfolio and Labs
 must be reachable in this utility row, without
@@ -980,7 +1043,7 @@ reset legacy sidebar positioning offsets explicitly when the rail is absent.
 `js/site-theme.js` applies the theme before CSS paints, with independent preferences:
 Portfolio home and project details use `portfolio-theme`, defaulting to dark;
 the standalone Blog under `/blogs/` uses `blog-reading-theme`, defaulting to light.
-The Blogs preview chapter belongs to the Portfolio and uses its preference.
+The Blog preview chapter belongs to the Portfolio and uses its preference.
 Migrate the former `site-theme` into the Portfolio only. Ignore the old mirrored
 `blog-theme` for the new Blog preference so a prior Portfolio choice cannot
 override its light default. Theme toggles, URL overrides, new tabs, storage events
@@ -1003,7 +1066,7 @@ after chapter departure does not create a renderer until Cover is active again.
 The production portfolio hero is the approved v32 sculpture cover, replacing the
 former Wave. `js/hero.js` and `js/hero-sculpture/` own its source; the build emits
 `assets/js/hero-sculpture.js`. Its material and base cover styles are in
-`assets/css/hero-sculpture.css`, with fixed layout in `portfolio-chapters.css`, while copy remains in
+`assets/css/hero-sculpture.css`, with chapter layout in `portfolio-chapters.css`, while copy remains in
 `content/portfolio/home.json`. Do not load old Wave or article-demo code on home.
 
 The cover uses a monochrome stone environment informed by onformative's AI Sculpting
@@ -1014,12 +1077,12 @@ multiscale mineral surface variation. Keep metalness and clearcoat at zero; avoi
 colored rim lights, polished floor reflections and screen-space grain. Texture is
 part of the material and affects diffuse response, roughness and surface normals.
 
-Place the name, role, practice paragraph and adjacent Projects / Blogs in
+Place the name, role, practice paragraph and adjacent Projects / Blog in
 the dark left margin as a readable editorial caption. Use real Manrope Regular
 outlines for the moderate display name and practice statement: a CSS 400/500 request
 must not silently fall back to the older 600/700-only font subset.
 Keep role and affiliation in smaller Inter, and the out-of-flow folio in quiet mono.
-Keep name, role and affiliation fixed. Place `About me ↗` immediately below the
+Keep the name, role and affiliation in their existing layout. Place `About me ↗` immediately below the
 affiliation, in 11.5 px muted text with a faint underline and a 44 px touch height.
 It is a secondary profile link without a number or button frame. On desktop,
 accommodate it within the existing pause before the practice statement, keeping
@@ -1031,13 +1094,13 @@ including when focus and pointer target different links. Reduced motion keeps
 the color and line feedback immediate, with no lift or arrow translation.
 Allow a little more height on phones so the link and practice copy remain separate.
 Set the practice paragraph at 16 px on desktop and 15 px on small phones,
-with 1.72 line height and a bounded reading width. Distill it to three complete
-phrases: building 3D generative systems, geometric representations, and efficient
-GPU inference. Give each phrase its own line at standard viewport sizes, retaining
+with 1.72 line height and a bounded reading width. Use three canonical phrases:
+`Building 3D generative systems,`, `from model design and training`, and
+`to geometry processing.` Give each phrase its own line at standard viewport sizes, retaining
 ordinary spaces in the accessible text. Allow phrases to wrap under text zoom;
 do not shrink the font or force no-wrap to preserve the line count.
 Keep decorative geometry clear of actual text/action bounds during pointer motion.
-Projects / Blogs are unfilled chapter links with small mono numbers, Space Grotesk
+Projects / Blog are unfilled chapter links with small mono numbers, Space Grotesk
 labels, a single resting top hairline and the established hover line/arrow response.
 Keep these labels compact at 12 px, with short rules on a 264 px action rail that
 shrinks to the available width. Use a 22 px gap.
@@ -1059,7 +1122,7 @@ pulse; disable the pulse under Motion off or reduced motion. Keep keyboard focus
 visible and honor reduced motion for the native section scroll.
 
 The carved form refines once on the first cover load over about four seconds,
-then remains finished. The fixed chapter layout never reverses geometry on scroll.
+then remains finished. Continuous chapter scrolling never reverses geometry.
 The active rules for scheduling, parallax, pause and fallback are specified above.
 Keep source organization and font licenses in `docs/hero-sculpture.md` aligned
 with the reproducible build.
@@ -1129,12 +1192,14 @@ title link regions respond independently:
    they use color only because their separate `Read post` action owns a
    persistent boxed external-link icon and the light-surface underline motion.
 
-On the Portfolio About contact index, use one small service icon before the
-copy—Envelope for Email and LinkedIn for LinkedIn—and retain one quiet trailing
-destination icon to anchor the far edge of each wide contact row. Use the
-directional arrow for Email and the boxed external-link icon for LinkedIn. Keep
-both neutral at rest and move them to the interactive accent on hover or
-keyboard focus.
+On the Portfolio About contact/profile index, group Email, LinkedIn, GitHub and
+Google Scholar beneath one `Contact & profiles` label, in that order. Use the
+existing unframed row grammar in a two-column desktop grid and one column on
+phones. Give each row one small service icon before the copy—Envelope, LinkedIn,
+GitHub or Mortarboard—and one quiet trailing destination icon. Use the directional
+arrow for Email and the boxed external-link icon for the external profiles. Keep
+the icons neutral at rest and move them to the interactive accent on hover or
+keyboard focus. Do not introduce a separate button group for these profiles.
 
 Do not add a card lift, background fill, shadow, border-color flash, or summary
 animation to this state.

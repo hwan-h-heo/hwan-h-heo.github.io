@@ -27,7 +27,7 @@ fs.mkdirSync(out,{recursive:true});
         await page.waitForFunction(id => document.body.dataset.chapter === id,id);
     }
     try {
-        // Native touch, nested reading scroll, route/reload/history and every project template.
+        // Responsive scroll containers, route/reload/history and every project template.
         for (const [width,height] of [[320,740],[390,844],[844,390],[1440,1000],[2560,1440]]) {
             const context = await browser.newContext({viewport:{width,height},isMobile:width<900,hasTouch:width<900,reducedMotion:'reduce'});
             const page = await context.newPage();
@@ -44,7 +44,7 @@ fs.mkdirSync(out,{recursive:true});
             const links = page.locator('.portfolio-project-item:not([hidden]) .portfolio-project-title-link');
             const selectedLink = links.last(), href = await selectedLink.getAttribute('href');
             await selectedLink.scrollIntoViewIfNeeded();
-            const before = await page.locator('#portfolio').evaluate(node => node.scrollTop);
+            const before = await page.evaluate(() => editionPreview.state().continuousScroll ? scrollY : document.getElementById('portfolio').scrollTop);
             await selectedLink.click();
             await page.waitForURL(url => url.pathname.includes('/projects/'));
             assert(await page.locator('.case-opening h1').count());
@@ -53,26 +53,28 @@ fs.mkdirSync(out,{recursive:true});
             await page.waitForFunction(() => document.body.dataset.chapter === 'portfolio');
             assert.equal(await page.locator('#portfolio').getAttribute('data-portfolio-view'),'all');
             assert(await disclosure.evaluate(node => node.open));
-            assert(Math.abs(await page.locator('#portfolio').evaluate(node => node.scrollTop)-before) < 4,'Back must restore project reading position');
+            assert(Math.abs(await page.evaluate(() => editionPreview.state().continuousScroll ? scrollY : document.getElementById('portfolio').scrollTop)-before) < 4,'Back must restore project reading position');
             await page.reload();
             await page.waitForFunction(() => document.body.dataset.chapter === 'portfolio');
             assert.equal(await page.locator('#portfolio').getAttribute('data-portfolio-view'),'all');
-            assert(Math.abs(await page.locator('#portfolio').evaluate(node => node.scrollTop)-before) < 4,'Reload must restore All view and scroll');
+            assert(Math.abs(await page.evaluate(() => editionPreview.state().continuousScroll ? scrollY : document.getElementById('portfolio').scrollTop)-before) < 4,'Reload must restore All view and scroll');
             // Leave through the actual project link again so the return control
             // can restore that departure's focus as well as scroll and filter.
             await selectedLink.click();
             await page.waitForURL(url => url.pathname.includes('/projects/'));
             await page.locator('.case-breadcrumb').click();
+            await page.waitForLoadState('load');
             await page.waitForFunction(() => document.body.dataset.chapter === 'portfolio');
             assert.equal(await page.locator('#portfolio').getAttribute('data-portfolio-view'),'all');
-            assert(Math.abs(await page.locator('#portfolio').evaluate(node => node.scrollTop)-before) < 4,'Projects return link must restore reading position');
+            assert(Math.abs(await page.evaluate(() => editionPreview.state().continuousScroll ? scrollY : document.getElementById('portfolio').scrollTop)-before) < 4,'Projects return link must restore reading position');
+            await page.waitForFunction(href => document.activeElement.getAttribute('href') === href, href);
             assert.equal(await page.evaluate(() => document.activeElement.getAttribute('href')),href,'Projects return restores the departure link focus');
             for (const id of ['blog','about','portfolio']) {
                 await chapter(page,id);
-                assert.equal(await page.evaluate(() => scrollY),0,'Chapter scrolling must not move the document');
+                assert.equal(await page.evaluate(() => scrollY > 0),width <= 900,'Chapter navigation must use the correct scroll container');
                 const box = await page.locator('#'+id).boundingBox();
                 assert(box.x>=0 && box.x+box.width<=width+1);
-                assert.equal(await page.locator('.edition-chapter:not(.is-active)').evaluateAll(nodes => nodes.every(node => node.inert)),true);
+                assert.equal(await page.locator('.edition-chapter').evaluateAll((nodes,continuous) => nodes.every(node => node.inert === (!continuous && !node.classList.contains('is-active'))),width <= 900),true);
                 await page.screenshot({path:path.join(out,`integrated-${id}-${width}.png`)});
             }
             await page.goBack(); await page.waitForFunction(() => document.body.dataset.chapter === 'about');

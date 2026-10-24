@@ -46,6 +46,12 @@ fs.mkdirSync(out,{recursive:true});
         assert(!(await page.evaluate(()=>portfolioHero.state().framePending)));
         console.log('Entrance plays once; pointer moves the camera with original offsets and fixed geometry/shadows; rendering stops at rest.');
 
+        assert.equal(await page.evaluate(() => editionPreview.state().continuousScroll),false);
+        assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).overflowY),'hidden');
+        assert.equal(await page.locator('#home .pbr-foot').count(),1);
+        assert.equal(await page.locator('#home .edition-cover-folio').textContent(),'00 — Cover');
+        assert.equal(await page.locator('.edition-next').count(),3);
+        assert.equal(await page.locator('.edition-colophon').count(),3);
         await page.locator('.pbr-motion').click(); await page.mouse.move(700,500);
         const paused=await page.evaluate(()=>portfolioHero.state());
         // Sample actual pseudo-element geometry through the transition, with 3D
@@ -110,39 +116,91 @@ fs.mkdirSync(out,{recursive:true});
         assert.equal(await page.evaluate(()=>portfolioHero.state().decoding.progress),1);
         await page.emulateMedia({reducedMotion:'reduce'}); await page.mouse.move(1300,300);
         assert((await page.evaluate(()=>portfolioHero.state())).paused);
-        assert.deepEqual(errors,[]); await page.close();
-        console.log('Projects/Blogs/About: up → no cue, down → next, native scroll preserved, hover wins; returning never replays refine.');
+        assert.deepEqual(errors,[]);
+        console.log('Projects/Blog/About: up → no cue, down → next, native scroll preserved, hover wins; returning never replays refine.');
 
         const direct=await browser.newPage({viewport:{width:1440,height:1000}});
-        await direct.goto(base+'#about'); await direct.waitForFunction(()=>document.body.dataset.chapter==='about' && portfolioHero.state().deferred);
+        await direct.goto(base+'#about');
+        await direct.waitForFunction(()=>document.body.dataset.chapter==='about' && portfolioHero.state().deferred);
         assert.equal(await direct.locator('.pbr-scene canvas').count(),0);
-        assert.equal(await direct.evaluate(()=>performance.getEntriesByType('resource').some(item=>item.name.includes('/assets/js/hero-sculpture.js'))),false);
-        assert.equal(await direct.evaluate(()=>portfolioHero.state().decoding.phase),'static');
-        await direct.locator('#about .edition-next a[rel="next"]').click(); await direct.waitForFunction(()=>document.body.dataset.chapter==='home');
+        await direct.locator('.edition-nav a[href="#home"]').click();
+        await direct.waitForFunction(()=>document.body.dataset.chapter==='home');
         await direct.waitForFunction(()=>portfolioHero.state().ready && portfolioHero.state().settled);
-        await direct.mouse.move(1200,250); await direct.waitForFunction(()=>portfolioHero.state().settled && portfolioHero.state().px>.5);
         assert.equal(await direct.evaluate(()=>portfolioHero.state().decoding.plays),0);
         await direct.close();
 
-        const mobile=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
-        await mobile.goto(base); await mobile.waitForFunction(()=>portfolioHero.state().ready && portfolioHero.state().settled && portfolioHero.state().decoding?.phase==='static');
-        const resting=await mobile.evaluate(()=>portfolioHero.state());
-        await mobile.waitForTimeout(500); assert.equal((await mobile.evaluate(()=>portfolioHero.state())).frames,resting.frames);
-        await mobile.screenshot({path:path.join(out,'v32-mobile-rest.png')});
-        await mobile.locator('.pbr-actions a[href="#blog"]').click(); await mobile.waitForFunction(()=>document.body.dataset.chapter==='blog'); await mobile.waitForTimeout(700);
-        const client=await mobile.context().newCDPSession(mobile);
-        await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:190,y:650}]});
-        await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:192,y:530}]});
-        await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-        await mobile.waitForFunction(()=>editionPreview.state().chapterHint==='next');
-        await mobile.waitForTimeout(500);
-        await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:190,y:450}]});
-        await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:192,y:570}]});
-        await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-        await mobile.waitForFunction(()=>editionPreview.state().chapterHint===null);
-        assert.equal(await mobile.evaluate(()=>portfolioHero.state().work.pointerUpdates),resting.work.pointerUpdates);
-        await mobile.close();
-        console.log('Direct chapter return has no intro; mobile stops after its entrance and uses directional touch cues without camera parallax.');
-        fs.writeFileSync(path.join(out,'v32-motion-verification.json'),JSON.stringify(report,null,2));
+        const resizing=await browser.newPage({viewport:{width:1920,height:1080},reducedMotion:'reduce'});
+        await resizing.goto(base+'#about');
+        await resizing.waitForFunction(()=>window.editionPreview);
+        await resizing.locator('.resume-disclosure').evaluate(node=>node.open=true);
+        await resizing.waitForTimeout(100);
+        await resizing.locator('#about').evaluate(node=>node.scrollTop=300);
+        await resizing.waitForTimeout(250);
+        await resizing.setViewportSize({width:900,height:900});
+        await resizing.waitForFunction(()=>editionPreview.state().continuousScroll);
+        await resizing.waitForTimeout(100);
+        assert.equal(await resizing.evaluate(()=>document.body.dataset.chapter),'about');
+        assert.equal(await resizing.locator('.resume-disclosure').evaluate(node=>node.open),true);
+        const mobileOffset=await resizing.evaluate(()=>scrollY-editionPreview.state().chapters.find(range=>range.id==='about').start);
+        assert(Math.abs(mobileOffset-300)<3);
+        await resizing.setViewportSize({width:901,height:900});
+        await resizing.waitForFunction(()=>!editionPreview.state().continuousScroll);
+        assert.equal(await resizing.evaluate(()=>scrollY),0);
+        assert(Math.abs(await resizing.locator('#about').evaluate(node=>node.scrollTop)-300)<3);
+        assert.equal(await resizing.evaluate(()=>document.body.dataset.chapter),'about');
+        await resizing.close();
+
+        for (const [width,height] of [[320,740],[390,844],[844,390],[900,900]]) {
+            const context=await browser.newContext({viewport:{width,height},isMobile:width<900,hasTouch:width<900});
+            const mobile=await context.newPage();
+            mobile.on('pageerror',e=>errors.push(e.message));
+            await mobile.goto(base);
+            await mobile.waitForFunction(()=>window.editionPreview);
+            await mobile.evaluate(()=>document.fonts.ready);
+            await mobile.waitForTimeout(100);
+            const ranges=await mobile.evaluate(()=>editionPreview.state().chapters);
+            if(width===390) {
+                const client=await context.newCDPSession(mobile);
+                for(let attempt=0; attempt<3 && await mobile.evaluate(()=>document.body.dataset.chapter==='home'); attempt++) {
+                    await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:190,y:640}]});
+                    for(const y of [610,560,510,460,400,340,280,200]) {
+                        await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:190,y}]});
+                        await mobile.waitForTimeout(35);
+                    }
+                    await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+                    await mobile.waitForTimeout(300);
+                }
+                await mobile.waitForFunction(()=>scrollY>100);
+                await mobile.waitForFunction(()=>document.body.dataset.chapter==='portfolio');
+                assert.equal(await mobile.evaluate(()=>editionPreview.state().navigationHint),false);
+            }
+            for (const range of ranges.slice(1)) {
+                await mobile.evaluate(id=>scrollTo({top:editionPreview.state().chapters.find(range=>range.id===id).start,behavior:'instant'}),range.id);
+                await mobile.waitForTimeout(100);
+                assert.equal(await mobile.evaluate(()=>document.body.dataset.chapter),range.id);
+                assert.equal(await mobile.evaluate(()=>document.documentElement.scrollWidth),width);
+                assert.equal(await mobile.locator('#'+range.id).evaluate(section=>getComputedStyle(section).opacity),'1');
+            }
+            await mobile.screenshot({path:path.join(out,'continuous-about-'+width+'.png')});
+            assert.equal(await mobile.locator('.edition-next').evaluateAll(nodes=>nodes.every(node=>getComputedStyle(node).display==='none')),true);
+            assert.equal(await mobile.locator('.edition-colophon').evaluateAll(nodes=>nodes.filter(node=>getComputedStyle(node).display!=='none').length),1);
+            await mobile.locator('.resume-disclosure').evaluate(node=>node.open=true);
+            assert.equal(await mobile.locator('.resume-item h4').first().evaluate(node=>getComputedStyle(node).fontSize),'14px');
+            assert.equal(await mobile.locator('.resume-entry-details li').first().evaluate(node=>getComputedStyle(node).fontSize),'13px');
+            await mobile.emulateMedia({reducedMotion:'reduce'});
+            await mobile.waitForTimeout(100);
+            assert.equal(await mobile.evaluate(()=>document.body.classList.contains('edition-motion')),false);
+            assert(await mobile.locator('.edition-chapter').evaluateAll(nodes=>nodes.every(node=>getComputedStyle(node).position==='relative' && getComputedStyle(node).opacity==='1')));
+            await mobile.locator('.edition-nav a[href="#portfolio"]').click();
+            await mobile.waitForFunction(()=>document.body.dataset.chapter==='portfolio');
+            assert.equal(await mobile.locator('#edition-title-portfolio').evaluate(node=>node===document.activeElement),true);
+            await mobile.emulateMedia({media:'print'});
+            assert(await mobile.locator('.edition-chapter').evaluateAll(nodes=>nodes.every(node=>getComputedStyle(node).position==='relative' && getComputedStyle(node).opacity==='1')));
+            assert.equal(await mobile.locator('.pbr-intro').evaluate(node=>getComputedStyle(node).opacity),'1');
+            await context.close();
+        }
+        assert.deepEqual(errors,[]);
+        console.log('PASS mobile touch, narrow/wide/landscape viewports, direct hashes and reduced motion.');
+        fs.writeFileSync(path.join(out,'responsive-motion-verification.json'),JSON.stringify(report,null,2));
     }finally{server.server.close(); await Promise.race([browser.close(),new Promise(r=>setTimeout(r,5000).unref())]);}
-})().then(()=>process.exit(0)).catch(e=>{console.error(e);process.exit(1)});
+})().then(()=>process.exit(0)).catch(e=>{console.error(e);process.exit(1);});
