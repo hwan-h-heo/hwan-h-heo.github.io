@@ -10,14 +10,18 @@ const { loadRawSiteData, loadSiteData } = require('../blogs/lib/site-data');
 const {
     getPostRoute,
     listSeriesArchiveEntries,
-    listTagArchiveEntries
+    listTagArchiveEntries,
+    listProjectEntries
 } = require('../blogs/lib/site-routes');
 const { loadLegacyRedirects, validateLegacyRedirects } = require('../blogs/lib/legacy-redirects');
-const { getPostTitle } = require('../blogs/lib/seo-utils');
+const { getFeaturedPost, getPostTitle } = require('../blogs/lib/seo-utils');
+const { getPortfolioProfile } = require('../blogs/lib/portfolio-profile');
+const { getPostSocialImage, getProjectSocialImage, getSocialImage } = require('../blogs/lib/social-images');
 
 const repoRoot = path.join(__dirname, '..');
 const distRoot = path.join(repoRoot, 'blogs', 'dist');
 const siteOrigin = new URL(SITE_URL).origin;
+const portfolioProfile = getPortfolioProfile();
 
 function readText(filePath) {
     return fs.readFileSync(filePath, 'utf8');
@@ -94,6 +98,7 @@ function getExpectedPostRoutes(siteData) {
 
 function getIndexablePages(siteData) {
     return [
+        { label: '/', route: '/', relativePath: 'index.html', expectedCanonical: `${SITE_URL}/`, type: 'portfolio' },
         { label: '/blogs/', route: '/blogs/', relativePath: path.join('blogs', 'index.html'), expectedCanonical: `${SITE_URL}/blogs/`, type: 'blog-index' },
         ...getExpectedPostRoutes(siteData).map(({ post, language, route, absolute }) => ({
             label: route,
@@ -119,6 +124,14 @@ function getIndexablePages(siteData) {
             expectedCanonical: `${SITE_URL}${entry.path}`,
             type: 'archive',
             archive: entry
+        })),
+        ...listProjectEntries().map((entry) => ({
+            label: entry.route,
+            route: entry.route,
+            relativePath: routeToDistRelative(entry.route),
+            expectedCanonical: `${SITE_URL}${entry.route}`,
+            type: 'project',
+            projectEntry: entry
         }))
     ];
 }
@@ -210,9 +223,71 @@ function checkStaticIndex(siteData, rawSiteData, errors) {
     }
 }
 
+function checkPortfolioIndex(siteData, errors) {
+    const { $ } = loadHtml('index.html');
+    const expectedMetadata = [
+        ['title', portfolioProfile.title, 'text'],
+        ['meta[name="description"]', portfolioProfile.description],
+        ['meta[property="og:title"]', portfolioProfile.title],
+        ['meta[name="twitter:title"]', portfolioProfile.title]
+    ];
+    expectedMetadata.forEach(([selector, expected, kind]) => {
+        const value = kind === 'text' ? $(selector).text() : $(selector).attr('content');
+        if ($(selector).length !== 1 || value !== expected) {
+            errors.push(`Portfolio ${selector} does not match the profile source.`);
+        }
+    });
+    if ($('h1').text().trim() !== portfolioProfile.name || $('html').attr('lang') !== 'en') {
+        errors.push('Portfolio must include its author heading and English document language.');
+    }
+    ['.pbr-role', '.about-bio', '#portfolio-projects', '#portfolio-publications', '#portfolio-talks', '#resume'].forEach((selector) => {
+        if (!$(selector).text().trim()) errors.push(`Portfolio has no static content in ${selector}.`);
+    });
+    if (!$('.about-name').text().includes(portfolioProfile.alternateName)) {
+        errors.push('Portfolio must visibly identify the Korean alternate name.');
+    }
+    const expected = siteData.featuredPortfolioPosts.filter((item) => item.post?.status === 'published');
+    const cards = $('#portfolio-blog-posts .portfolio-blog-preview-item');
+    const actualIds = cards.map((i, element) => $(element).attr('data-post-id')).get();
+    if (JSON.stringify(actualIds) !== JSON.stringify(expected.map((item) => item.id))) {
+        errors.push('Portfolio must statically render the featured posts exactly once and in configured order.');
+    }
+    expected.forEach(({ id, post }) => {
+        const card = cards.filter((i, element) => $(element).attr('data-post-id') === id);
+        if (card.find('.portfolio-blog-preview-title-link').attr('href') !== getPostRoute(post, 'eng')
+            || card.find('.portfolio-blog-preview-title').text() !== post.title_eng
+            || card.find('.portfolio-blog-preview-summary').text() !== post.subtitle_eng
+            || card.find('time').attr('datetime') !== post.date) {
+            errors.push(`Portfolio preview is missing current static text, date or canonical link: ${id}`);
+        }
+        const image = card.find('img');
+        if (!localUrlExists(image.attr('src'), '/') || !/-[a-f\d]{16}\.webp$/.test(image.attr('src') || '')) {
+            errors.push(`Portfolio preview must use an existing content-versioned image: ${id}`);
+        }
+    });
+
+    const publicData = JSON.parse(readText(path.join(distRoot, 'blogs/data/site-data.json')));
+    publicData.posts.filter((post) => (post.status || 'published') === 'published').forEach((post) => {
+        if (!post.coverPreviews?.cover || !localUrlExists(post.coverPreviews.cover)) {
+            errors.push(`Deployed search data has no current cover preview: ${post.id}`);
+        }
+    });
+}
+
+function checkPrivatePostSources(siteData, errors) {
+    const allowed = new Set(siteData.routablePosts.map((post) => post.id));
+    const postsDir = path.join(distRoot, 'blogs/posts');
+    fs.readdirSync(postsDir, { withFileTypes: true }).forEach((entry) => {
+        if (entry.isDirectory() && fs.existsSync(path.join(postsDir, entry.name, 'content-eng.md')) && !allowed.has(entry.name)) {
+            errors.push(`Non-public post source was copied into deployment output: ${entry.name}`);
+        }
+    });
+}
+
 function checkUnlistedPosts(siteData, errors) {
     const unlistedPosts = siteData.unlistedPosts || [];
     const discoveryFiles = [
+        path.join(distRoot, 'index.html'),
         path.join(distRoot, 'blogs', 'index.html'),
         path.join(distRoot, 'blogs', 'feed.xml'),
         path.join(distRoot, 'sitemap.xml'),
@@ -281,6 +356,9 @@ function checkSitemap(siteData, errors) {
     if (!locSet.has(`${SITE_URL}/blogs/`)) {
         errors.push('Sitemap is missing the blog index URL.');
     }
+    ['/', ...listProjectEntries().map((entry) => entry.route)].forEach((route) => {
+        if (!locSet.has(`${SITE_URL}${route}`)) errors.push(`Sitemap is missing portfolio route: ${route}`);
+    });
 
     [...listSeriesArchiveEntries(siteData), ...listTagArchiveEntries(siteData)].forEach((entry) => {
         const absolute = `${SITE_URL}${entry.path}`;
@@ -320,6 +398,9 @@ function checkCanonicals(siteData, errors) {
         }
 
         const { $ } = loadHtml(page.relativePath);
+        if (/\b(?:noindex|none)\b/i.test($('meta[name="robots"], meta[name="googlebot"]').map((i, el) => $(el).attr('content')).get().join(' '))) {
+            errors.push(`${page.label} blocks indexing with a robots meta tag.`);
+        }
         const canonicals = $('link[rel="canonical"]').map((index, element) => normalizeHref($(element).attr('href'))).get();
         if (canonicals.length !== 1) {
             errors.push(`${page.label} must contain exactly one canonical link; found ${canonicals.length}.`);
@@ -352,7 +433,7 @@ function checkHeadingsAndTitles(siteData, errors) {
             titleValues.push({ title, page: page.label });
         }
 
-        if (page.type === 'blog-index' || page.type === 'archive') {
+        if (page.type !== 'post') {
             if ($('h1').length !== 1) {
                 errors.push(`${page.label} must contain exactly one primary <h1>.`);
             }
@@ -451,6 +532,7 @@ function checkSocialMetadata(siteData, errors) {
 
         required.forEach(([selector, expected]) => {
             const value = normalizeHref($(selector).attr('content'));
+            if ($(selector).length !== 1) errors.push(`${page.label} must contain exactly one ${selector}.`);
             if (!value) {
                 errors.push(`${page.label} is missing ${selector}.`);
                 return;
@@ -459,6 +541,29 @@ function checkSocialMetadata(siteData, errors) {
                 errors.push(`${page.label} ${selector} expected "${expected}", found "${value}".`);
             }
         });
+
+        let expectedImage;
+        if (page.type === 'portfolio') expectedImage = getSocialImage(portfolioProfile.socialImage);
+        else if (page.type === 'post') expectedImage = getPostSocialImage(page.post);
+        else if (page.type === 'project') expectedImage = getProjectSocialImage(page.projectEntry, siteData, portfolioProfile.socialImage);
+        else if (page.type === 'archive') expectedImage = getPostSocialImage(page.archive.posts[0]);
+        else {
+            const featured = getFeaturedPost(siteData);
+            expectedImage = featured ? getPostSocialImage(featured) : getSocialImage(portfolioProfile.socialImage);
+        }
+        ['meta[property="og:image"]', 'meta[name="twitter:image"]'].forEach((selector) => {
+            if ($(selector).attr('content') !== expectedImage.url) {
+                errors.push(`${page.label} ${selector} is not generated from the current configured cover.`);
+            }
+        });
+        [['og:image:width', '1200'], ['og:image:height', '630'], ['og:image:type', 'image/jpeg']].forEach(([property, value]) => {
+            if ($(`meta[property="${property}"]`).attr('content') !== value) {
+                errors.push(`${page.label} must declare ${property}=${value}.`);
+            }
+        });
+        if (!$('meta[property="og:image:alt"]').attr('content') || !$('meta[name="twitter:image:alt"]').attr('content')) {
+            errors.push(`${page.label} is missing social image alternative text.`);
+        }
 
         ['meta[property="og:image"]', 'meta[name="twitter:image"]'].forEach((selector) => {
             const imageUrl = normalizeHref($(selector).attr('content'));
@@ -470,6 +575,19 @@ function checkSocialMetadata(siteData, errors) {
             }
         });
     });
+}
+
+async function checkSocialImageFiles(siteData, errors) {
+    const sharp = require('../blogs/node_modules/sharp');
+    const urls = new Set(getIndexablePages(siteData).map((page) =>
+        loadHtml(page.relativePath).$('meta[property="og:image"]').attr('content')));
+    for (const url of urls) {
+        if (!url || !localUrlExists(url)) continue;
+        const metadata = await sharp(localPathToGeneratedFile(new URL(url).pathname)).metadata();
+        if (metadata.format !== 'jpeg' || metadata.width !== 1200 || metadata.height !== 630) {
+            errors.push(`Social image must be a real 1200x630 JPEG: ${url}`);
+        }
+    }
 }
 
 function hasEmptyStructuredValue(value) {
@@ -508,6 +626,39 @@ function checkStructuredData(siteData, errors) {
             }
         });
 
+        if (page.type === 'portfolio') {
+            const graph = parsedBlocks.flatMap((block) => block['@graph'] || [block]);
+            const person = graph.find((block) => block['@type'] === 'Person' && block['@id'] === portfolioProfile.personId);
+            const website = graph.find((block) => block['@type'] === 'WebSite');
+            const profile = graph.find((block) => block['@type'] === 'ProfilePage');
+            if (!person || person.name !== portfolioProfile.name || person.jobTitle !== portfolioProfile.jobTitle
+                || person.alternateName !== portfolioProfile.alternateName || person.worksFor?.name !== portfolioProfile.organizationName) {
+                errors.push('Portfolio Person structured data does not match the profile source.');
+            }
+            if (website?.['@id'] !== portfolioProfile.websiteId || website?.url !== page.expectedCanonical
+                || website?.publisher?.['@id'] !== portfolioProfile.personId) {
+                errors.push('Portfolio WebSite must link the canonical home and profile author.');
+            }
+            if (profile?.['@id'] !== portfolioProfile.profileId || profile?.url !== page.expectedCanonical
+                || profile?.mainEntity?.['@id'] !== portfolioProfile.personId
+                || profile?.isPartOf?.['@id'] !== portfolioProfile.websiteId) {
+                errors.push('Portfolio ProfilePage must link the canonical home, website and person.');
+            }
+            portfolioProfile.sameAs.forEach((url) => {
+                if (!person?.sameAs?.includes(url)) errors.push(`Portfolio Person is missing profile link: ${url}`);
+            });
+            if (graph.some(hasEmptyStructuredValue)) errors.push('Portfolio JSON-LD contains empty string values.');
+            return;
+        }
+
+        if (page.type === 'project') {
+            const work = parsedBlocks.find((block) => block['@type'] === 'CreativeWork');
+            if (work?.url !== page.expectedCanonical || work?.author?.['@id'] !== portfolioProfile.personId) {
+                errors.push(`${page.label} must identify the canonical project and shared author.`);
+            }
+            return;
+        }
+
         if (page.type === 'blog-index' || page.type === 'archive') {
             const expectedTypes = page.type === 'blog-index' ? ['Blog', 'WebSite'] : ['CollectionPage'];
             if (!parsedBlocks.some((block) => expectedTypes.includes(block['@type']))) {
@@ -538,6 +689,12 @@ function checkStructuredData(siteData, errors) {
         }
         if (!blogPosting.author?.name) {
             errors.push(`${page.label} BlogPosting author is missing a name.`);
+        }
+        if (blogPosting.author?.['@id'] !== portfolioProfile.personId || blogPosting.publisher?.['@id'] !== portfolioProfile.personId) {
+            errors.push(`${page.label} BlogPosting author/publisher must link to the portfolio Person.`);
+        }
+        if (blogPosting.image?.[0] !== getPostSocialImage(page.post).url) {
+            errors.push(`${page.label} BlogPosting image does not use the current cover.`);
         }
         if (!Array.isArray(blogPosting.image) || blogPosting.image.length === 0 || !blogPosting.image.every((url) => /^https:\/\//.test(url))) {
             errors.push(`${page.label} BlogPosting image must be a non-empty array of absolute HTTPS URLs.`);
@@ -748,6 +905,8 @@ async function main() {
     const siteData = loadSiteData();
 
     checkStaticIndex(siteData, rawSiteData, errors);
+    checkPortfolioIndex(siteData, errors);
+    checkPrivatePostSources(siteData, errors);
     checkUnlistedPosts(siteData, errors);
     checkSitemap(siteData, errors);
     checkCanonicals(siteData, errors);
@@ -755,6 +914,7 @@ async function main() {
     checkDescriptions(siteData, errors);
     checkHtmlLanguageAndDates(siteData, errors);
     checkSocialMetadata(siteData, errors);
+    await checkSocialImageFiles(siteData, errors);
     checkStructuredData(siteData, errors);
     checkInternalLinks(siteData, errors);
     checkLanguageAlternates(siteData, errors);
@@ -769,7 +929,7 @@ async function main() {
         process.exit(1);
     }
 
-    console.log(`SEO validation passed: ${siteData.posts.length} published posts, ${getExpectedPostRoutes(siteData).length} post-language routes.`);
+    console.log(`SEO validation passed: portfolio home, ${listProjectEntries().length} projects, ${siteData.posts.length} published posts, ${getExpectedPostRoutes(siteData).length} post-language routes and current social images.`);
 }
 
 main().catch((error) => {

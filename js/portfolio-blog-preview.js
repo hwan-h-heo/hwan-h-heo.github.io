@@ -1,25 +1,22 @@
-document.addEventListener('DOMContentLoaded', async function() {
-    const section = document.getElementById('blog');
-    const container = document.getElementById('portfolio-blog-posts');
-    const listShell = document.querySelector('.portfolio-blog-list-shell');
-    const markReady = () => {
-        if (!section) return;
-        section.dataset.sectionReady = 'true';
-        section.dispatchEvent(new CustomEvent('portfolio:section-ready'));
-    };
-
-    if (!container || !listShell || !window.siteDataClient) {
-        markReady();
-        return;
+(function(root, factory) {
+    const api = factory(root);
+    if (typeof module === 'object' && module.exports) {
+        module.exports = api;
     }
+    if (root) {
+        root.portfolioBlogPreview = api;
+        root.document.addEventListener('DOMContentLoaded', api.mount);
+    }
+})(typeof window !== 'undefined' ? window : null, function(root) {
+    const data = root?.siteDataClient || require('../blogs/js/site-data-client');
+    const coverMedia = root?.blogCoverMedia || require('../blogs/js/blog-cover-media');
+    const icons = root?.SiteIcons || require('../assets/js/site-icons');
 
-    try {
-        const { loadSiteData, getPostTitle, getPostSubtitle, getPostUrl } = window.siteDataClient;
-        const coverMedia = window.blogCoverMedia;
-        const readPostIcon = window.SiteIcons.render('box-arrow-up-right', {
+    function render(siteData) {
+        const { getPostTitle, getPostSubtitle, getPostUrl } = data;
+        const readPostIcon = icons.render('box-arrow-up-right', {
             className: 'portfolio-blog-preview-read-icon'
         });
-        const siteData = await loadSiteData();
 
         const escapeHtml = (value) => String(value || '')
             .replace(/&/g, '&amp;')
@@ -29,14 +26,15 @@ document.addEventListener('DOMContentLoaded', async function() {
             .replace(/'/g, '&#39;');
 
         const formatDate = (value) => {
-            const date = new Date(`${value}T00:00:00`);
+            const date = new Date(`${value}T00:00:00Z`);
             if (Number.isNaN(date.getTime())) {
                 return '';
             }
             return date.toLocaleDateString('en-GB', {
                 year: 'numeric',
                 month: 'short',
-                day: '2-digit'
+                day: '2-digit',
+                timeZone: 'UTC'
             });
         };
 
@@ -45,8 +43,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             return series?.eng || post.series || 'Blog';
         };
 
-        const postsHtml = siteData.featuredPortfolioPosts
-            .filter((item) => item.post)
+        return siteData.featuredPortfolioPosts
+            .filter((item) => item.post && (item.post.status || 'published') === 'published')
             .map((item) => {
                 const title = getPostTitle(item.post, 'eng');
                 const subtitle = getPostSubtitle(item.post, 'eng');
@@ -57,7 +55,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     ? image
                     : item.post.cover;
                 const keepAnimated = item.post.animatedPreview === true && coverMedia?.isAnimatedCover(animatedImage);
-                const preview = coverMedia?.getBlogCoverPreviewUrl(item.id, 'portfolio') || image;
+                const preview = coverMedia?.getBlogCoverPreviewUrl(item.post, 'portfolio') || image;
                 const autoplaySource = keepAnimated
                     ? ` data-autoplay-src="${escapeHtml(animatedImage)}"`
                     : '';
@@ -67,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 const imageAlt = item.teaserAlt || `${title} article preview`;
 
                 return `
-            <article class="portfolio-blog-preview-item">
+            <article class="portfolio-blog-preview-item" data-post-id="${escapeHtml(item.id)}">
               <div class="portfolio-blog-preview-layout">
                 <a href="${escapeHtml(getPostUrl(item.post, 'eng'))}" target="_blank" rel="noopener noreferrer" class="portfolio-blog-preview-cover-link" aria-label="Read ${escapeHtml(title)}">
                   <span class="portfolio-blog-preview-cover${item.id === '260201_sparse' || getPostUrl(item.post, 'eng').includes('optimizing-sparse-3d-generation-inference') ? ' edition-media-plate' : ''}">
@@ -92,12 +90,29 @@ document.addEventListener('DOMContentLoaded', async function() {
             </article>
         `;
             }).join('');
-
-        container.innerHTML = postsHtml;
-        coverMedia?.initializeBlogCoverMedia(container);
-    } catch (error) {
-        console.error(error);
-    } finally {
-        markReady();
     }
+
+    async function mount() {
+        const section = root.document.getElementById('blog');
+        const container = root.document.getElementById('portfolio-blog-posts');
+        if (!container) return;
+
+        try {
+            // Built pages already contain the complete preview. Only an unbuilt
+            // source preview needs the data fetch and client-side renderer.
+            if (!container.querySelector('.portfolio-blog-preview-item')) {
+                container.innerHTML = render(await data.loadSiteData());
+            }
+            coverMedia.initializeBlogCoverMedia(container);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            if (section) {
+                section.dataset.sectionReady = 'true';
+                section.dispatchEvent(new root.CustomEvent('portfolio:section-ready'));
+            }
+        }
+    }
+
+    return { render, mount };
 });

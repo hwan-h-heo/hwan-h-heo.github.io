@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const sharp = require('sharp');
 
 const PREVIEW_DIRECTORY = 'assets/generated/blog-covers';
@@ -13,10 +14,10 @@ function sanitizeFilePart(value) {
         .replace(/^-+|-+$/g, '');
 }
 
-function getBlogCoverPreviewUrl(postId, variant = 'cover') {
+function getBlogCoverPreviewUrl(postId, variant = 'cover', version = '') {
     const safePostId = sanitizeFilePart(postId);
     const suffix = variant === 'portfolio' ? '-portfolio' : '';
-    return `/${PREVIEW_DIRECTORY}/${safePostId}${suffix}.webp`;
+    return `/${PREVIEW_DIRECTORY}/${safePostId}${suffix}${version ? `-${version}` : ''}.webp`;
 }
 
 function resolveLocalAsset(repoRoot, assetUrl) {
@@ -52,7 +53,7 @@ async function generateBlogCoverPreviews({ siteData, repoRoot, distDir }) {
     const postsById = new Map(siteData.posts.map((post) => [post.id, post]));
     const entries = siteData.posts.map((post) => ({
         id: post.id,
-        source: post.previewImage || post.cover,
+        source: /\.gif(?:[?#]|$)/i.test(post.cover) ? (post.previewImage || post.cover) : post.cover,
         variant: 'cover'
     }));
 
@@ -64,7 +65,7 @@ async function generateBlogCoverPreviews({ siteData, repoRoot, distDir }) {
 
         entries.push({
             id: item.id,
-            source: item.teaserImage || post.previewImage || post.cover,
+            source: item.teaserImage || (/\.gif(?:[?#]|$)/i.test(post.cover) ? post.previewImage : '') || post.cover,
             variant: 'portfolio'
         });
     });
@@ -83,12 +84,15 @@ async function generateBlogCoverPreviews({ siteData, repoRoot, distDir }) {
             throw new Error(`Cannot generate blog cover preview; source is missing: ${entry.source}`);
         }
 
-        const previewUrl = getBlogCoverPreviewUrl(entry.id, entry.variant);
+        const version = crypto.createHash('sha256')
+            .update(`blog-cover-v1:${PREVIEW_WIDTH}:${PREVIEW_HEIGHT}:quality-82`)
+            .update(fs.readFileSync(sourcePath)).digest('hex').slice(0, 16);
+        const previewUrl = getBlogCoverPreviewUrl(entry.id, entry.variant, version);
         const destinationPath = path.join(distDir, previewUrl.replace(/^\/+/, ''));
-        const sourceStat = fs.statSync(sourcePath);
-        const destinationStat = fs.existsSync(destinationPath) ? fs.statSync(destinationPath) : null;
+        const post = postsById.get(entry.id);
+        post.coverPreviews = { ...post.coverPreviews, [entry.variant]: previewUrl };
 
-        if (destinationStat && destinationStat.mtimeMs >= sourceStat.mtimeMs) {
+        if (fs.existsSync(destinationPath)) {
             reused += 1;
             continue;
         }
@@ -96,6 +100,16 @@ async function generateBlogCoverPreviews({ siteData, repoRoot, distDir }) {
         await writePreview(sourcePath, destinationPath);
         generated += 1;
     }
+
+    // The browser's search page reads this deployed data, so it must use the
+    // same immutable image URLs as the statically rendered list pages.
+    const publicDataPath = path.join(distDir, 'blogs/data/site-data.json');
+    const publicData = JSON.parse(fs.readFileSync(publicDataPath, 'utf8'));
+    publicData.posts.forEach((post) => {
+        const previews = postsById.get(post.id)?.coverPreviews;
+        if (previews) post.coverPreviews = previews;
+    });
+    fs.writeFileSync(publicDataPath, `${JSON.stringify(publicData, null, 2)}\n`);
 
     console.log(`Generated blog cover previews: ${generated} updated, ${reused} reused.`);
 }

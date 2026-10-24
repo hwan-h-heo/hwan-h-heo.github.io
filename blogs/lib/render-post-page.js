@@ -1,9 +1,9 @@
-const { SITE_URL } = require('./site-config');
 const { getSeriesRoute } = require('./site-routes');
 const { render: renderSiteIcon } = require('../../assets/js/site-icons');
+const { getPortfolioAuthor } = require('./portfolio-profile');
+const { getPostSocialImage, renderSocialImageMetadata } = require('./social-images');
 const {
     escapeHtml,
-    getAbsoluteUrl,
     getPostAlternates,
     getPostCanonicalUrl,
     getPostLanguageRoute,
@@ -33,20 +33,6 @@ function renderPostDisplayTitle(title) {
     });
 
     return html + escapeHtml(source.slice(cursor));
-}
-
-function resolveOgImage(post, featuredPortfolioPosts) {
-    const configuredImage = post.socialImage || post.previewImage || post.cover || '';
-    if (configuredImage && !/\.svg(?:[?#]|$)/i.test(configuredImage)) {
-        return getAbsoluteUrl(configuredImage);
-    }
-
-    const featured = featuredPortfolioPosts.find((item) => item.id === post.id);
-    if (featured?.teaserImage && !/\.svg(?:[?#]|$)/i.test(featured.teaserImage)) {
-        return getAbsoluteUrl(featured.teaserImage);
-    }
-
-    return `${SITE_URL}/assets/image_fx_.jpg`;
 }
 
 function renderImportMap(runtimeFeatures) {
@@ -147,7 +133,8 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
     const updatedIsoDate = `${post.updated || post.date}T00:00:00.000Z`;
     const slug = lang === 'eng' ? post.slug : `${post.slug}-kor`;
     const canonicalUrl = getPostCanonicalUrl(post, lang);
-    const ogImage = resolveOgImage(post, siteData.featuredPortfolioPosts);
+    const socialImage = getPostSocialImage(post);
+    const ogImage = socialImage.url;
     const alternateLang = lang === 'eng' ? 'kor' : 'eng';
     const hasAlternateLang = post.languages.includes(alternateLang);
     const alternateHref = hasAlternateLang
@@ -206,15 +193,8 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
         url: canonicalUrl,
         mainEntityOfPage: canonicalUrl,
         image: [ogImage],
-        author: {
-            '@type': 'Person',
-            name: 'Hwan Heo',
-            url: SITE_URL
-        },
-        publisher: {
-            '@type': 'Person',
-            name: 'Hwan Heo',
-        },
+        author: getPortfolioAuthor(),
+        publisher: getPortfolioAuthor(),
         datePublished: post.date,
         dateModified: post.updated || post.date,
         inLanguage: lang === 'eng' ? 'en' : 'ko'
@@ -255,7 +235,7 @@ ${alternateLinksHtml}
     <meta property="og:url" content="${canonicalUrl}" />
     <meta property="og:title" content="${escapeHtml(metadataTitle)}" />
     <meta property="og:description" content="${escapeHtml(metaDescription)}" />
-    <meta property="og:image" content="${ogImage}" />
+${renderSocialImageMetadata(socialImage, `${title} cover image`)}
     <meta property="og:site_name" content="HwanHeo's Blog" />
     <meta property="article:published_time" content="${isoDate}" />
     <meta property="article:modified_time" content="${updatedIsoDate}" />
@@ -264,7 +244,6 @@ ${alternateLinksHtml}
     <meta name="twitter:url" content="${canonicalUrl}" />
     <meta name="twitter:title" content="${escapeHtml(metadataTitle)}" />
     <meta name="twitter:description" content="${escapeHtml(metaDescription)}" />
-    <meta name="twitter:image" content="${ogImage}" />
     <script type="application/ld+json">${serializeStructuredData(structuredData)}</script>
 
     <title>${escapeHtml(pageTitle)}</title>

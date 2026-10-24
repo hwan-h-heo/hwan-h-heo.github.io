@@ -180,7 +180,7 @@ function getFeaturedPost(siteData) {
 function renderBlogCoverImage(post, title, options = {}) {
     const source = post.cover || '/assets/blog_bg.jpeg';
     const keepAnimated = post.animatedPreview === true && isAnimatedCover(source);
-    const preview = getBlogCoverPreviewUrl(post.id, options.variant);
+    const preview = getBlogCoverPreviewUrl(post, options.variant);
     const autoplaySource = keepAnimated
         ? ` data-autoplay-src="${escapeHtml(source)}"`
         : '';

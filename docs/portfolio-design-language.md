@@ -40,6 +40,13 @@ by these stylesheets rather than by generic framework utility classes.
 Shared interface icons use the first-party SVG sprite and `.site-icon`
 foundation documented in `docs/styles-and-assets.md`; component styles own
 only their local size, color, spacing, and motion.
+
+The build emits the complete Home, About, Project and selected-writing text and
+links in the initial HTML. Portfolio Blog previews share one renderer between
+the build and source-preview fallback; hydration only attaches image behavior
+and must preserve existing links. Chapter selection preserves the document's
+profile title. Keep the Korean alternate name beside the Latin name in About's
+existing identity line, using its inherited type rather than a new label.
 Portfolio and blog UI must remain framework-free at runtime. New components
 should use semantic, component-owned class names rather than generic grid,
 utility, or icon-font tokens; `npm run check:legacy-ui` enforces that boundary

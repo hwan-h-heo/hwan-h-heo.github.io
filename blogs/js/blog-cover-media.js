@@ -18,7 +18,11 @@
             .replace(/^-+|-+$/g, '');
     }
 
-    function getBlogCoverPreviewUrl(postId, variant = 'cover') {
+    function getBlogCoverPreviewUrl(postOrId, variant = 'cover') {
+        if (typeof postOrId === 'object' && postOrId?.coverPreviews?.[variant]) {
+            return postOrId.coverPreviews[variant];
+        }
+        const postId = typeof postOrId === 'object' ? postOrId.id : postOrId;
         const suffix = variant === 'portfolio' ? '-portfolio' : '';
         return `/assets/generated/blog-covers/${sanitizeFilePart(postId)}${suffix}.webp`;
     }

@@ -3,6 +3,7 @@ const path = require('path');
 
 const { loadRawSiteData, loadSiteData, validateSiteData } = require('../blogs/lib/site-data');
 const { renderBlock } = require('../js/portfolio-blocks');
+const { getPortfolioProfile } = require('../blogs/lib/portfolio-profile');
 
 const repoRoot = path.join(__dirname, '..');
 
@@ -42,6 +43,11 @@ const siteData = loadSiteData();
 
 const portfolioPath = path.join(repoRoot, 'content', 'portfolio', 'home.json');
 const portfolio = readJson(portfolioPath);
+try {
+    getPortfolioProfile(portfolio);
+} catch (error) {
+    errors.push(error.message);
+}
 if (!Array.isArray(portfolio.blocks) || portfolio.blocks.length === 0) {
     errors.push('content/portfolio/home.json must define a non-empty blocks array.');
 }

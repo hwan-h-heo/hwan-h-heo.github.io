@@ -14,6 +14,18 @@ const { versionStaticAssetReferences } = require('./lib/static-asset-versioning'
 const { renderPostPage } = require('./lib/render-post-page');
 const { renderStaticBlogIndex } = require('./lib/render-blog-index');
 const { renderArchivePage } = require('./lib/render-archive-page');
+const {
+    buildPortfolioStructuredData,
+    getPortfolioProfile,
+    loadPortfolioContent,
+    renderPortfolioHeadMetadata
+} = require('./lib/portfolio-profile');
+const {
+    generateSocialImages,
+    getPostSocialImage,
+    getProjectSocialImage,
+    getSocialImage
+} = require('./lib/social-images');
 const { loadLegacyRedirects, validateLegacyRedirects } = require('./lib/legacy-redirects');
 const {
     inferPostRuntimeFeatures,
@@ -31,6 +43,7 @@ const {
 const { escapeXml, getPostAlternates, truncateText } = require('./lib/seo-utils');
 const { analyzeChangedFiles, getChangedFiles, serializeChangedFiles } = require('../scripts/lib/change-impact');
 const { renderBlock: renderPortfolioBlock } = require('../js/portfolio-blocks');
+const { render: renderPortfolioBlogPreview } = require('../js/portfolio-blog-preview');
 const { render: renderSiteIcon } = require('../assets/js/site-icons');
 const {
     renderProject: renderPortfolioProject,
@@ -39,6 +52,8 @@ const {
 } = require('../js/portfolio-content');
 
 const siteData = loadSiteData();
+const portfolioContent = loadPortfolioContent();
+const portfolioProfile = getPortfolioProfile(portfolioContent);
 const legacyRedirects = loadLegacyRedirects();
 const distDir = path.join(__dirname, 'dist');
 const repoRoot = path.join(__dirname, '..');
@@ -109,7 +124,13 @@ function copyStaticAssets() {
 
     const postsPath = path.join(__dirname, 'posts');
     if (fs.existsSync(postsPath)) {
-        copyRecursiveSync(postsPath, path.join(distDir, 'blogs', 'posts'));
+        const routableIds = new Set(siteData.routablePosts.map((post) => post.id));
+        copyRecursiveSync(postsPath, path.join(distDir, 'blogs', 'posts'), {
+            shouldCopy: (sourcePath) => {
+                const relativePath = path.relative(postsPath, sourcePath);
+                return !relativePath || routableIds.has(relativePath.split(path.sep)[0]);
+            }
+        });
     }
 
     const sharedDirs = ['assets', 'css', 'js', 'content'];
@@ -128,7 +149,6 @@ function copyStaticAssets() {
 
     copyProjectAssets();
     copyRuntimeDependencies();
-    generatePortfolioIndex();
 }
 
 function copyPostSource(postId) {
@@ -178,9 +198,11 @@ function copyIncrementalStaticFiles(filePaths) {
 
 function generatePortfolioIndex() {
     const indexPath = path.join(__dirname, '..', 'index.html');
-    const contentPath = path.join(__dirname, '..', 'content', 'portfolio', 'home.json');
-    const portfolioContent = JSON.parse(fs.readFileSync(contentPath, 'utf8'));
     let html = fs.readFileSync(indexPath, 'utf8');
+
+    ['<!-- portfolio-metadata -->', '<!-- portfolio-blog-posts-static -->'].forEach((marker) => {
+        if (!html.includes(marker)) throw new Error(`Portfolio template is missing ${marker}.`);
+    });
 
     (portfolioContent.blocks || []).forEach((block) => {
         const pattern = new RegExp(
@@ -200,6 +222,8 @@ function generatePortfolioIndex() {
     });
 
     html = html
+        .replace('<!-- portfolio-metadata -->', () => renderPortfolioHeadMetadata(portfolioProfile))
+        .replace('<!-- portfolio-blog-posts-static -->', () => renderPortfolioBlogPreview(siteData))
         .replace(
             '<!-- portfolio-projects-static -->',
             (siteData.portfolioProjects || []).map(renderPortfolioProject).join('')
@@ -214,7 +238,7 @@ function generatePortfolioIndex() {
         )
         .replace(
             '</head>',
-            `  <script type="application/ld+json">${serializeStructuredData(buildPortfolioStructuredData())}</script>\n</head>`
+            `  <script type="application/ld+json">${serializeStructuredData(buildPortfolioStructuredData(siteData, portfolioProfile))}</script>\n</head>`
         );
 
     fs.writeFileSync(path.join(distDir, 'index.html'), html);
@@ -336,66 +360,6 @@ function normalizeTocLabel(label) {
 
 function serializeStructuredData(value) {
     return JSON.stringify(value).replace(/</g, '\\u003c');
-}
-
-function buildPortfolioStructuredData() {
-    const personId = `${SITE_URL}/#person`;
-    const publications = (siteData.publications || []).map((publication) => {
-        const paperLink = (publication.links || []).find((link) => link.label === 'paper');
-        const authors = stripHtml(publication.authorsHtml)
-            .split(',')
-            .map((name) => name.trim())
-            .filter(Boolean)
-            .map((name) => ({
-                '@type': 'Person',
-                name
-            }));
-
-        return {
-            '@type': 'ScholarlyArticle',
-            name: publication.title,
-            author: authors,
-            url: paperLink?.url || `${SITE_URL}/#portfolio`,
-            isPartOf: {
-                '@type': 'CreativeWork',
-                name: stripHtml(publication.venueHtml)
-            }
-        };
-    });
-
-    return {
-        '@context': 'https://schema.org',
-        '@graph': [
-            {
-                '@type': 'Person',
-                '@id': personId,
-                name: 'Hwan Heo',
-                alternateName: '허환',
-                url: SITE_URL,
-                jobTitle: 'Lead 3D AI Research Engineer',
-                worksFor: {
-                    '@type': 'Organization',
-                    name: 'NC AI'
-                },
-                alumniOf: {
-                    '@type': 'CollegeOrUniversity',
-                    name: 'Korea University'
-                },
-                sameAs: [
-                    'https://scholar.google.com/citations?user=RulvYTkAAAAJ',
-                    'https://github.com/hwanhuh',
-                    'https://www.linkedin.com/in/hwan-heo-0905korea/'
-                ],
-                knowsAbout: [
-                    '3D generative AI',
-                    'Neural rendering',
-                    'CUDA inference optimization',
-                    'Computer graphics'
-                ]
-            },
-            ...publications
-        ]
-    };
 }
 
 function generateTOC(htmlContent, lang = 'eng') {
@@ -1073,20 +1037,24 @@ function generateProjectPages() {
     const projectNavItems = buildProjectNavItems(projectEntries);
 
     projectEntries.forEach((entry) => {
-        const { slug, projectDir, contentPath, project } = entry;
+        const { slug, contentPath, project } = entry;
         const markdown = fs.readFileSync(contentPath, 'utf8');
         const contentHtml = markdown.trimStart().startsWith('<')
             ? markdown
             : parseProjectMarkdown(markdown, (source) => marked.parse(source));
         const html = renderProjectPage({
             project,
+            canonicalUrl: `${SITE_URL}${entry.route}`,
+            socialImage: getProjectSocialImage(entry, siteData, portfolioProfile.socialImage),
             contentHtml: normalizeContentImageAccessibility(contentHtml, {
                 title: project.title || slug
             }),
             projectNav: getProjectNav(projectNavItems, slug)
         });
 
-        fs.writeFileSync(path.join(projectDir, 'index.html'), html);
+        const outputDir = path.join(distDir, 'projects', slug);
+        ensureDirSync(outputDir);
+        fs.writeFileSync(path.join(outputDir, 'index.html'), html);
         console.log(`Generated project: /projects/${slug}/index.html`);
     });
 }
@@ -1188,11 +1156,21 @@ function generateSupportFiles() {
     fs.writeFileSync(path.join(distDir, '.nojekyll'), '');
 }
 
+async function generateAllSocialImages() {
+    const images = [
+        getSocialImage(portfolioProfile.socialImage),
+        ...siteData.routablePosts.map(getPostSocialImage),
+        ...listProjectEntries().map((entry) => getProjectSocialImage(entry, siteData, portfolioProfile.socialImage))
+    ];
+    await generateSocialImages({ images, distDir });
+}
+
 async function buildSite() {
     resetDistDir();
-    generateProjectPages();
     copyStaticAssets();
+    generateProjectPages();
     await generateBlogCoverPreviews({ siteData, repoRoot, distDir });
+    generatePortfolioIndex();
     validateContentFiles();
     validateLegacyRedirects(siteData, legacyRedirects);
     generateBlogIndex();
@@ -1203,6 +1181,7 @@ async function buildSite() {
     generateFeed();
     generateRobotsTxt();
     generateSupportFiles();
+    await generateAllSocialImages();
     stampDeploymentVersion({ distDir });
     versionStaticAssetReferences({ distDir });
 
@@ -1238,6 +1217,7 @@ async function buildIncremental(options = {}) {
         copyPostSource(postId);
     });
     await generateBlogCoverPreviews({ siteData, repoRoot, distDir });
+    generatePortfolioIndex();
     const generatedRoutes = await generatePostPages(impact.postTargets);
     generateBlogIndex();
     generateLegacyRedirectPages();
@@ -1246,6 +1226,7 @@ async function buildIncremental(options = {}) {
     generateFeed();
     generateRobotsTxt();
     generateSupportFiles();
+    await generateAllSocialImages();
     stampDeploymentVersion({ distDir });
     versionStaticAssetReferences({ distDir });
 

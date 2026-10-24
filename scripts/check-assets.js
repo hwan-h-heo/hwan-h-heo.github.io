@@ -137,7 +137,9 @@ routablePosts.forEach((post) => {
     checkReference(metadataPath, { kind: 'image', value: post.cover });
     checkReference(metadataPath, { kind: 'image', value: post.previewImage });
 });
-siteData.featuredPortfolioPosts.forEach((item) => checkReference(metadataPath, { kind: 'image', value: item.teaserImage }));
+siteData.featuredPortfolioPosts.forEach((item) => {
+    if (item.teaserImage) checkReference(metadataPath, { kind: 'image', value: item.teaserImage });
+});
 siteData.portfolioProjects.forEach((project) => {
     ['image', 'gif', 'video', 'poster'].forEach((key) => {
         if (project[key]) {

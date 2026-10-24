@@ -970,17 +970,14 @@
   "featuredPortfolioPosts": [
     {
       "id": "261022_pcg_muon",
-      "teaserImage": "/blogs/posts/261022_pcg_muon/assets/cover-sculptural-paths-v2.webp",
       "teaserAlt": "Graphite saddle sculpture with highlighted cyan Muon and silver PCG update paths and iteration markers"
     },
     {
       "id": "260818_quad_remesh",
-      "teaserImage": "/blogs/posts/260818_quad_remesh/assets/cover-dragon.webp",
       "teaserAlt": "Dragon surface split between shaded geometry and quad wireframe"
     },
     {
       "id": "260727_sparse_3d",
-      "teaserImage": "/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png",
       "teaserAlt": "VARCO3D sparse 3D inference optimization result"
     }
   ]

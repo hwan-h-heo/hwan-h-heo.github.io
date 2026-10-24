@@ -93,6 +93,12 @@ build generates a 960×600 WebP list preview under
 `blogs/dist/assets/generated/blog-covers/`; generated previews are deployment
 output and must not be edited or committed by hand.
 
+Preview filenames contain a hash of the source bytes and rendering settings.
+Replacing an image at the same source path therefore changes its preview URL,
+even when the file modification time has not changed. The build adds
+`coverPreviews` to the deployed copy of site data so client-side search uses the
+same URLs; do not add that generated field to authored `site-data.json`.
+
 Blog indexes, search results, archive pages, and the portfolio's featured blog
 list use these previews with native lazy loading. If the configured cover or
 portfolio teaser is a GIF, the static preview remains the default and the
@@ -102,9 +108,33 @@ Set a post-level `"previewImage"` when a specific still frame should be used
 instead of the GIF's first frame; keep the GIF in `"cover"` so hover playback
 continues to work. A featured portfolio entry may point `"teaserImage"` to the
 same still.
+Omit `teaserImage` when the portfolio should follow the post's current cover;
+set it only for a deliberate alternative image. `previewImage` supplies a still
+for GIF covers and does not override a static cover.
 Set `"animatedPreview": true` on a post only when its GIF motion is part of the
 preview design. That GIF starts automatically when its preview is within 300px
 of the viewport; the generated WebP remains the lightweight placeholder.
+
+### Social sharing images
+
+The build generates static 1200×630 JPEGs under
+`blogs/dist/assets/generated/social/`, with filenames derived from source bytes
+and rendering settings. Preserve the whole source artwork inside the frame.
+Open Graph, Twitter and article structured data use the same generated image;
+the head also declares its dimensions, MIME type and alternative text.
+
+The portfolio uses `seo.socialImage` in `content/portfolio/home.json`, currently
+the approved sculpture poster. Blog Home uses the configured featured post's
+current cover; series and tag pages use their latest post's cover. Article
+pages use `socialImage` when explicitly configured, otherwise their current
+`cover` (or `previewImage` for a GIF still). Project pages use an explicit
+project `socialImage`, their portfolio preview, their overview poster, then the
+portfolio cover. Sources must be local assets. Generated images are deployment
+output, not authored files.
+
+An image URL changes automatically with its content. Social platforms may cache
+the page metadata separately; an already shared card can require a platform
+cache refresh after deployment.
 
 Post and project content images preserve explicit alt text. During the build,
 missing or placeholder alt text receives a heading-aware fallback and images

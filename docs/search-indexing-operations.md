@@ -4,6 +4,32 @@ Date: 2026-07-28
 
 These steps happen after deploying the generated `blogs/dist/` output.
 
+## Build and CI checks
+
+Portfolio identity lives in `content/portfolio/home.json`: Home/About supply
+the name, role, biography and profile links, and `seo` supplies organization,
+education, expertise and the sharing-image source. The build generates the
+home's title, descriptions, social metadata and linked `WebSite`, `ProfilePage`
+and `Person` structured data. Articles, the Blog index, publications and project
+pages reference that same Person ID. Chapter navigation preserves the title.
+
+Selected writing is rendered from `featuredPortfolioPosts` in
+`blogs/data/site-data.json` into the initial home HTML. Its browser script keeps
+those nodes and attaches cover behavior; source previews retain a client-side
+fallback. Full and incremental builds regenerate the home.
+
+Run `npm run build`, `npm run validate:seo` and `npm run check:seo:render`.
+The static validator covers the portfolio home, projects, published article
+routes and archives, including current social-image sources and actual JPEG
+dimensions. A fixture regression also replaces an image at the same path and
+modification time to verify that thumbnails, deployed search data and social
+images receive fresh URLs and pixels. The browser check covers mobile and
+desktop, JavaScript disabled,
+normal hydration and blocked JSON requests. It also checks title stability
+through chapter navigation. GitHub Actions runs both checks, and the deploy
+paths retain them as verification gates. These checks validate implementation;
+Google's actual indexing state still requires Search Console.
+
 ## Google Search Console
 
 1. Add and verify the site property for the deployed origin.

@@ -6,6 +6,7 @@ function ensureDirSync(dirPath) {
 }
 
 function copyRecursiveSync(src, dest, options = {}) {
+    if (path.basename(src) === '.DS_Store') return;
     const shouldCopy = options.shouldCopy || (() => true);
     if (!shouldCopy(src)) {
         return;

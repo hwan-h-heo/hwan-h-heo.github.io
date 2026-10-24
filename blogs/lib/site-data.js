@@ -527,11 +527,11 @@ function validateSiteData(rawSiteData) {
         if (!ids.has(item.id)) {
             errors.push(`Featured portfolio post "${item.id}" does not exist.`);
         }
-        if (!item.teaserImage) {
-            errors.push(`Featured portfolio post "${item.id}" is missing teaserImage.`);
-        } else if (isExternalUrl(item.teaserImage)) {
+        if (item.teaserImage !== undefined && (typeof item.teaserImage !== 'string' || !item.teaserImage.trim())) {
+            errors.push(`Featured portfolio post "${item.id}" has an invalid teaserImage override.`);
+        } else if (item.teaserImage && isExternalUrl(item.teaserImage)) {
             errors.push(`Featured portfolio post "${item.id}" must use a local teaserImage.`);
-        } else {
+        } else if (item.teaserImage) {
             validateLocalFileReference(item.teaserImage, errors, `featured portfolio post ${item.id}`, 'teaserImage');
         }
         if (featuredIds.has(item.id)) {

@@ -1,6 +1,7 @@
 const { SITE_URL } = require('./site-config');
 const { isFromArchive } = require('./site-data');
 const { render: renderSiteIcon } = require('../../assets/js/site-icons');
+const { getPostSocialImage, renderSocialImageMetadata } = require('./social-images');
 const {
     escapeHtml,
     renderPostPreview,
@@ -35,6 +36,7 @@ function renderArchiveEntries(posts, siteData) {
 
 function renderArchivePage({ title, description, canonicalPath, posts, siteData, archiveKind = 'tag' }) {
     const canonicalUrl = `${SITE_URL}${canonicalPath}`;
+    const socialImage = getPostSocialImage(posts[0]);
     const structuredData = {
         '@context': 'https://schema.org',
         '@type': 'CollectionPage',
@@ -64,11 +66,10 @@ function renderArchivePage({ title, description, canonicalPath, posts, siteData,
         <meta property="og:title" content="${escapeHtml(title)}" />
         <meta property="og:description" content="${escapeHtml(description)}" />
         <meta property="og:url" content="${canonicalUrl}" />
-        <meta property="og:image" content="${SITE_URL}/assets/image_fx_.jpg" />
+${renderSocialImageMetadata(socialImage, `${posts[0].title_eng} cover image`)}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="${escapeHtml(title)}" />
         <meta name="twitter:description" content="${escapeHtml(description)}" />
-        <meta name="twitter:image" content="${SITE_URL}/assets/image_fx_.jpg" />
         <script type="application/ld+json">${serializeStructuredData(structuredData)}</script>
         <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />

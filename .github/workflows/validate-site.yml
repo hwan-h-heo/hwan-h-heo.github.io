@@ -38,5 +38,11 @@ jobs:
       - name: Validate generated SEO output
         run: npm run validate:seo
 
+      - name: Install Chromium for portfolio SEO checks
+        run: npx playwright install --with-deps chromium
+
+      - name: Check portfolio SEO with and without JavaScript
+        run: npm run check:seo:render
+
       - name: Run tests if present
         run: npm test --if-present

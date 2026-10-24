@@ -1,6 +1,8 @@
 const { render: renderSiteIcon } = require('../../assets/js/site-icons');
 const { renderSiteHeader } = require('./site-header');
 const cheerio = require('cheerio');
+const { getPortfolioAuthor } = require('./portfolio-profile');
+const { renderSocialImageMetadata } = require('./social-images');
 
 function escapeHtml(value) {
     return String(value || '')
@@ -51,7 +53,7 @@ function renderMathRuntime(contentHtml) {
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>`;
 }
 
-function renderProjectPage({ project, contentHtml, projectNav = null }) {
+function renderProjectPage({ project, contentHtml, projectNav = null, canonicalUrl, socialImage }) {
     const title = project.title || 'Project';
     const heroTitle = project.heroTitle || title;
     const colon = heroTitle.indexOf(':');
@@ -84,6 +86,16 @@ function renderProjectPage({ project, contentHtml, projectNav = null }) {
 <html lang="en"><head>
     <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
     <title>${escapeHtml(title)}</title><meta name="description" content="${escapeHtml(project.description || '')}"><meta name="keywords" content="${escapeHtml(project.keywords || '')}">
+    <link rel="canonical" href="${canonicalUrl}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="${escapeHtml(title)}" />
+    <meta property="og:description" content="${escapeHtml(project.description || '')}" />
+    <meta property="og:url" content="${canonicalUrl}" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${escapeHtml(title)}" />
+    <meta name="twitter:description" content="${escapeHtml(project.description || '')}" />
+${renderSocialImageMetadata(socialImage, `${heroTitle} project preview`)}
+    <script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'CreativeWork', name: title, description: project.description, url: canonicalUrl, image: socialImage.url, author: getPortfolioAuthor() }).replace(/</g, '\\u003c')}</script>
     <link href="/assets/favicon.ico" rel="icon">
     <script src="/js/site-theme.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">

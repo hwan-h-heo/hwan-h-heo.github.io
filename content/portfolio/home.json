@@ -1,5 +1,16 @@
 {
   "version": 1,
+  "seo": {
+    "organizationName": "NC AI",
+    "alumniOf": "Korea University",
+    "socialImage": "/assets/hero/sculpture/poster-1440.webp",
+    "knowsAbout": [
+      "3D generative AI",
+      "Neural rendering",
+      "CUDA inference optimization",
+      "Computer graphics"
+    ]
+  },
   "blocks": [
     {
       "id": "home",
@@ -61,6 +72,7 @@
       "depthImage": "assets/profile4-depth.png",
       "imageAlt": "Portrait of Hwan Heo",
       "name": "Hwan Heo",
+      "alternateName": "허환",
       "role": "Lead 3D AI Research Engineer",
       "affiliation": "NC AI · VARCO 3D",
       "bodyHtml": "At <strong>NC AI</strong>, I lead research and engineering for the <a href=\"https://3d.varco.ai/explore\" target=\"_blank\" rel=\"noopener noreferrer\"><strong>VARCO 3D</strong></a>, developing production 3D AI systems across large-scale generative model training, inference optimization, and graphics algorithms.<br><br>When I'm away from CUDA kernels and mesh pipelines, I'm usually playing guitar, making music, or following an unexpected STEM rabbit hole.",

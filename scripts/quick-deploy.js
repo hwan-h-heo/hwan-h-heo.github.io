@@ -116,6 +116,8 @@ function main() {
     run('npm', ['run', 'check:content']);
     run('npm', ['run', 'check:assets']);
     run('npm', ['--prefix', 'blogs', 'run', 'build:incremental', '--', `--changed=${serializeChangedFiles(changedFiles)}`]);
+    run('npm', ['run', 'validate:seo']);
+    if (routes.includes('/')) run('npm', ['run', 'check:seo:render']);
 
     (routes.length ? routes : ['/blogs/']).forEach((route) => {
         run('npm', ['run', 'check:render', '--', `--route=${route}`]);

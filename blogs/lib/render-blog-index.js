@@ -1,6 +1,8 @@
 const { SITE_URL } = require('./site-config');
 const { isFromArchive } = require('./site-data');
 const { getPostSeriesIds } = require('../js/site-data-client');
+const { getPortfolioAuthor, getPortfolioProfile } = require('./portfolio-profile');
+const { getPostSocialImage, getSocialImage, renderSocialImageMetadata } = require('./social-images');
 const {
     escapeHtml,
     getFeaturedPost,
@@ -20,18 +22,17 @@ function replaceOrFail(html, pattern, replacement, label) {
     return html.replace(pattern, replacement);
 }
 
-function renderBlogHeadMetadata() {
+function renderBlogHeadMetadata(siteData) {
+    const featured = getFeaturedPost(siteData);
+    const socialImage = featured ? getPostSocialImage(featured) : getSocialImage(getPortfolioProfile().socialImage);
     const structuredData = {
         '@context': 'https://schema.org',
         '@type': 'Blog',
         name: "Hwan Heo's Blog",
         url: `${SITE_URL}/blogs/`,
         description: BLOG_DESCRIPTION,
-        author: {
-            '@type': 'Person',
-            name: 'Hwan Heo',
-            url: SITE_URL
-        },
+        author: getPortfolioAuthor(),
+        image: socialImage.url,
         inLanguage: 'en'
     };
 
@@ -42,11 +43,10 @@ function renderBlogHeadMetadata() {
         `        <meta property="og:title" content="${escapeHtml(BLOG_TITLE)}" />`,
         `        <meta property="og:description" content="${escapeHtml(BLOG_DESCRIPTION)}" />`,
         `        <meta property="og:url" content="${SITE_URL}/blogs/" />`,
-        `        <meta property="og:image" content="${SITE_URL}/assets/image_fx_.jpg" />`,
+        renderSocialImageMetadata(socialImage, featured ? `${featured.title_eng} cover image` : 'Hwan Heo portfolio cover'),
         '        <meta name="twitter:card" content="summary_large_image" />',
         `        <meta name="twitter:title" content="${escapeHtml(BLOG_TITLE)}" />`,
         `        <meta name="twitter:description" content="${escapeHtml(BLOG_DESCRIPTION)}" />`,
-        `        <meta name="twitter:image" content="${SITE_URL}/assets/image_fx_.jpg" />`,
         `        <script type="application/ld+json">${serializeStructuredData(structuredData)}</script>`
     ].join('\n');
 }
@@ -99,7 +99,7 @@ function renderStaticBlogIndex(sourceHtml, siteData) {
     );
     html = html.replace(
         '</head>',
-        `${renderBlogHeadMetadata()}\n    </head>`
+        `${renderBlogHeadMetadata(siteData)}\n    </head>`
     );
     html = replaceOrFail(
         html,
