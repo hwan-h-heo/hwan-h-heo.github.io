@@ -168,6 +168,12 @@ page preloader.
 The portrait preprocessing script writes depth-study output under
 `_workspace/portrait-assets/`, outside the published asset tree.
 
+`js/simple-model-viewer.js` owns the viewer's loaders, scene state and controls.
+Its Shadow DOM markup lives in `js/model-viewer/template.js`; the isolated
+styles live in `js/model-viewer/styles.js`. Keep changes to those presentation
+modules independent of file loading, materials and persistence. The extracted
+template produces the same markup and styles as the former inline method.
+
 `js/hero-voxel.js` and `js/hero-wave.js` support the draft hierarchical-decoding
 demo and its preprocessing documentation. They are not portfolio entry points,
 and their lack of a home-page script tag does not make them unused code.
