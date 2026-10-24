@@ -6,6 +6,8 @@ node_modules/
 blogs/node_modules/
 /artifacts/ui-regression/
 /.codex-server/
+/_workspace/
+.DS_Store
 
 # Hero voxel preprocessing: keep only source/configuration and committed outputs.
 /scripts/hero_voxels/.venv/

@@ -128,8 +128,7 @@ row metadata should sit one neutral step above their surrounding separators.
 Keep the type compact, but do not rely on low contrast to make it subordinate.
 On light Portfolio surfaces, use `0.70rem` for chapter, index, eyebrow, and row
 folio labels; use no less than `0.68rem` for compact detail and disclosure
-labels. The About point-cloud affordance may sit at `0.66rem` because it is an
-ancillary enhancement hint. The dark Hero's out-of-flow margin notation remains
+labels. The dark Hero's out-of-flow margin notation remains
 the contained exception and may stay smaller.
 Within a featured Project, a meaningful detail label such as `CONTRIBUTION`
 uses IBM Plex Mono `600` at `0.70rem` and `--color-text-strong`. Keep it neutral
@@ -271,7 +270,7 @@ And Motion and implemented in `assets/css/hero-sculpture.css`.
   let the portrait rail absorb the remaining width. Center the portrait within
   that rail so the section balances across the shell instead of leaving unused
   space outside a fixed two-column grid. Treat the person's name as the portrait
-  caption headline, clearly above role, affiliation, and point-cloud notation.
+  caption headline, clearly above role and affiliation.
   Right-align that caption to the portrait edge on wide layouts so it reads as
   a deliberate margin note, compensating for the source PNG's transparent right
   inset so the text follows the visible portrait rather than the image box;
@@ -893,8 +892,8 @@ The static About cutout uses a dedicated editorial alpha mask eroded by a 4 px d
 at the original 1049 × 925 resolution, then lightly feathered. Keep the visible
 RGB pixels intact and never expand the original alpha. This removes the source
 matte's pale contour on charcoal without changing the face or adding a backing
-plate. Keep the original portrait and depth assets unchanged; the fixed home does not
-load the point-cloud enhancement.
+plate. Keep the original portrait source unchanged. Depth-study output belongs
+under `_workspace/portrait-assets/`; the fixed home uses only its static cutout.
 
 Continuous mobile scrolling follows Cover → Projects → Blog → About. Hide each
 chapter's Previous/Next CTA rail and the fixed page-number footer. Chapters end
@@ -1150,42 +1149,10 @@ Rules:
 - Keep movement within 1 to 4px.
 - Treat the sculpture canvas as the spatial-motion exception: fine-pointer input
   may drive restrained damped camera parallax, while the finished surface stays fixed. Keep the authored object orientation fixed and stop rendering at rest.
-- Treat the About portrait point cloud as a progressive enhancement. Keep its
-  colored points orthographically aligned to one flat depth plane at rest; on
-  fine-pointer hover, restore the authored depth gradually and allow only a
-  bounded pointer-relative rotation. Allow one first-view settle when the About
-  chapter reaches the same `200px` viewport boundary used by the `#about`
-  scrollspy: hold the flat photographic portrait briefly, then ease the point
-  layer and depth in with the angle, pass through one shallow left-to-right fan,
-  and return to the flat portrait over roughly `4.5s`. Keep the pre-trigger
-  portrait flat and never replay the intro. On fine-pointer devices
-  only, repeat the same left-to-right-to-front path over `4.5s` after at
-  least six seconds at rest. Fade the PNG almost entirely out during that fan so
-  it reads as spatial rotation rather than blur, while keeping its depth and
-  angle slightly quieter than the intro. Hover interrupts and takes priority.
-  Identify the enhancement with one quiet mono `POINT CLOUD` annotation and
-  show `/ HOVER FOR DEPTH` from first paint on fine-pointer layouts so
-  enhancement readiness never changes the caption layout. Keep the hint hidden
-  where hover is unavailable.
-  At rest, let the portrait PNG carry `100%` of the image and hide the point
-  layer completely, preventing a residual grid on compact displays. As the
-  depth response opens, bring the points in on a quicker ease-out curve while
-  keeping the PNG fully present through the first fifth of the response; only
-  then ease the underlay away. This avoids a thin, blurry midpoint without
-  leaving the PNG as a second, misaligned silhouette at full depth.
-  Size point sprites from their projected screen-space sampling interval rather
-  than DPR alone; overlap neighboring samples enough to prevent grid moire as
-  the portrait card changes size.
-  Fall back to the portrait PNG for iOS and iPadOS, reduced motion, data-saving
-  mode, or an unavailable or lost WebGL context. Detect iPadOS when it presents
-  a desktop-style `MacIntel` platform with touch points. In these static modes,
-  do not import Three.js, create a WebGL canvas, or expose the point-cloud
-  affordance; keep the PNG at full opacity. Desktop Safari and other desktop
-  browsers retain the enhancement.
+- Keep About as the static editorial portrait specified above; it adds no
+  independent WebGL scene or point-cloud controls.
 - Respect `prefers-reduced-motion`.
 - Keyboard focus must expose the same meaning as hover.
-- Keep the blocking portfolio preloader within about one second and exit it on
-  `--motion-base`; ambient hero motion may continue independently.
 
 Project and blog preview rows have no row-level hover state. Their media and
 title link regions respond independently:

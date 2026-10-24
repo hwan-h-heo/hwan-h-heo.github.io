@@ -29,7 +29,8 @@ on one text baseline, with the work scope at left and the folio at right.
 contact shadows and deterministic surface refinement. The scene uses AgX tone
 mapping, sRGB output, neutral studio lights, VSM shadows and 24,672 triangles.
 Material metalness and clearcoat are zero. There is no ray tracing or model asset
-download. The About portrait and article viewers retain their existing r150 runtime.
+download. Article viewers retain their existing r150 runtime; About uses the
+static editorial portrait.
 
 Refinement starts coarse before its first canvas frame and plays once over four
 seconds, using GPU ancestor interpolation. There is no reverse scroll or replay.
@@ -45,7 +46,7 @@ data-saving and directly opened reading pages. A later reading-to-Cover return
 loads the finished scene without replaying intro. Reduced-motion changes,
 unavailable WebGL, blocked bundle downloads and context loss retain the original
 responsive posters. Manual Motion is persisted separately as `portfolio-motion`.
-The home no longer loads the About point-cloud runtime.
+About retains its static portrait throughout chapter navigation.
 
 `npm run build:hero` bundles the pinned root `three` and `esbuild` versions into
 `assets/js/hero-sculpture.js` and its linked license notice. These generated assets

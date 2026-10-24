@@ -107,10 +107,6 @@
     }
 
     function renderAbout(block) {
-        const depthAttribute = block.depthImage
-            ? ` data-about-depth="${escapeHtml(block.depthImage)}"`
-            : '';
-
         return `
             <div class="portfolio-shell section-title about-section-heading">
                 <div class="portfolio-chapter-marker" aria-hidden="true">

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the cleaned portrait and masked scalar depth assets used on the home page."""
+"""Build the cleaned portrait and an optional offline depth-study asset."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_COLOR_SOURCE = REPO_ROOT / "assets" / "profile4.png"
 DEFAULT_ALPHA_SOURCE = REPO_ROOT / "assets" / "profile4-author.png"
 DEFAULT_PORTRAIT_OUTPUT = REPO_ROOT / "assets" / "profile4-portrait.png"
-DEFAULT_DEPTH_OUTPUT = REPO_ROOT / "assets" / "profile4-depth.png"
+DEFAULT_DEPTH_OUTPUT = REPO_ROOT / "_workspace" / "portrait-assets" / "profile4-depth.png"
 
 
 def parse_args() -> argparse.Namespace:

@@ -171,10 +171,10 @@ arguments, seed, Python range, and lockfile produce identical files.
 
 ## Runtime behavior
 
-The production entry point always loads the existing Wave hero and contains no
-URL switch to the voxel experiment. Consequently, the home page never fetches a
-voxel manifest or binary. `js/hero-voxel.js` is retained as source material for
-a dedicated technical Note/demo; when explicitly mounted in that isolated context it chooses
+The production portfolio uses the sculpture entry in `js/hero-loader.js` and
+`js/hero.js`, with no URL switch to this experiment. The home page never fetches
+a voxel manifest or binary. `js/hero-voxel.js` and its Wave fallback support the
+draft hierarchical-decoding demo; when explicitly mounted in that isolated context it chooses
 the desktop or mobile/low-spec manifest, validates its schema and binary ranges,
 and creates typed-array views directly over the fetched `ArrayBuffer`.
 
