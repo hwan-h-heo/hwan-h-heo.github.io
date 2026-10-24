@@ -130,7 +130,7 @@
                             <img src="/assets/profile4-editorial.png" class="about-profile-image" alt="${escapeHtml(block.imageAlt)}" loading="lazy" decoding="async">
                         </div>
                         <figcaption class="about-identity">
-                            <h3 class="about-name">${escapeHtml(block.name || block.role)}</h3>
+                            <h3 class="about-name">${escapeHtml(block.name || block.role)}${block.alternateName ? ` <span lang="ko">(${escapeHtml(block.alternateName)})</span>` : ''}</h3>
                             <p class="about-meta">
                                 <span class="about-role">${escapeHtml(block.role)}</span>
                                 <span class="about-affiliation">${escapeHtml(block.affiliation)}</span>

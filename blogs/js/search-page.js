@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             const seriesTitle = getSeriesTitle(post, language);
             const source = post.cover || '/assets/blog_bg.jpeg';
             const keepAnimated = post.animatedPreview === true && coverMedia?.isAnimatedCover(source);
-            const preview = coverMedia?.getBlogCoverPreviewUrl(post.id) || source;
+            const preview = coverMedia?.getBlogCoverPreviewUrl(post) || source;
             const autoplaySource = keepAnimated ? ` data-autoplay-src="${escapeHtml(source)}"` : '';
             const animatedSource = !keepAnimated && coverMedia?.isAnimatedCover(source)
                 ? ` data-animated-src="${escapeHtml(source)}"`

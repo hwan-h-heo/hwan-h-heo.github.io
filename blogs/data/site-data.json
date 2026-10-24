@@ -29,7 +29,11 @@
       ],
       "cover": "/blogs/posts/261022_pcg_muon/assets/cover-sculptural-paths-v2.webp",
       "status": "published",
-      "updated": "2026-10-22"
+      "updated": "2026-10-22",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/261022_pcg_muon-9eb8c9012823f341.webp",
+        "portfolio": "/assets/generated/blog-covers/261022_pcg_muon-portfolio-9eb8c9012823f341.webp"
+      }
     },
     {
       "id": "260818_quad_remesh",
@@ -50,7 +54,11 @@
       "slug": "quad-remesh",
       "tags": [
         "Graphics"
-      ]
+      ],
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/260818_quad_remesh-9466b067653cf839.webp",
+        "portfolio": "/assets/generated/blog-covers/260818_quad_remesh-portfolio-9466b067653cf839.webp"
+      }
     },
     {
       "id": "260802_cuda_01_gemm",
@@ -71,7 +79,10 @@
       ],
       "cover": "/blogs/posts/260802_cuda_01_gemm/assets/cover.webp",
       "status": "published",
-      "updated": "2026-08-12"
+      "updated": "2026-08-12",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/260802_cuda_01_gemm-50220b65c6d17566.webp"
+      }
     },
     {
       "id": "260802_cuda_03_flashattention",
@@ -159,7 +170,11 @@
       ],
       "cover": "/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png",
       "status": "published",
-      "updated": "2026-07-27"
+      "updated": "2026-07-27",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/260727_sparse_3d-0e1c5043796fb7c5.webp",
+        "portfolio": "/assets/generated/blog-covers/260727_sparse_3d-portfolio-0e1c5043796fb7c5.webp"
+      }
     },
     {
       "id": "260115_Varco3D",
@@ -181,7 +196,10 @@
       ],
       "cover": "/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif",
       "status": "published",
-      "updated": "2026-01-15"
+      "updated": "2026-01-15",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/260115_Varco3D-ad53a9a4c9aded74.webp"
+      }
     },
     {
       "id": "250823_sdf",
@@ -202,7 +220,10 @@
       ],
       "cover": "/blogs/posts/250823_sdf/assets/remote-12d4629724c7.png",
       "status": "published",
-      "updated": "2025-08-23"
+      "updated": "2025-08-23",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/250823_sdf-212f24c0a13a1627.webp"
+      }
     },
     {
       "id": "250810_flow",
@@ -224,7 +245,10 @@
       ],
       "cover": "/blogs/posts/250810_flow/assets/remote-40629d4b233a.png",
       "status": "published",
-      "updated": "2025-08-10"
+      "updated": "2025-08-10",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/250810_flow-4f09d6c71f188705.webp"
+      }
     },
     {
       "id": "250809_gwn",
@@ -245,7 +269,10 @@
       ],
       "cover": "/blogs/posts/250809_gwn/assets/image.png",
       "status": "published",
-      "updated": "2025-08-09"
+      "updated": "2025-08-09",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/250809_gwn-e1668997dc3a7ff6.webp"
+      }
     },
     {
       "id": "250710_building_large_3d_2",
@@ -267,7 +294,10 @@
       ],
       "cover": "/blogs/posts/250710_building_large_3d_2/assets/image-13.png",
       "status": "published",
-      "updated": "2025-07-10"
+      "updated": "2025-07-10",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/250710_building_large_3d_2-4385d6228fc46083.webp"
+      }
     },
     {
       "id": "250702_building_large_3d_1",
@@ -289,7 +319,10 @@
       ],
       "cover": "/blogs/posts/250702_building_large_3d_1/assets/image-10.png",
       "status": "published",
-      "updated": "2025-07-02"
+      "updated": "2025-07-02",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/250702_building_large_3d_1-a9510478f70ed55d.webp"
+      }
     },
     {
       "id": "250310_model_viewer",
@@ -311,7 +344,10 @@
       ],
       "cover": "/blogs/posts/250310_model_viewer/assets/image.png",
       "status": "published",
-      "updated": "2025-03-10"
+      "updated": "2025-03-10",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/250310_model_viewer-718b611b7f28c5d7.webp"
+      }
     },
     {
       "id": "250302_3d_latent_diffusion",
@@ -333,7 +369,10 @@
       ],
       "cover": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser-poster.jpg",
       "status": "published",
-      "updated": "2025-03-02"
+      "updated": "2025-03-02",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/250302_3d_latent_diffusion-f2ee47bc2a78da09.webp"
+      }
     },
     {
       "id": "250106_tomography",
@@ -355,7 +394,10 @@
       ],
       "cover": "/blogs/posts/250106_tomography/assets/image1.png",
       "status": "published",
-      "updated": "2025-01-06"
+      "updated": "2025-01-06",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/250106_tomography-1869ff9dee74b592.webp"
+      }
     },
     {
       "id": "240917_3djs",
@@ -377,7 +419,10 @@
       ],
       "cover": "/assets/guitar.jpeg",
       "status": "published",
-      "updated": "2024-09-17"
+      "updated": "2024-09-17",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/240917_3djs-404ff9dbdfd3ccc4.webp"
+      }
     },
     {
       "id": "240823_grt",
@@ -399,7 +444,10 @@
       ],
       "cover": "/blogs/posts/240823_grt/assets/teaser.gif",
       "status": "published",
-      "updated": "2024-08-23"
+      "updated": "2024-08-23",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/240823_grt-ead3a3c9761a466b.webp"
+      }
     },
     {
       "id": "240805_gs",
@@ -422,7 +470,10 @@
       "cover": "/blogs/posts/240805_gs/assets/garden.gif",
       "previewImage": "/blogs/posts/240805_gs/assets/garden-preview.jpg",
       "status": "published",
-      "updated": "2024-08-05"
+      "updated": "2024-08-05",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/240805_gs-f33e3379709e543e.webp"
+      }
     },
     {
       "id": "240721_sfm",
@@ -441,7 +492,10 @@
       ],
       "cover": "/blogs/posts/240721_sfm/assets/sfm.jpg",
       "status": "published",
-      "updated": "2024-07-21"
+      "updated": "2024-07-21",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/240721_sfm-1bf75488a1847ab2.webp"
+      }
     },
     {
       "id": "240602_2dgs",
@@ -463,7 +517,10 @@
       ],
       "cover": "/blogs/posts/240602_2dgs/assets/teaser.gif",
       "status": "published",
-      "updated": "2024-06-02"
+      "updated": "2024-06-02",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/240602_2dgs-cfad0ff0f8e39687.webp"
+      }
     },
     {
       "id": "240426_diffusion_depth",
@@ -485,7 +542,10 @@
       ],
       "cover": "/blogs/posts/240426_diffusion_depth/assets/teaser.jpeg",
       "status": "published",
-      "updated": "2024-04-26"
+      "updated": "2024-04-26",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/240426_diffusion_depth-1ec28407072a2b54.webp"
+      }
     },
     {
       "id": "240226_sora",
@@ -506,7 +566,10 @@
       ],
       "cover": "/blogs/posts/240226_sora/assets/big-sur-gs-poster.jpg",
       "status": "published",
-      "updated": "2024-02-26"
+      "updated": "2024-02-26",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/240226_sora-3d2587d895a6262b.webp"
+      }
     },
     {
       "id": "231130_nerf_in_game",
@@ -527,7 +590,10 @@
       ],
       "cover": "/blogs/posts/231130_nerf_in_game/assets/VID_4_NeRF_obeject_in_blender-poster.jpg",
       "status": "published",
-      "updated": "2023-11-30"
+      "updated": "2023-11-30",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/231130_nerf_in_game-b53bc2b6395a2359.webp"
+      }
     },
     {
       "id": "230202_ngp",
@@ -548,7 +614,10 @@
       ],
       "cover": "/blogs/posts/230202_ngp/assets/ngp_nerf.gif",
       "status": "published",
-      "updated": "2023-02-02"
+      "updated": "2023-02-02",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/230202_ngp-d4257d96c73efe87.webp"
+      }
     },
     {
       "id": "211128_fourier",
@@ -569,7 +638,10 @@
       ],
       "cover": "/blogs/posts/211128_fourier/assets/main.png",
       "status": "published",
-      "updated": "2021-11-28"
+      "updated": "2021-11-28",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/211128_fourier-34896995d411ed0d.webp"
+      }
     },
     {
       "id": "210910_lin_alg_2",
@@ -970,17 +1042,14 @@
   "featuredPortfolioPosts": [
     {
       "id": "261022_pcg_muon",
-      "teaserImage": "/blogs/posts/261022_pcg_muon/assets/cover-sculptural-paths-v2.webp",
       "teaserAlt": "Graphite saddle sculpture with highlighted cyan Muon and silver PCG update paths and iteration markers"
     },
     {
       "id": "260818_quad_remesh",
-      "teaserImage": "/blogs/posts/260818_quad_remesh/assets/cover-dragon.webp",
       "teaserAlt": "Dragon surface split between shaded geometry and quad wireframe"
     },
     {
       "id": "260727_sparse_3d",
-      "teaserImage": "/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png",
       "teaserAlt": "VARCO3D sparse 3D inference optimization result"
     }
   ]

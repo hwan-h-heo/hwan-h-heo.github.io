@@ -77,7 +77,6 @@
                 if (link.hash === '#' + id) link.setAttribute('aria-current', 'page');
                 else link.removeAttribute('aria-current');
             });
-            document.title = 'Hwan Heo — ' + titles[id];
             document.querySelector('.edition-page-number').textContent = String(ids.indexOf(id)).padStart(2,'0') + ' / 03';
             document.dispatchEvent(new CustomEvent('portfolio:chapter-change', {detail:{chapter:id}}));
             if (continuous && initialized && !navigation) {
