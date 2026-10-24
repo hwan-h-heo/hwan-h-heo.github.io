@@ -1,9 +1,36 @@
 {
   "blogHome": {
-    "featuredPostId": "260727_sparse_3d",
+    "featuredPostId": "261022_pcg_muon",
     "archiveStartPostId": "250106_tomography"
   },
   "posts": [
+    {
+      "id": "261022_pcg_muon",
+      "title_eng": "From PCG to Muon: The Geometry of Preconditioners and Optimizers",
+      "title_kor": "From PCG to Muon: Preconditioner와 Optimizer의 기하학",
+      "subtitle_eng": "From sparse quadratic solvers in quad remeshing to deep learning optimizers",
+      "subtitle_kor": "Quad Remeshing의 Sparse Quadratic Solver에서 Deep Learning Optimizer까지",
+      "date": "2026-10-22",
+      "category": "post",
+      "series": "graphics",
+      "additionalSeries": [
+        "3d-generation"
+      ],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "from-pcg-to-muon",
+      "tags": [
+        "Optimization",
+        "Linear Algebra",
+        "CUDA",
+        "Graphics"
+      ],
+      "cover": "/blogs/posts/261022_pcg_muon/assets/cover-sculptural-paths-v2.webp",
+      "status": "published",
+      "updated": "2026-10-22"
+    },
     {
       "id": "260818_quad_remesh",
       "title_eng": "Comprehensive Analysis of Quad Remeshing",
@@ -942,9 +969,9 @@
   ],
   "featuredPortfolioPosts": [
     {
-      "id": "260727_sparse_3d",
-      "teaserImage": "/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png",
-      "teaserAlt": "VARCO3D sparse 3D inference optimization result"
+      "id": "261022_pcg_muon",
+      "teaserImage": "/blogs/posts/261022_pcg_muon/assets/cover-sculptural-paths-v2.webp",
+      "teaserAlt": "Graphite saddle sculpture with highlighted cyan Muon and silver PCG update paths and iteration markers"
     },
     {
       "id": "260818_quad_remesh",
@@ -952,9 +979,9 @@
       "teaserAlt": "Dragon surface split between shaded geometry and quad wireframe"
     },
     {
-      "id": "240805_gs",
-      "teaserImage": "/blogs/posts/240805_gs/assets/garden-preview.jpg",
-      "teaserAlt": "Split view of the Gaussian point cloud and rasterized garden scene"
+      "id": "260727_sparse_3d",
+      "teaserImage": "/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png",
+      "teaserAlt": "VARCO3D sparse 3D inference optimization result"
     }
   ]
 }

@@ -72,6 +72,25 @@ Use the `tags` array in `blogs/data/site-data.json`:
 
 Tags appear on blog list/search cards and article headers.
 
+## Series
+
+Set the primary `series` in `blogs/data/site-data.json`. To list the same post
+in more series, add their IDs to `additionalSeries`:
+
+```json
+"series": "graphics",
+"additionalSeries": ["3d-generation"]
+```
+
+The primary series supplies preview labels, the article header, and previous/next
+navigation. Additional series include the post in their Blog home groups and
+series archives. The post keeps one URL per language and counts once in the
+overall article total. Each series counts it once.
+
+`additionalSeries` is optional. Every entry must name an existing series, with
+no duplicates or repetition of the primary series. Edit these memberships in
+the JSON file; the local editor preserves them when saving the post.
+
 ## Preview Locally
 
 Build and serve:

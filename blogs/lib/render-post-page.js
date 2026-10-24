@@ -234,6 +234,7 @@ function renderPostPage({ post, lang, contentHtml, metaDescription, readingTime,
             date: entry.date,
             category: entry.category,
             series: entry.series,
+            additionalSeries: entry.additionalSeries || [],
             languages: entry.languages,
             slug: entry.slug
         })),

@@ -1,6 +1,19 @@
-(function() {
+(function(root, factory) {
+    const api = factory();
+    if (typeof module === 'object' && module.exports) {
+        module.exports = api;
+    }
+    if (root) {
+        root.siteDataClient = api;
+    }
+})(typeof window !== 'undefined' ? window : null, function() {
     const DATA_PATH = '/blogs/data/site-data.json';
     let siteDataPromise;
+
+    function getPostSeriesIds(post) {
+        const additional = Array.isArray(post.additionalSeries) ? post.additionalSeries : [];
+        return [...new Set([post.series, ...additional].filter((id) => typeof id === 'string' && id))];
+    }
 
     function createSlug(title) {
         return String(title || '')
@@ -17,6 +30,7 @@
             .map((post) => ({
                 ...post,
                 languages: [...post.languages],
+                additionalSeries: Array.isArray(post.additionalSeries) ? [...post.additionalSeries] : [],
                 tags: Array.isArray(post.tags) ? [...post.tags] : [],
                 status: post.status || 'published',
                 cover: post.cover || '/assets/blog_bg.jpeg',
@@ -80,11 +94,12 @@
         return Boolean(archiveStartPost && post.date <= archiveStartPost.date);
     }
 
-    window.siteDataClient = {
+    return {
         loadSiteData,
+        getPostSeriesIds,
         getPostTitle,
         getPostSubtitle,
         getPostUrl,
         isFromArchive
     };
-})();
+});

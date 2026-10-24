@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { getPostSeriesIds } = require('../js/site-data-client');
 
 const DEFAULT_REPO_ROOT = path.join(__dirname, '..', '..');
 
@@ -52,13 +53,12 @@ function listTagArchiveEntries(siteData, minimumPosts = 2) {
 function listSeriesArchiveEntries(siteData, minimumPosts = 1) {
     const bySeries = new Map();
     siteData.posts.forEach((post) => {
-        if (!post.series) {
-            return;
-        }
-        if (!bySeries.has(post.series)) {
-            bySeries.set(post.series, []);
-        }
-        bySeries.get(post.series).push(post);
+        getPostSeriesIds(post).forEach((seriesId) => {
+            if (!bySeries.has(seriesId)) {
+                bySeries.set(seriesId, []);
+            }
+            bySeries.get(seriesId).push(post);
+        });
     });
 
     return [...bySeries.entries()]

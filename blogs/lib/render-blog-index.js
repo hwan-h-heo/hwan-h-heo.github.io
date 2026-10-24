@@ -1,5 +1,6 @@
 const { SITE_URL } = require('./site-config');
 const { isFromArchive } = require('./site-data');
+const { getPostSeriesIds } = require('../js/site-data-client');
 const {
     escapeHtml,
     getFeaturedPost,
@@ -81,7 +82,7 @@ function renderStaticBlogIndex(sourceHtml, siteData) {
     const featuredPost = getFeaturedPost(siteData);
     const allPosts = siteData.posts;
     const regularPosts = allPosts.filter((post) => post.id !== featuredPost?.id);
-    const seriesCount = new Set(siteData.posts.map((post) => post.series).filter(Boolean)).size;
+    const seriesCount = new Set(siteData.posts.flatMap(getPostSeriesIds)).size;
     const postsHtml = renderArchiveEntries(regularPosts, lang, siteData)
         || '<p class="blog-home-empty">No posts yet.</p>';
     const seriesHtml = renderSeriesGroups(siteData, lang)

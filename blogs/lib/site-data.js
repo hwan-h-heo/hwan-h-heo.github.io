@@ -18,6 +18,7 @@ const POST_ALLOWED_KEYS = new Set([
     'date',
     'category',
     'series',
+    'additionalSeries',
     'languages',
     'slug',
     'seoTitle',
@@ -86,8 +87,26 @@ function validatePostShape(post, seriesMap, errors) {
         }
     }
 
-    if (post.series && !seriesMap[post.series]) {
+    if (post.series && (typeof post.series !== 'string' || !Object.hasOwn(seriesMap, post.series))) {
         errors.push(`Post "${post.id}" references unknown series "${post.series}".`);
+    }
+
+    if (post.additionalSeries !== undefined) {
+        if (!Array.isArray(post.additionalSeries)) {
+            errors.push(`Post "${post.id}" must define "additionalSeries" as an array.`);
+        } else {
+            const seenSeries = new Set([post.series]);
+            post.additionalSeries.forEach((seriesId) => {
+                if (typeof seriesId !== 'string' || !seriesId.trim()) {
+                    errors.push(`Post "${post.id}" contains an invalid additional series.`);
+                } else if (!Object.hasOwn(seriesMap, seriesId)) {
+                    errors.push(`Post "${post.id}" references unknown additional series "${seriesId}".`);
+                } else if (seenSeries.has(seriesId)) {
+                    errors.push(`Post "${post.id}" repeats series "${seriesId}".`);
+                }
+                seenSeries.add(seriesId);
+            });
+        }
     }
 
     ['subtitle_eng', 'subtitle_kor', 'seoTitle', 'seoTitle_eng', 'seoTitle_kor', 'cover', 'previewImage', 'socialImage', 'translationKey', 'status', 'updated', 'slug'].forEach((key) => {
@@ -404,6 +423,7 @@ function normalizeSiteData(rawSiteData, relatedData = {}) {
         .map((post) => ({
             ...post,
             languages: [...post.languages],
+            additionalSeries: Array.isArray(post.additionalSeries) ? [...post.additionalSeries] : [],
             tags: Array.isArray(post.tags) ? [...post.tags] : [],
             status: post.status || 'published',
             cover: post.cover || '/assets/blog_bg.jpeg',

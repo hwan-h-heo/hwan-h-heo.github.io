@@ -132,6 +132,11 @@ function analyzeChangedFiles(changedFiles, siteData) {
             return;
         }
 
+        if (filePath === 'blogs/js/site-data-client.js') {
+            fullBuildReasons.push(`${filePath} supplies shared series membership for generated pages.`);
+            return;
+        }
+
         if (isStaticCopyFile(filePath)) {
             staticFiles.push(filePath);
             return;

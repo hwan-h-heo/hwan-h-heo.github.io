@@ -1,4 +1,5 @@
 const { SITE_URL } = require('./site-config');
+const { getPostSeriesIds } = require('../js/site-data-client');
 const { render: renderSiteIcon } = require('../../assets/js/site-icons');
 const {
     getPostRoute,
@@ -273,13 +274,15 @@ function renderFeaturedPost(siteData, lang = 'eng') {
 function renderSeriesGroups(siteData, lang = 'eng') {
     const postsBySeries = {};
     siteData.posts.forEach((post) => {
-        if (!post.series || !post.languages.includes(lang)) {
+        if (!post.languages.includes(lang)) {
             return;
         }
-        if (!postsBySeries[post.series]) {
-            postsBySeries[post.series] = [];
-        }
-        postsBySeries[post.series].push(post);
+        getPostSeriesIds(post).forEach((seriesId) => {
+            if (!postsBySeries[seriesId]) {
+                postsBySeries[seriesId] = [];
+            }
+            postsBySeries[seriesId].push(post);
+        });
     });
 
     return Object.entries(postsBySeries)
