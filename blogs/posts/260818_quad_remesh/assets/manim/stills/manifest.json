@@ -1,0 +1,65 @@
+{
+  "method": "Native Manim save_last_frame rendering of reframed source scenes; no video capture",
+  "renderer": "scripts/quad-remesh-stills.py",
+  "source_project": "quad_remesh_blog",
+  "manim_version": "0.21.0",
+  "source_sha256": {
+    "blog_scenes.py": "f39e89dde5430f0cda7e0b537c2582df4ef7094a726b76b903ff816ab0555c61",
+    "blog_geometry.py": "4be5158aaac99297f7f79c2b32b09af7f7ee73bd54d34e1b98e8d2bd1e88488b",
+    "common.py": "9dfad6fe89ff8b31a926f1cf40a7f06d8efb7cc1b52a8ebd042010b613165c05",
+    "geometry.py": "ada0be36622d2e2b66d913dc2643887e701685c55e0df8b55ea567acbaa45667",
+    "carrier_patch.py": "d56e07b80018fc9beaea5c6e23a8a84c2ce9a58b015a826d8d9bb51ff7a74a60",
+    "scene_patch_helpers.py": "d4442a6dc5b6c08df9e5dee5ac3d9b731799e60c7a8d9116be6cf3d7ac49801d",
+    "scenes_foundations.py": "773e2afcb7911eeb80ae47f9b03b1c652f3fcb411fd97f07cb469242b585b931",
+    "scenes_explained.py": "c299bdc03c5a1e2a9c06e567b2b90403164bd348ee11711a155d738fcb750bd4",
+    "scenes_extraction.py": "b9fe3ebe898e7273e969facf89d87e5cbd493f8273ca419d1a0b21f9a11f3211",
+    "teaching_solvers.py": "9aedfe3d044e76a0923f22c3b171b8e3d6473f05ad38fb82b80c8b0cc1a80fff"
+  },
+  "figures": [
+    {
+      "scene": "PairingStill",
+      "source_scene": "BlogPairingVsLattice",
+      "image": "pairing-vs-lattice.webp",
+      "width": 1600,
+      "height": 1162,
+      "bytes": 102220,
+      "quality": 88
+    },
+    {
+      "scene": "CarrierStill",
+      "source_scene": "BlogCarrierPatch",
+      "image": "carrier-patch.webp",
+      "width": 1600,
+      "height": 824,
+      "bytes": 40782,
+      "quality": 88
+    },
+    {
+      "scene": "ChartSeamStill",
+      "source_scene": "BlogCutCharts",
+      "image": "cut-charts.webp",
+      "width": 1600,
+      "height": 1066,
+      "bytes": 62534,
+      "quality": 88
+    },
+    {
+      "scene": "IntegerTransitionStill",
+      "source_scene": "BlogIntegerSeam",
+      "image": "integer-seam.webp",
+      "width": 1600,
+      "height": 594,
+      "bytes": 25892,
+      "quality": 88
+    },
+    {
+      "scene": "IntegerTransitionMobileStill",
+      "source_scene": "BlogIntegerSeam",
+      "image": "integer-seam-mobile.webp",
+      "width": 800,
+      "height": 1192,
+      "bytes": 26212,
+      "quality": 88
+    }
+  ]
+}

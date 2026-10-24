@@ -11,7 +11,7 @@ This post explores quad remeshing by **computing a direction field on the surfac
 
 ![The progression from a direction field through coordinates and an integer grid to a quad mesh](./assets/armadillo_pipeline_10k.webp)
 
-The Armadillo example was remeshed with the custom [CUDA-accelerated, CoMISo-like integer PDE solver](https://github.com/hwanhuh/CUDA-Lattice-Quadratice-Solver) used in Varco3D. The computations are illustrated with Manim videos on simple surfaces.
+The Armadillo example was remeshed with the custom [CUDA-accelerated, CoMISo-like integer PDE solver](https://github.com/hwanhuh/CUDA-Lattice-Quadratice-Solver) used in Varco3D. The computations are illustrated with Manim figures and animations on simple surfaces.
 
 ## 1. Triangle Pairing & Lattice
 
@@ -19,12 +19,9 @@ Let the input triangle mesh be $M=(V,E,F)$. We assume a manifold surface with co
 
 Pairing adjacent triangles based only on their local shape can improve the quality of individual quads to some extent. It does not guarantee that a direction chosen on one face will continue onto the next. Following opposite edges may lead to a zigzagging flow or a short closed loop, and some triangles may remain unpaired.
 
-<figure class="post-media quad-remesh-video">
-  <video controls loop muted playsinline preload="none" width="1280" height="720" poster="/blogs/posts/260818_quad_remesh/assets/manim/pairing-vs-lattice.webp" aria-label="Local pairing removes interior triangle edges; a globally aligned lattice organizes directions across the surface.">
-    <source src="/blogs/posts/260818_quad_remesh/assets/manim/pairing-vs-lattice.mp4" type="video/mp4">
-    <a href="/blogs/posts/260818_quad_remesh/assets/manim/pairing-vs-lattice.mp4">View MP4</a>
-  </video>
-  <figcaption>Local pairing removes interior triangle edges; a globally aligned lattice organizes directions across the surface.</figcaption>
+<figure class="post-media quad-remesh-still">
+  <img src="/blogs/posts/260818_quad_remesh/assets/manim/stills/pairing-vs-lattice.webp?v=9028527a48" width="1600" height="1162" loading="lazy" decoding="async" data-reading-surface="original" alt="Selected local triangle pairs and short flow fragments, compared with continuous strips on a quad mesh of the same surface.">
+  <figcaption>Left: selected local triangle pairs and short flow fragments. Right: coherent strips on a separately constructed quad mesh of the same surface.</figcaption>
 </figure>
 
 The triangle mesh provides the substrate for computing directions and coordinates: a *computational carrier*. The final quad vertices and edges are created on this substrate, so they need not follow the connectivity of the input triangles. To build new connectivity, we first need to decide how the grid should flow across the surface.
@@ -82,12 +79,9 @@ A single grid line may cross many input triangles. Nor does every input vertex n
 
 A closed surface cannot be covered by a single planar coordinate system without overlap or singularities. In practice, we cut the surface into charts and store separate coordinate copies on either side of each cut, or seam.
 
-<figure class="post-media quad-remesh-video">
-  <video controls loop muted playsinline preload="none" width="1280" height="720" poster="/blogs/posts/260818_quad_remesh/assets/manim/cut-charts.webp" aria-label="Duplicating seam coordinates across two charts preserves their correspondence to the original surface points.">
-    <source src="/blogs/posts/260818_quad_remesh/assets/manim/cut-charts.mp4" type="video/mp4">
-    <a href="/blogs/posts/260818_quad_remesh/assets/manim/cut-charts.mp4">View MP4</a>
-  </video>
-  <figcaption>Duplicating seam coordinates across two charts preserves their correspondence to the original surface points.</figcaption>
+<figure class="post-media quad-remesh-still">
+  <img src="/blogs/posts/260818_quad_remesh/assets/manim/stills/cut-charts.webp" width="1600" height="1066" loading="lazy" decoding="async" data-reading-surface="original" alt="Two charts separated by a purple seam, with corresponding copies C⁺ and C⁻ connected by a dashed line.">
+  <figcaption>C⁺ and C⁻ on opposite sides of the purple seam are coordinate copies of the same surface point. A seam transition relates the coordinates in the two charts.</figcaption>
 </figure>
 
 Flattening each chart well in isolation is not enough. Even when a surface point has two coordinate representations, grid lines must continue across the seam. A square grid is unchanged by a $90^\circ$ rotation or a translation by an integer number of cells, so these transformations can serve as the transition rules between charts. This is where the integer constraints of an integer-grid map come from, as we will see later.
@@ -148,12 +142,9 @@ Good remeshing cannot simply mean eliminating every irregular vertex. It must sa
 
 ## 3. Cross Field
 
-<figure class="post-media quad-remesh-video">
-  <video controls loop muted playsinline preload="none" width="1280" height="720" poster="/blogs/posts/260818_quad_remesh/assets/manim/carrier-patch.webp" aria-label="Crosses on three neighboring faces, with the highlighted face shown in an orthonormal basis. A·B·C correspond in both views.">
-    <source src="/blogs/posts/260818_quad_remesh/assets/manim/carrier-patch.mp4" type="video/mp4">
-    <a href="/blogs/posts/260818_quad_remesh/assets/manim/carrier-patch.mp4">View MP4</a>
-  </video>
-  <figcaption>Crosses on three neighboring faces, with the highlighted face shown in an orthonormal basis. A·B·C correspond in both views.</figcaption>
+<figure class="post-media quad-remesh-still">
+  <img src="/blogs/posts/260818_quad_remesh/assets/manim/stills/carrier-patch.webp" width="1600" height="824" loading="lazy" decoding="async" data-reading-surface="original" alt="Crosses on three neighboring faces, with the highlighted face expressed in a local orthonormal basis. A, B, and C identify the same vertices in both views.">
+  <figcaption>The highlighted face on the left is expressed in an orthonormal basis on the right. A, B, and C identify the same vertices in both views.</figcaption>
 </figure>
 
 For quad edges to follow the surface, their directions must lie in the tangent plane at each point. Given the unit normal $\mathbf n_p$ at a point $p$, the tangent plane is
@@ -523,12 +514,12 @@ $$
 
 Consider the simple case without rotation, with $\mathbf t_{ij}=(0.4,0)^T$. The line $u=k$ in chart $i$ corresponds to $u=k+0.4$ in chart $j$. The directions and spacing agree, but the line does not coincide with the integer lines on the other side. Extracting the grids independently in this state can produce broken edges or T-junctions at the seam, and cell boundaries may fail to close.
 
-<figure class="post-media quad-remesh-video">
-  <video controls loop muted playsinline preload="none" width="1280" height="720" poster="/blogs/posts/260818_quad_remesh/assets/manim/integer-seam.webp" aria-label="Integer translations align the grids, while a shift of 0.4 cells creates a mismatch at the seam.">
-    <source src="/blogs/posts/260818_quad_remesh/assets/manim/integer-seam.mp4" type="video/mp4">
-    <a href="/blogs/posts/260818_quad_remesh/assets/manim/integer-seam.mp4">View MP4</a>
-  </video>
-  <figcaption>Integer translations align the grids, while a shift of 0.4 cells creates a mismatch at the seam.</figcaption>
+<figure class="post-media quad-remesh-still">
+  <picture>
+    <source media="(max-width: 600px)" srcset="/blogs/posts/260818_quad_remesh/assets/manim/stills/integer-seam-mobile.webp" width="800" height="1192">
+    <img src="/blogs/posts/260818_quad_remesh/assets/manim/stills/integer-seam.webp" width="1600" height="594" loading="lazy" decoding="async" data-reading-surface="original" alt="Aligned grid intersections across a seam under integer translation, compared with a T-junction caused by a 0.4-cell fractional offset.">
+  </picture>
+  <figcaption>Integer translation aligns the grid across the seam. A fractional offset of 0.4 cells misaligns the intersections and creates a T-junction.</figcaption>
 </figure>
 
 ### Cycle Period
@@ -563,9 +554,40 @@ $$
 
 This places the valence-$3$/$5$ vertices discussed earlier at intersections of integer lines, rather than inside cells.
 
-In the implementation used here, seam translations are restricted to $\mathbf t_{ij}\in2\mathbb Z^2$. This condition is preserved under composition of seam transitions, so the fixed point of the quarter-turn monodromy at a valence-$3$/$5$ singularity lies at integer coordinates. This stronger restriction on translations satisfies the singularity's integer-coordinate condition.
+There is more than one way to enforce this condition in the solve. We can retain general integer translations and constrain singularity coordinates explicitly, or impose a stronger restriction on the translations themselves.
+
+**$\mathbb Z^2$ seam translations + explicit singularity constraints.** Keep $\mathbf t_{ij}\in\mathbb Z^2$ and choose one reference chart $i_s$ for each singularity. Add
+
+$$
+\Phi_{i_s}(s)=\mathbf k_s,
+\qquad \mathbf k_s\in\mathbb Z^2
+$$
+
+alongside the seam and cycle equalities. Other chart copies of the same singularity are related by integer-grid transitions, so their coordinates are integer as well. With fixed rotations, these coordinate relations are linear equalities. An implementation can mark the singularity's UV coordinates as integer DOFs or link them to a separate integer variable $\mathbf k_s$. Seam translations and singularity coordinates are chosen within the same mixed-integer solve, rather than solving for coordinates first and rounding the singularities afterward. [MIQ's parameterization formulation (§5)](https://graphics.rwth-aachen.de/media/papers/bommes_zimmer_2009_siggraph_011.pdf) likewise treats integer singularity locations together with seam compatibility.
+
+**$2\mathbb Z^2$ seam translations.** The custom implementation used in VARCO3D restricts every seam translation to $\mathbf t_{ij}=2\mathbf z_{ij}$, with $\mathbf z_{ij}\in\mathbb Z^2$. Quarter-turns preserve the even lattice, so the composed translation $\mathbf t_\gamma$ also has even components. The fixed point of the quarter-turn monodromy at a valence-$3$/$5$ singularity then has integer coordinates. In this case, singularity integrality follows from the stronger translation restriction.
+
+However, this is a **sufficient condition that is stronger than necessary.** For example, if $R_\gamma=R$ and $\mathbf t_\gamma=(a,b)^T$, then
+
+$$
+\mathbf x_s=\frac12
+\begin{pmatrix}a-b\\a+b\end{pmatrix}
+$$
+
+Thus $a,b$ need only have the same parity; they need not both be even. The choice $(a,b)=(1,1)$ already gives the integer fixed point $(0,1)^T$. In the same chart coordinate system, the explicit singularity constraint can admit such translations with odd components.
+
+| Approach | Benefit | Restriction or cost |
+|---|---|---|
+| $\mathbb Z^2$ + explicit singularity constraints | Enforces integer singularity coordinates directly while retaining admissible integer translations | The solver must handle the coupling of singularity integer DOFs with seam and cycle equalities |
+| $2\mathbb Z^2$ on every seam | Singularity integrality follows from the translation restriction for the quarter-turn singularities considered here | The stronger condition excludes some otherwise admissible phase and period combinations |
+
+For example, a cycle with no net rotation also has its composed period in $2\mathbb Z^2$. In the earlier cylinder example with period $(n,0)^T$, this permits only even values of $n$ at the same grid scale. Such restrictions can rule out candidates with lower distortion. They can simplify parts of an implementation, but do not guarantee a faster solve or better quality. The $2\mathbb Z^2$ restriction should therefore be understood as a conservative implementation choice made for VARCO3D. A general formulation can retain $\mathbb Z^2$ transitions and enforce integer singularity coordinates explicitly; the quarter-turn argument above should not be extended unchanged to every type of singularity.
 
 ### Mixed-Integer Optimization
+
+At this point, the nature of the problem changes fundamentally. The cross-field and coordinate solves mainly involve continuous variables, but an integer-grid map must also make discrete choices: how many cells close around a loop and how many cells of offset separate the charts across a seam. Each integer choice constrains both the surrounding continuous coordinates and the other integer choices.
+
+Rounding each variable independently to its nearest integer therefore cannot, by itself, produce a globally consistent grid. We must find a combination that satisfies seam and cycle consistency while keeping distortion low. The result is a coupled combinatorial optimization problem over many possible integer assignments.
 
 Let $\mathbf x$ collect the real-valued coordinates of all chart vertices, and let $\mathbf z$ represent the integer degrees of freedom for seam translations, periods, and singularity coordinates. A mixed-integer problem can generally be written as
 
