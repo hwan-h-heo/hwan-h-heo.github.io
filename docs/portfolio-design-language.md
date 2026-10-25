@@ -374,8 +374,14 @@ And Motion and implemented in `assets/css/hero-sculpture.css`.
   home, post, search and archive pages. Footer links are supplementary. On
   phones, destinations recede while the inline search field is expanded; Labs
   closes on Escape or outside interaction and preserves keyboard navigation.
-  Below 1600px, a native Contents disclosure before the body keeps the nested
-  heading index reachable, including on mobile. At 1600px and above, retain the
+  Below 768px, move the article's native Contents disclosure into the existing
+  utility row. Its theme-aware, scrollable index opens beneath that row without
+  changing the reading position or adding a navigation bar. Keep the utility row
+  visible while the index is open; close it on section selection, outside
+  interaction or Escape, returning keyboard focus appropriately. Search expansion
+  takes priority over this control. Below 360px, use the shared list icon with a
+  localized accessible name. From 768px to 1599px, retain the disclosure before
+  the body. At 1600px and above, retain the
   persistent right-margin TOC after entering the body. Do not add a reading
   progress edge or another navigation bar. Public Labs keep their existing
   72px icon rail; the publication does not load that rail's CSS or controller.
@@ -396,9 +402,15 @@ And Motion and implemented in `assets/css/hero-sculpture.css`.
   `02 / FROM THE ARCHIVE`.
   Their cover is the same calm `#101011` ink without the obsolete photographic
   banner. Their preview rows use the Blog home hierarchy: series, title,
-  subtitle, localized publication date, then tags. Search only the active locale
-  and link directly to that locale's article; do not expose a separate
-  `Languages` field. Apply the same current-right / archive-left media signature,
+  subtitle, localized publication date, then tags. Home, series, tag and search
+  listings share the preferred-language policy: use that article language when
+  available, otherwise retain the English original with a quiet `영문` note beside
+  its date in Korean listings, including the Series tab. Search both the displayed
+  metadata and the resolved article language's body. Opening an English-only
+  fallback must preserve the reader's Korean listing preference. Do not expose a
+  separate `Languages` field or add a badge. Link tags only when a generated tag
+  archive exists; `Explore Series` links always open the series archive.
+  Apply the same current-right / archive-left media signature,
   collapsing back to media-first rows on mobile. Wherever a mobile sidebar
   remains available, its scrim and panel must stack above any fixed utility bar.
 - Do not add breadcrumbs before a long-form blog article; the original utility
@@ -970,8 +982,9 @@ reduced-motion preferences remove the transition.
 Preserve the post utility row's scroll-away/reveal-on-up behavior. Dark remains
 the portfolio default; the independent Blog defaults to light. Portfolio and Labs
 must be reachable in this utility row, without
-scrolling to the footer or introducing a second bar. Compact Contents is a native
-disclosure before the article; wide reading uses the existing right-margin index.
+scrolling to the footer or introducing a second bar. Phone Contents reuses the
+native disclosure in the utility row; intermediate widths keep it before the
+article, and wide reading uses the existing right-margin index.
 These indexes derive from the same generated heading tree with no duplicate IDs.
 
 The Blog home, search and archives reuse the actual Portfolio sculpture render,

@@ -1,11 +1,10 @@
 const { SITE_URL } = require('./site-config');
-const { getPostSeriesIds } = require('../js/site-data-client');
+const { getPostSeriesIds, getPostLanguage, getPostLanguageNotice, getArchivedTagSet } = require('../js/site-data-client');
 const { render: renderSiteIcon } = require('../../assets/js/site-icons');
 const {
     getPostRoute,
     getSeriesRoute,
-    getTagRoute,
-    listTagArchiveEntries
+    getTagRoute
 } = require('./site-routes');
 const {
     getBlogCoverPreviewUrl,
@@ -80,7 +79,7 @@ function getPostSubtitle(post, lang = 'eng', options = {}) {
 }
 
 function getPostLanguageRoute(post, lang = 'eng') {
-    const resolvedLang = post.languages.includes(lang) ? lang : 'eng';
+    const resolvedLang = getPostLanguage(post, lang);
     return getPostRoute(post, resolvedLang);
 }
 
@@ -149,8 +148,9 @@ function renderLanguageLinks(post) {
         .join(', ');
 }
 
-function getArchivedTagSet(siteData) {
-    return new Set(listTagArchiveEntries(siteData).map((entry) => entry.tag));
+function renderPostLanguageNotice(post, lang) {
+    const notice = getPostLanguageNotice(post, lang);
+    return `<span class="post-language-note" data-post-language-note${notice ? '' : ' hidden'}>${escapeHtml(notice)}</span>`;
 }
 
 function renderTags(post, siteData = null) {
@@ -218,6 +218,7 @@ function renderPostPreview(post, lang, siteData, options = {}) {
                     ${subtitle ? `<p class="post-subtitle" lang="${escapeHtml(getTextHtmlLang(subtitle, lang))}">${escapeHtml(subtitle)}</p>` : ''}
                     <p class="post-meta">
                         <time datetime="${escapeHtml(post.date)}">${escapeHtml(formatDate(post.date, lang))}</time>
+                        ${renderPostLanguageNotice(post, lang)}
                     </p>
                     ${tagsHtml ? `<div class="post-tag-row">${tagsHtml}</div>` : ''}
                 </div>
@@ -257,7 +258,10 @@ function renderFeaturedPost(siteData, lang = 'eng') {
                     </div>
                     <h2 lang="${escapeHtml(getTextHtmlLang(title, lang))}"><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h2>
                     ${subtitle ? `<p class="blog-feature-subtitle" lang="${escapeHtml(getTextHtmlLang(subtitle, lang))}">${escapeHtml(subtitle)}</p>` : ''}
-                    <time class="blog-feature-date" datetime="${escapeHtml(featuredPost.date)}">${escapeHtml(formatDate(featuredPost.date, lang))}</time>
+                    <div class="blog-feature-publication">
+                        <time class="blog-feature-date" datetime="${escapeHtml(featuredPost.date)}">${escapeHtml(formatDate(featuredPost.date, lang))}</time>
+                        ${renderPostLanguageNotice(featuredPost, lang)}
+                    </div>
                     ${tagsHtml ? `<div class="post-tag-row">${tagsHtml}</div>` : ''}
                     <a class="blog-feature-read" href="${escapeHtml(url)}" aria-label="Read ${escapeHtml(title)}">
                         <span data-feature-read-label>Read post</span>
@@ -274,9 +278,6 @@ function renderFeaturedPost(siteData, lang = 'eng') {
 function renderSeriesGroups(siteData, lang = 'eng') {
     const postsBySeries = {};
     siteData.posts.forEach((post) => {
-        if (!post.languages.includes(lang)) {
-            return;
-        }
         getPostSeriesIds(post).forEach((seriesId) => {
             if (!postsBySeries[seriesId]) {
                 postsBySeries[seriesId] = [];
@@ -295,7 +296,7 @@ function renderSeriesGroups(siteData, lang = 'eng') {
                 return `
                         <li data-series-post-id="${escapeHtml(post.id)}">
                             <a href="${escapeHtml(getPostLanguageRoute(post, lang))}" lang="${escapeHtml(getTextHtmlLang(title, lang))}">${escapeHtml(title)}</a>
-                            <span class="post-meta-sm"><time datetime="${escapeHtml(post.date)}">${escapeHtml(formatShortDate(post.date, lang))}</time></span>
+                            <span class="post-meta-sm"><time datetime="${escapeHtml(post.date)}">${escapeHtml(formatShortDate(post.date, lang))}</time>${renderPostLanguageNotice(post, lang)}</span>
                         </li>
                 `;
             }).join('');
@@ -491,7 +492,7 @@ function renderSeriesPostNavigation(siteData, post, lang) {
 
         if (recommendation) {
             navHtml += renderPostNavCard({
-                href: getPostLanguageRoute(recommendation.post, lang),
+                href: getSeriesRoute(recommendation.seriesId),
                 type: 'explore',
                 label: 'Explore Series',
                 title: getSeriesTitle(siteData, recommendation.seriesId, lang)

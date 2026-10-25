@@ -133,6 +133,10 @@ function copyStaticAssets() {
         });
     }
 
+    // The public masthead uses this still even while its source article is a draft.
+    const mastheadStill = 'posts/260803_hierarchical_decoding_threejs/assets/hero-frame-3-30.webp';
+    copyRecursiveSync(path.join(__dirname, mastheadStill), path.join(distDir, 'blogs', mastheadStill));
+
     const sharedDirs = ['assets', 'css', 'js', 'content'];
     sharedDirs.forEach((dir) => {
         const srcPath = path.join(__dirname, '..', dir);

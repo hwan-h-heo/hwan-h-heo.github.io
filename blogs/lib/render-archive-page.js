@@ -242,6 +242,12 @@ ${renderSocialImageMetadata(socialImage, `${posts[0].title_eng} cover image`)}
                                 time.textContent = formatArchiveDate(post.date, language);
                             }
 
+                            const languageNotice = card.querySelector('[data-post-language-note]');
+                            if (languageNotice) {
+                                languageNotice.textContent = window.siteDataClient.getPostLanguageNotice(post, language);
+                                languageNotice.hidden = !languageNotice.textContent;
+                            }
+
                         });
                     } catch (error) {
                         console.warn('Failed to update archive language:', error);

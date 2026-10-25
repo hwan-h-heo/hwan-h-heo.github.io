@@ -291,6 +291,7 @@ ${renderConditionalHeadAssets(activeRuntimeFeatures)}
                             </div>
                         </div>
                         <ul class="post-nav-actions">
+                            <li class="post-nav-action post-nav-contents-item" hidden></li>
                             <li class="post-nav-action post-nav-search-item">
                                 <form id="post-nav-search-form" class="post-nav-search" role="search" data-collapsible-search>
                                     <label class="visually-hidden" for="post-nav-search-input">${searchLabel}</label>

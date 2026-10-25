@@ -5,7 +5,7 @@ const { chromium } = require('playwright');
 
 const { SITE_URL } = require('../blogs/lib/site-config');
 const { loadSiteData } = require('../blogs/lib/site-data');
-const { getPostRoute } = require('../blogs/lib/site-routes');
+const { getPostRoute, listTagArchiveEntries } = require('../blogs/lib/site-routes');
 const { getLaunchOptions, startStaticServer } = require('./check-rendered-site');
 
 const repoRoot = path.join(__dirname, '..');
@@ -1304,13 +1304,31 @@ async function assertBlogArchiveUtilities(page, testCase, width) {
             }
             await languageButton.click();
             await page.waitForFunction(() => document.documentElement.lang === 'ko');
-            const koreanTargets = await page.locator('#search-results-container .post-card-cover').evaluateAll((links) => (
-                links.map((link) => link.getAttribute('href') || '')
+            const koreanResults = await page.locator('#search-results-container .post-preview').evaluateAll((cards) => (
+                cards.map((card) => ({
+                    id: card.dataset.postId,
+                    href: card.querySelector('.post-card-cover')?.getAttribute('href'),
+                    notice: card.querySelector('.post-language-note')?.textContent.trim() || ''
+                }))
             ));
-            assert(
-                koreanTargets.length > 0 && koreanTargets.every((href) => href.endsWith('-kor/')),
-                'Korean search results do not consistently continue into Korean articles.'
-            );
+            const siteData = loadSiteData();
+            const postsById = new Map(siteData.posts.map((post) => [post.id, post]));
+            assert(koreanResults.length > 0, 'Korean search has no results.');
+            koreanResults.forEach((result) => {
+                const post = postsById.get(result.id);
+                const hasKorean = post?.languages.includes('kor');
+                assert(post && result.href === getPostRoute(post, hasKorean ? 'kor' : 'eng'),
+                    `Korean search used the wrong article language for ${result.id}.`);
+                assert(result.notice === (hasKorean ? '' : '영문'),
+                    `Korean search did not identify the English-only fallback for ${result.id}.`);
+            });
+            assert(koreanResults.some((result) => result.notice === '영문'),
+                'Korean search excluded all English-only articles.');
+            const archivePaths = new Set(listTagArchiveEntries(siteData).map((entry) => entry.path));
+            const tagLinks = await page.locator('#search-results-container a.post-tag').evaluateAll((links) => (
+                links.map((link) => link.getAttribute('href'))
+            ));
+            assert(tagLinks.every((href) => archivePaths.has(href)), 'Search linked to a missing tag archive.');
             await languageButton.click();
             await page.waitForFunction(() => document.documentElement.lang === 'en');
             const englishTargets = await page.locator('#search-results-container .post-card-cover').evaluateAll((links) => (
@@ -1566,11 +1584,29 @@ async function assertSharedSidebar(page, testCase, width, options) {
             assert(await page.locator('.post-nav-home').isVisible(), 'Blog Home is missing from the original utility row.');
             const contents = page.locator('.post-contents');
             if (width < 1600 && await contents.count()) {
+                if (width < 768) {
+                    assert(await contents.evaluate(element => Boolean(element.closest('#mainNav'))),
+                        'Phone Contents is missing from the original utility row.');
+                    // Reveal the scroll-away utility row as a reader would before using it.
+                    await page.evaluate(() => {
+                        window.scrollTo({ top: window.scrollY > 180 ? window.scrollY - 120 : 0, behavior: 'instant' });
+                    });
+                    await page.waitForFunction(() => document.querySelector('#mainNav').getBoundingClientRect().top >= -1);
+                }
                 // The nested-TOC check may leave this same disclosure open.
                 if (await contents.evaluate(element => element.open)) await contents.locator('summary').click();
+                const readingPosition = await page.evaluate(() => window.scrollY);
                 await contents.locator('summary').click();
                 assert(await contents.locator('nav').isVisible(), 'Compact Contents did not open.');
-                await contents.locator('summary').click();
+                if (width < 768) {
+                    assert(Math.abs(await page.evaluate(() => window.scrollY) - readingPosition) <= 1,
+                        'Opening phone Contents changed the reading position.');
+                    await page.keyboard.press('Escape');
+                    assert(await contents.locator('summary').evaluate(element => document.activeElement === element),
+                        'Escape did not return focus to phone Contents.');
+                } else {
+                    await contents.locator('summary').click();
+                }
                 assert(!await contents.locator('nav').isVisible(), 'Compact Contents did not close.');
             }
         }

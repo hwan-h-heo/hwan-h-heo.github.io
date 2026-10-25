@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const coverMedia = window.blogCoverMedia;
     let filteredPosts = [];
     let postContentCache = {};
+    let archivedTags = new Set();
     let siteData;
 
     const copy = {
@@ -59,13 +60,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         } catch (error) {}
     }
 
-    function tagSlug(tag) {
-        return String(tag)
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-|-$/g, '');
-    }
-
     function formatDate(date, language) {
         return new Date(`${date}T00:00:00`).toLocaleDateString(
             language === 'kor' ? 'ko-KR' : 'en-US',
@@ -80,7 +74,9 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     function renderTags(post) {
         return (post.tags || []).map((tag) => {
-            return `<a class="post-tag" href="/blogs/tags/${escapeHtml(tagSlug(tag))}/">${escapeHtml(tag)}</a>`;
+            return archivedTags.has(tag)
+                ? `<a class="post-tag" href="${escapeHtml(window.siteDataClient.getTagUrl(tag))}">${escapeHtml(tag)}</a>`
+                : `<span class="post-tag">${escapeHtml(tag)}</span>`;
         }).join('<span class="post-tag-separator" aria-hidden="true">·</span>');
     }
 
@@ -93,15 +89,15 @@ document.addEventListener('DOMContentLoaded', async function() {
         filteredPosts = !searchTerm
             ? []
             : siteData.posts.filter((post) => {
-                if (!post.languages.includes(language)) {
-                    return false;
-                }
+                const contentLanguage = window.siteDataClient.getPostLanguage(post, language);
                 const metadataMatch = [
                     post[`title_${language}`],
-                    post[`subtitle_${language}`]
+                    post[`subtitle_${language}`],
+                    post[`title_${contentLanguage}`],
+                    post[`subtitle_${contentLanguage}`]
                 ].some((value) => String(value || '').toLowerCase().includes(searchTerm));
                 const tagMatch = (post.tags || []).some((tag) => tag.toLowerCase().includes(searchTerm));
-                const contentMatch = postContentCache[post.id]?.[language]?.includes(searchTerm);
+                const contentMatch = postContentCache[post.id]?.[contentLanguage]?.includes(searchTerm);
                 return metadataMatch || tagMatch || contentMatch;
             });
         if (!searchTerm) {
@@ -130,6 +126,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             const subtitle = window.siteDataClient.getPostSubtitle(post, language);
             const url = window.siteDataClient.getPostUrl(post, language);
             const seriesTitle = getSeriesTitle(post, language);
+            const languageNotice = window.siteDataClient.getPostLanguageNotice(post, language);
             const source = post.cover || '/assets/blog_bg.jpeg';
             const keepAnimated = post.animatedPreview === true && coverMedia?.isAnimatedCover(source);
             const preview = coverMedia?.getBlogCoverPreviewUrl(post) || source;
@@ -169,7 +166,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                             </div>
                             <h3 class="post-title" lang="${language === 'kor' ? 'ko' : 'en'}"><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h3>
                             ${subtitle ? `<p class="post-subtitle" lang="${language === 'kor' ? 'ko' : 'en'}">${escapeHtml(subtitle)}</p>` : ''}
-                            <p class="post-meta"><time datetime="${escapeHtml(post.date)}">${escapeHtml(formatDate(post.date, language))}</time></p>
+                            <p class="post-meta"><time datetime="${escapeHtml(post.date)}">${escapeHtml(formatDate(post.date, language))}</time>${languageNotice ? `<span class="post-language-note">${escapeHtml(languageNotice)}</span>` : ''}</p>
                             ${post.tags?.length ? `<div class="post-tag-row">${renderTags(post)}</div>` : ''}
                         </div>
                     </div>
@@ -225,6 +222,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     const { loadSiteData } = window.siteDataClient;
     siteData = await loadSiteData();
+    archivedTags = window.siteDataClient.getArchivedTagSet(siteData);
 
     if (searchTerm) {
         postContentCache = {};
