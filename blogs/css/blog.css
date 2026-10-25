@@ -3207,8 +3207,9 @@ html[lang="ko"] .blog-home-hero h1 {
 
 .blog-home-page .series-group .series-post-list li a {
     color: #252d3a;
+    font-family: var(--blog-sans);
     font-size: 0.94rem;
-    font-weight: 520;
+    font-weight: 400;
     line-height: 1.42;
     text-decoration: none;
 }

@@ -652,6 +652,10 @@ underline so the controls do not compete with the chapter folios. On compact
 layouts, let the tab row move beneath the complete `02 ARTICLES` label and rule.
 The Posts count represents every published Post, including the separately
 presented Featured entry; exclude Featured only from the repeated Archive rows.
+Within the Series tab, every article link uses the shared body sans stack at
+weight `400`, regardless of the title's language. Latin text uses the same local
+Inter face in mixed Korean titles and English titles, with Korean glyphs falling
+back to Noto Sans KR Regular. Reserve the stronger display weight for series headings.
 Non-featured preview media uses the system's compact `4px` radius, and its copy
 begins at the media's top edge rather than being vertically centered. Keep its
 tags and publication date as one compact metadata stack beneath the subtitle;
