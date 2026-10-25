@@ -1,5 +1,5 @@
 title: Can NeRF be Used in Game?
-date: November 30, 2024
+date: November 30, 2023
 author: Hwan Heo
 --- 여기부터 실제 콘텐츠 ---
 

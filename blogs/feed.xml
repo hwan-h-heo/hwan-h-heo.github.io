@@ -158,6 +158,14 @@
       <description>Evaluating diffusion-estimated depth by turning Marigold predictions into textured meshes and inspecting their geometric consistency.</description>
     </item>
     <item>
+      <title>Reflections on the Practicality of NeRF</title>
+      <link>https://hwan-h-heo.github.io/blogs/posts/reflections-on-the-practicality-of-nerf/</link>
+      <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/reflections-on-the-practicality-of-nerf/</guid>
+      <pubDate>Fri, 08 Mar 2024 00:00:00 GMT</pubDate>
+      <language>en</language>
+      <description>A March 2024 follow-up on relighting, game-engine integration, and the gap between neural rendering demos and production use</description>
+    </item>
+    <item>
       <title>Can Sora Understand 3D?</title>
       <link>https://hwan-h-heo.github.io/blogs/posts/can-sora-understand-3d/</link>
       <guid isPermaLink="true">https://hwan-h-heo.github.io/blogs/posts/can-sora-understand-3d/</guid>

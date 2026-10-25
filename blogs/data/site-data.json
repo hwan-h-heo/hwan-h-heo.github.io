@@ -134,7 +134,7 @@
       "subtitle_kor": "Manim으로 구상한 hierarchical decoding을 deterministic hierarchy와 GPU instancing 기반의 웹 애니메이션으로 옮긴 과정",
       "date": "2026-08-03",
       "category": "post",
-      "series": "web-3d",
+      "series": "graphics",
       "languages": [
         "eng",
         "kor"
@@ -157,7 +157,7 @@
       "subtitle_kor": "torch.compile과 TensorRT가 실패하는 Sparse 3D Generation model에서 Null-Context Attention 제거와 custom CUDA Fusion으로 forward latency 줄이는 방법",
       "date": "2026-07-27",
       "category": "post",
-      "series": "3d-generation",
+      "series": "cuda",
       "languages": [
         "eng",
         "kor"
@@ -171,6 +171,9 @@
       "cover": "/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png",
       "status": "published",
       "updated": "2026-07-27",
+      "additionalSeries": [
+        "3d-generation"
+      ],
       "coverPreviews": {
         "cover": "/assets/generated/blog-covers/260727_sparse_3d-0e1c5043796fb7c5.webp",
         "portfolio": "/assets/generated/blog-covers/260727_sparse_3d-portfolio-0e1c5043796fb7c5.webp"
@@ -332,7 +335,7 @@
       "subtitle_kor": "Google model-viewer와 직접 만든 Three.js viewer를 비교하며, 웹에서 3D asset을 안정적으로 보여주는 방법을 정리해보기",
       "date": "2025-03-10",
       "category": "post",
-      "series": "web-3d",
+      "series": "graphics",
       "languages": [
         "eng",
         "kor"
@@ -407,7 +410,7 @@
       "subtitle_kor": "Three.js를 이용해 웹사이트에 interactive Gaussian Splatting scene을 삽입하고 제어해보기",
       "date": "2024-09-17",
       "category": "post",
-      "series": "web-3d",
+      "series": "graphics",
       "languages": [
         "eng",
         "kor"
@@ -548,16 +551,42 @@
       }
     },
     {
+      "id": "240308_nerf_practicality",
+      "title_eng": "Reflections on the Practicality of NeRF",
+      "title_kor": "NeRF의 실용성에 대한 단상",
+      "subtitle_eng": "A March 2024 follow-up on relighting, game-engine integration, and the gap between neural rendering demos and production use",
+      "subtitle_kor": "Relighting과 게임 엔진 이식의 한계, Neural Rendering의 실용화에 대한 2024년 3월의 생각",
+      "date": "2024-03-08",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "reflections-on-the-practicality-of-nerf",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240308_nerf_practicality/assets/nerf-in-game.jpg",
+      "status": "published",
+      "updated": "2024-03-08",
+      "coverPreviews": {
+        "cover": "/assets/generated/blog-covers/240308_nerf_practicality-eeff080b5cb8549c.webp"
+      }
+    },
+    {
       "id": "240226_sora",
       "title_eng": "Can Sora Understand 3D?",
       "title_kor": "Sora 가 상상하는 3D World",
       "subtitle_eng": "Testing whether video generation models encode enough 3D consistency to reconstruct radiance fields from their synthesized views",
-      "subtitle_kor": "Video Generative AI 로부터 NeRF reconstruction 해보기",
+      "subtitle_kor": "2024년 공개된 Sora 영상을 COLMAP·NeRF·Gaussian Splatting으로 복원하며 3D 기하 일관성을 살펴본 실험",
       "date": "2024-02-26",
       "category": "post",
       "series": "3d-generation",
       "languages": [
-        "eng"
+        "eng",
+        "kor"
       ],
       "slug": "can-sora-understand-3d",
       "tags": [
@@ -576,12 +605,13 @@
       "title_eng": "Can NeRF be used in Game?",
       "title_kor": "NeRF 를 게임 제작에서 이용할 수 있을까?",
       "subtitle_eng": "Examining the quality, rendering, and production constraints that limit NeRF in games—and the workarounds available today",
-      "subtitle_kor": "NeRF의 단점을 통해 살펴보는 Neural Rendering 기술이 게임에 적용되기 위해 넘어야 할 과제들",
+      "subtitle_kor": "NeRF를 게임에 활용하기 위한 relighting, 렌더링 속도, 카메라 추정과 엔진 통합의 과제 살펴보기",
       "date": "2023-11-30",
       "category": "post",
       "series": "nerf-and-gs",
       "languages": [
-        "eng"
+        "eng",
+        "kor"
       ],
       "slug": "can-nerf-be-used-in-game",
       "tags": [
@@ -600,12 +630,13 @@
       "title_eng": "Instant-NGP Review & Re-Implementation",
       "title_kor": "Instant-NGP 리뷰 및 재구현",
       "subtitle_eng": "Reviewing Instant-NGP’s multi-resolution hash encoding and rebuilding its NeRF pipeline step by step in PyTorch",
-      "subtitle_kor": "PyTorch Re-Implementation을 통해 수식과 코드 단위로 상세 리뷰해보는 Instant-NGP",
+      "subtitle_kor": "Multi-resolution hash encoding의 원리와 핵심 연산을 살펴보고 PyTorch로 직접 구현하기",
       "date": "2023-02-02",
       "category": "post",
       "series": "nerf-and-gs",
       "languages": [
-        "eng"
+        "eng",
+        "kor"
       ],
       "slug": "instant-ngp-review-re-implementation",
       "tags": [
@@ -622,14 +653,15 @@
     {
       "id": "211128_fourier",
       "title_eng": "Why Positional Encoding Makes NeRF more Powerful",
-      "title_kor": "Position Encoding 이 NeRF 에서 필수적인 이유",
+      "title_kor": "Positional Encoding이 NeRF에서 필수적인 이유",
       "subtitle_eng": "Review of Fourier Features Let Networks Learn High-Frequency Functions",
-      "subtitle_kor": "Fourier Features Let Networks Learn High-Frequency Functions 리뷰",
+      "subtitle_kor": "Fourier Features와 Neural Tangent Kernel을 통해 positional encoding이 고주파 학습을 돕는 이유 이해하기",
       "date": "2021-11-28",
       "category": "post",
       "series": "nerf-and-gs",
       "languages": [
-        "eng"
+        "eng",
+        "kor"
       ],
       "slug": "why-positional-encoding-makes-nerf-more-powerful",
       "tags": [
@@ -779,10 +811,6 @@
       "eng": "3D AI",
       "kor": "3D AI"
     },
-    "web-3d": {
-      "eng": "3D in Web",
-      "kor": "웹에서 3D 구현하기"
-    },
     "linear-algebra": {
       "eng": "Linear Algebra for Deep Learning",
       "kor": "딥러닝을 위한 선형대수"
@@ -795,6 +823,9 @@
       "eng": "Computer Graphics",
       "kor": "Computer Graphics"
     }
+  },
+  "seriesRedirects": {
+    "web-3d": "graphics"
   },
   "portfolioProjects": [
     {

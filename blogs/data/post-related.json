@@ -1,6 +1,12 @@
 {
   "231130_nerf_in_game": {
     "eng": [
+      "240308_nerf_practicality",
+      "240805_gs",
+      "240602_2dgs"
+    ],
+    "kor": [
+      "240308_nerf_practicality",
       "240805_gs",
       "240602_2dgs"
     ]
@@ -163,6 +169,38 @@
       "250302_3d_latent_diffusion",
       "250702_building_large_3d_1",
       "250710_building_large_3d_2"
+    ]
+  },
+  "240308_nerf_practicality": {
+    "eng": [
+      "231130_nerf_in_game"
+    ],
+    "kor": [
+      "231130_nerf_in_game"
+    ]
+  },
+  "211128_fourier": {
+    "kor": [
+      "250302_3d_latent_diffusion",
+      "240805_gs",
+      {
+        "title": "잃어버린 3D Gaussian Splatting 의 Densification Strategy 를 찾아서",
+        "url": "https://velog.io/@gjghks950/3D-Gaussian-Splatting-%EC%9D%98-Densification-Strategy-feat.-3DGS-MCMC-AbsGS"
+      },
+      "240602_2dgs",
+      "240823_grt"
+    ]
+  },
+  "230202_ngp": {
+    "kor": [
+      "250302_3d_latent_diffusion",
+      "240805_gs",
+      {
+        "title": "잃어버린 3D Gaussian Splatting 의 Densification Strategy 를 찾아서",
+        "url": "https://velog.io/@gjghks950/3D-Gaussian-Splatting-%EC%9D%98-Densification-Strategy-feat.-3DGS-MCMC-AbsGS"
+      },
+      "240602_2dgs",
+      "240823_grt"
     ]
   }
 }

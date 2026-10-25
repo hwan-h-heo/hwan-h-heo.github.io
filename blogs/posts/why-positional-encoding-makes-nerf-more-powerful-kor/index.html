@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Fourier Features와 Neural Tangent Kernel을 통해 positional encoding이 고주파 학습을 돕는 이유 이해하기" />
+    <meta name="keywords" content="post, nerf-and-gs, Neural Rendering, Gaussian Splatting, 3D graphics, computer vision, machine learning" />
+    <meta name="author" content="Hwan Heo" />
+    <link rel="canonical" href="https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful-kor/" />
+    <link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/" />
+    <link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful-kor/" />
+    <link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful-kor/" />
+    <meta property="og:title" content="Positional Encoding이 NeRF에서 필수적인 이유" />
+    <meta property="og:description" content="Fourier Features와 Neural Tangent Kernel을 통해 positional encoding이 고주파 학습을 돕는 이유 이해하기" />
+    <meta property="og:image" content="https://hwan-h-heo.github.io/assets/generated/social/2bbba462fd3d4b00.jpg" />
+    <meta property="og:image:secure_url" content="https://hwan-h-heo.github.io/assets/generated/social/2bbba462fd3d4b00.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Positional Encoding이 NeRF에서 필수적인 이유 cover image" />
+    <meta name="twitter:image" content="https://hwan-h-heo.github.io/assets/generated/social/2bbba462fd3d4b00.jpg" />
+    <meta name="twitter:image:alt" content="Positional Encoding이 NeRF에서 필수적인 이유 cover image" />
+    <meta property="og:site_name" content="HwanHeo's Blog" />
+    <meta property="article:published_time" content="2021-11-28T00:00:00.000Z" />
+    <meta property="article:modified_time" content="2021-11-28T00:00:00.000Z" />
+    <meta property="article:author" content="Hwan Heo" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful-kor/" />
+    <meta name="twitter:title" content="Positional Encoding이 NeRF에서 필수적인 이유" />
+    <meta name="twitter:description" content="Fourier Features와 Neural Tangent Kernel을 통해 positional encoding이 고주파 학습을 돕는 이유 이해하기" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Positional Encoding이 NeRF에서 필수적인 이유","description":"Fourier Features와 Neural Tangent Kernel을 통해 positional encoding이 고주파 학습을 돕는 이유 이해하기","url":"https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful-kor/","mainEntityOfPage":"https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful-kor/","image":["https://hwan-h-heo.github.io/assets/generated/social/2bbba462fd3d4b00.jpg"],"author":{"@type":"Person","@id":"https://hwan-h-heo.github.io/#person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io/"},"publisher":{"@type":"Person","@id":"https://hwan-h-heo.github.io/#person","name":"Hwan Heo","url":"https://hwan-h-heo.github.io/"},"datePublished":"2021-11-28","dateModified":"2021-11-28","inLanguage":"ko"}</script>
+
+    <title>Positional Encoding이 NeRF에서 필수적인 이유 | Hwan Heo</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="/blogs/css/blog.css?v=cff7683c65" rel="stylesheet" />
+    <link href="/blogs/css/typography.css?v=5feaa1dfce" rel="stylesheet" />
+    <link href="/blogs/css/post.css?v=4884cbcde2" rel="stylesheet" />
+    <link href="/assets/css/site-icons.css?v=32957b8b04" rel="stylesheet" />
+    <script src="/assets/js/site-icons.js?v=76c23064c5"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RF7ETSKPK9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RF7ETSKPK9');
+    </script>
+        <script src="/js/site-theme.js?v=0d82cf4a85"></script>
+    <link href="/assets/css/site-theme.css?v=447d8e8b5f" rel="stylesheet">
+    <link href="/blogs/css/site-reading.css?v=64df199d34" rel="stylesheet">
+    <meta name="site-deploy-version" content="df6d3ed0569c6ecb">
+    <script defer src="/assets/js/deploy-refresh.js?v=ee9c6c8f26"></script>
+</head>
+<body class="blog-post-page site-reading">
+
+    <main class="main blog-post-main">
+        <nav class="post-site-nav" id="mainNav" aria-label="Post utilities">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-utility-column">
+                        <div class="blog-utility-start">
+                            <a class="post-nav-home" href="/blogs/" aria-label="Back to Blog Home">
+                                <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-left"></use></svg>
+                                <span class="post-nav-home-label">Blog<span class="post-nav-home-suffix"> Home</span></span>
+                            </a>
+                            <div class="blog-destinations">
+                                <a href="/">Portfolio</a>
+                                <details class="blog-labs">
+                                    <summary>Labs</summary>
+                                    <div class="blog-labs-panel">
+                                        <a href="/blogs/3DViewer/">3D Viewer</a>
+                                        <a href="/blogs/editor/">Markdown Editor</a>
+                                    </div>
+                                </details>
+                            </div>
+                        </div>
+                        <ul class="post-nav-actions">
+                            <li class="post-nav-action post-nav-contents-item" hidden></li>
+                            <li class="post-nav-action post-nav-search-item">
+                                <form id="post-nav-search-form" class="post-nav-search" role="search" data-collapsible-search>
+                                    <label class="visually-hidden" for="post-nav-search-input">블로그 글 검색</label>
+                                    <input id="post-nav-search-input" type="search" placeholder="Search..." enterkeyhint="search" />
+                                    <button type="submit" aria-label="검색" aria-controls="post-nav-search-input" aria-expanded="false">
+                                        <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-search"></use></svg>
+                                    </button>
+                                </form>
+                            </li>
+                            <li class="post-nav-action"><button class="blog-theme-toggle post-nav-theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme" aria-pressed="false"><svg class="site-icon theme-toggle-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-moon-stars"></use></svg></button></li>
+                            <li class="post-nav-action"><a href="/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/" class="post-nav-language-link" data-language-target="eng" aria-label="Switch to English" title="Switch to English">A</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <header class="masthead post-masthead">
+            <div class="blog-shell post-hero-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-hero-column">
+                        <div class="post-heading">
+                            <div class="post-hero-series">
+                                <span class="post-hero-series-label">Series</span>
+                                <span class="post-hero-series-separator" aria-hidden="true">/</span>
+                                <a href="/blogs/series/nerf-and-gs/">
+                                    <span class="post-hero-series-name">Radiance Fields &amp; Gaussian Splatting</span>
+                                    <span class="post-hero-series-arrow" aria-hidden="true">→</span>
+                                </a>
+                            </div>
+                            <h1>Positional Encoding이 NeRF에서 필수적인 이유</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <article class="post-article">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column post-hero-column post-intro-column">
+                        <div class="post-intro-layout">
+                            <div class="post-intro-copy">
+                                <p class="post-intro-deck">Fourier Features와 Neural Tangent Kernel을 통해 positional encoding이 고주파 학습을 돕는 이유 이해하기</p>
+                                <div class="post-intro-topics" aria-label="주제">
+                                    <span class="post-intro-topics-label">Topics</span>
+                                    <span class="post-intro-topics-separator" aria-hidden="true">/</span>
+                                    <div class="post-tags"><a class="post-tag" href="/blogs/tags/neural-rendering/">Neural Rendering</a><span class="post-tag-separator" aria-hidden="true">·</span><a class="post-tag" href="/blogs/tags/gaussian-splatting/">Gaussian Splatting</a></div>
+                                </div>
+                            </div>
+                            <aside class="post-article-info" aria-label="글 정보">
+                                <ul>
+                                    <li data-post-detail="author">
+                                        <strong>Author</strong>
+                                        <span>Hwan Heo</span>
+                                    </li>
+                                    <li data-post-detail="published">
+                                        <strong>Published</strong>
+                                        <time datetime="2021-11-28">November 28, 2021</time>
+                                    </li>
+                                    <li data-post-detail="reading">
+                                        <strong>Reading</strong>
+                                        <span class="post-detail-reading">8 min read</span>
+                                    </li>
+                                </ul>
+                            </aside>
+                        </div>
+                    </div>
+                    <div class="post-reading-column main-content">
+                        <details class="post-contents"><summary>목차</summary><nav aria-label="목차"><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="1. Introduction" aria-label="1. Introduction"><span class="toc-link-text">1. Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="2. Preliminaries" aria-label="2. Preliminaries"><span class="toc-link-text">2. Preliminaries</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-2" title="2.1. Kernel Trick" aria-label="2.1. Kernel Trick"><span class="toc-link-text">2.1. Kernel Trick</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="2.2. Neural Tangent Kernel (NeurIPS2018)" aria-label="2.2. Neural Tangent Kernel (NeurIPS2018)"><span class="toc-link-text">2.2. Neural Tangent Kernel (NeurIPS2018)</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="2.3. Spectral Bias of DNNs" aria-label="2.3. Spectral Bias of DNNs"><span class="toc-link-text">2.3. Spectral Bias of DNNs</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-5" title="3. Fourier Features for a Tunable Stationary Neural Tangent Kernel" aria-label="3. Fourier Features for a Tunable Stationary Neural Tangent Kernel"><span class="toc-link-text">3. Fourier Features for a Tunable Stationary Neural Tangent Kernel</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="3.1. Fourier-Feature Mapping &amp; Kernel Regression" aria-label="3.1. Fourier-Feature Mapping &amp; Kernel Regression"><span class="toc-link-text">3.1. Fourier-Feature Mapping &amp; Kernel Regression</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="3.2. NTK Kernel with Fourier-Featuring" aria-label="3.2. NTK Kernel with Fourier-Featuring"><span class="toc-link-text">3.2. NTK Kernel with Fourier-Featuring</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-8" title="4. Experiments" aria-label="4. Experiments"><span class="toc-link-text">4. Experiments</span></a></li></ol></nav></details><nav id="post-toc" class="toc" aria-label="Table of contents"><div class="toc-title">목차</div><ol class="toc-list"><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-0" title="1. Introduction" aria-label="1. Introduction"><span class="toc-link-text">1. Introduction</span></a></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-1" title="2. Preliminaries" aria-label="2. Preliminaries"><span class="toc-link-text">2. Preliminaries</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-2" title="2.1. Kernel Trick" aria-label="2.1. Kernel Trick"><span class="toc-link-text">2.1. Kernel Trick</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-3" title="2.2. Neural Tangent Kernel (NeurIPS2018)" aria-label="2.2. Neural Tangent Kernel (NeurIPS2018)"><span class="toc-link-text">2.2. Neural Tangent Kernel (NeurIPS2018)</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-4" title="2.3. Spectral Bias of DNNs" aria-label="2.3. Spectral Bias of DNNs"><span class="toc-link-text">2.3. Spectral Bias of DNNs</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-5" title="3. Fourier Features for a Tunable Stationary Neural Tangent Kernel" aria-label="3. Fourier Features for a Tunable Stationary Neural Tangent Kernel"><span class="toc-link-text">3. Fourier Features for a Tunable Stationary Neural Tangent Kernel</span></a><ol class="toc-sublist"><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-6" title="3.1. Fourier-Feature Mapping &amp; Kernel Regression" aria-label="3.1. Fourier-Feature Mapping &amp; Kernel Regression"><span class="toc-link-text">3.1. Fourier-Feature Mapping &amp; Kernel Regression</span></a></li><li class="toc-item toc-item-level-3" data-level="3"><a class="toc-link" href="#toc-heading-7" title="3.2. NTK Kernel with Fourier-Featuring" aria-label="3.2. NTK Kernel with Fourier-Featuring"><span class="toc-link-text">3.2. NTK Kernel with Fourier-Featuring</span></a></li></ol></li><li class="toc-item toc-item-level-2" data-level="2"><a class="toc-link" href="#toc-heading-8" title="4. Experiments" aria-label="4. Experiments"><span class="toc-link-text">4. Experiments</span></a></li></ol></nav><button id="copyButton" type="button" aria-label="Copy post link">
+    <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-link-45deg"></use></svg>
+</button>
+
+<div id="myshare_modal" class="share_modal" role="status" aria-live="polite" aria-hidden="true">
+    <div class="share_modal-content">
+        <button class="share_modal_close" type="button" aria-label="Dismiss">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-x-lg"></use></svg>
+        </button>
+        <span class="share_modal-icon" aria-hidden="true">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-check2"></use></svg>
+        </span>
+        <span class="share_modal-message">
+            <strong>링크 복사됨</strong>
+            <small>글 주소를 바로 공유할 수 있습니다.</small>
+        </span>
+        <div class="copy_indicator-container">
+            <div class="copy_indicator" id="share_modalIndicator"></div>
+        </div>
+    </div>
+</div>
+
+<blockquote>
+<p>이 논문은 Neural Tangent Kernel 을 바탕으로 Fourier-featuring (coordinate space point 의 frequency space 로의 embedding) 이 network 관점에서 stationary 한 (isotrophic) 성질을 갖게 된다는 사실을 수학적으로 규명하고, 이를 통해 3d shape, 2d reconstruction 등의 low-dimension to high-dimension vision task 의 성능을 증대시킬 수 있다는 것을 이론적, 실험적으로 규명한 논문이다.
+<a href="https://neurips.cc/virtual/2020/protected/poster_55053683268957697aa39fba6f231c68.html">NeurIPS2020 Spotlight</a></p>
+</blockquote>
+<h2 id="toc-heading-0">1. Introduction</h2>
+<p>Fourier-featuring 이란, <em><strong>coordinate space point 를 frequency space 로 embedding 하는 function 의 총칭</strong></em> 이다.</p>
+<p>Deeplearning model 에서의 대표적인 예시로는, Transformer architecture model 들이 attention 만으로는 원본 위치 정보를 알 수 없으므로, feature 의 위치 정보를 포함시키기 위해 sinusoidal function 을 통해 coordinate space 에서 frequency space 로의 embedding 을 진행하는 <strong>&#39;Positional Encoding&#39;</strong> 등이 있다.</p>
+<p>위 논문은 <strong>NTK theory</strong> 를 통해</p>
+<ol>
+<li>fourier-featuring 을 통해 neural network 가 coordinate information 을 어떻게 받아들이게 되는지 이론적으로 규명하고,</li>
+<li>다양한 Vision task 에서 이를 활용한 qualitative case 를 제시하였다.</li>
+</ol>
+<p>저자들은 또한 다음 그림과 같이,
+<img src="/blogs/posts/211128_fourier/assets/nerf-overview.webp" alt="여러 시점 이미지로 NeRF를 최적화하고 새로운 시점을 렌더링하는 과정" loading="lazy" decoding="async" data-reading-surface="paper"></p>
+<ul>
+<li>Dense 하고 continuous &amp; uniform 한 low-dimension data input</li>
+<li>high-dimensional output</li>
+</ul>
+<p>을 모두 만족하는 neural network를  <em><strong>coordinate-based MLP</strong></em> 라고 명명한다.
+이 논문을 이해하기 위해 kernel trick 과 neural tangent kernel 에 대한 이해가 필요하므로, 간단하게 서술하고 넘어가도록 하겠다.</p>
+<h2 id="toc-heading-1">2. Preliminaries</h2>
+<h3 id="toc-heading-2">2.1. Kernel Trick</h3>
+<p>Linearly inseparable 한 data point $x$ 에 대하여 $\phi (x)$  (: feature map) 는 linear separability 를 갖게 만드는 non-linear mapping function 이라 하자.
+<img src="/blogs/posts/211128_fourier/assets/kernel_trick.png" alt="Kernel trick의 비선형 feature mapping" loading="lazy" decoding="async" data-reading-surface="paper">
+이때 kernel trick 은 이러한 feature map 을 explicit 하게 구하지 않고, kernel 을 통해서 feature space 를 구하는 kernel regression 이며, 다음과 같이 정의한다.
+$$K(x, \ x&#39;) = \phi(x) ^T \phi(x&#39;)
+$$</p>
+<p>이는 input $x$ 에 feature mapping 을 거친 후에 내적을 취해준다기 보단, kernel 을 통해 좋은 성질을 갖는 feature map $\phi$ 를 구할 수 있다고 해석하는 편이 좋다.</p>
+<h3 id="toc-heading-3">2.2. Neural Tangent Kernel (NeurIPS2018)</h3>
+<p><em><strong>Neural tangent kernel</strong></em> 은, 이러한 kernel trick 을 이용해 neural network 를 설명하려는 노력의 일환으로, width 가 무한대인 deep한 NN의 GD based training 을 kernel regression 으로 설명하는 이론이다.</p>
+<h4>2.2.1. Linearization of NN training &amp; Kernel Definition</h4>
+<p>$$f(w, \ x) \simeq f(w_0 , \ x) \ + \ \nabla _w f( w_0 , \ x) ^T (w - w_0 )
+$$</p>
+<p>어떠한 neural network model 을 위와 같은 linearization 으로 표현할 수 있다. 이때 Taylor expanded tangent line 은 다음과 같은 성질을 가지는데,</p>
+<ol>
+<li>weight $w$ 에 대해서 <em><strong>linear</strong></em></li>
+<li>$x$ 에 대해서 <em><strong>non-linear</strong></em></li>
+</ol>
+<p>이에 따라 tangent line 의 gradient term $\nabla _w f( w_0 , \ x) ^T (w - w_0 )$ 을 다음과 같이 해석할 수 있다.</p>
+<ul>
+<li>$\nabla _w f( w_0 , \ x) ^T (w - w_0 )$: non-linear data point $x$ 를 어떠한 유용한 space 에 mapping 하는 feature map.</li>
+</ul>
+<p>이에 해당하는 kernel $K$ 는 다음과 같이 정의할 수 있다.</p>
+<p>$$K(x, \ x&#39;) =  h_\text{NTK} = \{ \phi(x) , \ \phi (x&#39;) \} = \nabla _w f(w_0 , \ x) ^T \ \nabla _w f(w_0, \ x&#39; )
+$$</p>
+<h4>2.2.2. Gradient-based Training &amp; Kernel Regression</h4>
+<p>이때, 정의된 neural tangent kernel 을 neural network 의 gradient descent 에서 찾을 수 있다.  timestep $t$ 에 대하여 gradient descent 를 다음과 같이 표현해보자.</p>
+<p>$$w(t+1) \ = \ w(t) - \eta \nabla _w l \\ {} \\\rightarrow { w(t+1)  \ - \ w(t) \over \eta } = -\nabla _w l \simeq {dw \over dt}
+$$</p>
+<p>이제 least square (MSE) 이 loss function 일 때, 다음과 같이 $\nabla _w$ 를 구할 수 있고,</p>
+<p>$$l(w) = {1 \over 2}  \| f(w, x ) - y \|^2 \\ \rightarrow \nabla _w l= \nabla _w  |f(w, x) - y |
+$$</p>
+<p>이에 따라 optimization-based neural network training 을 다음과 같이 NTK kernel regression 으로 나타낼 수 있다.</p>
+<p>$$\begin{aligned}
+{d \over dt } y(w) &amp;= \nabla _w f(w, x) ^T \cdot {d \over dt }w \\
+&amp;= - \nabla _w f(w, x) ^T \cdot \nabla _w f(w, x) (f(w, x) - y) \\ &amp;= -h_{\text{NTK}} (f(w,x) -y )
+\end{aligned}$$</p>
+<p>이제 $$u=y(w)-y$$ 라고 하자. 이 때, training iteration $t$ 에서의 output residual 을 다음과 같이 표현할 수 있다.</p>
+<p>$$ u(t) = u(0) \exp (-\eta h_{\text{NTK}} t )
+$$</p>
+<h3 id="toc-heading-4">2.3. Spectral Bias of DNNs</h3>
+<p>이제 논문에서의 Eq.3 을 자세히 살펴보겠다.</p>
+<p>위 절에서 살펴 보았던 NTK approximation 에 따라, test data $$\mathbf X_\text{test}$$ 에 대해 $$t$$ iteration 이후의 network 의 prediction 은 다음과 같이 표현할 수 있다.</p>
+<p>$$ \hat{\mathbf y}^{(t)} \simeq \mathbf K_\text{test} \mathbf K^{-1} ( \mathbf I - e ^{-\eta \mathbf K t} ) \mathbf y
+$$</p>
+<p>이상적인 training 에 대해서 $$\mathbf K_\text{test} =  \mathbf K$$ 가 성립할 것이기 때문에, 2.2.2 마지막 eq 의 residual 을 통해 output 을 표현한 것과 같은 형태임을 알 수 있다.</p>
+<p>이제 우리는 NTK kernel 를 eigendecomposition 하여 $$\mathbf K = \mathbf Q \mathbf \Lambda \mathbf Q^{\rm T}$$ 로 나타낼 때, 위 식을 다음과 같이 표현할 수 있다.</p>
+<p>$$\begin{aligned}
+ \mathbf Q^{\rm T} (\hat{\mathbf y} ^{(t)}
+ - \mathbf y) &amp;\simeq \mathbf Q ^{\rm T} ( \mathbf K_\text{test} \mathbf K^{-1} ( \mathbf I - e ^{-\eta \mathbf K t} ) \mathbf y - \mathbf y )) \\
+&amp; \simeq \mathbf Q ^{\rm T} (  ( \mathbf I - e ^{-\eta \mathbf K t} ) \mathbf y - \mathbf y )) \\
+&amp; \simeq - e ^{-\eta \mathbf  \Lambda  t}   \mathbf Q ^{\rm T} \mathbf y \quad (\because e ^{-\eta \mathbf K t} = \mathbf Q e ^{-\eta \mathbf  \Lambda  t} \mathbf Q ^{\rm T} )
+\end{aligned}$$</p>
+<p>따라서 우리는 exponential 의 지수 항이 eigenvalue 값에 따라 decay 됨을 알 수 있고, 이는 즉 larger eigenvalue 가 먼저 빨리 배우게 됨을 의미한다.</p>
+<p>이미지 fourier transform 에서 large eigenvalue 는 전체적인 image 의 contour 등을 담당하고 있으므로, high frequency component 에 대한 convergence 가 느릴 것이다. 이는 NeRF 에서 embedding 을 적용하지 않을 시 fine detail 에 대한 convergence 가 매우 느린 것을 수학적으로 규명한다.</p>
+<h2 id="toc-heading-5">3. Fourier Features for a Tunable Stationary Neural Tangent Kernel</h2>
+<p>이 절에서 저자들은 Fourier Features Embedding 이 Kernel space 상에서 어떠한 역할을 하는지 규명하고, 이를 통해 High frequency component 에 대한 convergence 를 어떻게 효과적으로 다루는지에 대해 설명한다.</p>
+<h3 id="toc-heading-6">3.1. Fourier-Feature Mapping &amp; Kernel Regression</h3>
+<h4>3.1.1. Fourier-Feature Mapping</h4>
+<p>Fourier-Feature mapping function $\gamma$  를 다음과 같이 정의할 수 있다.</p>
+<p>$$\gamma (v) \  = \ \big [a_1 \cos (2 \pi b_1 ^T v), \ a_1 \sin (2 \pi b_1 ^T v ), .... , a_m \cos (2 \pi b_m ^T v), \ a_m \sin (2 \pi b_m ^T v ) \big ]^T
+$$</p>
+<ul>
+<li><p><em>e.g.</em> <strong>Positional Encoding in Transformer :</strong>
+Transformer 등의 attention-based architecture 에서 <em><strong>spatial information 을 feature 에 더해주기 위한 encoding</strong></em> 방식이며, 다음과 같이 정의된다.
+$$a_i =1, \ b_i = 10000^{i / d} , \ d : \text{dimension}$$</p>
+</li>
+<li><p><em>e.g.</em> <strong>Positional Encoding in NeRF :</strong>
+Coordinate-based MLP 에서 network input 이 low/high frequency information 을 골고루 잘 포함할 수 있도록 하는 encoding 이며, 다음과 같이 정의된다.
+$$a_i =1, \ b_i = 2^{i} {}$$</p>
+</li>
+</ul>
+<h4>3.1.2. Kernel Regression to Fourier-Feature mapping</h4>
+<p>우리는 이 mapping function 으로부터 induced 되는 kernel 을 다음과 같이 정의할 수 있으며, $\cos (\alpha - \beta ) = \cos \alpha \cos \beta  \ + \ \sin \alpha \sin \beta$ 으로부터</p>
+<p>$$\begin{aligned}
+K (\gamma (v_1 ) , \  \gamma (v_2) ) &amp;= \gamma (v_1 ) ^T \gamma (v_2) \\ &amp;= \sum _{j=1}^m a^2 _j \cos (2 \pi b_j ^T (v_1 -v_2) ) = h_\gamma (v_1 - v_2 )
+\end{aligned}$$</p>
+<p>fourier featuring kernel 이 2개의 input coordinates 에 대한 stationary function 으로 표현됨을 알 수 있다.</p>
+<ul>
+<li>stationary function 은 <em><strong>translation-invariant</strong></em> 한 특성을 갖는 function 을 의미한다. 여기서는<br>$$h_\gamma( (v_1 +k )  -  (v_2 +k ) ) = h_\gamma (v_1  -  v_2 )
+$$
+이기 때문에 stationary 한 성질을 만족한다.</li>
+</ul>
+<p>Cooridnate-based MLP는 dense &amp; uniform coordinate points 를 입력으로 받아 정보를 추출하는데, global 하게 좋은 성능을 내기 위해서는 <em>isotropic</em> 해야한다. 이는 특정 방향이 아닌, 전방위적으로 feature 를 추출해야하기 때문이다.</p>
+<ul>
+<li>따라서 location 에 상관없이 modeling 을 진행할 수 있는 stationary 성질이 갖춰졌을 때 좋은 성능을 기대할 수 있다.</li>
+<li>이는 image positional encoding 이 원래 coordinate system 에서 같은 거리만큼 떨어져 있는 관계는 위치 정보에 따른 weight 를 모두 같게 처리하기 때문이며, 좌표의 relative relation 을 high-dimensional space 에서 복각할 수 있다는 것.</li>
+</ul>
+<h3 id="toc-heading-7">3.2. NTK Kernel with Fourier-Featuring</h3>
+<p>이제 NTK fourier-featured kernel 을 다음과 같이 쓸 수 있다.</p>
+<p>$$K( \phi \circ \gamma (x) , \ \phi \circ \gamma (y) )
+$$</p>
+<ul>
+<li>여기서 stationary kernel regression 은 <em><strong>convolutional filter 를 통한 reconstruction</strong></em> 과 같음을 알 수 있다. neural network 가 data point $v_i$  와 이에 대한 weight $w_i$  에서 $K_\text{NTK}$ 와 $K_\gamma$  의 합성 kernel 사이의 convolution 을 approximate 하기 때문.</li>
+</ul>
+<p>따라서 NTK theory 을 통해 나타낸 fourier featuring 은 최종적으로 다음과 같다.</p>
+<p>$$f = ( h_\text{NTK} \circ h_\gamma ) * \sum_{i=1}^n w_i \delta _{v_i}
+$$</p>
+<p>여기서 $\delta$ 는 direc delta 이다. 위 식의 의미를 다음과 같이 해석할 수 있다.</p>
+<ol>
+<li>Stationary 한 filter $h_\gamma$ 를 통해 coordinate system 상에서의 정보를 <em><strong>location-invariant</strong></em> 하게 추출한다.</li>
+<li>Convolution 은 frequency space 에서 <em><strong>multiplication 의 IFT</strong></em> 이기 때문에, $h_\gamma$ 에서 직접적으로 embedding 된 특정 frequency 의 componenet 들을 통해 서로 다른 frequency space 에서의 feature 를 다각도로 (그러나 location invariant 하게) 얻을 수 있다.</li>
+<li>Fourier-featured input 을 입력받는 NN 은 NTK 와 어떤 stationary kernel 을 합성해서 kernel regression 을 수행하는 것과 같다.</li>
+</ol>
+<h2 id="toc-heading-8">4. Experiments</h2>
+<p><img src="/blogs/posts/211128_fourier/assets/experiment-results-1.webp" alt="Fourier Features 논문의 실험 결과 1" loading="lazy" decoding="async">
+<img src="/blogs/posts/211128_fourier/assets/experiment-results-2.webp" alt="Fourier Features 논문의 실험 결과 2" loading="lazy" decoding="async"></p>
+<hr>
+<p>원문: <a href="https://velog.io/@gjghks950/Fourier-Features-Let-Networks-Learn-High-Frequency-Functions-in-Low-Dimensional-Domains-%EB%85%BC%EB%AC%B8-%EB%A6%AC%EB%B7%B0">Velog — [Review] Fourier Features Let Networks Learn High-Frequency Functions in Low Dimensional Domains</a></p>
+
+                    </div>
+                    <div class="post-reading-column post-end-matter">
+                        <section class="post-author-note" aria-labelledby="post-author-name">
+                            <img class="post-author-portrait" src="/assets/profile4-author.png" alt="Hwan Heo" loading="lazy">
+                            <div class="post-author-copy">
+                                <span class="post-author-kicker">Written by</span>
+                                <h2 id="post-author-name">Hwan Heo</h2>
+                                <p>대규모 3D 생성 모델부터 CUDA 추론 최적화와 그래픽스 파이프라인까지, 실제 제품으로 이어지는 3D AI 시스템을 만듭니다.</p>
+                                <div class="post-author-links" aria-label="Author links">
+                                    <a href="mailto:hwan.heo.ai@gmail.com">Email</a>
+                                    <a href="https://www.linkedin.com/in/hwan-heo-0905korea/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                                </div>
+                            </div>
+                        </section>
+                        
+                    <section class="related-posts" aria-labelledby="related-posts-heading">
+                        <h2 id="related-posts-heading">Related Posts</h2>
+                        <div class="related-post-grid">
+                            
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/an-era-of-3d-generation-kor/" aria-label="Read 3D 생성 모델의 시대">
+                                    <strong>3D 생성 모델의 시대</strong>
+                                    <time datetime="2025-03-02">2025년 3월</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/a-comprehensive-analysis-of-gaussian-splatting-rasterization-kor/" aria-label="Read Gaussian Splatting Rasterization 완벽 분석">
+                                    <strong>Gaussian Splatting Rasterization 완벽 분석</strong>
+                                    <time datetime="2024-08-05">2024년 8월</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="https://velog.io/@gjghks950/3D-Gaussian-Splatting-%EC%9D%98-Densification-Strategy-feat.-3DGS-MCMC-AbsGS" target="_blank" rel="noopener noreferrer" aria-label="Open 잃어버린 3D Gaussian Splatting 의 Densification Strategy 를 찾아서">
+                                    <strong>잃어버린 3D Gaussian Splatting 의 Densification Strategy 를 찾아서</strong>
+                                    <span>External</span>
+                                </a>
+                            </article>
+            
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting-kor/" aria-label="Read 2D Gaussian Splatting 톺아보기">
+                                    <strong>2D Gaussian Splatting 톺아보기</strong>
+                                    <time datetime="2024-06-02">2024년 6월</time>
+                                </a>
+                            </article>
+        
+                            <article class="related-post-card">
+                                <a href="/blogs/posts/dont-rasterize-but-ray-trace-3d-gaussian-kor/" aria-label="Read 3D Gaussian Ray Tracing 톺아보기">
+                                    <strong>3D Gaussian Ray Tracing 톺아보기</strong>
+                                    <time datetime="2024-08-23">2024년 8월</time>
+                                </a>
+                            </article>
+        
+                        </div>
+                    </section>
+    
+                        <div id="post-navigation" class="post-navigation-space"><nav class="post-nav-grid" aria-label="Post navigation"><span class="post-nav-spacer" aria-hidden="true"></span>
+                <a class="post-nav-card is-next" href="/blogs/posts/instant-ngp-review-re-implementation-kor/" aria-label="Next Post: Instant-NGP 리뷰 및 재구현">
+                    <span class="post-nav-kicker">
+                        Next Post <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-right"></use></svg>
+                    </span>
+                    <strong>Instant-NGP 리뷰 및 재구현</strong>
+                </a>
+    </nav></div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <button id="scroll-top" class="scroll-top button_top post-scroll-top" type="button" aria-label="Back to top">
+            <svg class="site-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/site-icons.svg#icon-arrow-up"></use></svg>
+        </button>
+
+        <footer class="blog-post-footer">
+            <div class="blog-shell">
+                <div class="post-reading-row">
+                    <div class="post-reading-column">
+                        <div class="blog-footer-note">Copyright © Hwan Heo</div>
+                        <nav class="blog-publication-links" aria-label="Publication links">
+                            <a href="/blogs/">Blog Home</a>
+                            <a href="/">Portfolio ↗</a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        window.siteData = {
+  "posts": [
+    {
+      "id": "261022_pcg_muon",
+      "title_eng": "From PCG to Muon: The Geometry of Preconditioners and Optimizers",
+      "title_kor": "From PCG to Muon: Preconditioner와 Optimizer의 기하학",
+      "subtitle_eng": "From sparse quadratic solvers in quad remeshing to deep learning optimizers",
+      "subtitle_kor": "Quad Remeshing의 Sparse Quadratic Solver에서 Deep Learning Optimizer까지",
+      "tags": [
+        "Optimization",
+        "Linear Algebra",
+        "CUDA",
+        "Graphics"
+      ],
+      "cover": "/blogs/posts/261022_pcg_muon/assets/cover-sculptural-paths-v2.webp",
+      "status": "published",
+      "updated": "2026-10-22",
+      "date": "2026-10-22",
+      "category": "post",
+      "series": "graphics",
+      "additionalSeries": [
+        "3d-generation"
+      ],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "from-pcg-to-muon"
+    },
+    {
+      "id": "260818_quad_remesh",
+      "title_eng": "Comprehensive Analysis of Quad Remeshing",
+      "title_kor": "Quad Remesh 톺아보기",
+      "subtitle_eng": "The differential geometry of quad remeshing, from cross fields to integer-grid maps",
+      "subtitle_kor": "Manifold 위의 integer grid 설계. Tri-mesh decimation 과는 근본적으로 다른 접근법을 가진 Quad remeshing 을 이해해보기.",
+      "tags": [
+        "Graphics"
+      ],
+      "cover": "/blogs/posts/260818_quad_remesh/assets/cover-dragon.webp",
+      "status": "published",
+      "updated": "2026-10-06",
+      "date": "2026-10-06",
+      "category": "post",
+      "series": "graphics",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "quad-remesh"
+    },
+    {
+      "id": "260802_cuda_01_gemm",
+      "title_eng": "GEMM on NVIDIA GPUs: From Naive Kernels to Tiled Pipelines",
+      "title_kor": "NVIDIA GPU의 GEMM: Naive Kernel에서 Tiled Pipeline까지",
+      "subtitle_eng": "Why naive GEMM becomes memory-bound, how tiled reuse changes arithmetic intensity, and where Tensor Cores, schedulers, and libraries fit",
+      "subtitle_kor": "Naive GEMM의 memory bottleneck부터 tiled reuse, Tensor Core pipeline, shape별 scheduling과 library 추상화까지",
+      "tags": [
+        "CUDA"
+      ],
+      "cover": "/blogs/posts/260802_cuda_01_gemm/assets/cover.webp",
+      "status": "published",
+      "updated": "2026-08-12",
+      "date": "2026-08-12",
+      "category": "post",
+      "series": "cuda",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "gemm-on-nvidia-gpus"
+    },
+    {
+      "id": "260727_sparse_3d",
+      "title_eng": "What the Compiler Missed in Sparse 3D Inference",
+      "title_kor": "컴파일러가 놓치는 Sparse 3D Generation Inference 최적화",
+      "subtitle_eng": "Why generic compiler paths underperform on dynamic sparse 3D generative models—and how null-context attention removal and model-aware CUDA kernels cut inference latency.",
+      "subtitle_kor": "torch.compile과 TensorRT가 실패하는 Sparse 3D Generation model에서 Null-Context Attention 제거와 custom CUDA Fusion으로 forward latency 줄이는 방법",
+      "tags": [
+        "3D Generation",
+        "Generative AI",
+        "CUDA"
+      ],
+      "cover": "/blogs/posts/260727_sparse_3d/assets/varco3d2-result-a.png",
+      "status": "published",
+      "updated": "2026-07-27",
+      "date": "2026-07-27",
+      "category": "post",
+      "series": "cuda",
+      "additionalSeries": [
+        "3d-generation"
+      ],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "optimizing-sparse-3d-generation-inference"
+    },
+    {
+      "id": "260115_Varco3D",
+      "title_eng": "VARCO 3D: A Year in Review — 2025 Retrospective",
+      "title_kor": "3D 생성형 AI 서비스; Varco3D 개발기",
+      "subtitle_eng": "How a fast-follower team tracked the evolution of 3D AI to build an in-house generative 3D service—from VecSet VAEs to Voxel-conditioned 3D DiTs.",
+      "subtitle_kor": "3D VecSet VAEs 에서부터 Hunyuan3D 3.0의 Voxel-conditioned 3D DiTs까지 추적하며 자체 3D 생성형 AI 서비스를 구축해 간 과정",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/260115_Varco3D/assets/remote-903932fc4929.gif",
+      "status": "published",
+      "updated": "2026-01-15",
+      "date": "2026-01-15",
+      "category": "post",
+      "series": "3d-generation",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "varco3d-a-year-in-review-2025-retrospective"
+    },
+    {
+      "id": "250823_sdf",
+      "title_eng": "SDF and Eikonal Equation",
+      "title_kor": "SDF 와 Eikonal Equation 의 관계는?",
+      "subtitle_eng": "A rigorous derivation of why a signed distance field satisfies the Eikonal equation, from its geometric definition to gradient bounds",
+      "subtitle_kor": "Signed distance field의 기하학적 정의에서 출발해, gradient의 크기가 왜 Eikonal equation을 만족하는지 엄밀하게 유도해보기",
+      "tags": [
+        "Graphics"
+      ],
+      "cover": "/blogs/posts/250823_sdf/assets/remote-12d4629724c7.png",
+      "status": "published",
+      "updated": "2025-08-23",
+      "date": "2025-08-23",
+      "category": "post",
+      "series": "graphics",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "sdf-and-eikonal-equation"
+    },
+    {
+      "id": "250810_flow",
+      "title_eng": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
+      "title_kor": "From Flow Matching to Optimal Transport: A Physics-based View of Generative Models",
+      "subtitle_eng": "Why a Straight Line? Unpacking the Physics and Geometry of Rectified Flow",
+      "subtitle_kor": "Rectified Flow의 생성 경로가 왜 직선으로 수렴하는지, 물리학과 기하학, optimal transport의 관점에서 살펴보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250810_flow/assets/remote-40629d4b233a.png",
+      "status": "published",
+      "updated": "2025-08-10",
+      "date": "2025-08-10",
+      "category": "post",
+      "series": "3d-generation",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "from-flow-matching-to-optimal-transport-a-physics-based-view-of-generative-models"
+    },
+    {
+      "id": "250809_gwn",
+      "title_eng": "Generalized Winding Number",
+      "title_kor": "Generalized Winding Number",
+      "subtitle_eng": "How Generalized Winding Numbers turn imperfect meshes into robust inside–outside tests for signed distance field construction",
+      "subtitle_kor": "불완전하거나 열린 mesh에서도 Generalized Winding Number로 inside/outside를 판별하고 견고한 SDF를 계산하는 방법을 살펴보기",
+      "tags": [
+        "Graphics"
+      ],
+      "cover": "/blogs/posts/250809_gwn/assets/image.png",
+      "status": "published",
+      "updated": "2025-08-09",
+      "date": "2025-08-09",
+      "category": "post",
+      "series": "graphics",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "generalized-winding-number"
+    },
+    {
+      "id": "250710_building_large_3d_2",
+      "title_eng": "Building Large 3D Generative Model (2) VAE and DiT Deep Dive",
+      "title_kor": "Large 3D Generative Model 구축하기 (2) VAE and DiT 분석",
+      "subtitle_eng": "Comparing vecset and sparse-voxel VAE–DiT architectures, from 3D representation and compression to shape-generation design",
+      "subtitle_kor": "Vecset과 sparse voxel이 3D shape을 표현하는 방식부터 VAE와 DiT 구조, 생성 모델 설계의 차이까지 비교해보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250710_building_large_3d_2/assets/image-13.png",
+      "status": "published",
+      "updated": "2025-07-10",
+      "date": "2025-07-10",
+      "category": "post",
+      "series": "3d-generation",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "building-large-3d-generative-model-2-vae-and-dit-deep-dive"
+    },
+    {
+      "id": "250702_building_large_3d_1",
+      "title_eng": "Building Large 3D Generative Model (1) Data pre-processing",
+      "title_kor": "Large 3D Generative Model 구축하기 (1) 데이터 전처리",
+      "subtitle_eng": "Preparing training-ready 3D data through watertight mesh conversion, surface sampling, and salient-edge-aware preprocessing",
+      "subtitle_kor": "대규모 3D 생성 모델의 학습 데이터를 위해 watertight mesh 변환, surface sampling, salient edge 추출 과정을 정리해보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250702_building_large_3d_1/assets/image-10.png",
+      "status": "published",
+      "updated": "2025-07-02",
+      "date": "2025-07-02",
+      "category": "post",
+      "series": "3d-generation",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "building-large-3d-generative-model-1-data-pre-processing"
+    },
+    {
+      "id": "250310_model_viewer",
+      "title_eng": "3D Model Viewer in Web",
+      "title_kor": "커스텀 3D 웹뷰어 만들기",
+      "subtitle_eng": "Comparing Google model-viewer with a custom Three.js pipeline for embedding, controlling, and presenting 3D assets on the web",
+      "subtitle_kor": "Google model-viewer와 직접 만든 Three.js viewer를 비교하며, 웹에서 3D asset을 안정적으로 보여주는 방법을 정리해보기",
+      "tags": [
+        "Web 3D",
+        "Three.js"
+      ],
+      "cover": "/blogs/posts/250310_model_viewer/assets/image.png",
+      "status": "published",
+      "updated": "2025-03-10",
+      "date": "2025-03-10",
+      "category": "post",
+      "series": "graphics",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "3d-model-viewer-in-web"
+    },
+    {
+      "id": "250302_3d_latent_diffusion",
+      "title_eng": "An Era of 3D Generation",
+      "title_kor": "3D 생성 모델의 시대",
+      "subtitle_eng": "Tracing 3D latent diffusion from ShapeVAE to TRELLIS and Hunyuan3D, and comparing how modern systems represent and generate shape",
+      "subtitle_kor": "ShapeVAE에서 TRELLIS와 Hunyuan3D까지, 3D latent diffusion이 shape을 표현하고 생성하는 방식 톺아보기",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/250302_3d_latent_diffusion/assets/teaser-poster.jpg",
+      "status": "published",
+      "updated": "2025-03-02",
+      "date": "2025-03-02",
+      "category": "post",
+      "series": "3d-generation",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "an-era-of-3d-generation"
+    },
+    {
+      "id": "250106_tomography",
+      "title_eng": "Neural Rendering Beyond Photography",
+      "title_kor": "X-Ray 와 NeRF",
+      "subtitle_eng": "Applying NeRF and Gaussian Splatting beyond photography to X-ray tomography, plus a lightweight viewer workflow built with Viser.",
+      "subtitle_kor": "NeRF와 Gaussian Splatting을 X-ray tomography에 적용하는 원리를 살펴보고, Viser 기반 viewer 제작 팁까지 살펴보기",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/250106_tomography/assets/image1.png",
+      "status": "published",
+      "updated": "2025-01-06",
+      "date": "2025-01-06",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "neural-rendering-beyond-photography"
+    },
+    {
+      "id": "240917_3djs",
+      "title_eng": "Add Gaussian Splatting to Your Website",
+      "title_kor": "웹사이트에 3D GS 삽입하기",
+      "subtitle_eng": "A practical Three.js guide to embedding an interactive Gaussian Splatting scene in a website, with no web-graphics background required",
+      "subtitle_kor": "Three.js를 이용해 웹사이트에 interactive Gaussian Splatting scene을 삽입하고 제어해보기",
+      "tags": [
+        "Web 3D",
+        "Three.js"
+      ],
+      "cover": "/assets/guitar.jpeg",
+      "status": "published",
+      "updated": "2024-09-17",
+      "date": "2024-09-17",
+      "category": "post",
+      "series": "graphics",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "add-gaussian-splatting-to-your-website"
+    },
+    {
+      "id": "240823_grt",
+      "title_eng": "Don't Rasterize, But Ray Trace 3D Gaussian",
+      "title_kor": "3D Gaussian Ray Tracing 톺아보기",
+      "subtitle_eng": "How NVIDIA’s 3D Gaussian Ray Tracing replaces splat rasterization with differentiable ray tracing—and what that changes.",
+      "subtitle_kor": "NVIDIA의 3D Gaussian Ray Tracing이 splat rasterization을 differentiable ray tracing으로 바꾸는 방식과 장점에 대한 심층 분석",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240823_grt/assets/teaser.gif",
+      "status": "published",
+      "updated": "2024-08-23",
+      "date": "2024-08-23",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "dont-rasterize-but-ray-trace-3d-gaussian"
+    },
+    {
+      "id": "240805_gs",
+      "title_eng": "A Comprehensive Analysis of Gaussian Splatting Rasterization",
+      "title_kor": "Gaussian Splatting Rasterization 완벽 분석",
+      "subtitle_eng": "A ground-up guide to Gaussian Splatting and differentiable rasterization, tracing the mathematics through its CUDA implementation—from projection and covariance to sorting and alpha blending.",
+      "subtitle_kor": "수식과 CUDA rasterizer 코드를 직접 대응시키며 따라가보는 Gaussian Splatting 완전 해설",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240805_gs/assets/garden.gif",
+      "status": "published",
+      "updated": "2024-08-05",
+      "date": "2024-08-05",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "a-comprehensive-analysis-of-gaussian-splatting-rasterization"
+    },
+    {
+      "id": "240721_sfm",
+      "title_eng": "Radiance Fields from Deep-based Structure-from-Motion",
+      "subtitle_eng": "Comparing VGGSfM and MASt3R as learned Structure-from-Motion pipelines for camera estimation and radiance-field reconstruction.",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240721_sfm/assets/sfm.jpg",
+      "status": "published",
+      "updated": "2024-07-21",
+      "date": "2024-07-21",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "additionalSeries": [],
+      "languages": [
+        "eng"
+      ],
+      "slug": "radiance-fields-from-deep-based-structure-from-motion"
+    },
+    {
+      "id": "240602_2dgs",
+      "title_eng": "Under the 3D: Geometrically Accurate 2D Gaussian Splatting",
+      "title_kor": "2D Gaussian Splatting 톺아보기",
+      "subtitle_eng": "How 2D Gaussian Splatting replaces volumetric blobs with oriented disks to improve surface geometry and mesh reconstruction",
+      "subtitle_kor": "2D Gaussian Splatting이 volumetric blob 대신 oriented disk를 사용해 surface geometry와 mesh reconstruction을 개선하는 원리를 살펴보기",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240602_2dgs/assets/teaser.gif",
+      "status": "published",
+      "updated": "2024-06-02",
+      "date": "2024-06-02",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "under-the-3d-geometrically-accurate-2d-gaussian-splatting"
+    },
+    {
+      "id": "240426_diffusion_depth",
+      "title_eng": "Is Diffusion's Estimated Depth Really Good?",
+      "title_kor": "Diffusion 으로 추정한 Depth 진짜 좋나요?",
+      "subtitle_eng": "Evaluating diffusion-estimated depth by turning Marigold predictions into textured meshes and inspecting their geometric consistency.",
+      "subtitle_kor": "Diffusion 으로 추정한 Depth Map 을 이용해 Textured Mesh 만들어보기 (feat. Marigold)",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/240426_diffusion_depth/assets/teaser.jpeg",
+      "status": "published",
+      "updated": "2024-04-26",
+      "date": "2024-04-26",
+      "category": "post",
+      "series": "3d-generation",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "is-diffusions-estimated-depth-really-good"
+    },
+    {
+      "id": "240308_nerf_practicality",
+      "title_eng": "Reflections on the Practicality of NeRF",
+      "title_kor": "NeRF의 실용성에 대한 단상",
+      "subtitle_eng": "A March 2024 follow-up on relighting, game-engine integration, and the gap between neural rendering demos and production use",
+      "subtitle_kor": "Relighting과 게임 엔진 이식의 한계, Neural Rendering의 실용화에 대한 2024년 3월의 생각",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/240308_nerf_practicality/assets/nerf-in-game.jpg",
+      "status": "published",
+      "updated": "2024-03-08",
+      "date": "2024-03-08",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "reflections-on-the-practicality-of-nerf"
+    },
+    {
+      "id": "240226_sora",
+      "title_eng": "Can Sora Understand 3D?",
+      "title_kor": "Sora 가 상상하는 3D World",
+      "subtitle_eng": "Testing whether video generation models encode enough 3D consistency to reconstruct radiance fields from their synthesized views",
+      "subtitle_kor": "2024년 공개된 Sora 영상을 COLMAP·NeRF·Gaussian Splatting으로 복원하며 3D 기하 일관성을 살펴본 실험",
+      "tags": [
+        "3D Generation",
+        "Generative AI"
+      ],
+      "cover": "/blogs/posts/240226_sora/assets/big-sur-gs-poster.jpg",
+      "status": "published",
+      "updated": "2024-02-26",
+      "date": "2024-02-26",
+      "category": "post",
+      "series": "3d-generation",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "can-sora-understand-3d"
+    },
+    {
+      "id": "231130_nerf_in_game",
+      "title_eng": "Can NeRF be used in Game?",
+      "title_kor": "NeRF 를 게임 제작에서 이용할 수 있을까?",
+      "subtitle_eng": "Examining the quality, rendering, and production constraints that limit NeRF in games—and the workarounds available today",
+      "subtitle_kor": "NeRF를 게임에 활용하기 위한 relighting, 렌더링 속도, 카메라 추정과 엔진 통합의 과제 살펴보기",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/231130_nerf_in_game/assets/VID_4_NeRF_obeject_in_blender-poster.jpg",
+      "status": "published",
+      "updated": "2023-11-30",
+      "date": "2023-11-30",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "can-nerf-be-used-in-game"
+    },
+    {
+      "id": "230202_ngp",
+      "title_eng": "Instant-NGP Review & Re-Implementation",
+      "title_kor": "Instant-NGP 리뷰 및 재구현",
+      "subtitle_eng": "Reviewing Instant-NGP’s multi-resolution hash encoding and rebuilding its NeRF pipeline step by step in PyTorch",
+      "subtitle_kor": "Multi-resolution hash encoding의 원리와 핵심 연산을 살펴보고 PyTorch로 직접 구현하기",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/230202_ngp/assets/ngp_nerf.gif",
+      "status": "published",
+      "updated": "2023-02-02",
+      "date": "2023-02-02",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "instant-ngp-review-re-implementation"
+    },
+    {
+      "id": "211128_fourier",
+      "title_eng": "Why Positional Encoding Makes NeRF more Powerful",
+      "title_kor": "Positional Encoding이 NeRF에서 필수적인 이유",
+      "subtitle_eng": "Review of Fourier Features Let Networks Learn High-Frequency Functions",
+      "subtitle_kor": "Fourier Features와 Neural Tangent Kernel을 통해 positional encoding이 고주파 학습을 돕는 이유 이해하기",
+      "tags": [
+        "Neural Rendering",
+        "Gaussian Splatting"
+      ],
+      "cover": "/blogs/posts/211128_fourier/assets/main.png",
+      "status": "published",
+      "updated": "2021-11-28",
+      "date": "2021-11-28",
+      "category": "post",
+      "series": "nerf-and-gs",
+      "additionalSeries": [],
+      "languages": [
+        "eng",
+        "kor"
+      ],
+      "slug": "why-positional-encoding-makes-nerf-more-powerful"
+    }
+  ],
+  "series": {
+    "cuda": {
+      "eng": "CUDA",
+      "kor": "CUDA"
+    },
+    "nerf-and-gs": {
+      "eng": "Radiance Fields & Gaussian Splatting",
+      "kor": "Radiance Fields & Gaussian Splatting"
+    },
+    "3d-generation": {
+      "eng": "3D AI",
+      "kor": "3D AI"
+    },
+    "linear-algebra": {
+      "eng": "Linear Algebra for Deep Learning",
+      "kor": "딥러닝을 위한 선형대수"
+    },
+    "computer-vision": {
+      "eng": "Classical Computer Vision",
+      "kor": "고전 Computer Vision"
+    },
+    "graphics": {
+      "eng": "Computer Graphics",
+      "kor": "Computer Graphics"
+    }
+  }
+};
+        window.blogPostPageConfig = {
+  "postId": "211128_fourier",
+  "lang": "kor",
+  "alternateLang": "eng",
+  "alternateHref": "/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/",
+  "runtimeFeatures": {
+    "katex": true,
+    "prism": false,
+    "modelViewer": false,
+    "modelViewerTextureToggle": false,
+    "three": false,
+    "tween": false,
+    "simpleModelViewer": false,
+    "gaussianSplats": false
+  }
+};
+    </script>
+
+    <script src="/blogs/js/theme-toggle.js?v=02f1278dd5"></script>
+    <script src="/blogs/js/blog-shell.js?v=2108ee26e6"></script>
+    <script src="/blogs/js/post-page.js?v=acf6ad7cc8"></script>
+        <script>
+            initBlogShell({
+                formSelector: '#post-nav-search-form',
+                inputSelector: '#post-nav-search-input'
+            });
+        </script>
+</body>
+</html>

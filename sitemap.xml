@@ -343,8 +343,36 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://hwan-h-heo.github.io/blogs/posts/reflections-on-the-practicality-of-nerf/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/reflections-on-the-practicality-of-nerf/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/reflections-on-the-practicality-of-nerf-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/reflections-on-the-practicality-of-nerf/" />
+    <lastmod>2024-03-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/posts/reflections-on-the-practicality-of-nerf-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/reflections-on-the-practicality-of-nerf/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/reflections-on-the-practicality-of-nerf-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/reflections-on-the-practicality-of-nerf/" />
+    <lastmod>2024-03-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/can-sora-understand-3d/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/can-sora-understand-3d/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/can-sora-understand-3d-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/can-sora-understand-3d/" />
+    <lastmod>2024-02-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/posts/can-sora-understand-3d-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/can-sora-understand-3d/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/can-sora-understand-3d-kor/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/can-sora-understand-3d/" />
     <lastmod>2024-02-26</lastmod>
     <changefreq>monthly</changefreq>
@@ -353,6 +381,16 @@
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/can-nerf-be-used-in-game/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/can-nerf-be-used-in-game/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/can-nerf-be-used-in-game-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/can-nerf-be-used-in-game/" />
+    <lastmod>2023-11-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/posts/can-nerf-be-used-in-game-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/can-nerf-be-used-in-game/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/can-nerf-be-used-in-game-kor/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/can-nerf-be-used-in-game/" />
     <lastmod>2023-11-30</lastmod>
     <changefreq>monthly</changefreq>
@@ -361,6 +399,16 @@
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/instant-ngp-review-re-implementation/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/instant-ngp-review-re-implementation/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/instant-ngp-review-re-implementation-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/instant-ngp-review-re-implementation/" />
+    <lastmod>2023-02-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/posts/instant-ngp-review-re-implementation-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/instant-ngp-review-re-implementation/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/instant-ngp-review-re-implementation-kor/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/instant-ngp-review-re-implementation/" />
     <lastmod>2023-02-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -369,6 +417,16 @@
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful-kor/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/" />
+    <lastmod>2021-11-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful-kor/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful-kor/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://hwan-h-heo.github.io/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/" />
     <lastmod>2021-11-28</lastmod>
     <changefreq>monthly</changefreq>
@@ -377,12 +435,6 @@
   <url>
     <loc>https://hwan-h-heo.github.io/blogs/series/3d-generation/</loc>
     <lastmod>2026-10-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://hwan-h-heo.github.io/blogs/series/web-3d/</loc>
-    <lastmod>2025-03-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
