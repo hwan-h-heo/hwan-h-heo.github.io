@@ -169,6 +169,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         return lang === 'kor' && /[\u1100-\u11ff\u3130-\u318f\uac00-\ud7af]/.test(String(value || '')) ? 'ko' : 'en';
     }
 
+    function updateLanguageNotice(container, post, lang) {
+        const element = container.querySelector('[data-post-language-note]');
+        if (element) {
+            element.textContent = window.siteDataClient.getPostLanguageNotice(post, lang);
+            element.hidden = !element.textContent;
+        }
+    }
+
     function setText(selector, value) {
         const element = document.querySelector(selector);
         if (element) {
@@ -211,6 +219,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     function updatePostPreview(card, post, lang) {
+        updateLanguageNotice(card, post, lang);
         const title = getPostTitle(post, lang);
         const subtitleText = getPostSubtitle(post, lang);
         const url = getPostUrl(post, lang);
@@ -257,6 +266,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             return;
         }
 
+        updateLanguageNotice(card, post, lang);
         const title = getPostTitle(post, lang);
         const subtitle = getPostSubtitle(post, lang);
         const url = getPostUrl(post, lang);
@@ -337,6 +347,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 link.href = getPostUrl(post, lang);
                 link.textContent = postTitle;
                 link.lang = getTextLang(postTitle, lang);
+                updateLanguageNotice(item, post, lang);
                 if (time) {
                     time.dateTime = post.date;
                     time.textContent = formatShortDate(post.date, lang);

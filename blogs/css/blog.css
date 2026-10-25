@@ -2491,7 +2491,8 @@ html[lang="ko"] .blog-home-hero h1 {
     text-wrap: balance;
 }
 
-.blog-feature-date {
+.blog-feature-date,
+.blog-feature-publication {
     margin-top: 0.44rem;
     color: var(--blog-home-muted);
     font-family: var(--blog-mono);
@@ -2500,6 +2501,34 @@ html[lang="ko"] .blog-home-hero h1 {
     letter-spacing: 0.02em;
     line-height: 1.4;
     text-transform: uppercase;
+}
+
+.blog-feature-publication {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+
+.blog-feature-publication .blog-feature-date {
+    margin-top: 0;
+}
+
+.post-language-note {
+    margin-left: 0.55em;
+    color: var(--blog-color-muted);
+    font-family: var(--blog-sans);
+    font-size: 0.68rem;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+.post-language-note[hidden] {
+    display: none;
+}
+
+.post-language-note::before {
+    margin-right: 0.55em;
+    content: "·";
 }
 
 .blog-feature-copy .post-tag-row {

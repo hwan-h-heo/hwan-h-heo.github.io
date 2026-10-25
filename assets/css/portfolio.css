@@ -612,67 +612,12 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   width: 100%;
   height: auto;
   margin: 0;
-  opacity: var(--about-portrait-image-opacity, 1);
+  opacity: 1;
   filter: brightness(0.99) contrast(1.06);
-}
-
-.about .about-portrait-canvas {
-  position: absolute;
-  z-index: 2;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  opacity: var(--about-portrait-canvas-opacity, 0);
-  filter: brightness(0.99) contrast(1.06);
-  pointer-events: none;
 }
 
 .about .about-identity {
   margin-top: 0.9rem;
-}
-
-.about .about-portrait-affordance {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.28rem 0.42rem;
-  margin: 0 0 0.72rem;
-  color: var(--color-text-faint);
-  font-family: var(--mono-font);
-  font-size: 0.66rem;
-  font-weight: 500;
-  letter-spacing: 0;
-  line-height: 1.2;
-  text-transform: uppercase;
-}
-
-.about .about-portrait-affordance-hint {
-  display: none;
-  color: var(--color-text-soft);
-}
-
-.about .about-profile-note[data-about-portrait-static="true"] .about-portrait-affordance {
-  display: none;
-}
-
-.about .about-profile-note[data-about-portrait-static="true"] .about-profile-image {
-  opacity: 1;
-}
-
-.about .about-profile-note[data-about-portrait-static="true"] .about-portrait-canvas {
-  display: none;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .about .about-portrait-affordance-hint {
-    display: inline;
-  }
-
-  .about .about-media[data-about-portrait-state="flat"],
-  .about .about-media[data-about-portrait-state="depth"],
-  .about .about-media[data-about-portrait-state="ambient"] {
-    cursor: crosshair;
-  }
 }
 
 .about .about-name {
@@ -713,10 +658,6 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   .about .about-identity {
     padding-right: 16.7%;
     text-align: right;
-  }
-
-  .about .about-portrait-affordance {
-    justify-content: flex-end;
   }
 
   .about .about-meta {
@@ -893,15 +834,6 @@ section, .section { color: var(--default-color); background-color: var(--backgro
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .about .about-profile-image {
-    opacity: 1;
-  }
-
-  .about .about-portrait-canvas {
-    display: none;
-  }
-}
 .resume {
   scroll-margin-top: 2.4rem;
 }

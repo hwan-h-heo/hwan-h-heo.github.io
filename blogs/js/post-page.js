@@ -447,6 +447,82 @@
         }
     }
 
+    function setupCompactContents() {
+        const contents = document.querySelector('.post-contents');
+        const item = document.querySelector('.post-nav-contents-item');
+        const summary = contents?.querySelector('summary');
+        if (!contents || !item || !summary) {
+            return;
+        }
+
+        const compactMedia = window.matchMedia('(max-width: 767.98px)');
+        const originalPosition = document.createComment('Inline article contents');
+        contents.before(originalPosition);
+        const label = document.createElement('span');
+        label.className = 'post-contents-label';
+        label.textContent = summary.textContent;
+        summary.setAttribute('aria-label', label.textContent);
+        summary.replaceChildren(label);
+        summary.insertAdjacentHTML('afterbegin', icons.render('list-ul'));
+
+        function syncPosition() {
+            const hadFocus = contents.contains(document.activeElement);
+            contents.open = false;
+            contents.classList.toggle('post-contents--nav', compactMedia.matches);
+            item.hidden = !compactMedia.matches;
+            if (compactMedia.matches) {
+                item.appendChild(contents);
+            } else {
+                originalPosition.after(contents);
+            }
+            if (hadFocus) {
+                summary.focus({ preventScroll: true });
+            }
+        }
+
+        contents.addEventListener('toggle', () => {
+            if (compactMedia.matches && contents.open) {
+                const labs = document.querySelector('.blog-labs');
+                if (labs) {
+                    labs.open = false;
+                }
+            }
+        });
+        contents.addEventListener('click', (event) => {
+            const link = event.target.closest('a[href^="#"]');
+            if (!compactMedia.matches || !link) {
+                return;
+            }
+            contents.open = false;
+            const target = document.getElementById(link.hash.slice(1));
+            if (target) {
+                target.setAttribute('tabindex', '-1');
+                requestAnimationFrame(() => target.focus({ preventScroll: true }));
+            }
+        });
+        document.addEventListener('pointerdown', (event) => {
+            if (compactMedia.matches && !contents.contains(event.target)) {
+                contents.open = false;
+            }
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && compactMedia.matches && contents.open) {
+                event.preventDefault();
+                contents.open = false;
+                summary.focus({ preventScroll: true });
+            }
+        });
+        contents.addEventListener('focusout', () => {
+            requestAnimationFrame(() => {
+                if (compactMedia.matches && !contents.contains(document.activeElement)) {
+                    contents.open = false;
+                }
+            });
+        });
+        compactMedia.addEventListener('change', syncPosition);
+        syncPosition();
+    }
+
     function syncLanguagePreference() {
         const config = window.blogPostPageConfig;
         if (!config?.lang) {
@@ -456,7 +532,11 @@
         document.documentElement.lang = config.lang === 'kor' ? 'ko' : 'en';
 
         try {
-            localStorage.setItem('language', config.lang);
+            // Opening an English-only fallback preserves the preferred listing language.
+            const preferredLanguage = localStorage.getItem('language');
+            if (config.alternateHref || !['eng', 'kor'].includes(preferredLanguage)) {
+                localStorage.setItem('language', config.lang);
+            }
         } catch (error) {
             console.warn('Failed to persist language preference:', error);
         }
@@ -532,7 +612,7 @@
         let ticking = false;
 
         function isMenuOpen() {
-            return Boolean(nav.querySelector('.post-nav-panel.is-open'));
+            return Boolean(nav.querySelector('.post-nav-panel.is-open, .post-contents[open], .blog-labs[open]'));
         }
 
         function updateNav() {
@@ -570,6 +650,7 @@
         nav.querySelector('.post-nav-toggle')?.addEventListener('click', () => {
             window.setTimeout(requestUpdate, 0);
         });
+        nav.addEventListener('toggle', requestUpdate, true);
         updateNav();
     }
 
@@ -579,6 +660,7 @@
         setupShareButton();
         setupImageLightboxes();
         setupPostNavPanel();
+        setupCompactContents();
         setupAutoRevealNav();
         initializeTOC();
         initializeSpecialViewers();

@@ -79,8 +79,33 @@
         return post[`subtitle_${lang}`] || post.subtitle_eng || '';
     }
 
+    function getPostLanguage(post, lang) {
+        return post.languages.includes(lang) ? lang : 'eng';
+    }
+
+    function getPostLanguageNotice(post, lang) {
+        return getPostLanguage(post, lang) === lang ? '' : (lang === 'kor' ? '영문' : 'Korean');
+    }
+
+    function getArchivedTagSet(siteData, minimumPosts = 2) {
+        const counts = new Map();
+        siteData.posts.forEach((post) => {
+            (post.tags || []).forEach((tag) => counts.set(tag, (counts.get(tag) || 0) + 1));
+        });
+        return new Set([...counts].filter(([, count]) => count >= minimumPosts).map(([tag]) => tag));
+    }
+
+    function getTagUrl(tag) {
+        const slug = String(tag)
+            .toLowerCase()
+            .replace(/&/g, 'and')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-|-$/g, '');
+        return `/blogs/tags/${slug}/`;
+    }
+
     function getPostUrl(post, lang) {
-        const resolvedLang = post.languages.includes(lang) ? lang : 'eng';
+        const resolvedLang = getPostLanguage(post, lang);
         return `/blogs/posts/${resolvedLang === 'eng' ? post.slug : `${post.slug}-kor`}/`;
     }
 
@@ -99,6 +124,10 @@
         getPostSeriesIds,
         getPostTitle,
         getPostSubtitle,
+        getPostLanguage,
+        getPostLanguageNotice,
+        getArchivedTagSet,
+        getTagUrl,
         getPostUrl,
         isFromArchive
     };
