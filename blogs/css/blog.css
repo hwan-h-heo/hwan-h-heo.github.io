@@ -2859,6 +2859,31 @@ html[lang="ko"] .blog-home-hero h1 {
     font-weight: 650;
 }
 
+.blog-home-page.blog-search-page .post-card-body .post-search-excerpt {
+    display: block;
+    overflow: visible;
+    -webkit-line-clamp: unset;
+}
+
+.blog-search-page .post-card-body mark {
+    padding: 0;
+    color: inherit;
+    background: color-mix(in srgb, var(--blog-color-accent) 16%, transparent);
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+}
+
+.blog-search-retry {
+    padding: 0;
+    border: 0;
+    color: var(--blog-color-accent-strong);
+    background: transparent;
+    font: inherit;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    cursor: pointer;
+}
+
 .blog-home-page .post-preview {
     margin: 0;
     padding: 1rem 0;
