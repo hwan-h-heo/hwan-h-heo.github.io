@@ -62,6 +62,13 @@ editorial deck supplies article headers, home and search previews, RSS summaries
 and search/social metadata. Published posts must define the subtitle for every
 available language.
 
+Full and incremental builds also generate a fingerprinted search index under
+`blogs/dist/blogs/data/` from published article bodies. Search combines the current
+site metadata with this cached plain-text index, retaining the English original
+when a Korean body is unavailable. Draft and unlisted bodies are excluded. Do not
+edit the generated index; update the post source or metadata and rebuild. Run
+`npm test` when changing search extraction, ranking, excerpts, or highlighting.
+
 ## Tags
 
 Use the `tags` array in `blogs/data/site-data.json`:

@@ -14,6 +14,7 @@ const { versionStaticAssetReferences } = require('./lib/static-asset-versioning'
 const { renderPostPage } = require('./lib/render-post-page');
 const { renderStaticBlogIndex } = require('./lib/render-blog-index');
 const { renderArchivePage } = require('./lib/render-archive-page');
+const { generateSearchIndex } = require('./lib/search-index');
 const {
     buildPortfolioStructuredData,
     getPortfolioProfile,
@@ -1183,6 +1184,7 @@ async function buildSite() {
     await generatePostPages();
     generateSitemap();
     generateFeed();
+    generateSearchIndex({ siteData, repoRoot, distDir });
     generateRobotsTxt();
     generateSupportFiles();
     await generateAllSocialImages();
@@ -1228,6 +1230,7 @@ async function buildIncremental(options = {}) {
     generateArchivePages();
     generateSitemap();
     generateFeed();
+    generateSearchIndex({ siteData, repoRoot, distDir });
     generateRobotsTxt();
     generateSupportFiles();
     await generateAllSocialImages();

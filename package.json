@@ -6,6 +6,7 @@
     "setup": "npm install && npm --prefix blogs install",
     "build": "npm run build:hero && npm --prefix blogs run build",
     "build:incremental": "npm --prefix blogs run build:incremental",
+    "test": "node --test scripts/*.test.js",
     "dev": "npm --prefix blogs run dev",
     "deploy": "npm run verify && npm --prefix blogs run deploy:dist",
     "deploy:quick": "node scripts/quick-deploy.js",

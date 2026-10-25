@@ -1241,7 +1241,7 @@ async function assertBlogArchiveUtilities(page, testCase, width) {
                     const body = card.querySelector('.post-card-body')?.getBoundingClientRect();
                     return Boolean(cover && body && cover.bottom <= body.top + 1);
                 }
-                return card.classList.contains('post-preview-media-right') === !fromArchive;
+                return card.classList.contains('post-preview-media-right') === (pageType === 'blog-search' || !fromArchive);
             }),
             fromArchiveFolio: document.querySelector('.blog-home-era-break')?.textContent.replace(/\s+/g, ' ').trim() || '',
             visibleLanguageField: pageType === 'blog-search'
@@ -1283,7 +1283,8 @@ async function assertBlogArchiveUtilities(page, testCase, width) {
     );
     assert(state.previewHierarchyValid, `${testCase.id} previews no longer share the Blog home content hierarchy.`);
     assert(state.previewEraSignatureValid, `${testCase.id} previews no longer share the Blog home era alignment.`);
-    assert(state.fromArchiveFolio === '02 From the Archive', `${testCase.id} is missing the archive boundary folio.`);
+    assert(state.fromArchiveFolio === (testCase.type === 'blog-search' ? '' : '02 From the Archive'),
+        `${testCase.id} has the wrong archive boundary for its result ordering.`);
     if (testCase.type === 'blog-search') {
         assert(
             state.countBorderWidth === '0px'

@@ -410,7 +410,17 @@ And Motion and implemented in `assets/css/hero-sculpture.css`.
   fallback must preserve the reader's Korean listing preference. Do not expose a
   separate `Languages` field or add a badge. Link tags only when a generated tag
   archive exists; `Explore Series` links always open the series archive.
-  Apply the same current-right / archive-left media signature,
+  Series and tag archives retain the current-right / archive-left media signature.
+  Search results use relevance order across all dates, with one consistent
+  copy-left / media-right layout and no chronological archive divider. Rank
+  direct title and topic matches before subtitle and body matches; use recency
+  only to break equal relevance. Replace the result subtitle with a short matching
+  body excerpt when available, using the same muted description type. Highlight
+  matching text in titles and excerpts with a faint native Blog accent wash,
+  inherited ink and weight, and no new badge or panel. Keep excerpts bounded in
+  text rather than visually clipping the matching passage. The build supplies a
+  fingerprinted, cacheable plain-text index of published posts only; snippets
+  never include embedded scripts, styles or source asset URLs. Keep the rows
   collapsing back to media-first rows on mobile. Wherever a mobile sidebar
   remains available, its scrim and panel must stack above any fixed utility bar.
 - Do not add breadcrumbs before a long-form blog article; the original utility
