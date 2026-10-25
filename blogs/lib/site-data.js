@@ -452,6 +452,7 @@ function normalizeSiteData(rawSiteData, relatedData = {}) {
         routablePosts,
         blogHome: { ...rawSiteData.blogHome },
         series: rawSiteData.series,
+        seriesRedirects: { ...rawSiteData.seriesRedirects },
         portfolioProjects: rawSiteData.portfolioProjects || [],
         publications: rawSiteData.publications || [],
         talks: rawSiteData.talks || [],
@@ -487,6 +488,28 @@ function validateSiteData(rawSiteData) {
 
     rawSiteData.posts.forEach((post) => validatePostShape(post, rawSiteData.series, errors));
     validateBlogHomeShape(rawSiteData.blogHome, rawSiteData.posts, errors);
+
+    const seriesRedirects = rawSiteData.seriesRedirects;
+    if (seriesRedirects !== undefined) {
+        if (!seriesRedirects || typeof seriesRedirects !== 'object' || Array.isArray(seriesRedirects)) {
+            errors.push('seriesRedirects must be a map of retired series IDs to current series IDs.');
+        } else {
+            Object.entries(seriesRedirects).forEach(([source, target]) => {
+                if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(source)) {
+                    errors.push(`Invalid retired series ID "${source}".`);
+                }
+                if (Object.hasOwn(rawSiteData.series, source)) {
+                    errors.push(`Series redirect source "${source}" is still an active series.`);
+                }
+                if (typeof target !== 'string' || !Object.hasOwn(rawSiteData.series, target)) {
+                    errors.push(`Series redirect "${source}" must target an existing series.`);
+                } else if (!rawSiteData.posts.some((post) => (post.status || 'published') === 'published'
+                    && (post.series === target || post.additionalSeries?.includes(target)))) {
+                    errors.push(`Series redirect "${source}" must target a series with published posts.`);
+                }
+            });
+        }
+    }
 
     const portfolioProjectIds = new Set();
     (rawSiteData.portfolioProjects || []).forEach((project, index) => {

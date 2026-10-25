@@ -20,6 +20,12 @@ Generated from current source metadata. Preserve these routes unless a documente
 
 | Post ID | Language | Route |
 | --- | --- | --- |
+| `261022_pcg_muon` | eng | `/blogs/posts/from-pcg-to-muon/` |
+| `261022_pcg_muon` | kor | `/blogs/posts/from-pcg-to-muon-kor/` |
+| `260818_quad_remesh` | eng | `/blogs/posts/quad-remesh/` |
+| `260818_quad_remesh` | kor | `/blogs/posts/quad-remesh-kor/` |
+| `260802_cuda_01_gemm` | eng | `/blogs/posts/gemm-on-nvidia-gpus/` |
+| `260802_cuda_01_gemm` | kor | `/blogs/posts/gemm-on-nvidia-gpus-kor/` |
 | `260727_sparse_3d` | eng | `/blogs/posts/optimizing-sparse-3d-generation-inference/` |
 | `260727_sparse_3d` | kor | `/blogs/posts/optimizing-sparse-3d-generation-inference-kor/` |
 | `260115_Varco3D` | eng | `/blogs/posts/varco3d-a-year-in-review-2025-retrospective/` |
@@ -51,10 +57,16 @@ Generated from current source metadata. Preserve these routes unless a documente
 | `240602_2dgs` | kor | `/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting-kor/` |
 | `240426_diffusion_depth` | eng | `/blogs/posts/is-diffusions-estimated-depth-really-good/` |
 | `240426_diffusion_depth` | kor | `/blogs/posts/is-diffusions-estimated-depth-really-good-kor/` |
+| `240308_nerf_practicality` | eng | `/blogs/posts/reflections-on-the-practicality-of-nerf/` |
+| `240308_nerf_practicality` | kor | `/blogs/posts/reflections-on-the-practicality-of-nerf-kor/` |
 | `240226_sora` | eng | `/blogs/posts/can-sora-understand-3d/` |
+| `240226_sora` | kor | `/blogs/posts/can-sora-understand-3d-kor/` |
 | `231130_nerf_in_game` | eng | `/blogs/posts/can-nerf-be-used-in-game/` |
+| `231130_nerf_in_game` | kor | `/blogs/posts/can-nerf-be-used-in-game-kor/` |
 | `230202_ngp` | eng | `/blogs/posts/instant-ngp-review-re-implementation/` |
+| `230202_ngp` | kor | `/blogs/posts/instant-ngp-review-re-implementation-kor/` |
 | `211128_fourier` | eng | `/blogs/posts/why-positional-encoding-makes-nerf-more-powerful/` |
+| `211128_fourier` | kor | `/blogs/posts/why-positional-encoding-makes-nerf-more-powerful-kor/` |
 | `210910_lin_alg_2` | eng | `/blogs/posts/change-of-basis/` |
 | `210910_lin_alg_2` | kor | `/blogs/posts/change-of-basis-kor/` |
 | `210909_lin_alg_1` | eng | `/blogs/posts/linear-system/` |
@@ -68,6 +80,9 @@ Generated from current source metadata. Preserve these routes unless a documente
 
 | Legacy ID | Canonical English Route |
 | --- | --- |
+| `/blogs/posts/?id=261022_pcg_muon` | `/blogs/posts/from-pcg-to-muon/` |
+| `/blogs/posts/?id=260818_quad_remesh` | `/blogs/posts/quad-remesh/` |
+| `/blogs/posts/?id=260802_cuda_01_gemm` | `/blogs/posts/gemm-on-nvidia-gpus/` |
 | `/blogs/posts/?id=260727_sparse_3d` | `/blogs/posts/optimizing-sparse-3d-generation-inference/` |
 | `/blogs/posts/?id=260115_Varco3D` | `/blogs/posts/varco3d-a-year-in-review-2025-retrospective/` |
 | `/blogs/posts/?id=250823_sdf` | `/blogs/posts/sdf-and-eikonal-equation/` |
@@ -84,6 +99,7 @@ Generated from current source metadata. Preserve these routes unless a documente
 | `/blogs/posts/?id=240721_sfm` | `/blogs/posts/radiance-fields-from-deep-based-structure-from-motion/` |
 | `/blogs/posts/?id=240602_2dgs` | `/blogs/posts/under-the-3d-geometrically-accurate-2d-gaussian-splatting/` |
 | `/blogs/posts/?id=240426_diffusion_depth` | `/blogs/posts/is-diffusions-estimated-depth-really-good/` |
+| `/blogs/posts/?id=240308_nerf_practicality` | `/blogs/posts/reflections-on-the-practicality-of-nerf/` |
 | `/blogs/posts/?id=240226_sora` | `/blogs/posts/can-sora-understand-3d/` |
 | `/blogs/posts/?id=231130_nerf_in_game` | `/blogs/posts/can-nerf-be-used-in-game/` |
 | `/blogs/posts/?id=230202_ngp` | `/blogs/posts/instant-ngp-review-re-implementation/` |
@@ -99,22 +115,23 @@ Generated from current source metadata. Preserve these routes unless a documente
 
 ### Series Archives
 
-- `/blogs/series/3d-generation/` (8 posts)
-- `/blogs/series/web-3d/` (2 posts)
-- `/blogs/series/computer-vision/` (4 posts)
-- `/blogs/series/graphics/` (2 posts)
-- `/blogs/series/linear-algebra/` (2 posts)
-- `/blogs/series/nerf-and-gs/` (8 posts)
+- `/blogs/series/3d-generation/` (9 posts)
+- `/blogs/series/graphics/` (6 posts)
+- `/blogs/series/cuda/` (2 posts)
+- `/blogs/series/nerf-and-gs/` (9 posts)
+
+### Retired Series Redirects
+
+- `/blogs/series/web-3d/` → `/blogs/series/graphics/` (preserves query parameters and fragment with JavaScript)
 
 ### Tag Archives
 
 - `/blogs/tags/3d-generation/` (8 posts)
-- `/blogs/tags/computer-vision/` (4 posts)
-- `/blogs/tags/gaussian-splatting/` (8 posts)
+- `/blogs/tags/cuda/` (3 posts)
+- `/blogs/tags/gaussian-splatting/` (9 posts)
 - `/blogs/tags/generative-ai/` (8 posts)
-- `/blogs/tags/graphics/` (2 posts)
-- `/blogs/tags/linear-algebra/` (2 posts)
-- `/blogs/tags/neural-rendering/` (8 posts)
+- `/blogs/tags/graphics/` (4 posts)
+- `/blogs/tags/neural-rendering/` (9 posts)
 - `/blogs/tags/three-js/` (2 posts)
 - `/blogs/tags/web-3d/` (2 posts)
 

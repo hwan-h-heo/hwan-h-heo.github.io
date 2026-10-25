@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const { loadSiteData } = require('../blogs/lib/site-data');
+const { listSeriesRedirectEntries } = require('../blogs/lib/legacy-redirects');
 const {
     getPostRoute,
     listProjectEntries,
@@ -54,6 +55,10 @@ function buildMarkdown() {
     lines.push('### Series Archives', '');
     listSeriesArchiveEntries(siteData).forEach((entry) => {
         lines.push(`- \`${entry.path}\` (${entry.posts.length} posts)`);
+    });
+    lines.push('', '### Retired Series Redirects', '');
+    listSeriesRedirectEntries(siteData).forEach((entry) => {
+        lines.push(`- \`${entry.path}\` → \`${entry.target}\` (preserves query parameters and fragment with JavaScript)`);
     });
     lines.push('', '### Tag Archives', '');
     listTagArchiveEntries(siteData).forEach((entry) => {

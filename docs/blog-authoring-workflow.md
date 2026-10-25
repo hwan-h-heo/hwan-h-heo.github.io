@@ -89,6 +89,13 @@ in more series, add their IDs to `additionalSeries`:
 "additionalSeries": ["3d-generation"]
 ```
 
+Choose the primary series by the problem the article explains. Use an additional
+series when the article substantially serves that readership, and tags for the
+techniques and concepts used along the way. For example, sparse 3D inference
+optimization belongs primarily to `cuda` and additionally to `3d-generation`.
+The PCG-to-Muon article belongs to `graphics` and `3d-generation`; its CUDA tag
+does not by itself make it part of the CUDA series.
+
 The primary series supplies preview labels, the article header, and previous/next
 navigation. Additional series include the post in their Blog home groups and
 series archives. The post keeps one URL per language and counts once in the
@@ -97,6 +104,24 @@ overall article total. Each series counts it once.
 `additionalSeries` is optional. Every entry must name an existing series, with
 no duplicates or repetition of the primary series. Edit these memberships in
 the JSON file; the local editor preserves them when saving the post.
+
+Web 3D articles belong to `graphics`; keep `Web 3D` and `Three.js` tags for
+more specific discovery. When merging a series, update published and draft
+memberships, remove its label from `series`, and add its old ID to
+`seriesRedirects` (for example, `"web-3d": "graphics"`). The static redirect
+generator preserves the old archive URL without adding it to the sitemap.
+Redirect targets must be current series with published posts; chains are not
+allowed. Individual post slugs stay unchanged.
+
+## Related Posts
+
+Keep curated recommendations in `blogs/data/post-related.json`, under the post
+ID and language (`eng` or `kor`). Use post IDs for internal articles and
+`{"title": "...", "url": "https://..."}` for external articles. The shared
+renderer supplies the Related Posts cards and resolves internal links to the
+appropriate language. Move imported "You may also like" lists into this data
+instead of keeping a second recommendation list in the article body. Keep
+citations and original-source credits in the body.
 
 ## Preview Locally
 

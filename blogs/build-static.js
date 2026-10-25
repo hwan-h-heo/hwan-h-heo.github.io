@@ -27,7 +27,7 @@ const {
     getProjectSocialImage,
     getSocialImage
 } = require('./lib/social-images');
-const { loadLegacyRedirects, validateLegacyRedirects } = require('./lib/legacy-redirects');
+const { listSeriesRedirectEntries, loadLegacyRedirects, renderSeriesRedirectPage, validateLegacyRedirects } = require('./lib/legacy-redirects');
 const {
     inferPostRuntimeFeatures,
     parsePostMarkdownSource
@@ -569,6 +569,9 @@ function generateLegacyRedirectPages() {
     ensureDirSync(postsDir);
     fs.writeFileSync(path.join(postsDir, 'index.html'), html);
     fs.writeFileSync(path.join(distDir, 'blogs', 'redirect-legacy-posts.html'), html);
+    listSeriesRedirectEntries(siteData).forEach((entry) => {
+        writeHtmlRoute(entry.path, renderSeriesRedirectPage(entry.target));
+    });
     console.log('Generated legacy redirect fallback pages');
 }
 

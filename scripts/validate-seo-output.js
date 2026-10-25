@@ -13,7 +13,7 @@ const {
     listTagArchiveEntries,
     listProjectEntries
 } = require('../blogs/lib/site-routes');
-const { loadLegacyRedirects, validateLegacyRedirects } = require('../blogs/lib/legacy-redirects');
+const { listSeriesRedirectEntries, loadLegacyRedirects, validateLegacyRedirects } = require('../blogs/lib/legacy-redirects');
 const { getFeaturedPost, getPostTitle } = require('../blogs/lib/seo-utils');
 const { getPortfolioProfile } = require('../blogs/lib/portfolio-profile');
 const { getPostSocialImage, getProjectSocialImage, getSocialImage } = require('../blogs/lib/social-images');
@@ -790,6 +790,24 @@ function checkLegacyRedirects(siteData, errors) {
     } catch (error) {
         errors.push(error.message);
     }
+
+    listSeriesRedirectEntries(siteData).forEach((entry) => {
+        const filePath = localPathToGeneratedFile(entry.path);
+        if (!fs.existsSync(filePath)) {
+            errors.push(`Missing retired series redirect: ${entry.path}`);
+            return;
+        }
+        const $ = cheerio.load(readText(filePath));
+        if ($('link[rel="canonical"]').attr('href') !== `${SITE_URL}${entry.target}`
+            || $('meta[name="robots"]').attr('content') !== 'noindex, follow'
+            || $('meta[http-equiv="refresh"]').attr('content') !== `0;url=${entry.target}`
+            || !localUrlExists(entry.target)) {
+            errors.push(`Invalid retired series redirect: ${entry.path}`);
+        }
+        if (readText(path.join(distRoot, 'google-sitemap.xml')).includes(`${SITE_URL}${entry.path}<`)) {
+            errors.push(`Sitemap contains retired series URL: ${entry.path}`);
+        }
+    });
 
     const fallbackPath = path.join(distRoot, 'blogs', 'posts', 'index.html');
     if (!fs.existsSync(fallbackPath)) {
