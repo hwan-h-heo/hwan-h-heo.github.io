@@ -518,6 +518,20 @@ the compact reference near `48px`; the right-aligned publication-index row lives
 inside the upper interval so the spacing carries hierarchy rather than reading
 as empty padding.
 
+Fade the home cover's background into the shared reading scene in both light
+and dark themes. Group the cover color, artwork and ink overlay in one masked,
+non-interactive backdrop; keep the title, standfirst and byline outside the
+mask. Let the paint extend into the existing Featured gutter without changing
+the Hero height or content positions. Use a sampled smoothstep opacity curve
+with gentle entry and exit: `160px` deep with `88px` of bleed on wider screens,
+`112px` deep with `72px` of bleed at `600px` and below. Let its nearly transparent
+tail pass beneath the Featured folio without obscuring its copy. Reveal the
+actual page backdrop instead of ending on an opaque
+paper color, so the sculpture and theme tones meet without a second seam.
+Keep the artwork stage at the original Hero height and fade its last `96px`
+with the same curve, so extending the backdrop never enlarges the source
+composition or leaves a separate artwork edge.
+
 ### Project and blog previews
 
 Portfolio Project previews use this order:

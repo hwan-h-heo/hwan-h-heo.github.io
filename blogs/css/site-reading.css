@@ -28,11 +28,43 @@ html[data-theme] body.site-reading :is(.main,.post-masthead,.post-article,.blog-
 html[data-theme] body.site-reading #mainNav { background:transparent; }
 html[data-theme] body.site-reading #mainNav.is-fixed,
 html[data-theme] body.site-reading .blog-home-topbar.is-scrolled { background:var(--ed-header); }
-/* Preserve the authored home banner; archive openings share the reading scene. */
-html[data-theme] body.site-reading header.blog-editorial-hero { clip-path:inset(0); }
-.site-reading header.blog-editorial-hero::after {
+/* Fade only the cover artwork into the reading scene, leaving its copy untouched. */
+html[data-theme] body.site-reading header.blog-editorial-hero {
+    --blog-cover-fade-depth:160px;
+    --blog-cover-fade-bleed:88px;
+    overflow:visible;
+    isolation:isolate;
+}
+.site-reading header.blog-editorial-hero::before { content:none; }
+/* Sample smoothstep so the fade eases in and out without a concentrated bright band. */
+.site-reading :is(.blog-editorial-backdrop,.blog-editorial-artwork) {
+    --blog-cover-fade-mask:linear-gradient(to bottom,
+        #000 calc(100% - var(--blog-fade-depth)),
+        rgba(0,0,0,.972) calc(100% - var(--blog-fade-depth) * .9),
+        rgba(0,0,0,.896) calc(100% - var(--blog-fade-depth) * .8),
+        rgba(0,0,0,.784) calc(100% - var(--blog-fade-depth) * .7),
+        rgba(0,0,0,.648) calc(100% - var(--blog-fade-depth) * .6),
+        rgba(0,0,0,.5) calc(100% - var(--blog-fade-depth) * .5),
+        rgba(0,0,0,.352) calc(100% - var(--blog-fade-depth) * .4),
+        rgba(0,0,0,.216) calc(100% - var(--blog-fade-depth) * .3),
+        rgba(0,0,0,.104) calc(100% - var(--blog-fade-depth) * .2),
+        rgba(0,0,0,.028) calc(100% - var(--blog-fade-depth) * .1),
+        transparent);
+    -webkit-mask-image:var(--blog-cover-fade-mask);
+    mask-image:var(--blog-cover-fade-mask);
+}
+.site-reading .blog-editorial-backdrop {
+    --blog-fade-depth:var(--blog-cover-fade-depth);
+    position:absolute; inset:0 0 calc(-1 * var(--blog-cover-fade-bleed)); z-index:0;
+    overflow:hidden; pointer-events:none; background:var(--blog-home-cover);
+}
+.site-reading .blog-editorial-backdrop::after {
     content:''; position:fixed; inset:0; z-index:-1; pointer-events:none;
     background:var(--blog-scene-poster) center / cover no-repeat; opacity:.18;
+}
+.site-reading .blog-editorial-artwork {
+    --blog-fade-depth:96px;
+    position:absolute; inset:0 0 var(--blog-cover-fade-bleed);
 }
 html[data-theme] body.site-reading.blog-home-page header.masthead.blog-home-hero:not(.blog-editorial-hero) { background:transparent; }
 html[data-theme] body.site-reading.blog-home-page header.masthead.blog-home-hero:not(.blog-editorial-hero)::before { background:none; opacity:0; }
@@ -50,6 +82,10 @@ html[data-theme="light"] body.site-reading.blog-archive-page .blog-home-topbar i
     body.site-reading { --blog-scene-poster:url('/assets/hero/sculpture/poster-768.webp'); }
 }
 @media (max-width:600px) {
+    html[data-theme] body.site-reading header.blog-editorial-hero {
+        --blog-cover-fade-depth:112px;
+        --blog-cover-fade-bleed:72px;
+    }
     body.site-reading {
         --blog-scene-poster:url('/assets/hero/sculpture/poster-390.webp');
         --blog-scene-veil:linear-gradient(rgba(233,232,225,.96),rgba(233,232,225,.91));
